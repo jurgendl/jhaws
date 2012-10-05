@@ -64,10 +64,14 @@ public class BeanWrapper {
 
         if (field == null) {
             try {
-                field = cc.type.getDeclaredField(fieldName);
-            } catch (NoSuchFieldException ex) {
-                throw new FieldNotFoundException(ex);
+                BeanInfo info = Introspector.getBeanInfo(cc.type, cc.type.getSuperclass());
+                for (PropertyDescriptor pd : info.getPropertyDescriptors()) {
+                    cc.fields.put(pd.getName(), pd);
+                }
+                field = cc.fields.get(fieldName);
             } catch (SecurityException ex) {
+                throw new FieldNotFoundException(ex);
+            } catch (IntrospectionException ex) {
                 throw new FieldNotFoundException(ex);
             }
         }
