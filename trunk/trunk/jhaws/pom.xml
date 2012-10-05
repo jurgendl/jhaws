@@ -13,5 +13,6 @@
 		<module>lang</module>
 		<module>io</module>
 		<module>net</module>
+		<module>ldap</module>
 	</modules>
 </project>
