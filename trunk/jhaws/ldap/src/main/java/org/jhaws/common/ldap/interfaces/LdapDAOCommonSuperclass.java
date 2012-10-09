@@ -50,8 +50,8 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
     /**
      * Instantieer een nieuwe ALDI
      */
-    @SuppressWarnings("rawtypes") 
-    protected LdapDAOCommonSuperclass() {
+    @SuppressWarnings("unchecked")
+	protected LdapDAOCommonSuperclass() {
         logger.debug("INIT start"); //$NON-NLS-1$
         this.pojoClass = (Class<T>) JGenerics.findImplementation(this, 0);
         logger.debug("pojoClass=" + pojoClass); //$NON-NLS-1$
