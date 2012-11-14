@@ -2,7 +2,7 @@ package org.jhaws.common.ldap.filters;
 
 /**
  * filter: key=value (like)
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class Like implements Filter {
@@ -12,14 +12,14 @@ public class Like implements Filter {
     /** value */
     private String value;
 
-/**
+    /**
      * Creates a new Like object.
      */
     public Like() {
         super();
     }
 
-/**
+    /**
      * Creates a new Like object.
      */
     public Like(String key, String value) {
@@ -30,7 +30,7 @@ public class Like implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -40,7 +40,7 @@ public class Like implements Filter {
 
     /**
      * gets key
-     *
+     * 
      * @return Returns the key.
      */
     public String getKey() {
@@ -49,7 +49,7 @@ public class Like implements Filter {
 
     /**
      * sets key
-     *
+     * 
      * @param key The key to set.
      */
     public void setKey(String key) {
@@ -58,7 +58,7 @@ public class Like implements Filter {
 
     /**
      * gets value
-     *
+     * 
      * @return Returns the value.
      */
     public String getValue() {
@@ -67,7 +67,7 @@ public class Like implements Filter {
 
     /**
      * sets value
-     *
+     * 
      * @param value The value to set.
      */
     public void setValue(String value) {

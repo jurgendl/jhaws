@@ -4,16 +4,14 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jhaws.common.ldap.annotations.LdapClass;
 import org.jhaws.common.ldap.annotations.LdapKey;
 
-
 import java.io.Serializable;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 @LdapClass(autoFields = true, objectClass = "person")
@@ -46,7 +44,7 @@ public class Person implements Serializable, Comparable<Person> {
     /** field */
     private byte[] userCertificate;
 
-/**
+    /**
      * Creates a new Person object.
      */
     public Person() {
@@ -55,7 +53,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor c
-     *
+     * 
      * @param c The c to set.
      */
     public void setC(String c) {
@@ -64,7 +62,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor c
-     *
+     * 
      * @return Returns the c.
      */
     public String getC() {
@@ -73,9 +71,9 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * na
-     *
+     * 
      * @return
-     *
+     * 
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
@@ -84,7 +82,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor cn
-     *
+     * 
      * @param cn The cn to set.
      */
     public void setCn(String cn) {
@@ -93,7 +91,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor cn
-     *
+     * 
      * @return Returns the cn.
      */
     public String getCn() {
@@ -102,7 +100,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor givenName
-     *
+     * 
      * @param givenName The givenName to set.
      */
     public void setGivenName(String givenName) {
@@ -111,7 +109,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor givenName
-     *
+     * 
      * @return Returns the givenName.
      */
     public String getGivenName() {
@@ -120,7 +118,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor objectClass
-     *
+     * 
      * @param objectClass The objectClass to set.
      */
     public void setObjectClass(String[] objectClass) {
@@ -129,7 +127,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor objectClass
-     *
+     * 
      * @return Returns the objectClass.
      */
     public String[] getObjectClass() {
@@ -138,7 +136,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor serialNumber
-     *
+     * 
      * @param serialNumber The serialNumber to set.
      */
     public void setSerialNumber(String serialNumber) {
@@ -147,7 +145,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor serialNumber
-     *
+     * 
      * @return Returns the serialNumber.
      */
     public String getSerialNumber() {
@@ -156,7 +154,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor sn
-     *
+     * 
      * @param sn The sn to set.
      */
     public void setSn(String sn) {
@@ -165,7 +163,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor sn
-     *
+     * 
      * @return Returns the sn.
      */
     public String getSn() {
@@ -174,7 +172,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor uid
-     *
+     * 
      * @param uid The uid to set.
      */
     public void setUid(String uid) {
@@ -183,7 +181,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor uid
-     *
+     * 
      * @return Returns the uid.
      */
     public String getUid() {
@@ -192,7 +190,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor userCertificate
-     *
+     * 
      * @param userCertificate The userCertificate to set.
      */
     public void setUserCertificate(byte[] userCertificate) {
@@ -201,7 +199,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor userCertificate
-     *
+     * 
      * @return Returns the userCertificate.
      */
     public byte[] getUserCertificate() {
@@ -235,6 +233,7 @@ public class Person implements Serializable, Comparable<Person> {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("c", this.c).append("uid", this.uid).append("sn", this.sn).append("serialNumber", this.serialNumber).append("givenName", this.givenName).append("cn", this.cn).append("userCertificate", (userCertificate != null) && (userCertificate.length > 0)).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+        return new ToStringBuilder(this)
+                .append("c", this.c).append("uid", this.uid).append("sn", this.sn).append("serialNumber", this.serialNumber).append("givenName", this.givenName).append("cn", this.cn).append("userCertificate", (userCertificate != null) && (userCertificate.length > 0)).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     }
 }

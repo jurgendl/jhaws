@@ -2,10 +2,9 @@ package org.jhaws.common.ldap.interfaces;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-
 /**
  * intern gebruik
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class KeyValue {
@@ -15,9 +14,9 @@ public class KeyValue {
     /** value */
     private String value;
 
-/**
+    /**
      * Creates a new KeyValue object.
-     *
+     * 
      * @param key
      * @param value
      */
@@ -28,7 +27,7 @@ public class KeyValue {
 
     /**
      * gets key
-     *
+     * 
      * @return Returns the key.
      */
     public String getKey() {
@@ -37,7 +36,7 @@ public class KeyValue {
 
     /**
      * gets value
-     *
+     * 
      * @return Returns the value.
      */
     public String getValue() {

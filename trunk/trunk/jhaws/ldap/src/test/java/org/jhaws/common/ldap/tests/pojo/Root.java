@@ -4,16 +4,14 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jhaws.common.ldap.annotations.LdapClass;
 import org.jhaws.common.ldap.annotations.LdapKey;
 
-
 import java.io.Serializable;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 @LdapClass(autoFields = true)
@@ -31,7 +29,7 @@ public class Root implements Serializable, Comparable<Root> {
     /** field */
     private byte[] userCertificate;
 
-/**
+    /**
      * Creates a new Root object.
      */
     public Root() {
@@ -40,9 +38,9 @@ public class Root implements Serializable, Comparable<Root> {
 
     /**
      * na
-     *
+     * 
      * @return
-     *
+     * 
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
@@ -51,7 +49,7 @@ public class Root implements Serializable, Comparable<Root> {
 
     /**
      * Setter voor objectClass
-     *
+     * 
      * @param objectClass The objectClass to set.
      */
     public void setObjectClass(String[] objectClass) {
@@ -60,7 +58,7 @@ public class Root implements Serializable, Comparable<Root> {
 
     /**
      * Getter voor objectClass
-     *
+     * 
      * @return Returns the objectClass.
      */
     public String[] getObjectClass() {
@@ -69,7 +67,7 @@ public class Root implements Serializable, Comparable<Root> {
 
     /**
      * Setter voor ou
-     *
+     * 
      * @param ou The ou to set.
      */
     public void setOu(String ou) {
@@ -78,7 +76,7 @@ public class Root implements Serializable, Comparable<Root> {
 
     /**
      * Getter voor ou
-     *
+     * 
      * @return Returns the ou.
      */
     public String getOu() {
@@ -87,7 +85,7 @@ public class Root implements Serializable, Comparable<Root> {
 
     /**
      * Setter voor userCertificate
-     *
+     * 
      * @param userCertificate The userCertificate to set.
      */
     public void setUserCertificate(byte[] userCertificate) {
@@ -96,7 +94,7 @@ public class Root implements Serializable, Comparable<Root> {
 
     /**
      * Getter voor userCertificate
-     *
+     * 
      * @return Returns the userCertificate.
      */
     public byte[] getUserCertificate() {

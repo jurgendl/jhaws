@@ -1,21 +1,19 @@
 package org.jhaws.common.ldap.tests.local;
 
-
 import java.util.Properties;
 
 import org.jhaws.common.ldap.standalone.ContextSource;
 
-
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class UserDaoMock extends UserDao {
     /** serialVersionUID */
     private static final long serialVersionUID = -8240875516107185780L;
 
-/**
+    /**
      * Creates a new UserDaoMock object.
      */
     public UserDaoMock() {

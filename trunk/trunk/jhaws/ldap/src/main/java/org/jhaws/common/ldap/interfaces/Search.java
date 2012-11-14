@@ -3,16 +3,17 @@ package org.jhaws.common.ldap.interfaces;
 import javax.naming.directory.SearchControls;
 
 /**
- *  na
- *
+ * na
+ * 
  * @author Jurgen De Landsheer
  */
-public enum Search {SINGLE_LEVEL, DEEP;
+public enum Search {
+    SINGLE_LEVEL, DEEP;
     /**
      * na
-     *
+     * 
      * @return
-     *
+     * 
      * @throws IllegalArgumentException na
      */
     public int value() {

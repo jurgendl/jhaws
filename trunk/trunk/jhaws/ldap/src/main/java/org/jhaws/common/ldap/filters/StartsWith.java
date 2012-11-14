@@ -2,7 +2,7 @@ package org.jhaws.common.ldap.filters;
 
 /**
  * startswith filter
- *
+ * 
  * @author jdlandsh
  */
 public class StartsWith implements Filter {
@@ -12,9 +12,9 @@ public class StartsWith implements Filter {
     /** value */
     private String value;
 
-/**
+    /**
      * Instantieer een nieuwe StartsWith
-     *
+     * 
      * @param key
      * @param value
      */
@@ -25,7 +25,7 @@ public class StartsWith implements Filter {
 
     /**
      * Getter voor key
-     *
+     * 
      * @return Returns the key.
      */
     public String getKey() {
@@ -34,7 +34,7 @@ public class StartsWith implements Filter {
 
     /**
      * Setter voor key
-     *
+     * 
      * @param key The key to set.
      */
     public void setKey(String key) {
@@ -43,7 +43,7 @@ public class StartsWith implements Filter {
 
     /**
      * Getter voor value
-     *
+     * 
      * @return Returns the value.
      */
     public String getValue() {
@@ -52,7 +52,7 @@ public class StartsWith implements Filter {
 
     /**
      * Setter voor value
-     *
+     * 
      * @param value The value to set.
      */
     public void setValue(String value) {
@@ -61,7 +61,7 @@ public class StartsWith implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

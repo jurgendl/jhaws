@@ -6,7 +6,6 @@ import org.jhaws.common.ldap.filters.Equal;
 import org.jhaws.common.ldap.filters.Or;
 import org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass;
 
-
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -23,20 +22,18 @@ import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 
 /**
- * na
- *
  * @author Jurgen De Landsheer
  */
 public abstract class AbstractLdapDao<T extends Serializable & Comparable<? super T>> extends LdapDAOCommonSuperclass<T> {
     /** serialVersionUID */
-	private static final long serialVersionUID = 8136185571396833318L;
+    private static final long serialVersionUID = 8136185571396833318L;
 
-	/** Logger for this class */
+    /** Logger for this class */
     private static final Logger logger = Logger.getLogger(AbstractLdapDao.class);
 
     /** ldap context */
     private ContextSource contextSource;
-    
+
     /**
      * Creates a new AbstractLdapDao object.
      */
@@ -50,13 +47,13 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
     public boolean createBean(T object) {
         try {
             contextSource.getContext().bind(buildDn(object), null, convertObjectToAttributes(object));
-            
+
             return true;
         } catch (Exception ex) {
-            //NamingException
+            // NamingException
             logger.warn(ex);
         }
-        
+
         return false;
     }
 
@@ -66,13 +63,13 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
     public boolean deleteBean(T object) {
         try {
             contextSource.getContext().unbind(buildDn(object));
-            
+
             return true;
         } catch (Exception ex) {
-            //NamingException
+            // NamingException
             logger.warn(ex);
         }
-        
+
         return false;
     }
 
@@ -81,11 +78,11 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
      */
     public List<T> findAllBeans() throws IllegalArgumentException {
         Or query = new Or();
-        
-        for(String oc : annotationParser.getObjectClass()) {
-            query.addFilters(new Equal("objectClass",oc)); //$NON-NLS-1$
+
+        for (String oc : annotationParser.getObjectClass()) {
+            query.addFilters(new Equal("objectClass", oc)); //$NON-NLS-1$
         }
-        
+
         return findBeans(query.toString());
     }
 
@@ -123,12 +120,15 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
      */
     public T findByPrimaryKey(Properties props) throws IllegalArgumentException {
         try {
-            return convertAttributesToObject(((LdapContext) contextSource.getContext().lookup(buildDn(props))).getAttributes(""));  //$NON-NLS-1$
+            LdapContext lookup = (LdapContext) contextSource.getContext().lookup(buildDn(props));
+            String[] atts = annotationParser.getMapping().values().toArray(new String[0]);
+            Attributes attributes = lookup.getAttributes("", atts);//$NON-NLS-1$
+            return convertAttributesToObject(attributes);
         } catch (Exception ex) {
             // InvalidNameException,NamingException
             logger.warn(ex);
         }
-        
+
         return null;
     }
 
@@ -138,19 +138,19 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
     public boolean updateBean(T object) {
         try {
             contextSource.getContext().rebind(buildDn(object), null, convertObjectToAttributes(object));
-            
+
             return true;
         } catch (Exception ex) {
-            //NamingException
+            // NamingException
             logger.warn(ex);
         }
-        
+
         return false;
     }
-    
+
     /**
      * na
-     *
+     * 
      * @param object
      * 
      * @return
@@ -165,17 +165,17 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
                 Class<?> fieldClass = annotationParser.getFieldType(field);
                 Object value = annotationParser.get(field, bean);
                 Attribute attribute = null;
-                
+
                 if (fieldClass.equals(BYTE_ARRAY_CLASS)) {
-                    attribute = new BasicAttribute(ldap+";binary", value); //$NON-NLS-1$
+                    attribute = new BasicAttribute(ldap + ";binary", value); //$NON-NLS-1$
                 } else {
                     if (fieldClass.equals(STRING_ARRAY_CLASS)) {
-                        if("objectClass".equals(ldap)) { //$NON-NLS-1$
+                        if ("objectClass".equals(ldap)) { //$NON-NLS-1$
                             value = annotationParser.getObjectClass();
                         }
-                        
+
                         attribute = new BasicAttribute(ldap);
-                        
+
                         for (String s : (String[]) value) {
                             attribute.add(s);
                         }
@@ -183,61 +183,63 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
                         attribute = new BasicAttribute(ldap, value);
                     }
                 }
-                
-                attributes.put(attribute); 
+
+                attributes.put(attribute);
             } catch (Exception ex) {
-                //NullPointerException,SecurityException,NoSuchFieldException
+                // NullPointerException,SecurityException,NoSuchFieldException
                 logger.warn(ex);
             }
         }
-        
+
         logger.debug(attributes);
-        
+
         return attributes;
     }
-    
+
     /**
      * na
-     *
+     * 
      * @param attributes
      * 
      * @return
      */
     private final T convertAttributesToObject(final Attributes attributes) {
         T bean = newBean();
-        
+
         for (final Object field0 : annotationParser.getMapping().keySet()) {
             try {
                 String field = field0.toString();
                 String ldap = annotationParser.getMapping(field);
                 Object value = null;
                 Class<?> fieldClass = annotationParser.getFieldType(field);
-                
+
                 if (fieldClass.equals(BYTE_ARRAY_CLASS)) {
                     value = attributes.get(ldap + ";binary").get(); //$NON-NLS-1$
                 } else {
-                    if (fieldClass.equals(STRING_ARRAY_CLASS)) {
-                        NamingEnumeration<?> enumm = attributes.get(ldap).getAll();
-                        ArrayList<String> vals = new ArrayList<String>();
-                        
-                        while(enumm.hasMore()) {
-                            vals.add( enumm.next().toString() );
+                    Attribute attributeValue = attributes.get(ldap);
+                    if (attributeValue != null)
+                        if (fieldClass.equals(STRING_ARRAY_CLASS)) {
+                            NamingEnumeration<?> enumm = attributeValue.getAll();
+                            ArrayList<String> vals = new ArrayList<String>();
+
+                            while (enumm.hasMore()) {
+                                vals.add(enumm.next().toString());
+                            }
+
+                            value = vals.toArray(new String[0]);
+                        } else {
+                            value = attributeValue.get();
                         }
-                        
-                        value = vals.toArray(new String[0]);
-                    } else {
-                        value = attributes.get(ldap).get();
-                    }
                 }
 
                 // zet veldwaarde object via reflection met autocasting
                 annotationParser.set(field, bean, value);
             } catch (Exception ex) {
-                //NamingException,NoSuchFieldException,SecurityException,NullPointerException
+                // NamingException,NoSuchFieldException,SecurityException,NullPointerException
                 logger.warn(ex);
             }
         }
-        
+
         return bean;
     }
 
@@ -251,10 +253,9 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
         return search(_base, query, controls);
     }
 
-	protected final List<T> search(String base, final String query,
-			final SearchControls controls) {
-		logger.debug("search(String, SearchControls) - start");  //$NON-NLS-1$
-		logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
+    protected final List<T> search(String base, final String query, final SearchControls controls) {
+        logger.debug("search(String, SearchControls) - start"); //$NON-NLS-1$
+        logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
 
         List<T> list = new ArrayList<T>();
 
@@ -266,18 +267,18 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
                 list.add(convertAttributesToObject(res.getAttributes()));
             }
         } catch (Exception ex) {
-            //NamingException
+            // NamingException
             logger.warn(ex);
         }
 
-        logger.debug("search(String, SearchControls) - end");  //$NON-NLS-1$
+        logger.debug("search(String, SearchControls) - end"); //$NON-NLS-1$
 
         return list;
-	}
+    }
 
     /**
      * gets contextSource
-     *
+     * 
      * @return Returns the contextSource.
      */
     public final ContextSource getContextSource() {
@@ -286,7 +287,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 
     /**
      * sets contextSource
-     *
+     * 
      * @param contextSource The contextSource to set.
      */
     public final void setContextSource(ContextSource contextSource) {

@@ -5,13 +5,11 @@ import junit.framework.TestCase;
 import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.interfaces.LdapDao;
 
-
 import java.util.Properties;
-
 
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class TestDao extends TestCase {
@@ -56,8 +54,7 @@ public class TestDao extends TestCase {
     }
 
     /**
-     * Main method for {@link
-     * org.jhaws.common.ldap.spring.AbstractSpringLdapDao#createBean(java.io.Serializable)}.
+     * Main method for {@link org.jhaws.common.ldap.spring.AbstractSpringLdapDao#createBean(java.io.Serializable)}.
      */
     public void _testCreateBean() {
         logger.debug("_testCreateBean() - start"); //$NON-NLS-1$
@@ -73,8 +70,7 @@ public class TestDao extends TestCase {
     }
 
     /**
-     * Main method for {@link
-     * org.jhaws.common.ldap.spring.AbstractSpringLdapDao#deleteBean(java.io.Serializable)}.
+     * Main method for {@link org.jhaws.common.ldap.spring.AbstractSpringLdapDao#deleteBean(java.io.Serializable)}.
      */
     public void _testDeleteBean() {
         logger.debug("_testDeleteBean() - start"); //$NON-NLS-1$
@@ -85,8 +81,7 @@ public class TestDao extends TestCase {
     }
 
     /**
-     * Main method for {@link
-     * org.jhaws.common.ldap.spring.AbstractSpringLdapDao#findAllBeans()}.
+     * Main method for {@link org.jhaws.common.ldap.spring.AbstractSpringLdapDao#findAllBeans()}.
      */
     public void _testFindAllBeans() {
         logger.debug("_testFindAllBeans() - start"); //$NON-NLS-1$
@@ -96,8 +91,7 @@ public class TestDao extends TestCase {
     }
 
     /**
-     * Main method for {@link
-     * org.jhaws.common.ldap.spring.AbstractSpringLdapDao#findBeansByExample(java.io.Serializable)}.
+     * Main method for {@link org.jhaws.common.ldap.spring.AbstractSpringLdapDao#findBeansByExample(java.io.Serializable)}.
      */
     public void _testFindBeansByExample() {
         logger.debug("_testFindBeansByExample() - start"); //$NON-NLS-1$
@@ -109,8 +103,7 @@ public class TestDao extends TestCase {
     }
 
     /**
-     * Main method for {@link
-     * org.jhaws.common.ldap.spring.AbstractSpringLdapDao#findByPrimaryKey(java.util.Properties)}.
+     * Main method for {@link org.jhaws.common.ldap.spring.AbstractSpringLdapDao#findByPrimaryKey(java.util.Properties)}.
      */
     public void _testFindByPrimaryKeyProperties() {
         logger.debug("_testFindByPrimaryKeyProperties() - start"); //$NON-NLS-1$
@@ -122,8 +115,7 @@ public class TestDao extends TestCase {
     }
 
     /**
-     * Main method for {@link
-     * org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#findByPrimaryKey(java.lang.String)}.
+     * Main method for {@link org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#findByPrimaryKey(java.lang.String)}.
      */
     public void _testFindByPrimaryKeyString() {
         logger.debug("_testFindByPrimaryKeyString() - start"); //$NON-NLS-1$
@@ -134,8 +126,7 @@ public class TestDao extends TestCase {
     }
 
     /**
-     * Main method for {@link
-     * org.jhaws.common.ldap.spring.AbstractSpringLdapDao#updateBean(java.io.Serializable)}.
+     * Main method for {@link org.jhaws.common.ldap.spring.AbstractSpringLdapDao#updateBean(java.io.Serializable)}.
      */
     public void _testUpdateBean() {
         logger.debug("_testUpdateBean() - start"); //$NON-NLS-1$

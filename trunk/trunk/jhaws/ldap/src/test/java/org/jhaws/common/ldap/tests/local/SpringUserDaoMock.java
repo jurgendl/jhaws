@@ -6,17 +6,16 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class SpringUserDaoMock extends SpringUserDao {
     /** serialVersionUID */
     private static final long serialVersionUID = 647009288639148718L;
 
-/**
+    /**
      * Creates a new SpringUserDaoMock object.
      */
     @SuppressWarnings("deprecation")

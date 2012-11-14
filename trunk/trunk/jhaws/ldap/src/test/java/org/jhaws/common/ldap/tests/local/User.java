@@ -8,13 +8,11 @@ import org.jhaws.common.ldap.annotations.LdapField;
 import org.jhaws.common.ldap.annotations.LdapKey;
 import org.jhaws.common.ldap.annotations.LdapKeyValue;
 
-
 import java.io.Serializable;
-
 
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 @LdapClass(objectClass = "person", dn = @LdapKeyValue(key = "ou", value = "users") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -50,7 +48,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor cn
-     *
+     * 
      * @param cn The cn to set.
      */
     public final void setCn(String cn) {
@@ -59,7 +57,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor cn
-     *
+     * 
      * @return Returns the cn.
      */
     public final String getCn() {
@@ -68,7 +66,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor description
-     *
+     * 
      * @param description The description to set.
      */
     public final void setDescription(String description) {
@@ -77,7 +75,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor description
-     *
+     * 
      * @return Returns the description.
      */
     public final String getDescription() {
@@ -86,7 +84,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor objectClass
-     *
+     * 
      * @param objectClass The objectClass to set.
      */
     public final void setObjectClass(String[] objectClass) {
@@ -95,7 +93,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor objectClass
-     *
+     * 
      * @return Returns the objectClass.
      */
     public final String[] getObjectClass() {
@@ -104,7 +102,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor reference
-     *
+     * 
      * @param seealso The reference to set.
      */
     public final void setReference(String seealso) {
@@ -113,7 +111,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor reference
-     *
+     * 
      * @return Returns the reference.
      */
     public final String getReference() {
@@ -122,7 +120,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor surname
-     *
+     * 
      * @param sn The surname to set.
      */
     public final void setSurname(String sn) {
@@ -131,7 +129,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor surname
-     *
+     * 
      * @return Returns the surname.
      */
     public final String getSurname() {
@@ -140,7 +138,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor telephoneNumber
-     *
+     * 
      * @param telephonenumber The telephoneNumber to set.
      */
     public final void setTelephoneNumber(String telephonenumber) {
@@ -149,7 +147,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor telephoneNumber
-     *
+     * 
      * @return Returns the telephoneNumber.
      */
     public final String getTelephoneNumber() {
@@ -170,7 +168,8 @@ public class User implements Serializable, Comparable<User> {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("description", this.description).append("surname", this.surname).append("telephoneNumber", this.telephoneNumber).append("reference", this.reference).append("cn", this.cn).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+        return new ToStringBuilder(this)
+                .append("description", this.description).append("surname", this.surname).append("telephoneNumber", this.telephoneNumber).append("reference", this.reference).append("cn", this.cn).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     }
 
     /**
@@ -185,7 +184,9 @@ public class User implements Serializable, Comparable<User> {
 
         User rhs = (User) object;
 
-        return new EqualsBuilder().appendSuper(super.equals(object)).append(this.cn, rhs.cn).append(this.description, rhs.description).append(this.telephoneNumber, rhs.telephoneNumber).append(this.surname, rhs.surname).append(this.objectClass, rhs.objectClass).append(this.reference, rhs.reference).isEquals();
+        return new EqualsBuilder().appendSuper(super.equals(object)).append(this.cn, rhs.cn).append(this.description, rhs.description)
+                .append(this.telephoneNumber, rhs.telephoneNumber).append(this.surname, rhs.surname).append(this.objectClass, rhs.objectClass)
+                .append(this.reference, rhs.reference).isEquals();
     }
 
     /**
@@ -194,6 +195,7 @@ public class User implements Serializable, Comparable<User> {
      */
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(-1529639275, 107903843).appendSuper(super.hashCode()).append(this.cn).append(this.description).append(this.telephoneNumber).append(this.surname).append(this.objectClass).append(this.reference).toHashCode();
+        return new HashCodeBuilder(-1529639275, 107903843).appendSuper(super.hashCode()).append(this.cn).append(this.description)
+                .append(this.telephoneNumber).append(this.surname).append(this.objectClass).append(this.reference).toHashCode();
     }
 }

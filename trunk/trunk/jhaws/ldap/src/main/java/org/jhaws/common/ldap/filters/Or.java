@@ -3,26 +3,25 @@ package org.jhaws.common.ldap.filters;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * filter1 OR filter2 OR filter3 ...
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class Or implements Filter {
     /** alle filters */
     private List<Filter> filters = new ArrayList<Filter>();
 
-/**
+    /**
      * Creates a new Or object.
      */
     public Or() {
         super();
     }
 
-/**
+    /**
      * Creates a new Or object.
-     *
+     * 
      * @param filters lijst van filters (1 of meer)
      */
     public Or(Filter... filters) {
@@ -35,7 +34,7 @@ public class Or implements Filter {
 
     /**
      * sets filters
-     *
+     * 
      * @param filters The filters to set.
      */
     public void setFilters(List<Filter> filters) {
@@ -44,7 +43,7 @@ public class Or implements Filter {
 
     /**
      * gets filters
-     *
+     * 
      * @return Returns the filters.
      */
     public List<Filter> getFilters() {
@@ -62,7 +61,7 @@ public class Or implements Filter {
 
     /**
      * verwijderd een filter uit de lijst
-     *
+     * 
      * @param filter Filter
      */
     public void removeFilter(Filter filter) {
@@ -71,7 +70,7 @@ public class Or implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

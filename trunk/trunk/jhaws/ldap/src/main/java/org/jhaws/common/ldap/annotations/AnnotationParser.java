@@ -3,7 +3,6 @@ package org.jhaws.common.ldap.annotations;
 import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.interfaces.KeyValue;
 
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,11 +18,9 @@ import java.util.SortedMap;
 import java.util.Stack;
 import java.util.TreeMap;
 
-
 /**
- * collects ldap mapping information from annotated class and it's
- * superclasses
- *
+ * collects ldap mapping information from annotated class and it's superclasses
+ * 
  * @author Jurgen De Landsheer
  */
 public final class AnnotationParser {
@@ -33,7 +30,7 @@ public final class AnnotationParser {
     /** base dn, bv ou=people, addBasePart("ou","people"), ordered */
     private final ArrayList<KeyValue> baseName = new ArrayList<KeyValue>();
 
-    /** key, bv ugentId  (key is fields name in class), ordered */
+    /** key, bv ugentId (key is fields name in class), ordered */
     private final ArrayList<String> keyParts = new ArrayList<String>();
 
     /** class type of fields (key is fields name in class), unique */
@@ -51,17 +48,15 @@ public final class AnnotationParser {
     /** objectClass in ldap */
     private final Set<String> objectClass = new HashSet<String>();
 
-/**
+    /**
      * Creates a new AnnotationParser object.
-     *
+     * 
      * @param pojoClass type pojoclass
-     *
+     * 
      * @throws IllegalArgumentException "class /Class/ does not have the annotation LdapClass present"
      * @throws IllegalArgumentException "class /Class/: ldap annotation: key index incorrect"
      * @throws IllegalArgumentException "no keys found"
-     * @throws IllegalArgumentException "getter/setter method
-     *         getterMethodName/setterMethodName for field (field) not
-     *         accessible/found"
+     * @throws IllegalArgumentException "getter/setter method getterMethodName/setterMethodName for field (field) not accessible/found"
      * @throws IllegalArgumentException "no return type found for getter method"
      */
     public AnnotationParser(final Class<?> pojoClass) {
@@ -73,8 +68,10 @@ public final class AnnotationParser {
 
         while (currentClass != null) {
             logger.debug("AnnotationParser(Class<?>) - Class<?> currentClass=" + currentClass); //$NON-NLS-1$
-                                                                                                //currentClass = initStep2(superclass of currentClass, stack)
-                                                                                                //null when currentClass not inherited or currentClass.superclass not an LdapClass
+                                                                                                // currentClass = initStep2(superclass of
+                                                                                                // currentClass, stack)
+                                                                                                // null when currentClass not inherited or
+                                                                                                // currentClass.superclass not an LdapClass
 
             currentClass = initStep2(currentClass, informationStack);
         }
@@ -90,7 +87,7 @@ public final class AnnotationParser {
 
     /**
      * gets baseName
-     *
+     * 
      * @return Returns the baseName.
      */
     public ArrayList<KeyValue> getBaseNameList() {
@@ -99,9 +96,9 @@ public final class AnnotationParser {
 
     /**
      * geeft class type terug van field met meegegeven naam van class T
-     *
+     * 
      * @param field fieldname
-     *
+     * 
      * @return class type
      */
     public Class<?> getFieldType(final String field) {
@@ -110,11 +107,11 @@ public final class AnnotationParser {
 
     /**
      * get class fieldname voor ldap fieldname
-     *
+     * 
      * @param key class fieldname
-     *
+     * 
      * @return ldap fieldname; null when not found
-     *
+     * 
      * @see #getMapping()
      */
     public String getInverseMapping(final String key) {
@@ -134,7 +131,7 @@ public final class AnnotationParser {
 
     /**
      * gets keyParts
-     *
+     * 
      * @return Returns the keyParts.
      */
     public ArrayList<String> getKeyParts() {
@@ -143,7 +140,7 @@ public final class AnnotationParser {
 
     /**
      * gets mapping
-     *
+     * 
      * @return Returns the mapping.
      */
     public Properties getMapping() {
@@ -152,11 +149,11 @@ public final class AnnotationParser {
 
     /**
      * gets ldap fieldname voor class fieldname
-     *
+     * 
      * @param key ldap fieldname
-     *
+     * 
      * @return class fieldname; null when not found
-     *
+     * 
      * @see #getMapping()
      */
     public String getMapping(final String key) {
@@ -165,7 +162,7 @@ public final class AnnotationParser {
 
     /**
      * gets objectClass
-     *
+     * 
      * @return Returns the objectClass.
      */
     public String[] getObjectClass() {
@@ -180,12 +177,12 @@ public final class AnnotationParser {
 
     /**
      * invoke getter via class field name
-     *
+     * 
      * @param field class field name
      * @param bean object
-     *
+     * 
      * @return value
-     *
+     * 
      * @throws IllegalArgumentException "getter not invokable"
      */
     public Object get(String field, Object bean) {
@@ -202,10 +199,10 @@ public final class AnnotationParser {
 
     /**
      * invoke getter via class field name
-     *
+     * 
      * @param ldapfield class field name
      * @param bean object
-     *
+     * 
      * @return value
      */
     public Object lget(final String ldapfield, final Object bean) {
@@ -214,7 +211,7 @@ public final class AnnotationParser {
 
     /**
      * invoke setter via ldap field name
-     *
+     * 
      * @param ldapfield ldap field name
      * @param bean object
      * @param value value
@@ -225,11 +222,11 @@ public final class AnnotationParser {
 
     /**
      * invoke setter via ldap field name
-     *
+     * 
      * @param field ldap field name
      * @param bean object
      * @param value value
-     *
+     * 
      * @throws IllegalArgumentException "setter not invokable"
      */
     public void set(final String field, final Object bean, final Object value) {
@@ -246,14 +243,13 @@ public final class AnnotationParser {
 
     /**
      * see inside for info
-     *
+     * 
      * @param field NA
      * @param ldapName NA
      * @param superPojoClass NA
-     *
-     * @throws IllegalArgumentException "getter/setter method
-     *         getterMethodName/setterMethodName for field (field) not
-     *         accessible/found"; "no return type found for getter method"
+     * 
+     * @throws IllegalArgumentException "getter/setter method getterMethodName/setterMethodName for field (field) not accessible/found"; "no return
+     *             type found for getter method"
      */
     private void addMapping(final String field, final String ldapName, final Class<?> superPojoClass) {
         String getterMethodName = "get" + Character.toUpperCase(field.charAt(0)) + field.substring(1); //$NON-NLS-1$
@@ -284,9 +280,7 @@ public final class AnnotationParser {
         Method setterMethod = null;
 
         try {
-            setterMethod = superPojoClass.getMethod(setterMethodName, new Class[] {
-                        returns
-                    });
+            setterMethod = superPojoClass.getMethod(setterMethodName, new Class[] { returns });
         } catch (SecurityException ex) {
             logger.error(ex, ex);
             throw new IllegalArgumentException("setter method " + setterMethodName + " for field " + field + " not accessible"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -303,22 +297,23 @@ public final class AnnotationParser {
 
     /**
      * see inside for info
-     *
+     * 
      * @param pojoClass NA
-     *
+     * 
      * @return NA
      */
     private Stack<Class<?>> initStep1(final Class<?> pojoClass) {
         logger.debug("initStep1(Class<?>) - start"); //$NON-NLS-1$
         logger.debug("initStep1(Class<?>) - Class<?> pojoClass=" + pojoClass); //$NON-NLS-1$
 
-        //gets LdapClass annotation for current class
+        // gets LdapClass annotation for current class
         LdapClass classAnnotation = pojoClass.getAnnotation(LdapClass.class);
         logger.debug("initStep1(Class<?>) - LdapClass classAnnotation=" + classAnnotation); //$NON-NLS-1$
 
         // annotation not found; throw exception
         if (classAnnotation == null) {
-            IllegalArgumentException ex = new IllegalArgumentException("class " + pojoClass.getName() + " does not have the annotation LdapClass present"); //$NON-NLS-1$ //$NON-NLS-2$
+            IllegalArgumentException ex = new IllegalArgumentException(
+                    "class " + pojoClass.getName() + " does not have the annotation LdapClass present"); //$NON-NLS-1$ //$NON-NLS-2$
             logger.error(ex, ex);
             throw ex;
         }
@@ -334,10 +329,10 @@ public final class AnnotationParser {
 
     /**
      * see inside for info
-     *
+     * 
      * @param currentInspectedClass NA
      * @param informationStack NA
-     *
+     * 
      * @return NA
      */
     private Class<?> initStep2(final Class<?> currentInspectedClass, final Stack<Class<?>> informationStack) {
@@ -380,7 +375,7 @@ public final class AnnotationParser {
 
     /**
      * see inside for info
-     *
+     * 
      * @param currentClass NA
      * @param pojoClass NA
      */
@@ -437,16 +432,16 @@ public final class AnnotationParser {
             // check for LdapField or auto
             LdapField ldapField = field.getAnnotation(LdapField.class);
 
-            //ldapField == null
+            // ldapField == null
             // --> auto == true
-            //      --> fieldName
+            // --> fieldName
             // --> auto == false
-            //     --> null
-            //ldapField != null
+            // --> null
+            // ldapField != null
             // --> ldapField.value().equals("") == true
-            //     --> fieldName
+            // --> fieldName
             // --> ldapField.value().equals("") == false
-            //     --> ldapField.value()
+            // --> ldapField.value()
             String ldapName = (ldapField == null) ? (auto ? fieldName : null) : (ldapField.value().equals("") ? fieldName : ldapField.value()); //$NON-NLS-1$
             logger.debug("initStep3(Class<?>) - String ldapName=" + ldapName); //$NON-NLS-1$
 
@@ -465,7 +460,8 @@ public final class AnnotationParser {
             logger.debug("initStep3(Class<?>) - last=" + last + ", index=" + index); //$NON-NLS-1$ //$NON-NLS-2$
 
             if (last >= index) {
-                IllegalArgumentException ex = new IllegalArgumentException("class " + currentClass.getName() + ": ldap annotation: key index incorrect"); //$NON-NLS-1$ //$NON-NLS-2$
+                IllegalArgumentException ex = new IllegalArgumentException(
+                        "class " + currentClass.getName() + ": ldap annotation: key index incorrect"); //$NON-NLS-1$ //$NON-NLS-2$
                 logger.error(ex, ex);
                 throw ex;
             }
