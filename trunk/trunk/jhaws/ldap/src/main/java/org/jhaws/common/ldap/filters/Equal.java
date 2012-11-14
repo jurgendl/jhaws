@@ -30,8 +30,8 @@ public class Equal implements Filter {
      */
     public Equal(String key, String value) {
         super();
-        setKey(key);
-        setValue(value);
+        this.setKey(key);
+        this.setValue(value);
     }
 
     /**
@@ -40,7 +40,25 @@ public class Equal implements Filter {
      * @return Returns the key.
      */
     public String getKey() {
-        return key;
+        return this.key;
+    }
+
+    /**
+     * gets value
+     * 
+     * @return Returns the value.
+     */
+    public String getValue() {
+        return this.value;
+    }
+
+    /**
+     * gets negate
+     * 
+     * @return Returns the negate.
+     */
+    public boolean isNegate() {
+        return this.negate;
     }
 
     /**
@@ -53,12 +71,12 @@ public class Equal implements Filter {
     }
 
     /**
-     * gets value
+     * sets negate
      * 
-     * @return Returns the value.
+     * @param negate The negate to set.
      */
-    public String getValue() {
-        return value;
+    public void setNegate(boolean negate) {
+        this.negate = negate;
     }
 
     /**
@@ -77,24 +95,6 @@ public class Equal implements Filter {
      */
     @Override
     public String toString() {
-        return negate ? ("(!" + key + "=" + value + ")") : ("(" + key + "=" + value + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-    }
-
-    /**
-     * gets negate
-     * 
-     * @return Returns the negate.
-     */
-    public boolean isNegate() {
-        return negate;
-    }
-
-    /**
-     * sets negate
-     * 
-     * @param negate The negate to set.
-     */
-    public void setNegate(boolean negate) {
-        this.negate = negate;
+        return this.negate ? ("(!" + this.key + "=" + this.value + ")") : ("(" + this.key + "=" + this.value + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     }
 }

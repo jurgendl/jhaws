@@ -1,5 +1,23 @@
 package org.jhaws.common.ldap.tests;
 
+import java.net.URI;
+import java.security.Security;
+import java.security.cert.CertPath;
+import java.security.cert.CertPathValidator;
+import java.security.cert.CertPathValidatorException;
+import java.security.cert.CertStore;
+import java.security.cert.CertStoreParameters;
+import java.security.cert.CertificateFactory;
+import java.security.cert.CollectionCertStoreParameters;
+import java.security.cert.PKIXCertPathValidatorResult;
+import java.security.cert.PKIXParameters;
+import java.security.cert.TrustAnchor;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPublicKey;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
+
 import org.jhaws.common.ldap.tests.dao.CADao;
 import org.jhaws.common.ldap.tests.dao.CADao0;
 import org.jhaws.common.ldap.tests.dao.PersoonDao;
@@ -14,26 +32,6 @@ import org.jhaws.common.ldap.tests.pojo.Person;
 import org.jhaws.common.ldap.tests.pojo.Root;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.net.URI;
-
-import java.security.Security;
-import java.security.cert.CertPath;
-import java.security.cert.CertPathValidator;
-import java.security.cert.CertPathValidatorException;
-import java.security.cert.CertStore;
-import java.security.cert.CertStoreParameters;
-import java.security.cert.CertificateFactory;
-import java.security.cert.CollectionCertStoreParameters;
-import java.security.cert.PKIXCertPathValidatorResult;
-import java.security.cert.PKIXParameters;
-import java.security.cert.TrustAnchor;
-import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPublicKey;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
-
 /**
  * test ldap
  * 
@@ -42,8 +40,6 @@ import java.util.Vector;
 public class Test {
     /**
      * TESTING
-     * 
-     * @param args TESTING
      */
     @SuppressWarnings("unused")
     public static void main(final String[] args) {
@@ -88,7 +84,7 @@ public class Test {
             X509Certificate cert = null;
             X509Certificate ROOT_CA_CERT = null;
             X509Certificate OCSP_SERVER_CERT = null;
-            System.out.println("validate:" + validate(cert, ROOT_CA_CERT, OCSP_SERVER_CERT));
+            System.out.println("validate:" + Test.validate(cert, ROOT_CA_CERT, OCSP_SERVER_CERT));
 
             Person p = pdao1.findByPrimaryKey("1003059162");
             p.print();

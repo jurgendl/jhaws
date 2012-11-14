@@ -1,20 +1,17 @@
 package org.jhaws.common.ldap.tests.pojo;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.jhaws.common.ldap.annotations.LdapClass;
-import org.jhaws.common.ldap.annotations.LdapKey;
-
 import java.io.IOException;
 import java.io.Serializable;
-
 import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.jhaws.common.ldap.annotations.LdapClass;
+import org.jhaws.common.ldap.annotations.LdapKey;
+
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 @LdapClass(autoFields = true)
@@ -46,6 +43,15 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(CA o) {
+        return this.ou.compareTo(o.ou);
+    }
+
+    /**
      * na
      * 
      * @return
@@ -53,16 +59,7 @@ public class CA implements Serializable, Comparable<CA> {
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
-        return (X509Certificate) Cert.certificate(getUserCertificate());
-    }
-
-    /**
-     * Setter voor certificateRevocationList
-     * 
-     * @param certificateRevocationList The certificateRevocationList to set.
-     */
-    public void setCertificateRevocationList(byte[] certificateRevocationList) {
-        this.certificateRevocationList = certificateRevocationList;
+        return (X509Certificate) Cert.certificate(this.getUserCertificate());
     }
 
     /**
@@ -84,7 +81,7 @@ public class CA implements Serializable, Comparable<CA> {
      * @throws IOException na
      */
     public X509CRL getCrl() throws CertificateException, CRLException, IOException {
-        return Cert.crl(getCertificateRevocationList());
+        return Cert.crl(this.getCertificateRevocationList());
     }
 
     /**
@@ -97,16 +94,7 @@ public class CA implements Serializable, Comparable<CA> {
      * @throws IOException na
      */
     public X509CRL getDeltaCrl() throws CertificateException, CRLException, IOException {
-        return Cert.crl(getDeltaRevocationList());
-    }
-
-    /**
-     * Setter voor deltaRevocationList
-     * 
-     * @param deltaRevocationList The deltaRevocationList to set.
-     */
-    public void setDeltaRevocationList(byte[] deltaRevocationList) {
-        this.deltaRevocationList = deltaRevocationList;
+        return Cert.crl(this.getDeltaRevocationList());
     }
 
     /**
@@ -119,30 +107,12 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
-     * Setter voor objectClass
-     * 
-     * @param objectClass The objectClass to set.
-     */
-    public void setObjectClass(String[] objectClass) {
-        this.objectClass = objectClass;
-    }
-
-    /**
      * Getter voor objectClass
      * 
      * @return Returns the objectClass.
      */
     public String[] getObjectClass() {
         return this.objectClass;
-    }
-
-    /**
-     * Setter voor ou
-     * 
-     * @param ou The ou to set.
-     */
-    public void setOu(String ou) {
-        this.ou = ou;
     }
 
     /**
@@ -155,15 +125,6 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
-     * Setter voor userCertificate
-     * 
-     * @param userCertificate The userCertificate to set.
-     */
-    public void setUserCertificate(byte[] userCertificate) {
-        this.userCertificate = userCertificate;
-    }
-
-    /**
      * Getter voor userCertificate
      * 
      * @return Returns the userCertificate.
@@ -173,27 +134,19 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(CA o) {
-        return this.ou.compareTo(o.ou);
-    }
-
-    /**
      * na
      */
     public void print() {
         System.out.println(this);
 
         try {
-            System.out.println(getCertificate());
+            System.out.println(this.getCertificate());
         } catch (CertificateException ex) {
             ex.printStackTrace();
         }
 
         try {
-            System.out.println(getCrl());
+            System.out.println(this.getCrl());
         } catch (CertificateException ex) {
             ex.printStackTrace();
         } catch (CRLException ex) {
@@ -203,7 +156,7 @@ public class CA implements Serializable, Comparable<CA> {
         }
 
         try {
-            System.out.println(getDeltaCrl());
+            System.out.println(this.getDeltaCrl());
         } catch (CertificateException ex) {
             ex.printStackTrace();
         } catch (CRLException ex) {
@@ -211,6 +164,51 @@ public class CA implements Serializable, Comparable<CA> {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Setter voor certificateRevocationList
+     * 
+     * @param certificateRevocationList The certificateRevocationList to set.
+     */
+    public void setCertificateRevocationList(byte[] certificateRevocationList) {
+        this.certificateRevocationList = certificateRevocationList;
+    }
+
+    /**
+     * Setter voor deltaRevocationList
+     * 
+     * @param deltaRevocationList The deltaRevocationList to set.
+     */
+    public void setDeltaRevocationList(byte[] deltaRevocationList) {
+        this.deltaRevocationList = deltaRevocationList;
+    }
+
+    /**
+     * Setter voor objectClass
+     * 
+     * @param objectClass The objectClass to set.
+     */
+    public void setObjectClass(String[] objectClass) {
+        this.objectClass = objectClass;
+    }
+
+    /**
+     * Setter voor ou
+     * 
+     * @param ou The ou to set.
+     */
+    public void setOu(String ou) {
+        this.ou = ou;
+    }
+
+    /**
+     * Setter voor userCertificate
+     * 
+     * @param userCertificate The userCertificate to set.
+     */
+    public void setUserCertificate(byte[] userCertificate) {
+        this.userCertificate = userCertificate;
     }
 
     /**

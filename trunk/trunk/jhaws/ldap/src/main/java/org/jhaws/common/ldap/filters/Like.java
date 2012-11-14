@@ -24,18 +24,8 @@ public class Like implements Filter {
      */
     public Like(String key, String value) {
         super();
-        setKey(key);
-        setValue(value);
-    }
-
-    /**
-     * wordt gebruikt om filter op te bouwen
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "(" + key + "=*" + value + "*)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        this.setKey(key);
+        this.setValue(value);
     }
 
     /**
@@ -44,7 +34,16 @@ public class Like implements Filter {
      * @return Returns the key.
      */
     public String getKey() {
-        return key;
+        return this.key;
+    }
+
+    /**
+     * gets value
+     * 
+     * @return Returns the value.
+     */
+    public String getValue() {
+        return this.value;
     }
 
     /**
@@ -57,20 +56,21 @@ public class Like implements Filter {
     }
 
     /**
-     * gets value
-     * 
-     * @return Returns the value.
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
      * sets value
      * 
      * @param value The value to set.
      */
     public void setValue(String value) {
         this.value = value;
+    }
+
+    /**
+     * wordt gebruikt om filter op te bouwen
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "(" + this.key + "=*" + this.value + "*)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }

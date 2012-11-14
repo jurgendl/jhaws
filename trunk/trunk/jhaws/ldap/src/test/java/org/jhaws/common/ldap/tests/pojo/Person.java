@@ -1,17 +1,14 @@
 package org.jhaws.common.ldap.tests.pojo;
 
+import java.io.Serializable;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jhaws.common.ldap.annotations.LdapClass;
 import org.jhaws.common.ldap.annotations.LdapKey;
 
-import java.io.Serializable;
-
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 @LdapClass(autoFields = true, objectClass = "person")
@@ -52,12 +49,12 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     * Setter voor c
      * 
-     * @param c The c to set.
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
-    public void setC(String c) {
-        this.c = c;
+    @Override
+    public int compareTo(Person o) {
+        return this.uid.compareTo(o.uid);
     }
 
     /**
@@ -77,16 +74,7 @@ public class Person implements Serializable, Comparable<Person> {
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
-        return (X509Certificate) Cert.certificate(getUserCertificate());
-    }
-
-    /**
-     * Setter voor cn
-     * 
-     * @param cn The cn to set.
-     */
-    public void setCn(String cn) {
-        this.cn = cn;
+        return (X509Certificate) Cert.certificate(this.getUserCertificate());
     }
 
     /**
@@ -99,30 +87,12 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     * Setter voor givenName
-     * 
-     * @param givenName The givenName to set.
-     */
-    public void setGivenName(String givenName) {
-        this.givenName = givenName;
-    }
-
-    /**
      * Getter voor givenName
      * 
      * @return Returns the givenName.
      */
     public String getGivenName() {
         return this.givenName;
-    }
-
-    /**
-     * Setter voor objectClass
-     * 
-     * @param objectClass The objectClass to set.
-     */
-    public void setObjectClass(String[] objectClass) {
-        this.objectClass = objectClass;
     }
 
     /**
@@ -135,30 +105,12 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     * Setter voor serialNumber
-     * 
-     * @param serialNumber The serialNumber to set.
-     */
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    /**
      * Getter voor serialNumber
      * 
      * @return Returns the serialNumber.
      */
     public String getSerialNumber() {
         return this.serialNumber;
-    }
-
-    /**
-     * Setter voor sn
-     * 
-     * @param sn The sn to set.
-     */
-    public void setSn(String sn) {
-        this.sn = sn;
     }
 
     /**
@@ -171,30 +123,12 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     * Setter voor uid
-     * 
-     * @param uid The uid to set.
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    /**
      * Getter voor uid
      * 
      * @return Returns the uid.
      */
     public String getUid() {
         return this.uid;
-    }
-
-    /**
-     * Setter voor userCertificate
-     * 
-     * @param userCertificate The userCertificate to set.
-     */
-    public void setUserCertificate(byte[] userCertificate) {
-        this.userCertificate = userCertificate;
     }
 
     /**
@@ -207,24 +141,88 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(Person o) {
-        return this.uid.compareTo(o.uid);
-    }
-
-    /**
      * na
      */
     public void print() {
         System.out.println(this);
 
         try {
-            System.out.println(getCertificate());
+            System.out.println(this.getCertificate());
         } catch (CertificateException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Setter voor c
+     * 
+     * @param c The c to set.
+     */
+    public void setC(String c) {
+        this.c = c;
+    }
+
+    /**
+     * Setter voor cn
+     * 
+     * @param cn The cn to set.
+     */
+    public void setCn(String cn) {
+        this.cn = cn;
+    }
+
+    /**
+     * Setter voor givenName
+     * 
+     * @param givenName The givenName to set.
+     */
+    public void setGivenName(String givenName) {
+        this.givenName = givenName;
+    }
+
+    /**
+     * Setter voor objectClass
+     * 
+     * @param objectClass The objectClass to set.
+     */
+    public void setObjectClass(String[] objectClass) {
+        this.objectClass = objectClass;
+    }
+
+    /**
+     * Setter voor serialNumber
+     * 
+     * @param serialNumber The serialNumber to set.
+     */
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    /**
+     * Setter voor sn
+     * 
+     * @param sn The sn to set.
+     */
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
+
+    /**
+     * Setter voor uid
+     * 
+     * @param uid The uid to set.
+     */
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    /**
+     * Setter voor userCertificate
+     * 
+     * @param userCertificate The userCertificate to set.
+     */
+    public void setUserCertificate(byte[] userCertificate) {
+        this.userCertificate = userCertificate;
     }
 
     /**
@@ -234,6 +232,6 @@ public class Person implements Serializable, Comparable<Person> {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("c", this.c).append("uid", this.uid).append("sn", this.sn).append("serialNumber", this.serialNumber).append("givenName", this.givenName).append("cn", this.cn).append("userCertificate", (userCertificate != null) && (userCertificate.length > 0)).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+                .append("c", this.c).append("uid", this.uid).append("sn", this.sn).append("serialNumber", this.serialNumber).append("givenName", this.givenName).append("cn", this.cn).append("userCertificate", (this.userCertificate != null) && (this.userCertificate.length > 0)).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     }
 }

@@ -5,13 +5,22 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
 /**
- * copy {@link util.classes.generics.JGenerics}
- * 
  * @author Jurgen De landsheer
  * 
  * @see util.classes.generics.JGenerics
  */
 public class JGenerics {
+    /**
+     * NA
+     * 
+     * @param o NA
+     * 
+     * @return NA
+     */
+    public static Class<?> findImplementation(Object o) {
+        return JGenerics.findImplementation(o, 0);
+    }
+
     /**
      * NA
      * 
@@ -26,7 +35,7 @@ public class JGenerics {
         Class<?> clazz = o.getClass();
 
         while (clazz.getSuperclass() != null) {
-            Class<?> pojoClass = findImplementationForClass(clazz, tvarindex);
+            Class<?> pojoClass = JGenerics.findImplementationForClass(clazz, tvarindex);
 
             if (null != pojoClass) {
                 return pojoClass;
@@ -41,23 +50,12 @@ public class JGenerics {
     /**
      * NA
      * 
-     * @param o NA
-     * 
-     * @return NA
-     */
-    public static Class<?> findImplementation(Object o) {
-        return findImplementation(o, 0);
-    }
-
-    /**
-     * NA
-     * 
      * @param clazz NA
      * 
      * @return NA
      */
     public static Class<?> findImplementationForClass(Class<?> clazz) {
-        return findImplementationForClass(clazz, 0);
+        return JGenerics.findImplementationForClass(clazz, 0);
     }
 
     /**

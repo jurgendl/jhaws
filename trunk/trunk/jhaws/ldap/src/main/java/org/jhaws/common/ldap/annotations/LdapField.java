@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface LdapField {
     /**
-     * 
      * fieldname or same as class property when not set
      * 
      * @return fieldname

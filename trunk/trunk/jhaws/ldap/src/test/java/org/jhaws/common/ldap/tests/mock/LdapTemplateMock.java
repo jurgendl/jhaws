@@ -1,14 +1,12 @@
 package org.jhaws.common.ldap.tests.mock;
 
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
+
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 public class LdapTemplateMock {
@@ -42,6 +40,6 @@ public class LdapTemplateMock {
      * @return
      */
     public static LdapTemplate singleton() {
-        return singleton;
+        return LdapTemplateMock.singleton;
     }
 }

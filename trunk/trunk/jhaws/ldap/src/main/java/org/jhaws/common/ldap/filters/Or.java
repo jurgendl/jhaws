@@ -33,24 +33,6 @@ public class Or implements Filter {
     }
 
     /**
-     * sets filters
-     * 
-     * @param filters The filters to set.
-     */
-    public void setFilters(List<Filter> filters) {
-        this.filters = filters;
-    }
-
-    /**
-     * gets filters
-     * 
-     * @return Returns the filters.
-     */
-    public List<Filter> getFilters() {
-        return filters;
-    }
-
-    /**
      * voeg filters toe aan de lijst
      */
     public void addFilters(Filter... filtersToAdd) {
@@ -60,12 +42,30 @@ public class Or implements Filter {
     }
 
     /**
+     * gets filters
+     * 
+     * @return Returns the filters.
+     */
+    public List<Filter> getFilters() {
+        return this.filters;
+    }
+
+    /**
      * verwijderd een filter uit de lijst
      * 
      * @param filter Filter
      */
     public void removeFilter(Filter filter) {
-        filters.remove(filter);
+        this.filters.remove(filter);
+    }
+
+    /**
+     * sets filters
+     * 
+     * @param filters The filters to set.
+     */
+    public void setFilters(List<Filter> filters) {
+        this.filters = filters;
     }
 
     /**
@@ -75,15 +75,15 @@ public class Or implements Filter {
      */
     @Override
     public String toString() {
-        if (filters.size() == 1) {
-            return filters.iterator().next().toString();
+        if (this.filters.size() == 1) {
+            return this.filters.iterator().next().toString();
         }
 
         StringBuilder sb = new StringBuilder(10);
 
         sb.append("(|"); //$NON-NLS-1$
 
-        for (Filter f : filters) {
+        for (Filter f : this.filters) {
             sb.append(f.toString());
         }
 

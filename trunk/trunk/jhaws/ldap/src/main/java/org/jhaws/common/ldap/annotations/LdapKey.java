@@ -17,17 +17,16 @@ import java.lang.annotation.Target;
 public @interface LdapKey {
     /**
      * 
-     * fieldname or same as class property when not set
-     * 
-     * @return fieldname
-     */
-    String value() default "";
-
-    /**
-     * 
      * key order index, default 0
      * 
      * @return index
      */
     int index() default 0;
+
+    /**
+     * fieldname or same as class property when not set
+     * 
+     * @return fieldname
+     */
+    String value() default "";
 }

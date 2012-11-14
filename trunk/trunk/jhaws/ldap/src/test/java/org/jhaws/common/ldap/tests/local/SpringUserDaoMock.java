@@ -1,14 +1,12 @@
 package org.jhaws.common.ldap.tests.local;
 
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.ldap.core.support.LdapContextSource;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.ldap.core.support.LdapContextSource;
+
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 public class SpringUserDaoMock extends SpringUserDao {
@@ -36,6 +34,6 @@ public class SpringUserDaoMock extends SpringUserDao {
             ex.printStackTrace();
         }
 
-        setLdapOperations(new LdapTemplate(contextSource));
+        this.setLdapOperations(new LdapTemplate(contextSource));
     }
 }

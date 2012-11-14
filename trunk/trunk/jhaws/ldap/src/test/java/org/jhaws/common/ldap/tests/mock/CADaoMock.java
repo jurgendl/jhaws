@@ -3,8 +3,6 @@ package org.jhaws.common.ldap.tests.mock;
 import org.jhaws.common.ldap.tests.dao.CADao;
 
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 public class CADaoMock extends CADao {
@@ -17,6 +15,6 @@ public class CADaoMock extends CADao {
      * @param b na
      */
     public CADaoMock() {
-        setLdapOperations(LdapTemplateMock.singleton());
+        this.setLdapOperations(LdapTemplateMock.singleton());
     }
 }

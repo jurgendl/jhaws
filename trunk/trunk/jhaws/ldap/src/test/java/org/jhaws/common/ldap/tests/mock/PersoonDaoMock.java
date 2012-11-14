@@ -3,8 +3,6 @@ package org.jhaws.common.ldap.tests.mock;
 import org.jhaws.common.ldap.tests.dao.PersoonDao;
 
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 public class PersoonDaoMock extends PersoonDao {
@@ -17,6 +15,6 @@ public class PersoonDaoMock extends PersoonDao {
      * @param b
      */
     public PersoonDaoMock() {
-        setLdapOperations(LdapTemplateMock.singleton());
+        this.setLdapOperations(LdapTemplateMock.singleton());
     }
 }
