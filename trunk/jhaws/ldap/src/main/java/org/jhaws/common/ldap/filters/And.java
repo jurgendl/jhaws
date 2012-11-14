@@ -33,31 +33,12 @@ public class And implements Filter {
     }
 
     /**
-     * verwijderd een filter uit de lijst
-     * 
-     * @param filter Filter
+     * voeg filters toe aan de lijst
      */
-    public void removeFilter(Filter filter) {
-        filters.remove(filter);
-    }
-
-    /**
-     * wordt gebruikt om filter op te bouwen
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(10);
-        sb.append("(&"); //$NON-NLS-1$
-
-        for (Filter f : filters) {
-            sb.append(f.toString());
+    public void addFilters(Filter... filtersToAdd) {
+        for (Filter f : filtersToAdd) {
+            this.filters.add(f);
         }
-
-        sb.append(")"); //$NON-NLS-1$
-
-        return sb.toString();
     }
 
     /**
@@ -66,7 +47,16 @@ public class And implements Filter {
      * @return Returns the filters.
      */
     public List<Filter> getFilters() {
-        return filters;
+        return this.filters;
+    }
+
+    /**
+     * verwijderd een filter uit de lijst
+     * 
+     * @param filter Filter
+     */
+    public void removeFilter(Filter filter) {
+        this.filters.remove(filter);
     }
 
     /**
@@ -79,11 +69,21 @@ public class And implements Filter {
     }
 
     /**
-     * voeg filters toe aan de lijst
+     * wordt gebruikt om filter op te bouwen
+     * 
+     * @see java.lang.Object#toString()
      */
-    public void addFilters(Filter... filtersToAdd) {
-        for (Filter f : filtersToAdd) {
-            this.filters.add(f);
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(10);
+        sb.append("(&"); //$NON-NLS-1$
+
+        for (Filter f : this.filters) {
+            sb.append(f.toString());
         }
+
+        sb.append(")"); //$NON-NLS-1$
+
+        return sb.toString();
     }
 }

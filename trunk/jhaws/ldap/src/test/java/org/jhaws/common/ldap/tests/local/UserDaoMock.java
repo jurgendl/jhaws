@@ -5,8 +5,6 @@ import java.util.Properties;
 import org.jhaws.common.ldap.standalone.ContextSource;
 
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 public class UserDaoMock extends UserDao {
@@ -30,6 +28,6 @@ public class UserDaoMock extends UserDao {
         contextSource.setPassword("secret"); //$NON-NLS-1$
 
         contextSource.init();
-        setContextSource(contextSource);
+        this.setContextSource(contextSource);
     }
 }

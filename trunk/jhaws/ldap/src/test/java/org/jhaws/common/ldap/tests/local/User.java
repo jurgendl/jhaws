@@ -1,5 +1,7 @@
 package org.jhaws.common.ldap.tests.local;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -8,11 +10,7 @@ import org.jhaws.common.ldap.annotations.LdapField;
 import org.jhaws.common.ldap.annotations.LdapKey;
 import org.jhaws.common.ldap.annotations.LdapKeyValue;
 
-import java.io.Serializable;
-
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 @LdapClass(objectClass = "person", dn = @LdapKeyValue(key = "ou", value = "users") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -47,129 +45,12 @@ public class User implements Serializable, Comparable<User> {
     private String[] objectClass;
 
     /**
-     * Setter voor cn
-     * 
-     * @param cn The cn to set.
-     */
-    public final void setCn(String cn) {
-        this.cn = cn;
-    }
-
-    /**
-     * Getter voor cn
-     * 
-     * @return Returns the cn.
-     */
-    public final String getCn() {
-        return this.cn;
-    }
-
-    /**
-     * Setter voor description
-     * 
-     * @param description The description to set.
-     */
-    public final void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Getter voor description
-     * 
-     * @return Returns the description.
-     */
-    public final String getDescription() {
-        return this.description;
-    }
-
-    /**
-     * Setter voor objectClass
-     * 
-     * @param objectClass The objectClass to set.
-     */
-    public final void setObjectClass(String[] objectClass) {
-        this.objectClass = objectClass;
-    }
-
-    /**
-     * Getter voor objectClass
-     * 
-     * @return Returns the objectClass.
-     */
-    public final String[] getObjectClass() {
-        return this.objectClass;
-    }
-
-    /**
-     * Setter voor reference
-     * 
-     * @param seealso The reference to set.
-     */
-    public final void setReference(String seealso) {
-        this.reference = seealso;
-    }
-
-    /**
-     * Getter voor reference
-     * 
-     * @return Returns the reference.
-     */
-    public final String getReference() {
-        return this.reference;
-    }
-
-    /**
-     * Setter voor surname
-     * 
-     * @param sn The surname to set.
-     */
-    public final void setSurname(String sn) {
-        this.surname = sn;
-    }
-
-    /**
-     * Getter voor surname
-     * 
-     * @return Returns the surname.
-     */
-    public final String getSurname() {
-        return this.surname;
-    }
-
-    /**
-     * Setter voor telephoneNumber
-     * 
-     * @param telephonenumber The telephoneNumber to set.
-     */
-    public final void setTelephoneNumber(String telephonenumber) {
-        this.telephoneNumber = telephonenumber;
-    }
-
-    /**
-     * Getter voor telephoneNumber
-     * 
-     * @return Returns the telephoneNumber.
-     */
-    public final String getTelephoneNumber() {
-        return this.telephoneNumber;
-    }
-
-    /**
      * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(User o) {
         return 0;
-    }
-
-    /**
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("description", this.description).append("surname", this.surname).append("telephoneNumber", this.telephoneNumber).append("reference", this.reference).append("cn", this.cn).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     }
 
     /**
@@ -190,6 +71,60 @@ public class User implements Serializable, Comparable<User> {
     }
 
     /**
+     * Getter voor cn
+     * 
+     * @return Returns the cn.
+     */
+    public final String getCn() {
+        return this.cn;
+    }
+
+    /**
+     * Getter voor description
+     * 
+     * @return Returns the description.
+     */
+    public final String getDescription() {
+        return this.description;
+    }
+
+    /**
+     * Getter voor objectClass
+     * 
+     * @return Returns the objectClass.
+     */
+    public final String[] getObjectClass() {
+        return this.objectClass;
+    }
+
+    /**
+     * Getter voor reference
+     * 
+     * @return Returns the reference.
+     */
+    public final String getReference() {
+        return this.reference;
+    }
+
+    /**
+     * Getter voor surname
+     * 
+     * @return Returns the surname.
+     */
+    public final String getSurname() {
+        return this.surname;
+    }
+
+    /**
+     * Getter voor telephoneNumber
+     * 
+     * @return Returns the telephoneNumber.
+     */
+    public final String getTelephoneNumber() {
+        return this.telephoneNumber;
+    }
+
+    /**
      * 
      * @see java.lang.Object#hashCode()
      */
@@ -197,5 +132,69 @@ public class User implements Serializable, Comparable<User> {
     public int hashCode() {
         return new HashCodeBuilder(-1529639275, 107903843).appendSuper(super.hashCode()).append(this.cn).append(this.description)
                 .append(this.telephoneNumber).append(this.surname).append(this.objectClass).append(this.reference).toHashCode();
+    }
+
+    /**
+     * Setter voor cn
+     * 
+     * @param cn The cn to set.
+     */
+    public final void setCn(String cn) {
+        this.cn = cn;
+    }
+
+    /**
+     * Setter voor description
+     * 
+     * @param description The description to set.
+     */
+    public final void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * Setter voor objectClass
+     * 
+     * @param objectClass The objectClass to set.
+     */
+    public final void setObjectClass(String[] objectClass) {
+        this.objectClass = objectClass;
+    }
+
+    /**
+     * Setter voor reference
+     * 
+     * @param seealso The reference to set.
+     */
+    public final void setReference(String seealso) {
+        this.reference = seealso;
+    }
+
+    /**
+     * Setter voor surname
+     * 
+     * @param sn The surname to set.
+     */
+    public final void setSurname(String sn) {
+        this.surname = sn;
+    }
+
+    /**
+     * Setter voor telephoneNumber
+     * 
+     * @param telephonenumber The telephoneNumber to set.
+     */
+    public final void setTelephoneNumber(String telephonenumber) {
+        this.telephoneNumber = telephonenumber;
+    }
+
+    /**
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("description", this.description).append("surname", this.surname).append("telephoneNumber", this.telephoneNumber).append("reference", this.reference).append("cn", this.cn).append("objectClass", this.objectClass).toString(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     }
 }

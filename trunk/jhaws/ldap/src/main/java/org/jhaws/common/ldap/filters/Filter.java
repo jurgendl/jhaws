@@ -6,5 +6,5 @@ package org.jhaws.common.ldap.filters;
  * @author Jurgen De Landsheer
  */
 public interface Filter {
-    // ignore me
+    //
 }

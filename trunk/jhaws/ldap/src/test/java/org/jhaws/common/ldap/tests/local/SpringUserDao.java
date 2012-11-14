@@ -3,7 +3,6 @@ package org.jhaws.common.ldap.tests.local;
 import org.jhaws.common.ldap.spring.AbstractSpringLdapDao;
 
 /**
- * na
  * 
  * @author Jurgen De Landsheer
  */

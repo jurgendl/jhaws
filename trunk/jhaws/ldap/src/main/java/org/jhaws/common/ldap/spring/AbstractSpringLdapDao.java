@@ -51,7 +51,6 @@ import org.springframework.ldap.filter.OrFilter;
  * @param <T> object type (class) waarvoor de dao subclass geschikt voor is
  */
 public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<? super T>> extends LdapDAOCommonSuperclass<T> {
-    /** serialVersionUID */
     private static final long serialVersionUID = 4528890293912122131L;
 
     /** Logger for this class */
@@ -59,6 +58,13 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
     /** LdapOperations is een interface voor LdapTemplate */
     private LdapOperations ldapOperations;
+
+    private final ContextMapper contextMapper = new ContextMapper() {
+        @Override
+        public Object mapFromContext(Object ctx) {
+            return AbstractSpringLdapDao.this.mapFromContextImp((DirContextOperations) ctx);
+        }
+    };
 
     /**
      * Creates a new AbstractSpringLdapDao object.
@@ -68,167 +74,33 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
     }
 
     /**
-     * @see org.jhaws.common.ldap.interfaces.LdapDao#findBeansByExample(T)
-     */
-    public final List<T> findBeansByExample(final T bean) throws IllegalArgumentException {
-        logger.debug("findAll() - start"); //$NON-NLS-1$
-        AndFilter filter = new AndFilter();
-        OrFilter ocfilter = new OrFilter();
-
-        for (final String objectClass : annotationParser.getObjectClass()) {
-            ocfilter.or(new EqualsFilter("objectClass", objectClass)); //$NON-NLS-1$
-        }
-
-        filter.and(ocfilter);
-
-        for (final Object key : annotationParser.getMapping().keySet()) {
-            String fieldName = key.toString();
-            Object value = annotationParser.get(fieldName, bean);
-
-            if ((value != null) && value instanceof String) {
-                filter.and(new LikeFilter(annotationParser.getMapping().getProperty(fieldName), (String) value));
-            }
-        }
-
-        String encode = filter.encode();
-        logger.info("findBeansByExample(T) - String encode=" + encode); //$NON-NLS-1$
-
-        return findBeans(encode);
-    }
-
-    /**
-     * @see org.jhaws.common.ldap.interfaces.LdapDao#findByPrimaryKey(java.util.Properties)
-     */
-    public final T findByPrimaryKey(final Properties props) {
-        try {
-            return lookup(buildDn(props));
-        } catch (Exception ex) {
-            logger.warn(ex);
-
-            return null;
-        }
-    }
-
-    /**
-     * @see org.springframework.ldap.ContextMapper#mapFromContext(java.lang.Object)
-     */
-    private final Object mapFromContextImp(final DirContextOperations ctx) {
-        logger.debug("DirContextOperations=" + ctx); //$NON-NLS-1$
-
-        T bean = newBean();
-
-        for (final Object field0 : annotationParser.getMapping().keySet()) {
-            try {
-                String field = field0.toString();
-                String ldap = annotationParser.getMapping(field);
-                Object value;
-
-                /*
-                 * als mapping als array is gezet (bv objectClass) dan moet de waarde worden opgevraagt met getStringAttributes kijkt naar de class
-                 * van het veld, is het byte[] dan wordt automatisch ';binary' achter de ldap veldnaam gezet om de binaire waarde op te halen
-                 */
-                Class<?> fieldClass = annotationParser.getFieldType(field);
-                logger.debug("fieldClass=" + fieldClass); //$NON-NLS-1$
-
-                if (fieldClass.equals(BYTE_ARRAY_CLASS)) {
-                    value = ctx.getObjectAttribute(ldap + ";binary"); //$NON-NLS-1$
-                } else {
-                    if (fieldClass.equals(STRING_ARRAY_CLASS)) {
-                        value = ctx.getStringAttributes(ldap);
-                    } else {
-                        value = ctx.getObjectAttribute(ldap);
-                    }
-                }
-
-                logger.debug("mapFromContext(" + ctx.getClass().getSimpleName() + ") - field=" + field + ", ldap=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                        + ldap + ", value=" + value); //$NON-NLS-1$
-
-                // zet veldwaarde object via reflection met autocasting
-                annotationParser.set(field, bean, value);
-            } catch (final Exception ex) {
-                logger.error(ex, ex);
-            }
-        }
-
-        return bean;
-    }
-
-    /**
-     * intern gebruik
-     * 
-     * @param dn DistinguishedName
-     * 
-     * @return T
-     * 
-     * @throws IllegalArgumentException login gegevens mogelijks verkeerd
-     */
-    private final T lookup(final Name dn) {
-        logger.debug("lookup(Name) - dn=" + dn); //$NON-NLS-1$
-
-        try {
-            return getPojoClass().cast(ldapOperations.lookup(dn, new ContextMapper() {
-                public Object mapFromContext(Object ctx) {
-                    return mapFromContextImp((DirContextOperations) ctx);
-                }
-            }));
-        } catch (final UncategorizedLdapException ule) {
-            if (ule.getCause().getClass().equals(InvalidNameException.class)) {
-                throw new IllegalArgumentException("login gegevens mogelijks verkeerd", ule); //$NON-NLS-1$
-            }
-
-            throw ule;
-        }
-    }
-
-    private final ContextMapper contextMapper = new ContextMapper() {
-        public Object mapFromContext(Object ctx) {
-            return mapFromContextImp((DirContextOperations) ctx);
-        }
-    };
-
-    /**
-     * 
-     * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String, javax.naming.directory.SearchControls)
-     */
-    @Override
-    protected final List<T> search(final String query, final SearchControls controls) {
-        String _base = getBase();
-        return search(_base, query, controls);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected final List<T> search(String base, final String query, final SearchControls controls) {
-        logger.debug("search(String, SearchControls) - start"); //$NON-NLS-1$
-        logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
-
-        List<T> list = null;
-
-        try {
-            list = ldapOperations.search(base, query, controls, contextMapper);
-        } catch (final UncategorizedLdapException ule) {
-            if (ule.getCause().getClass().equals(InvalidNameException.class)) {
-                throw new IllegalArgumentException("login gegevens zijn mogelijk verkeerd", ule); //$NON-NLS-1$
-            }
-
-            throw ule;
-        }
-
-        logger.debug("search(String, SearchControls) - end"); //$NON-NLS-1$
-
-        return list;
-    }
-
-    /**
      * @see org.jhaws.common.ldap.interfaces.LdapDao#createBean(T)
      */
+    @Override
     public final boolean createBean(final T object) {
         try {
-            Name dn = buildDn(object);
-            getLdapOperations().bind(dn, getContextToBind(dn, object), null);
+            Name dn = this.buildDn(object);
+            this.getLdapOperations().bind(dn, this.getContextToBind(dn, object), null);
 
             return true;
         } catch (final Exception ex) {
-            logger.warn(ex);
+            AbstractSpringLdapDao.logger.warn(ex);
+
+            return false;
+        }
+    }
+
+    /**
+     * @see org.jhaws.common.ldap.interfaces.LdapDao#deleteBean(T)
+     */
+    @Override
+    public final boolean deleteBean(final T object) {
+        try {
+            this.getLdapOperations().unbind(this.buildDn(object));
+
+            return true;
+        } catch (final Exception ex) {
+            AbstractSpringLdapDao.logger.warn(ex);
 
             return false;
         }
@@ -237,28 +109,58 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
     /**
      * @see org.jhaws.common.ldap.interfaces.LdapDao#findAllBeans()
      */
+    @Override
     public final List<T> findAllBeans() throws IllegalArgumentException {
         OrFilter filter = new OrFilter();
 
-        for (final String objectClass : annotationParser.getObjectClass()) {
+        for (final String objectClass : this.annotationParser.getObjectClass()) {
             filter.or(new EqualsFilter("objectClass", objectClass)); //$NON-NLS-1$
         }
 
-        return findBeans(filter.encode());
+        return this.findBeans(filter.encode());
     }
 
     /**
-     * @see org.jhaws.common.ldap.interfaces.LdapDao#deleteBean(T)
+     * @see org.jhaws.common.ldap.interfaces.LdapDao#findBeansByExample(T)
      */
-    public final boolean deleteBean(final T object) {
+    @Override
+    public final List<T> findBeansByExample(final T bean) throws IllegalArgumentException {
+        AbstractSpringLdapDao.logger.debug("findAll() - start"); //$NON-NLS-1$
+        AndFilter filter = new AndFilter();
+        OrFilter ocfilter = new OrFilter();
+
+        for (final String objectClass : this.annotationParser.getObjectClass()) {
+            ocfilter.or(new EqualsFilter("objectClass", objectClass)); //$NON-NLS-1$
+        }
+
+        filter.and(ocfilter);
+
+        for (final Object key : this.annotationParser.getMapping().keySet()) {
+            String fieldName = key.toString();
+            Object value = this.annotationParser.get(fieldName, bean);
+
+            if ((value != null) && (value instanceof String)) {
+                filter.and(new LikeFilter(this.annotationParser.getMapping().getProperty(fieldName), (String) value));
+            }
+        }
+
+        String encode = filter.encode();
+        AbstractSpringLdapDao.logger.info("findBeansByExample(T) - String encode=" + encode); //$NON-NLS-1$
+
+        return this.findBeans(encode);
+    }
+
+    /**
+     * @see org.jhaws.common.ldap.interfaces.LdapDao#findByPrimaryKey(java.util.Properties)
+     */
+    @Override
+    public final T findByPrimaryKey(final Properties props) {
         try {
-            getLdapOperations().unbind(buildDn(object));
+            return this.lookup(this.buildDn(props));
+        } catch (Exception ex) {
+            AbstractSpringLdapDao.logger.warn(ex);
 
-            return true;
-        } catch (final Exception ex) {
-            logger.warn(ex);
-
-            return false;
+            return null;
         }
     }
 
@@ -270,25 +172,25 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
      * 
      * @return DirContextOperations
      */
-    private final DirContextOperations getContextToBind(final Name dn, final T object) {
+    private final DirContextOperations getContextToBind(@SuppressWarnings("unused") final Name dn, final T object) {
         DirContextAdapter adapter = new DirContextAdapter();
 
-        for (final Object field0 : annotationParser.getMapping().keySet()) {
+        for (final Object field0 : this.annotationParser.getMapping().keySet()) {
             try {
                 String field = field0.toString();
-                String ldap = annotationParser.getMapping(field);
-                Object value = annotationParser.get(field, object);
-                Class<?> fieldType = annotationParser.getFieldType(field);
-                logger.debug("getContextToBind(" + getPojoClass().getSimpleName() + ") - field=" + field + ", ldap=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                String ldap = this.annotationParser.getMapping(field);
+                Object value = this.annotationParser.get(field, object);
+                Class<?> fieldType = this.annotationParser.getFieldType(field);
+                AbstractSpringLdapDao.logger.debug("getContextToBind(" + this.getPojoClass().getSimpleName() + ") - field=" + field + ", ldap=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                         + ldap + ", value=" + value); //$NON-NLS-1$
 
                 if (value != null) {
-                    if (fieldType.equals(BYTE_ARRAY_CLASS)) {
+                    if (fieldType.equals(LdapDAOCommonSuperclass.BYTE_ARRAY_CLASS)) {
                         adapter.setAttributeValue(ldap, value);
                     } else {
-                        if (fieldType.equals(STRING_ARRAY_CLASS)) {
+                        if (fieldType.equals(LdapDAOCommonSuperclass.STRING_ARRAY_CLASS)) {
                             if ("objectClass".equals(ldap)) { //$NON-NLS-1$
-                                value = annotationParser.getObjectClass();
+                                value = this.annotationParser.getObjectClass();
                             }
 
                             adapter.setAttributeValues(ldap, (String[]) value);
@@ -298,29 +200,13 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
                     }
                 }
             } catch (final Exception ex) {
-                logger.warn(ex, ex);
+                AbstractSpringLdapDao.logger.warn(ex, ex);
             }
         }
 
-        adapter.setAttributeValues("objectClass", annotationParser.getObjectClass()); //$NON-NLS-1$
+        adapter.setAttributeValues("objectClass", this.annotationParser.getObjectClass()); //$NON-NLS-1$
 
         return adapter;
-    }
-
-    /**
-     * @see org.jhaws.common.ldap.interfaces.LdapDao#updateBean(T)
-     */
-    public final boolean updateBean(final T object) {
-        try {
-            Name dn = buildDn(object);
-            getLdapOperations().rebind(dn, getContextToBind(dn, object), null);
-
-            return true;
-        } catch (final Exception ex) {
-            logger.warn(ex);
-
-            return false;
-        }
     }
 
     /**
@@ -333,11 +219,132 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
     }
 
     /**
+     * intern gebruik
+     * 
+     * @param dn DistinguishedName
+     * 
+     * @return T
+     * 
+     * @throws IllegalArgumentException login gegevens mogelijks verkeerd
+     */
+    private final T lookup(final Name dn) {
+        AbstractSpringLdapDao.logger.debug("lookup(Name) - dn=" + dn); //$NON-NLS-1$
+
+        try {
+            return this.getPojoClass().cast(this.ldapOperations.lookup(dn, new ContextMapper() {
+                @Override
+                public Object mapFromContext(Object ctx) {
+                    return AbstractSpringLdapDao.this.mapFromContextImp((DirContextOperations) ctx);
+                }
+            }));
+        } catch (final UncategorizedLdapException ule) {
+            if (ule.getCause().getClass().equals(InvalidNameException.class)) {
+                throw new IllegalArgumentException("login gegevens mogelijks verkeerd", ule); //$NON-NLS-1$
+            }
+
+            throw ule;
+        }
+    }
+
+    /**
+     * @see org.springframework.ldap.ContextMapper#mapFromContext(java.lang.Object)
+     */
+    private final Object mapFromContextImp(final DirContextOperations ctx) {
+        AbstractSpringLdapDao.logger.debug("DirContextOperations=" + ctx); //$NON-NLS-1$
+
+        T bean = this.newBean();
+
+        for (final Object field0 : this.annotationParser.getMapping().keySet()) {
+            try {
+                String field = field0.toString();
+                String ldap = this.annotationParser.getMapping(field);
+                Object value;
+
+                /*
+                 * als mapping als array is gezet (bv objectClass) dan moet de waarde worden opgevraagt met getStringAttributes kijkt naar de class
+                 * van het veld, is het byte[] dan wordt automatisch ';binary' achter de ldap veldnaam gezet om de binaire waarde op te halen
+                 */
+                Class<?> fieldClass = this.annotationParser.getFieldType(field);
+                AbstractSpringLdapDao.logger.debug("fieldClass=" + fieldClass); //$NON-NLS-1$
+
+                if (fieldClass.equals(LdapDAOCommonSuperclass.BYTE_ARRAY_CLASS)) {
+                    value = ctx.getObjectAttribute(ldap + ";binary"); //$NON-NLS-1$
+                } else {
+                    if (fieldClass.equals(LdapDAOCommonSuperclass.STRING_ARRAY_CLASS)) {
+                        value = ctx.getStringAttributes(ldap);
+                    } else {
+                        value = ctx.getObjectAttribute(ldap);
+                    }
+                }
+
+                AbstractSpringLdapDao.logger.debug("mapFromContext(" + ctx.getClass().getSimpleName() + ") - field=" + field + ", ldap=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        + ldap + ", value=" + value); //$NON-NLS-1$
+
+                // zet veldwaarde object via reflection met autocasting
+                this.annotationParser.set(field, bean, value);
+            } catch (final Exception ex) {
+                AbstractSpringLdapDao.logger.error(ex, ex);
+            }
+        }
+
+        return bean;
+    }
+
+    /**
+     * 
+     * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String, javax.naming.directory.SearchControls)
+     */
+    @Override
+    protected final List<T> search(final String query, final SearchControls controls) {
+        String _base = this.getBase();
+        return this.search(_base, query, controls);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final List<T> search(@SuppressWarnings("hiding") String base, final String query, final SearchControls controls) {
+        AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - start"); //$NON-NLS-1$
+        AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
+
+        List<T> list = null;
+
+        try {
+            list = this.ldapOperations.search(base, query, controls, this.contextMapper);
+        } catch (final UncategorizedLdapException ule) {
+            if (ule.getCause().getClass().equals(InvalidNameException.class)) {
+                throw new IllegalArgumentException("login gegevens zijn mogelijk verkeerd", ule); //$NON-NLS-1$
+            }
+
+            throw ule;
+        }
+
+        AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - end"); //$NON-NLS-1$
+
+        return list;
+    }
+
+    /**
      * sets ldapOperations
      * 
      * @param ldapOperations The ldapOperations to set.
      */
     public final void setLdapOperations(LdapOperations ldapOperations) {
         this.ldapOperations = ldapOperations;
+    }
+
+    /**
+     * @see org.jhaws.common.ldap.interfaces.LdapDao#updateBean(T)
+     */
+    @Override
+    public final boolean updateBean(final T object) {
+        try {
+            Name dn = this.buildDn(object);
+            this.getLdapOperations().rebind(dn, this.getContextToBind(dn, object), null);
+
+            return true;
+        } catch (final Exception ex) {
+            AbstractSpringLdapDao.logger.warn(ex);
+
+            return false;
+        }
     }
 }

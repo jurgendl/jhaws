@@ -23,7 +23,7 @@ public class Any implements Filter {
      */
     public Any(String key) {
         super();
-        setKey(key);
+        this.setKey(key);
     }
 
     /**
@@ -32,7 +32,7 @@ public class Any implements Filter {
      * @return Returns the key.
      */
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     /**
@@ -51,6 +51,6 @@ public class Any implements Filter {
      */
     @Override
     public String toString() {
-        return "(" + key + "=*)"; //$NON-NLS-1$ //$NON-NLS-2$
+        return "(" + this.key + "=*)"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

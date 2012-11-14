@@ -1,17 +1,14 @@
 package org.jhaws.common.ldap.tests.pojo;
 
+import java.io.Serializable;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.jhaws.common.ldap.annotations.LdapClass;
 import org.jhaws.common.ldap.annotations.LdapKey;
 
-import java.io.Serializable;
-
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 @LdapClass(autoFields = true)
@@ -37,6 +34,15 @@ public class Root implements Serializable, Comparable<Root> {
     }
 
     /**
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @Override
+    public int compareTo(Root o) {
+        return this.ou.compareTo(o.ou);
+    }
+
+    /**
      * na
      * 
      * @return
@@ -44,16 +50,7 @@ public class Root implements Serializable, Comparable<Root> {
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
-        return (X509Certificate) Cert.certificate(getUserCertificate());
-    }
-
-    /**
-     * Setter voor objectClass
-     * 
-     * @param objectClass The objectClass to set.
-     */
-    public void setObjectClass(String[] objectClass) {
-        this.objectClass = objectClass;
+        return (X509Certificate) Cert.certificate(this.getUserCertificate());
     }
 
     /**
@@ -66,30 +63,12 @@ public class Root implements Serializable, Comparable<Root> {
     }
 
     /**
-     * Setter voor ou
-     * 
-     * @param ou The ou to set.
-     */
-    public void setOu(String ou) {
-        this.ou = ou;
-    }
-
-    /**
      * Getter voor ou
      * 
      * @return Returns the ou.
      */
     public String getOu() {
         return this.ou;
-    }
-
-    /**
-     * Setter voor userCertificate
-     * 
-     * @param userCertificate The userCertificate to set.
-     */
-    public void setUserCertificate(byte[] userCertificate) {
-        this.userCertificate = userCertificate;
     }
 
     /**
@@ -102,24 +81,43 @@ public class Root implements Serializable, Comparable<Root> {
     }
 
     /**
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
-    public int compareTo(Root o) {
-        return this.ou.compareTo(o.ou);
-    }
-
-    /**
      * na
      */
     public void print() {
         System.out.println(this);
 
         try {
-            System.out.println(getCertificate());
+            System.out.println(this.getCertificate());
         } catch (CertificateException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Setter voor objectClass
+     * 
+     * @param objectClass The objectClass to set.
+     */
+    public void setObjectClass(String[] objectClass) {
+        this.objectClass = objectClass;
+    }
+
+    /**
+     * Setter voor ou
+     * 
+     * @param ou The ou to set.
+     */
+    public void setOu(String ou) {
+        this.ou = ou;
+    }
+
+    /**
+     * Setter voor userCertificate
+     * 
+     * @param userCertificate The userCertificate to set.
+     */
+    public void setUserCertificate(byte[] userCertificate) {
+        this.userCertificate = userCertificate;
     }
 
     /**

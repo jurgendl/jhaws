@@ -6,8 +6,6 @@ import javax.naming.Context;
 import javax.naming.directory.InitialDirContext;
 
 /**
- * na
- * 
  * @author Jurgen De Landsheer
  */
 public class ContextSource {
@@ -37,6 +35,55 @@ public class ContextSource {
     }
 
     /**
+     * gets context
+     * 
+     * @return Returns the context.
+     */
+    public final InitialDirContext getContext() {
+        return this.context;
+    }
+
+    /**
+     * maakt context aan
+     * 
+     * @return InitialDirContext
+     */
+    public final InitialDirContext init() {
+        final Properties ldapEnvironment = new Properties();
+
+        ldapEnvironment.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); //$NON-NLS-1$
+        ldapEnvironment.setProperty(Context.PROVIDER_URL, this.url + "/" + this.base.replaceAll(" ", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+        if (this.userName != null) {
+            ldapEnvironment.setProperty(Context.SECURITY_PRINCIPAL, this.userName);
+            ldapEnvironment.setProperty(Context.SECURITY_CREDENTIALS, this.password);
+        }
+
+        if (this.baseEnvironmentProperties.getProperty("ldapSecurityProtocol") != null) { //$NON-NLS-1$
+            // eg 'ssl'
+            ldapEnvironment.setProperty(Context.SECURITY_PROTOCOL, this.baseEnvironmentProperties.getProperty("ldapSecurityProtocol")); //$NON-NLS-1$
+        }
+
+        if (this.baseEnvironmentProperties.getProperty("ldapSecurity") != null) { //$NON-NLS-1$
+            // eg 'none', 'simple', 'strong'
+            ldapEnvironment.setProperty(Context.SECURITY_AUTHENTICATION, this.baseEnvironmentProperties.getProperty("ldapSecurity")); //$NON-NLS-1$
+        }
+
+        if (this.baseEnvironmentProperties.getProperty("ldapVersion") != null) { //$NON-NLS-1$
+            // eg '3'
+            ldapEnvironment.setProperty("java.naming.ldap.version", this.baseEnvironmentProperties.getProperty("ldapVersion")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        try {
+            this.context = new InitialDirContext(ldapEnvironment);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return this.context;
+    }
+
+    /**
      * sets base
      * 
      * @param base The base to set.
@@ -52,15 +99,6 @@ public class ContextSource {
      */
     public final void setBaseEnvironmentProperties(Properties baseEnvironmentProperties) {
         this.baseEnvironmentProperties = baseEnvironmentProperties;
-    }
-
-    /**
-     * gets context
-     * 
-     * @return Returns the context.
-     */
-    public final InitialDirContext getContext() {
-        return this.context;
     }
 
     /**
@@ -88,45 +126,5 @@ public class ContextSource {
      */
     public final void setUserName(String name) {
         this.userName = name;
-    }
-
-    /**
-     * maakt context aan
-     * 
-     * @return InitialDirContext
-     */
-    public final InitialDirContext init() {
-        final Properties ldapEnvironment = new Properties();
-
-        ldapEnvironment.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); //$NON-NLS-1$
-        ldapEnvironment.setProperty(Context.PROVIDER_URL, url + "/" + base.replaceAll(" ", "")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-        if (userName != null) {
-            ldapEnvironment.setProperty(Context.SECURITY_PRINCIPAL, userName);
-            ldapEnvironment.setProperty(Context.SECURITY_CREDENTIALS, password);
-        }
-
-        if (baseEnvironmentProperties.getProperty("ldapSecurityProtocol") != null) { //$NON-NLS-1$
-                                                                                     // eg 'ssl'
-            ldapEnvironment.setProperty(Context.SECURITY_PROTOCOL, baseEnvironmentProperties.getProperty("ldapSecurityProtocol")); //$NON-NLS-1$
-        }
-
-        if (baseEnvironmentProperties.getProperty("ldapSecurity") != null) { //$NON-NLS-1$
-                                                                             // eg 'none', 'simple', 'strong'
-            ldapEnvironment.setProperty(Context.SECURITY_AUTHENTICATION, baseEnvironmentProperties.getProperty("ldapSecurity")); //$NON-NLS-1$
-        }
-
-        if (baseEnvironmentProperties.getProperty("ldapVersion") != null) { //$NON-NLS-1$
-                                                                            // eg '3'
-            ldapEnvironment.setProperty("java.naming.ldap.version", baseEnvironmentProperties.getProperty("ldapVersion")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        try {
-            this.context = new InitialDirContext(ldapEnvironment);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return this.context;
     }
 }

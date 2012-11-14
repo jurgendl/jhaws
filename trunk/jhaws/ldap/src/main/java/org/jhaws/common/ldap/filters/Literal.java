@@ -23,7 +23,7 @@ public class Literal implements Filter {
      */
     public Literal(String literal) {
         super();
-        setLiteral(literal);
+        this.setLiteral(literal);
     }
 
     /**
@@ -32,7 +32,7 @@ public class Literal implements Filter {
      * @return Returns the literal.
      */
     public String getLiteral() {
-        return literal;
+        return this.literal;
     }
 
     /**
@@ -51,6 +51,6 @@ public class Literal implements Filter {
      */
     @Override
     public String toString() {
-        return literal;
+        return this.literal;
     }
 }
