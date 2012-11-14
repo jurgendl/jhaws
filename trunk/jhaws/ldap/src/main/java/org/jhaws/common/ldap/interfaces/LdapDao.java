@@ -6,13 +6,13 @@ import java.util.Properties;
 
 /**
  * interface voor ldap dao
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public interface LdapDao<T extends Serializable & Comparable<? super T>> extends Serializable {
     /**
-     * zoekt alle objecten dien voldoen aan een and relatie van like 'waarda'/equals 'waarde' van elke ingevulde object
-     * property die een string is en niet null
+     * zoekt alle objecten dien voldoen aan een and relatie van like 'waarda'/equals 'waarde' van elke ingevulde object property die een string is en
+     * niet null
      * 
      * @param bean voorbeeld; bean met ingevulde waardes
      * 
@@ -45,8 +45,7 @@ public interface LdapDao<T extends Serializable & Comparable<? super T>> extends
     public abstract T findByPrimaryKey(final String value) throws IllegalArgumentException;
 
     /**
-     * maakt een object aan (save).
-     * voor beveiliging moet een subclass een functie aanmaken en deze aanspreken
+     * maakt een object aan (save). voor beveiliging moet een subclass een functie aanmaken en deze aanspreken
      * 
      * @param object bean object
      * 
@@ -64,8 +63,7 @@ public interface LdapDao<T extends Serializable & Comparable<? super T>> extends
     public abstract List<T> findAllBeans() throws IllegalArgumentException;
 
     /**
-     * verwijderd een object aan (save).
-     * voor beveiliging moet een subclass een functie aanmaken en deze aanspreken
+     * verwijderd een object aan (save). voor beveiliging moet een subclass een functie aanmaken en deze aanspreken
      * 
      * @param object bean object
      * 
@@ -74,25 +72,24 @@ public interface LdapDao<T extends Serializable & Comparable<? super T>> extends
     public abstract boolean deleteBean(final T object);
 
     /**
-     * past een bestaand ldap object aan (update).
-     * voor beveiliging moet een subclass een functie aanmaken en deze aanspreken
+     * past een bestaand ldap object aan (update). voor beveiliging moet een subclass een functie aanmaken en deze aanspreken
      * 
      * @param object bean object
      * 
      * @return success?
      */
     public abstract boolean updateBean(final T object);
-    
+
     /**
      * sets search level
-     *
+     * 
      * @param search Search
      */
     public abstract void setSearchDepth(Search search);
-    
+
     /**
      * gets search level
-     *
+     * 
      * @return Search
      */
     public abstract Search getSearchDepth();

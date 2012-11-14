@@ -10,20 +10,19 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
 
-
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class Cert {
     /**
      * na
-     *
+     * 
      * @param cert na
-     *
+     * 
      * @return
-     *
+     * 
      * @throws CertificateException
      */
     public static Certificate certificate(byte[] cert) throws CertificateException {
@@ -36,11 +35,11 @@ public class Cert {
 
     /**
      * na
-     *
+     * 
      * @param crl na
-     *
+     * 
      * @return
-     *
+     * 
      * @throws CertificateException na
      * @throws CRLException
      * @throws IOException

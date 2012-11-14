@@ -14,7 +14,6 @@ import org.jhaws.common.ldap.tests.pojo.Person;
 import org.jhaws.common.ldap.tests.pojo.Root;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-
 import java.net.URI;
 
 import java.security.Security;
@@ -35,16 +34,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-
 /**
  * test ldap
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class Test {
     /**
      * TESTING
-     *
+     * 
      * @param args TESTING
      */
     @SuppressWarnings("unused")
@@ -150,24 +148,24 @@ public class Test {
 
             Root r = rdao2.findByPrimaryKey("Belgium Root CA");
 
-            //r.print();
+            // r.print();
             CA c1 = cdao3.findByPrimaryKey("Government CA");
-            //c1.print();
+            // c1.print();
             System.out.println(c1.getCrl().isRevoked(p.getCertificate()));
             System.out.println(c1.getDeltaCrl().isRevoked(p.getCertificate()));
 
             CA c2 = cdao3.findByPrimaryKey("Government CA 2004-1");
-            //c2.print();
+            // c2.print();
             System.out.println(c2.getCrl().isRevoked(p.getCertificate()));
             System.out.println(c2.getDeltaCrl().isRevoked(p.getCertificate()));
 
             CA c3 = cdao3.findByPrimaryKey("Citizen CA");
-            //c3.print();
+            // c3.print();
             System.out.println(c3.getCrl().isRevoked(p.getCertificate()));
             System.out.println(c3.getDeltaCrl().isRevoked(p.getCertificate()));
 
             CA c4 = cdao3.findByPrimaryKey("Citizen CA 2004-1");
-            //c4.print();
+            // c4.print();
             System.out.println(c4.getCrl().isRevoked(p.getCertificate()));
             System.out.println(c4.getDeltaCrl().isRevoked(p.getCertificate()));
         } catch (final Exception e) {
@@ -177,14 +175,14 @@ public class Test {
 
     /**
      * Creates a new validate object.
-     *
+     * 
      * @param cert na
      * @param ROOT_CA_CERT na
      * @param OCSP_SERVER_CERT na
-     *
+     * 
      * @return
      */
-    @SuppressWarnings({"nls", "rawtypes", "unchecked"})
+    @SuppressWarnings({ "nls", "rawtypes", "unchecked" })
     protected static int validate(X509Certificate cert, X509Certificate ROOT_CA_CERT, X509Certificate OCSP_SERVER_CERT) {
         try {
             CertPath cp = null;

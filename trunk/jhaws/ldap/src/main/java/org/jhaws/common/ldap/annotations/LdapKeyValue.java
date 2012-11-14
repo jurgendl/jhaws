@@ -7,23 +7,24 @@ import java.lang.annotation.Target;
 
 /**
  * key/value pair
- *
+ * 
  * @author Jurgen De Landsheer
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface LdapKeyValue {
-/**
+    /**
      * 
      * key
-     *
+     * 
      * @return key
      */
     String key();
-/**
+
+    /**
      * 
      * value
-     *
+     * 
      * @return value
      */
     String value();

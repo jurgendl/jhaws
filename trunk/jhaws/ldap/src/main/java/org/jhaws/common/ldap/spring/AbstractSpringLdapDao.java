@@ -20,10 +20,8 @@ import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.LikeFilter;
 import org.springframework.ldap.filter.OrFilter;
 
-
 /**
- * abstracte implementate voor ldap dao die <i>LdapOperations</i> (interface) oftewel <i>LdapTemplate</i> (class)
- * gebruikt.<br>
+ * abstracte implementate voor ldap dao die <i>LdapOperations</i> (interface) oftewel <i>LdapTemplate</i> (class) gebruikt.<br>
  * <br>
  * <br>
  * <u><b>config via annotations:</b></u><br>
@@ -43,7 +41,9 @@ import org.springframework.ldap.filter.OrFilter;
  *                     @LdapField(&quot;givenName&quot;)
  *                     private String voornaam;
  * </pre>
- * <br><br>
+ * 
+ * <br>
+ * <br>
  * the only overidable function is newBean
  * 
  * @author Jurgen De Landsheer
@@ -52,9 +52,9 @@ import org.springframework.ldap.filter.OrFilter;
  */
 public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<? super T>> extends LdapDAOCommonSuperclass<T> {
     /** serialVersionUID */
-	private static final long serialVersionUID = 4528890293912122131L;
+    private static final long serialVersionUID = 4528890293912122131L;
 
-	/** Logger for this class */
+    /** Logger for this class */
     private static final Logger logger = Logger.getLogger(AbstractSpringLdapDao.class);
 
     /** LdapOperations is een interface voor LdapTemplate */
@@ -104,11 +104,11 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
             return lookup(buildDn(props));
         } catch (Exception ex) {
             logger.warn(ex);
-            
+
             return null;
         }
     }
-   
+
     /**
      * @see org.springframework.ldap.ContextMapper#mapFromContext(java.lang.Object)
      */
@@ -124,9 +124,8 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
                 Object value;
 
                 /*
-                 * als mapping als array is gezet (bv objectClass) dan moet de waarde worden opgevraagt met
-                 * getStringAttributes kijkt naar de class van het veld, is het byte[] dan wordt automatisch ';binary'
-                 * achter de ldap veldnaam gezet om de binaire waarde op te halen
+                 * als mapping als array is gezet (bv objectClass) dan moet de waarde worden opgevraagt met getStringAttributes kijkt naar de class
+                 * van het veld, is het byte[] dan wordt automatisch ';binary' achter de ldap veldnaam gezet om de binaire waarde op te halen
                  */
                 Class<?> fieldClass = annotationParser.getFieldType(field);
                 logger.debug("fieldClass=" + fieldClass); //$NON-NLS-1$
@@ -165,7 +164,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
      */
     private final T lookup(final Name dn) {
         logger.debug("lookup(Name) - dn=" + dn); //$NON-NLS-1$
-        
+
         try {
             return getPojoClass().cast(ldapOperations.lookup(dn, new ContextMapper() {
                 public Object mapFromContext(Object ctx) {
@@ -175,9 +174,9 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
         } catch (final UncategorizedLdapException ule) {
             if (ule.getCause().getClass().equals(InvalidNameException.class)) {
                 throw new IllegalArgumentException("login gegevens mogelijks verkeerd", ule); //$NON-NLS-1$
-            } 
-            
-            throw ule;            
+            }
+
+            throw ule;
         }
     }
 
@@ -186,7 +185,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
             return mapFromContextImp((DirContextOperations) ctx);
         }
     };
-    
+
     /**
      * 
      * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String, javax.naming.directory.SearchControls)
@@ -197,12 +196,11 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
         return search(_base, query, controls);
     }
 
-	@SuppressWarnings("unchecked")
-	protected final List<T> search(String base, final String query,
-			final SearchControls controls) {
-		logger.debug("search(String, SearchControls) - start");  //$NON-NLS-1$
-		logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
-        
+    @SuppressWarnings("unchecked")
+    protected final List<T> search(String base, final String query, final SearchControls controls) {
+        logger.debug("search(String, SearchControls) - start"); //$NON-NLS-1$
+        logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
+
         List<T> list = null;
 
         try {
@@ -211,14 +209,14 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
             if (ule.getCause().getClass().equals(InvalidNameException.class)) {
                 throw new IllegalArgumentException("login gegevens zijn mogelijk verkeerd", ule); //$NON-NLS-1$
             }
-            
+
             throw ule;
         }
 
-       logger.debug("search(String, SearchControls) - end");  //$NON-NLS-1$
-        
+        logger.debug("search(String, SearchControls) - end"); //$NON-NLS-1$
+
         return list;
-	}
+    }
 
     /**
      * @see org.jhaws.common.ldap.interfaces.LdapDao#createBean(T)
@@ -289,10 +287,10 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
                         adapter.setAttributeValue(ldap, value);
                     } else {
                         if (fieldType.equals(STRING_ARRAY_CLASS)) {
-                            if("objectClass".equals(ldap)) { //$NON-NLS-1$
+                            if ("objectClass".equals(ldap)) { //$NON-NLS-1$
                                 value = annotationParser.getObjectClass();
                             }
-                            
+
                             adapter.setAttributeValues(ldap, (String[]) value);
                         } else {
                             adapter.setAttributeValue(ldap, value);
@@ -315,7 +313,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
     public final boolean updateBean(final T object) {
         try {
             Name dn = buildDn(object);
-            getLdapOperations().rebind(dn, getContextToBind(dn, object), null);            
+            getLdapOperations().rebind(dn, getContextToBind(dn, object), null);
 
             return true;
         } catch (final Exception ex) {
@@ -327,7 +325,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
     /**
      * gets ldapOperations
-     *
+     * 
      * @return Returns the ldapOperations.
      */
     public final LdapOperations getLdapOperations() {
@@ -336,7 +334,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
     /**
      * sets ldapOperations
-     *
+     * 
      * @param ldapOperations The ldapOperations to set.
      */
     public final void setLdapOperations(LdapOperations ldapOperations) {

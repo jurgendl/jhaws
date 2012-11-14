@@ -3,26 +3,25 @@ package org.jhaws.common.ldap.filters;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * filter1 AND filter2 AND filter3 ...
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class And implements Filter {
     /** alle filters */
     private List<Filter> filters = new ArrayList<Filter>();
 
-/**
+    /**
      * Creates a new And object.
      */
     public And() {
         super();
     }
 
-/**
+    /**
      * Creates a new And object.
-     *
+     * 
      * @param filters lijst van Filter (1 of meer)
      */
     public And(Filter... filters) {
@@ -35,7 +34,7 @@ public class And implements Filter {
 
     /**
      * verwijderd een filter uit de lijst
-     *
+     * 
      * @param filter Filter
      */
     public void removeFilter(Filter filter) {
@@ -44,7 +43,7 @@ public class And implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override
@@ -63,7 +62,7 @@ public class And implements Filter {
 
     /**
      * gets filters
-     *
+     * 
      * @return Returns the filters.
      */
     public List<Filter> getFilters() {
@@ -72,7 +71,7 @@ public class And implements Filter {
 
     /**
      * sets filters
-     *
+     * 
      * @param filters The filters to set.
      */
     public void setFilters(List<Filter> filters) {

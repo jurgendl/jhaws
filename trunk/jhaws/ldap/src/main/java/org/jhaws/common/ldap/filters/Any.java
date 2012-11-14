@@ -2,23 +2,23 @@ package org.jhaws.common.ldap.filters;
 
 /**
  * filter: key= (any)
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class Any implements Filter {
     /** key */
     private String key;
 
-/**
+    /**
      * Creates a new Any object.
      */
     public Any() {
         super();
     }
 
-/**
+    /**
      * Creates a new Any object.
-     *
+     * 
      * @param key key
      */
     public Any(String key) {
@@ -28,7 +28,7 @@ public class Any implements Filter {
 
     /**
      * gets key
-     *
+     * 
      * @return Returns the key.
      */
     public String getKey() {
@@ -37,7 +37,7 @@ public class Any implements Filter {
 
     /**
      * sets key
-     *
+     * 
      * @param key The key to set.
      */
     public void setKey(String key) {
@@ -46,7 +46,7 @@ public class Any implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     *
+     * 
      * @see java.lang.Object#toString()
      */
     @Override

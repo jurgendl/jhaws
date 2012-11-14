@@ -6,10 +6,9 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * na
- *
+ * 
  * @author Jurgen De Landsheer
  */
 public class LdapTemplateMock {
@@ -24,8 +23,8 @@ public class LdapTemplateMock {
         contextSource.setUrl("ldap://ldap.eid.belgium.be:389"); //$NON-NLS-1$
         contextSource.setBase("dc=eid, dc=belgium, dc=be"); //$NON-NLS-1$
 
-        //contextSource.setUserName("");
-        //contextSource.setPassword("");
+        // contextSource.setUserName("");
+        // contextSource.setPassword("");
         contextSource.setBaseEnvironmentProperties(env);
 
         try {
@@ -39,7 +38,7 @@ public class LdapTemplateMock {
 
     /**
      * na
-     *
+     * 
      * @return
      */
     public static LdapTemplate singleton() {
