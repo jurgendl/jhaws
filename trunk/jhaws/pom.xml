@@ -14,5 +14,6 @@
 		<module>io</module>
 		<module>net</module>
 		<module>ldap</module>
+		<module>lucene3</module>
 	</modules>
 </project>
