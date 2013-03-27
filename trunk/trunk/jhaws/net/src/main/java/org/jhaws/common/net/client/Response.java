@@ -24,13 +24,19 @@ import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XmlSerializer;
 import org.jhaws.common.net.client.forms.Form;
 
-
 /**
  * Response
  */
 public class Response implements Serializable {
-
     protected static final long serialVersionUID = -7030369997895433094L;
+
+    public static Response deserialize(InputStream in) throws IOException, ClassNotFoundException {
+        ObjectInputStream encoder = new ObjectInputStream(in);
+        Object object = encoder.readObject();
+        encoder.close();
+
+        return (Response) object;
+    }
 
     /** date */
     protected Date date;
@@ -56,6 +62,8 @@ public class Response implements Serializable {
     /** content */
     protected byte[] content;
 
+    private String charset;
+
     public Response() {
         super();
     }
@@ -76,68 +84,68 @@ public class Response implements Serializable {
         this.redirect = redirect;
     }
 
-    /**
-     * 
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("filename", filename).append("mime", mime).append("date", date)
-                .append("redirect", redirect).append("chain", chain).append("content", content != null)
-                .append("content.size", content == null ? -1 : content.length).toString();
+    protected Response cleanup() throws IOException {
+        TagNode rootnode = this.getNode();
+        CleanerProperties properties = this.cleaner.getProperties();
+        XmlSerializer xmlSerializer = new PrettyXmlSerializer(properties);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        xmlSerializer.writeXmlToStream(rootnode, out);
+        out.close();
+
+        return new Response(out.toByteArray(), this.mime, this.filename, this.charset, this.chain);
     }
 
-    public String getMime() {
-        return this.mime;
+    public List<java.net.URI> getChain() {
+        return this.chain;
+    }
+
+    private String getCharset() {
+        return this.charset;
+    }
+
+    public byte[] getContent() throws IOException {
+        if (StringUtils.isNotBlank(this.redirect)) {
+            throw new IOException("redirected to " + this.redirect);
+        }
+
+        return this.content;
+    }
+
+    public String getContentString() throws IOException {
+        return (this.getCharset() == null) ? new String(this.getContent()) : new String(this.getContent(), this.getCharset());
     }
 
     public String getFilename() {
         return this.filename;
     }
 
-    public String getContentString() throws IOException {
-        return (getCharset() == null) ? new String(getContent()) : new String(getContent(), getCharset());
-    }
-
-    private String charset;
-
-    private String getCharset() {
-        return charset;
-    }
-
-    public byte[] getContent() throws IOException {
-        if (StringUtils.isNotBlank(redirect)) {
-            throw new IOException("redirected to " + redirect);
+    public Form getForm(String id) throws IOException {
+        for (Form form : this.getForms()) {
+            if (id.equals(form.getId())) {
+                return form;
+            }
         }
 
-        return this.content;
-    }
-
-    protected void setContent(byte[] content) {
-        this.content = content;
+        return null;
     }
 
     @SuppressWarnings("unchecked")
     public List<Form> getForms() throws IOException {
-        List<TagNode> formlist = getNode().getElementListByName("form", true);
+        List<TagNode> formlist = this.getNode().getElementListByName("form", true);
 
         List<Form> forms = new ArrayList<Form>();
 
         for (TagNode formnode : formlist) {
-            URI uri = chain.get(chain.size() - 1);
+            URI uri = this.chain.get(this.chain.size() - 1);
             forms.add(new Form(uri, formnode));
         }
 
         return forms;
     }
 
-    public String getRedirect() {
-        return this.redirect;
-    }
-
     @SuppressWarnings("unchecked")
     public String getMetaRedirect() throws IOException {
-        List<TagNode> metas = getNode().getElementListByName("meta", true);
+        List<TagNode> metas = this.getNode().getElementListByName("meta", true);
 
         for (TagNode meta : metas) {
             if ("refresh".equals(meta.getAttributeByName("http-equiv"))) {
@@ -150,6 +158,29 @@ public class Response implements Serializable {
         return null;
     }
 
+    public String getMime() {
+        return this.mime;
+    }
+
+    public TagNode getNode() throws IOException {
+        if (this.node == null) {
+            this.node = this.cleaner.clean(new ByteArrayInputStream(this.getContent()));
+        }
+
+        return this.node;
+    }
+
+    public String getRedirect() {
+        return this.redirect;
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getTitle() throws IOException {
+        List<TagNode> res = this.getNode().getElementListByName("title", false);
+
+        return (res.size() == 0) ? null : res.get(0).getText().toString();
+    }
+
     public Response serialize(OutputStream out) throws IOException {
         ObjectOutputStream encoder = new ObjectOutputStream(out);
         encoder.writeObject(this);
@@ -158,66 +189,33 @@ public class Response implements Serializable {
         return this;
     }
 
-    public static Response deserialize(InputStream in) throws IOException, ClassNotFoundException {
-        ObjectInputStream encoder = new ObjectInputStream(in);
-        Object object = encoder.readObject();
-        encoder.close();
-
-        return (Response) object;
-    }
-
-    /**
-     * cleanup and make new reponse
-     */
-    public void write(IOFile file) throws IOException {
-        file.writeBytes(getContent());
-    }
-
     public void setCharset(String charset) {
         this.charset = charset;
+    }
+
+    protected void setContent(byte[] content) {
+        this.content = content;
     }
 
     protected void setDate(Date date) {
         this.date = date;
     }
 
-    public Form getForm(String id) throws IOException {
-        for (Form form : getForms()) {
-            if (id.equals(form.getId())) {
-                return form;
-            }
-        }
-
-        return null;
+    /**
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("filename", this.filename).append("mime", this.mime)
+                .append("date", this.date).append("redirect", this.redirect).append("chain", this.chain).append("content", this.content != null)
+                .append("content.size", this.content == null ? -1 : this.content.length).toString();
     }
 
-    public List<java.net.URI> getChain() {
-        return chain;
-    }
-
-    @SuppressWarnings("unchecked")
-    public String getTitle() throws IOException {
-        List<TagNode> res = getNode().getElementListByName("title", false);
-
-        return (res.size() == 0) ? null : res.get(0).getText().toString();
-    }
-
-    public TagNode getNode() throws IOException {
-        if (node == null) {
-            node = cleaner.clean(new ByteArrayInputStream(getContent()));
-        }
-
-        return this.node;
-    }
-
-    protected Response cleanup() throws IOException {
-        TagNode rootnode = getNode();
-        CleanerProperties properties = cleaner.getProperties();
-        XmlSerializer xmlSerializer = new PrettyXmlSerializer(properties);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        xmlSerializer.writeXmlToStream(rootnode, out);
-        out.close();
-
-        return new Response(out.toByteArray(), mime, filename, charset, chain);
+    /**
+     * cleanup and make new reponse
+     */
+    public void write(IOFile file) throws IOException {
+        file.writeBytes(this.getContent());
     }
 }

@@ -58,9 +58,9 @@ public interface HTTPClientDefaults {
     public static final HttpVersion HTTP_VERSION = HttpVersion.HTTP_1_1;
 
     /**
-     * Mozilla/5.0 (Windows; U; Windows NT 5.1; nl; rv:1.9.2.9) Gecko/20100824 Firefox/3.6.9
+     * Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1
      */
-    public static final String MOZILLA = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en; rv:1.9.2.9) Gecko/20100824 Firefox/3.6.9";
+    public static final String MOZILLA = "Mozilla/5.0 (Windows NT 6.2; Win64; x64; rv:16.0.1) Gecko/20121011 Firefox/16.0.1";
 
     /** http.protocol.single-cookie-header */
     public static final String PARAM_SINGLE_COOKIE_HEADER = "http.protocol.single-cookie-header";

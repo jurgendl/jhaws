@@ -95,7 +95,6 @@ import org.jhaws.common.net.client.forms.FileInput;
 import org.jhaws.common.net.client.forms.Form;
 import org.jhaws.common.net.client.forms.InputElement;
 
-
 /**
  * http://hc.apache.org<br>
  * http://en.wikipedia.org/wiki/Post/Redirect/Get<br>
@@ -307,9 +306,7 @@ public class HTTPClient implements Serializable {
     /** user */
     protected String user;
 
-    /**
-     * Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1
-     */
+    /** userAgent */
     protected String userAgent;
 
     /** pass */
@@ -722,7 +719,8 @@ public class HTTPClient implements Serializable {
     }
 
     protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest, @SuppressWarnings("hiding") String accept) throws IOException,
-            org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException, org.apache.http.client.ClientProtocolException {
+            org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException,
+            org.apache.http.client.ClientProtocolException {
         // System.out.println(">> " + httpRequest.getURI());
         HTTPClient.logger.info("url=" + httpRequest.getURI());
         this.chain.add(httpRequest.getURI());
