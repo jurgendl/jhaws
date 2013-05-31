@@ -18,7 +18,6 @@ import org.apache.log4j.Logger;
 import org.common.io.IODirectory;
 import org.common.io.IOFile;
 
-
 /**
  * PreloadWinFirefoxCookies
  */
@@ -83,7 +82,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 
     /**
      * 
-     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+     *      java.util.Date)
      */
     @Override
     public void beforeClearExpired(CookieStore store, Date date) {
@@ -101,7 +101,15 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
                 return;
             }
 
+            if (store.getClient() == null) {
+                throw new NullPointerException("HTTPClient not set");
+            }
+
             String domain = store.getClient().getDomain();
+
+            if (domain == null) {
+                throw new NullPointerException("HTTPClient.domain not set");
+            }
 
             if (this.domainsLoaded.contains(domain)) {
                 return;
@@ -147,6 +155,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
             } else {
                 try {
                     IOFile ff3c = new IOFile(new IODirectory(ffr, p.getProperty("Path")), "cookies.sqlite");
+                    ff3c.checkExistence();
                     PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - IOFile sqlite=" + ff3c);
 
                     String url = "jdbc:sqlite:/" + ff3c.getAbsolutePath().replace('\\', '/');
