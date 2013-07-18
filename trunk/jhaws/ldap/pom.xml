@@ -58,7 +58,7 @@
 		<!-- you can find this lib here: http://repository.atlassian.com/maven2/ -->
 		<!-- http://repository.atlassian.com/maven2/com/sun/jndi/ldap/ldapbp/1.0/ -->
 		<dependency>
-			<groupId>com.sun.jndi.ldap</groupId>
+			<groupId>com.sun</groupId>
 			<artifactId>ldapbp</artifactId>
 			<version>1.0</version>
 		</dependency> 			
