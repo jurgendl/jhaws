@@ -17,7 +17,7 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>org.common</groupId>
+			<groupId>org.jhaws.common</groupId>
 			<artifactId>io</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -43,7 +43,7 @@
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jvnet.hudson</groupId>
+			<groupId>net.sf.jtidy</groupId>
 			<artifactId>jtidy</artifactId>
 			<version>r938</version>
 			<optional>true</optional>
@@ -55,9 +55,9 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.htmlcleaner</groupId>
+			<groupId>net.sourceforge.htmlcleaner</groupId>
 			<artifactId>htmlcleaner</artifactId>
-			<version>2.1</version>
+			<version>2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -109,12 +109,6 @@
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
 			<version>1.9.14</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jvnet.hudson</groupId>
-			<artifactId>jtidy</artifactId>
-			<version>r938</version>
 			<scope>test</scope>
 		</dependency>	
 		<dependency>
