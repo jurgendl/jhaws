@@ -11,8 +11,8 @@ import java.util.HashSet;
 
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.log4j.Logger;
-import org.common.io.IODirectory;
-import org.common.io.IOFile;
+import org.jhaws.common.io.IODirectory;
+import org.jhaws.common.io.IOFile;
 
 
 /**

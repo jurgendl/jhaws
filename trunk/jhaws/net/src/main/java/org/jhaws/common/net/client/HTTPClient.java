@@ -84,7 +84,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
-import org.common.io.IOFile;
+import org.jhaws.common.io.IOFile;
 import org.jhaws.common.net.client.cookies.CookieStore;
 import org.jhaws.common.net.client.cookies.PreloadUnixChromeCookies;
 import org.jhaws.common.net.client.cookies.PreloadUnixFirefoxCookies;

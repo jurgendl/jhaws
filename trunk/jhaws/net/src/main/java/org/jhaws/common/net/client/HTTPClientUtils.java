@@ -13,7 +13,7 @@ import java.net.URL;
 import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.http.client.utils.URIUtils;
-import org.common.io.IOFile;
+import org.jhaws.common.io.IOFile;
 import org.jhaws.common.net.client.cookies.CookieStore;
 
 

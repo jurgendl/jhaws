@@ -1,12 +1,10 @@
 package org.jhaws.common.net.client;
 
-import org.apache.http.client.methods.HttpRequestBase;
-import org.common.io.IOFile;
-
-
 import java.net.URI;
-
 import java.util.HashMap;
+
+import org.apache.http.client.methods.HttpRequestBase;
+import org.jhaws.common.io.IOFile;
 
 /**
  * HTTPClientListener
