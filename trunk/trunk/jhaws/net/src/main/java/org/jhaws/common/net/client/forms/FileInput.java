@@ -1,9 +1,8 @@
 package org.jhaws.common.net.client.forms;
 
 import org.apache.commons.lang.StringUtils;
-import org.common.io.IOFile;
-
 import org.htmlcleaner.TagNode;
+import org.jhaws.common.io.IOFile;
 
 
 /**

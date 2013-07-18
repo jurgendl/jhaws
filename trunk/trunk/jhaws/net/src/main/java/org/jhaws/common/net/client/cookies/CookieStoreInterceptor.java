@@ -2,7 +2,7 @@ package org.jhaws.common.net.client.cookies;
 
 import java.util.Date;
 
-import org.common.io.IODirectory;
+import org.jhaws.common.io.IODirectory;
 
 
 /**
