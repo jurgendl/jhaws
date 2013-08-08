@@ -1532,6 +1532,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
         // to ensure that file is not larger than Integer.MAX_VALUE.
         if (length > Integer.MAX_VALUE) {
             // File is too large
+        	is.close();
             throw new IOException(String.valueOf(length));
         }
 
@@ -1548,6 +1549,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
         // Ensure all the bytes have been read in
         if (offset < bytes.length) {
+        	is.close();
             throw new IOException(new IOException("Could not completely read file " + this.getAbsolutePath())); //$NON-NLS-1$
         }
 
@@ -1868,9 +1870,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
         // set to false if the bytes should replace current bytes
         // (if the file exists)
         try {
-            FileChannel wChannel = new FileOutputStream(this, append).getChannel(); // Create a writable file channel
+            FileOutputStream fo = new FileOutputStream(this, append);
+			FileChannel wChannel = fo.getChannel(); // Create a writable file channel
             wChannel.write(source); // Write the ByteBuffer contents; the bytes between the ByteBuffer's position and the limit is written to the file
             wChannel.close();
+            fo.close();
         } catch (final IOException ex) {
             throw new IOException(ex);
         }
