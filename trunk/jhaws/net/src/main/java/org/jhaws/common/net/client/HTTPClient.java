@@ -306,7 +306,7 @@ public class HTTPClient implements Serializable {
     /** user */
     protected String user;
 
-    /** userAgent */
+    /** userAgent: html/script/document.write(navigator.userAgent);/script/html */
     protected String userAgent;
 
     /** pass */
@@ -341,7 +341,7 @@ public class HTTPClient implements Serializable {
 
     public HTTPClient() {
         this.cookiePolicy = HTTPClientDefaults.BROWSER_COMPATIBILITY;
-        this.userAgent = HTTPClientDefaults.MOZILLA;
+        this.userAgent = HTTPClientDefaults.CHROME;
         this.charset = HTTPClientDefaults.CHARSET;
         this.acceptEncoding = HTTPClientDefaults.ACCEPT_ENCODING;
         this.accept = HTTPClientDefaults.ACCEPT;
