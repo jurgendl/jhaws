@@ -387,8 +387,10 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static void copyFile(File in, File out) throws IOException {
-        FileChannel inChannel = new FileInputStream(in).getChannel();
-        FileChannel outChannel = new FileOutputStream(out).getChannel();
+        FileInputStream fileInputStream = new FileInputStream(in);
+		FileChannel inChannel = fileInputStream.getChannel();
+        FileOutputStream fileOutputStream = new FileOutputStream(out);
+		FileChannel outChannel = fileOutputStream.getChannel();
 
         try {
             // fix copy bestanden groter dan 64MB (zie link)
@@ -403,13 +405,26 @@ public class IOnOSUtils {
         } catch (IOException e) {
             throw e;
         } finally {
-            if (inChannel != null) {
+        	try {
+            	fileInputStream.close();
+			} catch (Exception e2) {
+				// 
+			}
+        	try {
                 inChannel.close();
-            }
-
-            if (outChannel != null) {
+			} catch (Exception e2) {
+				// 
+			}
+        	try {
+                fileOutputStream.close();
+			} catch (Exception e2) {
+				// 
+			}
+        	try {
                 outChannel.close();
-            }
+			} catch (Exception e2) {
+				// 
+			}
         }
     }
 

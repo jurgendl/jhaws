@@ -485,11 +485,11 @@ public class HTTPClient implements Serializable {
         return this;
     }
 
-    protected synchronized ResponseContext execute(HttpRequestBase httpRequest, @SuppressWarnings("hiding") String accept) throws IOException,
+    protected synchronized ResponseContext execute(HttpRequestBase httpRequest, String ccpt) throws IOException,
             InternalServerError {
         this.chain.clear();
 
-        ResponseContext response = this.innerExecute(httpRequest, accept);
+        ResponseContext response = this.innerExecute(httpRequest, ccpt);
 
         // if (isHandleRedirects() && (response.getRedirect() != null)) {
         // try {
@@ -505,19 +505,26 @@ public class HTTPClient implements Serializable {
         return response;
     }
 
-    public Response get(@SuppressWarnings("hiding") GetParams params) throws HttpException, IOException, URISyntaxException {
-        HttpRequestBase method = new HttpGet(params.getUrl());
+    public Response get(GetParams prm) throws HttpException, IOException, URISyntaxException {
+        HttpRequestBase method = new HttpGet(prm.getUrl());
 
-        return this.execute(method, params.getAccept()).response;
+        return this.execute(method, prm.getAccept()).response;
     }
+    
+    private long downloaded = 0;
 
-    protected byte[] get(HttpEntity entity) throws IOException {
+    public long getDownloaded() {
+		return downloaded;
+	}
+
+	protected byte[] get(HttpEntity entity) throws IOException {
         int size = (entity.getContentLength() != -1) ? (int) entity.getContentLength() : 2048;
         ByteArrayOutputStream bout = new ByteArrayOutputStream(size);
         entity.writeTo(bout);
         bout.close();
-
-        return bout.toByteArray();
+        byte[] arr = bout.toByteArray();
+        downloaded+=arr.length;
+		return arr;
     }
 
     public Response get(String url) throws HttpException, IOException, URISyntaxException {
@@ -718,7 +725,7 @@ public class HTTPClient implements Serializable {
         return this.userAgent;
     }
 
-    protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest, @SuppressWarnings("hiding") String accept) throws IOException,
+    protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest,  String ccpt) throws IOException,
             org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException,
             org.apache.http.client.ClientProtocolException {
         // System.out.println(">> " + httpRequest.getURI());
@@ -750,8 +757,8 @@ public class HTTPClient implements Serializable {
                 }
             }
 
-            if (accept != null) {
-                httpRequest.setHeader("Accept", accept);
+            if (ccpt != null) {
+                httpRequest.setHeader("Accept", ccpt);
             }
 
             try {
@@ -910,18 +917,18 @@ public class HTTPClient implements Serializable {
         return this.singleCookieHeader;
     }
 
-    public Response post(@SuppressWarnings("hiding") PostParams params) throws HttpException, IOException, URISyntaxException, InternalServerError {
+    public Response post( PostParams prms) throws HttpException, IOException, URISyntaxException, InternalServerError {
         for (HTTPClientListener httpClientListener : this.httpClientListeners) {
-            httpClientListener.beforeMethod(this, "POST", params.getUrl(), params.getFormValues(), params.getAttachments());
+            httpClientListener.beforeMethod(this, "POST", prms.getUrl(), prms.getFormValues(), prms.getAttachments());
         }
 
         HttpPost method;
         HttpEntity entity;
 
-        if ((params.getAttachments() == null) || (params.getAttachments().size() == 0)) {
+        if ((prms.getAttachments() == null) || (prms.getAttachments().size() == 0)) {
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 
-            for (Map.Entry<String, String> entry : params.getFormValues().entrySet()) {
+            for (Map.Entry<String, String> entry : prms.getFormValues().entrySet()) {
                 formparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
             }
 
@@ -929,20 +936,20 @@ public class HTTPClient implements Serializable {
         } else {
             entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-            for (Map.Entry<String, String> entry : params.getFormValues().entrySet()) {
+            for (Map.Entry<String, String> entry : prms.getFormValues().entrySet()) {
                 ((MultipartEntity) entity).addPart(entry.getKey(), new StringBody(entry.getValue(), "text/plain", Charset.forName(this.charset)));
             }
 
-            for (Map.Entry<String, IOFile> attachment : params.getAttachments().entrySet()) {
+            for (Map.Entry<String, IOFile> attachment : prms.getAttachments().entrySet()) {
                 ((MultipartEntity) entity).addPart(attachment.getKey(),
                         new FileBody(attachment.getValue(), HTTPClientUtils.getMimeType(attachment.getValue())));
             }
         }
 
-        method = new HttpPost(params.getUrl());
+        method = new HttpPost(prms.getUrl());
         method.setEntity(entity);
 
-        return this.execute(method, params.getAccept()).response;
+        return this.execute(method, prms.getAccept()).response;
     }
 
     public Response post(String url, HashMap<String, String> formValues) throws HttpException, IOException, URISyntaxException {
@@ -954,22 +961,22 @@ public class HTTPClient implements Serializable {
         return this.post(new PostParams(url, formValues, attachments));
     }
 
-    public Response put(@SuppressWarnings("hiding") PutParams params) throws HttpException, IOException, URISyntaxException, InternalServerError {
+    public Response put(PutParams prms) throws HttpException, IOException, URISyntaxException, InternalServerError {
         for (HTTPClientListener httpClientListener : this.httpClientListeners) {
-            httpClientListener.beforeMethod(this, "PUT", params.getUrl(), params.getFormValues(), null);
+            httpClientListener.beforeMethod(this, "PUT", prms.getUrl(), prms.getFormValues(), null);
         }
 
         List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 
-        for (Map.Entry<String, String> entry : params.getFormValues().entrySet()) {
+        for (Map.Entry<String, String> entry : prms.getFormValues().entrySet()) {
             formparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
 
-        java.net.URI uri = new java.net.URI(params.getUrl());
+        java.net.URI uri = new java.net.URI(prms.getUrl());
         String uriPlusQuery = uri.toString() + URLEncodedUtils.format(formparams, this.charset);
         HttpEntityEnclosingRequestBase method = new HttpPut(uriPlusQuery);
 
-        return this.execute(method, params.getAccept()).response;
+        return this.execute(method, prms.getAccept()).response;
     }
 
     public Response put(String url, HashMap<String, String> formValues) throws HttpException, IOException, URISyntaxException {

@@ -144,6 +144,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
                         PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
                     }
                 }
+                
+                ffcr.close();
             } else {
                 try {
                     IOFile ff3c = new IOFile(new IODirectory(ffr, p.getProperty("Path")), "cookies.sqlite");
