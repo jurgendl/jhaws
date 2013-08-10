@@ -89,7 +89,7 @@ public class Response implements Serializable {
         CleanerProperties properties = this.cleaner.getProperties();
         XmlSerializer xmlSerializer = new PrettyXmlSerializer(properties);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        xmlSerializer.writeXmlToStream(rootnode, out);
+        xmlSerializer.writeToStream(rootnode, out);
         out.close();
 
         return new Response(out.toByteArray(), this.mime, this.filename, this.charset, this.chain);
