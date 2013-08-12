@@ -160,6 +160,8 @@ public class IOnOSUtils {
     /** windows specific dir */
     public static final String WINDIR_USER_PROFILE;
 
+    public static final String NEWLINE = System.getProperty("line.separator");
+
     static {
         String WINDIR_PROGRAM_FILES0 = "%ProgramFiles%";
         String WINDIR_SYSTEM_ROOT0 = "%SystemRoot%";
@@ -388,9 +390,9 @@ public class IOnOSUtils {
      */
     public static void copyFile(File in, File out) throws IOException {
         FileInputStream fileInputStream = new FileInputStream(in);
-		FileChannel inChannel = fileInputStream.getChannel();
+        FileChannel inChannel = fileInputStream.getChannel();
         FileOutputStream fileOutputStream = new FileOutputStream(out);
-		FileChannel outChannel = fileOutputStream.getChannel();
+        FileChannel outChannel = fileOutputStream.getChannel();
 
         try {
             // fix copy bestanden groter dan 64MB (zie link)
@@ -405,26 +407,26 @@ public class IOnOSUtils {
         } catch (IOException e) {
             throw e;
         } finally {
-        	try {
-            	fileInputStream.close();
-			} catch (Exception e2) {
-				// 
-			}
-        	try {
+            try {
+                fileInputStream.close();
+            } catch (Exception e2) {
+                //
+            }
+            try {
                 inChannel.close();
-			} catch (Exception e2) {
-				// 
-			}
-        	try {
+            } catch (Exception e2) {
+                //
+            }
+            try {
                 fileOutputStream.close();
-			} catch (Exception e2) {
-				// 
-			}
-        	try {
+            } catch (Exception e2) {
+                //
+            }
+            try {
                 outChannel.close();
-			} catch (Exception e2) {
-				// 
-			}
+            } catch (Exception e2) {
+                //
+            }
         }
     }
 

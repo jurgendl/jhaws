@@ -135,6 +135,11 @@ public class HTTPClient implements Serializable {
 
             return this;
         }
+
+        @Override
+        public String toString() {
+            return "GetParams [url=" + this.url + ", accept=" + this.accept + "]";
+        }
     }
 
     /**
@@ -193,6 +198,11 @@ public class HTTPClient implements Serializable {
 
             return this;
         }
+
+        @Override
+        public String toString() {
+            return super.toString() + " & PostParams [attachments=" + this.attachments + "]";
+        }
     }
 
     /**
@@ -219,6 +229,11 @@ public class HTTPClient implements Serializable {
             this.formValues = formValues;
 
             return this;
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " & PutParams [this.formValues=" + this.formValues + "]";
         }
     }
 
@@ -338,6 +353,8 @@ public class HTTPClient implements Serializable {
 
     /** version */
     protected int version;
+
+    protected long downloaded = 0;
 
     public HTTPClient() {
         this.cookiePolicy = HTTPClientDefaults.BROWSER_COMPATIBILITY;
@@ -485,8 +502,7 @@ public class HTTPClient implements Serializable {
         return this;
     }
 
-    protected synchronized ResponseContext execute(HttpRequestBase httpRequest, String ccpt) throws IOException,
-            InternalServerError {
+    protected synchronized ResponseContext execute(HttpRequestBase httpRequest, String ccpt) throws IOException, InternalServerError {
         this.chain.clear();
 
         ResponseContext response = this.innerExecute(httpRequest, ccpt);
@@ -510,21 +526,15 @@ public class HTTPClient implements Serializable {
 
         return this.execute(method, prm.getAccept()).response;
     }
-    
-    private long downloaded = 0;
 
-    public long getDownloaded() {
-		return downloaded;
-	}
-
-	protected byte[] get(HttpEntity entity) throws IOException {
+    protected byte[] get(HttpEntity entity) throws IOException {
         int size = (entity.getContentLength() != -1) ? (int) entity.getContentLength() : 2048;
         ByteArrayOutputStream bout = new ByteArrayOutputStream(size);
         entity.writeTo(bout);
         bout.close();
         byte[] arr = bout.toByteArray();
-        downloaded+=arr.length;
-		return arr;
+        this.downloaded += arr.length;
+        return arr;
     }
 
     public Response get(String url) throws HttpException, IOException, URISyntaxException {
@@ -610,6 +620,10 @@ public class HTTPClient implements Serializable {
 
     public String getDomain() {
         return this.domain;
+    }
+
+    public long getDownloaded() {
+        return this.downloaded;
     }
 
     /**
@@ -725,7 +739,7 @@ public class HTTPClient implements Serializable {
         return this.userAgent;
     }
 
-    protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest,  String ccpt) throws IOException,
+    protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest, String ccpt) throws IOException,
             org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException,
             org.apache.http.client.ClientProtocolException {
         // System.out.println(">> " + httpRequest.getURI());
@@ -917,7 +931,7 @@ public class HTTPClient implements Serializable {
         return this.singleCookieHeader;
     }
 
-    public Response post( PostParams prms) throws HttpException, IOException, URISyntaxException, InternalServerError {
+    public Response post(PostParams prms) throws HttpException, IOException, URISyntaxException, InternalServerError {
         for (HTTPClientListener httpClientListener : this.httpClientListeners) {
             httpClientListener.beforeMethod(this, "POST", prms.getUrl(), prms.getFormValues(), prms.getAttachments());
         }

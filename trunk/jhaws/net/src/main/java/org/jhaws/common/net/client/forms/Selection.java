@@ -1,8 +1,9 @@
 package org.jhaws.common.net.client.forms;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.htmlcleaner.TagNode;
 
@@ -12,9 +13,6 @@ import org.htmlcleaner.TagNode;
 public class Selection implements InputElement {
     private static final long serialVersionUID = -434561563846856302L;
 
-    /** options */
-    private final List<String> options = new ArrayList<String>();
-
     /** name */
     private final String id;
 
@@ -23,6 +21,9 @@ public class Selection implements InputElement {
 
     /** selected */
     private String value;
+
+    /** options */
+    private Map<String, String> options = new LinkedHashMap<String, String>();
 
     /** multiple */
     private final boolean multiple;
@@ -34,12 +35,13 @@ public class Selection implements InputElement {
 
         for (TagNode optionnode : optionlist) {
             String v = optionnode.getAttributeByName("value");
+            String t = optionnode.getText().toString().trim();
 
             if (v == null) {
                 v = optionnode.getText().toString().trim();
             }
 
-            this.options.add(v);
+            this.options.put(v, t);
 
             if ("selected".equals(optionnode.getAttributeByName("selected"))) {
                 selected = v;
@@ -71,8 +73,8 @@ public class Selection implements InputElement {
         return this.name;
     }
 
-    public List<String> getOptions() {
-        return Collections.unmodifiableList(this.options);
+    public Map<String, String> getOptions() {
+        return Collections.unmodifiableMap(this.options);
     }
 
     /**
