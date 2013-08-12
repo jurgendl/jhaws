@@ -1,14 +1,18 @@
 package org.jhaws.common.net.client.forms;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -42,27 +46,26 @@ public class FormDialog extends JDialog {
     /** cancelled */
     private boolean cancelled = true;
 
-    /**
-     * Creates a new FormDialog object.
-     * 
-     * @param form
-     */
     public FormDialog(final Form form) {
+        this(form, 2);
+    }
+
+    public FormDialog(final Form form, int cols) {
         super((Frame) null, true);
 
         this.form = form;
 
-        getContentPane().setLayout(new BorderLayout());
+        this.getContentPane().setLayout(new BorderLayout());
 
-        JPanel mainpanel = new JPanel(new GridLayout(0, 2));
+        JPanel mainpanel = new JPanel(new GridLayout(0, cols * 2));
         JPanel actionpanel = new JPanel(new FlowLayout());
 
         JButton ok = new JButton("ok");
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cancelled = false;
-                dispose();
+                FormDialog.this.cancelled = false;
+                FormDialog.this.dispose();
             }
         });
 
@@ -70,15 +73,15 @@ public class FormDialog extends JDialog {
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                FormDialog.this.dispose();
             }
         });
 
         actionpanel.add(ok);
         actionpanel.add(cancel);
 
-        getContentPane().add(mainpanel, BorderLayout.CENTER);
-        getContentPane().add(actionpanel, BorderLayout.SOUTH);
+        this.getContentPane().add(mainpanel, BorderLayout.CENTER);
+        this.getContentPane().add(actionpanel, BorderLayout.SOUTH);
 
         for (InputElement element : form.getInputElements()) {
             // System.out.println(element);
@@ -133,7 +136,7 @@ public class FormDialog extends JDialog {
 
                     Password password = (Password) element;
                     mainpanel.add(new JLabel(password.getName()), null);
-                    mainpanel.add(addListener(password, new JPasswordField(password.getValue())), null);
+                    mainpanel.add(this.addListener(password, new JPasswordField(password.getValue())), null);
 
                     break;
 
@@ -172,17 +175,34 @@ public class FormDialog extends JDialog {
 
                     DefaultListModel model = new DefaultListModel();
 
-                    for (String option : selection.getOptions()) {
+                    Map.Entry<String, String> sl = null;
+                    for (Map.Entry<String, String> option : selection.getOptions().entrySet()) {
                         model.addElement(option);
+                        if (option.getKey().equals(selection.getValue())) {
+                            sl = option;
+                        }
                     }
 
                     JList jList = new JList(model);
+                    jList.setCellRenderer(new DefaultListCellRenderer() {
+                        private static final long serialVersionUID = 5621985439026030982L;
+
+                        @Override
+                        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                            if (value != null) {
+                                @SuppressWarnings("unchecked")
+                                Map.Entry<String, String> entry = (Entry<String, String>) value;
+                                value = entry.getValue();
+                            }
+                            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                        }
+                    });
 
                     jList.setSelectionMode(selection.isMultiple() ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
                             : ListSelectionModel.SINGLE_SELECTION);
 
-                    if (StringUtils.isNotBlank(selection.getValue())) {
-                        jList.setSelectedValue(selection.getValue(), true);
+                    if (sl != null) {
+                        jList.setSelectedValue(sl, true);
                     }
 
                     mainpanel.add(new JScrollPane(jList), null);
@@ -204,7 +224,7 @@ public class FormDialog extends JDialog {
                     }
 
                     mainpanel.add(new JLabel(text.getName()));
-                    mainpanel.add(addListener(text, new JTextField(text.getValue())));
+                    mainpanel.add(this.addListener(text, new JTextField(text.getValue())));
 
                     break;
 
@@ -223,8 +243,8 @@ public class FormDialog extends JDialog {
             }
         }
 
-        setSize(new Dimension(400, 400));
-        setLocationRelativeTo(null);
+        this.setSize(new Dimension(400, 400));
+        this.setLocationRelativeTo(null);
     }
 
     private JComponent addListener(final Input input, final JTextComponent jTextComponent) {
@@ -233,44 +253,34 @@ public class FormDialog extends JDialog {
         }
 
         jTextComponent.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                changed();
-            }
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                changed();
+            private void changed() {
+                input.setValue(jTextComponent.getText());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                changed();
+                this.changed();
             }
 
-            private void changed() {
-                input.setValue(jTextComponent.getText());
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                this.changed();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                this.changed();
             }
         });
 
         return jTextComponent;
     }
 
-    /**
-     * isCancelled
-     * 
-     * @return the cancelled
-     */
-    public boolean isCancelled() {
-        return cancelled;
+    public Form getForm() {
+        return this.form;
     }
 
-    /**
-     * getForm
-     * 
-     * @return the form
-     */
-    public Form getForm() {
-        return form;
+    public boolean isCancelled() {
+        return this.cancelled;
     }
 }

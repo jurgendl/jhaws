@@ -11,8 +11,8 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +34,7 @@ public class Form implements Serializable, Iterable<InputElement> {
     }
 
     /** inputElements */
-    private Map<String, InputElement> inputElements = new HashMap<String, InputElement>();
+    private Map<String, InputElement> inputElements = new LinkedHashMap<String, InputElement>();
 
     /** action */
     private String action;
@@ -148,8 +148,14 @@ public class Form implements Serializable, Iterable<InputElement> {
         return this;
     }
 
-    public void setValue(String name, String value) {
-        this.getInputElement(name).setValue(value);
+    public InputElement setValue(String name, String value) {
+        InputElement inputElement = this.getInputElement(name);
+        if (inputElement == null) {
+            inputElement = new Input(null, name, name);
+            this.inputElements.put(name, inputElement);
+        }
+        inputElement.setValue(value);
+        return inputElement;
     }
 
     /**

@@ -62,17 +62,21 @@ public class Response implements Serializable {
     /** content */
     protected byte[] content;
 
-    private String charset;
+    protected String charset;
 
     public Response() {
         super();
     }
 
-    protected Response(byte[] content, String mime, String filename, String charset) {
+    public Response(byte[] content) {
+        this(content, null, null, null, null);
+    }
+
+    public Response(byte[] content, String mime, String filename, String charset) {
         this(content, mime, filename, charset, null);
     }
 
-    protected Response(byte[] content, String mime, String filename, String charset, List<java.net.URI> chain) {
+    public Response(byte[] content, String mime, String filename, String charset, List<java.net.URI> chain) {
         this.content = content;
         this.mime = mime;
         this.filename = filename;
@@ -136,7 +140,7 @@ public class Response implements Serializable {
         List<Form> forms = new ArrayList<Form>();
 
         for (TagNode formnode : formlist) {
-            URI uri = this.chain.get(this.chain.size() - 1);
+            URI uri = this.chain == null ? null : this.chain.get(this.chain.size() - 1);
             forms.add(new Form(uri, formnode));
         }
 

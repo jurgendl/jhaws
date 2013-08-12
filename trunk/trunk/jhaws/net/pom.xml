@@ -91,19 +91,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>core-renderer</artifactId>
-			<version>R8pre2</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>bcmail-jdk14</artifactId>
-					<groupId>bouncycastle</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>bcprov-jdk14</artifactId>
-					<groupId>bouncycastle</groupId>
-				</exclusion>
-			</exclusions>
+			<artifactId>flying-saucer-pdf-itext5</artifactId>
+			<version>9.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
