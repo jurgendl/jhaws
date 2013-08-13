@@ -30,7 +30,7 @@ public class RecyclerFactory {
     }
 
     public static boolean recycle(IOFile child) {
-        return child.delete();
+        return child.erase();
     }
 
     public static void setDefaultRecycleDirectory(IODirectory oldTrashCan) {
