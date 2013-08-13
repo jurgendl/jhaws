@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * general utilities for a Lucene Analyzer
  *
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 1.0.0 - 22 June 2006
  *
  * @since 1.5

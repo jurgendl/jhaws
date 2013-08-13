@@ -3,7 +3,7 @@ package org.jhaws.common.ldap.filters;
 /**
  * filter: key= (any)
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class Any implements Filter {
     /** key */

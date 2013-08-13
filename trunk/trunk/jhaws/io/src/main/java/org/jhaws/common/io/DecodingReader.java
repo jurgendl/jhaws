@@ -30,7 +30,7 @@ import java.nio.ByteBuffer;
  * UTF-16LE -> Sixteen-bit UCS Transformation Format, little-endian byte-order<br>
  * UTF-16 -> Sixteen-bit UCS Transformation Format, byte-order identified by an optional byte-order mark<br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 1.0.0 - 24 February 2005
  * 
  * @see <a href="http://mindprod.com/jgloss/encoding.html">here</a>

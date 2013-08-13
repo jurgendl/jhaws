@@ -22,7 +22,7 @@ import org.jhaws.common.io.filter.OnlyFilesFilter;
 /**
  * functionality that java.io.File lacks for directories only.<br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 29 January 2007
  * 
  * @see IOGeneralFile

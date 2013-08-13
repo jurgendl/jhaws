@@ -9,7 +9,7 @@ import java.util.Comparator;
  * 1.1.0:<br>
  * - sorting is now an enum<br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 1.1.0 - 6 June 2006
  */
 @SuppressWarnings("rawtypes")
@@ -18,7 +18,7 @@ public class FileDateComparator implements Comparator<IOGeneralFile> {
      * 
      * sorting
      * 
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     public enum Sort {
         /** NEWEST_FIRST */

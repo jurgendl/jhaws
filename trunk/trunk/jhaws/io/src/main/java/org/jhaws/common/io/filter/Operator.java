@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * creates operator filters (filter linking)
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 2.0.0 - 27 June 2006
  * 
  * @see org.jhaws.common.io.filter.AbstractFileFilter
@@ -127,7 +127,7 @@ public abstract class Operator {
     /**
      * AND operation file filter
      * 
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     public static class AndFileFilter extends AbstractFileFilter {
         /** filters */
@@ -186,7 +186,7 @@ public abstract class Operator {
     /**
      * OR operation file filter
      * 
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     public static class OrFileFilter extends AbstractFileFilter {
         /** filters */

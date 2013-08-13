@@ -3,7 +3,7 @@ package org.jhaws.common.ldap.tests.mock;
 import org.jhaws.common.ldap.tests.dao.CADao;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class CADaoMock extends CADao {
     /** serialVersionUID */

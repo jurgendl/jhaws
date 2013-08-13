@@ -15,7 +15,7 @@ import java.io.FilenameFilter;
  * - moved filter to other packages<br>
  * - reimplemented case sensitivity and filter chaining (and/or/not)<br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 2.0.0 - 27 June 2006
  * 
  * @see java.io.FileFilter

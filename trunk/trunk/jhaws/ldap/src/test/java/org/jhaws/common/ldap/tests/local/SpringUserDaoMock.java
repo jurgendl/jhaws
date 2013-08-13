@@ -7,7 +7,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class SpringUserDaoMock extends SpringUserDao {
     /** serialVersionUID */

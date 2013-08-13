@@ -4,7 +4,7 @@ package org.jhaws.common.lucene;
  * 
  * different stored fields
  *
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @since 1.5
  * @version 1.0.0 - 22 June 2006
  */

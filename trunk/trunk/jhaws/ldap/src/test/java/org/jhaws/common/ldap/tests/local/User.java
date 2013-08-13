@@ -11,7 +11,7 @@ import org.jhaws.common.ldap.annotations.LdapKey;
 import org.jhaws.common.ldap.annotations.LdapKeyValue;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 @LdapClass(objectClass = "person", dn = @LdapKeyValue(key = "ou", value = "users") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 

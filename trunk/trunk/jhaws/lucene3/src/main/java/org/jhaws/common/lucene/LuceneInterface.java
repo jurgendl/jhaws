@@ -23,7 +23,7 @@ import org.jhaws.common.lucene.stat.HighScoreTerms;
 /**
  * lucene index interface
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public interface LuceneInterface {
     /** field will be saved */

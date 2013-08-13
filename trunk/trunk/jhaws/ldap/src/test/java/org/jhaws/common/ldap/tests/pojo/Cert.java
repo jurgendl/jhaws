@@ -10,7 +10,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class Cert {
     public static Certificate certificate(byte[] cert) throws CertificateException {

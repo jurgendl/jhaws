@@ -5,7 +5,7 @@ import java.io.File;
 /**
  * directory commpare listener
  * 
- * @author Jurgen De landsheer
+ * @author Jurgen
  * @version 1.0.0 - 27 June 2005
  */
 public interface IODirectoryCompareListener {

@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * file size comparator <br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 6 June 2006
  */
 public class FileSizeComparator implements Comparator<IOFile> {
@@ -13,7 +13,7 @@ public class FileSizeComparator implements Comparator<IOFile> {
      * 
      * sorting
      * 
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     public enum Sort {
         /** LARGEST_FIRST */

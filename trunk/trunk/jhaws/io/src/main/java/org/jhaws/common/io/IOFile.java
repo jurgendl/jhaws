@@ -30,7 +30,7 @@ import org.jhaws.common.io.filter.VideoFileFilter;
 /**
  * functionality that java.io.File lacks for real files only.<br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 29 January 2007
  * 
  * @see IOGeneralFile

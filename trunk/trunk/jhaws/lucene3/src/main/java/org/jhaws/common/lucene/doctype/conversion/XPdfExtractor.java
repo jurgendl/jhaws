@@ -22,7 +22,7 @@ import org.jhaws.common.io.IOFile;
 /**
  * uses xpdf as command line utility to convert pdf to text (very performant), needs connection to internet and library ftp server to be up to work
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * 
  * @see http://www.foolabs.com/xpdf/download.html
  * @see ftp://ftp.foolabs.com/pub/xpdf

@@ -9,7 +9,7 @@ import org.jhaws.common.io.IOFile;
 /**
  * interface for a document reader
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @since 1.5
  * @version 1.0.0 - 22 June 2006
  */

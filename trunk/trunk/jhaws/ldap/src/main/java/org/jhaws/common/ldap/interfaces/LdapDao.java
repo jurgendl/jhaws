@@ -7,7 +7,7 @@ import java.util.Properties;
 /**
  * interface voor ldap dao
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public interface LdapDao<T extends Serializable & Comparable<? super T>> extends Serializable {
     /**

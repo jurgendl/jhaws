@@ -8,7 +8,7 @@ import java.util.TreeSet;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * 
  * @since 3.0.0
  */

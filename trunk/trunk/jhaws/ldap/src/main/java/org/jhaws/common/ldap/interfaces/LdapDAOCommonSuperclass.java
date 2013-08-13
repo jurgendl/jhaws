@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.annotations.AnnotationParser;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparable<? super T>> implements LdapDao<T> {
     /** serialVersionUID */

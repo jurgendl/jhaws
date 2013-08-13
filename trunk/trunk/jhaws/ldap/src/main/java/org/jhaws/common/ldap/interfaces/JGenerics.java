@@ -5,7 +5,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
 /**
- * @author Jurgen De landsheer
+ * @author Jurgen
  * 
  * @see util.classes.generics.JGenerics
  */

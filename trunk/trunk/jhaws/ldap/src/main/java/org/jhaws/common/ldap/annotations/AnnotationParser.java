@@ -20,7 +20,7 @@ import org.jhaws.common.ldap.interfaces.KeyValue;
 /**
  * collects ldap mapping information from annotated class and it's superclasses
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public final class AnnotationParser {
     /** Logger for this class */

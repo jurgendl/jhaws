@@ -3,7 +3,7 @@ package org.jhaws.common.io.filter;
 /**
  * modifier
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 2.0.0 - 27 June 2006
  */
 public enum Modifier {

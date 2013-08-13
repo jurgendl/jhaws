@@ -12,7 +12,7 @@ import javax.swing.filechooser.FileSystemView;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 1.0.0 - 28 February 2005
  */
 public class SystemIcon implements ExtensionIconFinder {

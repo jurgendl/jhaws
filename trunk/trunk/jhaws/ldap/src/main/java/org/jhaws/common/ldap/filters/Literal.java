@@ -3,7 +3,7 @@ package org.jhaws.common.ldap.filters;
 /**
  * letterlijke filter, gebruik deze voor custom filters
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class Literal implements Filter {
     /** query (letterlijk) */

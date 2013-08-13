@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.interfaces.LdapDao;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class TestDao extends TestCase {
     /** Logger for this class */

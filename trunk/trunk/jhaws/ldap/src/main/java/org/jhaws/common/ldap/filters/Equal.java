@@ -3,7 +3,7 @@ package org.jhaws.common.ldap.filters;
 /**
  * filter: key=value (equality) met mogelijkheid tot invers (not)
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class Equal implements Filter {
     /** key */

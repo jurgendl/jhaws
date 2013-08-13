@@ -15,7 +15,7 @@ import org.jhaws.common.lucene.AbstractToLuceneDocument;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class OpenOfficeToLuceneDocument extends AbstractToLuceneDocument {
     /**

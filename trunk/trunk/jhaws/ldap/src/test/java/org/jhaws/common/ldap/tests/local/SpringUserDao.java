@@ -4,7 +4,7 @@ import org.jhaws.common.ldap.spring.AbstractSpringLdapDao;
 
 /**
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class SpringUserDao extends AbstractSpringLdapDao<User> {
     /** serialVersionUID */

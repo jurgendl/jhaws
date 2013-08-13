@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * ldap fieldname = key
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

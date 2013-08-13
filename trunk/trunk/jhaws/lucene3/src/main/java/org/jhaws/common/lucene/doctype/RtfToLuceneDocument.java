@@ -13,7 +13,7 @@ import org.jhaws.common.lucene.AbstractToLuceneDocument;
 /**
  * RTF document conversion
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 1.0.0 - 22 June 2006
  * 
  * @since 1.5

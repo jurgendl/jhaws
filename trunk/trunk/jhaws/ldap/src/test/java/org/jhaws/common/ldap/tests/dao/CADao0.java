@@ -4,7 +4,7 @@ import org.jhaws.common.ldap.standalone.AbstractLdapDao;
 import org.jhaws.common.ldap.tests.pojo.CA;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class CADao0 extends AbstractLdapDao<CA> {
     /** serialVersionUID */

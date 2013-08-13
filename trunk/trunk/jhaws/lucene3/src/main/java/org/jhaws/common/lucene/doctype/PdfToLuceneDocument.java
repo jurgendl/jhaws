@@ -9,7 +9,7 @@ import org.jhaws.common.lucene.doctype.conversion.XPdfExtractor;
 /**
  * uses xpdf as command line utility to convert pdf to text (very performant), needs connection to internet and library ftp server to be up to work
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class PdfToLuceneDocument extends AbstractToLuceneDocument {
     /**

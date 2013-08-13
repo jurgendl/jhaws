@@ -3,7 +3,7 @@ package org.jhaws.common.ldap.filters;
 /**
  * startswith filter
  * 
- * @author jdlandsh
+ * @author Jurgen
  */
 public class StartsWith implements Filter {
     /** key */

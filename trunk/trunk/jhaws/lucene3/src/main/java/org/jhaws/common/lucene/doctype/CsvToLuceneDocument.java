@@ -13,7 +13,7 @@ import org.jhaws.common.lucene.doctype.conversion.CsvTool;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class CsvToLuceneDocument extends AbstractToLuceneDocument {
     /**
