@@ -5,7 +5,7 @@ import javax.naming.directory.SearchControls;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public enum Search {
     SINGLE_LEVEL, DEEP;

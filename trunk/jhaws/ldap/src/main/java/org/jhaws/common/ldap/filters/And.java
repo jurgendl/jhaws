@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * filter1 AND filter2 AND filter3 ...
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class And implements Filter {
     /** alle filters */

@@ -6,7 +6,7 @@ import java.util.Vector;
 /**
  * holds encoding info
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 1.0.0 - 24 February 2005
  */
 public class EncodingInfo {

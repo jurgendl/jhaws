@@ -12,7 +12,7 @@ import org.jhaws.common.lucene.DocumentFactory;
 /**
  * testConversion
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class TestConversion extends TestCase {
     /**

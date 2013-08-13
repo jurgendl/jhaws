@@ -25,7 +25,7 @@ import java.util.Locale;
  *
  * type og analyzer base on language
  *
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @since 1.5
  * @version 1.0.0 - 22 June 2006
  */
@@ -162,7 +162,7 @@ public enum Analyzer {
     /**
      * English analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final    public static class English extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "English");
@@ -187,7 +187,7 @@ public enum Analyzer {
     /**
      * Czech analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class Czech extends org.apache.lucene.analysis.Analyzer {
 /**
@@ -211,7 +211,7 @@ public enum Analyzer {
     /**
      * Brazilian analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class Brazilian extends org.apache.lucene.analysis.Analyzer {
 /**
@@ -235,7 +235,7 @@ public enum Analyzer {
     /**
      * Chinese analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final    public static class Chinese extends org.apache.lucene.analysis.Analyzer {
 /**
@@ -259,7 +259,7 @@ public enum Analyzer {
     /**
      * Dutch analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final    public static class Dutch extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Dutch");
@@ -285,7 +285,7 @@ public enum Analyzer {
     /**
      * French analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final    public static class French extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "French");
@@ -310,7 +310,7 @@ public enum Analyzer {
     /**
      * german analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class German extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "German");
@@ -335,7 +335,7 @@ public enum Analyzer {
     /**
      * Greek analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class Greek extends org.apache.lucene.analysis.Analyzer {
 /**
@@ -359,7 +359,7 @@ public enum Analyzer {
     /**
      * Russian analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class Russian extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Russian");
@@ -384,7 +384,7 @@ public enum Analyzer {
     /**
      * Danish analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class Danish extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Danish");
@@ -410,7 +410,7 @@ public enum Analyzer {
     /**
      * Finnish analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final    public static class Finnish extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Finnish");
@@ -435,7 +435,7 @@ public enum Analyzer {
     /**
      * Italian analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final    public static class Italian extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Italian");
@@ -460,7 +460,7 @@ public enum Analyzer {
     /**
      * Norwegian analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class Norwegian extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Norwegian");
@@ -486,7 +486,7 @@ public enum Analyzer {
     /**
      * Portuguese analayzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final    public static class Portuguese extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Portuguese");
@@ -512,7 +512,7 @@ public enum Analyzer {
     /**
      * Spanish analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     final   public static class Spanish extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Spanish");
@@ -538,7 +538,7 @@ public enum Analyzer {
     /**
      * Swedish analyzer
      *
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
   final  public static class Swedish extends org.apache.lucene.analysis.Analyzer {
     	private SnowballAnalyzer sba = new SnowballAnalyzer(Version.LUCENE_CURRENT, "Swedish");

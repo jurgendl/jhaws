@@ -21,7 +21,7 @@ import org.jhaws.common.ldap.filters.Or;
 import org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public abstract class AbstractLdapDao<T extends Serializable & Comparable<? super T>> extends LdapDAOCommonSuperclass<T> {
     /** serialVersionUID */

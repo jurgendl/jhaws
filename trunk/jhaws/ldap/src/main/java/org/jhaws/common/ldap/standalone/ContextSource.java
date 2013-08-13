@@ -6,7 +6,7 @@ import javax.naming.Context;
 import javax.naming.directory.InitialDirContext;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class ContextSource {
     /** field */

@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * 
  * @since 3.0.0
  */

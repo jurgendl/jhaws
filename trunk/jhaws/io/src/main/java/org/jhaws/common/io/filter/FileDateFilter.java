@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * compairs the date of file for filtering
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 2.0.0 - 27 June 2006
  * 
  * @see org.jhaws.common.io.filter.AbstractFileFilter

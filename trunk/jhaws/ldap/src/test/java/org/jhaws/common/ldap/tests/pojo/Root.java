@@ -9,7 +9,7 @@ import org.jhaws.common.ldap.annotations.LdapClass;
 import org.jhaws.common.ldap.annotations.LdapKey;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 @LdapClass(autoFields = true)
 public class Root implements Serializable, Comparable<Root> {

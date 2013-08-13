@@ -36,6 +36,8 @@ import org.apache.lucene.analysis.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.FieldInfo;
+import org.apache.lucene.index.FieldInfos;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
@@ -63,7 +65,7 @@ import org.jhaws.common.lucene.stat.HighScoreTerms;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 3.0.0 - 21 August 2007
  * 
  * @see http://lucene.apache.org/java/docs/
@@ -75,7 +77,7 @@ public class LuceneIndex implements LuceneInterface {
     /**
      * internally used
      * 
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     private static class BreakLoopException extends Exception {
         /** serialVersionUID */
@@ -282,7 +284,7 @@ public class LuceneIndex implements LuceneInterface {
 
             bzip.erase();
 
-            Archive archive = new Archive(bzip);
+            LuceneArchive archive = new LuceneArchive(bzip);
             archive.addEntry(target);
 
             try {
@@ -628,7 +630,12 @@ public class LuceneIndex implements LuceneInterface {
     @Override
     public SortedSet<String> getFieldNames() throws IOException {
         SortedSet<String> set = new TreeSet<String>();
-        set.addAll(this.getReader().getFieldNames(FieldOption.ALL));
+        FieldInfos finfo = this.getReader().getFieldInfos();
+        Iterator<FieldInfo> iterator = finfo.iterator();
+        while (iterator.hasNext()) {
+            FieldInfo fieldInfo = iterator.next();
+            set.add(fieldInfo.name);
+        }
 
         return set;
     }

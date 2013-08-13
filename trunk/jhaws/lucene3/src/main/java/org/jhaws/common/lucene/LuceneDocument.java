@@ -22,7 +22,7 @@ import org.jhaws.common.io.IOFile;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class LuceneDocument implements Comparable<LuceneDocument>, Serializable {
     /** Logger for this class */
@@ -151,7 +151,7 @@ public class LuceneDocument implements Comparable<LuceneDocument>, Serializable 
             throw new FileNotFoundException(bzip.toString());
         }
 
-        Archive archive = new Archive(bzip);
+        LuceneArchive archive = new LuceneArchive(bzip);
         archive.extract(archive.getArchiveFile().getParentDirectory());
 
         FileInputStream in = new FileInputStream(target);

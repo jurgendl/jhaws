@@ -3,7 +3,7 @@ package org.jhaws.common.ldap.filters;
 /**
  * filter: key=value (like)
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class Like implements Filter {
     /** key */

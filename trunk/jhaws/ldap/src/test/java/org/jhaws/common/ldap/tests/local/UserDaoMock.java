@@ -5,7 +5,7 @@ import java.util.Properties;
 import org.jhaws.common.ldap.standalone.ContextSource;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class UserDaoMock extends UserDao {
     /** serialVersionUID */

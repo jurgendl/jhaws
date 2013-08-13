@@ -46,7 +46,7 @@ import org.springframework.ldap.filter.OrFilter;
  * <br>
  * the only overidable function is newBean
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * 
  * @param <T> object type (class) waarvoor de dao subclass geschikt voor is
  */

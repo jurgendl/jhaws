@@ -4,7 +4,7 @@ import org.jhaws.common.ldap.standalone.AbstractLdapDao;
 import org.jhaws.common.ldap.tests.pojo.Person;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class PersoonDao0 extends AbstractLdapDao<Person> {
     /** serialVersionUID */

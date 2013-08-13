@@ -5,7 +5,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * intern gebruik
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class KeyValue {
     /** key */

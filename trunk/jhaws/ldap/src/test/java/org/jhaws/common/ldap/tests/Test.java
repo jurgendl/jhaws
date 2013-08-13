@@ -35,7 +35,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * test ldap
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class Test {
     /**

@@ -4,7 +4,7 @@ import org.jhaws.common.ldap.spring.AbstractSpringLdapDao;
 import org.jhaws.common.ldap.tests.pojo.Root;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class RootDao extends AbstractSpringLdapDao<Root> {
     /** serialVersionUID */

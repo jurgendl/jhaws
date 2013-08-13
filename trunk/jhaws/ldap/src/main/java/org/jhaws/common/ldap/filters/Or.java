@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * filter1 OR filter2 OR filter3 ...
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class Or implements Filter {
     /** alle filters */

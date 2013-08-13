@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * 
  * @version 2.0.0 - 27 June 2006
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public enum Case {
     /** case sensitive */

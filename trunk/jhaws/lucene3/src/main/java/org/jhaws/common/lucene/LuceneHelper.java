@@ -32,6 +32,8 @@ import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.index.FieldInfo;
+import org.apache.lucene.index.FieldInfos;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriter.MaxFieldLength;
@@ -65,7 +67,7 @@ public class LuceneHelper {
     /**
      * internally used
      * 
-     * @author Jurgen De Landsheer
+     * @author Jurgen
      */
     protected static class BreakLoopException extends Exception {
         /** serialVersionUID */
@@ -755,7 +757,12 @@ public class LuceneHelper {
         try {
             IndexReader readOnlyIndexReader2 = this.getReadOnlyIndexReader();
             SortedSet<String> set = new TreeSet<String>();
-            set.addAll(readOnlyIndexReader2.getFieldNames(FieldOption.ALL));
+            FieldInfos finfo = readOnlyIndexReader2.getFieldInfos();
+            Iterator<FieldInfo> iterator = finfo.iterator();
+            while (iterator.hasNext()) {
+                FieldInfo fieldInfo = iterator.next();
+                set.add(fieldInfo.name);
+            }
 
             return set;
         } catch (FileNotFoundException ex) {

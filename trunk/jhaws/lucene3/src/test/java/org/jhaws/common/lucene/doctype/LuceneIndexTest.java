@@ -18,7 +18,7 @@ import org.junit.Test;
 /**
  * test LuceneIndex
  * 
- * @author jdlandsh
+ * @author Jurgen
  */
 @SuppressWarnings("deprecation")
 public class LuceneIndexTest {

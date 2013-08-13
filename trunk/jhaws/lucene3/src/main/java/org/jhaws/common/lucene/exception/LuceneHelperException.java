@@ -3,7 +3,7 @@ package org.jhaws.common.lucene.exception;
 /**
  * generale Lucene helper exception
  *
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 1.0.0 - 22 June 2006
  *
  * @since 1.5

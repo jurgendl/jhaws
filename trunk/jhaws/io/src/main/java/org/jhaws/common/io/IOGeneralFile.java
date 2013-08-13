@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 /**
  * static and string based functionality that java.io.File lacks for files and directories.<br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 7 March 2006
  * 
  * @param <T> DOC_ME

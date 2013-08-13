@@ -21,7 +21,7 @@ import org.apache.poi.ss.usermodel.Cell;
 /**
  * converteert csv naar xls met poi
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class CsvTool {
     /**

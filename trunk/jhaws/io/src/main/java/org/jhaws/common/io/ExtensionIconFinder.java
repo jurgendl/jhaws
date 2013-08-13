@@ -5,7 +5,7 @@ import javax.swing.Icon;
 /**
  * na
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public interface ExtensionIconFinder {
     /**

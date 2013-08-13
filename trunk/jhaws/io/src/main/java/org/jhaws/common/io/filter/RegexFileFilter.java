@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * for example: [^$]{#-6#}.class<br>
  * will let filenames pass that end with .class and don't contain $ in the filename and pathname<br>
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  * @version 2.0.0 - 27 June 2006
  * 
  * @see org.jhaws.common.io.filter.AbstractFileFilter

@@ -3,7 +3,7 @@ package org.jhaws.common.ldap.tests.local;
 import org.jhaws.common.ldap.standalone.AbstractLdapDao;
 
 /**
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 public class UserDao extends AbstractLdapDao<User> {
     /** serialVersionUID */

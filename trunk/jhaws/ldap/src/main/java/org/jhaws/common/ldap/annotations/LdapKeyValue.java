@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * key/value pair
  * 
- * @author Jurgen De Landsheer
+ * @author Jurgen
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
