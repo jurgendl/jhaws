@@ -2,7 +2,6 @@ package org.jhaws.common.io;
 
 import java.io.File;
 
-@SuppressWarnings("unused")
 public class RecyclerFactory {
     private static IODirectory oldTrashCan;
 
