@@ -457,7 +457,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      */
     public IODirectory create() {
         this.mkdirs();
-
         return this;
     }
 
@@ -468,6 +467,13 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     @Override
     public boolean delete() {
         return this.recycle();
+    }
+
+    /**
+     * @see java.io.File#delete()
+     */
+    public boolean delete0() {
+        return super.delete();
     }
 
     /**
@@ -982,6 +988,22 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
         }
 
         return files;
+    }
+
+    public IOGeneralFile<?>[] listIOGeneralFile() {
+        File[] f = this.listFiles();
+
+        if (f == null) {
+            return new IOGeneralFile[0];
+        }
+
+        IOGeneralFile<?>[] d = new IOGeneralFile[f.length];
+
+        for (int i = 0; i < f.length; i++) {
+            d[i] = f[i].isDirectory() ? new IODirectory(f[i]) : new IOFile(f[i]);
+        }
+
+        return d;
     }
 
     /**
