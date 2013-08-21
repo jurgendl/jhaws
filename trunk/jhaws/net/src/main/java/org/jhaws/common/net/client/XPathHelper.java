@@ -53,7 +53,7 @@ public class XPathHelper {
     }
 
     public static <T> T xpathXml(Class<T> clazz, String expr, org.w3c.dom.Document doc) throws XPathExpressionException, IOException {
-        String basenodename = expr.substring(1, expr.indexOf('/', 2));
+        String basenodename = expr.substring(1, expr.indexOf('/', 2)).replaceAll("default:", "");
         return XPathHelper.xpathXml(clazz, expr, doc, basenodename);
     }
 
@@ -85,7 +85,7 @@ public class XPathHelper {
     }
 
     public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, org.w3c.dom.Document doc) throws XPathExpressionException, IOException {
-        String basenodename = expr.substring(1, expr.indexOf('/', 2));
+        String basenodename = expr.substring(1, expr.indexOf('/', 2)).replaceAll("default:", "");
         return XPathHelper.xpathXmlList(clazz, expr, doc, basenodename);
     }
 
