@@ -140,6 +140,11 @@ public class Form implements Serializable, Iterable<InputElement> {
         return this.inputElements.values().iterator();
     }
 
+    public void removeInputElement(String name) {
+        this.inputElements.remove(this.getInputElement(name));
+
+    }
+
     public Form serialize(OutputStream out) throws IOException {
         ObjectOutputStream encoder = new ObjectOutputStream(new BufferedOutputStream(out));
         encoder.writeObject(this);

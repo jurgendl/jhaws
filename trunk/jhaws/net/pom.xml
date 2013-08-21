@@ -13,7 +13,7 @@
 	<description>http(s) protocol made simple, build around Apache httpcomponents</description>
 	<packaging>jar</packaging>
 	<properties>
-		<httpcomponents.version>4.2.1</httpcomponents.version>
+		<httpcomponents.version>4.2.5</httpcomponents.version>
 	</properties>
 	<dependencies>
 		<dependency>
