@@ -10,9 +10,10 @@ public class RecyclerFactory {
                     if (!RecyclerFactory.deleteDirectory((IODirectory) file)) {
                         return false;
                     }
-                }
-                if (!((IOFile) file).delete()) {
-                    return false;
+                } else {
+                    if (!((IOFile) file).delete()) {
+                        return false;
+                    }
                 }
             }
             return directory.delete0();
