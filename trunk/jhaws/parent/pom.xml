@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -8,96 +7,97 @@
 	<packaging>pom</packaging>
 	<name>parent</name>
 	<description>parent</description>
-	<inceptionYear>2004</inceptionYear>
+	<url>http://jhaws.googlecode.com</url>
 	<properties>
 		<targetJdk>1.6</targetJdk>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 	</properties>
-	<developers>
-		<developer>
-			<name>Jurgen De Landsheer</name>
-			<email>Jurgen.De.Landsheer@google.com</email>
-			<roles>
-				<role>administrator</role>
-				<role>developer</role>
-			</roles>
-			<timezone>+1</timezone>
-		</developer>
-	</developers>
 	<licenses>
 		<license>
-			<name>GNU LESSER GENERAL PUBLIC LICENSE</name>
-			<url>LICENSE.txt</url>
-			<distribution>
-				GNU LESSER GENERAL PUBLIC LICENSE
-			</distribution>
-			<comments>GNU LESSER GENERAL PUBLIC LICENSE</comments>
+			<name>GNU Lesser General Public License v2.1</name>
+			<url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
 		</license>
 	</licenses>
+	<issueManagement>
+		<system>Google</system>
+		<url>http://code.google.com/p/jhaws/issues/list</url>
+	</issueManagement>	
+	<distributionManagement>
+		<!--
+		<site>
+			<id>hql-builder.googlecode.site</id>
+			<name>hql-builder.googlecode.site</name>
+			<url>scm:svn:https://jhaws.googlecode.com/svn/site</url>
+		</site>
+		-->
+		<repository>
+			<id>jhaws.googlecode.releases</id>
+			<name>jhaws.googlecode.releases</name>
+			<url>dav:https://jhaws.googlecode.com/svn/maven2</url>
+		</repository>
+		<snapshotRepository>
+			<id>jhaws.googlecode.snapshots</id>
+			<name>jhaws.googlecode.snapshots</name>
+			<url>dav:https://jhaws.googlecode.com/svn/maven2-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+	<inceptionYear>2013</inceptionYear>
+	<developers>
+		<developer>
+			<id />
+			<timezone>+1</timezone>
+			<name>Jurgen</name>
+			<roles>
+				<role>Project owner</role>
+			</roles>
+		</developer>
+	</developers>
+	<contributors />
 	<scm>
-		<connection>scm:svn:svn://savannah.ugent.be/jurgen-dl-pers/trunk</connection>
-		<developerConnection>scm:svn:svn+ssh://savannah.ugent.be/jurgen-dl-pers/trunk</developerConnection>
+		<connection>scm:svn:http://jhaws.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://jhaws.googlecode.com/svn/trunk</developerConnection>
+		<url>http://jhaws.googlecode.com/svn/trunk</url>
 	</scm>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.10</version>
-			<scope>testing</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
-		</dependency>
-	</dependencies>
+	<repositories>
+		<repository>
+			<id>jhaws.googlecode</id>
+			<url>http://jhaws.googlecode.com/svn/maven2</url>
+		</repository>
+	</repositories>
 	<build>
-		<finalName>${artifactId}-${version}</finalName>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-			</resource>
-		</resources>
-		<extensions>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ftp</artifactId>
-				<version>1.0-alpha-6</version>
-			</extension>
-		</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.0-beta-9</version>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.8.1</version>
 				<configuration>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<updateDependencies>false</updateDependencies>
-					<allowTimestampedSnapshots>true</allowTimestampedSnapshots>
-					<preparationGoals>clean install verify</preparationGoals>
-					<goals>deploy</goals>
-					<tagbase>svn+ssh://savannah.ugent.be/jurgen-dl-pers/tags</tagbase>
+					<connectionType>developerConnection</connectionType>
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2-beta-3</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<descriptors>
-						<descriptor>
-							src/assemblies/bin-with-dependencies.xml
-						</descriptor>
-					</descriptors>
-					<tarLongFileMode>gnu</tarLongFileMode>
+					<fork>true</fork>
+					<source>${targetJdk}</source>
+					<target>${targetJdk}</target>
+					<optimize>true</optimize>
+					<verbose>false</verbose>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<debug>true</debug> 
+					<debuglevel>lines,vars,source</debuglevel>
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.5.1</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.2</version>
 				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
-					<forceRecheck>true</forceRecheck>
+					<locales>en</locales>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -105,172 +105,69 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.3</version>
 				<configuration>
-					<forkMode>pertest</forkMode>
 					<testFailureIgnore>true</testFailureIgnore>
 					<argLine>-Xms128m -Xmx128m</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.1</version>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
 				<configuration>
-					<archive>
-						<index>false</index>
-						<manifest>
-							<packageName>util</packageName>
-							<!-- <addExtensions>true</addExtensions> -->
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>./</classpathPrefix>
-						</manifest>
-						<manifestEntries>
-							<JavaVersion>
-								${java.runtime.version}
-							</JavaVersion>
-							<JavaName>${java.runtime.name}</JavaName>
-							<Mode>development</Mode>
-							<Url>${pom.url}</Url>
-							<InceptionYear>
-								${project.inceptionYear}
-							</InceptionYear>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jalopy-maven-plugin</artifactId>
-				<version>1.0-alpha-1</version>
-				<configuration>
-					<convention>jalopy.xml</convention>
-					<failOnError>false</failOnError>
-					<srcExcludesPattern>
-						**/package-info.java,frc/**
-					</srcExcludesPattern>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>log4j</groupId>
-						<artifactId>log4j</artifactId>
-						<version>1.2.13</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<optimize>true</optimize>
-					<verbose>false</verbose>
-					<encoding>utf-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-				<version>2.0-beta-5</version>
-				<configuration>
-					<locales>en</locales>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.1</version>
-				<configuration>
-					<descriptors>
-						<descriptor>
-							src/assemblies/sources.xml
-						</descriptor>
-						<descriptor>
-							src/assemblies/bin-with-dependencies.xml
-						</descriptor>
-						<descriptor>src/assemblies/bin.xml</descriptor>
-					</descriptors>
-					<tarLongFileMode>gnu</tarLongFileMode>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+					<forceRecheck>true</forceRecheck>
+					<buildOutputDirectory>target-eclipse</buildOutputDirectory>
+					<charset>${project.build.sourceEncoding}</charset>
+					<docencoding>${project.build.sourceEncoding}</docencoding>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<sourceExcludes>
+						<sourceExclude>**/.svn/**</sourceExclude>
+					</sourceExcludes>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>itextpdf.com</id>
-			<name>Maven Repository for iText</name>
-			<url>http://maven.itextpdf.com/</url>
-		</repository>
-		<repository>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots />
-			<id>java.net</id>
-			<name>http://download.java.net/maven/2</name>
-			<url>http://download.java.net/maven/2</url>
-			<layout>default</layout>
-		</repository>
-		<repository>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots />
-			<id>maven.snapshots</id>
-			<name>http://snapshots.maven.codehaus.org/maven2/</name>
-			<url>http://snapshots.maven.codehaus.org/maven2/</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots />
-			<id>elca-services</id>
-			<name>http://el4.elca-services.ch/el4j/maven2repository</name>
-			<url>http://el4.elca-services.ch/el4j/maven2repository</url>
-		</pluginRepository>
-		<pluginRepository>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-			<snapshots />
-			<id>codehaus.snapshots</id>
-			<name>http://snapshots.maven.codehaus.org/maven2/</name>
-			<url>http://snapshots.maven.codehaus.org/maven2/</url>
-		</pluginRepository>
-	</pluginRepositories>
 	<reporting>
 		<plugins>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>changelog-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<targetjdk>${targetJdk}</targetjdk>
+					<format>xml</format>
+					<linkXref>true</linkXref>
+					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+					<minimumTokens>100</minimumTokens>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clover-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.9</version>
 				<configuration>
 					<testFailureIgnore>true</testFailureIgnore>
-					<forkMode>pertest</forkMode>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>
-					maven-project-info-reports-plugin
-				</artifactId>
-				<version>2.0.1</version>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
-				<version>2.0</version>
 				<configuration>
 					<multipleLineComments>true</multipleLineComments>
 					<sourceDirectory>
 						${project.build.sourceDirectory}
 					</sourceDirectory>
 					<tags>
-						<tag>@todo</tag>
-						<tag>@fixme</tag>
 						<tag>TODO</tag>
 						<tag>FIXME</tag>
 					</tags>
@@ -279,7 +176,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
-				<version>2.0-beta-1</version>
 				<configuration>
 					<projectDirectory>${basedir}</projectDirectory>
 					<classDirectory>
@@ -292,8 +188,8 @@
 				<artifactId>maven-pmd-plugin</artifactId>
 				<configuration>
 					<linkXref>true</linkXref>
-					<sourceEncoding>utf-8</sourceEncoding>
-					<targetJdk>1.6</targetJdk>
+					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+					<targetJdk>${targetJdk}</targetJdk>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -303,104 +199,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.3</version>
-				<reportSets>
-					<reportSet>
-						<id>full-api</id>
-						<configuration>
-							<aggregate>true</aggregate>
-						</configuration>
-					</reportSet>
-					<reportSet>
-						<id>api-per-project</id>
-						<configuration>
-							<aggregate>false</aggregate>
-							<additionalparam>
-								${additionalparam}
-							</additionalparam>
-							<author>true</author>
-							<breakiterator>false</breakiterator>
-							<charset>ISO-8859-1</charset>
-							<docencoding>${docencoding}</docencoding>
-							<docfilessubdirs>false</docfilessubdirs>
-							<doclet>${doclet}</doclet>
-							<docletPath>${docletPath}</docletPath>
-							<doctitle>
-								${project.name} ${project.version} API
-							</doctitle>
-							<encoding>${encoding}</encoding>
-							<excludePackageNames>
-								${excludePackageNames}
-							</excludePackageNames>
-							<excludedocfilessubdir>
-								${excludedocfilessubdir}
-							</excludedocfilessubdir>
-							<extdirs>${extdirs}</extdirs>
-							<footer>${footer}</footer>
-							<header>${header}</header>
-							<helpfile>${helpfile}</helpfile>
-							<links>
-								<link>
-									http://java.sun.com/j2se/1.6.0/docs/api/
-								</link>
-								<link>
-									http://java.sun.com/products/javamail/javadocs/
-								</link>
-								<link>
-									http://jakarta.apache.org/commons/net/apidocs/
-								</link>
-								<link>
-									http://java.sun.com/products/java-media/jai/forDevelopers/jai-apidocs/
-								</link>
-								<link>
-									http://java.sun.com/products/java-media/jai/forDevelopers/jai-imageio-1_0-docs/
-								</link>
-								<link>
-									http://jtidy.sourceforge.net/apidocs/
-								</link>
-								<link>
-									http://java.sun.com/j2se/1.6.0/docs/guide/javadoc/doclet/spec/
-								</link>
-							</links>
-							<linksource>true</linksource>
-							<maxmemory>256m</maxmemory>
-							<minmemory>128m</minmemory>
-							<nocomment>false</nocomment>
-							<nodeprecated>false</nodeprecated>
-							<nodeprecatedlist>false</nodeprecatedlist>
-							<nohelp>false</nohelp>
-							<noindex>false</noindex>
-							<nonavbar>false</nonavbar>
-							<noqualifier>${noqualifier}</noqualifier>
-							<nosince>false</nosince>
-							<notree>false</notree>
-							<old>false</old>
-							<overview>${overview}</overview>
-							<quiet>true</quiet>
-							<serialwarn>false</serialwarn>
-							<public>false</public>
-							<showPackage>false</showPackage>
-							<showProtected>true</showProtected>
-							<showPrivate>false</showPrivate>
-							<source>1.6</source>
-							<splitindex>true</splitindex>
-							<!--
-							<stylesheetfile>
-								${basedir}/src/site/resources/apidocs/stylesheet.css
-							</stylesheetfile>
-							-->
-							<use>true</use>
-							<verbose>false</verbose>
-							<version>true</version>
-							<windowtitle>
-								${project.name} ${project.version} API
-							</windowtitle>
-						</configuration>
-						<reports>
-							<report>javadoc</report>
-						</reports>
-					</reportSet>
-				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>
