@@ -1,24 +1,23 @@
 package org.jhaws.common.io;
 
-import java.io.File;
-
 public class RecyclerFactory {
     private static IODirectory oldTrashCan;
 
-    private static boolean deleteDirectory(java.io.File directory) {
+    private static boolean deleteDirectory(IODirectory directory) {
         if (directory.exists()) {
-            java.io.File[] files = directory.listFiles();
-            if (null != files) {
-                for (File file : files) {
-                    if (file.isDirectory()) {
-                        RecyclerFactory.deleteDirectory(file);
-                    } else {
-                        file.delete();
+            for (IOGeneralFile<?> file : directory.listIOGeneralFile()) {
+                if (file.isDirectory()) {
+                    if (!RecyclerFactory.deleteDirectory((IODirectory) file)) {
+                        return false;
                     }
                 }
+                if (!((IOFile) file).delete()) {
+                    return false;
+                }
             }
+            return directory.delete0();
         }
-        return (directory.delete());
+        return true;
     }
 
     public static IODirectory getDefaultRecycleDirectory() {
