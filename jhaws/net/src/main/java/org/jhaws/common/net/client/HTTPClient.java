@@ -97,6 +97,7 @@ import org.jhaws.common.net.client.forms.InputElement;
 
 /**
  * http://hc.apache.org<br>
+ * http://hc.apache.org/httpcomponents-client-ga/<br>
  * http://en.wikipedia.org/wiki/Post/Redirect/Get<br>
  * http://wiki.apache.org/HttpComponents/LessonsLearned<br>
  * http://wiki.apache.org/HttpComponents/FrequentlyAskedConnectionManagementQuestions<br>
@@ -106,10 +107,8 @@ public class HTTPClient implements Serializable {
      * GetParams
      */
     public static class GetParams {
-        /** accept */
         private String accept;
 
-        /** url */
         private String url;
 
         public GetParams(String url) {
@@ -126,13 +125,11 @@ public class HTTPClient implements Serializable {
 
         public GetParams setAccept(String accept) {
             this.accept = accept;
-
             return this;
         }
 
         public GetParams setUrl(String url) {
             this.url = url;
-
             return this;
         }
 
@@ -146,7 +143,6 @@ public class HTTPClient implements Serializable {
      * InputStreamBody
      */
     protected static class InputStreamBody extends org.apache.http.entity.mime.content.InputStreamBody {
-        /** lenght */
         private int lenght;
 
         public InputStreamBody(byte[] buffer, String mimeType, String filename) {
@@ -160,7 +156,6 @@ public class HTTPClient implements Serializable {
         }
 
         /**
-         * 
          * @see org.apache.http.entity.mime.content.InputStreamBody#getContentLength()
          */
         @Override
@@ -173,7 +168,6 @@ public class HTTPClient implements Serializable {
      * PostParams
      */
     public static class PostParams extends PutParams {
-        /** attachments */
         private HashMap<String, IOFile> attachments = new HashMap<String, IOFile>();
 
         public PostParams(String url) {
@@ -199,6 +193,9 @@ public class HTTPClient implements Serializable {
             return this;
         }
 
+        /**
+         * @see org.jhaws.common.net.client.HTTPClient.PutParams#toString()
+         */
         @Override
         public String toString() {
             return super.toString() + " & PostParams [attachments=" + this.attachments + "]";
@@ -209,7 +206,6 @@ public class HTTPClient implements Serializable {
      * PutParams
      */
     public static class PutParams extends GetParams {
-        /** formValues */
         private HashMap<String, String> formValues = new HashMap<String, String>();
 
         public PutParams(String url) {
@@ -227,10 +223,12 @@ public class HTTPClient implements Serializable {
 
         public PutParams setFormValues(HashMap<String, String> formValues) {
             this.formValues = formValues;
-
             return this;
         }
 
+        /**
+         * @see org.jhaws.common.net.client.HTTPClient.GetParams#toString()
+         */
         @Override
         public String toString() {
             return super.toString() + " & PutParams [this.formValues=" + this.formValues + "]";
@@ -298,7 +296,7 @@ public class HTTPClient implements Serializable {
     protected transient RedirectStrategy redirectStrategy;
 
     /** security */
-    protected transient SecureNet secure;
+    protected transient HTTPSecure secure;
 
     /** accept types */
     protected String accept;
@@ -375,7 +373,12 @@ public class HTTPClient implements Serializable {
 
         this.version = 0;
 
-        this.secure = new SecureNet();
+        try {
+            this.secure = (HTTPSecure) Class.forName(this.getClass().getPackage().getName() + ".SecureNet").newInstance();
+        } catch (Exception ex) {
+            System.err.println("cannot use passwords");
+            ex.printStackTrace();
+        }
 
         this.httpClientListeners = new ArrayList<HTTPClientListener>();
 
@@ -387,7 +390,6 @@ public class HTTPClient implements Serializable {
                 HttpUriRequest redirect = super.getRedirect(request, response, context);
                 HTTPClient.this.chain.add(redirect.getURI());
                 HTTPClient.this.domain = redirect.getURI().getHost();
-
                 // System.out.println("redirect: " + redirect.getURI());
                 return redirect;
             }
@@ -406,15 +408,12 @@ public class HTTPClient implements Serializable {
                     case HttpStatus.SC_MOVED_TEMPORARILY:
                         return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method
                                 .equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
-
                     case HttpStatus.SC_MOVED_PERMANENTLY:
                     case HttpStatus.SC_TEMPORARY_REDIRECT:
                         return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
                                 || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
-
                     case HttpStatus.SC_SEE_OTHER:
                         return true;
-
                     default:
                         return false;
                 } // end of switch
@@ -428,13 +427,11 @@ public class HTTPClient implements Serializable {
      */
     public HTTPClient addCookie(Cookie cookie) {
         this.getCookieStore().addCookie(cookie);
-
         return this;
     }
 
     public HTTPClient addHTTPClientListener(HTTPClientListener listener) {
         this.httpClientListeners.add(listener);
-
         return this;
     }
 
@@ -444,7 +441,6 @@ public class HTTPClient implements Serializable {
      */
     public HTTPClient clearCookies() {
         this.getCookieStore().clear();
-
         return this;
     }
 
@@ -458,7 +454,6 @@ public class HTTPClient implements Serializable {
 
     public HTTPClient clearHTTPClientListener() {
         this.httpClientListeners.clear();
-
         return this;
     }
 
@@ -498,7 +493,6 @@ public class HTTPClient implements Serializable {
         } catch (Exception ex) {
             //
         }
-
         return this;
     }
 
@@ -523,7 +517,6 @@ public class HTTPClient implements Serializable {
 
     public Response get(GetParams prm) throws HttpException, IOException, URISyntaxException {
         HttpRequestBase method = new HttpGet(prm.getUrl());
-
         return this.execute(method, prm.getAccept()).response;
     }
 
@@ -552,14 +545,12 @@ public class HTTPClient implements Serializable {
     public String getAcceptLanguage() {
         if (this.acceptLanguage == null) {
             String localLanguage = Locale.getDefault().getLanguage();
-
             if (HTTPClientDefaults.ACCEPT_LANGUAGE.equals(localLanguage)) {
                 this.acceptLanguage = HTTPClientDefaults.ACCEPT_LANGUAGE;
             } else {
                 this.acceptLanguage = localLanguage + "," + HTTPClientDefaults.ACCEPT_LANGUAGE;
             }
         }
-
         return this.acceptLanguage;
     }
 
@@ -603,7 +594,6 @@ public class HTTPClient implements Serializable {
     }
 
     /**
-     * 
      * @see org.apache.http.client.CookieStore#getCookies()
      */
     public List<Cookie> getCookies() {
@@ -614,7 +604,6 @@ public class HTTPClient implements Serializable {
         if (this.cookieStore == null) {
             this.cookieStore = new CookieStore(this);
         }
-
         return this.cookieStore;
     }
 
@@ -632,7 +621,6 @@ public class HTTPClient implements Serializable {
     public Header[] getHeaders(String url) throws IOException, URISyntaxException, InternalServerError {
         HttpHead head = new HttpHead(url);
         ResponseContext response = this.execute(head, null);
-
         return response.httpResponse.getAllHeaders();
     }
 
@@ -666,7 +654,6 @@ public class HTTPClient implements Serializable {
         if (this.httpRoutePlanner == null) {
             this.httpRoutePlanner = new ProxySelectorRoutePlanner(this.getConnectionManager().getSchemeRegistry(), ProxySelector.getDefault());
         }
-
         return this.httpRoutePlanner;
     }
 
@@ -680,7 +667,6 @@ public class HTTPClient implements Serializable {
 
     protected String getName(URI url) {
         String tmp = url.toString();
-
         return tmp.substring(tmp.lastIndexOf("/") + 1);
     }
 
@@ -999,44 +985,37 @@ public class HTTPClient implements Serializable {
 
     public HTTPClient removeHTTPClientListener(HTTPClientListener listener) {
         this.httpClientListeners.remove(listener);
-
         return this;
     }
 
     public HTTPClient resetAuthentication() {
         this.user = null;
         this.pass = null;
-
         return this;
     }
 
     public HTTPClient serialize(OutputStream out) throws IOException {
         HTTPClientUtils.serialize(this, out);
-
         return this;
     }
 
     public HTTPClient setAccept(String accept) {
         this.accept = accept;
-
         return this.setParams(null);
     }
 
     public HTTPClient setAcceptEncoding(String acceptEncoding) {
         this.acceptEncoding = acceptEncoding;
-
         return this.setParams(null);
     }
 
     public HTTPClient setAcceptLanguage(String acceptLanguage) {
         this.acceptLanguage = acceptLanguage;
-
         return this.setParams(null);
     }
 
     public HTTPClient setAuthentication(String user, String pass) {
         this.user = user;
-
         try {
             this.pass = this.secure.encrypt(pass);
         } catch (RuntimeException ex) {
@@ -1044,86 +1023,72 @@ public class HTTPClient implements Serializable {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-
         return this;
     }
 
     public HTTPClient setCaching(boolean caching) {
         this.caching = caching;
         this.setHttpclientcacher(null);
-
         return this;
     }
 
     public HTTPClient setCharset(String charset) {
         this.charset = charset;
-
         return this.setHttpclient(null);
     }
 
     public HTTPClient setCookiePolicy(String cookiePolicy) {
         this.cookiePolicy = cookiePolicy;
-
         return this.setParams(null);
     }
 
     public HTTPClient setCookieStore(CookieStore cookieStore) {
         this.cookieStore = cookieStore;
-
         return this.setHttpclient(null);
     }
 
     public HTTPClient setDomain(String domain) {
         this.domain = domain;
-
         return this;
     }
 
     public HTTPClient setExpectContinue(boolean expectContinue) {
         this.expectContinue = expectContinue;
-
         return this.setParams(null);
     }
 
     public HTTPClient setHandleRedirects(boolean handleRedirects) {
         this.handleRedirects = handleRedirects;
-
         return this.setParams(null);
     }
 
     protected HTTPClient setHttpclient(DefaultHttpClient httpclient) {
         this.httpclient = httpclient;
-
         return this;
     }
 
     protected HTTPClient setHttpclientcacher(CachingHttpClient httpclientcacher) {
         this.httpclientcacher = httpclientcacher;
-
         return this;
     }
 
     protected HTTPClient setHttpRoutePlanner(HttpRoutePlanner httpRoutePlanner) {
         this.httpRoutePlanner = httpRoutePlanner;
-
         return this.setHttpclient(null);
     }
 
     public HTTPClient setHttpVersion(HttpVersion httpVersion) {
         this.httpVersion = httpVersion;
-
         return this.setParams(null);
     }
 
     public HTTPClient setKeepAlive(int keepAlive) {
         this.keepAlive = keepAlive;
-
         return this.setParams(null);
     }
 
     protected HTTPClient setParams(HttpParams params) {
         this.params = params;
-
         return this.setHttpclient(null);
     }
 
@@ -1169,25 +1134,21 @@ public class HTTPClient implements Serializable {
 
     protected HTTPClient setRetryHandler(HttpRequestRetryHandler retryHandler) {
         this.retryHandler = retryHandler;
-
         return this.setHttpclient(null);
     }
 
     public HTTPClient setSingleCookieHeader(boolean singleCookieHeader) {
         this.singleCookieHeader = singleCookieHeader;
-
         return this.setParams(null);
     }
 
     public HTTPClient setTimeout(int timeout) {
         this.timeout = timeout;
-
         return this.setParams(null);
     }
 
     public HTTPClient setUserAgent(String userAgent) {
         this.userAgent = userAgent;
-
         return this.setParams(null);
     }
 
@@ -1241,7 +1202,6 @@ public class HTTPClient implements Serializable {
      */
     public Response trace(String url) throws IOException, URISyntaxException, InternalServerError {
         HttpTrace optionRequest = new HttpTrace(url);
-
         return this.execute(optionRequest, null).response;
     }
 }
