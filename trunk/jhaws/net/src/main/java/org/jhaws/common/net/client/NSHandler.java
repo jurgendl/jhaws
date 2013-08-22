@@ -11,7 +11,7 @@ import org.w3c.dom.Node;
 public class NSHandler extends HashMap<String, String> implements NamespaceContext {
     private static final long serialVersionUID = -5509377982038203847L;
 
-    private static final String DEFAULT = "default";
+    public static final String DEFAULT = "default";
 
     private static final String XMLNS = "xmlns";
 
