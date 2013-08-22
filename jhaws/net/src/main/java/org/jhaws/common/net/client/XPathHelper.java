@@ -15,6 +15,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -25,6 +26,37 @@ import org.xml.sax.SAXException;
  * http://blog.davber.com/2006/09/17/xpath-with-namespaces-in-java/<br>
  */
 public class XPathHelper {
+    public static class Xpr {
+        private String expression = "";
+
+        private String namespace = "";
+
+        public Xpr(boolean defaulted) {
+            this.namespace = defaulted ? NSHandler.DEFAULT : "";
+        }
+
+        public Xpr(String ns) {
+            this.namespace = ns;
+        }
+
+        public Xpr append(String expr) {
+            this.expression += "/" + expr;
+            return this;
+        }
+
+        public String get() {
+            return this.expression;
+        }
+
+        public Xpr path(String expr) {
+            if (StringUtils.isBlank(this.namespace)) {
+                return this.append(expr);
+            }
+            this.expression += "/" + this.namespace + ":" + expr;
+            return this;
+        }
+    }
+
     /** http://apache.org/xml/features/nonvalidating/load-external-dtd */
     protected static final String DTD_NO_VALIDATION = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
 
@@ -89,10 +121,10 @@ public class XPathHelper {
             throws XPathExpressionException, IOException {
         Object result = XPathHelper.xpathXml(Object.class, expr, doc, basenodename);
         if (result == null) {
-            return new ArrayList<T>();
+            return Collections.emptyList();
         }
         if (result instanceof List<?>) {
-            return Collections.emptyList();
+            return (List<T>) result;
         }
         return Collections.singletonList((T) result);
     }
