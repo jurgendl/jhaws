@@ -1,0 +1,10 @@
+org.jhaws.common.lucene.doctype.TxtToLuceneDocument
+org.jhaws.common.lucene.doctype.WordToLuceneDocument
+org.jhaws.common.lucene.doctype.RtfToLuceneDocument
+org.jhaws.common.lucene.doctype.HtmlToLuceneDocument
+org.jhaws.common.lucene.doctype.EmailToLuceneDocument
+org.jhaws.common.lucene.doctype.PowerpointToLuceneDocument
+org.jhaws.common.lucene.doctype.XlsToLuceneDocument
+org.jhaws.common.lucene.doctype.XmlToLuceneDocument
+org.jhaws.common.lucene.doctype.PdfToLuceneDocument
+org.jhaws.common.lucene.doctype.OpenOfficeToLuceneDocument

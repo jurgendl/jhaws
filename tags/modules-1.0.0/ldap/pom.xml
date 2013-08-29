@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jhaws.common</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../parent/pom.xml</relativePath>
+	</parent>
+	<artifactId>ldap</artifactId>
+	<name>jar: ldap classes</name>
+	<description>ldap classes</description>
+	<properties>
+		<spring.version>2.0.6</spring.version>
+		<spring.ldap.version>1.2.1</spring.ldap.version>
+	</properties>
+	<repositories>
+		<repository>
+			<id>atlassian</id>
+			<url>http://repository.atlassian.com/maven2</url>
+		</repository>
+		<repository>
+			<id>java.net</id>
+			<name>http://download.java.net/maven/2</name>
+			<url>http://download.java.net/maven/2</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots />
+			<id>maven.snapshots</id>
+			<name>http://snapshots.maven.codehaus.org/maven2/</name>
+			<url>http://snapshots.maven.codehaus.org/maven2/</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ldap</groupId>
+			<artifactId>spring-ldap</artifactId>
+			<version>${spring.ldap.version}</version>
+			<optional>true</optional>
+			<scope>compile</scope>
+			<!-- when using spring's ldap template -->
+		</dependency>
+		<!-- you can find this lib here: http://repository.atlassian.com/maven2/ -->
+		<!-- http://repository.atlassian.com/maven2/com/sun/jndi/ldap/ldapbp/1.0/ -->
+		<dependency>
+			<groupId>com.sun</groupId>
+			<artifactId>ldapbp</artifactId>
+			<version>1.0</version>
+		</dependency> 			
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+			<scope>compile</scope>
+			<!-- when using spring's ldap template -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+			<scope>compile</scope>
+			<!-- when using spring's ldap template -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-dao</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+			<scope>compile</scope>
+			<!-- when using spring's ldap template -->
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+			<optional>true</optional>
+			<scope>compile</scope>
+			<!-- when using spring's ldap template -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+			<scope>compile</scope>
+			<!-- when using spring's ldap template -->
+			<!-- when using spring.xml -->
+		</dependency>
+	</dependencies>	
+
+</project>
