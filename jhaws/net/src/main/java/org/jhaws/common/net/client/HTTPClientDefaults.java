@@ -79,7 +79,7 @@ public interface HTTPClientDefaults {
     public static final int TIMEOUT = 3000;
 
     /** "Content-Type" */
-    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_TYPE = HTTP.CONTENT_TYPE;
 
     /** "Date" */
     public static final String DATE = "Date";
