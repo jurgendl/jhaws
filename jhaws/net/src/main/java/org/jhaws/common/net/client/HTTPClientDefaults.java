@@ -12,7 +12,7 @@ public interface HTTPClientDefaults {
     public static final String LOCATION = "Location";
 
     /** Content-Encoding */
-    public static final String CONTENT_ENCODING = "Content-Encoding";
+    public static final String CONTENT_ENCODING = HTTP.CONTENT_ENCODING;
 
     /** false */
     public static final boolean HANDLE_REDIRECTS = true;
@@ -30,7 +30,7 @@ public interface HTTPClientDefaults {
     public static final int KEEP_ALIVE = 300;
 
     /** Keep-Alive */
-    public static final String PARAM_KEEP_ALIVE = "Keep-Alive";
+    public static final String PARAM_KEEP_ALIVE = HTTP.CONN_KEEP_ALIVE;
 
     /** Accept-Language */
     public static final String PARAM_ACCEPT_LANGUAGE = "Accept-Language";
