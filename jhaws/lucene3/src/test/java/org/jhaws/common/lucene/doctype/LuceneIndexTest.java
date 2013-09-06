@@ -80,7 +80,7 @@ public class LuceneIndexTest {
         this.newTempDir.erase();
 
         if (this.newTempDir.exists()) {
-            IOException ex = new IOException("cannot delete");
+            throw (new IOException("cannot delete"));
         }
     }
 
