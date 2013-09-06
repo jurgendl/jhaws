@@ -64,10 +64,6 @@ public class DocumentFactory {
         return DocumentFactory.loader.getKeys();
     }
 
-    public static void main(String[] args) {
-        System.out.println(DocumentFactory.supports("c:/java/1.pdf"));
-    }
-
     /**
      * na
      * 

@@ -17,7 +17,7 @@
 		<module>io</module>
 		<module>net</module>
 		<module>ldap</module>
-		<module>lucene3</module>
+		<!--<module>lucene3</module>-->
 		<module>lucene4</module>
 	</modules>
 	<licenses>
