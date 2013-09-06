@@ -12,7 +12,6 @@ import org.apache.poi.util.LittleEndian;
 import org.jhaws.common.io.IOFile;
 import org.jhaws.common.lucene.AbstractToLuceneDocument;
 
-
 /**
  * Powerpoint PPT document conversion
  * 
@@ -82,7 +81,7 @@ public class PowerpointToLuceneDocument extends AbstractToLuceneDocument impleme
                 try {
                     Thread.sleep(10);
                 } catch (final Exception ex) {
-                    ;
+                    //
                 }
             }
         } catch (final Exception ex) {
