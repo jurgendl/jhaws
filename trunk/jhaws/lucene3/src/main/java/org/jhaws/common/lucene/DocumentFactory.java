@@ -19,7 +19,7 @@ public class DocumentFactory {
      * @return
      */
     public static ToLuceneDocument getConvertor(File file) {
-        return loader.getImplementation(DocumentFactory.getKey(file));
+        return DocumentFactory.loader.getImplementation(DocumentFactory.getKey(file));
     }
 
     /**
@@ -30,7 +30,7 @@ public class DocumentFactory {
      * @return
      */
     public static ToLuceneDocument getConvertor(String s) {
-        return loader.getImplementation(DocumentFactory.getKey(s));
+        return DocumentFactory.loader.getImplementation(DocumentFactory.getKey(s));
     }
 
     /**
@@ -61,7 +61,11 @@ public class DocumentFactory {
      * @return
      */
     public static String[] getSupportedExtensions() {
-        return loader.getKeys();
+        return DocumentFactory.loader.getKeys();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(DocumentFactory.supports("c:/java/1.pdf"));
     }
 
     /**
@@ -72,7 +76,7 @@ public class DocumentFactory {
      * @return
      */
     public static boolean supports(File file) {
-        return loader.supports(DocumentFactory.getKey(file));
+        return DocumentFactory.loader.supports(DocumentFactory.getKey(file));
     }
 
     /**
@@ -83,7 +87,7 @@ public class DocumentFactory {
      * @return
      */
     public static boolean supports(String s) {
-        return loader.supports(DocumentFactory.getKey(s));
+        return DocumentFactory.loader.supports(DocumentFactory.getKey(s));
     }
 
     /**
