@@ -36,26 +36,24 @@ public class LuceneTest {
             IndexWriterConfig iwc = new IndexWriterConfig(LUCENE_VERSION, analyzer);
             iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
             IndexWriter writer = new IndexWriter(dir, iwc);
-
             String testfiles = LuceneTest.class.getPackage().getName().replace('.', '/') + "/testfiles";
             ByteArrayOutputStream tmp = new ByteArrayOutputStream();
             IOnOSUtils.copyResource(testfiles, tmp);
             BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(tmp.toByteArray())));
             String line;
             while ((line = br.readLine()) != null) {
-                indexDocs(writer, line);
+                String testfile = LuceneTest.class.getPackage().getName().replace('.', '/') + "/" + line;
+                indexDocs(writer, testfile);
             }
-
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void indexDocs(IndexWriter writer, String file) throws IOException {
-        String testfiles = LuceneTest.class.getPackage().getName().replace('.', '/') + "/" + file;
-        InputStream fis = LuceneTest.class.getClassLoader().getResourceAsStream(testfiles);
-        String content = DocumentFactory.getConvertor(testfiles).getText(fis);
+    private static void indexDocs(IndexWriter writer, String testfile) throws IOException {
+        InputStream fis = LuceneTest.class.getClassLoader().getResourceAsStream(testfile);
+        String content = DocumentFactory.getConvertor(testfile).getText(fis);
         try {
 
             // make a new, empty document
@@ -65,7 +63,7 @@ public class LuceneTest {
             // field that is indexed (i.e. searchable), but don't tokenize
             // the field into separate words and don't index term frequency
             // or positional information:
-            Field pathField = new StringField("path", file, Field.Store.YES);
+            Field pathField = new StringField("path", testfile, Field.Store.YES);
             doc.add(pathField);
 
             // Add the last modified date of the file a field named "modified".
@@ -85,16 +83,15 @@ public class LuceneTest {
 
             if (writer.getConfig().getOpenMode() == OpenMode.CREATE) {
                 // New index, so we just add the document (no old document can be there):
-                System.out.println("adding " + file);
+                System.out.println("adding " + testfile);
                 writer.addDocument(doc);
             } else {
                 // Existing index (an old copy of this document may have been indexed) so
                 // we use updateDocument instead to replace the old one matching the exact
                 // path, if present:
-                System.out.println("updating " + file);
-                writer.updateDocument(new Term("path", file), doc);
+                System.out.println("updating " + testfile);
+                writer.updateDocument(new Term("path", testfile), doc);
             }
-
         } finally {
             fis.close();
         }
