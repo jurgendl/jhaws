@@ -91,22 +91,4 @@ public class FileDateComparator implements Comparator<IOGeneralFile> {
         }
         return +1 * this.type.direction();
     }
-
-    /**
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        return false;
-    }
-
-    /**
-     * 
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
 }
