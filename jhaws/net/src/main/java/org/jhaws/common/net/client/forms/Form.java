@@ -141,8 +141,7 @@ public class Form implements Serializable, Iterable<InputElement> {
     }
 
     public void removeInputElement(String name) {
-        this.inputElements.remove(this.getInputElement(name));
-
+        this.inputElements.remove(name);
     }
 
     public Form serialize(OutputStream out) throws IOException {
