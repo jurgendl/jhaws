@@ -511,9 +511,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
         String outFileName = str.substring(p1 + 1, p2);
         String extension = ""; //$NON-NLS-1$
 
-        if (p2 < str.length()) {
-            str.substring(p2 + 1, str.length());
-        }
+        // if (p2 < str.length()) {
+        // str.substring(p2 + 1, str.length());
+        // }
 
         return IOGeneralFile.checkFileIndex(path, outFileName, separator0, format, extension);
     }
@@ -1532,7 +1532,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
         // to ensure that file is not larger than Integer.MAX_VALUE.
         if (length > Integer.MAX_VALUE) {
             // File is too large
-        	is.close();
+            is.close();
             throw new IOException(String.valueOf(length));
         }
 
@@ -1549,7 +1549,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
         // Ensure all the bytes have been read in
         if (offset < bytes.length) {
-        	is.close();
+            is.close();
             throw new IOException(new IOException("Could not completely read file " + this.getAbsolutePath())); //$NON-NLS-1$
         }
 
@@ -1871,7 +1871,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
         // (if the file exists)
         try {
             FileOutputStream fo = new FileOutputStream(this, append);
-			FileChannel wChannel = fo.getChannel(); // Create a writable file channel
+            FileChannel wChannel = fo.getChannel(); // Create a writable file channel
             wChannel.write(source); // Write the ByteBuffer contents; the bytes between the ByteBuffer's position and the limit is written to the file
             wChannel.close();
             fo.close();
