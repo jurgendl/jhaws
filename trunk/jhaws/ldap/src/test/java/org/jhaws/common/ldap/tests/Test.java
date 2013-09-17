@@ -183,8 +183,7 @@ public class Test {
         try {
             CertPath cp = null;
             Vector certs = new Vector();
-            @SuppressWarnings("unused")
-            URI ocspServer = new URI("http://ocsp.eid.belgium.be"); //$NON-NLS-1$
+            /* URI ocspServer = */new URI("http://ocsp.eid.belgium.be"); //$NON-NLS-1$
 
             // load the cert to be checked
             certs.add(cert);
