@@ -22,7 +22,7 @@ public class HttpClientTest {
             SecureNet sn = new SecureNet();
             String data = sn.getClass().getName();
             Assert.assertEquals(
-                    "[111, 114, 103, 46, 99, 111, 109, 109, 111, 110, 46, 110, 101, 116, 46, 99, 108, 105, 101, 110, 116, 46, 83, 101, 99, 117, 114, 101, 78, 101, 116]",
+                    "[111, 114, 103, 46, 106, 104, 97, 119, 115, 46, 99, 111, 109, 109, 111, 110, 46, 110, 101, 116, 46, 99, 108, 105, 101, 110, 116, 46, 83, 101, 99, 117, 114, 101, 78, 101, 116]",
                     Arrays.toString(data.getBytes()));
             byte[] encrypt = sn.encrypt(data);
             Assert.assertEquals(data, sn.decrypt(encrypt));
