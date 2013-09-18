@@ -325,10 +325,6 @@ public class IOnOSUtils {
     /**
      * voert command uit
      * 
-     * @param command
-     * 
-     * @return
-     * 
      * @throws IOException
      * 
      * @see {@link #process(String, boolean, boolean)} met true false
@@ -340,10 +336,6 @@ public class IOnOSUtils {
     /**
      * capture 1 line
      * 
-     * @param command
-     * 
-     * @return
-     * 
      * @throws IOException
      */
     public static String capture1(String command) throws IOException {
@@ -352,9 +344,6 @@ public class IOnOSUtils {
 
     /**
      * copy inputstream naar outputstream
-     * 
-     * @param in
-     * @param out
      * 
      * @throws IOException
      * @throws NullPointerException
@@ -384,9 +373,6 @@ public class IOnOSUtils {
 
     /**
      * Kopieert een file, NIO
-     * 
-     * @param in
-     * @param out
      * 
      * @throws IOException
      */
@@ -435,9 +421,6 @@ public class IOnOSUtils {
     /**
      * copy classpath resource naar outputstream
      * 
-     * @param path
-     * @param out
-     * 
      * @throws IOException
      * @throws NullPointerException
      */
@@ -448,10 +431,6 @@ public class IOnOSUtils {
     /**
      * creeer tijdelijk bestand met extensie
      * 
-     * @param extensie
-     * 
-     * @return
-     * 
      * @throws IOException
      */
     public static File createTempFile(String extensie) throws IOException {
@@ -460,11 +439,6 @@ public class IOnOSUtils {
 
     /**
      * creeer tijdelijk bestand met extensie en naam
-     * 
-     * @param naam
-     * @param extensie
-     * 
-     * @return
      * 
      * @throws IOException
      */
@@ -489,8 +463,6 @@ public class IOnOSUtils {
     /**
      * load library
      * 
-     * @param libname
-     * 
      * @throws IOException
      * @throws NullPointerException
      * @throws UnsatisfiedLinkError
@@ -502,9 +474,6 @@ public class IOnOSUtils {
     /**
      * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
      * 
-     * @param libname
-     * @param ext
-     * 
      * @throws IOException
      * @throws NullPointerException
      * @throws UnsatisfiedLinkError
@@ -515,10 +484,6 @@ public class IOnOSUtils {
 
     /**
      * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
-     * 
-     * @param libname
-     * @param ext
-     * @param temp
      * 
      * @throws IOException
      * @throws NullPointerException
@@ -552,10 +517,6 @@ public class IOnOSUtils {
     /**
      * dynamicLoadWinLibrary
      * 
-     * @param libname
-     * @param ext
-     * @param onlywrite
-     * 
      * @throws IOException
      * @throws FileNotFoundException
      */
@@ -574,9 +535,7 @@ public class IOnOSUtils {
     }
 
     /**
-     * voert command uit
-     * 
-     * @param command
+     * execute command
      * 
      * @throws IOException
      * 
@@ -605,6 +564,9 @@ public class IOnOSUtils {
         }
     }
 
+    /**
+     * get file extension, always lowercase
+     */
     public static String getExtension(File file) {
         String filename = file.getName();
         String ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
@@ -613,8 +575,6 @@ public class IOnOSUtils {
 
     /**
      * open bestand met default voor OS, wanneer niet ondersteund en op windows pobeer via file association command; wanneer pdf probeer eerst acrobat
-     * 
-     * @param file
      * 
      * @throws IOException
      */
@@ -626,10 +586,6 @@ public class IOnOSUtils {
 
     /**
      * open bestand met default voor OS, wanneer niet ondersteund en op windows pobeer via file association command; wanneer pdf probeer eerst acrobat
-     * 
-     * @param file
-     * 
-     * @return
      * 
      * @throws IOException
      * @throws FileNotFoundException
@@ -648,11 +604,6 @@ public class IOnOSUtils {
 
     /**
      * openCommand
-     * 
-     * @param file
-     * @param prefixedparameters
-     * 
-     * @return
      * 
      * @throws IOException
      * @throws FileNotFoundException
