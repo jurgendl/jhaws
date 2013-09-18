@@ -20,9 +20,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.cookie.SetCookie;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.log4j.Logger;
 import org.jhaws.common.net.client.HTTPClient;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * CookieStore
@@ -283,8 +283,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
     protected static final long serialVersionUID = -3469573532019535065L;
 
-    /** Logger for this class */
-    protected static final Logger logger = Logger.getLogger(CookieStore.class);
+    protected static final Logger logger = LoggerFactory.getLogger(CookieStore.class);
 
     /**
      * deserialize

@@ -12,21 +12,20 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.log4j.Logger;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PreloadWinFirefoxCookies
  */
 public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(PreloadWinFirefoxCookies.class);
+    private static final Logger logger = LoggerFactory.getLogger(PreloadWinFirefoxCookies.class);
 
-    /** field */
     protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
 
     private static final boolean driver;
@@ -83,7 +82,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 
     /**
      * 
-     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+     *      java.util.Date)
      */
     @Override
     public void beforeClearExpired(CookieStore store, Date date) {
@@ -144,7 +144,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
                         PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
                     }
                 }
-                
+
                 ffcr.close();
             } else {
                 try {
@@ -185,7 +185,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
                 }
             }
         } catch (Exception ex) {
-            PreloadWinFirefoxCookies.logger.error(ex, ex);
+            PreloadWinFirefoxCookies.logger.error(ExceptionUtils.getFullStackTrace(ex));
             this.failed = true;
         }
     }

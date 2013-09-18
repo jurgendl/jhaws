@@ -5,26 +5,23 @@ import java.io.FileFilter;
 import java.util.Date;
 import java.util.HashSet;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.log4j.Logger;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PreloadWinIExplorerCookies
  */
 public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(PreloadWinIExplorerCookies.class);
+    private static final Logger logger = LoggerFactory.getLogger(PreloadWinIExplorerCookies.class);
 
-    /** field */
     protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
 
-    /** domainsLoaded */
     private HashSet<String> domainsLoaded = new HashSet<String>();
 
-    /** failed */
     private boolean failed = false;
 
     /**
@@ -56,7 +53,8 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 
     /**
      * 
-     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+     *      java.util.Date)
      */
     @Override
     public void beforeClearExpired(CookieStore store, Date date) {
@@ -124,7 +122,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
                 PreloadWinIExplorerCookies.logger.info("loadIExplorerCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
             }
         } catch (Exception ex) {
-            PreloadWinIExplorerCookies.logger.error(ex, ex);
+            PreloadWinIExplorerCookies.logger.error(ExceptionUtils.getFullStackTrace(ex));
             this.failed = true;
         }
     }
