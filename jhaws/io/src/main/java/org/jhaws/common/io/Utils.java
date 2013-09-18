@@ -726,7 +726,7 @@ public class Utils {
      */
     private static List<String> process(String command, boolean capture, boolean log) throws IOException {
         List<String> lines = new ArrayList<String>();
-        ProcessBuilder pb = new ProcessBuilder(command.split(" "));
+        ProcessBuilder pb = new ProcessBuilder(Utils.split(command));
         Process p = pb.start();
 
         if (capture) {
@@ -769,6 +769,41 @@ public class Utils {
 
     public static void setOpenCommandPrefixedparameters(String ext, boolean prefixedparameters) {
         Utils.WIN_FILE_OPEN_CMDS_PRE.put(ext.toLowerCase(), prefixedparameters);
+    }
+
+    private static List<String> split(String sysexec) {
+        List<String> parts = new ArrayList<String>();
+        Matcher m = Pattern.compile("\"[^\"]++\"").matcher(sysexec);
+        int pos = 0;
+        boolean found = false;
+        while (m.find()) {
+            found = true;
+            if (pos != m.start()) {
+                String trimmed = sysexec.substring(pos, m.start()).trim();
+                if (trimmed.length() > 0) {
+                    for (String p : trimmed.split(" ")) {
+                        parts.add(p);
+                    }
+                }
+            }
+            parts.add(m.group());
+            pos = m.end();
+        }
+        if (found) {
+            if (pos != (sysexec.length() - 1)) {
+                String trimmed = sysexec.substring(pos).trim();
+                if (trimmed.length() > 0) {
+                    for (String p : trimmed.split(" ")) {
+                        parts.add(p);
+                    }
+                }
+            }
+        } else {
+            for (String p : sysexec.split(" ")) {
+                parts.add(p);
+            }
+        }
+        return parts;
     }
 
     public static void unzip(InputStream source, IODirectory target) throws IOException {
