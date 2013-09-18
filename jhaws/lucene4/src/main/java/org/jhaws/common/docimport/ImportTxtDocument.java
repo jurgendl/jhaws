@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jhaws.common.io.IOFile;
-import org.jhaws.common.io.IOnOSUtils;
+import org.jhaws.common.io.Utils;
 
 /**
  * TXT document conversion
@@ -31,7 +31,7 @@ public class ImportTxtDocument implements ImportDocument {
     @Override
     public String getText(InputStream file) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        IOnOSUtils.copy(file, out);
+        Utils.copy(file, out);
         return new String(out.toByteArray());
     }
 
