@@ -18,6 +18,7 @@ import org.apache.commons.net.io.CopyStreamEvent;
 import org.apache.commons.net.io.CopyStreamListener;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
+import org.jhaws.common.io.Utils;
 
 /**
  * uses xpdf as command line utility to convert pdf to text (very performant), needs connection to internet and library ftp server to be up to work
