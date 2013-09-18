@@ -9,20 +9,19 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.log4j.Logger;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PreloadWinChromeCookies
  */
 public class PreloadWinChromeCookies implements CookieStoreInterceptor {
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(PreloadWinChromeCookies.class);
+    private static final Logger logger = LoggerFactory.getLogger(PreloadWinChromeCookies.class);
 
-    /** field */
     protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
 
     private static final boolean driver;
@@ -79,7 +78,8 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 
     /**
      * 
-     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+     *      java.util.Date)
      */
     @Override
     public void beforeClearExpired(CookieStore store, Date date) {
@@ -136,7 +136,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
                 store.addCookie(cookie);
             }
         } catch (Exception e) {
-            PreloadWinChromeCookies.logger.error(e, e);
+            PreloadWinChromeCookies.logger.error(ExceptionUtils.getFullStackTrace(e));
             this.failed = true;
         }
     }

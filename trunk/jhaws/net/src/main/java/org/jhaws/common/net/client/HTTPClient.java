@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -83,7 +84,6 @@ import org.apache.http.params.SyncBasicHttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.log4j.Logger;
 import org.jhaws.common.io.IOFile;
 import org.jhaws.common.net.client.cookies.CookieStore;
 import org.jhaws.common.net.client.cookies.PreloadUnixChromeCookies;
@@ -94,6 +94,8 @@ import org.jhaws.common.net.client.cookies.PreloadWinIExplorerCookies;
 import org.jhaws.common.net.client.forms.FileInput;
 import org.jhaws.common.net.client.forms.Form;
 import org.jhaws.common.net.client.forms.InputElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * http://hc.apache.org<br>
@@ -260,7 +262,7 @@ public class HTTPClient implements Serializable {
     private static final long serialVersionUID = 5252842616737283754L;
 
     /** Logger for this class */
-    private static Logger logger = Logger.getLogger(HTTPClient.class);
+    private static Logger logger = LoggerFactory.getLogger(HTTPClient.class);
 
     /** httpclient */
     protected transient CachingHttpClient httpclientcacher;
@@ -1099,31 +1101,31 @@ public class HTTPClient implements Serializable {
             try {
                 cs.addCookieStoreInterceptor(new PreloadUnixFirefoxCookies());
             } catch (Exception ex) {
-                HTTPClient.logger.error(ex);
+                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
             }
 
             try {
                 cs.addCookieStoreInterceptor(new PreloadUnixChromeCookies());
             } catch (Exception ex) {
-                HTTPClient.logger.error(ex);
+                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
             }
 
             try {
                 cs.addCookieStoreInterceptor(new PreloadWinFirefoxCookies());
             } catch (Exception ex) {
-                HTTPClient.logger.error(ex);
+                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
             }
 
             try {
                 cs.addCookieStoreInterceptor(new PreloadWinIExplorerCookies());
             } catch (Exception ex) {
-                HTTPClient.logger.error(ex);
+                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
             }
 
             try {
                 cs.addCookieStoreInterceptor(new PreloadWinChromeCookies());
             } catch (Exception ex) {
-                HTTPClient.logger.error(ex);
+                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
             }
         } else {
             this.getCookieStore().clearCookieStoreInterceptors();
