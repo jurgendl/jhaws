@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.StringUtils;
@@ -768,6 +769,29 @@ public class Utils {
 
     public static void setOpenCommandPrefixedparameters(String ext, boolean prefixedparameters) {
         Utils.WIN_FILE_OPEN_CMDS_PRE.put(ext.toLowerCase(), prefixedparameters);
+    }
+
+    public static void unzip(InputStream source, IODirectory target) throws IOException {
+        ZipInputStream zin = new ZipInputStream(source);
+        ZipEntry entry;
+        int read;
+        byte[] buffer = new byte[8 * 1024];
+
+        while ((entry = zin.getNextEntry()) != null) {
+            if (!entry.isDirectory()) {
+                IOFile file = new IOFile(target, entry.getName());
+                file.mkDir();
+                OutputStream out = new FileOutputStream(file);
+                while ((read = zin.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+            } else {
+                IODirectory dir = new IODirectory(target, entry.getName());
+                dir.create();
+            }
+        }
+
+        zin.close();
     }
 
     /**
