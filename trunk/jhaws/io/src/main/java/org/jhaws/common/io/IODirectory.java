@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.filechooser.FileSystemView;
 
-import org.apache.log4j.Logger;
 import org.jhaws.common.io.filter.OnlyDirectoriesFileFilter;
 import org.jhaws.common.io.filter.OnlyFilesFilter;
 
@@ -29,10 +28,6 @@ import org.jhaws.common.io.filter.OnlyFilesFilter;
  * @see IODirectory
  */
 public class IODirectory extends IOGeneralFile<IODirectory> {
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(IODirectory.class);
-
-    /** serialVersionUID */
     private static final long serialVersionUID = 100001010000000001L;
 
     /** join function parameter */
@@ -776,8 +771,7 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * @throws IOException : when something fails
      */
     protected void join0(final IODirectory source, final int modifier, final int maxcomparesize) throws IOException {
-        IODirectory.logger
-                .debug("copying/moving everything from " + source + " to " + this + ", modifier=" + modifier + ", maxcomparesize=" + maxcomparesize); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        // System.out.println("copying/moving everything from " + source + " to " + this + ", modifier=" + modifier + ", maxcomparesize=" + maxcomparesize); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
         boolean recursive = (modifier & IODirectory.RECURSIVE) == IODirectory.RECURSIVE;
         boolean delete = (modifier & IODirectory.DELETE_SOURCE) == IODirectory.DELETE_SOURCE;
@@ -792,13 +786,12 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
             overwritealways = (modifier & IODirectory.OVERWRITE_ALWAYS) == IODirectory.OVERWRITE_ALWAYS;
         }
 
-        IODirectory.logger
-                .debug("recursive=" + recursive + ", rename=" + rename + ", overwritenewer=" + overwritenewer + ", overwritealways=" + overwritealways + ", delete=" + delete); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ 
+        // System.out.println("recursive=" + recursive + ", rename=" + rename + ", overwritenewer=" + overwritenewer + ", overwritealways=" + overwritealways + ", delete=" + delete); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ 
 
         this.create();
 
         for (IOFile subfile : source.listIOFiles()) {
-            IODirectory.logger.debug("join0(IODirectory, int, int) - subfile=" + subfile); //$NON-NLS-1$
+            // System.out.println("join0(IODirectory, int, int) - subfile=" + subfile); //$NON-NLS-1$
 
             IOFile target = new IOFile(this, subfile.getName());
 
@@ -817,7 +810,7 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 
         if (recursive) {
             for (IODirectory subdir : source.listIODirectories()) {
-                IODirectory.logger.debug("join0(IODirectory, int, int) - subdir=" + subdir); //$NON-NLS-1$
+                // System.out.println("join0(IODirectory, int, int) - subdir=" + subdir); //$NON-NLS-1$
 
                 if (flatten) {
                     this.join0(subdir, modifier, maxcomparesize);
@@ -831,7 +824,7 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 
         if (delete && ((tmp == null) || (tmp.length == 0))) {
             boolean erased = source.erase();
-            IODirectory.logger.debug("erasing " + source + " => " + erased); //$NON-NLS-1$ //$NON-NLS-2$
+            // System.out.println("erasing " + source + " => " + erased); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

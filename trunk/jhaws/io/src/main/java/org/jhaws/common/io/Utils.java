@@ -25,7 +25,6 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 /**
  * OSUtils
@@ -121,9 +120,6 @@ public class Utils {
     public static enum OS_GROUP {
         Mac, Nix, Windows, unknown;
     }
-
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(Utils.class);
 
     /** 8kB */
     public static final int DEFAULT_BUFFER_LEN = 1024 * 8;
@@ -691,7 +687,7 @@ public class Utils {
             }
         }
 
-        Utils.logger.info(opencommand);
+        // System.out.println(opencommand);
         Utils.execute(opencommand);
 
         return true;

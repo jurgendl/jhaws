@@ -16,7 +16,6 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.net.io.CopyStreamEvent;
 import org.apache.commons.net.io.CopyStreamListener;
-import org.jhaws.common.CommonUtils;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
 
@@ -133,7 +132,7 @@ public class XPdfExtractor {
             ftp.disconnect();
         }
 
-        CommonUtils.unzip(new FileInputStream(archivef), XPdfExtractor.runners_root);
+        Utils.unzip(new FileInputStream(archivef), XPdfExtractor.runners_root);
     }
 
     public static void main(String[] args) {

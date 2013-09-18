@@ -4,9 +4,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jhaws.common.CommonUtils;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
+import org.jhaws.common.io.Utils;
 
 /**
  * na
@@ -30,7 +30,7 @@ public class ImportOpenOfficeDocument implements ImportDocument {
         try {
             IODirectory dir = IODirectory.newTempDir("" + file).create();
             dir.deleteOnExit();
-            CommonUtils.unzip(file, dir);
+            Utils.unzip(file, dir);
 
             IOFile xml = new IOFile(dir, "content.xml");
 
