@@ -2,12 +2,23 @@ package org.jhaws.common.net.client.tests;
 
 import java.util.Arrays;
 
+import org.jhaws.common.net.client.HTTPClient;
 import org.jhaws.common.net.client.SecureNet;
 import org.jhaws.common.net.client.forms.Password;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class HttpClientTest {
+    @Test
+    public void test() {
+        try {
+            HTTPClient hc = new HTTPClient();
+            hc.get("http://www.google.com");
+        } catch (Exception e) {
+            Assert.fail(String.valueOf(e));
+        }
+    }
+
     @Test
     public void testPassword() {
         Password test = new Password("2", "3");
