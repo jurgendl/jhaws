@@ -142,6 +142,8 @@ public class IOnOSUtils {
     /** default open file commands for windows */
     public static final Map<String, String> WIN_FILE_OPEN_CMDS = new HashMap<String, String>();
 
+    public static final Map<String, Boolean> WIN_FILE_OPEN_CMDS_PRE = new HashMap<String, Boolean>();
+
     /** file extension map for windows */
     public static final Map<String, String> WIN_FILE_EXTS = new HashMap<String, String>();
 
@@ -525,7 +527,7 @@ public class IOnOSUtils {
      */
     public static void dynamicLoadLibrary(String libname, String ext, boolean temp) throws IOException, NullPointerException, UnsatisfiedLinkError {
         if (ext == null) {
-            ext = IOnOSUtils.getDefaultLibraryExtention();
+            ext = IOnOSUtils.getDefaultLibraryExtension();
         }
 
         try {
@@ -586,10 +588,8 @@ public class IOnOSUtils {
 
     /**
      * get default library extention name for current OS
-     * 
-     * @return
      */
-    public static String getDefaultLibraryExtention() {
+    public static String getDefaultLibraryExtension() {
         switch (IOnOSUtils.osgroup) {
             case Mac:
                 return "jnilib";
@@ -603,6 +603,12 @@ public class IOnOSUtils {
             default:
                 return null;
         }
+    }
+
+    public static String getExtension(File file) {
+        String filename = file.getName();
+        String ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+        return ext;
     }
 
     /**
@@ -658,8 +664,7 @@ public class IOnOSUtils {
             throw new FileNotFoundException(file.getAbsolutePath());
         }
 
-        String filename = file.getName();
-        String ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+        String ext = IOnOSUtils.getExtension(file);
 
         // %0 or %1 are replaced with the file name that you want to open.
         // %* is replaced with all of the parameters.
@@ -740,6 +745,12 @@ public class IOnOSUtils {
         return true;
     }
 
+    public static boolean openCommand(File file, String... cmdparameters) throws IOException {
+        String ext = IOnOSUtils.getExtension(file);
+        Boolean b = IOnOSUtils.WIN_FILE_OPEN_CMDS_PRE.get(ext);
+        return IOnOSUtils.openCommand(file, b == null ? false : b.booleanValue(), cmdparameters);
+    }
+
     private static boolean openDesktop(File file) throws IOException {
         if (!Desktop.isDesktopSupported()) {
             return false;
@@ -802,6 +813,10 @@ public class IOnOSUtils {
         IOnOSUtils.copy(new FileInputStream(file), out);
 
         return out.toByteArray();
+    }
+
+    public static void setOpenCommandPrefixedparameters(String ext, boolean prefixedparameters) {
+        IOnOSUtils.WIN_FILE_OPEN_CMDS_PRE.put(ext.toLowerCase(), prefixedparameters);
     }
 
     /**
