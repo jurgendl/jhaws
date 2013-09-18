@@ -13,6 +13,9 @@ import java.util.Locale;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * static and string based functionality that java.io.File lacks for files and directories.<br>
  * 
@@ -1193,19 +1196,15 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     }
 
     /**
-     * 
      * @see java.io.File#equals(java.lang.Object)
      */
-    @SuppressWarnings("rawtypes")
     @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof IOGeneralFile)) {
+    public boolean equals(final Object other) {
+        if (!(other instanceof IOGeneralFile)) {
             return false;
         }
-
-        String path = ((IOGeneralFile) obj).getAbsolutePath();
-
-        return this.getAbsolutePath().equals(path);
+        IOGeneralFile<?> castOther = (IOGeneralFile<?>) other;
+        return new EqualsBuilder().append(this.getAbsolutePath(), castOther.getAbsolutePath()).isEquals();
     }
 
     /**
@@ -1286,6 +1285,14 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     }
 
     /**
+     * @see java.io.File#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(-1941084191, -565286407).append(this.getAbsolutePath()).toHashCode();
+    }
+
+    /**
      * 
      * @see java.io.File#toString()
      */
@@ -1295,7 +1302,6 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     }
 
     /**
-     * 
      * @see java.io.File#toURI()
      */
     @Override

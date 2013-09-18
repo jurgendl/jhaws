@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 /**
  * OSUtils
  */
-public class IOnOSUtils {
+public class Utils {
     public static enum BIT {
         _32, _64, unknown;
     }
@@ -88,7 +88,7 @@ public class IOnOSUtils {
          * reset data
          */
         public void reset() {
-            this.reset(IOnOSUtils.DEFAULT_BUFFER_LEN);
+            this.reset(Utils.DEFAULT_BUFFER_LEN);
         }
 
         private void reset(int length) {
@@ -122,7 +122,7 @@ public class IOnOSUtils {
     }
 
     /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(IOnOSUtils.class);
+    private static final Logger logger = Logger.getLogger(Utils.class);
 
     /** 8kB */
     public static final int DEFAULT_BUFFER_LEN = 1024 * 8;
@@ -194,7 +194,7 @@ public class IOnOSUtils {
         OS_GROUP _osgroup = OS_GROUP.unknown;
 
         try {
-            switch (IOnOSUtils.os) {
+            switch (Utils.os) {
                 case Digital_Unix:
                 case Linux:
                     _osgroup = OS_GROUP.Nix;
@@ -237,7 +237,7 @@ public class IOnOSUtils {
 
         osgroup = _osgroup;
 
-        if (IOnOSUtils.osgroup == OS_GROUP.Windows) {
+        if (Utils.osgroup == OS_GROUP.Windows) {
             // http://technet.microsoft.com/en-us/library/bb490910.aspx
             Pattern dirProgramFilesPattern = Pattern.compile("ProgramFiles", Pattern.CASE_INSENSITIVE);
             Pattern dirSystemRootPattern = Pattern.compile("SystemRoot", Pattern.CASE_INSENSITIVE);
@@ -245,17 +245,17 @@ public class IOnOSUtils {
             Pattern dirUserProfilePattern = Pattern.compile("UserProfile", Pattern.CASE_INSENSITIVE);
 
             try {
-                WINDIR_PROGRAM_FILES0 = IOnOSUtils.capture1("cmd /c echo %ProgramFiles%");
-                WINDIR_SYSTEM_ROOT0 = IOnOSUtils.capture1("cmd /c echo %SystemRoot%");
-                WINDIR_WINDIR0 = IOnOSUtils.capture1("cmd /c echo %WinDir%");
+                WINDIR_PROGRAM_FILES0 = Utils.capture1("cmd /c echo %ProgramFiles%");
+                WINDIR_SYSTEM_ROOT0 = Utils.capture1("cmd /c echo %SystemRoot%");
+                WINDIR_WINDIR0 = Utils.capture1("cmd /c echo %WinDir%");
                 WINDIR_SYSTEM320 = WINDIR_WINDIR0 + "/system32";
-                WINDIR_USER_PROFILE0 = IOnOSUtils.capture1("cmd /c echo %UserProfile%");
+                WINDIR_USER_PROFILE0 = Utils.capture1("cmd /c echo %UserProfile%");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
             try {
-                for (String record : IOnOSUtils.capture("cmd /c ftype")) {
+                for (String record : Utils.capture("cmd /c ftype")) {
                     String[] parts = record.split("=");
 
                     String cmd = parts[1];
@@ -292,14 +292,14 @@ public class IOnOSUtils {
                         }
                     }
 
-                    IOnOSUtils.WIN_FILE_OPEN_CMDS.put(parts[0], cmd);
+                    Utils.WIN_FILE_OPEN_CMDS.put(parts[0], cmd);
                 }
 
-                for (String record : IOnOSUtils.capture("cmd /c assoc")) {
+                for (String record : Utils.capture("cmd /c assoc")) {
                     String[] parts = record.split("=");
 
                     if (parts.length == 2) {
-                        IOnOSUtils.WIN_FILE_EXTS.put(parts[0].substring(1).toLowerCase(), parts[1]);
+                        Utils.WIN_FILE_EXTS.put(parts[0].substring(1).toLowerCase(), parts[1]);
                     }
                 }
             } catch (Exception ex) {
@@ -315,7 +315,7 @@ public class IOnOSUtils {
 
         File _nix_lib = null;
 
-        if (IOnOSUtils.osgroup == OS_GROUP.Nix) {
+        if (Utils.osgroup == OS_GROUP.Nix) {
             _nix_lib = new File("/usr/lib/");
         }
 
@@ -330,7 +330,7 @@ public class IOnOSUtils {
      * @see {@link #process(String, boolean, boolean)} met true false
      */
     public static List<String> capture(String command) throws IOException {
-        return IOnOSUtils.process(command, true, false);
+        return Utils.process(command, true, false);
     }
 
     /**
@@ -339,7 +339,7 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static String capture1(String command) throws IOException {
-        return IOnOSUtils.capture(command).get(0);
+        return Utils.capture(command).get(0);
     }
 
     /**
@@ -350,7 +350,7 @@ public class IOnOSUtils {
      */
     public static void copy(InputStream in, OutputStream out) throws IOException, NullPointerException {
         try {
-            byte[] buffer = new byte[IOnOSUtils.DEFAULT_BUFFER_LEN];
+            byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
             int read;
 
             while ((read = in.read(buffer)) > 0) {
@@ -425,7 +425,7 @@ public class IOnOSUtils {
      * @throws NullPointerException
      */
     public static void copyResource(String path, OutputStream out) throws IOException, NullPointerException {
-        IOnOSUtils.copy(IOnOSUtils.class.getClassLoader().getResourceAsStream(path), out);
+        Utils.copy(Utils.class.getClassLoader().getResourceAsStream(path), out);
     }
 
     /**
@@ -434,7 +434,7 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static File createTempFile(String extensie) throws IOException {
-        return IOnOSUtils.createTempFile(new Date().toString().replace(' ', '_').replace(':', '_'), extensie);
+        return Utils.createTempFile(new Date().toString().replace(' ', '_').replace(':', '_'), extensie);
     }
 
     /**
@@ -453,7 +453,7 @@ public class IOnOSUtils {
         File dllfile = File.createTempFile(libname, "." + ext);
 
         if (!dllfile.exists()) {
-            IOnOSUtils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
+            Utils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
             dllfile.deleteOnExit();
         }
 
@@ -468,7 +468,7 @@ public class IOnOSUtils {
      * @throws UnsatisfiedLinkError
      */
     public static void dynamicLoadLibrary(String libname) throws IOException, NullPointerException, UnsatisfiedLinkError {
-        IOnOSUtils.dynamicLoadLibrary(libname, null, true);
+        Utils.dynamicLoadLibrary(libname, null, true);
     }
 
     /**
@@ -479,7 +479,7 @@ public class IOnOSUtils {
      * @throws UnsatisfiedLinkError
      */
     public static void dynamicLoadLibrary(String libname, String ext) throws IOException, NullPointerException, UnsatisfiedLinkError {
-        IOnOSUtils.dynamicLoadLibrary(libname, ext, true);
+        Utils.dynamicLoadLibrary(libname, ext, true);
     }
 
     /**
@@ -492,23 +492,23 @@ public class IOnOSUtils {
      */
     public static void dynamicLoadLibrary(String libname, String ext, boolean temp) throws IOException, NullPointerException, UnsatisfiedLinkError {
         if (ext == null) {
-            ext = IOnOSUtils.getDefaultLibraryExtension();
+            ext = Utils.getDefaultLibraryExtension();
         }
 
         try {
             System.loadLibrary(libname);
         } catch (UnsatisfiedLinkError e) {
             if (temp) {
-                IOnOSUtils.dynamic(libname, ext);
+                Utils.dynamic(libname, ext);
             } else {
-                switch (IOnOSUtils.osgroup) {
+                switch (Utils.osgroup) {
                     case Windows:
-                        IOnOSUtils.dynamicLoadWinLibrary(libname, ext, false);
+                        Utils.dynamicLoadWinLibrary(libname, ext, false);
 
                         break;
 
                     default:
-                        throw new RuntimeException("not implemented for " + IOnOSUtils.osgroup);
+                        throw new RuntimeException("not implemented for " + Utils.osgroup);
                 }
             }
         }
@@ -521,10 +521,10 @@ public class IOnOSUtils {
      * @throws FileNotFoundException
      */
     public static void dynamicLoadWinLibrary(String libname, String ext, boolean onlywrite) throws IOException, FileNotFoundException {
-        File dllfile = new File(IOnOSUtils.WINDIR_SYSTEM32, libname + "." + ext);
+        File dllfile = new File(Utils.WINDIR_SYSTEM32, libname + "." + ext);
 
         if (!dllfile.exists()) {
-            IOnOSUtils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
+            Utils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
         }
 
         if (onlywrite) {
@@ -542,14 +542,14 @@ public class IOnOSUtils {
      * @see {@link #process(String, boolean, boolean)} met false false
      */
     public static void execute(String command) throws IOException {
-        IOnOSUtils.process(command, false, false);
+        Utils.process(command, false, false);
     }
 
     /**
      * get default library extention name for current OS
      */
     public static String getDefaultLibraryExtension() {
-        switch (IOnOSUtils.osgroup) {
+        switch (Utils.osgroup) {
             case Mac:
                 return "jnilib";
 
@@ -579,7 +579,7 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static void open(File file, String... cmdparameters) throws IOException {
-        if (!IOnOSUtils.openAndCheck(file, cmdparameters)) {
+        if (!Utils.openAndCheck(file, cmdparameters)) {
             throw new IOException("could not open file " + file);
         }
     }
@@ -595,11 +595,11 @@ public class IOnOSUtils {
             throw new FileNotFoundException((file == null) ? "" : file.getAbsolutePath());
         }
 
-        if (IOnOSUtils.osgroup == OS_GROUP.Windows) {
-            return IOnOSUtils.openCommand(file, false, cmdparameters);
+        if (Utils.osgroup == OS_GROUP.Windows) {
+            return Utils.openCommand(file, false, cmdparameters);
         }
 
-        return IOnOSUtils.openDesktop(file);
+        return Utils.openDesktop(file);
     }
 
     /**
@@ -615,19 +615,19 @@ public class IOnOSUtils {
             throw new FileNotFoundException(file.getAbsolutePath());
         }
 
-        String ext = IOnOSUtils.getExtension(file);
+        String ext = Utils.getExtension(file);
 
         // %0 or %1 are replaced with the file name that you want to open.
         // %* is replaced with all of the parameters.
         // %~ n is replaced with all of the remaining parameters, starting with the nth parameter, where n can be any number from 2 to 9.
         // %2 is replaced with the first parameter, %3 with the second, and so on.
-        String extname = IOnOSUtils.WIN_FILE_EXTS.get(ext);
+        String extname = Utils.WIN_FILE_EXTS.get(ext);
 
         if (extname == null) {
             throw new IOException("file association not found: " + ext);
         }
 
-        String opencommand = IOnOSUtils.WIN_FILE_OPEN_CMDS.get(extname);
+        String opencommand = Utils.WIN_FILE_OPEN_CMDS.get(extname);
 
         if (opencommand == null) {
             throw new IOException("file association not found: " + ext + "=" + extname);
@@ -690,16 +690,16 @@ public class IOnOSUtils {
             }
         }
 
-        IOnOSUtils.logger.info(opencommand);
-        IOnOSUtils.execute(opencommand);
+        Utils.logger.info(opencommand);
+        Utils.execute(opencommand);
 
         return true;
     }
 
     public static boolean openCommand(File file, String... cmdparameters) throws IOException {
-        String ext = IOnOSUtils.getExtension(file);
-        Boolean b = IOnOSUtils.WIN_FILE_OPEN_CMDS_PRE.get(ext);
-        return IOnOSUtils.openCommand(file, b == null ? false : b.booleanValue(), cmdparameters);
+        String ext = Utils.getExtension(file);
+        Boolean b = Utils.WIN_FILE_OPEN_CMDS_PRE.get(ext);
+        return Utils.openCommand(file, b == null ? false : b.booleanValue(), cmdparameters);
     }
 
     private static boolean openDesktop(File file) throws IOException {
@@ -761,13 +761,13 @@ public class IOnOSUtils {
      */
     public static byte[] read(File file) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        IOnOSUtils.copy(new FileInputStream(file), out);
+        Utils.copy(new FileInputStream(file), out);
 
         return out.toByteArray();
     }
 
     public static void setOpenCommandPrefixedparameters(String ext, boolean prefixedparameters) {
-        IOnOSUtils.WIN_FILE_OPEN_CMDS_PRE.put(ext.toLowerCase(), prefixedparameters);
+        Utils.WIN_FILE_OPEN_CMDS_PRE.put(ext.toLowerCase(), prefixedparameters);
     }
 
     /**
@@ -781,7 +781,7 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static void write(byte[] data, File file) throws NullPointerException, FileNotFoundException, IOException {
-        IOnOSUtils.copy(new ByteArrayInputStream(data), new FileOutputStream(file));
+        Utils.copy(new ByteArrayInputStream(data), new FileOutputStream(file));
     }
 
     /**
@@ -792,7 +792,7 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static void zip(OutputStream out, File... files) throws IOException {
-        byte[] buffer = new byte[IOnOSUtils.DEFAULT_BUFFER_LEN];
+        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
         int read;
 
         ZipOutputStream zout = new ZipOutputStream(out);
@@ -833,7 +833,7 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static void zip(OutputStream out, String entryname, byte[] data) throws IOException {
-        IOnOSUtils.zip(out, entryname, new ByteArrayInputStream(data));
+        Utils.zip(out, entryname, new ByteArrayInputStream(data));
     }
 
     /**
@@ -846,7 +846,7 @@ public class IOnOSUtils {
      * @throws IOException
      */
     public static void zip(OutputStream out, String entryname, InputStream in) throws IOException {
-        byte[] buffer = new byte[IOnOSUtils.DEFAULT_BUFFER_LEN];
+        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
         int read;
 
         ZipOutputStream zout = new ZipOutputStream(out);

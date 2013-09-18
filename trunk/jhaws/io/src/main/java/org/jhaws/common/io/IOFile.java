@@ -1834,7 +1834,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
     public IOFile writeBytes(final byte[] source, @SuppressWarnings("unused") final boolean append) throws IOException {
         try {
             this.getParentDirectory().create();
-            IOnOSUtils.write(source, this);
+            Utils.write(source, this);
         } catch (final IOException ex) {
             throw new IOException(ex);
         }
@@ -1894,7 +1894,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
     public IOFile writeBytes(final InputStream source) throws IOException {
         try {
             this.getParentDirectory().create();
-            IOnOSUtils.copy(source, new FileOutputStream(this));
+            Utils.copy(source, new FileOutputStream(this));
         } catch (IOException e) {
             throw new IOException(e);
         }

@@ -25,7 +25,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.jhaws.common.docimport.DocumentFactory;
 import org.jhaws.common.io.IODirectory;
-import org.jhaws.common.io.IOnOSUtils;
+import org.jhaws.common.io.Utils;
 
 public class LuceneTest {
     public static void main(String[] args) {
@@ -38,7 +38,7 @@ public class LuceneTest {
             IndexWriter writer = new IndexWriter(dir, iwc);
             String testfiles = LuceneTest.class.getPackage().getName().replace('.', '/') + "/testfiles";
             ByteArrayOutputStream tmp = new ByteArrayOutputStream();
-            IOnOSUtils.copyResource(testfiles, tmp);
+            Utils.copyResource(testfiles, tmp);
             BufferedReader br = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(tmp.toByteArray())));
             String line;
             while ((line = br.readLine()) != null) {
