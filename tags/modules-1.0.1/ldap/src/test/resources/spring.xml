@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE beans PUBLIC
+    "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-autowire="no" default-lazy-init="false"
+	default-dependency-check="none">
+
+	<bean id="contextSource"
+		class="org.springframework.ldap.core.support.LdapContextSource">
+		<property name="url" value="ldap://ldap.eid.belgium.be:389" />
+		<property name="base" value="dc=eid, dc=belgium, dc=be" />
+		<property name="baseEnvironmentProperties">
+			<map>
+				<entry>
+					<key>
+						<value>ldapVersion</value>
+					</key>
+					<value>3</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="ldapOperations"
+		class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSource" />
+	</bean>
+	<bean id="caDao" class="org.jhaws.common.ldap.tests.dao.CADao">
+		<property name="ldapOperations">
+			<ref bean="ldapOperations" />
+		</property>
+	</bean>
+	<bean id="persoonDao" class="org.jhaws.common.ldap.tests.dao.PersoonDao">
+		<property name="ldapOperations">
+			<ref bean="ldapOperations" />
+		</property>
+	</bean>
+	<bean id="rootDao" class="org.jhaws.common.ldap.tests.dao.RootDao">
+		<property name="ldapOperations">
+			<ref bean="ldapOperations" />
+		</property>
+	</bean>
+
+	<bean id="ldapContextSource" class="org.jhaws.common.ldap.standalone.ContextSource"
+		init-method="init">
+		<property name="url" value="ldap://ldap.eid.belgium.be:389" />
+		<property name="base" value="dc=eid, dc=belgium, dc=be" />
+		<property name="baseEnvironmentProperties">
+			<map>
+				<entry>
+					<key>
+						<value>ldapVersion</value>
+					</key>
+					<value>3</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="caDao0" class="org.jhaws.common.ldap.tests.dao.CADao0">
+		<property name="contextSource">
+			<ref bean="ldapContextSource" />
+		</property>
+	</bean>
+	<bean id="persoonDao0" class="org.jhaws.common.ldap.tests.dao.PersoonDao0">
+		<property name="contextSource">
+			<ref bean="ldapContextSource" />
+		</property>
+	</bean>
+	<bean id="rootDao0" class="org.jhaws.common.ldap.tests.dao.RootDao0">
+		<property name="contextSource">
+			<ref bean="ldapContextSource" />
+		</property>
+	</bean>
+
+	<!-- 
+	<bean id="ldapLocal" class="org.jhaws.common.ldap.standalone.ContextSource"
+		init-method="init">
+		<property name="url" value="ldap://127.0.0.1:10389" />
+		<property name="base" value="ou=system" />
+		<property name="userName" value="uid=admin,ou=system" />
+		<property name="password" value="secret" />
+		<property name="baseEnvironmentProperties">
+			<map>
+				<entry>
+					<key>
+						<value>ldapVersion</value>
+					</key>
+					<value>3</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="userDao" class="org.jhaws.common.ldap.tests.local.UserDao">
+		<property name="contextSource">
+			<ref bean="ldapLocal" />
+		</property>
+	</bean>
+	<bean id="contextSourceL"
+		class="org.springframework.ldap.core.support.LdapContextSource">
+		<property name="url" value="ldap://127.0.0.1:10389" />
+		<property name="base" value="ou=system" />
+		<property name="userName" value="uid=admin,ou=system" />
+		<property name="password" value="secret" />
+		<property name="baseEnvironmentProperties">
+			<map>
+				<entry>
+					<key>
+						<value>ldapVersion</value>
+					</key>
+					<value>3</value>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="ldapOperationsL"
+		class="org.springframework.ldap.core.LdapTemplate">
+		<constructor-arg ref="contextSourceL" />
+	</bean>
+	<bean id="userDao0" class="org.jhaws.common.ldap.tests.local.SpringUserDao">
+		<property name="ldapOperations">
+			<ref bean="ldapOperationsL" />
+		</property>
+	</bean>
+	 -->
+</beans>

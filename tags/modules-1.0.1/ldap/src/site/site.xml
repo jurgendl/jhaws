@@ -1,0 +1,29 @@
+<project name="Mojo">
+	<bannerLeft>
+		<name>Maven</name>
+		<src>http://maven.apache.org/images/apache-maven-project.png</src>
+ 		<href>http://maven.apache.org/</href>
+	</bannerLeft> <bannerRight> <src>http://maven.apache.org/images/maven-small.gif</src> </bannerRight>
+	<body>
+		<links>
+			<item name="Maven" href="http://maven.apache.org/maven2"/>
+		</links>
+		<menu name="back">
+			<item name="back" href="../../../target/site/index.html"/>
+		</menu>
+		${reports}
+		<menu name="DependencyGraph">
+			<item name="DependencyGraph" href="dependency-graph.html"/>
+		</menu>
+	</body>
+   <!--<artifactId>maven-default-skin</artifactId>-->
+   <!--<artifactId>maven-classic-skin</artifactId>-->
+   <!--<artifactId>maven-stylus-skin</artifactId>-->
+   <skin>
+     <groupId>org.apache.maven.skins</groupId>
+     <artifactId>maven-default-skin</artifactId>
+     <version>1.0</version>
+   </skin>
+</project>
+
+
