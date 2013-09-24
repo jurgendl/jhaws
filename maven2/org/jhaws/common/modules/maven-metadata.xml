@@ -4,10 +4,11 @@
   <artifactId>modules</artifactId>
   <version>1.0.0</version>
   <versioning>
-    <release>1.0.0</release>
+    <release>1.0.1</release>
     <versions>
       <version>1.0.0</version>
+      <version>1.0.1</version>
     </versions>
-    <lastUpdated>20130829100337</lastUpdated>
+    <lastUpdated>20130924140222</lastUpdated>
   </versioning>
 </metadata>
