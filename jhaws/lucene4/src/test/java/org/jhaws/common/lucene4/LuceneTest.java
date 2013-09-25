@@ -26,9 +26,11 @@ import org.apache.lucene.util.Version;
 import org.jhaws.common.docimport.DocumentFactory;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.Utils;
+import org.junit.Test;
 
 public class LuceneTest {
-    public static void main(String[] args) {
+    @Test
+    public void test() {
         try {
             Version LUCENE_VERSION = Version.LUCENE_44;
             Directory dir = FSDirectory.open(IODirectory.newTempDir("lucenetests"));
@@ -51,7 +53,7 @@ public class LuceneTest {
         }
     }
 
-    private static void indexDocs(IndexWriter writer, String testfile) throws IOException {
+    private void indexDocs(IndexWriter writer, String testfile) throws IOException {
         InputStream fis = LuceneTest.class.getClassLoader().getResourceAsStream(testfile);
         String content = DocumentFactory.getConvertor(testfile).getText(fis);
         try {
