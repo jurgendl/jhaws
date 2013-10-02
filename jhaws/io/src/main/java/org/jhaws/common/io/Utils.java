@@ -816,6 +816,7 @@ public class Utils {
                 while ((read = zin.read(buffer)) != -1) {
                     out.write(buffer, 0, read);
                 }
+                out.close();
             } else {
                 IODirectory dir = new IODirectory(target, entry.getName());
                 dir.create();
