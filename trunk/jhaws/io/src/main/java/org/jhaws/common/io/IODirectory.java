@@ -823,7 +823,7 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
         java.io.File[] tmp = source.listFiles();
 
         if (delete && ((tmp == null) || (tmp.length == 0))) {
-            boolean erased = source.erase();
+            /* boolean erased = */source.erase();
             // System.out.println("erasing " + source + " => " + erased); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
