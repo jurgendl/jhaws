@@ -828,6 +828,9 @@ public class HTTPClient implements Serializable {
                 case HttpStatus.SC_GATEWAY_TIMEOUT:
                     throw new IOException(status.getReasonPhrase());
 
+                case HttpStatus.SC_FORBIDDEN:
+                    throw new IOException(status.getReasonPhrase());
+
                 default:
                     throw new RuntimeException("not implemented: " + status);
             }
