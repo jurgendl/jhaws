@@ -2,6 +2,8 @@ package org.jhaws.common.io;
 
 import java.util.Comparator;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+
 /**
  * file size comparator <br>
  * 
@@ -64,20 +66,6 @@ public class FileSizeComparator implements Comparator<IOFile> {
      */
     @Override
     public int compare(final IOFile f1, final IOFile f2) {
-        long s1 = 0;
-        long s2 = 0;
-
-        if (!f1.isDirectory()) {
-            s1 = f1.length();
-        }
-
-        if (!f2.isDirectory()) {
-            s2 = f2.length();
-        }
-
-        if (s1 > s2) {
-            return 1 * this.type.direction();
-        }
-        return -1 * this.type.direction();
+        return this.type.direction() * new CompareToBuilder().append(f1.length(), f2.length()).toComparison();
     }
 }
