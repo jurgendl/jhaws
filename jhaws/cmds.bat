@@ -15,17 +15,16 @@ echo e. eclipse (online)
 echo o. eclipse (offline)
 echo c. clean
 echo d. download dependencies
-echo b. rest build
 echo r. release
 echo y. update, deploy
 echo s. generate sources
 echo m. assembly
 echo t. status
-echo j. update java home
-echo a. update maven home
+echo j. update java_home to latest (Windows)
+echo a. update maven_home to maven3_home
 echo q. quit
 echo ------------------
-CHOICE /N /C:uieocdbrysmtjaq
+CHOICE /N /C:uieocdrysmtjaq
 set nr=%ERRORLEVEL%
 IF %nr% EQU 1 goto lsvnup
 IF %nr% EQU 2 goto llocinstall
@@ -33,15 +32,14 @@ IF %nr% EQU 3 goto leclipse
 IF %nr% EQU 4 goto leclipseoff
 IF %nr% EQU 5 goto lclean
 IF %nr% EQU 6 goto ldependency
-IF %nr% EQU 7 goto lrest
-IF %nr% EQU 8 goto lrelease
-IF %nr% EQU 9 goto ldeploy
-IF %nr% EQU 10 goto lgen
-IF %nr% EQU 11 goto lass
-IF %nr% EQU 12 goto lstatus
-IF %nr% EQU 13 goto ljavahome
-IF %nr% EQU 14 goto lmavenhome
-IF %nr% EQU 15 goto lquit
+IF %nr% EQU 7 goto lrelease
+IF %nr% EQU 8 goto ldeploy
+IF %nr% EQU 9 goto lgen
+IF %nr% EQU 10 goto lass
+IF %nr% EQU 11 goto lstatus
+IF %nr% EQU 12 goto ljavahome
+IF %nr% EQU 13 goto lmavenhome
+IF %nr% EQU 14 goto lquit
 goto start
 
 :lmavenhome
@@ -103,12 +101,6 @@ goto start
 :ldependency
 cls
 call mvn -e dependency:go-offline
-pause
-goto start
-
-:lrest
-cls
-call mvn -e -pl be.ugent.oasis:rest-xsd -am install -DskipTests=true
 pause
 goto start
 
