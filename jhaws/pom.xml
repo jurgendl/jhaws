@@ -20,6 +20,39 @@
 		<!--<module>lucene3</module>-->
 		<module>lucene4</module>
 	</modules>
+	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
+	<profiles>
+		<profile>
+			<!-- 
+				"mvn clean package -P nodebuginfo"
+				wil create an optimized (without debugging info) jar: hql-builder-nodebug-{version}.jar
+				
+				"mvn clean package"
+				wil create a jar without debugging info: hql-builder-{version}.jar
+			 -->
+			<id>nodebuginfo</id>
+			<build>
+				<finalName>${artifactId}-nodebuginfo-${version}</finalName>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>2.5.1</version>
+						<configuration>
+							<fork>true</fork>
+							<source>${targetJdk}</source>
+							<target>${targetJdk}</target>
+							<optimize>true</optimize>
+							<verbose>false</verbose>
+							<encoding>${project.build.sourceEncoding}</encoding>
+							<debug>false</debug> 
+							<debuglevel>none</debuglevel><!-- lines, vars, and source or none -->
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<licenses>
 		<license>
 			<name>GNU Lesser General Public License v2.1</name>
@@ -89,6 +122,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
 				<configuration>
 					<fork>true</fork>
 					<source>${targetJdk}</source>
