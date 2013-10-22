@@ -1101,34 +1101,44 @@ public class HTTPClient implements Serializable {
         if (preloadCookies) {
             CookieStore cs = this.getCookieStore();
 
-            try {
-                cs.addCookieStoreInterceptor(new PreloadUnixFirefoxCookies());
-            } catch (Exception ex) {
-                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+            if (!PreloadUnixChromeCookies.windows) {
+                try {
+                    cs.addCookieStoreInterceptor(new PreloadUnixFirefoxCookies());
+                } catch (Exception ex) {
+                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                }
             }
 
-            try {
-                cs.addCookieStoreInterceptor(new PreloadUnixChromeCookies());
-            } catch (Exception ex) {
-                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+            if (!PreloadUnixChromeCookies.windows) {
+                try {
+                    cs.addCookieStoreInterceptor(new PreloadUnixChromeCookies());
+                } catch (Exception ex) {
+                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                }
             }
 
-            try {
-                cs.addCookieStoreInterceptor(new PreloadWinFirefoxCookies());
-            } catch (Exception ex) {
-                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+            if (PreloadUnixChromeCookies.windows) {
+                try {
+                    cs.addCookieStoreInterceptor(new PreloadWinFirefoxCookies());
+                } catch (Exception ex) {
+                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                }
             }
 
-            try {
-                cs.addCookieStoreInterceptor(new PreloadWinIExplorerCookies());
-            } catch (Exception ex) {
-                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+            if (PreloadUnixChromeCookies.windows) {
+                try {
+                    cs.addCookieStoreInterceptor(new PreloadWinIExplorerCookies());
+                } catch (Exception ex) {
+                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                }
             }
 
-            try {
-                cs.addCookieStoreInterceptor(new PreloadWinChromeCookies());
-            } catch (Exception ex) {
-                HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+            if (PreloadUnixChromeCookies.windows) {
+                try {
+                    cs.addCookieStoreInterceptor(new PreloadWinChromeCookies());
+                } catch (Exception ex) {
+                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                }
             }
         } else {
             this.getCookieStore().clearCookieStoreInterceptors();
