@@ -8,8 +8,7 @@ import java.util.HashSet;
  */
 @SuppressWarnings("unused")
 public class PreloadUnixChromeCookies implements CookieStoreInterceptor {
-    /** field */
-    protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
+    public static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
 
     private static final boolean driver;
 
@@ -66,7 +65,8 @@ public class PreloadUnixChromeCookies implements CookieStoreInterceptor {
 
     /**
      * 
-     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+     *      java.util.Date)
      */
     @Override
     public void beforeClearExpired(CookieStore store, Date date) {
