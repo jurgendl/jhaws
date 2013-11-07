@@ -29,6 +29,8 @@ public class CheckBoxList extends JList {
         }
     }
 
+    private static final long serialVersionUID = -6288650056105581228L;
+
     protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
     public CheckBoxList() {

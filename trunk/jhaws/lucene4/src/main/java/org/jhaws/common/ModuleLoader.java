@@ -99,14 +99,14 @@ public class ModuleLoader<T> {
          * 
          * @return Returns the moduleLoaders.
          */
-        @SuppressWarnings("rawtypes")
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         public <P> ModuleLoader<P> getModuleLoader(Class<P> serviceInterface) {
             return (ModuleLoader<P>) this.moduleLoaders.get(serviceInterface);
         }
     }
 
     /** "/META-INF/services/" */
-    private static final String SERVICES_CONFIG_LOCATION = "META-INF/services/"; 
+    private static final String SERVICES_CONFIG_LOCATION = "META-INF/services/";
 
     /**
      * gets module loader for given interface
@@ -351,7 +351,7 @@ public class ModuleLoader<T> {
                 while (line != null) {
                     line = line.trim();
 
-                    if (!line.startsWith("#") && (line.trim().length() > 1)) { 
+                    if (!line.startsWith("#") && (line.trim().length() > 1)) {
 
                         Object o = null;
 
@@ -383,7 +383,7 @@ public class ModuleLoader<T> {
 
                         T implementation = this.serviceInterface.cast(o);
 
-                        for (String key : implementation.toString().split(";")) { 
+                        for (String key : implementation.toString().split(";")) {
 
                             Map<String, T> implementationList = this.implementations.get(key);
 
