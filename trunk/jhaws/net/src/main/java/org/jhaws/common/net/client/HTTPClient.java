@@ -85,6 +85,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.IOFile;
+import org.jhaws.common.io.security.Security;
 import org.jhaws.common.net.client.cookies.CookieStore;
 import org.jhaws.common.net.client.cookies.PreloadUnixChromeCookies;
 import org.jhaws.common.net.client.cookies.PreloadUnixFirefoxCookies;
@@ -298,7 +299,7 @@ public class HTTPClient implements Serializable {
     protected transient RedirectStrategy redirectStrategy;
 
     /** security */
-    protected transient HTTPSecure secure;
+    protected transient Security secure;
 
     /** accept types */
     protected String accept;
@@ -376,7 +377,7 @@ public class HTTPClient implements Serializable {
         this.version = 0;
 
         try {
-            this.secure = (HTTPSecure) Class.forName(this.getClass().getPackage().getName() + ".SecureNet").newInstance();
+            this.secure = (Security) Class.forName(this.getClass().getPackage().getName() + ".SecureNet").newInstance();
         } catch (Exception ex) {
             System.err.println("cannot use passwords");
             ex.printStackTrace();

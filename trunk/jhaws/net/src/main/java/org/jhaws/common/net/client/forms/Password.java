@@ -1,7 +1,7 @@
 package org.jhaws.common.net.client.forms;
 
 import org.htmlcleaner.TagNode;
-import org.jhaws.common.net.client.SecureNet;
+import org.jhaws.common.io.security.SecureMe;
 
 
 /**
@@ -12,7 +12,7 @@ public class Password extends Input {
     private static final long serialVersionUID = -3366809266365586314L;
 
     /** secure */
-    private SecureNet secure = new SecureNet();
+    private SecureMe secure = new SecureMe();
 
     /** cipher */
     private byte[] data;
