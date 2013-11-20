@@ -7,50 +7,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.security.SecureRandom;
-import java.util.Random;
 
 import org.bouncycastle.crypto.DataLengthException;
 import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.crypto.KeyGenerationParameters;
 import org.bouncycastle.crypto.engines.DESedeEngine;
-import org.bouncycastle.crypto.generators.DESedeKeyGenerator;
 import org.bouncycastle.crypto.modes.CBCBlockCipher;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import org.bouncycastle.crypto.params.DESedeParameters;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.util.encoders.Hex;
 
 /**
- * HTTPSecure using BouncyCastle
+ * security using BouncyCastle
  */
 public class SecureMe implements Security {
     static {
         java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
-    private static byte[] rndSeed() {
-        Random rnd = new Random(System.currentTimeMillis());
-        byte[] seed = new byte[128 + (rnd.nextInt(64) * 2)];
-        rnd.nextBytes(seed);
-
-        return seed;
-    }
-
-    private byte[] key;
+    private Seed key;
 
     public SecureMe() {
-        this(SecureMe.rndSeed());
-    }
-
-    public SecureMe(byte[] seed) {
-        DESedeKeyGenerator kg = new DESedeKeyGenerator();
-        kg.init(new KeyGenerationParameters(new SecureRandom(seed), DESedeParameters.DES_EDE_KEY_LENGTH * 8));
-        this.key = kg.generateKey();
+        this.key = new Seed();
     }
 
     /**
-     * @see org.jhaws.common.Security.client.HTTPSecure#decrypt(byte[])
+     * @see org.jhaws.common.io.security.Security#decrypt(byte[])
      */
     @Override
     public String decrypt(byte[] encrypted) throws DataLengthException, IllegalStateException, InvalidCipherTextException, IOException {
@@ -68,7 +49,7 @@ public class SecureMe implements Security {
         PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(new DESedeEngine()));
 
         // initialise the cipher for decryption
-        cipher.init(false, new KeyParameter(this.key));
+        cipher.init(false, new KeyParameter(this.key.key));
 
         /*
          * As the decryption is from our preformatted file, and we know that it's a hex encoded format, then we wrap the InputStream with a
@@ -115,7 +96,7 @@ public class SecureMe implements Security {
         PaddedBufferedBlockCipher cipher = new PaddedBufferedBlockCipher(new CBCBlockCipher(new DESedeEngine()));
 
         // initialise the cipher with the key bytes, for encryption
-        cipher.init(true, new KeyParameter(this.key));
+        cipher.init(true, new KeyParameter(this.key.key));
 
         /*
          * Create some temporary byte arrays for use in encryption, make them a reasonable size so that we don't spend forever reading small chunks
@@ -165,10 +146,10 @@ public class SecureMe implements Security {
     }
 
     /**
-     * @see org.jhaws.common.Security.client.HTTPSecure#encrypt(java.lang.String)
+     * @see org.jhaws.common.io.security.Security#encrypt(java.lang.String)
      */
     @Override
-    public byte[] encrypt(String string) throws Exception, IllegalStateException, InvalidCipherTextException, IOException {
+    public byte[] encrypt(String string) throws IllegalStateException, InvalidCipherTextException, IOException {
         ByteArrayInputStream in = new ByteArrayInputStream(string.getBytes());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         this.encrypt(in, out);
