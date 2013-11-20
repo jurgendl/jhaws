@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client;
+package org.jhaws.common.io.security;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.SecureRandom;
-import java.security.Security;
 import java.util.Random;
 
 import org.bouncycastle.crypto.DataLengthException;
@@ -23,11 +22,11 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.util.encoders.Hex;
 
 /**
- * HTTPSecure using BoucyCastle
+ * HTTPSecure using BouncyCastle
  */
-public class SecureNet implements HTTPSecure {
+public class SecureMe implements Security {
     static {
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 
     private static byte[] rndSeed() {
@@ -40,18 +39,18 @@ public class SecureNet implements HTTPSecure {
 
     private byte[] key;
 
-    public SecureNet() {
-        this(SecureNet.rndSeed());
+    public SecureMe() {
+        this(SecureMe.rndSeed());
     }
 
-    public SecureNet(byte[] seed) {
+    public SecureMe(byte[] seed) {
         DESedeKeyGenerator kg = new DESedeKeyGenerator();
         kg.init(new KeyGenerationParameters(new SecureRandom(seed), DESedeParameters.DES_EDE_KEY_LENGTH * 8));
         this.key = kg.generateKey();
     }
 
     /**
-     * @see org.jhaws.common.net.client.HTTPSecure#decrypt(byte[])
+     * @see org.jhaws.common.Security.client.HTTPSecure#decrypt(byte[])
      */
     @Override
     public String decrypt(byte[] encrypted) throws DataLengthException, IllegalStateException, InvalidCipherTextException, IOException {
@@ -166,7 +165,7 @@ public class SecureNet implements HTTPSecure {
     }
 
     /**
-     * @see org.jhaws.common.net.client.HTTPSecure#encrypt(java.lang.String)
+     * @see org.jhaws.common.Security.client.HTTPSecure#encrypt(java.lang.String)
      */
     @Override
     public byte[] encrypt(String string) throws Exception, IllegalStateException, InvalidCipherTextException, IOException {
