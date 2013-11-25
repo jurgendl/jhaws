@@ -377,10 +377,15 @@ public class HTTPClient implements Serializable {
         this.version = 0;
 
         try {
-            this.secure = (Security) Class.forName(this.getClass().getPackage().getName() + ".SecureNet").newInstance();
-        } catch (Exception ex) {
-            System.err.println("cannot use passwords");
-            ex.printStackTrace();
+            this.secure = (Security) Class.forName("org.jhaws.common.io.security.SecureMeHard").newInstance();
+        } catch (Exception ex1) {
+            try {
+                this.secure = (Security) Class.forName("org.jhaws.common.io.security.SecureMe").newInstance();
+            } catch (Exception ex2) {
+                System.err.println("cannot use passwords");
+                ex1.printStackTrace();
+                ex2.printStackTrace();
+            }
         }
 
         this.httpClientListeners = new ArrayList<HTTPClientListener>();
