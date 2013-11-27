@@ -1,6 +1,6 @@
 @echo off
 
-set MAVEN_OPTS=-Xms64m -Xmx1024m -Xss2048k -Xmn32m -XX:PermSize=64m -XX:MaxPermSize=256m
+set MAVEN_OPTS=-Xms64m -Xmx1024m -Xss2048k -Xmn32m
 
 :start
 cls
