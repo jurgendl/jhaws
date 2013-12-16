@@ -15,10 +15,14 @@ public class NSHandler extends HashMap<String, String> implements NamespaceConte
 
     private static final String XMLNS = "xmlns";
 
-    NSHandler(NamedNodeMap basenode) {
+    public NSHandler(NamedNodeMap basenode) {
         this.init(basenode);
     }
 
+    /**
+     * 
+     * @see javax.xml.namespace.NamespaceContext#getNamespaceURI(java.lang.String)
+     */
     @Override
     public String getNamespaceURI(String prefix) {
         for (String key : this.keySet()) {
