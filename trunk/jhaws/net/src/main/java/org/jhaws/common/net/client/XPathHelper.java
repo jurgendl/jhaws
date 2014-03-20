@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,10 +13,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -72,6 +75,29 @@ public class XPathHelper {
         return doc;
     }
 
+    public static String xpathfix(String xpath) {
+        if ((xpath == null) || (xpath.trim().length() == 0)) {
+            return null;
+        }
+        StringBuilder xpr = new StringBuilder();
+        List<String> els = Arrays.asList(xpath.split("/"));
+        for (int i = 0; i < els.size(); i++) {
+            String el = els.get(i);
+            if ((i == 0) && (el.length() == 0)) {
+                continue;
+            }
+            if (el.contains("(") || el.equals("*")) {
+                if (i != 0) {
+                    xpr.append("/");
+                }
+                xpr.append(el);
+            } else {
+                xpr.append("/default:").append(el);
+            }
+        }
+        return xpr.toString();
+    }
+
     public static <T> T xpathXml(Class<T> clazz, String expr, byte[] xmlData) throws XPathExpressionException, IOException,
             ParserConfigurationException, SAXException {
         return XPathHelper.xpathXml(clazz, expr, XPathHelper.parseXml(xmlData));
@@ -90,15 +116,28 @@ public class XPathHelper {
     @SuppressWarnings("unchecked")
     public static <T> T xpathXml(@SuppressWarnings("unused") Class<T> clazz, String expr, org.w3c.dom.Document doc, String basenodename)
             throws XPathExpressionException, IOException {
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        xpath.setNamespaceContext(new NSHandler(NodeList.class.cast(doc.getElementsByTagName(basenodename)).item(0).getAttributes()));
-        List<Node> results = new ArrayList<Node>();
-        NodeList nodes = NodeList.class.cast(xpath.compile(expr).evaluate(doc, XPathConstants.NODESET));
-        int length = nodes.getLength();
-        for (int i = 0; i < length; i++) {
-            results.add(nodes.item(i));
+        NodeList elementsByTagName = doc.getElementsByTagName(basenodename);
+        if (elementsByTagName.getLength() == 0) {
+            return null;
         }
-        return (T) (results.size() == 0 ? null : (results.size() == 1 ? results.get(0) : results));
+        Node item = elementsByTagName.item(0);
+        NamedNodeMap attributes = item.getAttributes();
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        xpath.setNamespaceContext(new NSHandler(attributes));
+        XPathExpression xpr = xpath.compile(expr);
+        try {
+            Object evaluate = xpr.evaluate(doc, XPathConstants.NODESET);
+            NodeList nodes = NodeList.class.cast(evaluate);
+            int length = nodes.getLength();
+            List<Node> results = new ArrayList<Node>();
+            for (int i = 0; i < length; i++) {
+                Node node = nodes.item(i);
+                results.add(node);
+            }
+            return (T) (results.size() == 0 ? null : (results.size() == 1 ? results.get(0) : results));
+        } catch (javax.xml.xpath.XPathExpressionException ex) {
+            return (T) xpr.evaluate(doc);
+        }
     }
 
     public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, byte[] xmlData) throws XPathExpressionException, IOException,
@@ -112,7 +151,9 @@ public class XPathHelper {
     }
 
     public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, org.w3c.dom.Document doc) throws XPathExpressionException, IOException {
-        String basenodename = expr.substring(1, expr.indexOf('/', 2)).replaceAll("default:", "");
+        int p1 = expr.indexOf("/") + 1;
+        int p2 = expr.indexOf("/", p1);
+        String basenodename = expr.substring(p1, p2).replaceAll("default:", "");
         return XPathHelper.xpathXmlList(clazz, expr, doc, basenodename);
     }
 
