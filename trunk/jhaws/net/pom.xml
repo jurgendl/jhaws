@@ -97,7 +97,7 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
-			<version>1.49</version>
+			<version>1.46</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
