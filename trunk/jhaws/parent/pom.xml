@@ -57,12 +57,14 @@
 		<developerConnection>scm:svn:https://jhaws.googlecode.com/svn/trunk</developerConnection>
 		<url>http://jhaws.googlecode.com/svn/trunk</url>
 	</scm>
+	<!--
 	<repositories>
 		<repository>
 			<id>jhaws.googlecode</id>
 			<url>http://jhaws.googlecode.com/svn/maven2</url>
 		</repository>
 	</repositories>
+	-->
 	<build>
 		<plugins>
 			<plugin>
