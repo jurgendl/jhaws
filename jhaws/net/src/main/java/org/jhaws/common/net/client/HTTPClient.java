@@ -105,6 +105,7 @@ import org.slf4j.LoggerFactory;
  * http://wiki.apache.org/HttpComponents/LessonsLearned<br>
  * http://wiki.apache.org/HttpComponents/FrequentlyAskedConnectionManagementQuestions<br>
  */
+@SuppressWarnings("deprecation")
 public class HTTPClient implements Serializable {
     /**
      * GetParams

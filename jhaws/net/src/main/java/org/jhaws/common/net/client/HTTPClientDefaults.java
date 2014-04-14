@@ -1,9 +1,5 @@
 package org.jhaws.common.net.client;
 
-import org.apache.http.HttpVersion;
-import org.apache.http.client.params.CookiePolicy;
-import org.apache.http.protocol.HTTP;
-
 /**
  * HTTPClientDefaults
  */
@@ -12,7 +8,7 @@ public interface HTTPClientDefaults {
     public static final String LOCATION = "Location";
 
     /** Content-Encoding */
-    public static final String CONTENT_ENCODING = HTTP.CONTENT_ENCODING;
+    public static final String CONTENT_ENCODING = org.apache.http.protocol.HTTP.CONTENT_ENCODING;
 
     /** false */
     public static final boolean HANDLE_REDIRECTS = true;
@@ -30,7 +26,7 @@ public interface HTTPClientDefaults {
     public static final int KEEP_ALIVE = 300;
 
     /** Keep-Alive */
-    public static final String PARAM_KEEP_ALIVE = HTTP.CONN_KEEP_ALIVE;
+    public static final String PARAM_KEEP_ALIVE = org.apache.http.protocol.HTTP.CONN_KEEP_ALIVE;
 
     /** Accept-Language */
     public static final String PARAM_ACCEPT_LANGUAGE = "Accept-Language";
@@ -46,16 +42,17 @@ public interface HTTPClientDefaults {
 
     /** UTF-8 */
     @SuppressWarnings("deprecation")
-    public static final String CHARSET = HTTP.UTF_8;
+    public static final String CHARSET = org.apache.http.protocol.HTTP.UTF_8;
 
     /** true */
     public static final boolean SINGLE_COOKIE_HEADER = true;
 
     /** compatibility */
-    public static final String BROWSER_COMPATIBILITY = CookiePolicy.BROWSER_COMPATIBILITY;
+    @SuppressWarnings("deprecation")
+    public static final String BROWSER_COMPATIBILITY = org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY;
 
     /** 1.1 */
-    public static final HttpVersion HTTP_VERSION = HttpVersion.HTTP_1_1;
+    public static final org.apache.http.HttpVersion HTTP_VERSION = org.apache.http.HttpVersion.HTTP_1_1;
 
     /** Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0 */
     public static final String FIREFOX = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0";
@@ -79,7 +76,7 @@ public interface HTTPClientDefaults {
     public static final int TIMEOUT = 3000;
 
     /** "Content-Type" */
-    public static final String CONTENT_TYPE = HTTP.CONTENT_TYPE;
+    public static final String CONTENT_TYPE = org.apache.http.protocol.HTTP.CONTENT_TYPE;
 
     /** "Date" */
     public static final String DATE = "Date";

@@ -133,9 +133,8 @@ public class Response implements Serializable {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Form> getForms() throws IOException {
-        List<TagNode> formlist = this.getNode().getElementListByName("form", true);
+        List<? extends TagNode> formlist = this.getNode().getElementListByName("form", true);
 
         List<Form> forms = new ArrayList<Form>();
 
@@ -147,9 +146,8 @@ public class Response implements Serializable {
         return forms;
     }
 
-    @SuppressWarnings("unchecked")
     public String getMetaRedirect() throws IOException {
-        List<TagNode> metas = this.getNode().getElementListByName("meta", true);
+        List<? extends TagNode> metas = this.getNode().getElementListByName("meta", true);
 
         for (TagNode meta : metas) {
             if ("refresh".equals(meta.getAttributeByName("http-equiv"))) {
@@ -178,9 +176,8 @@ public class Response implements Serializable {
         return this.redirect;
     }
 
-    @SuppressWarnings("unchecked")
     public String getTitle() throws IOException {
-        List<TagNode> res = this.getNode().getElementListByName("title", false);
+        List<? extends TagNode> res = this.getNode().getElementListByName("title", false);
 
         return (res.size() == 0) ? null : res.get(0).getText().toString();
     }
