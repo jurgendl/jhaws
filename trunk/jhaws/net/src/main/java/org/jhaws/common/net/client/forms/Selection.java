@@ -28,9 +28,8 @@ public class Selection implements InputElement {
     /** multiple */
     private final boolean multiple;
 
-    @SuppressWarnings("unchecked")
     public Selection(TagNode selectnode) {
-        List<TagNode> optionlist = selectnode.getElementListByName("option", true);
+        List<? extends TagNode> optionlist = selectnode.getElementListByName("option", true);
         String selected = null;
 
         for (TagNode optionnode : optionlist) {

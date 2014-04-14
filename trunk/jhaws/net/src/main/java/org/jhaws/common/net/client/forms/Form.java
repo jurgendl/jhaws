@@ -55,14 +55,13 @@ public class Form implements Serializable, Iterable<InputElement> {
         super();
     }
 
-    @SuppressWarnings("unchecked")
     public Form(URI url, TagNode formnode) {
         this.url = url;
         this.id = formnode.getAttributeByName("id");
         this.method = formnode.getAttributeByName("method");
         this.action = formnode.getAttributeByName("action");
 
-        List<TagNode> inputlist = formnode.getElementListByName("input", true);
+        List<? extends TagNode> inputlist = formnode.getElementListByName("input", true);
 
         for (TagNode inputnode : inputlist) {
             String type = inputnode.getAttributeByName("type");
@@ -88,14 +87,14 @@ public class Form implements Serializable, Iterable<InputElement> {
             }
         }
 
-        List<TagNode> selectlist = formnode.getElementListByName("select", true);
+        List<? extends TagNode> selectlist = formnode.getElementListByName("select", true);
 
         for (TagNode selectnode : selectlist) {
             final Selection e = new Selection(selectnode);
             this.inputElements.put(e.getName(), e);
         }
 
-        List<TagNode> textarealist = formnode.getElementListByName("textarea", true);
+        List<? extends TagNode> textarealist = formnode.getElementListByName("textarea", true);
 
         for (TagNode textareanode : textarealist) {
             final TextArea e = new TextArea(textareanode);
