@@ -431,7 +431,7 @@ public class HTTPClient implements Serializable {
     }
 
     /**
-     * 
+     *
      * @see org.apache.http.client.CookieStore#addCookie(org.apache.http.cookie.Cookie)
      */
     public HTTPClient addCookie(Cookie cookie) {
@@ -445,7 +445,7 @@ public class HTTPClient implements Serializable {
     }
 
     /**
-     * 
+     *
      * @see org.apache.http.client.CookieStore#clear()
      */
     public HTTPClient clearCookies() {
@@ -454,7 +454,7 @@ public class HTTPClient implements Serializable {
     }
 
     /**
-     * 
+     *
      * @see org.apache.http.client.CookieStore#clearExpired(java.util.Date)
      */
     public boolean clearExpiredCookies(Date date) {
@@ -735,9 +735,8 @@ public class HTTPClient implements Serializable {
     }
 
     protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest, String ccpt) throws IOException,
-            org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException,
-            org.apache.http.client.ClientProtocolException {
-        // System.out.println(">> " + httpRequest.getURI());
+    org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException,
+    org.apache.http.client.ClientProtocolException {
         HTTPClient.logger.info("url=" + httpRequest.getURI());
         this.chain.add(httpRequest.getURI());
 
@@ -755,9 +754,9 @@ public class HTTPClient implements Serializable {
 
                 if (this.getHttpclient().getCredentialsProvider().getCredentials(scope) == null) {
                     this.getHttpclient()
-                            .getCredentialsProvider()
-                            .setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                                    new UsernamePasswordCredentials(this.user, this.getPass()));
+                    .getCredentialsProvider()
+                    .setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+                            new UsernamePasswordCredentials(this.user, this.getPass()));
 
                     AuthCache authCache = new BasicAuthCache();
                     BasicScheme basicAuth = new BasicScheme();
@@ -969,7 +968,7 @@ public class HTTPClient implements Serializable {
     }
 
     public Response post(String url, HashMap<String, String> formValues, HashMap<String, IOFile> attachments) throws HttpException, IOException,
-            URISyntaxException {
+    URISyntaxException {
         return this.post(new PostParams(url, formValues, attachments));
     }
 
