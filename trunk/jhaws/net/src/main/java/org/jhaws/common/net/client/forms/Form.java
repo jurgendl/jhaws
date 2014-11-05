@@ -22,9 +22,6 @@ import org.htmlcleaner.TagNode;
  * Form
  */
 public class Form implements Serializable, Iterable<InputElement> {
-
-    private static final long serialVersionUID = 7602293891493494638L;
-
     public static Form deserialize(InputStream in) throws IOException, ClassNotFoundException {
         ObjectInputStream encoder = new ObjectInputStream(new BufferedInputStream(in));
         Object object = encoder.readObject();
@@ -32,6 +29,8 @@ public class Form implements Serializable, Iterable<InputElement> {
 
         return (Form) object;
     }
+
+    private static final long serialVersionUID = 7602293891493494638L;
 
     /** inputElements */
     private Map<String, InputElement> inputElements = new LinkedHashMap<String, InputElement>();
@@ -131,7 +130,7 @@ public class Form implements Serializable, Iterable<InputElement> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Iterable#iterator()
      */
     @Override
@@ -162,7 +161,7 @@ public class Form implements Serializable, Iterable<InputElement> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
