@@ -167,12 +167,12 @@ public class Form implements Serializable, Iterable<InputElement> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("form: id=").append(this.id).append(",method=").append(this.method).append(",action=")
-                .append(this.action).append("[");
+                .append(this.action).append(";");
 
         for (InputElement element : this.getInputElements()) {
             sb.append("\n\t").append(element);
         }
 
-        return sb.append("]\n").toString();
+        return sb.toString();
     }
 }
