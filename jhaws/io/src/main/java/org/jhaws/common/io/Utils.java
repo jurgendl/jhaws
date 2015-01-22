@@ -50,7 +50,7 @@ public class Utils {
 
         /**
          * Creates a new Buffer object.
-         * 
+         *
          * @param data
          */
         public ByteBuffer(byte[] data) {
@@ -59,7 +59,7 @@ public class Utils {
 
         /**
          * get buffered data
-         * 
+         *
          * @return
          */
         public byte[] getBytes() {
@@ -68,7 +68,7 @@ public class Utils {
 
         /**
          * get OutputStream
-         * 
+         *
          * @return
          */
         public OutputStream getOutputStream() {
@@ -77,7 +77,7 @@ public class Utils {
 
         /**
          * new InputStream
-         * 
+         *
          * @return
          */
         public InputStream newInputStream() {
@@ -97,9 +97,9 @@ public class Utils {
 
         /**
          * set buffer data
-         * 
+         *
          * @param data
-         * 
+         *
          * @throws RuntimeException
          */
         public void setBytes(byte[] data) {
@@ -119,6 +119,606 @@ public class Utils {
 
     public static enum OS_GROUP {
         Mac, Nix, Windows, unknown;
+    }
+
+    /**
+     * voert command uit
+     *
+     * @throws IOException
+     *
+     * @see {@link #process(String, boolean, boolean)} met true false
+     */
+    public static List<String> capture(String command) throws IOException {
+        return Utils.process(command, true, false);
+    }
+
+    /**
+     * capture 1 line
+     *
+     * @throws IOException
+     */
+    public static String capture1(String command) throws IOException {
+        return Utils.capture(command).get(0);
+    }
+
+    /**
+     * copy inputstream naar outputstream
+     *
+     * @throws IOException
+     * @throws NullPointerException
+     */
+    public static void copy(InputStream in, OutputStream out) throws IOException, NullPointerException {
+        try {
+            byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
+            int read;
+
+            while ((read = in.read(buffer)) > 0) {
+                out.write(buffer, 0, read);
+            }
+        } finally {
+            try {
+                in.close();
+            } catch (Exception ex) {
+                //
+            }
+
+            try {
+                out.close();
+            } catch (Exception ex) {
+                //
+            }
+        }
+    }
+
+    /**
+     * Kopieert een file, NIO
+     *
+     * @throws IOException
+     */
+    public static void copyFile(File in, File out) throws IOException {
+        FileInputStream fileInputStream = new FileInputStream(in);
+        FileChannel inChannel = fileInputStream.getChannel();
+        FileOutputStream fileOutputStream = new FileOutputStream(out);
+        FileChannel outChannel = fileOutputStream.getChannel();
+
+        try {
+            // fix copy bestanden groter dan 64MB (zie link)
+            // // magic number for Windows, 64Mb - 32Kb)
+            // int maxCount = (64 * 1024 * 1024) - (32 * 1024);
+            // long size = inChannel.size();
+            // long position = 0;
+            // while (position < size) {
+            // position +=
+            // inChannel.transferTo(position, maxCount, outChannel);
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        } catch (IOException e) {
+            throw e;
+        } finally {
+            try {
+                fileInputStream.close();
+            } catch (Exception e2) {
+                //
+            }
+            try {
+                inChannel.close();
+            } catch (Exception e2) {
+                //
+            }
+            try {
+                fileOutputStream.close();
+            } catch (Exception e2) {
+                //
+            }
+            try {
+                outChannel.close();
+            } catch (Exception e2) {
+                //
+            }
+        }
+    }
+
+    /**
+     * copy classpath resource naar outputstream
+     *
+     * @throws IOException
+     * @throws NullPointerException
+     */
+    public static void copyResource(String path, OutputStream out) throws IOException, NullPointerException {
+        Utils.copy(Utils.class.getClassLoader().getResourceAsStream(path), out);
+    }
+
+    /**
+     * creeer tijdelijk bestand met extensie
+     *
+     * @throws IOException
+     */
+    public static File createTempFile(String extensie) throws IOException {
+        return Utils.createTempFile(new Date().toString().replace(' ', '_').replace(':', '_'), extensie);
+    }
+
+    /**
+     * creeer tijdelijk bestand met extensie en naam
+     *
+     * @throws IOException
+     */
+    public static File createTempFile(String naam, String extensie) throws IOException {
+        File tempFile = File.createTempFile(naam, "." + extensie);
+        tempFile.deleteOnExit();
+
+        return tempFile;
+    }
+
+    private static void dynamic(String libname, String ext) throws IOException, FileNotFoundException {
+        File dllfile = File.createTempFile(libname, "." + ext);
+
+        if (!dllfile.exists()) {
+            Utils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
+            dllfile.deleteOnExit();
+        }
+
+        System.load(dllfile.getAbsolutePath());
+    }
+
+    /**
+     * load library
+     *
+     * @throws IOException
+     * @throws NullPointerException
+     * @throws UnsatisfiedLinkError
+     */
+    public static void dynamicLoadLibrary(String libname) throws IOException, NullPointerException, UnsatisfiedLinkError {
+        Utils.dynamicLoadLibrary(libname, null, true);
+    }
+
+    /**
+     * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
+     *
+     * @throws IOException
+     * @throws NullPointerException
+     * @throws UnsatisfiedLinkError
+     */
+    public static void dynamicLoadLibrary(String libname, String ext) throws IOException, NullPointerException, UnsatisfiedLinkError {
+        Utils.dynamicLoadLibrary(libname, ext, true);
+    }
+
+    /**
+     * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
+     *
+     * @throws IOException
+     * @throws NullPointerException
+     * @throws UnsatisfiedLinkError
+     * @throws RuntimeException
+     */
+    public static void dynamicLoadLibrary(String libname, String ext, boolean temp) throws IOException, NullPointerException, UnsatisfiedLinkError {
+        if (ext == null) {
+            ext = Utils.getDefaultLibraryExtension();
+        }
+
+        try {
+            System.loadLibrary(libname);
+        } catch (UnsatisfiedLinkError e) {
+            if (temp) {
+                Utils.dynamic(libname, ext);
+            } else {
+                switch (Utils.osgroup) {
+                    case Windows:
+                        Utils.dynamicLoadWinLibrary(libname, ext, false);
+
+                        break;
+
+                    default:
+                        throw new RuntimeException("not implemented for " + Utils.osgroup);
+                }
+            }
+        }
+    }
+
+    /**
+     * dynamicLoadWinLibrary
+     *
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
+    public static void dynamicLoadWinLibrary(String libname, String ext, boolean onlywrite) throws IOException, FileNotFoundException {
+        File dllfile = new File(Utils.WINDIR_SYSTEM32, libname + "." + ext);
+
+        if (!dllfile.exists()) {
+            Utils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
+        }
+
+        if (onlywrite) {
+            return;
+        }
+
+        System.loadLibrary(libname);
+    }
+
+    /**
+     * execute command
+     *
+     * @throws IOException
+     *
+     * @see {@link #process(String, boolean, boolean)} met false false
+     */
+    public static void execute(String command) throws IOException {
+        Utils.process(command, false, false);
+    }
+
+    /**
+     * get default library extention name for current OS
+     */
+    public static String getDefaultLibraryExtension() {
+        switch (Utils.osgroup) {
+            case Mac:
+                return "jnilib";
+
+            case Nix:
+                return "so";
+
+            case Windows:
+                return "dll";
+
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * get file extension, always lowercase
+     */
+    public static String getExtension(File file) {
+        String filename = file.getName();
+        String ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+        return ext;
+    }
+
+    /**
+     * open bestand met default voor OS, wanneer niet ondersteund en op windows pobeer via file association command; wanneer pdf probeer eerst acrobat
+     *
+     * @throws IOException
+     */
+    public static void open(File file, String... cmdparameters) throws IOException {
+        if (!Utils.openAndCheck(file, cmdparameters)) {
+            throw new IOException("could not open file " + file);
+        }
+    }
+
+    /**
+     * open bestand met default voor OS, wanneer niet ondersteund en op windows pobeer via file association command; wanneer pdf probeer eerst acrobat
+     *
+     * @throws IOException
+     * @throws FileNotFoundException
+     */
+    private static boolean openAndCheck(File file, String... cmdparameters) throws IOException {
+        if ((file == null) || !file.exists()) {
+            throw new FileNotFoundException((file == null) ? "" : file.getAbsolutePath());
+        }
+
+        if (Utils.osgroup == OS_GROUP.Windows) {
+            return Utils.openCommand(file, false, cmdparameters);
+        }
+
+        return Utils.openDesktop(file);
+    }
+
+    /**
+     * openCommand
+     *
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws IllegalArgumentException
+     */
+    public static boolean openCommand(File file, boolean prefixedparameters, String... cmdparameters) throws IOException {
+        // om te vermijden dat we fouten van het programma dat de meegegeven file normaal opent krijgen
+        if (!file.exists() || (file.length() == 0)) {
+            throw new FileNotFoundException(file.getAbsolutePath());
+        }
+
+        String ext = Utils.getExtension(file);
+
+        // %0 or %1 are replaced with the file name that you want to open.
+        // %* is replaced with all of the parameters.
+        // %~ n is replaced with all of the remaining parameters, starting with the nth parameter, where n can be any number from 2 to 9.
+        // %2 is replaced with the first parameter, %3 with the second, and so on.
+        String extname = Utils.WIN_FILE_EXTS.get(ext);
+
+        if (extname == null) {
+            throw new IOException("file association not found: " + ext);
+        }
+
+        String opencommand = Utils.WIN_FILE_OPEN_CMDS.get(extname);
+
+        if (opencommand == null) {
+            throw new IOException("file association not found: " + ext + "=" + extname);
+        }
+
+        String tmp = opencommand;
+
+        if (!opencommand.contains("%")) {
+            // voe toe als prefix
+            if (prefixedparameters && (cmdparameters.length > 0)) {
+                for (String cmdparameter : cmdparameters) {
+                    opencommand += (" " + cmdparameter);
+                }
+            }
+
+            // voeg filename toe
+            opencommand += (" " + file.getAbsoluteFile().getAbsolutePath());
+
+            // voe toe als suffix
+            if (!prefixedparameters && (cmdparameters.length > 0)) {
+                for (String cmdparameter : cmdparameters) {
+                    opencommand += (" " + cmdparameter);
+                }
+            }
+        } else {
+            // vervang filename
+            if (opencommand.contains("%0") || opencommand.contains("%1")) {
+                opencommand = StringUtils.replace(opencommand, "%0", file.getAbsoluteFile().getAbsolutePath());
+                opencommand = StringUtils.replace(opencommand, "%1", file.getAbsoluteFile().getAbsolutePath());
+
+                if (opencommand.contains("%")) {
+                    for (int i = 0; i < cmdparameters.length; i++) {
+                        opencommand = StringUtils.replace(opencommand, "%" + (i + 2), cmdparameters[i]);
+                    }
+                } else {
+                    // voe toe als prefix
+                    if (prefixedparameters) {
+                        int pos = opencommand.indexOf(file.getAbsoluteFile().getAbsolutePath());
+                        pos = opencommand.substring(0, pos).lastIndexOf(' ') + 1;
+
+                        String tmp1 = opencommand.substring(0, pos);
+                        String tmp2 = opencommand.substring(pos);
+
+                        opencommand = tmp1;
+
+                        for (String cmdparameter : cmdparameters) {
+                            opencommand += (" " + cmdparameter);
+                        }
+
+                        opencommand += (" " + tmp2);
+                    } else {
+                        // voe toe als suffix
+                        for (String cmdparameter : cmdparameters) {
+                            opencommand += (" " + cmdparameter);
+                        }
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("format not supported: " + tmp);
+            }
+        }
+
+        // System.out.println(opencommand);
+        Utils.execute(opencommand);
+
+        return true;
+    }
+
+    public static boolean openCommand(File file, String... cmdparameters) throws IOException {
+        String ext = Utils.getExtension(file);
+        Boolean b = Utils.WIN_FILE_OPEN_CMDS_PRE.get(ext);
+        return Utils.openCommand(file, b == null ? false : b.booleanValue(), cmdparameters);
+    }
+
+    private static boolean openDesktop(File file) throws IOException {
+        if (!Desktop.isDesktopSupported()) {
+            return false;
+        }
+
+        Desktop.getDesktop().open(file);
+
+        return true;
+    }
+
+    /**
+     * voer command uit
+     *
+     * @param command het commando
+     * @param capture wanneer dit aan staat zal de uitvoerende thread blokeren tot wanneer alle uitvoer van het commando voltooid is!!!
+     * @param log wanneer capture aan staat, log ook naar System.out
+     *
+     * @return wanneer capture aan staat, de uitvoer ervan, lijnen
+     *
+     * @throws IOException
+     */
+    private static List<String> process(String command, boolean capture, boolean log) throws IOException {
+        List<String> lines = new ArrayList<String>();
+        ProcessBuilder pb = new ProcessBuilder(Utils.split(command));
+        Process p = pb.start();
+
+        if (capture) {
+            InputStream is = p.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                if (capture) {
+                    lines.add(line);
+                }
+
+                if (log) {
+                    System.out.println(line);
+                }
+            }
+
+            is.close();
+        }
+
+        return lines;
+    }
+
+    /**
+     * get file content
+     */
+    public static byte[] read(File file) throws IOException {
+        return Utils.read(new FileInputStream(file));
+    }
+
+    /**
+     * get stream content
+     */
+    public static byte[] read(InputStream in) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Utils.copy(in, out);
+        in.close();
+        return out.toByteArray();
+    }
+
+    public static void setOpenCommandPrefixedparameters(String ext, boolean prefixedparameters) {
+        Utils.WIN_FILE_OPEN_CMDS_PRE.put(ext.toLowerCase(), prefixedparameters);
+    }
+
+    private static List<String> split(String sysexec) {
+        List<String> parts = new ArrayList<String>();
+        Matcher m = Pattern.compile("\"[^\"]++\"").matcher(sysexec);
+        int pos = 0;
+        boolean found = false;
+        while (m.find()) {
+            found = true;
+            if (pos != m.start()) {
+                String trimmed = sysexec.substring(pos, m.start()).trim();
+                if (trimmed.length() > 0) {
+                    for (String p : trimmed.split(" ")) {
+                        parts.add(p);
+                    }
+                }
+            }
+            parts.add(m.group());
+            pos = m.end();
+        }
+        if (found) {
+            if (pos != (sysexec.length() - 1)) {
+                String trimmed = sysexec.substring(pos).trim();
+                if (trimmed.length() > 0) {
+                    for (String p : trimmed.split(" ")) {
+                        parts.add(p);
+                    }
+                }
+            }
+        } else {
+            for (String p : sysexec.split(" ")) {
+                parts.add(p);
+            }
+        }
+        return parts;
+    }
+
+    public static void unzip(InputStream source, IODirectory target) throws IOException {
+        ZipInputStream zin = new ZipInputStream(source);
+        ZipEntry entry;
+        int read;
+        byte[] buffer = new byte[8 * 1024];
+
+        while ((entry = zin.getNextEntry()) != null) {
+            if (!entry.isDirectory()) {
+                IOFile file = new IOFile(target, entry.getName());
+                file.mkDir();
+                OutputStream out = new FileOutputStream(file);
+                while ((read = zin.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                out.close();
+            } else {
+                IODirectory dir = new IODirectory(target, entry.getName());
+                dir.create();
+            }
+        }
+
+        zin.close();
+    }
+
+    /**
+     * schrijf data naar bestand
+     *
+     * @param data
+     * @param file
+     *
+     * @throws NullPointerException
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public static void write(byte[] data, File file) throws NullPointerException, FileNotFoundException, IOException {
+        Utils.copy(new ByteArrayInputStream(data), new FileOutputStream(file));
+    }
+
+    /**
+     * zip entries from multiple files
+     *
+     * @param out
+     *
+     * @throws IOException
+     */
+    public static void zip(OutputStream out, File... files) throws IOException {
+        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
+        int read;
+
+        ZipOutputStream zout = new ZipOutputStream(out);
+        int count = 0;
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                continue;
+            }
+
+            zout.putNextEntry(new ZipEntry(file.getName()));
+
+            FileInputStream fin = new FileInputStream(file);
+
+            while ((read = fin.read(buffer)) > 0) {
+                zout.write(buffer, 0, read);
+            }
+
+            fin.close();
+            zout.closeEntry();
+            count++;
+        }
+
+        zout.close();
+
+        if (count == 0) {
+            throw new IOException("nothing to zip");
+        }
+    }
+
+    /**
+     * zip data + name
+     *
+     * @param out
+     * @param entryname
+     * @param data
+     *
+     * @throws IOException
+     */
+    public static void zip(OutputStream out, String entryname, byte[] data) throws IOException {
+        Utils.zip(out, entryname, new ByteArrayInputStream(data));
+    }
+
+    /**
+     * zip single entry from inputstream
+     *
+     * @param out
+     * @param entryname
+     * @param in
+     *
+     * @throws IOException
+     */
+    public static void zip(OutputStream out, String entryname, InputStream in) throws IOException {
+        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
+        int read;
+
+        ZipOutputStream zout = new ZipOutputStream(out);
+        zout.putNextEntry(new ZipEntry(entryname));
+
+        while ((read = in.read(buffer)) > 0) {
+            zout.write(buffer, 0, read);
+        }
+
+        in.close();
+        zout.closeEntry();
+
+        zout.close();
     }
 
     /** 8kB */
@@ -317,604 +917,5 @@ public class Utils {
         }
 
         NIX_LIB = _nix_lib;
-    }
-
-    /**
-     * voert command uit
-     * 
-     * @throws IOException
-     * 
-     * @see {@link #process(String, boolean, boolean)} met true false
-     */
-    public static List<String> capture(String command) throws IOException {
-        return Utils.process(command, true, false);
-    }
-
-    /**
-     * capture 1 line
-     * 
-     * @throws IOException
-     */
-    public static String capture1(String command) throws IOException {
-        return Utils.capture(command).get(0);
-    }
-
-    /**
-     * copy inputstream naar outputstream
-     * 
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    public static void copy(InputStream in, OutputStream out) throws IOException, NullPointerException {
-        try {
-            byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
-            int read;
-
-            while ((read = in.read(buffer)) > 0) {
-                out.write(buffer, 0, read);
-            }
-        } finally {
-            try {
-                in.close();
-            } catch (Exception ex) {
-                //
-            }
-
-            try {
-                out.close();
-            } catch (Exception ex) {
-                //
-            }
-        }
-    }
-
-    /**
-     * Kopieert een file, NIO
-     * 
-     * @throws IOException
-     */
-    public static void copyFile(File in, File out) throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(in);
-        FileChannel inChannel = fileInputStream.getChannel();
-        FileOutputStream fileOutputStream = new FileOutputStream(out);
-        FileChannel outChannel = fileOutputStream.getChannel();
-
-        try {
-            // fix copy bestanden groter dan 64MB (zie link)
-            // // magic number for Windows, 64Mb - 32Kb)
-            // int maxCount = (64 * 1024 * 1024) - (32 * 1024);
-            // long size = inChannel.size();
-            // long position = 0;
-            // while (position < size) {
-            // position +=
-            // inChannel.transferTo(position, maxCount, outChannel);
-            inChannel.transferTo(0, inChannel.size(), outChannel);
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            try {
-                fileInputStream.close();
-            } catch (Exception e2) {
-                //
-            }
-            try {
-                inChannel.close();
-            } catch (Exception e2) {
-                //
-            }
-            try {
-                fileOutputStream.close();
-            } catch (Exception e2) {
-                //
-            }
-            try {
-                outChannel.close();
-            } catch (Exception e2) {
-                //
-            }
-        }
-    }
-
-    /**
-     * copy classpath resource naar outputstream
-     * 
-     * @throws IOException
-     * @throws NullPointerException
-     */
-    public static void copyResource(String path, OutputStream out) throws IOException, NullPointerException {
-        Utils.copy(Utils.class.getClassLoader().getResourceAsStream(path), out);
-    }
-
-    /**
-     * creeer tijdelijk bestand met extensie
-     * 
-     * @throws IOException
-     */
-    public static File createTempFile(String extensie) throws IOException {
-        return Utils.createTempFile(new Date().toString().replace(' ', '_').replace(':', '_'), extensie);
-    }
-
-    /**
-     * creeer tijdelijk bestand met extensie en naam
-     * 
-     * @throws IOException
-     */
-    public static File createTempFile(String naam, String extensie) throws IOException {
-        File tempFile = File.createTempFile(naam, "." + extensie);
-        tempFile.deleteOnExit();
-
-        return tempFile;
-    }
-
-    private static void dynamic(String libname, String ext) throws IOException, FileNotFoundException {
-        File dllfile = File.createTempFile(libname, "." + ext);
-
-        if (!dllfile.exists()) {
-            Utils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
-            dllfile.deleteOnExit();
-        }
-
-        System.load(dllfile.getAbsolutePath());
-    }
-
-    /**
-     * load library
-     * 
-     * @throws IOException
-     * @throws NullPointerException
-     * @throws UnsatisfiedLinkError
-     */
-    public static void dynamicLoadLibrary(String libname) throws IOException, NullPointerException, UnsatisfiedLinkError {
-        Utils.dynamicLoadLibrary(libname, null, true);
-    }
-
-    /**
-     * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
-     * 
-     * @throws IOException
-     * @throws NullPointerException
-     * @throws UnsatisfiedLinkError
-     */
-    public static void dynamicLoadLibrary(String libname, String ext) throws IOException, NullPointerException, UnsatisfiedLinkError {
-        Utils.dynamicLoadLibrary(libname, ext, true);
-    }
-
-    /**
-     * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
-     * 
-     * @throws IOException
-     * @throws NullPointerException
-     * @throws UnsatisfiedLinkError
-     * @throws RuntimeException
-     */
-    public static void dynamicLoadLibrary(String libname, String ext, boolean temp) throws IOException, NullPointerException, UnsatisfiedLinkError {
-        if (ext == null) {
-            ext = Utils.getDefaultLibraryExtension();
-        }
-
-        try {
-            System.loadLibrary(libname);
-        } catch (UnsatisfiedLinkError e) {
-            if (temp) {
-                Utils.dynamic(libname, ext);
-            } else {
-                switch (Utils.osgroup) {
-                    case Windows:
-                        Utils.dynamicLoadWinLibrary(libname, ext, false);
-
-                        break;
-
-                    default:
-                        throw new RuntimeException("not implemented for " + Utils.osgroup);
-                }
-            }
-        }
-    }
-
-    /**
-     * dynamicLoadWinLibrary
-     * 
-     * @throws IOException
-     * @throws FileNotFoundException
-     */
-    public static void dynamicLoadWinLibrary(String libname, String ext, boolean onlywrite) throws IOException, FileNotFoundException {
-        File dllfile = new File(Utils.WINDIR_SYSTEM32, libname + "." + ext);
-
-        if (!dllfile.exists()) {
-            Utils.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
-        }
-
-        if (onlywrite) {
-            return;
-        }
-
-        System.loadLibrary(libname);
-    }
-
-    /**
-     * execute command
-     * 
-     * @throws IOException
-     * 
-     * @see {@link #process(String, boolean, boolean)} met false false
-     */
-    public static void execute(String command) throws IOException {
-        Utils.process(command, false, false);
-    }
-
-    /**
-     * get default library extention name for current OS
-     */
-    public static String getDefaultLibraryExtension() {
-        switch (Utils.osgroup) {
-            case Mac:
-                return "jnilib";
-
-            case Nix:
-                return "so";
-
-            case Windows:
-                return "dll";
-
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * get file extension, always lowercase
-     */
-    public static String getExtension(File file) {
-        String filename = file.getName();
-        String ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
-        return ext;
-    }
-
-    /**
-     * open bestand met default voor OS, wanneer niet ondersteund en op windows pobeer via file association command; wanneer pdf probeer eerst acrobat
-     * 
-     * @throws IOException
-     */
-    public static void open(File file, String... cmdparameters) throws IOException {
-        if (!Utils.openAndCheck(file, cmdparameters)) {
-            throw new IOException("could not open file " + file);
-        }
-    }
-
-    /**
-     * open bestand met default voor OS, wanneer niet ondersteund en op windows pobeer via file association command; wanneer pdf probeer eerst acrobat
-     * 
-     * @throws IOException
-     * @throws FileNotFoundException
-     */
-    private static boolean openAndCheck(File file, String... cmdparameters) throws IOException {
-        if ((file == null) || !file.exists()) {
-            throw new FileNotFoundException((file == null) ? "" : file.getAbsolutePath());
-        }
-
-        if (Utils.osgroup == OS_GROUP.Windows) {
-            return Utils.openCommand(file, false, cmdparameters);
-        }
-
-        return Utils.openDesktop(file);
-    }
-
-    /**
-     * openCommand
-     * 
-     * @throws IOException
-     * @throws FileNotFoundException
-     * @throws IllegalArgumentException
-     */
-    public static boolean openCommand(File file, boolean prefixedparameters, String... cmdparameters) throws IOException {
-        // om te vermijden dat we fouten van het programma dat de meegegeven file normaal opent krijgen
-        if (!file.exists() || (file.length() == 0)) {
-            throw new FileNotFoundException(file.getAbsolutePath());
-        }
-
-        String ext = Utils.getExtension(file);
-
-        // %0 or %1 are replaced with the file name that you want to open.
-        // %* is replaced with all of the parameters.
-        // %~ n is replaced with all of the remaining parameters, starting with the nth parameter, where n can be any number from 2 to 9.
-        // %2 is replaced with the first parameter, %3 with the second, and so on.
-        String extname = Utils.WIN_FILE_EXTS.get(ext);
-
-        if (extname == null) {
-            throw new IOException("file association not found: " + ext);
-        }
-
-        String opencommand = Utils.WIN_FILE_OPEN_CMDS.get(extname);
-
-        if (opencommand == null) {
-            throw new IOException("file association not found: " + ext + "=" + extname);
-        }
-
-        String tmp = opencommand;
-
-        if (!opencommand.contains("%")) {
-            // voe toe als prefix
-            if (prefixedparameters && (cmdparameters.length > 0)) {
-                for (String cmdparameter : cmdparameters) {
-                    opencommand += (" " + cmdparameter);
-                }
-            }
-
-            // voeg filename toe
-            opencommand += (" " + file.getAbsoluteFile().getAbsolutePath());
-
-            // voe toe als suffix
-            if (!prefixedparameters && (cmdparameters.length > 0)) {
-                for (String cmdparameter : cmdparameters) {
-                    opencommand += (" " + cmdparameter);
-                }
-            }
-        } else {
-            // vervang filename
-            if (opencommand.contains("%0") || opencommand.contains("%1")) {
-                opencommand = StringUtils.replace(opencommand, "%0", file.getAbsoluteFile().getAbsolutePath());
-                opencommand = StringUtils.replace(opencommand, "%1", file.getAbsoluteFile().getAbsolutePath());
-
-                if (opencommand.contains("%")) {
-                    for (int i = 0; i < cmdparameters.length; i++) {
-                        opencommand = StringUtils.replace(opencommand, "%" + (i + 2), cmdparameters[i]);
-                    }
-                } else {
-                    // voe toe als prefix
-                    if (prefixedparameters) {
-                        int pos = opencommand.indexOf(file.getAbsoluteFile().getAbsolutePath());
-                        pos = opencommand.substring(0, pos).lastIndexOf(' ') + 1;
-
-                        String tmp1 = opencommand.substring(0, pos);
-                        String tmp2 = opencommand.substring(pos);
-
-                        opencommand = tmp1;
-
-                        for (String cmdparameter : cmdparameters) {
-                            opencommand += (" " + cmdparameter);
-                        }
-
-                        opencommand += (" " + tmp2);
-                    } else {
-                        // voe toe als suffix
-                        for (String cmdparameter : cmdparameters) {
-                            opencommand += (" " + cmdparameter);
-                        }
-                    }
-                }
-            } else {
-                throw new IllegalArgumentException("format not supported: " + tmp);
-            }
-        }
-
-        // System.out.println(opencommand);
-        Utils.execute(opencommand);
-
-        return true;
-    }
-
-    public static boolean openCommand(File file, String... cmdparameters) throws IOException {
-        String ext = Utils.getExtension(file);
-        Boolean b = Utils.WIN_FILE_OPEN_CMDS_PRE.get(ext);
-        return Utils.openCommand(file, b == null ? false : b.booleanValue(), cmdparameters);
-    }
-
-    private static boolean openDesktop(File file) throws IOException {
-        if (!Desktop.isDesktopSupported()) {
-            return false;
-        }
-
-        Desktop.getDesktop().open(file);
-
-        return true;
-    }
-
-    /**
-     * voer command uit
-     * 
-     * @param command het commando
-     * @param capture wanneer dit aan staat zal de uitvoerende thread blokeren tot wanneer alle uitvoer van het commando voltooid is!!!
-     * @param log wanneer capture aan staat, log ook naar System.out
-     * 
-     * @return wanneer capture aan staat, de uitvoer ervan, lijnen
-     * 
-     * @throws IOException
-     */
-    private static List<String> process(String command, boolean capture, boolean log) throws IOException {
-        List<String> lines = new ArrayList<String>();
-        ProcessBuilder pb = new ProcessBuilder(Utils.split(command));
-        Process p = pb.start();
-
-        if (capture) {
-            InputStream is = p.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                if (capture) {
-                    lines.add(line);
-                }
-
-                if (log) {
-                    System.out.println(line);
-                }
-            }
-
-            is.close();
-        }
-
-        return lines;
-    }
-
-    /**
-     * get file content
-     * 
-     * @param file
-     * 
-     * @return
-     * 
-     * @throws IOException
-     */
-    public static byte[] read(File file) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        Utils.copy(new FileInputStream(file), out);
-
-        return out.toByteArray();
-    }
-
-    public static void setOpenCommandPrefixedparameters(String ext, boolean prefixedparameters) {
-        Utils.WIN_FILE_OPEN_CMDS_PRE.put(ext.toLowerCase(), prefixedparameters);
-    }
-
-    private static List<String> split(String sysexec) {
-        List<String> parts = new ArrayList<String>();
-        Matcher m = Pattern.compile("\"[^\"]++\"").matcher(sysexec);
-        int pos = 0;
-        boolean found = false;
-        while (m.find()) {
-            found = true;
-            if (pos != m.start()) {
-                String trimmed = sysexec.substring(pos, m.start()).trim();
-                if (trimmed.length() > 0) {
-                    for (String p : trimmed.split(" ")) {
-                        parts.add(p);
-                    }
-                }
-            }
-            parts.add(m.group());
-            pos = m.end();
-        }
-        if (found) {
-            if (pos != (sysexec.length() - 1)) {
-                String trimmed = sysexec.substring(pos).trim();
-                if (trimmed.length() > 0) {
-                    for (String p : trimmed.split(" ")) {
-                        parts.add(p);
-                    }
-                }
-            }
-        } else {
-            for (String p : sysexec.split(" ")) {
-                parts.add(p);
-            }
-        }
-        return parts;
-    }
-
-    public static void unzip(InputStream source, IODirectory target) throws IOException {
-        ZipInputStream zin = new ZipInputStream(source);
-        ZipEntry entry;
-        int read;
-        byte[] buffer = new byte[8 * 1024];
-
-        while ((entry = zin.getNextEntry()) != null) {
-            if (!entry.isDirectory()) {
-                IOFile file = new IOFile(target, entry.getName());
-                file.mkDir();
-                OutputStream out = new FileOutputStream(file);
-                while ((read = zin.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
-                }
-                out.close();
-            } else {
-                IODirectory dir = new IODirectory(target, entry.getName());
-                dir.create();
-            }
-        }
-
-        zin.close();
-    }
-
-    /**
-     * schrijf data naar bestand
-     * 
-     * @param data
-     * @param file
-     * 
-     * @throws NullPointerException
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    public static void write(byte[] data, File file) throws NullPointerException, FileNotFoundException, IOException {
-        Utils.copy(new ByteArrayInputStream(data), new FileOutputStream(file));
-    }
-
-    /**
-     * zip entries from multiple files
-     * 
-     * @param out
-     * 
-     * @throws IOException
-     */
-    public static void zip(OutputStream out, File... files) throws IOException {
-        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
-        int read;
-
-        ZipOutputStream zout = new ZipOutputStream(out);
-        int count = 0;
-
-        for (File file : files) {
-            if (file.isDirectory()) {
-                continue;
-            }
-
-            zout.putNextEntry(new ZipEntry(file.getName()));
-
-            FileInputStream fin = new FileInputStream(file);
-
-            while ((read = fin.read(buffer)) > 0) {
-                zout.write(buffer, 0, read);
-            }
-
-            fin.close();
-            zout.closeEntry();
-            count++;
-        }
-
-        zout.close();
-
-        if (count == 0) {
-            throw new IOException("nothing to zip");
-        }
-    }
-
-    /**
-     * zip data + name
-     * 
-     * @param out
-     * @param entryname
-     * @param data
-     * 
-     * @throws IOException
-     */
-    public static void zip(OutputStream out, String entryname, byte[] data) throws IOException {
-        Utils.zip(out, entryname, new ByteArrayInputStream(data));
-    }
-
-    /**
-     * zip single entry from inputstream
-     * 
-     * @param out
-     * @param entryname
-     * @param in
-     * 
-     * @throws IOException
-     */
-    public static void zip(OutputStream out, String entryname, InputStream in) throws IOException {
-        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
-        int read;
-
-        ZipOutputStream zout = new ZipOutputStream(out);
-        zout.putNextEntry(new ZipEntry(entryname));
-
-        while ((read = in.read(buffer)) > 0) {
-            zout.write(buffer, 0, read);
-        }
-
-        in.close();
-        zout.closeEntry();
-
-        zout.close();
     }
 }
