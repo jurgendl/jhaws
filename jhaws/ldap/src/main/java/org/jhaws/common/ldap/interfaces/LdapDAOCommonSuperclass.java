@@ -12,18 +12,17 @@ import javax.naming.directory.SearchControls;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 
-import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.annotations.AnnotationParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jurgen
  */
 public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparable<? super T>> implements LdapDao<T> {
-    /** serialVersionUID */
     private static final long serialVersionUID = -7411351913012966087L;
 
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(LdapDAOCommonSuperclass.class);
+    private static final Logger logger = LoggerFactory.getLogger(LdapDAOCommonSuperclass.class);
 
     /** byte array class */
     protected static final Class<?> BYTE_ARRAY_CLASS = new byte[0].getClass();
@@ -57,11 +56,11 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * maakt distinguished name van bestaand object (maw de base-dn/key)
-     * 
+     *
      * @param object bean object
-     * 
+     *
      * @return distinguished Name
-     * 
+     *
      * @throws InvalidNameException
      */
     protected final Name buildDn(final Properties keyprops) throws InvalidNameException {
@@ -87,11 +86,11 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * maakt distinguished name van bestaand object (maw de base-dn/key)
-     * 
+     *
      * @param object bean object
-     * 
+     *
      * @return distinguished Name
-     * 
+     *
      * @throws InvalidNameException
      */
     protected final Name buildDn(final T bean) throws InvalidNameException {
@@ -116,9 +115,9 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * zoekt met query string (gebruik handmatig opgestelde string of classes zoals AndFilter etc)
-     * 
+     *
      * @param query querystring
-     * 
+     *
      * @return List van T objecten (mogelijks gelimiteerd aantal door ldap server); nooit null maar lege lijst
      */
     protected final List<T> findBeans(final String query) {
@@ -149,7 +148,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * maakt base-dn string voor uivoeren queries
-     * 
+     *
      * @return base-dn string
      */
     protected final String getBase() {
@@ -175,7 +174,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * gets pojoClass (no init)
-     * 
+     *
      * @return Returns the pojoClass.
      */
     protected final Class<T> getPojoClass() {
@@ -183,7 +182,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.ldap.interfaces.LdapDao#getSearchDepth()
      */
     @Override
@@ -193,9 +192,9 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * nieuwe instantie van bean; kan overridden worden in subclass en daarom private
-     * 
+     *
      * @return T
-     * 
+     *
      * @throws UnsupportedOperationException wanneer er geen default constructor is
      */
     protected T newBean() throws UnsupportedOperationException {
@@ -205,7 +204,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
             // wanneer er geen default constructor is
             throw new UnsupportedOperationException(
                     "default constructor not present: override Bean creation: 'private " + this.pojoClass.getSimpleName() //$NON-NLS-1$
-                            + " newBean()' in class " + this.getClass().getName()); //$NON-NLS-1$
+                    + " newBean()' in class " + this.getClass().getName()); //$NON-NLS-1$
         } catch (final IllegalAccessException ex) {
             // constructor is bv private
             throw new UnsupportedOperationException("make sure the constructor is public or override Bean creation: 'private " //$NON-NLS-1$
@@ -219,7 +218,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * creates new SearchControls based on settings
-     * 
+     *
      * @return SearchControls
      */
     protected final SearchControls newSearchControls() {
@@ -236,12 +235,12 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
 
     /**
      * intern gebruik
-     * 
+     *
      * @param query String
      * @param controls SearchControls
-     * 
+     *
      * @return List T
-     * 
+     *
      * @throws IllegalArgumentException login gegevens mogelijks verkeerd
      */
     protected abstract List<T> search(String query, SearchControls controls);

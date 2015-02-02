@@ -14,21 +14,20 @@ import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 import javax.naming.ldap.LdapContext;
 
-import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.filters.And;
 import org.jhaws.common.ldap.filters.Equal;
 import org.jhaws.common.ldap.filters.Or;
 import org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jurgen
  */
 public abstract class AbstractLdapDao<T extends Serializable & Comparable<? super T>> extends LdapDAOCommonSuperclass<T> {
-    /** serialVersionUID */
     private static final long serialVersionUID = 8136185571396833318L;
 
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(AbstractLdapDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractLdapDao.class);
 
     /** ldap context */
     private ContextSource contextSource;
@@ -42,9 +41,9 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 
     /**
      * na
-     * 
+     *
      * @param attributes
-     * 
+     *
      * @return
      */
     private final T convertAttributesToObject(final Attributes attributes) {
@@ -81,7 +80,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
                 this.annotationParser.set(field, bean, value);
             } catch (Exception ex) {
                 // NamingException,NoSuchFieldException,SecurityException,NullPointerException
-                AbstractLdapDao.logger.warn(ex);
+                AbstractLdapDao.logger.warn("{}", ex);
             }
         }
 
@@ -90,9 +89,9 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 
     /**
      * na
-     * 
+     *
      * @param object
-     * 
+     *
      * @return
      */
     private final Attributes convertObjectToAttributes(T bean) {
@@ -127,11 +126,11 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
                 attributes.put(attribute);
             } catch (Exception ex) {
                 // NullPointerException,SecurityException,NoSuchFieldException
-                AbstractLdapDao.logger.warn(ex);
+                AbstractLdapDao.logger.warn("{}", ex);
             }
         }
 
-        AbstractLdapDao.logger.debug(attributes);
+        AbstractLdapDao.logger.debug("{}", attributes);
 
         return attributes;
     }
@@ -147,7 +146,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
             return true;
         } catch (Exception ex) {
             // NamingException
-            AbstractLdapDao.logger.warn(ex);
+            AbstractLdapDao.logger.warn("{}", ex);
         }
 
         return false;
@@ -164,7 +163,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
             return true;
         } catch (Exception ex) {
             // NamingException
-            AbstractLdapDao.logger.warn(ex);
+            AbstractLdapDao.logger.warn("{}", ex);
         }
 
         return false;
@@ -226,7 +225,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
             return this.convertAttributesToObject(attributes);
         } catch (Exception ex) {
             // InvalidNameException,NamingException
-            AbstractLdapDao.logger.warn(ex);
+            AbstractLdapDao.logger.warn("{}", ex);
         }
 
         return null;
@@ -234,7 +233,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 
     /**
      * gets contextSource
-     * 
+     *
      * @return Returns the contextSource.
      */
     public final ContextSource getContextSource() {
@@ -242,7 +241,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String, javax.naming.directory.SearchControls)
      */
     @Override
@@ -266,7 +265,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
             }
         } catch (Exception ex) {
             // NamingException
-            AbstractLdapDao.logger.warn(ex);
+            AbstractLdapDao.logger.warn("{}", ex);
         }
 
         AbstractLdapDao.logger.debug("search(String, SearchControls) - end"); //$NON-NLS-1$
@@ -276,7 +275,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 
     /**
      * sets contextSource
-     * 
+     *
      * @param contextSource The contextSource to set.
      */
     public final void setContextSource(ContextSource contextSource) {
@@ -294,7 +293,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
             return true;
         } catch (Exception ex) {
             // NamingException
-            AbstractLdapDao.logger.warn(ex);
+            AbstractLdapDao.logger.warn("{}", ex);
         }
 
         return false;

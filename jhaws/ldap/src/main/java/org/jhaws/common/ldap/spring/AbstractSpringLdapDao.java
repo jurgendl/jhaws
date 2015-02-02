@@ -8,8 +8,9 @@ import javax.naming.InvalidNameException;
 import javax.naming.Name;
 import javax.naming.directory.SearchControls;
 
-import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ldap.UncategorizedLdapException;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -26,7 +27,7 @@ import org.springframework.ldap.filter.OrFilter;
  * <br>
  * <u><b>config via annotations:</b></u><br>
  * <br>
- * 
+ *
  * <pre>
  *              @LdapClass(dn = {  @LdapKeyValue(key = &quot;ou&quot;, value = &quot;people&quot;) } )
  *              public class Persoon
@@ -41,20 +42,19 @@ import org.springframework.ldap.filter.OrFilter;
  *                     @LdapField(&quot;givenName&quot;)
  *                     private String voornaam;
  * </pre>
- * 
+ *
  * <br>
  * <br>
  * the only overidable function is newBean
- * 
+ *
  * @author Jurgen
- * 
+ *
  * @param <T> object type (class) waarvoor de dao subclass geschikt voor is
  */
 public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<? super T>> extends LdapDAOCommonSuperclass<T> {
     private static final long serialVersionUID = 4528890293912122131L;
 
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(AbstractSpringLdapDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSpringLdapDao.class);
 
     /** LdapOperations is een interface voor LdapTemplate */
     private LdapOperations ldapOperations;
@@ -84,7 +84,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
             return true;
         } catch (final Exception ex) {
-            AbstractSpringLdapDao.logger.warn(ex);
+            AbstractSpringLdapDao.logger.warn("{}", ex);
 
             return false;
         }
@@ -100,7 +100,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
             return true;
         } catch (final Exception ex) {
-            AbstractSpringLdapDao.logger.warn(ex);
+            AbstractSpringLdapDao.logger.warn("{}", ex);
 
             return false;
         }
@@ -158,7 +158,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
         try {
             return this.lookup(this.buildDn(props));
         } catch (Exception ex) {
-            AbstractSpringLdapDao.logger.warn(ex);
+            AbstractSpringLdapDao.logger.warn("{}", ex);
 
             return null;
         }
@@ -166,10 +166,10 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
     /**
      * create DirContextOperations object from exiting object in ldap
-     * 
+     *
      * @param dn dn
      * @param object bean object
-     * 
+     *
      * @return DirContextOperations
      */
     private final DirContextOperations getContextToBind(@SuppressWarnings("unused") final Name dn, final T object) {
@@ -200,7 +200,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
                     }
                 }
             } catch (final Exception ex) {
-                AbstractSpringLdapDao.logger.warn(ex, ex);
+                AbstractSpringLdapDao.logger.warn("{}", ex);
             }
         }
 
@@ -211,7 +211,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
     /**
      * gets ldapOperations
-     * 
+     *
      * @return Returns the ldapOperations.
      */
     public final LdapOperations getLdapOperations() {
@@ -220,11 +220,11 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
     /**
      * intern gebruik
-     * 
+     *
      * @param dn DistinguishedName
-     * 
+     *
      * @return T
-     * 
+     *
      * @throws IllegalArgumentException login gegevens mogelijks verkeerd
      */
     private final T lookup(final Name dn) {
@@ -283,7 +283,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
                 // zet veldwaarde object via reflection met autocasting
                 this.annotationParser.set(field, bean, value);
             } catch (final Exception ex) {
-                AbstractSpringLdapDao.logger.error(ex, ex);
+                AbstractSpringLdapDao.logger.error("{}", ex);
             }
         }
 
@@ -291,7 +291,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String, javax.naming.directory.SearchControls)
      */
     @Override
@@ -324,7 +324,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
     /**
      * sets ldapOperations
-     * 
+     *
      * @param ldapOperations The ldapOperations to set.
      */
     public final void setLdapOperations(LdapOperations ldapOperations) {
@@ -342,7 +342,7 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 
             return true;
         } catch (final Exception ex) {
-            AbstractSpringLdapDao.logger.warn(ex);
+            AbstractSpringLdapDao.logger.warn("{}", ex);
 
             return false;
         }
