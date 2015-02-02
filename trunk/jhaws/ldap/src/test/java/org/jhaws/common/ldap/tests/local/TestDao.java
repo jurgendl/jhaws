@@ -5,20 +5,18 @@ import java.util.Properties;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.apache.log4j.Logger;
 import org.jhaws.common.ldap.interfaces.LdapDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Jurgen
  */
 public class TestDao extends TestCase {
-    /** Logger for this class */
-    private static final Logger logger = Logger.getLogger(TestDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestDao.class);
 
-    /** field */
     private LdapDao<User> dao = null;
 
-    /** field */
     private User user = null;
 
     /**

@@ -36,14 +36,14 @@
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
@@ -59,7 +59,7 @@
 			<groupId>com.sun</groupId>
 			<artifactId>ldapbp</artifactId>
 			<version>1.0</version>
-		</dependency> 			
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
