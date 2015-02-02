@@ -27,25 +27,25 @@ public final class AnnotationParser {
     private static final Logger logger = LoggerFactory.getLogger(AnnotationParser.class);
 
     /** base dn, bv ou=people, addBasePart("ou","people"), ordered */
-    private final ArrayList<KeyValue> baseName = new ArrayList<KeyValue>();
+    protected final ArrayList<KeyValue> baseName = new ArrayList<KeyValue>();
 
     /** key, bv ugentId (key is fields name in class), ordered */
-    private final ArrayList<String> keyParts = new ArrayList<String>();
+    protected final ArrayList<String> keyParts = new ArrayList<String>();
 
     /** class type of fields (key is fields name in class), unique */
-    private final Map<String, Class<?>> fieldTypes = new HashMap<String, Class<?>>();
+    protected final Map<String, Class<?>> fieldTypes = new HashMap<String, Class<?>>();
 
     /** getter methods (key is fields name in class), unique */
-    private final Map<String, Method> getters = new HashMap<String, Method>();
+    protected final Map<String, Method> getters = new HashMap<String, Method>();
 
     /** setter methods (key is fields name in class), unique */
-    private final Map<String, Method> setters = new HashMap<String, Method>();
+    protected final Map<String, Method> setters = new HashMap<String, Method>();
 
     /** key=FIELD-name, value=LDAP-name (key is fields name in class), unique */
-    private final Properties mapping = new Properties();
+    protected final Properties mapping = new Properties();
 
     /** objectClass in ldap */
-    private final Set<String> objectClass = new HashSet<String>();
+    protected final Set<String> objectClass = new HashSet<String>();
 
     /**
      * Creates a new AnnotationParser object.
@@ -87,14 +87,10 @@ public final class AnnotationParser {
     /**
      * see inside for info
      *
-     * @param field NA
-     * @param ldapName NA
-     * @param superPojoClass NA
-     *
      * @throws IllegalArgumentException "getter/setter method getterMethodName/setterMethodName for field (field) not accessible/found"; "no return
      *             type found for getter method"
      */
-    private void addMapping(final String field, final String ldapName, final Class<?> superPojoClass) {
+    protected void addMapping(final String field, final String ldapName, final Class<?> superPojoClass) {
         String getterMethodName = "get" + Character.toUpperCase(field.charAt(0)) + field.substring(1); //$NON-NLS-1$
         AnnotationParser.logger.debug("addMapping(String, String, Class<?>) - String getterMethodName=" + getterMethodName); //$NON-NLS-1$
 
@@ -142,9 +138,6 @@ public final class AnnotationParser {
      * invoke getter via class field name
      *
      * @param field class field name
-     * @param bean object
-     *
-     * @return value
      *
      * @throws IllegalArgumentException "getter not invokable"
      */
@@ -162,8 +155,6 @@ public final class AnnotationParser {
 
     /**
      * gets baseName
-     *
-     * @return Returns the baseName.
      */
     public ArrayList<KeyValue> getBaseNameList() {
         return this.baseName;
@@ -173,8 +164,6 @@ public final class AnnotationParser {
      * geeft class type terug van field met meegegeven naam van class T
      *
      * @param field fieldname
-     *
-     * @return class type
      */
     public Class<?> getFieldType(final String field) {
         return this.fieldTypes.get(field);
@@ -206,8 +195,6 @@ public final class AnnotationParser {
 
     /**
      * gets keyParts
-     *
-     * @return Returns the keyParts.
      */
     public ArrayList<String> getKeyParts() {
         return this.keyParts;
@@ -215,8 +202,6 @@ public final class AnnotationParser {
 
     /**
      * gets mapping
-     *
-     * @return Returns the mapping.
      */
     public Properties getMapping() {
         return this.mapping;
@@ -237,8 +222,6 @@ public final class AnnotationParser {
 
     /**
      * gets objectClass
-     *
-     * @return Returns the objectClass.
      */
     public String[] getObjectClass() {
         if (this.objectClass.size() == 0) {
@@ -252,12 +235,8 @@ public final class AnnotationParser {
 
     /**
      * see inside for info
-     *
-     * @param pojoClass NA
-     *
-     * @return NA
      */
-    private Stack<Class<?>> initStep1(final Class<?> pojoClass) {
+    protected Stack<Class<?>> initStep1(final Class<?> pojoClass) {
         AnnotationParser.logger.debug("initStep1(Class<?>) - start"); //$NON-NLS-1$
         AnnotationParser.logger.debug("initStep1(Class<?>) - Class<?> pojoClass=" + pojoClass); //$NON-NLS-1$
 
@@ -284,13 +263,8 @@ public final class AnnotationParser {
 
     /**
      * see inside for info
-     *
-     * @param currentInspectedClass NA
-     * @param informationStack NA
-     *
-     * @return NA
      */
-    private Class<?> initStep2(final Class<?> currentInspectedClass, final Stack<Class<?>> informationStack) {
+    protected Class<?> initStep2(final Class<?> currentInspectedClass, final Stack<Class<?>> informationStack) {
         AnnotationParser.logger.debug("initStep2(Class<?>, Stack<Class<?>>) - start"); //$NON-NLS-1$
         AnnotationParser.logger.debug("initStep2(Class<?>, Stack<Class<?>>) - currentInspectedClass=" + currentInspectedClass); //$NON-NLS-1$
 
@@ -331,11 +305,8 @@ public final class AnnotationParser {
 
     /**
      * see inside for info
-     *
-     * @param currentClass NA
-     * @param pojoClass NA
      */
-    private void initStep3(final Class<?> currentClass, final Class<?> pojoClass) {
+    protected void initStep3(final Class<?> currentClass, final Class<?> pojoClass) {
         AnnotationParser.logger.debug("initStep3(Class<?>) - start"); //$NON-NLS-1$
         AnnotationParser.logger.debug("initStep3(Class<?>) - Class<?> currentClass=" + currentClass); //$NON-NLS-1$
 
@@ -435,7 +406,7 @@ public final class AnnotationParser {
     /**
      * see inside for info
      */
-    private void initStep4() {
+    protected void initStep4() {
         AnnotationParser.logger.debug("initStep4() - start"); //$NON-NLS-1$
 
         if (this.getKeyParts().size() == 0) {
@@ -453,11 +424,6 @@ public final class AnnotationParser {
 
     /**
      * invoke getter via class field name
-     *
-     * @param ldapfield class field name
-     * @param bean object
-     *
-     * @return value
      */
     public Object lget(final String ldapfield, final Object bean) {
         return this.get(this.getInverseMapping(ldapfield), bean);
@@ -465,10 +431,6 @@ public final class AnnotationParser {
 
     /**
      * invoke setter via ldap field name
-     *
-     * @param ldapfield ldap field name
-     * @param bean object
-     * @param value value
      */
     public void lset(final String ldapfield, final Object bean, final Object value) {
         this.set(this.getInverseMapping(ldapfield), bean, value);
@@ -478,8 +440,6 @@ public final class AnnotationParser {
      * invoke setter via ldap field name
      *
      * @param field ldap field name
-     * @param bean object
-     * @param value value
      *
      * @throws IllegalArgumentException "setter not invokable"
      */
