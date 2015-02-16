@@ -15,160 +15,21 @@ import javax.swing.ImageIcon;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.jhaws.common.io.Utils.OSGroup;
 
 /**
  * static and string based functionality that java.io.File lacks for files and directories.<br>
- * 
+ *
  * @author Jurgen
  * @version 7 March 2006
- * 
+ *
  * @param <T> DOC_ME
- * 
+ *
  * @see util.io.IOGeneralFile
  * @see util.io.IODirectory
  */
 @SuppressWarnings("unused")
 public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements Comparable<File> {
-    public static enum ByteTo {
-        Byte, GigaByte, KiloByte, MegaByte, TerraByte;
-        /** 1 */
-        private static final long O = 1L;
-
-        /** 1024 */
-        private static final long KBV = 1024L;
-
-        /** 1048576 */
-        private static final long MBV = 1024L * 1024L;
-
-        /** 1125899906842624 */
-        private static final long GBV = 1024L * 1024L * 1024L;
-
-        /** 1152921504606846976 */
-        private static final long TBV = 1024L * 1024L * 1024L * 1024L;
-
-        /** 0,0080645161290322580645161290322581 */
-        private static final double IKBV = 1d / ByteTo.KBV;
-
-        /** 7,8755040322580645161290322580645e-6 */
-        private static final double IMBV = 1d / ByteTo.MBV;
-
-        /** 7,6909219065020161290322580645161e-9 */
-        private static final double IGBV = 1d / ByteTo.GBV;
-
-        /** 7,510665924318375126008064516129e-12 */
-        private static final double ITBV = 1d / ByteTo.TBV;
-
-        /**
-         * na
-         * 
-         * @return
-         */
-        public String display() {
-            switch (this) {
-                case KiloByte:
-                    return "kB"; //$NON-NLS-1$
-
-                case MegaByte:
-                    return "MB"; //$NON-NLS-1$
-
-                case GigaByte:
-                    return "GB"; //$NON-NLS-1$
-
-                case TerraByte:
-                    return "TB"; //$NON-NLS-1$
-
-                default:
-                case Byte:
-                    return "bytes"; //$NON-NLS-1$
-            }
-        }
-
-        /**
-         * na
-         * 
-         * @return
-         */
-        public double doubleValue() {
-            switch (this) {
-                case KiloByte:
-                    return ByteTo.IKBV;
-
-                case MegaByte:
-                    return ByteTo.IMBV;
-
-                case GigaByte:
-                    return ByteTo.IGBV;
-
-                case TerraByte:
-                    return ByteTo.ITBV;
-
-                default:
-                case Byte:
-                    return ByteTo.O;
-            }
-        }
-
-        /**
-         * na
-         * 
-         * @return
-         */
-        public long longValue() {
-            switch (this) {
-                case KiloByte:
-                    return ByteTo.KBV;
-
-                case MegaByte:
-                    return ByteTo.MBV;
-
-                case GigaByte:
-                    return ByteTo.GBV;
-
-                case TerraByte:
-                    return ByteTo.TBV;
-
-                default:
-                case Byte:
-                    return ByteTo.O;
-            }
-        }
-    }
-
-    public static enum OS {
-        DOS, UNIX, WIN32;
-
-        private static final String UCC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-        private static final String LCC = "abcdefghijklmnopqrstuvwxyz";
-
-        private static final String N = "0123456789";
-
-        /**
-         * legal DOS filename characters (illegal dos chars are space and " , / [ ] + = ; : ? \ |)
-         */
-        private static final char[] legalDosFileCharacters = ("!#$%&'()@^{}`~" + ".-_" + OS.N + OS.UCC + OS.LCC).toCharArray(); //$NON-NLS-1$ //$NON-NLS-2$
-
-        /** legal Windows32 filename characters */
-        private static final char[] legalWin32FileCharacters = ("!#$%&'()@^{}`~" + ",;[]+= " + ".-_" + OS.N + OS.UCC + OS.LCC).toCharArray(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-        /** legal Unix filename characters (incomplete) */
-        private static final char[] legalUnixFileCharacters = (".-_" + OS.N + OS.UCC + OS.LCC).toCharArray(); //$NON-NLS-1$
-
-        public char[] legal() {
-            switch (this) {
-                case DOS:
-                    return OS.legalDosFileCharacters;
-
-                case UNIX:
-                    return OS.legalUnixFileCharacters;
-
-                default:
-                case WIN32:
-                    return OS.legalWin32FileCharacters;
-            }
-        }
-    }
-
     public static enum Replace {
         ALWAYS, NEWER_AND_NON_EXISTING, ONLY_NEWER, ONLY_NOT_EXISTING;
     }
@@ -177,36 +38,13 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
         CLASSPATH_ONLY, EVERYWHERE, LIBRARYPATH_ONLY;
     }
 
-    /** serialVersionUID */
-    private static final long serialVersionUID = 7931119843811634983L;
-
-    /** file date comparator */
-    @SuppressWarnings("rawtypes")
-    protected static Comparator<IOGeneralFile> fileDateComparator = new FileDateComparator();
-
-    /** file size comparator */
-    protected static Comparator<IOFile> fileSizeComparator = new FileSizeComparator();
-
-    /** constants for overwrite file dialog box: possible options */
-    protected static final String[] overwriteOptions = new String[] { "yes", "no", "yes to all", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            "no to all" //$NON-NLS-1$ 
-    };
-
-    /** na */
-    private static final NumberFormat instance = NumberFormat.getInstance(Locale.getDefault());
-
-    static {
-        IOGeneralFile.instance.setMaximumFractionDigits(20);
-        IOGeneralFile.instance.setRoundingMode(RoundingMode.UNNECESSARY);
-    }
-
     /**
      * {@link #checkFileIndex(String, String, String, String, String)} but with separator set to '_' and format to '0000'
-     * 
+     *
      * @param path : String : the location (path only) of the target file
      * @param outFileName : String : the name of the target file (without extension and . before extension)
      * @param extension : String : the extension of the target file (without . before extension), see class constants FORMAT... for possibilities
-     * 
+     *
      * @return : IOFile : new indexed File
      */
     public static IOFile checkFileIndex(final String path, final String outFileName, final String extension) {
@@ -221,13 +59,13 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
      * index checking:<br>
      * if file exists, return it<br>
      * if file does not exists, adds 1 to the index (_0000 goes to _0001) and does further index again
-     * 
+     *
      * @param path : String : the location (path only) of the target file
      * @param outFileName : String : the name of the target file (without extension and . before extension)
      * @param sep : String : characters sperating filename from index (example: _ )
      * @param format : String : number of positions character 0 (example: 0000 )
      * @param extension : String : the extension of the target file (without . before extension), see class constants FORMAT... for possibilities
-     * 
+     *
      * @return : IOFile : new indexed File
      */
     public static IOFile checkFileIndex(final String path, String outFileName, final String sep, final String format, final String extension) {
@@ -298,14 +136,14 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks filename versus operating system restrictions
-     * 
+     *
      * @param filename : String : filename
      * @param os : int : operating system (use OS.DOS, OS.WIN32, OS.UNIX)
-     * 
+     *
      * @return : boolean : filename is valid or not
      * @throws IOException
      */
-    public static boolean checkFilenameVS(String filename, final OS os) throws IOException {
+    public static boolean checkFilenameVS(String filename, final OSGroup os) throws IOException {
         filename = new File(filename).getName();
 
         if (filename.substring(0, 1).compareTo(".") == 0) { //$NON-NLS-1$
@@ -316,7 +154,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
         char[] c = new char[0];
         char[] fn = filename.toCharArray();
 
-        if (os == OS.DOS) {
+        if (os == OSGroup.Dos) {
             String[] parts = filename.split("\\."); //$NON-NLS-1$
 
             if (parts.length != 2) {
@@ -327,23 +165,23 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
                 return false;
             }
 
-            c = OS.DOS.legal();
+            c = Utils.legal(OSGroup.Dos);
         }
 
-        if (os == OS.WIN32) {
+        if (os == OSGroup.Windows) {
             if (filename.length() > 255) {
                 return false;
             }
 
-            c = OS.WIN32.legal();
+            c = Utils.legal(OSGroup.Windows);
         }
 
-        if (os == OS.UNIX) {
+        if (os == OSGroup.Nix) {
             if (filename.length() > 100) {
                 return false;
             }
 
-            c = OS.UNIX.legal();
+            c = Utils.legal(OSGroup.Nix);
         }
 
         if (c.length == 0) {
@@ -369,16 +207,16 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks if not null in constructor
-     * 
+     *
      * @param file : File : file
-     * 
+     *
      * @return : File : file
-     * 
+     *
      * @throws IllegalArgumentException : exception thrown
      */
     protected static File checkNotNull(final File file) throws IllegalArgumentException {
         if (file == null) {
-            throw new IllegalArgumentException("File parameter cannot be null"); //$NON-NLS-1$ 
+            throw new IllegalArgumentException("File parameter cannot be null"); //$NON-NLS-1$
         }
 
         return file;
@@ -386,16 +224,16 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks if not null in constructor
-     * 
+     *
      * @param object : Object : any object
-     * 
+     *
      * @return : Object : same object as given
-     * 
+     *
      * @throws IllegalArgumentException : exception thrown
      */
     protected static Object checkNotNull(final Object object) throws IllegalArgumentException {
         if (object == null) {
-            throw new IllegalArgumentException("parameter object cannot be null"); //$NON-NLS-1$ 
+            throw new IllegalArgumentException("parameter object cannot be null"); //$NON-NLS-1$
         }
 
         return object;
@@ -403,11 +241,11 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * converts a size in bytes to kB, MB, GB, TB
-     * 
+     *
      * @param size : long : size (file size)
      * @param conversion : int : use BYTE_TO_KiloByte, BYTE_TO_MegaByte, BYTE_TO_GigaByte, BYTE_TO_TerraByte
      * @param decimals : int : number of decimals to show
-     * 
+     *
      * @return : double : converted size
      */
     public static double convertSize(final long size, final ByteTo conversion, final int decimals) {
@@ -416,9 +254,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * converts this file's size to string, decimals 2
-     * 
+     *
      * @param length : long : size (file size)
-     * 
+     *
      * @return : String : converted size as string
      */
     public static String convertSize2String(final long length) {
@@ -427,10 +265,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * converts a size in bytes to kB, MB, GB, TB with suffix with two decimals
-     * 
+     *
      * @param length : long : size (file size)
      * @param conversion : int : use BYTE_TO_KiloByte, BYTE_TO_MegaByte, BYTE_TO_GigaByte, BYTE_TO_TerraByte
-     * 
+     *
      * @return : String : converted size with size suffix
      */
     public static String convertSize2String(final long length, final ByteTo conversion) {
@@ -439,11 +277,11 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * converts a size in bytes to kB, MB, GB, TB with suffix
-     * 
+     *
      * @param length : long : size (file size)
      * @param conversion : int : use BYTE_TO_KiloByte, BYTE_TO_MegaByte, BYTE_TO_GigaByte, BYTE_TO_TerraByte
      * @param decimals : int : number of decimals to show
-     * 
+     *
      * @return : String : converted size with size suffix
      */
     public static String convertSize2String(final long length, final ByteTo conversion, final int decimals) {
@@ -456,10 +294,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * autoconverts a size in bytes to kB, MB, GB, TB with a suffix
-     * 
+     *
      * @param length : long : size (file size)
      * @param decimals : int : number of decimals to show
-     * 
+     *
      * @return : String : converted size with size suffix
      */
     public static String convertSize2String(final long length, final int decimals) {
@@ -468,9 +306,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks if a file exists somewhere in the classpath, library path or working directory
-     * 
+     *
      * @param file : File : file
-     * 
+     *
      * @return : boolean : exists or not
      */
     public static boolean fileExists(final String file) {
@@ -479,10 +317,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks if a file exists somewhere in the classpath, library path or working directory
-     * 
+     *
      * @param file : File : file
      * @param parameter : int : use FileConv.EVERYWHERE, FileConv.CLASSPATH_ONLY or FileConv.LIBRARYPATH_ONLY
-     * 
+     *
      * @return : boolean : exists or not
      */
     public static boolean fileExists(final String file, final Search parameter) {
@@ -497,9 +335,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * na
-     * 
+     *
      * @param file na
-     * 
+     *
      * @return na
      */
     private static String getCanonicalPath(File file) {
@@ -512,7 +350,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * get current directory
-     * 
+     *
      * @return : IODirectory : current directory object
      */
     public static IODirectory getCurrentDirectory() {
@@ -522,9 +360,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     /**
      * if location is a file, returns the directory where it is in; if it is a directory, returns the directory; uses system default file separator;
      * String ends with system default file separator; location does not need to exist already
-     * 
+     *
      * @param location : String : filesystem location
-     * 
+     *
      * @return : String : directory
      */
     public static String getDirectory(final String location) {
@@ -554,9 +392,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * gets the extension of a file ("" when no extension)
-     * 
+     *
      * @param fileName : String : filename or complete file path
-     * 
+     *
      * @return : String : extension
      */
     public static String getExtension(final String fileName) {
@@ -582,9 +420,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * gets the file without path (if location is a directory, returns ""); location does not need to exist already
-     * 
+     *
      * @param location : String : filesystem location
-     * 
+     *
      * @return : String : file
      */
     public static String getFile(final File location) {
@@ -612,9 +450,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * gets the file without path (if location is a directory, returns ""); location does not need to exist already
-     * 
+     *
      * @param location : String : filesystem location
-     * 
+     *
      * @return : String : file
      */
     public static String getFile(final String location) {
@@ -634,9 +472,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * na
-     * 
+     *
      * @param length na
-     * 
+     *
      * @return
      */
     public static ByteTo getNearest(final long length) {
@@ -661,9 +499,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * gets the filename without the extension and the pathname
-     * 
+     *
      * @param file : File : file
-     * 
+     *
      * @return : String : short filename
      */
     public static String getShortFile(final File file) {
@@ -672,9 +510,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * gets the filename without the extension and the pathname
-     * 
+     *
      * @param name : String : filename
-     * 
+     *
      * @return : String : short filename
      */
     public static String getShortFile(String name) {
@@ -701,9 +539,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * is location a directory or not
-     * 
+     *
      * @param location : String : location
-     * 
+     *
      * @return : boolean
      */
     public static boolean isDirectory(final File location) {
@@ -723,9 +561,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * is location a directory or not
-     * 
+     *
      * @param location : File : location
-     * 
+     *
      * @return : boolean
      */
     public static boolean isDirectory(final String location) {
@@ -745,9 +583,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * is location a file or not
-     * 
+     *
      * @param location : File : location
-     * 
+     *
      * @return : boolean
      */
     public static boolean isFile(final File location) {
@@ -767,9 +605,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * is location a file or not
-     * 
+     *
      * @param location : String : location
-     * 
+     *
      * @return : boolean
      */
     public static boolean isFile(final String location) {
@@ -789,9 +627,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks if a file is in the classpath, not only in a directory in a classpath dir but as a file in the classpath
-     * 
+     *
      * @param fileName : String : file to search for
-     * 
+     *
      * @return : boolean : found or not
      */
     public static boolean isFileInClasspath(final String fileName) {
@@ -811,14 +649,14 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     /**
      * convers a filename to a legal filename for given operating system, too long parts are chopped, illegal characters are replaced by the character
      * <i>_</i> , a missing extensions is adapted to extension <i>ext</i>
-     * 
+     *
      * @param filename : String : current name
      * @param os : int : operating system, use FileConv.WIN32, FileConv.DOS, FileConv.UNIX
-     * 
+     *
      * @return : String : converted name
      * @throws IOException
      */
-    public static String legalizeFilenameVs(String filename, final OS os) throws IOException {
+    public static String legalizeFilenameVs(String filename, final OSGroup os) throws IOException {
         filename = new File(filename).getName();
 
         while (filename.substring(0, 1).compareTo(".") == 0) { //$NON-NLS-1$
@@ -827,7 +665,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
         char[] c = new char[0];
 
-        if (os == OS.DOS) {
+        if (os == OSGroup.Dos) {
             String[] parts = filename.split("\\."); //$NON-NLS-1$
 
             if (parts.length == 1) {
@@ -853,15 +691,15 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
             }
 
             filename = parts[0] + "." + parts[1]; //$NON-NLS-1$
-            c = OS.DOS.legal();
+            c = Utils.legal(OSGroup.Dos);
         }
 
-        if (os == OS.WIN32) {
-            c = OS.WIN32.legal();
+        if (os == OSGroup.Windows) {
+            c = Utils.legal(OSGroup.Windows);
         }
 
-        if (os == OS.UNIX) {
-            c = OS.UNIX.legal();
+        if (os == OSGroup.Nix) {
+            c = Utils.legal(OSGroup.Nix);
         }
 
         if (c.length == 0) {
@@ -890,9 +728,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     /**
      * makes sure a file path string with mixed seprator characters is a correct one, replaces the / and \ character and any combination of them (fe
      * /\ or \/) by the default system separator
-     * 
+     *
      * @param mixedFilePathString : String : mixed string
-     * 
+     *
      * @return : String : file path with correct separator
      */
     public static String makeSystemSeparator(final String mixedFilePathString) {
@@ -902,10 +740,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     /**
      * makes sure a file path string with mixed seprator characters is a correct one, replaces the / and \ character and any combination of them (fe
      * /\ or \/) by the given separator
-     * 
+     *
      * @param mixedFilePathString : String : mixed string
      * @param sep : String : separator character (normally either / or \ )
-     * 
+     *
      * @return : String : file path with correct separator
      */
     public static String makeSystemSeparator(final String mixedFilePathString, final String sep) {
@@ -934,9 +772,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * na
-     * 
+     *
      * @param s na
-     * 
+     *
      * @return
      */
     private static String replacer(String s) {
@@ -962,10 +800,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * na
-     * 
+     *
      * @param d na
      * @param t na
-     * 
+     *
      * @return
      */
     protected static double round(final double d, final int t) {
@@ -976,9 +814,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * cfr function searchFile(String, int) but searches everywhere
-     * 
+     *
      * @param file : String : file name without path
-     * 
+     *
      * @return : IOFile : IOFile file or <i>null</i> when not found
      */
     public static IOFile searchFile(final String file) {
@@ -988,10 +826,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     /**
      * searches for a file in the current directory, the current user dir, the complete class path and the complete library path in this order, return
      * the complete path from the moment when found or null when not found
-     * 
+     *
      * @param file : String : file name without path
      * @param parameter : int : file name with path where first found, EVERYWHERE, CLASSPATH_ONLY, LIBRARYPATH_ONLY
-     * 
+     *
      * @return : IOFile : IOFile file or <i>null</i> when not found
      */
     public static IOFile searchFile(final String file, final Search parameter) {
@@ -1052,9 +890,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * cfr function searchFile(String, int) but searches everywhere
-     * 
+     *
      * @param file : String : file name without path
-     * 
+     *
      * @return : String : complete file path or <i>null</i> when not found
      */
     public static String searchFile2String(final String file) {
@@ -1069,10 +907,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * cfr function searchFile(String, int) but searches everywhere
-     * 
+     *
      * @param file : String : file name without path
      * @param parameter : int : file name with path where first found, EVERYWHERE, CLASSPATH_ONLY, LIBRARYPATH_ONLY
-     * 
+     *
      * @return : String : complete file path or <i>null</i> when not found
      */
     public static String searchFile2String(final String file, final Search parameter) {
@@ -1087,10 +925,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * used internally by function {@link #searchFile(String)}
-     * 
+     *
      * @param path : String : full filepath without filename
      * @param file : String : filename withou path
-     * 
+     *
      * @return : boolean : exists or not
      */
     protected static String searchFileInPath(final String path, final String file) {
@@ -1123,13 +961,36 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * double to string
-     * 
+     *
      * @param round
-     * 
+     *
      * @return
      */
     protected static String toString(double round) {
         return IOGeneralFile.instance.format(round);
+    }
+
+    /** serialVersionUID */
+    private static final long serialVersionUID = 7931119843811634983L;
+
+    /** file date comparator */
+    @SuppressWarnings("rawtypes")
+    protected static Comparator<IOGeneralFile> fileDateComparator = new FileDateComparator();
+
+    /** file size comparator */
+    protected static Comparator<IOFile> fileSizeComparator = new FileSizeComparator();
+
+    /** constants for overwrite file dialog box: possible options */
+    protected static final String[] overwriteOptions = new String[] { "yes", "no", "yes to all", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        "no to all" //$NON-NLS-1$
+    };
+
+    /** na */
+    private static final NumberFormat instance = NumberFormat.getInstance(Locale.getDefault());
+
+    static {
+        IOGeneralFile.instance.setMaximumFractionDigits(20);
+        IOGeneralFile.instance.setRoundingMode(RoundingMode.UNNECESSARY);
     }
 
     /** constants for overwrite file dialog box: what option is chosen */
@@ -1137,7 +998,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * Creates a new IoGeneralFile object.
-     * 
+     *
      * @param file : File : file or directory
      */
     public IOGeneralFile(final File file) {
@@ -1146,7 +1007,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * Creates a new IOGeneralFile object.
-     * 
+     *
      * @param parent : File : directory
      * @param child : String : short name of file or directory
      */
@@ -1156,7 +1017,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * Creates a new IOGeneralFile object.
-     * 
+     *
      * @param pathname : String : full path name of file or directory; when only a name is given, the file or directory will be in the current working
      *            directory
      */
@@ -1166,7 +1027,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks if exists
-     * 
+     *
      * @return
      * @throws FileNotFoundException
      */
@@ -1181,10 +1042,10 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * checks if not exists
-     * 
+     *
      * @return
      * @throws FileNotFoundException
-     * 
+     *
      */
     @SuppressWarnings({ "unchecked" })
     public T checkNonExistence() throws FileNotFoundException {
@@ -1208,7 +1069,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     }
 
     /**
-     * 
+     *
      * @see java.io.File#getAbsolutePath()
      */
     @Override
@@ -1218,7 +1079,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * na
-     * 
+     *
      * @return
      */
     @SuppressWarnings("restriction")
@@ -1232,9 +1093,9 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * see File.length()
-     * 
+     *
      * @return see File.length()
-     * 
+     *
      * @see java.io.File#length()
      */
     public long getLength() {
@@ -1243,7 +1104,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * get parent directory
-     * 
+     *
      * @return : IODirectory : parent directory
      */
     public IODirectory getParentDirectory() {
@@ -1253,7 +1114,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     }
 
     /**
-     * 
+     *
      * @see java.io.File#getPath()
      */
     @Override
@@ -1263,7 +1124,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * get disk root for this file or directory
-     * 
+     *
      * @return
      */
     public IODirectory getRoot() {
@@ -1277,7 +1138,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /**
      * gets the extension from given file and maps it to an image icon (extracted from the system)
-     * 
+     *
      * @return : Icon
      */
     public Icon getSmallIcon() {
@@ -1293,7 +1154,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
     }
 
     /**
-     * 
+     *
      * @see java.io.File#toString()
      */
     @Override

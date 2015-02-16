@@ -113,12 +113,36 @@ public class Utils {
     }
 
     public static enum OS {
-        AIX, Digital_Unix, FreeBSD, HP_UX, Irix, Linux, MPE_iX, Mac_OS, Mac_OS_X, Netware_4_11, OS_2, Solaris, Windows_2000, Windows_7, Windows_95,
-        Windows_98, Windows_NT, Windows_Vista, Windows_XP, unknown;
+        AIX, //
+        Digital_Unix, //
+        FreeBSD, //
+        HP_UX, //
+        Irix, //
+        Linux, //
+        MPE_iX, //
+        Mac_OS, //
+        Mac_OS_X, //
+        Netware_4_11, //
+        OS_2, //
+        Solaris, //
+        Windows_2000, //
+        Windows_7, //
+        Windows_8, //
+        Windows_10, //
+        Windows_95, //
+        Windows_98, //
+        Windows_NT, //
+        Windows_Vista, //
+        Windows_XP, //
+        unknown;//
     }
 
-    public static enum OS_GROUP {
-        Mac, Nix, Windows, unknown;
+    public static enum OSGroup {
+        Dos, //
+        Mac, //
+        Nix, //
+        Windows, //
+        unknown;//
     }
 
     /**
@@ -372,6 +396,20 @@ public class Utils {
         return ext;
     }
 
+    static public char[] legal(OSGroup osg) {
+        switch (osg) {
+            case Dos:
+                return Utils.legalDosFileCharacters;
+
+            case Nix:
+                return Utils.legalUnixFileCharacters;
+
+            default:
+            case Windows:
+                return Utils.legalWin32FileCharacters;
+        }
+    }
+
     /**
      * open bestand met default voor OS, wanneer niet ondersteund en op windows pobeer via file association command; wanneer pdf probeer eerst acrobat
      *
@@ -394,7 +432,7 @@ public class Utils {
             throw new FileNotFoundException((file == null) ? "" : file.getAbsolutePath());
         }
 
-        if (Utils.osgroup == OS_GROUP.Windows) {
+        if (Utils.osgroup == OSGroup.Windows) {
             return Utils.openCommand(file, false, cmdparameters);
         }
 
@@ -721,6 +759,23 @@ public class Utils {
         zout.close();
     }
 
+    private static final String UCC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private static final String LCC = "abcdefghijklmnopqrstuvwxyz";
+
+    private static final String NR = "0123456789";
+
+    /**
+     * legal DOS filename characters (illegal dos chars are space and " , / [ ] + = ; : ? \ |)
+     */
+    private static final char[] legalDosFileCharacters = ("!#$%&'()@^{}`~" + ".-_" + Utils.NR + Utils.UCC + Utils.LCC).toCharArray(); //$NON-NLS-1$ //$NON-NLS-2$
+
+    /** legal Windows32 filename characters */
+    private static final char[] legalWin32FileCharacters = ("!#$%&'()@^{}`~" + ",;[]+= " + ".-_" + Utils.NR + Utils.UCC + Utils.LCC).toCharArray(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    /** legal Unix filename characters (incomplete) */
+    private static final char[] legalUnixFileCharacters = (".-_" + Utils.NR + Utils.UCC + Utils.LCC).toCharArray(); //$NON-NLS-1$
+
     /** 8kB */
     public static final int DEFAULT_BUFFER_LEN = 1024 * 8;
 
@@ -731,7 +786,7 @@ public class Utils {
     public static final OS os;
 
     /** see enum */
-    public static final OS_GROUP osgroup;
+    public static final OSGroup osgroup;
 
     /** nix /usr/lib/ */
     public static final File NIX_LIB;
@@ -788,19 +843,19 @@ public class Utils {
 
         os = _os;
 
-        OS_GROUP _osgroup = OS_GROUP.unknown;
+        OSGroup _osgroup = OSGroup.unknown;
 
         try {
             switch (Utils.os) {
                 case Digital_Unix:
                 case Linux:
-                    _osgroup = OS_GROUP.Nix;
+                    _osgroup = OSGroup.Nix;
 
                     break;
 
                 case Mac_OS:
                 case Mac_OS_X:
-                    _osgroup = OS_GROUP.Mac;
+                    _osgroup = OSGroup.Mac;
 
                     break;
 
@@ -811,7 +866,9 @@ public class Utils {
                 case Windows_NT:
                 case Windows_Vista:
                 case Windows_XP:
-                    _osgroup = OS_GROUP.Windows;
+                case Windows_8:
+                case Windows_10:
+                    _osgroup = OSGroup.Windows;
 
                     break;
 
@@ -824,7 +881,7 @@ public class Utils {
                 case Netware_4_11:
                 case OS_2:
                 case Solaris:
-                    _osgroup = OS_GROUP.unknown;
+                    _osgroup = OSGroup.unknown;
 
                     break;
             }
@@ -834,7 +891,7 @@ public class Utils {
 
         osgroup = _osgroup;
 
-        if (Utils.osgroup == OS_GROUP.Windows) {
+        if (Utils.osgroup == OSGroup.Windows) {
             // http://technet.microsoft.com/en-us/library/bb490910.aspx
             Pattern dirProgramFilesPattern = Pattern.compile("ProgramFiles", Pattern.CASE_INSENSITIVE);
             Pattern dirSystemRootPattern = Pattern.compile("SystemRoot", Pattern.CASE_INSENSITIVE);
@@ -912,7 +969,7 @@ public class Utils {
 
         File _nix_lib = null;
 
-        if (Utils.osgroup == OS_GROUP.Nix) {
+        if (Utils.osgroup == OSGroup.Nix) {
             _nix_lib = new File("/usr/lib/");
         }
 

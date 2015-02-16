@@ -11,22 +11,16 @@ import javax.swing.filechooser.FileSystemView;
 
 /**
  * na
- * 
+ *
  * @author Jurgen
  * @version 1.0.0 - 28 February 2005
  */
 public class SystemIcon implements ExtensionIconFinder {
-    /** field */
-    private static FileSystemView fsv = FileSystemView.getFileSystemView();
-
-    /** field */
-    private static HashMap<String, Icon> iconMap = new HashMap<String, Icon>();
-
     /**
      * Creates a new SystemIcon object.
-     * 
+     *
      * @param f na
-     * 
+     *
      * @return
      */
     public static Icon getSystemIcon(final File f) {
@@ -57,22 +51,28 @@ public class SystemIcon implements ExtensionIconFinder {
         }
     }
 
+    /** field */
+    private static FileSystemView fsv = FileSystemView.getFileSystemView();
+
+    /** field */
+    private static HashMap<String, Icon> iconMap = new HashMap<String, Icon>();
+
     /**
-     * 
+     *
      * @see util.io.ExtensionIconFinder#getLargeIcon(util.io.IOFile)
      */
     @Override
-    public Icon getLargeIcon(IOFile file) {
+    public Icon getLargeIcon(java.io.File file) {
         return SystemIcon.getSystemIcon(file);
     }
 
     /**
-     * 
+     *
      * @see util.io.ExtensionIconFinder#getSmallIcon(util.io.IOFile)
      */
     @SuppressWarnings("restriction")
     @Override
-    public Icon getSmallIcon(IOFile file) {
+    public Icon getSmallIcon(java.io.File file) {
         try {
             sun.awt.shell.ShellFolder sf;
 
