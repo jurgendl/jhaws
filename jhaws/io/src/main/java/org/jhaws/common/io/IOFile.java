@@ -29,10 +29,10 @@ import org.jhaws.common.io.filter.VideoFileFilter;
 // http://en.wikipedia.org/wiki/List_of_file_formats
 /**
  * functionality that java.io.File lacks for real files only.<br>
- * 
+ *
  * @author Jurgen
  * @version 29 January 2007
- * 
+ *
  * @see IOGeneralFile
  * @see IODirectory
  */
@@ -56,7 +56,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
         /**
          * NA
-         * 
+         *
          * @param todelete NA
          */
         public void addErase(IOFile todelete) {
@@ -65,7 +65,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
         /**
          * NA
-         * 
+         *
          * @param todelete NA
          */
         public void addRecycle(IOFile todelete) {
@@ -73,7 +73,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
         }
 
         /**
-         * 
+         *
          * @see java.lang.Runnable#run()
          */
         @Override
@@ -92,57 +92,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
         }
     }
 
-    /** serialVersionUID */
-    private static final long serialVersionUID = 6893324119288839097L;
-
-    /** maximum size that is taken to compare a file binary is 8 kB */
-    protected static int MAX_COMPARE_SIZE = 8192;
-
-    /** field */
-    private static final ShutDownHook SHUTDOWNHOOK;
-
-    static {
-        SHUTDOWNHOOK = new ShutDownHook();
-        Runtime.getRuntime().addShutdownHook(new Thread(IOFile.SHUTDOWNHOOK));
-    }
-
-    /** field */
-    private static char[] c = "ABCDEFGHIJLKMNOPQRSTUVWXYZ0123456789".toCharArray(); //$NON-NLS-1$
-
-    /** field */
-    private static Random r = new Random(System.currentTimeMillis());
-
-    /** field */
-    private static final IODirectory TMP_DIR = new IODirectory(System.getProperty("java.io.tmpdir")); //$NON-NLS-1$    
-
-    /** field */
-    private static ExtensionIconFinder grabber_alt = null;
-
-    static {
-        try {
-            IOFile.grabber_alt = (ExtensionIconFinder) Class.forName("util.io.ExtensionsIconsAlt").newInstance(); //$NON-NLS-1$
-        } catch (Throwable e) {
-            //
-        }
-    }
-
-    /** field */
-    private static ExtensionIconFinder grabber = null;
-
-    static {
-        try {
-            IOFile.grabber = (ExtensionIconFinder) Class.forName("util.io.ExtensionIcons").newInstance(); //$NON-NLS-1$
-        } catch (Throwable e) {
-            //
-        }
-    }
-
     /**
      * creates a file when not exists
-     * 
+     *
      * @param dir : IODirectory : directory
      * @param file : String : filename (or path and filename)
-     * 
+     *
      * @return : IoFile : file created or existing or null when unable to create or null when exists and is a directory
      */
     public static IOFile create(final IODirectory dir, final String file) {
@@ -151,9 +106,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * creates a file when not exists
-     * 
+     *
      * @param filePath : String : file name & path to create
-     * 
+     *
      * @return : IoFile : file created or existing or null when unable to create or null when exists and is a directory
      */
     public static IOFile create(final String filePath) {
@@ -183,7 +138,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the default maximum compare size (class level)
-     * 
+     *
      * @return : int : default maximum compare size
      */
     public static int getDefaultMaxCompareSize() {
@@ -192,7 +147,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets filepath separator
-     * 
+     *
      * @return always '/'
      */
     public static char getSeparator() {
@@ -201,9 +156,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * return a file in the temp dir
-     * 
+     *
      * @param relativeName relative name in temp dir
-     * 
+     *
      * @return IOFile
      */
     public static IOFile newTempFile(String relativeName) {
@@ -212,7 +167,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * new file in temporary directory with random extension with random name
-     * 
+     *
      * @return IOFile
      */
     public static IOFile newTmpFile() {
@@ -221,13 +176,13 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * new file in temporary directory with given name and extension
-     * 
+     *
      * @param name name
-     * 
+     *
      * @return IOFile
      */
     public static IOFile newTmpFile(String name) {
-        IOFile tmp = new IOFile(IOFile.TMP_DIR, name);
+        IOFile tmp = new IOFile(IODirectory.TEMPDIR, name);
         tmp.eraseOnExit();
 
         return tmp;
@@ -235,9 +190,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * new file in temporary directory with given extension with random name
-     * 
+     *
      * @param ext extension
-     * 
+     *
      * @return IOFile
      */
     public static IOFile newTmpFileExt(String ext) {
@@ -246,9 +201,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * return a file in the user home dir
-     * 
+     *
      * @param relativeName relative name in user home dir
-     * 
+     *
      * @return IOFile
      */
     public static IOFile newUserFile(String relativeName) {
@@ -257,9 +212,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * na
-     * 
+     *
      * @param LEN na
-     * 
+     *
      * @return
      */
     public static String rand(int LEN) {
@@ -275,11 +230,53 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * sets the default maximum compare size (class level)
-     * 
+     *
      * @param maxCompareSize : int : default maximum compare size
      */
     public static void setDefaultMaxCompareSize(final int maxCompareSize) {
         IOFile.MAX_COMPARE_SIZE = maxCompareSize;
+    }
+
+    /** serialVersionUID */
+    private static final long serialVersionUID = 6893324119288839097L;
+
+    /** maximum size that is taken to compare a file binary is 8 kB */
+    protected static int MAX_COMPARE_SIZE = 8192;
+
+    /** field */
+    private static final ShutDownHook SHUTDOWNHOOK;
+
+    static {
+        SHUTDOWNHOOK = new ShutDownHook();
+        Runtime.getRuntime().addShutdownHook(new Thread(IOFile.SHUTDOWNHOOK));
+    }
+
+    /** field */
+    private static char[] c = "ABCDEFGHIJLKMNOPQRSTUVWXYZ0123456789".toCharArray(); //$NON-NLS-1$
+
+    /** field */
+    private static Random r = new Random(System.currentTimeMillis());
+
+    /** field */
+    private static ExtensionIconFinder grabber_alt = null;
+
+    static {
+        try {
+            IOFile.grabber_alt = (ExtensionIconFinder) Class.forName("util.io.ExtensionsIconsAlt").newInstance(); //$NON-NLS-1$
+        } catch (Throwable e) {
+            //
+        }
+    }
+
+    /** field */
+    private static ExtensionIconFinder grabber = null;
+
+    static {
+        try {
+            IOFile.grabber = (ExtensionIconFinder) Class.forName("util.io.ExtensionIcons").newInstance(); //$NON-NLS-1$
+        } catch (Throwable e) {
+            //
+        }
     }
 
     /** maximum compare size for the object */
@@ -287,7 +284,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * Creates a new IOFile object.
-     * 
+     *
      * @param file : File : File object
      */
     public IOFile(final File file) {
@@ -301,7 +298,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * Creates a new IOFile object.
-     * 
+     *
      * @param parent : File : directory
      * @param child : String : short name of file
      */
@@ -316,7 +313,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * Creates a new IOFile object.
-     * 
+     *
      * @param pathname : String : full path name of file; when only a name is given, the file will be in the current working directory
      */
     public IOFile(final String pathname) {
@@ -330,7 +327,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * Creates a new IOFile object.
-     * 
+     *
      * @param parent : String : directory
      * @param child : String : short name of file
      */
@@ -345,9 +342,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * checks if a file may be overwritten or not in save mode (asks if necessary)
-     * 
+     *
      * @param destinationFile : File : target directory
-     * 
+     *
      * @return : boolean : file may be overwritten or not
      */
     protected boolean canOverwrite(final File destinationFile) {
@@ -391,10 +388,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * checks if a file may be overwritten or not
-     * 
+     *
      * @param destinationFile : File : target directory
      * @param parameter : int : ALL, ONLY_NEWER, ONLY_NOT_EXISTING, NEWER_AND_NON_EXISTING
-     * 
+     *
      * @return : boolean : file may be overwritten or not
      */
     protected boolean canOverwrite(final File destinationFile, final Replace parameter) {
@@ -444,7 +441,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * {@link #checkFileIndex(String, String, String, String, String)} but with separator set to '_' and format to '0000' and the other parameters
      * derived from given File
-     * 
+     *
      * @return : IOFile : new indexed File
      */
     public IOFile checkFileIndex() {
@@ -487,10 +484,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * {@link #checkFileIndex(String, String, String, String, String)} but with given separator and given format and the other parameters derived from
      * given File
-     * 
+     *
      * @param separator0 : String : characters sperating filename from index (example: _ )
      * @param format : String : number of positions character 0 (example: 0000 )
-     * 
+     *
      * @return : IOFile : new indexed File
      */
     public IOFile checkFileIndex(final String separator0, final String format) {
@@ -520,9 +517,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * checks for parameter, throws exception if needed
-     * 
+     *
      * @return
-     * 
+     *
      * @throws ObjectIsNoFileException : thrown exception
      */
     protected IOFile checkIfFile() throws IOException {
@@ -535,11 +532,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * compares two files binary, reads only first 8192 bytes (default) (MAX_COMPARE_SIZE)
-     * 
+     *
      * @param file : IOFile : file to compare to
-     * 
+     *
      * @return : boolean : file is equal or not
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public boolean compare2(final IOFile file) throws IOException {
@@ -548,12 +545,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * compares two files binary, reads only first maxCompareSize bytes
-     * 
+     *
      * @param file : IOFile : file to compare to
      * @param maxCompareSize0 : int : maximum size when comparing files
-     * 
+     *
      * @return : boolean : file is equal or not
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public boolean compare2(final IOFile file, final int maxCompareSize0) throws IOException {
@@ -594,10 +591,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * converts a size in bytes to kB, MB, GB, TB
-     * 
+     *
      * @param conversion : int : use BYTE_TO_KiloByte, BYTE_TO_MegaByte, BYTE_TO_GigaByte, BYTE_TO_TerraByte
      * @param decimals : int : number of decimals to show
-     * 
+     *
      * @return : double : converted size
      * @throws FileNotFoundException
      */
@@ -609,7 +606,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * converts this file's size to string, decimals 2
-     * 
+     *
      * @return : String : converted size as string
      */
     public String convertSize2String() {
@@ -618,10 +615,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * converts a size in bytes to kB, MB, GB, TB with suffix
-     * 
+     *
      * @param conversion : int : use BYTE_TO_KiloByte, BYTE_TO_MegaByte, BYTE_TO_GigaByte, BYTE_TO_TerraByte
      * @param decimals : int : number of decimals to show
-     * 
+     *
      * @return : String : converted size with size suffix
      * @throws FileNotFoundException
      */
@@ -633,9 +630,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * autoconverts a size in bytes to kB, MB, GB, TB with a suffix
-     * 
+     *
      * @param decimals : int : number of decimals to show
-     * 
+     *
      * @return : String : converted size with size suffix
      * @throws FileNotFoundException
      */
@@ -647,12 +644,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * na
-     * 
+     *
      * @param target na
      * @param listener
-     * 
+     *
      * @return
-     * 
+     *
      * @throws IOException
      */
     protected IOFile copy0(IOFile target, IOCopyListener listener) throws IOException {
@@ -704,11 +701,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary), overwrites
-     * 
+     *
      * @param destination : IODirectory : destination directory
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copy2(IODirectory destination) throws IOException {
@@ -717,12 +714,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary), overwrites
-     * 
+     *
      * @param destination : IODirectory : destination directory
      * @param listener
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copy2(IODirectory destination, IOCopyListener listener) throws IOException {
@@ -731,12 +728,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary)
-     * 
+     *
      * @param destination : IODirectory : destination directory
      * @param parameter : int : ALL, ONLY_NEWER, ONLY_NOT_EXISTING, NEWER_AND_NON_EXISTING
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copy2(IODirectory destination, Replace parameter) throws IOException {
@@ -745,11 +742,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary), overwrites by default
-     * 
+     *
      * @param destination : IOFile : destination file
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copy2(final IOFile destination) throws IOException {
@@ -758,12 +755,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary), overwrites by default
-     * 
+     *
      * @param destination : IOFile : destination file
      * @param listener
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copy2(final IOFile destination, IOCopyListener listener) throws IOException {
@@ -772,12 +769,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary)
-     * 
+     *
      * @param destination : IOFile : destination file
      * @param parameter : int : ALL, ONLY_NEWER, ONLY_NOT_EXISTING, NEWER_AND_NON_EXISTING
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copy2(final IOFile destination, final Replace parameter) throws IOException {
@@ -786,13 +783,13 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary)
-     * 
+     *
      * @param destination : IOFile : destination file
      * @param parameter : int : ALL, ONLY_NEWER, ONLY_NOT_EXISTING, NEWER_AND_NON_EXISTING
      * @param listener
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copy2(final IOFile destination, final Replace parameter, IOCopyListener listener) throws IOException {
@@ -810,11 +807,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copy file to destination (ask if file exists)
-     * 
+     *
      * @param destination : IODirectory : destination directory
-     * 
+     *
      * @return : boolean : file copied
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copySafely2(final IODirectory destination) throws IOException {
@@ -823,11 +820,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary), asks when file exists
-     * 
+     *
      * @param destination : IOFile : destination file
-     * 
+     *
      * @return : boolean : file is overwritten
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copySafely2(final IOFile destination) throws IOException {
@@ -836,12 +833,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copies a file to another file (binary), asks when file exists
-     * 
+     *
      * @param destination : IOFile : destination file
      * @param listener
-     * 
+     *
      * @return : boolean : file is overwritten
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile copySafely2(final IOFile destination, IOCopyListener listener) throws IOException {
@@ -849,7 +846,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
     }
 
     /**
-     * 
+     *
      * @see java.io.File#delete()
      */
     @Override
@@ -858,7 +855,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
     }
 
     /**
-     * 
+     *
      * @see java.io.File#deleteOnExit()
      */
     @Override
@@ -868,11 +865,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * downloads a file from the web to a local file when it does not exists or is older, binary copy
-     * 
+     *
      * @param urlSourceFile : URL : file on the web
-     * 
+     *
      * @return : boolean : file downloaded or not
-     * 
+     *
      * @throws IOException : IOException
      */
     public boolean downloadFromURL(final URL urlSourceFile) throws IOException {
@@ -912,7 +909,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * na
-     * 
+     *
      * @return
      */
     public String dropExtension() {
@@ -928,7 +925,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * erases a file
-     * 
+     *
      * @return : boolean : success
      */
     public boolean erase() {
@@ -944,7 +941,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the parent directory
-     * 
+     *
      * @return : IODirectory : parent directory
      */
     public IODirectory getDirectory() {
@@ -953,7 +950,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the extension of a file ("" when no extension)
-     * 
+     *
      * @return : String : extension
      */
     public String getExtension() {
@@ -968,7 +965,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the extension from given file and maps it to an image icon (png read from this jar)
-     * 
+     *
      * @return : ImageIcon
      */
     public Icon getLargeIcon1() {
@@ -977,7 +974,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the extension from given file and maps it to an image icon (needs swing and icons package)
-     * 
+     *
      * @return : ImageIcon
      */
     public Icon getLargeIcon2() {
@@ -986,7 +983,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the maximum compare size (object level)
-     * 
+     *
      * @return : int : maximum compare size
      */
     public int getMaxCompareSize() {
@@ -995,7 +992,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * returns another object for the same file returning only the name as {@link Object#toString()}
-     * 
+     *
      * @return IOFile
      */
     public IOFile getShortIOFile() {
@@ -1012,7 +1009,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the filename without the extension and the pathname
-     * 
+     *
      * @return : String : short filename
      */
     public String getShortName() {
@@ -1021,7 +1018,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the extension from given file and maps it to an image icon (png read from this jar)
-     * 
+     *
      * @return : ImageIcon
      */
     public Icon getSmallIcon1() {
@@ -1030,7 +1027,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the extension from given file and maps it to an image icon (needs swing and icons package)
-     * 
+     *
      * @return : ImageIcon
      */
     public Icon getSmallIcon2() {
@@ -1038,7 +1035,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -1048,7 +1045,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file an audio file (via extension)
-     * 
+     *
      * @return : boolean
      */
     public boolean isAudio() {
@@ -1057,9 +1054,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file the same age as the other file
-     * 
+     *
      * @param other : IOFile : other file
-     * 
+     *
      * @return : boolean
      */
     public boolean isEqualAge(final IOFile other) {
@@ -1072,9 +1069,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file the same size as the other file
-     * 
+     *
      * @param other : IOFile : other file
-     * 
+     *
      * @return : boolean
      */
     public boolean isEqualSize(final IOFile other) {
@@ -1087,7 +1084,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file an image (via extension)
-     * 
+     *
      * @return : boolean
      */
     public boolean isImage() {
@@ -1096,9 +1093,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file larger than the other file
-     * 
+     *
      * @param other : IOFile : other file
-     * 
+     *
      * @return : boolean
      */
     public boolean isLarger(final IOFile other) {
@@ -1111,7 +1108,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file an media (movie) file (via extension)
-     * 
+     *
      * @return : boolean
      */
     public boolean isMedia() {
@@ -1120,9 +1117,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file newer than the other file
-     * 
+     *
      * @param other : IOFile : other file
-     * 
+     *
      * @return : boolean
      */
     public boolean isNewer(final IOFile other) {
@@ -1135,9 +1132,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file older than the other file
-     * 
+     *
      * @param other : IOFile : other file
-     * 
+     *
      * @return : boolean
      */
     public boolean isOlder(final IOFile other) {
@@ -1150,9 +1147,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file smaller than the other file
-     * 
+     *
      * @param other : IOFile : other file
-     * 
+     *
      * @return : boolean
      */
     public boolean isSmaller(final IOFile other) {
@@ -1165,7 +1162,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * is this file an media (movie) file (via extension)
-     * 
+     *
      * @return : boolean
      */
     public boolean isVideo() {
@@ -1174,7 +1171,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * na
-     * 
+     *
      * @return
      */
     public Icon mapExtensionLarge() {
@@ -1196,7 +1193,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * na
-     * 
+     *
      * @return
      */
     public Icon mapExtensionSmall() {
@@ -1218,7 +1215,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * invokes creating of directory on parent directory
-     * 
+     *
      * @return IODirectory
      */
     public IODirectory mkDir() {
@@ -1231,16 +1228,16 @@ public class IOFile extends IOGeneralFile<IOFile> {
      * 'askForOverwrite' overwrites 'overwriteAlways,overwriteWhenNewer'<br>
      * 'overwriteAlways' overwrites 'overwriteWhenNewer'<br>
      * deleteSource=true MOVES and deleteSource=false COPIES<br>
-     * 
+     *
      * @param target NA
      * @param deleteSource NA
      * @param overwriteAlways NA
      * @param overwriteWhenNewer NA
      * @param askForOverwrite NA
      * @param renameInstead NA
-     * 
+     *
      * @return NA
-     * 
+     *
      * @throws IOException NA
      */
     protected IOFile move_copy(IOFile target, boolean deleteSource, boolean overwriteAlways, boolean overwriteWhenNewer, boolean askForOverwrite,
@@ -1254,7 +1251,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
      * 'askForOverwrite' overwrites 'overwriteAlways,overwriteWhenNewer'<br>
      * 'overwriteAlways' overwrites 'overwriteWhenNewer'<br>
      * deleteSource=true MOVES and deleteSource=false COPIES<br>
-     * 
+     *
      * @param target NA
      * @param deleteSource NA
      * @param overwriteAlways NA
@@ -1262,9 +1259,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
      * @param askForOverwrite NA
      * @param renameInstead NA
      * @param listener
-     * 
+     *
      * @return NA
-     * 
+     *
      * @throws IOException NA
      */
     protected IOFile move_copy(IOFile target, boolean deleteSource, boolean overwriteAlways, boolean overwriteWhenNewer, boolean askForOverwrite,
@@ -1349,12 +1346,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * na
-     * 
+     *
      * @param target na
      * @param listener
-     * 
+     *
      * @return
-     * 
+     *
      * @throws IOException na
      */
     protected IOFile move0(IOFile target, IOCopyListener listener) throws IOException {
@@ -1383,11 +1380,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * moves a file (copy & delete), always overwrites
-     * 
+     *
      * @param destination : IODirectory : destination directory
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException
      */
     public IOFile move2(final IODirectory destination) throws IOException {
@@ -1396,11 +1393,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * moves a file (copy & delete), always overwrites
-     * 
+     *
      * @param destination : IOFile : destination file
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException
      */
     public IOFile move2(final IOFile destination) throws IOException {
@@ -1409,12 +1406,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * moves a file (copy & delete), always overwrites
-     * 
+     *
      * @param destination : IOFile : destination file
      * @param listener
-     * 
+     *
      * @return : IOFile : destination file
-     * 
+     *
      * @throws IOException
      */
     public IOFile move2(final IOFile destination, IOCopyListener listener) throws IOException {
@@ -1423,11 +1420,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * moves a file (ask when file will be overwritten)
-     * 
+     *
      * @param destination IODirectory : destination directory
-     * 
+     *
      * @return : boolean : file moved
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile moveSafely2(final IODirectory destination) throws IOException {
@@ -1436,11 +1433,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * moves a file (ask when file will be overwritten)
-     * 
+     *
      * @param destination : IOFile : destination file
-     * 
+     *
      * @return : boolean : file moved
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile moveSafely2(final IOFile destination) throws IOException {
@@ -1449,12 +1446,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * moves a file (ask when file will be overwritten)
-     * 
+     *
      * @param destination : IOFile : destination file
      * @param listener
-     * 
+     *
      * @return : boolean : file moved
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile moveSafely2(final IOFile destination, IOCopyListener listener) throws IOException {
@@ -1463,12 +1460,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * copyViaChannel
-     * 
+     *
      * @param target
      * @param blocks
-     * 
+     *
      * @return
-     * 
+     *
      * @throws IOException
      */
     public IOFile niocopy(IOFile target, boolean blocks) throws IOException {
@@ -1512,9 +1509,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the bytes from a file up to the maximum capacity for the lenght of an array
-     * 
+     *
      * @return byte[] : byte array from file
-     * 
+     *
      * @throws IOException : thrown exception
      * @throws FileTooLargeException : thrown exception
      */
@@ -1562,9 +1559,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * gets the bytes from a file up to the maximum capacity for the lenght of an array
-     * 
+     *
      * @return ByteBuffer : byte buffer from file
-     * 
+     *
      * @throws IOException : thrown exception
      * @throws FileTooLargeException : thrown exception
      */
@@ -1573,7 +1570,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
     }
 
     /**
-     * 
+     *
      * @see util.io.jni.Recycler#recycle(java.io.File)
      */
     public boolean recycle() {
@@ -1582,9 +1579,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * recycles a file
-     * 
+     *
      * @param alternativeRecycleBin : IODirectory : alternative recycle directory when impossible to use system recycle
-     * 
+     *
      * @return : Object : null => could not delete, Boolean(true) => deleted to OS recycle bin, String => deleted to location on disk
      */
     public boolean recycle(final IODirectory alternativeRecycleBin) {
@@ -1601,9 +1598,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * rename a file
-     * 
+     *
      * @param target target
-     * 
+     *
      * @return target or null when failed
      */
     public IOFile rename(IOFile target) {
@@ -1613,9 +1610,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * searches for a specific byte array in a file from start position 0 (binary search works with ALL sorts of files) (will decode if encoding is
      * found), searches case sensitive
-     * 
+     *
      * @param searchForBytes : byte[] : bytes to search for
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1627,10 +1624,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * searches for a specific byte array in a file from start position 0 (binary search works with ALL sorts of files) (will decode if encoding is
      * found), can search case sensitive or insensitive
-     * 
+     *
      * @param searchForBytes : byte[] : bytes to search for
      * @param caseSensitive : boolean : case sensitive search
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1642,10 +1639,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * searches for a specific string in a file from given start position (binary search works with ALL sorts of files) (will decode if encoding is
      * found), searches case sensitive
-     * 
+     *
      * @param startPos : int : position where to start searching in file
      * @param searchForBytes : byte[] : bytes to search for
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1657,11 +1654,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * searches for a specific byte array in a file from given start position (binary search works with ALL sorts of files) (will decode if encoding
      * is found), can search case sensitive or insensitive
-     * 
+     *
      * @param startPos : position where to start searching in file
      * @param searchForBytes : byte[] : bytes to search for
      * @param caseSensitive : boolean : case sensitive search
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1739,10 +1736,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * searches for a specific string in a file from given start position (binary search works with ALL sorts of files) (will decode if encoding is
      * found), searches case sensitive
-     * 
+     *
      * @param startPos : int : position where to start searching in file
      * @param searchFor : String : string to search for
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1754,11 +1751,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * searches for a specific string in a file from given start position (binary search works with ALL sorts of files) (will decode if encoding is
      * found), can search case sensitive or insensitive
-     * 
+     *
      * @param startPos : int : position where to start searching in file
      * @param searchFor : String : string to search for
      * @param caseSensitive : boolean : case sensitive search
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1769,9 +1766,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * searches for a specific string in a file from start position 0 (binary search works with ALL sorts of files), searches case sensitive
-     * 
+     *
      * @param searchFor : String : string to search for
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1783,10 +1780,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
     /**
      * searches for a specific string in a file from start position 0 (binary search works with ALL sorts of files), can search case sensitive or
      * insensitive
-     * 
+     *
      * @param searchFor : String : string to search for
      * @param caseSensitive : boolean : case sensitive search
-     * 
+     *
      * @return : int : position where searched bytes are found (starting from 0), negative when not found (-1: not found, -2: startpos greater than
      *         size, -3: file empty or [startpos+1] greater than size, -4: IOException)
      * @throws FileNotFoundException
@@ -1797,9 +1794,9 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * sets the maximum compare size (object level)
-     * 
+     *
      * @param maxCompareSize : int : maximum compare size
-     * 
+     *
      * @return
      */
     public IOFile setMaxCompareSize(final int maxCompareSize) {
@@ -1810,11 +1807,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * writes a byte array to a file (possibly overwrites the file)
-     * 
+     *
      * @param source : byte[] : source
-     * 
+     *
      * @return : IOFile : this file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile writeBytes(final byte[] source) throws IOException {
@@ -1823,12 +1820,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * writes a byte array to a file (possibly overwrites the file)
-     * 
+     *
      * @param source : byte[] : source
      * @param append : boolean : appends to the end of the file
-     * 
+     *
      * @return : IOFile : this file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile writeBytes(final byte[] source, @SuppressWarnings("unused") final boolean append) throws IOException {
@@ -1844,11 +1841,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * writes a ByteBuffer to a file (possibly overwrites the file)
-     * 
+     *
      * @param source : ByteBuffer : byte buffer
-     * 
+     *
      * @return : IOFile : this file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile writeBytes(final ByteBuffer source) throws IOException {
@@ -1857,12 +1854,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * writes a ByteBuffer to a file (possibly overwrites the file)
-     * 
+     *
      * @param source : ByteBuffer : byte buffer
      * @param append : boolean : append to the end of an existing file or create a new
-     * 
+     *
      * @return : IOFile : this file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile writeBytes(final ByteBuffer source, final boolean append) throws IOException {
@@ -1884,11 +1881,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * writes an InputStream to a file (possibly overwrites the file)
-     * 
+     *
      * @param source : InputStream : source
-     * 
+     *
      * @return : IOFile : this file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile writeBytes(final InputStream source) throws IOException {
@@ -1904,11 +1901,11 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * writes a String to a file (possibly overwrites the file)
-     * 
+     *
      * @param source : String : source
-     * 
+     *
      * @return : IOFile : this file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile writeBytes(final String source) throws IOException {
@@ -1917,12 +1914,12 @@ public class IOFile extends IOGeneralFile<IOFile> {
 
     /**
      * writes a String to a file (possibly overwrites the file)
-     * 
+     *
      * @param source : String : source
      * @param append : boolean : appends to the end of the file
-     * 
+     *
      * @return : IOFile : this file
-     * 
+     *
      * @throws IOException : thrown exception
      */
     public IOFile writeBytes(final String source, boolean append) throws IOException {

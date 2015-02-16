@@ -854,7 +854,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
                 return new IOFile(tmp);
             }
 
-            tmp = IOGeneralFile.searchFileInPath(System.getProperty("java.io.tmpdir"), file); //$NON-NLS-1$
+            tmp = IOGeneralFile.searchFileInPath(IODirectory.TEMPDIR.getAbsolutePath(), file);
 
             if (tmp != null) {
                 return new IOFile(tmp);
@@ -982,7 +982,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /** constants for overwrite file dialog box: possible options */
     protected static final String[] overwriteOptions = new String[] { "yes", "no", "yes to all", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        "no to all" //$NON-NLS-1$
+            "no to all" //$NON-NLS-1$
     };
 
     /** na */
