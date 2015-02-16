@@ -47,7 +47,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.Adler32;
 import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
@@ -283,6 +285,10 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public Long adler32() throws IOException {
+        return this.checksum(new Adler32());
+    }
+
     public FilePath checkDirectory() throws IOException {
         if (!this.isDirectory()) {
             throw new IOException("not a directory");
@@ -320,6 +326,28 @@ public class FilePath implements Path, Externalizable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Long checksum(Checksum checksum) throws IOException {
+        InputStream is = null;
+        Long rv = null;
+        try {
+            is = this.newInputStream();
+            int cnt;
+            while ((cnt = is.read()) != -1) {
+                checksum.update(cnt);
+            }
+            rv = checksum.getValue();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception ex2) {
+                    //
+                }
+            }
+        }
+        return rv;
     }
 
     /**
@@ -399,26 +427,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Long crc32() throws IOException {
-        InputStream is = null;
-        Long rv = null;
-        try {
-            CRC32 crc = new CRC32();
-            is = this.newInputStream();
-            int cnt;
-            while ((cnt = is.read()) != -1) {
-                crc.update(cnt);
-            }
-            rv = crc.getValue();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception ex2) {
-                    //
-                }
-            }
-        }
-        return rv;
+        return this.checksum(new CRC32());
     }
 
     public FilePath createDirectories(FileAttribute<?>... attrs) throws IOException {
@@ -854,6 +863,17 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.setAttribute(this.path, attribute, value, options));
     }
 
+    public boolean setExecutable(boolean executable) throws IOException {
+        Files.setAttribute(this, null, executable);
+        return true;
+    }
+
+    public boolean setExecutable(boolean executable, boolean ownerOnly) throws IOException {
+        Files.setAttribute(this, null, executable);
+        Files.setAttribute(this, null, ownerOnly);
+        return true;
+    }
+
     public FilePath setLastModifiedTime(FileTime time) throws IOException {
         return new FilePath(Files.setLastModifiedTime(this.path, time));
     }
@@ -868,6 +888,26 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath setPosixFilePermissions(Set<PosixFilePermission> perms) throws IOException {
         return new FilePath(Files.setPosixFilePermissions(this.path, perms));
+    }
+
+    public boolean setReadable(boolean readable) {
+        return this.toFile().setReadable(readable);
+    }
+
+    public boolean setReadable(boolean readable, boolean ownerOnly) {
+        return this.toFile().setReadable(readable, ownerOnly);
+    }
+
+    public boolean setReadOnly() {
+        return this.toFile().setReadOnly();
+    }
+
+    public boolean setWritable(boolean writable) {
+        return this.toFile().setWritable(writable);
+    }
+
+    public boolean setWritable(boolean writable, boolean ownerOnly) {
+        return this.toFile().setWritable(writable, ownerOnly);
     }
 
     public long size() throws IOException {
