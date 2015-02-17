@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Externalizable;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInput;
@@ -43,10 +42,12 @@ import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -60,7 +61,7 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
-    protected static FilePath checkFileIndex(Path parent, String outFileName, String extension) {
+    protected static FilePath checkFileIndex(FilePath parent, String outFileName, String extension) {
         return FilePath.checkFileIndex(parent, outFileName, "_", "0000", extension);
     }
 
@@ -81,7 +82,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @return : IOFile : new indexed File
      */
-    protected static FilePath checkFileIndex(Path parent, String outFileName, String sep, String format, String extension) {
+    protected static FilePath checkFileIndex(FilePath parent, String outFileName, String sep, String format, String extension) {
         String SEPARATOR = sep;
         String FORMAT = sep + format;
         FilePath file = "".equals(extension) ? new FilePath(parent, outFileName) : new FilePath(parent, outFileName + "." + extension);
@@ -144,7 +145,14 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.createTempFile(prefix, suffix, attrs));
     }
 
-    public static String getExtension(Path path) {
+    public static String getConvertedSize(long size) {
+        int unitIndex = (int) (Math.log10(size) / 3);
+        double unitValue = 1 << (unitIndex * 10);
+        String readableSize = new DecimalFormat(/* "#,##0.#" */).format(size / unitValue) + " " + FilePath.UNITS[unitIndex];
+        return readableSize;
+    }
+
+    public static String getExtension(FilePath path) {
         String fileName = path.getFileName().toString();
         int p = fileName.lastIndexOf('.');
         if (p == -1) {
@@ -153,7 +161,7 @@ public class FilePath implements Path, Externalizable {
         return fileName.substring(p + 1);
     }
 
-    public static String getShortFileName(Path path) {
+    public static String getShortFileName(FilePath path) {
         String fileName = path.getFileName().toString();
         int p = fileName.lastIndexOf('.');
         if (p == -1) {
@@ -245,6 +253,8 @@ public class FilePath implements Path, Externalizable {
     /** user home dir */
     public static final FilePath USERDIR = new FilePath(System.getProperty("user.home"));
 
+    public static final String[] UNITS = new String[] { "bytes", "kB", "MB", "GB", "TB"/* , "PB" */};
+
     public FilePath(File file) {
         this.path = Paths.get(file.toURI());
     }
@@ -321,7 +331,7 @@ public class FilePath implements Path, Externalizable {
             }
             String shortFile = this.getShortFileName();
             String extension = this.getExtension();
-            return FilePath.checkFileIndex(this.getParent(), shortFile, extension);
+            return FilePath.checkFileIndex(new FilePath(this.getParent()), shortFile, extension);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -342,7 +352,7 @@ public class FilePath implements Path, Externalizable {
             if (is != null) {
                 try {
                     is.close();
-                } catch (Exception ex2) {
+                } catch (Exception ex) {
                     //
                 }
             }
@@ -360,7 +370,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @throws IOException : thrown exception
      */
-    public boolean compareContents(Path file, int maxCompareSize) throws IOException {
+    public boolean compareContents(FilePath file, int maxCompareSize) throws IOException {
         BufferedInputStream iser1 = null;
         BufferedInputStream iser2 = null;
         try {
@@ -401,29 +411,33 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#compareTo(java.nio.file.Path)
+     */
     @Override
     public int compareTo(Path other) {
         return this.path.compareTo(other);
+    }
+
+    public FilePath copyFrom(FilePath source, CopyOption... options) throws IOException {
+        return new FilePath(Files.copy(source, this, options));
     }
 
     public long copyFrom(InputStream in, CopyOption... options) throws IOException {
         return Files.copy(in, this.path, options);
     }
 
-    public FilePath copyFrom(Path source, CopyOption... options) throws IOException {
-        return new FilePath(Files.copy(source, this, options));
+    public FilePath copyTo(FilePath target) throws IOException {
+        return this.copyTo(target, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public FilePath copyTo(FilePath target, CopyOption... options) throws IOException {
+        return new FilePath(Files.copy(this, target, options));
     }
 
     public long copyTo(OutputStream out) throws IOException {
         return Files.copy(this.path, out);
-    }
-
-    public FilePath copyTo(Path target) throws IOException {
-        return this.copyTo(target, StandardCopyOption.REPLACE_EXISTING);
-    }
-
-    public FilePath copyTo(Path target, CopyOption... options) throws IOException {
-        return new FilePath(Files.copy(this, target, options));
     }
 
     public Long crc32() throws IOException {
@@ -440,6 +454,22 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath createFile(FileAttribute<?>... attrs) throws IOException {
         return new FilePath(Files.createFile(this.path, attrs));
+    }
+
+    public FilePath createLinkFrom(Path existing) throws IOException {
+        return new FilePath(Files.createLink(this, existing));
+    }
+
+    public FilePath createLinkTo(Path link) throws IOException {
+        return new FilePath(Files.createLink(link, this));
+    }
+
+    public Path createSymbolicLinkFrom(Path link, FileAttribute<?>... attrs) throws IOException {
+        return new FilePath(Files.createSymbolicLink(link, this, attrs));
+    }
+
+    public Path createSymbolicLinkTo(Path target, FileAttribute<?>... attrs) throws IOException {
+        return new FilePath(Files.createSymbolicLink(this, target, attrs));
     }
 
     public FilePath createTempDirectory(String prefix, FileAttribute<?>... attrs) throws IOException {
@@ -507,16 +537,28 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#endsWith(java.nio.file.Path)
+     */
     @Override
     public boolean endsWith(Path other) {
         return this.path.endsWith(other);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#endsWith(java.lang.String)
+     */
     @Override
     public boolean endsWith(String other) {
         return this.path.endsWith(other);
     }
 
+    /**
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object other) {
         return this.path.equals(other);
@@ -530,17 +572,8 @@ public class FilePath implements Path, Externalizable {
         return Files.getAttribute(this.path, attribute, options);
     }
 
-    /**
-     * converts a size in bytes to kB, MB, GB, TB
-     *
-     * @param conversion : int : use BYTE_TO_KiloByte, BYTE_TO_MegaByte, BYTE_TO_GigaByte, BYTE_TO_TerraByte
-     * @param decimals : int : number of decimals to show
-     *
-     * @return : double : converted size
-     * @throws FileNotFoundException
-     */
-    public double getConvertedSize(ByteTo conversion, int decimals) throws IOException {
-        return IOGeneralFile.convertSize(this.size(), conversion, decimals);
+    public String getConvertedSize() throws IOException {
+        return FilePath.getConvertedSize(this.size());
     }
 
     public String getExtension() {
@@ -551,6 +584,10 @@ public class FilePath implements Path, Externalizable {
         return Files.getFileAttributeView(this.path, type, options);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#getFileName()
+     */
     @Override
     public Path getFileName() {
         return new FilePath(this.path.getFileName());
@@ -560,6 +597,10 @@ public class FilePath implements Path, Externalizable {
         return Files.getFileStore(this.path);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#getFileSystem()
+     */
     @Override
     public FileSystem getFileSystem() {
         return this.path.getFileSystem();
@@ -577,11 +618,19 @@ public class FilePath implements Path, Externalizable {
         return this.toString();
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#getName(int)
+     */
     @Override
     public Path getName(int index) {
         return new FilePath(this.path.getName(index));
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#getNameCount()
+     */
     @Override
     public int getNameCount() {
         return this.path.getNameCount();
@@ -591,14 +640,14 @@ public class FilePath implements Path, Externalizable {
         return Files.getOwner(this.path, options);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#getParent()
+     */
     @Override
     public Path getParent() {
         return new FilePath(this.path.getParent());
     }
-
-    // public Path createSymbolicLink(Path link, Path target, FileAttribute<?>... attrs)throws IOException
-
-    // public Path createLink(Path link, Path existing) throws IOException
 
     public Path getPath() {
         return this.path;
@@ -608,6 +657,10 @@ public class FilePath implements Path, Externalizable {
         return Files.getPosixFilePermissions(this.path, options);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#getRoot()
+     */
     @Override
     public Path getRoot() {
         return new FilePath(this.path.getRoot());
@@ -617,49 +670,23 @@ public class FilePath implements Path, Externalizable {
         return FilePath.getShortFileName(this);
     }
 
-    /**
-     * converts this file's size to string, decimals 2
-     *
-     * @return : String : converted size as string
-     */
-    public String getSizeString() throws IOException {
-        return IOGeneralFile.convertSize2String(this.size());
-    }
-
-    /**
-     * converts a size in bytes to kB, MB, GB, TB with suffix
-     *
-     * @param conversion : int : use BYTE_TO_KiloByte, BYTE_TO_MegaByte, BYTE_TO_GigaByte, BYTE_TO_TerraByte
-     * @param decimals : int : number of decimals to show
-     *
-     * @return : String : converted size with size suffix
-     * @throws FileNotFoundException
-     */
-    public String getSizeString(ByteTo conversion, final int decimals) throws IOException {
-        return IOGeneralFile.convertSize2String(this.size(), conversion, decimals);
-    }
-
-    /**
-     * autoconverts a size in bytes to kB, MB, GB, TB with a suffix
-     *
-     * @param decimals : int : number of decimals to show
-     *
-     * @return : String : converted size with size suffix
-     * @throws FileNotFoundException
-     */
-    public String getSizeString(int decimals) throws IOException {
-        return IOGeneralFile.convertSize2String(this.size(), decimals);
-    }
-
     public Icon getSmallIcon() {
         return FilePath.grabber.getSmallIcon(this.toFile());
     }
 
+    /**
+     *
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         return this.path.hashCode();
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#isAbsolute()
+     */
     @Override
     public boolean isAbsolute() {
         return this.path.isAbsolute();
@@ -685,7 +712,7 @@ public class FilePath implements Path, Externalizable {
         return Files.isRegularFile(this.path, options);
     }
 
-    public boolean isSameFile(Path otherPath) throws IOException {
+    public boolean isSameFile(FilePath otherPath) throws IOException {
         return Files.isSameFile(this.path, otherPath);
     }
 
@@ -697,24 +724,28 @@ public class FilePath implements Path, Externalizable {
         return Files.isWritable(this.path);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#iterator()
+     */
     @Override
     public Iterator<Path> iterator() {
         return this.path.iterator();
     }
 
-    public FilePath moveFrom(Path source) throws IOException {
+    public FilePath moveFrom(FilePath source) throws IOException {
         return this.moveFrom(source, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public FilePath moveFrom(Path source, CopyOption... options) throws IOException {
+    public FilePath moveFrom(FilePath source, CopyOption... options) throws IOException {
         return new FilePath(Files.move(source, this, options));
     }
 
-    public FilePath moveTo(Path target) throws IOException {
+    public FilePath moveTo(FilePath target) throws IOException {
         return this.moveTo(target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public FilePath moveTo(Path target, CopyOption... options) throws IOException {
+    public FilePath moveTo(FilePath target, CopyOption... options) throws IOException {
         return new FilePath(Files.move(this, target, options));
     }
 
@@ -770,6 +801,10 @@ public class FilePath implements Path, Externalizable {
         return Files.newOutputStream(this.path, options);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#normalize()
+     */
     @Override
     public Path normalize() {
         return new FilePath(this.path.normalize());
@@ -811,6 +846,10 @@ public class FilePath implements Path, Externalizable {
         return Files.readAttributes(this.path, attributes, options);
     }
 
+    /**
+     *
+     * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
+     */
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         try {
@@ -824,36 +863,64 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.readSymbolicLink(this.path));
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[])
+     */
     @Override
     public WatchKey register(WatchService watcher, Kind<?>... events) throws IOException {
         return this.path.register(watcher, events);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[], java.nio.file.WatchEvent.Modifier[])
+     */
     @Override
     public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) throws IOException {
         return this.path.register(watcher, events, modifiers);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#relativize(java.nio.file.Path)
+     */
     @Override
     public Path relativize(Path other) {
         return new FilePath(this.path.relativize(other));
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#resolve(java.nio.file.Path)
+     */
     @Override
     public Path resolve(Path other) {
         return new FilePath(this.path.resolve(other));
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#resolve(java.lang.String)
+     */
     @Override
     public Path resolve(String other) {
         return new FilePath(this.path.resolve(other));
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#resolveSibling(java.nio.file.Path)
+     */
     @Override
     public Path resolveSibling(Path other) {
         return new FilePath(this.path.resolveSibling(other));
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#resolveSibling(java.lang.String)
+     */
     @Override
     public Path resolveSibling(String other) {
         return new FilePath(this.path.resolveSibling(other));
@@ -914,41 +981,84 @@ public class FilePath implements Path, Externalizable {
         return Files.size(this.path);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#startsWith(java.nio.file.Path)
+     */
     @Override
     public boolean startsWith(Path other) {
         return this.path.startsWith(other);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#startsWith(java.lang.String)
+     */
     @Override
     public boolean startsWith(String other) {
         return this.path.startsWith(other);
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#subpath(int, int)
+     */
     @Override
     public Path subpath(int beginIndex, int endIndex) {
         return new FilePath(this.path.subpath(beginIndex, endIndex));
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#toAbsolutePath()
+     */
     @Override
     public Path toAbsolutePath() {
         return new FilePath(this.path.toAbsolutePath());
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#toFile()
+     */
     @Override
     public File toFile() {
         return this.path.toFile();
     }
 
+    /**
+     *
+     * @see java.nio.file.Path#toRealPath(java.nio.file.LinkOption[])
+     */
     @Override
     public Path toRealPath(LinkOption... options) throws IOException {
         return new FilePath(this.path.toRealPath(options));
     }
 
+    /**
+     *
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
         return this.path.toString();
     }
 
+    public long totalSize() throws IOException {
+        final AtomicLong size = new AtomicLong(0);
+        this.walkFileTree(new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return size.get();
+    }
+
+    /**
+     *
+     * @see java.nio.file.Path#toUri()
+     */
     @Override
     public URI toUri() {
         return this.path.toUri();
@@ -957,10 +1067,10 @@ public class FilePath implements Path, Externalizable {
     public FilePath walkDirectories(final FileVisit visitor) throws IOException {
         return this.walkFileTree(new SimpleFileVisitor<Path>() {
             @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                FileVisitResult visitFile = super.postVisitDirectory(dir, exc);
-                visitor.visit(new FilePath(dir));
-                return visitFile;
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                FileVisitResult preVisitDirectory = super.preVisitDirectory(dir, attrs);
+                visitor.visit(new FilePath(dir), attrs);
+                return preVisitDirectory;
             }
         });
     }
@@ -970,7 +1080,7 @@ public class FilePath implements Path, Externalizable {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 FileVisitResult visitFile = super.visitFile(file, attrs);
-                visitor.visit(new FilePath(file));
+                visitor.visit(new FilePath(file), attrs);
                 return visitFile;
             }
         });
@@ -1000,6 +1110,10 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.write(this.path, text.getBytes(charset == null ? Charset.defaultCharset() : charset), options));
     }
 
+    /**
+     *
+     * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
+     */
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeUTF(this.path.toUri().toString());
