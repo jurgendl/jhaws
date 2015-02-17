@@ -152,7 +152,7 @@ public class FilePath implements Path, Externalizable {
         return readableSize;
     }
 
-    public static String getExtension(FilePath path) {
+    public static String getExtension(Path path) {
         String fileName = path.getFileName().toString();
         int p = fileName.lastIndexOf('.');
         if (p == -1) {
@@ -161,7 +161,7 @@ public class FilePath implements Path, Externalizable {
         return fileName.substring(p + 1);
     }
 
-    public static String getShortFileName(FilePath path) {
+    public static String getShortFileName(Path path) {
         String fileName = path.getFileName().toString();
         int p = fileName.lastIndexOf('.');
         if (p == -1) {
