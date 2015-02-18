@@ -61,6 +61,26 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
+    public static class PathIterator implements Iterator<Path> {
+        protected Path path;
+
+        public PathIterator(Path path) {
+            this.path = path;
+        }
+
+        @Override
+        public boolean hasNext() {
+            Path parent = this.path.getParent();
+            return parent != null;
+        }
+
+        @Override
+        public Path next() {
+            this.path = this.path.getParent();
+            return this.path;
+        }
+    }
+
     protected static FilePath checkFileIndex(FilePath parent, String outFileName, String extension) {
         return FilePath.checkFileIndex(parent, outFileName, "_", "0000", extension);
     }
@@ -264,6 +284,9 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath(FilePath file) {
+        if (this.path == null) {
+            throw new NullPointerException();
+        }
         this.path = file.path;
     }
 
@@ -272,6 +295,9 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath(Path path) {
+        if (path == null) {
+            throw new NullPointerException();
+        }
         this.path = path;
     }
 
@@ -646,7 +672,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path getParent() {
-        return new FilePath(this.path.getParent());
+        return this.path.getParent() == null ? null : new FilePath(this.path.getParent());
     }
 
     public Path getPath() {
@@ -812,6 +838,10 @@ public class FilePath implements Path, Externalizable {
 
     public boolean notExists(LinkOption... options) {
         return Files.notExists(this.path, options);
+    }
+
+    public PathIterator pathIterator() {
+        return new PathIterator(this);
     }
 
     public String probeContentType() throws IOException {
