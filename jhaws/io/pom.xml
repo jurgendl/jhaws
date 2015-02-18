@@ -10,6 +10,9 @@
 	<name>io</name>
 	<description />
 	<packaging>jar</packaging>
+	<properties>
+		<targetJdk>1.7</targetJdk>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>commons-lang</groupId>
