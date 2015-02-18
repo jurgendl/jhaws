@@ -8,7 +8,7 @@
 	<description>parent</description>
 	<url>http://jhaws.googlecode.com</url>
 	<properties>
-		<targetJdk>1.6</targetJdk>
+		<targetJdk>1.7</targetJdk>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 	</properties>
 	<licenses>

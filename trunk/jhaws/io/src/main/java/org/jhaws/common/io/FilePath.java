@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.CopyOption;
+import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
@@ -43,6 +44,7 @@ import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -598,6 +600,20 @@ public class FilePath implements Path, Externalizable {
         return Files.getAttribute(this.path, attribute, options);
     }
 
+    public List<FilePath> getChildren() {
+        List<FilePath> children = new ArrayList<>();
+        try (DirectoryStream<Path> stream = this.newDirectoryStream()) {
+            for (Path file : stream) {
+                children.add(new FilePath(file));
+            }
+        } catch (IOException | DirectoryIteratorException x) {
+            // IOException can never be thrown by the iteration.
+            // In this snippet, it can only be thrown by newDirectoryStream.
+            throw new RuntimeException(x);
+        }
+        return children;
+    }
+
     public String getConvertedSize() throws IOException {
         return FilePath.getConvertedSize(this.size());
     }
@@ -1005,6 +1021,18 @@ public class FilePath implements Path, Externalizable {
 
     public boolean setWritable(boolean writable, boolean ownerOnly) {
         return this.toFile().setWritable(writable, ownerOnly);
+    }
+
+    public List<FilePath> siblings() {
+        List<FilePath> siblings = new ArrayList<FilePath>();
+        if (this.getParent() != null) {
+            for (FilePath child : this.getChildren()) {
+                if (!child.equals(this.path)) {
+                    siblings.add(child);
+                }
+            }
+        }
+        return siblings;
     }
 
     public long size() throws IOException {

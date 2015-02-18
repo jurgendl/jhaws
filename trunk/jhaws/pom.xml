@@ -8,7 +8,7 @@
 	<description>modules</description>
 	<url>http://jhaws.googlecode.com</url>
 	<properties>
-		<targetJdk>1.6</targetJdk><!-- should be compatible with 1.6 and higher -->
+		<targetJdk>1.7</targetJdk><!-- should be compatible with 1.6 and higher -->
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- fixed encoding -->
 		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 		<maven.javadoc.skip>true</maven.javadoc.skip><!-- skip by default -->
