@@ -173,7 +173,7 @@ public class FormDialog extends JDialog {
                     Selection selection = (Selection) element;
                     mainpanel.add(new JLabel(selection.getName()), null);
 
-                    DefaultListModel model = new DefaultListModel();
+                    DefaultListModel<Map.Entry<String, String>> model = new DefaultListModel<>();
 
                     Map.Entry<String, String> sl = null;
                     for (Map.Entry<String, String> option : selection.getOptions().entrySet()) {
@@ -183,12 +183,12 @@ public class FormDialog extends JDialog {
                         }
                     }
 
-                    JList jList = new JList(model);
+                    JList<Map.Entry<String, String>> jList = new JList<>(model);
                     jList.setCellRenderer(new DefaultListCellRenderer() {
                         private static final long serialVersionUID = 5621985439026030982L;
 
                         @Override
-                        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                             if (value != null) {
                                 @SuppressWarnings("unchecked")
                                 Map.Entry<String, String> entry = (Entry<String, String>) value;

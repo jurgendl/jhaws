@@ -13,11 +13,11 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-public class CheckBoxList extends JList {
-    protected class CellRenderer implements ListCellRenderer {
+public class CheckBoxList extends JList<JCheckBox> {
+    protected class CellRenderer implements ListCellRenderer<JCheckBox> {
         @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            JCheckBox checkbox = (JCheckBox) value;
+        public Component getListCellRendererComponent(JList<? extends JCheckBox> list, JCheckBox checkbox, int index, boolean isSelected,
+                boolean cellHasFocus) {
             checkbox.setBackground(isSelected ? CheckBoxList.this.getSelectionBackground() : CheckBoxList.this.getBackground());
             checkbox.setForeground(isSelected ? CheckBoxList.this.getSelectionForeground() : CheckBoxList.this.getForeground());
             checkbox.setEnabled(CheckBoxList.this.isEnabled());
@@ -42,7 +42,7 @@ public class CheckBoxList extends JList {
                 int index = CheckBoxList.this.locationToIndex(e.getPoint());
 
                 if (index != -1) {
-                    JCheckBox checkbox = (JCheckBox) CheckBoxList.this.getModel().getElementAt(index);
+                    JCheckBox checkbox = CheckBoxList.this.getModel().getElementAt(index);
                     checkbox.setSelected(!checkbox.isSelected());
                     CheckBoxList.this.repaint();
                 }
@@ -53,10 +53,10 @@ public class CheckBoxList extends JList {
     }
 
     public void addCheckbox(JCheckBox checkBox) {
-        ListModel currentList = this.getModel();
+        ListModel<JCheckBox> currentList = this.getModel();
         JCheckBox[] newList = new JCheckBox[currentList.getSize() + 1];
         for (int i = 0; i < currentList.getSize(); i++) {
-            newList[i] = (JCheckBox) currentList.getElementAt(i);
+            newList[i] = currentList.getElementAt(i);
         }
         newList[newList.length - 1] = checkBox;
         this.setListData(newList);
