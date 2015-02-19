@@ -26,12 +26,10 @@
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 	</properties>
 	<modules>
-		<module>parent</module>
 		<module>lang</module>
 		<module>io</module>
 		<module>net</module>
 		<module>ldap</module>
-		<!--<module>lucene3</module>-->
 		<module>lucene4</module>
 	</modules>
 	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
