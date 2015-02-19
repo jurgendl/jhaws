@@ -46,15 +46,15 @@ import java.util.Set;
  * imageLoaders.getImplementation("png") returns a cached instance of class classes.PngLoader<br>
  * imageLoaders.getImplementation("jpg") and imageLoaders.getImplementation("jpeg") return each another cached instance of class classes.JpegLoader<br>
  * imageLoaders.getNewImplementation("png") returns always an new object of class classes.PngLoader<br>
- * 
+ *
  * @author Jurgen De Landsheer
- * 
+ *
  * @param <T> class type
  */
 public class ModuleLoader<T> {
     /**
      * module factory
-     * 
+     *
      * @author Jurgen De Landsheer
      */
     static class ModuleFactory {
@@ -63,7 +63,7 @@ public class ModuleLoader<T> {
 
         /**
          * gets instance
-         * 
+         *
          * @return Returns the instance.
          */
         public static ModuleFactory getInstance() {
@@ -82,7 +82,7 @@ public class ModuleLoader<T> {
 
         /**
          * adds a module loader
-         * 
+         *
          * @param <P>
          * @param serviceInterface serviceInterface
          * @param moduleLoader ModuleLoader of type P
@@ -93,13 +93,13 @@ public class ModuleLoader<T> {
 
         /**
          * gets moduleLoaders
-         * 
+         *
          * @param <P>
          * @param serviceInterface serviceInterface
-         * 
+         *
          * @return Returns the moduleLoaders.
          */
-        @SuppressWarnings({ "rawtypes", "unchecked" })
+        @SuppressWarnings({ "unchecked" })
         public <P> ModuleLoader<P> getModuleLoader(Class<P> serviceInterface) {
             return (ModuleLoader<P>) this.moduleLoaders.get(serviceInterface);
         }
@@ -110,10 +110,10 @@ public class ModuleLoader<T> {
 
     /**
      * gets module loader for given interface
-     * 
+     *
      * @param <T> type Class T
      * @param moduleInterface interface of type T
-     * 
+     *
      * @return ModuleLoader of type T
      */
     public static <T> ModuleLoader<T> getModuleLoader(Class<T> moduleInterface) {
@@ -129,9 +129,9 @@ public class ModuleLoader<T> {
 
     /**
      * get loader for interface (name from interface)
-     * 
+     *
      * @param moduleInterface name from interface
-     * 
+     *
      * @return ModuleLoader
      */
     public static ModuleLoader<?> getModuleLoader(String moduleInterface) {
@@ -155,7 +155,7 @@ public class ModuleLoader<T> {
 
     /**
      * Creates a new ModuleLoader object.
-     * 
+     *
      * @param serviceInterface serviceInterface
      */
     private ModuleLoader(Class<T> serviceInterface) {
@@ -168,7 +168,7 @@ public class ModuleLoader<T> {
 
     /**
      * TODO DOCUMENT ME!
-     * 
+     *
      * @return TODO DOCUMENT ME!
      */
     public Set<T> getAllImplementations() {
@@ -183,9 +183,9 @@ public class ModuleLoader<T> {
 
     /**
      * gets any ONE found implementations for key determined by the {@link Object#toString()} of the class (split by the ; sign); cached
-     * 
+     *
      * @param key String
-     * 
+     *
      * @return T
      */
     public T getImplementation(String key) {
@@ -200,7 +200,7 @@ public class ModuleLoader<T> {
 
     /**
      * gets all and any implementations of a specific service
-     * 
+     *
      * @return Returns the implementations.
      */
     public Map<String, Collection<T>> getImplementations() {
@@ -215,9 +215,9 @@ public class ModuleLoader<T> {
 
     /**
      * gets all found implementations for key determined by the {@link Object#toString()} of the class (split by the ; sign); cached
-     * 
+     *
      * @param key String
-     * 
+     *
      * @return Collection
      */
     public Collection<T> getImplementations(String key) {
@@ -230,9 +230,9 @@ public class ModuleLoader<T> {
 
     /**
      * gets all found implementations for key determined by the {@link Object#toString()} of the class (split by the ; sign); cached
-     * 
+     *
      * @param key String
-     * 
+     *
      * @return Iterator
      */
     public Iterator<T> getImplementationsIterator(String key) {
@@ -241,7 +241,7 @@ public class ModuleLoader<T> {
         if (tmp == null) {
             return new Iterator<T>() {
                 /**
-                 * 
+                 *
                  * @see java.util.Iterator#hasNext()
                  */
                 @Override
@@ -250,7 +250,7 @@ public class ModuleLoader<T> {
                 }
 
                 /**
-                 * 
+                 *
                  * @see java.util.Iterator#next()
                  */
                 @Override
@@ -259,7 +259,7 @@ public class ModuleLoader<T> {
                 }
 
                 /**
-                 * 
+                 *
                  * @see java.util.Iterator#remove()
                  */
                 @Override
@@ -274,7 +274,7 @@ public class ModuleLoader<T> {
 
     /**
      * gives all found keys (toString)
-     * 
+     *
      * @return String[]
      */
     public String[] getKeys() {
@@ -283,7 +283,7 @@ public class ModuleLoader<T> {
 
     /**
      * gets serviceInterface
-     * 
+     *
      * @return Returns the serviceInterface.
      */
     public Class<T> getModule() {
@@ -292,7 +292,7 @@ public class ModuleLoader<T> {
 
     /**
      * gives the fully qualified name of the Interface
-     * 
+     *
      * @return Returns the serviceInterfaceClassName.
      */
     public String getName() {
@@ -301,9 +301,9 @@ public class ModuleLoader<T> {
 
     /**
      * gets new implementation for key (even when cached)
-     * 
+     *
      * @param key String
-     * 
+     *
      * @return T
      */
     public T getNewImplementation(String key) {
@@ -321,7 +321,7 @@ public class ModuleLoader<T> {
 
     /**
      * gets a new instance of each implementation for this loader
-     * 
+     *
      * @throws IOException IOException
      */
     private void loadImplementations() throws IOException {
@@ -421,9 +421,9 @@ public class ModuleLoader<T> {
 
     /**
      * is implementation for key found?
-     * 
+     *
      * @param key String
-     * 
+     *
      * @return boolean
      */
     public boolean supports(String key) {
@@ -431,7 +431,7 @@ public class ModuleLoader<T> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
