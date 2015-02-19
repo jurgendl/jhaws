@@ -81,6 +81,11 @@ public class FilePath implements Path, Externalizable {
             this.path = this.path.getParent();
             return this.path;
         }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     protected static FilePath checkFileIndex(FilePath parent, String outFileName, String extension) {
@@ -168,10 +173,8 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static String getConvertedSize(long size) {
-        int unitIndex = (int) (Math.log10(size) / 3);
-        double unitValue = 1 << (unitIndex * 10);
-        String readableSize = new DecimalFormat(/* "#,##0.#" */).format(size / unitValue) + " " + FilePath.UNITS[unitIndex];
-        return readableSize;
+        int scale = (int) (Math.log10(size) / 3);
+        return new DecimalFormat().format(size / (1 << (scale * 10))) + "" + FilePath.UNITS[scale];
     }
 
     public static String getExtension(Path path) {

@@ -101,6 +101,5 @@
 			<!-- when using spring's ldap template -->
 			<!-- when using spring.xml -->
 		</dependency>
-	</dependencies>	
-
+	</dependencies>
 </project>

@@ -2,14 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jhaws.common</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>modules</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
-		<relativePath>../parent/pom.xml</relativePath>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>lucene4</artifactId>
 	<name>lucene 4x</name>
-	<description />
-	<packaging>jar</packaging>
+	<description>lucene 4x</description>
 	<properties>
 		<lucene.version>4.4.0</lucene.version>
 		<poi.version>3.9</poi.version>
