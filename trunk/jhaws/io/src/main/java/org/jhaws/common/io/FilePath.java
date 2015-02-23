@@ -707,7 +707,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Path getPath() {
-        return this.getPath();
+        return this.path;
     }
 
     public Set<PosixFilePermission> getPosixFilePermissions(LinkOption... options) throws IOException {
