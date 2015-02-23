@@ -280,6 +280,11 @@ public class FilePath implements Path, Externalizable {
 
     public static final String[] UNITS = new String[] { "bytes", "kB", "MB", "GB", "TB"/* , "PB" */};
 
+    public FilePath(Class<?> root, String relativePath) {
+        this(root.getClassLoader().getResource(
+                root.getPackage().getName().replace('.', '/') + (relativePath.startsWith("/") ? "" : "/") + relativePath));
+    }
+
     public FilePath(File file) {
         this.path = Paths.get(file.toURI());
     }
@@ -873,6 +878,14 @@ public class FilePath implements Path, Externalizable {
 
     public long read(InputStream in) throws IOException {
         return this.copyFrom(in);
+    }
+
+    public String readAll() throws IOException {
+        return new String(Files.readAllBytes(this.path));
+    }
+
+    public String readAll(Charset cs) throws IOException {
+        return new String(Files.readAllBytes(this.path), cs);
     }
 
     public byte[] readAllBytes() throws IOException {
