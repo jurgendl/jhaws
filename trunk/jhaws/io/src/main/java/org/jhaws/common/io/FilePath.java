@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -294,7 +295,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath(FilePath file) {
-        if (this.path == null) {
+        if (this.getPath() == null) {
             throw new NullPointerException();
         }
         this.path = file.path;
@@ -459,7 +460,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public int compareTo(Path other) {
-        return this.path.compareTo(other);
+        return this.getPath().compareTo(other);
     }
 
     public FilePath copyFrom(FilePath source, CopyOption... options) throws IOException {
@@ -467,7 +468,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public long copyFrom(InputStream in, CopyOption... options) throws IOException {
-        return Files.copy(in, this.path, options);
+        return Files.copy(in, this.getPath(), options);
     }
 
     public FilePath copyTo(FilePath target) throws IOException {
@@ -475,11 +476,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath copyTo(FilePath target, CopyOption... options) throws IOException {
-        return new FilePath(Files.copy(this, target, options));
+        return new FilePath(Files.copy(this.getPath(), target, options));
     }
 
     public long copyTo(OutputStream out) throws IOException {
-        return Files.copy(this.path, out);
+        return Files.copy(this.getPath(), out);
     }
 
     public Long crc32() throws IOException {
@@ -487,48 +488,48 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath createDirectories(FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createDirectories(this.path, attrs));
+        return new FilePath(Files.createDirectories(this.getPath(), attrs));
     }
 
     public FilePath createDirectory(FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createDirectory(this.path, attrs));
+        return new FilePath(Files.createDirectory(this.getPath(), attrs));
     }
 
     public FilePath createFile(FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createFile(this.path, attrs));
+        return new FilePath(Files.createFile(this.getPath(), attrs));
     }
 
     public FilePath createLinkFrom(Path existing) throws IOException {
-        return new FilePath(Files.createLink(this, existing));
+        return new FilePath(Files.createLink(this.getPath(), existing));
     }
 
     public FilePath createLinkTo(Path link) throws IOException {
-        return new FilePath(Files.createLink(link, this));
+        return new FilePath(Files.createLink(link, this.getPath()));
     }
 
     public Path createSymbolicLinkFrom(Path link, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createSymbolicLink(link, this, attrs));
+        return new FilePath(Files.createSymbolicLink(link, this.getPath(), attrs));
     }
 
     public Path createSymbolicLinkTo(Path target, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createSymbolicLink(this, target, attrs));
+        return new FilePath(Files.createSymbolicLink(this.getPath(), target, attrs));
     }
 
     public FilePath createTempDirectory(String prefix, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempDirectory(this.path, prefix, attrs));
+        return new FilePath(Files.createTempDirectory(this.getPath(), prefix, attrs));
     }
 
     public FilePath createTempFile(String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempFile(this.path, prefix, suffix, attrs));
+        return new FilePath(Files.createTempFile(this.getPath(), prefix, suffix, attrs));
     }
 
     public FilePath delete() throws IOException {
-        Files.delete(this.path);
+        Files.delete(this.getPath());
         return this;
     }
 
     public FilePath deleteIfExists() throws IOException {
-        Files.deleteIfExists(this.path);
+        Files.deleteIfExists(this.getPath());
         return this;
     }
 
@@ -585,7 +586,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public boolean endsWith(Path other) {
-        return this.path.endsWith(other);
+        return this.getPath().endsWith(other);
     }
 
     /**
@@ -594,7 +595,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public boolean endsWith(String other) {
-        return this.path.endsWith(other);
+        return this.getPath().endsWith(other);
     }
 
     /**
@@ -603,15 +604,15 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public boolean equals(Object other) {
-        return this.path.equals(other);
+        return this.getPath().equals(other);
     }
 
     public boolean exists(LinkOption... options) {
-        return Files.exists(this.path, options);
+        return Files.exists(this.getPath(), options);
     }
 
     public Object getAttribute(String attribute, LinkOption... options) throws IOException {
-        return Files.getAttribute(this.path, attribute, options);
+        return Files.getAttribute(this.getPath(), attribute, options);
     }
 
     public List<FilePath> getChildren() {
@@ -633,11 +634,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String getExtension() {
-        return FilePath.getExtension(this);
+        return FilePath.getExtension(this.getPath());
     }
 
     public <V extends FileAttributeView> V getFileAttributeView(Class<V> type, LinkOption... options) {
-        return Files.getFileAttributeView(this.path, type, options);
+        return Files.getFileAttributeView(this.getPath(), type, options);
     }
 
     /**
@@ -646,11 +647,11 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path getFileName() {
-        return new FilePath(this.path.getFileName());
+        return new FilePath(this.getPath().getFileName());
     }
 
     public FileStore getFileStore() throws IOException {
-        return Files.getFileStore(this.path);
+        return Files.getFileStore(this.getPath());
     }
 
     /**
@@ -659,7 +660,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public FileSystem getFileSystem() {
-        return this.path.getFileSystem();
+        return this.getPath().getFileSystem();
     }
 
     public Icon getLargeIcon() {
@@ -667,7 +668,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FileTime getLastModifiedTime(LinkOption... options) throws IOException {
-        return Files.getLastModifiedTime(this.path, options);
+        return Files.getLastModifiedTime(this.getPath(), options);
     }
 
     public String getName() {
@@ -680,7 +681,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path getName(int index) {
-        return new FilePath(this.path.getName(index));
+        return new FilePath(this.getPath().getName(index));
     }
 
     /**
@@ -689,11 +690,11 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public int getNameCount() {
-        return this.path.getNameCount();
+        return this.getPath().getNameCount();
     }
 
     public UserPrincipal getOwner(LinkOption... options) throws IOException {
-        return Files.getOwner(this.path, options);
+        return Files.getOwner(this.getPath(), options);
     }
 
     /**
@@ -702,15 +703,15 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path getParent() {
-        return this.path.getParent() == null ? null : new FilePath(this.path.getParent());
+        return this.getPath().getParent() == null ? null : new FilePath(this.getPath().getParent());
     }
 
     public Path getPath() {
-        return this.path;
+        return this.getPath();
     }
 
     public Set<PosixFilePermission> getPosixFilePermissions(LinkOption... options) throws IOException {
-        return Files.getPosixFilePermissions(this.path, options);
+        return Files.getPosixFilePermissions(this.getPath(), options);
     }
 
     /**
@@ -719,7 +720,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path getRoot() {
-        return new FilePath(this.path.getRoot());
+        return new FilePath(this.getPath().getRoot());
     }
 
     public String getShortFileName() {
@@ -736,7 +737,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public int hashCode() {
-        return this.path.hashCode();
+        return this.getPath().hashCode();
     }
 
     /**
@@ -745,39 +746,39 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public boolean isAbsolute() {
-        return this.path.isAbsolute();
+        return this.getPath().isAbsolute();
     }
 
     public boolean isDirectory(LinkOption... options) {
-        return Files.isDirectory(this.path, options);
+        return Files.isDirectory(this.getPath(), options);
     }
 
     public boolean isExecutable() {
-        return Files.isExecutable(this.path);
+        return Files.isExecutable(this.getPath());
     }
 
     public boolean isHidden() throws IOException {
-        return Files.isHidden(this.path);
+        return Files.isHidden(this.getPath());
     }
 
     public boolean isReadable() {
-        return Files.isReadable(this.path);
+        return Files.isReadable(this.getPath());
     }
 
     public boolean isRegularFile(LinkOption... options) {
-        return Files.isRegularFile(this.path, options);
+        return Files.isRegularFile(this.getPath(), options);
     }
 
     public boolean isSameFile(FilePath otherPath) throws IOException {
-        return Files.isSameFile(this.path, otherPath);
+        return Files.isSameFile(this.getPath(), otherPath);
     }
 
     public boolean isSymbolicLink() {
-        return Files.isSymbolicLink(this.path);
+        return Files.isSymbolicLink(this.getPath());
     }
 
     public boolean isWritable() {
-        return Files.isWritable(this.path);
+        return Files.isWritable(this.getPath());
     }
 
     /**
@@ -786,7 +787,11 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Iterator<Path> iterator() {
-        return this.path.iterator();
+        return this.getPath().iterator();
+    }
+
+    public Stream<String> lines() throws IOException {
+        return Files.lines(this.getPath());
     }
 
     public FilePath moveFrom(FilePath source) throws IOException {
@@ -818,11 +823,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public BufferedReader newBufferedReader(Charset cs) throws IOException {
-        return Files.newBufferedReader(this.path, cs);
+        return Files.newBufferedReader(this.getPath(), cs);
     }
 
     public BufferedWriter newBufferedWriter(Charset cs, OpenOption... options) throws IOException {
-        return Files.newBufferedWriter(this.path, cs, options);
+        return Files.newBufferedWriter(this.getPath(), cs, options);
     }
 
     public BufferedWriter newBufferedWriter(OpenOption... options) throws IOException {
@@ -830,31 +835,31 @@ public class FilePath implements Path, Externalizable {
     }
 
     public SeekableByteChannel newByteChannel(OpenOption... options) throws IOException {
-        return Files.newByteChannel(this.path, options);
+        return Files.newByteChannel(this.getPath(), options);
     }
 
     public SeekableByteChannel newByteChannel(Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
-        return Files.newByteChannel(this.path, options, attrs);
+        return Files.newByteChannel(this.getPath(), options, attrs);
     }
 
     public DirectoryStream<Path> newDirectoryStream() throws IOException {
-        return Files.newDirectoryStream(this.path);
+        return Files.newDirectoryStream(this.getPath());
     }
 
     public DirectoryStream<Path> newDirectoryStream(DirectoryStream.Filter<? super Path> filter) throws IOException {
-        return Files.newDirectoryStream(this.path, filter);
+        return Files.newDirectoryStream(this.getPath(), filter);
     }
 
     public DirectoryStream<Path> newDirectoryStream(String glob) throws IOException {
-        return Files.newDirectoryStream(this.path, glob);
+        return Files.newDirectoryStream(this.getPath(), glob);
     }
 
     public InputStream newInputStream(OpenOption... options) throws IOException {
-        return Files.newInputStream(this.path, options);
+        return Files.newInputStream(this.getPath(), options);
     }
 
     public OutputStream newOutputStream(OpenOption... options) throws IOException {
-        return Files.newOutputStream(this.path, options);
+        return Files.newOutputStream(this.getPath(), options);
     }
 
     /**
@@ -863,11 +868,11 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path normalize() {
-        return new FilePath(this.path.normalize());
+        return new FilePath(this.getPath().normalize());
     }
 
     public boolean notExists(LinkOption... options) {
-        return Files.notExists(this.path, options);
+        return Files.notExists(this.getPath(), options);
     }
 
     public PathIterator pathIterator() {
@@ -875,7 +880,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String probeContentType() throws IOException {
-        return Files.probeContentType(this.path);
+        return Files.probeContentType(this.getPath());
     }
 
     public InputStream read() throws IOException {
@@ -891,15 +896,15 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String readAll(Charset cs) throws IOException {
-        return new String(Files.readAllBytes(this.path), cs);
+        return new String(Files.readAllBytes(this.getPath()), cs);
     }
 
     public byte[] readAllBytes() throws IOException {
-        return Files.readAllBytes(this.path);
+        return Files.readAllBytes(this.getPath());
     }
 
     public ByteBuffer readAllBytesToBuffer() throws IOException {
-        return ByteBuffer.wrap(Files.readAllBytes(this.path));
+        return ByteBuffer.wrap(Files.readAllBytes(this.getPath()));
     }
 
     public List<String> readAllLines() throws IOException {
@@ -907,15 +912,15 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<String> readAllLines(Charset cs) throws IOException {
-        return Files.readAllLines(this.path, cs);
+        return Files.readAllLines(this.getPath(), cs);
     }
 
     public <A extends BasicFileAttributes> A readAttributes(Class<A> type, LinkOption... options) throws IOException {
-        return Files.readAttributes(this.path, type, options);
+        return Files.readAttributes(this.getPath(), type, options);
     }
 
     public Map<String, Object> readAttributes(String attributes, LinkOption... options) throws IOException {
-        return Files.readAttributes(this.path, attributes, options);
+        return Files.readAttributes(this.getPath(), attributes, options);
     }
 
     /**
@@ -932,7 +937,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath readSymbolicLink() throws IOException {
-        return new FilePath(Files.readSymbolicLink(this.path));
+        return new FilePath(Files.readSymbolicLink(this.getPath()));
     }
 
     /**
@@ -941,7 +946,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public WatchKey register(WatchService watcher, Kind<?>... events) throws IOException {
-        return this.path.register(watcher, events);
+        return this.getPath().register(watcher, events);
     }
 
     /**
@@ -950,7 +955,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) throws IOException {
-        return this.path.register(watcher, events, modifiers);
+        return this.getPath().register(watcher, events, modifiers);
     }
 
     /**
@@ -959,7 +964,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path relativize(Path other) {
-        return new FilePath(this.path.relativize(other));
+        return new FilePath(this.getPath().relativize(other));
     }
 
     /**
@@ -968,7 +973,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolve(Path other) {
-        return new FilePath(this.path.resolve(other));
+        return new FilePath(this.getPath().resolve(other));
     }
 
     /**
@@ -977,7 +982,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolve(String other) {
-        return new FilePath(this.path.resolve(other));
+        return new FilePath(this.getPath().resolve(other));
     }
 
     /**
@@ -986,7 +991,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolveSibling(Path other) {
-        return new FilePath(this.path.resolveSibling(other));
+        return new FilePath(this.getPath().resolveSibling(other));
     }
 
     /**
@@ -995,11 +1000,11 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolveSibling(String other) {
-        return new FilePath(this.path.resolveSibling(other));
+        return new FilePath(this.getPath().resolveSibling(other));
     }
 
     public FilePath setAttribute(String attribute, Object value, LinkOption... options) throws IOException {
-        return new FilePath(Files.setAttribute(this.path, attribute, value, options));
+        return new FilePath(Files.setAttribute(this.getPath(), attribute, value, options));
     }
 
     public boolean setExecutable(boolean executable) throws IOException {
@@ -1014,11 +1019,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath setLastModifiedTime(FileTime time) throws IOException {
-        return new FilePath(Files.setLastModifiedTime(this.path, time));
+        return new FilePath(Files.setLastModifiedTime(this.getPath(), time));
     }
 
     public FilePath setOwner(UserPrincipal owner) throws IOException {
-        return new FilePath(Files.setOwner(this.path, owner));
+        return new FilePath(Files.setOwner(this.getPath(), owner));
     }
 
     public void setPath(Path path) {
@@ -1026,7 +1031,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath setPosixFilePermissions(Set<PosixFilePermission> perms) throws IOException {
-        return new FilePath(Files.setPosixFilePermissions(this.path, perms));
+        return new FilePath(Files.setPosixFilePermissions(this.getPath(), perms));
     }
 
     public boolean setReadable(boolean readable) {
@@ -1053,7 +1058,7 @@ public class FilePath implements Path, Externalizable {
         List<FilePath> siblings = new ArrayList<FilePath>();
         if (this.getParent() != null) {
             for (FilePath child : this.getChildren()) {
-                if (!child.equals(this.path)) {
+                if (!child.equals(this.getPath())) {
                     siblings.add(child);
                 }
             }
@@ -1062,7 +1067,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public long size() throws IOException {
-        return Files.size(this.path);
+        return Files.size(this.getPath());
     }
 
     /**
@@ -1071,7 +1076,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public boolean startsWith(Path other) {
-        return this.path.startsWith(other);
+        return this.getPath().startsWith(other);
     }
 
     /**
@@ -1080,7 +1085,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public boolean startsWith(String other) {
-        return this.path.startsWith(other);
+        return this.getPath().startsWith(other);
     }
 
     /**
@@ -1089,7 +1094,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path subpath(int beginIndex, int endIndex) {
-        return new FilePath(this.path.subpath(beginIndex, endIndex));
+        return new FilePath(this.getPath().subpath(beginIndex, endIndex));
     }
 
     /**
@@ -1098,7 +1103,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path toAbsolutePath() {
-        return new FilePath(this.path.toAbsolutePath());
+        return new FilePath(this.getPath().toAbsolutePath());
     }
 
     /**
@@ -1107,7 +1112,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public File toFile() {
-        return this.path.toFile();
+        return this.getPath().toFile();
     }
 
     /**
@@ -1116,7 +1121,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path toRealPath(LinkOption... options) throws IOException {
-        return new FilePath(this.path.toRealPath(options));
+        return new FilePath(this.getPath().toRealPath(options));
     }
 
     /**
@@ -1125,7 +1130,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public String toString() {
-        return this.path.toString();
+        return this.getPath().toString();
     }
 
     public long totalSize() throws IOException {
@@ -1145,7 +1150,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public URI toUri() {
-        return this.path.toUri();
+        return this.getPath().toUri();
     }
 
     public FilePath walkDirectories(final FileVisit visitor) throws IOException {
@@ -1171,27 +1176,31 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath walkFileTree(FileVisitor<? super Path> visitor) throws IOException {
-        return new FilePath(Files.walkFileTree(this.path, visitor));
+        return new FilePath(Files.walkFileTree(this.getPath(), visitor));
     }
 
     public FilePath walkFileTree(Set<FileVisitOption> options, int maxDepth, FileVisitor<? super Path> visitor) throws IOException {
-        return new FilePath(Files.walkFileTree(this.path, options, maxDepth, visitor));
+        return new FilePath(Files.walkFileTree(this.getPath(), options, maxDepth, visitor));
     }
 
     public FilePath write(byte[] bytes, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.path, bytes, options));
+        return new FilePath(Files.write(this.getPath(), bytes, options));
     }
 
     public FilePath write(ByteBuffer bytes, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.path, bytes.array(), options));
+        return new FilePath(Files.write(this.getPath(), bytes.array(), options));
     }
 
     public FilePath write(Iterable<? extends CharSequence> lines, Charset cs, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.path, lines, cs, options));
+        return new FilePath(Files.write(this.getPath(), lines, cs, options));
+    }
+
+    public Path write(Iterable<? extends CharSequence> lines, OpenOption... options) throws IOException {
+        return Files.write(this.getPath(), lines, options);
     }
 
     public FilePath write(String text, Charset charset, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.path, text.getBytes(charset == null ? Charset.defaultCharset() : charset), options));
+        return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? Charset.defaultCharset() : charset), options));
     }
 
     /**
@@ -1200,6 +1209,6 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeUTF(this.path.toUri().toString());
+        out.writeUTF(this.getPath().toUri().toString());
     }
 }
