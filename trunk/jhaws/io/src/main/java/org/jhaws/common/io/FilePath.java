@@ -881,7 +881,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String readAll() throws IOException {
-        return new String(Files.readAllBytes(this.path));
+        return this.readAll(Charset.defaultCharset());
     }
 
     public String readAll(Charset cs) throws IOException {
@@ -894,6 +894,10 @@ public class FilePath implements Path, Externalizable {
 
     public ByteBuffer readAllBytesToBuffer() throws IOException {
         return ByteBuffer.wrap(Files.readAllBytes(this.path));
+    }
+
+    public List<String> readAllLines() throws IOException {
+        return this.readAllLines(Charset.defaultCharset());
     }
 
     public List<String> readAllLines(Charset cs) throws IOException {
