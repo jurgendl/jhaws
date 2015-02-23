@@ -325,7 +325,13 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath(URL url) {
         try {
-            this.path = Paths.get(url.toURI());
+            URI uri = url.toURI();
+            if ("file".equals(uri.getScheme())) {
+                String p = uri.getPath().substring(1);
+                this.path = Paths.get(p);
+            } else {
+                this.path = Paths.get(uri);
+            }
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
