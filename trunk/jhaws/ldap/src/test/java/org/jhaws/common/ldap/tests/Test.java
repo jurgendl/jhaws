@@ -34,7 +34,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * test ldap
- * 
+ *
  * @author Jurgen
  */
 public class Test {
@@ -43,8 +43,9 @@ public class Test {
      */
     @SuppressWarnings("unused")
     public static void main(final String[] args) {
+        ClassPathXmlApplicationContext ctx = null;
         try {
-            ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml"); //$NON-NLS-1$
+            ctx = new ClassPathXmlApplicationContext("spring.xml"); //$NON-NLS-1$
 
             PersoonDao pdao1 = new PersoonDaoMock();
             PersoonDao pdao2 = (PersoonDao) ctx.getBean("persoonDao"); //$NON-NLS-1$
@@ -166,16 +167,24 @@ public class Test {
             System.out.println(c4.getDeltaCrl().isRevoked(p.getCertificate()));
         } catch (final Exception e) {
             e.printStackTrace(System.out);
+        } finally {
+            if (ctx != null) {
+                try {
+                    ctx.close();
+                } catch (Exception ex) {
+                    //
+                }
+            }
         }
     }
 
     /**
      * Creates a new validate object.
-     * 
+     *
      * @param cert na
      * @param ROOT_CA_CERT na
      * @param OCSP_SERVER_CERT na
-     * 
+     *
      * @return
      */
     @SuppressWarnings({ "nls", "rawtypes", "unchecked" })
