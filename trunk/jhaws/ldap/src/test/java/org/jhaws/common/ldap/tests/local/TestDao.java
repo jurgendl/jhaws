@@ -2,10 +2,10 @@ package org.jhaws.common.ldap.tests.local;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.jhaws.common.ldap.interfaces.LdapDao;
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
