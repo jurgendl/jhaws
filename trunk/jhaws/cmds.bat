@@ -76,57 +76,57 @@ goto start
 
 :llocinstall
 cls
-call mvn -Dmaven.tomcat.skip=true -e install -DskipTests=true -DupdateReleaseInfo=true
+call mvn -T 1C -Dmaven.tomcat.skip=true -e install -DskipTests=true -DupdateReleaseInfo=true
 pause
 goto start
 
 :leclipse
 cls
-call mvn -Dmaven.tomcat.skip=true -e -U -DdownloadSources=true -Dwtpversion=2.0 eclipse:eclipse
+call mvn -T 1C -Dmaven.tomcat.skip=true -e -U -DdownloadSources=true -Dwtpversion=2.0 eclipse:eclipse
 pause
 goto start
 
 :leclipseoff
 cls
-call mvn -Dmaven.tomcat.skip=true -e -U -DdownloadSources=true -Dwtpversion=2.0 eclipse:eclipse -o
+call mvn -T 1C -Dmaven.tomcat.skip=true -e -U -DdownloadSources=true -Dwtpversion=2.0 eclipse:eclipse -o
 pause
 goto start
 
 :lclean
 cls
-call mvn -Dmaven.tomcat.skip=true -e clean
+call mvn -T 1C -Dmaven.tomcat.skip=true -e clean
 pause
 goto start
 
 :ldependency
 cls
-call mvn -Dmaven.tomcat.skip=true -e dependency:go-offline
+call mvn -T 1C -Dmaven.tomcat.skip=true -e dependency:go-offline
 pause
 goto start
 
 :lrelease
 cls
-call mvn -Dmaven.tomcat.skip=true -e release:prepare
-call mvn -Dmaven.tomcat.skip=true -e release:perform
+call mvn -T 1C -Dmaven.tomcat.skip=true -e release:prepare
+call mvn -T 1C -Dmaven.tomcat.skip=true -e release:perform
 pause
 goto start
 
 :ldeploy
 cls
 svn update
-call mvn -Dmaven.tomcat.skip=true -e deploy
+call mvn -T 1C -Dmaven.tomcat.skip=true -e deploy
 pause
 goto start
 
 :lgen
 cls
-call mvn -Dmaven.tomcat.skip=true -e generate-sources
+call mvn -T 1C -Dmaven.tomcat.skip=true -e generate-sources
 pause
 goto start
 
 :lass
 cls
-call mvn -o -Dmaven.tomcat.skip=true -e package assembly:assembly
+call mvn -T 1C -o -Dmaven.tomcat.skip=true -e package assembly:assembly
 pause
 
 :lquit
