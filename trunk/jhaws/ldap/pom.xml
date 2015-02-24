@@ -10,8 +10,8 @@
 	<name>ldap classes</name>
 	<description>ldap classes</description>
 	<properties>
-		<spring.version>2.0.6</spring.version>
-		<spring.ldap.version>1.2.1</spring.ldap.version>
+		<spring.version>3.2.13.RELEASE</spring.version>
+		<spring.ldap.version>2.0.2.RELEASE</spring.ldap.version>
 	</properties>
 	<repositories>
 		<repository>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>4.12</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -47,11 +47,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap</artifactId>
+			<artifactId>spring-ldap-core</artifactId>
 			<version>${spring.ldap.version}</version>
 			<optional>true</optional>
 			<scope>compile</scope>
-			<!-- when using spring's ldap template -->
 		</dependency>
 		<!-- you can find this lib here: http://repository.atlassian.com/maven2/ -->
 		<!-- http://repository.atlassian.com/maven2/com/sun/jndi/ldap/ldapbp/1.0/ -->
@@ -60,13 +59,20 @@
 			<artifactId>ldapbp</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<!-- when using spring's ldap template -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
 			<optional>true</optional>
 			<scope>compile</scope>
-			<!-- when using spring's ldap template -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -74,15 +80,6 @@
 			<version>${spring.version}</version>
 			<optional>true</optional>
 			<scope>compile</scope>
-			<!-- when using spring's ldap template -->
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-dao</artifactId>
-			<version>${spring.version}</version>
-			<optional>true</optional>
-			<scope>compile</scope>
-			<!-- when using spring's ldap template -->
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
@@ -90,7 +87,6 @@
 			<version>2.6</version>
 			<optional>true</optional>
 			<scope>compile</scope>
-			<!-- when using spring's ldap template -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -98,8 +94,6 @@
 			<version>${spring.version}</version>
 			<optional>true</optional>
 			<scope>compile</scope>
-			<!-- when using spring's ldap template -->
-			<!-- when using spring.xml -->
 		</dependency>
 	</dependencies>
 </project>

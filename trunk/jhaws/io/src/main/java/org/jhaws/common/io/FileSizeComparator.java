@@ -2,19 +2,19 @@ package org.jhaws.common.io;
 
 import java.util.Comparator;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 /**
  * file size comparator <br>
- * 
+ *
  * @author Jurgen
  * @version 6 June 2006
  */
 public class FileSizeComparator implements Comparator<IOFile> {
     /**
-     * 
+     *
      * sorting
-     * 
+     *
      * @author Jurgen
      */
     public enum Sort {
@@ -24,7 +24,7 @@ public class FileSizeComparator implements Comparator<IOFile> {
         SMALLEST_FIRST;
         /**
          * returns 1 or -1
-         * 
+         *
          * @return 1 or -1
          */
         protected int direction() {
@@ -53,7 +53,7 @@ public class FileSizeComparator implements Comparator<IOFile> {
 
     /**
      * Creates a new FileSizeComparator object.
-     * 
+     *
      * @param type : type, SMALLEST_FIRST or LARGEST_FIRST
      */
     public FileSizeComparator(final Sort type) {
@@ -61,7 +61,7 @@ public class FileSizeComparator implements Comparator<IOFile> {
     }
 
     /**
-     * 
+     *
      * @see java.util.Comparator#compare(java.lang.Object,java.lang.Object)
      */
     @Override

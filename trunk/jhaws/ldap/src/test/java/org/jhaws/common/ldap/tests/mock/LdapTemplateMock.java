@@ -10,11 +10,20 @@ import org.springframework.ldap.core.support.LdapContextSource;
  * @author Jurgen
  */
 public class LdapTemplateMock {
+    /**
+     * na
+     *
+     * @return
+     */
+    public static LdapTemplate singleton() {
+        return LdapTemplateMock.singleton;
+    }
+
     /** field */
     private static final LdapTemplate singleton;
 
     static {
-        Map<String, String> env = new HashMap<String, String>();
+        Map<String, Object> env = new HashMap<String, Object>();
         env.put("ldapVersion", "3"); //$NON-NLS-1$ //$NON-NLS-2$
 
         LdapContextSource contextSource = new LdapContextSource();
@@ -32,14 +41,5 @@ public class LdapTemplateMock {
         }
 
         singleton = new LdapTemplate(contextSource);
-    }
-
-    /**
-     * na
-     * 
-     * @return
-     */
-    public static LdapTemplate singleton() {
-        return LdapTemplateMock.singleton;
     }
 }
