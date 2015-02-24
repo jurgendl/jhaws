@@ -45,12 +45,12 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Stream;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -790,8 +790,13 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().iterator();
     }
 
-    public Stream<String> lines() throws IOException {
-        return Files.lines(this.getPath());
+    public Collection<String> lines() throws IOException {
+        Collection<String> lines = new ArrayList<>();
+        try (BufferedReader bufferedReader = this.newBufferedReader()) {
+            lines.add(bufferedReader.readLine());
+        }
+        return lines;
+        // return Files.lines(this.getPath());
     }
 
     public FilePath moveFrom(FilePath source) throws IOException {
@@ -1196,7 +1201,12 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Path write(Iterable<? extends CharSequence> lines, OpenOption... options) throws IOException {
-        return Files.write(this.getPath(), lines, options);
+        try (BufferedWriter bufferedWriter = this.newBufferedWriter(options)) {
+            for (CharSequence line : lines) {
+                bufferedWriter.write(line.toString());
+            }
+        }
+        return this;// Files.write(this.getPath(), lines, options);
     }
 
     public FilePath write(String text, Charset charset, OpenOption... options) throws IOException {
