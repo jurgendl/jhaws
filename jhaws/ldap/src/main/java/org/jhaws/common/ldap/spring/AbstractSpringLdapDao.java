@@ -59,10 +59,11 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
     /** LdapOperations is een interface voor LdapTemplate */
     private LdapOperations ldapOperations;
 
-    private final ContextMapper contextMapper = new ContextMapper() {
+    private final ContextMapper<T> contextMapper = new ContextMapper<T>() {
+        @SuppressWarnings("unchecked")
         @Override
-        public Object mapFromContext(Object ctx) {
-            return AbstractSpringLdapDao.this.mapFromContextImp((DirContextOperations) ctx);
+        public T mapFromContext(Object ctx) {
+            return (T) AbstractSpringLdapDao.this.mapFromContextImp(DirContextOperations.class.cast(ctx));
         }
     };
 
@@ -231,12 +232,13 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
         AbstractSpringLdapDao.logger.debug("lookup(Name) - dn=" + dn); //$NON-NLS-1$
 
         try {
-            return this.getPojoClass().cast(this.ldapOperations.lookup(dn, new ContextMapper() {
+            Object lookup = this.ldapOperations.lookup(dn, new ContextMapper<Object>() {
                 @Override
                 public Object mapFromContext(Object ctx) {
                     return AbstractSpringLdapDao.this.mapFromContextImp((DirContextOperations) ctx);
                 }
-            }));
+            });
+            return this.getPojoClass().cast(lookup);
         } catch (final UncategorizedLdapException ule) {
             if (ule.getCause().getClass().equals(InvalidNameException.class)) {
                 throw new IllegalArgumentException("login gegevens mogelijks verkeerd", ule); //$NON-NLS-1$
@@ -300,7 +302,6 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
         return this.search(_base, query, controls);
     }
 
-    @SuppressWarnings("unchecked")
     protected final List<T> search(@SuppressWarnings("hiding") String base, final String query, final SearchControls controls) {
         AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - start"); //$NON-NLS-1$
         AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
