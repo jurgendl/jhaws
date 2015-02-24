@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
@@ -59,7 +59,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeAddCookie(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -68,7 +68,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClear(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -77,7 +77,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
      *      java.util.Date)
      */
@@ -87,7 +87,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeGetCookies(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -136,7 +136,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
                 store.addCookie(cookie);
             }
         } catch (Exception e) {
-            PreloadWinChromeCookies.logger.error(ExceptionUtils.getFullStackTrace(e));
+            PreloadWinChromeCookies.logger.error(ExceptionUtils.getStackTrace(e));
             this.failed = true;
         }
     }

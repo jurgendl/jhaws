@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
@@ -63,7 +63,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeAddCookie(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -72,7 +72,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClear(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -81,7 +81,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
      *      java.util.Date)
      */
@@ -91,7 +91,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeGetCookies(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -185,7 +185,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
                 }
             }
         } catch (Exception ex) {
-            PreloadWinFirefoxCookies.logger.error(ExceptionUtils.getFullStackTrace(ex));
+            PreloadWinFirefoxCookies.logger.error(ExceptionUtils.getStackTrace(ex));
             this.failed = true;
         }
     }

@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.cookie.SetCookie;
 import org.apache.http.impl.client.BasicCookieStore;
@@ -68,7 +68,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * Creates a new SerializableCookie object.
-         * 
+         *
          * @param cookie
          */
         public SerializableCookie(Cookie cookie) {
@@ -83,7 +83,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getComment()
          */
         @Override
@@ -92,7 +92,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getCommentURL()
          */
         @Override
@@ -101,7 +101,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getDomain()
          */
         @Override
@@ -110,7 +110,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getExpiryDate()
          */
         @Override
@@ -119,7 +119,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getName()
          */
         @Override
@@ -128,7 +128,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getPath()
          */
         @Override
@@ -137,7 +137,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getPorts()
          */
         @Override
@@ -146,7 +146,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getValue()
          */
         @Override
@@ -155,7 +155,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#getVersion()
          */
         @Override
@@ -164,7 +164,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#isExpired(java.util.Date)
          */
         @Override
@@ -173,7 +173,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#isPersistent()
          */
         @Override
@@ -182,7 +182,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see org.apache.http.cookie.Cookie#isSecure()
          */
         @Override
@@ -192,7 +192,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param comment the comment to set
          */
         @Override
@@ -202,7 +202,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param domain the domain to set
          */
         @Override
@@ -212,7 +212,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param expiryDate the expiryDate to set
          */
         @Override
@@ -222,7 +222,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param name the name to set
          */
         public void setName(String name) {
@@ -231,7 +231,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param path the path to set
          */
         @Override
@@ -241,7 +241,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param isSecure the isSecure to set
          */
         @Override
@@ -251,7 +251,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param value the value to set
          */
         @Override
@@ -261,7 +261,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         /**
          * setter
-         * 
+         *
          * @param version the version to set
          */
         @Override
@@ -270,7 +270,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
 
         /**
-         * 
+         *
          * @see java.lang.Object#toString()
          */
         @Override
@@ -281,17 +281,13 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
         }
     }
 
-    protected static final long serialVersionUID = -3469573532019535065L;
-
-    protected static final Logger logger = LoggerFactory.getLogger(CookieStore.class);
-
     /**
      * deserialize
-     * 
+     *
      * @param in
-     * 
+     *
      * @return
-     * 
+     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -305,9 +301,9 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
     /**
      * xmldeserialize
-     * 
+     *
      * @param in
-     * 
+     *
      * @return
      */
     public static CookieStore xmldeserialize(InputStream in) {
@@ -324,6 +320,10 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
         return store;
     }
+
+    protected static final long serialVersionUID = -3469573532019535065L;
+
+    protected static final Logger logger = LoggerFactory.getLogger(CookieStore.class);
 
     /** backing store */
     protected transient org.apache.http.client.CookieStore cookieStore = new BasicCookieStore();
@@ -343,7 +343,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     }
 
     /**
-     * 
+     *
      * @see org.apache.http.client.CookieStore#addCookie(org.apache.http.cookie.Cookie)
      */
     @Override
@@ -360,7 +360,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     }
 
     /**
-     * 
+     *
      * @see org.apache.http.client.CookieStore#clear()
      */
     @Override
@@ -377,7 +377,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     }
 
     /**
-     * 
+     *
      * @see org.apache.http.client.CookieStore#clearExpired(java.util.Date)
      */
     @Override
@@ -394,7 +394,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     }
 
     /**
-     * 
+     *
      * @see org.apache.http.client.CookieStore#getCookies()
      */
     @Override
@@ -411,7 +411,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     }
 
     /**
-     * 
+     *
      * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
      */
     @Override
@@ -458,7 +458,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     }
 
     /**
-     * 
+     *
      * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
      */
     @Override

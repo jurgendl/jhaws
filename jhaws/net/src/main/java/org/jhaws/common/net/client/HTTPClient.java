@@ -18,9 +18,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -1111,7 +1111,7 @@ public class HTTPClient implements Serializable {
                 try {
                     cs.addCookieStoreInterceptor(new PreloadUnixFirefoxCookies());
                 } catch (Exception ex) {
-                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                    HTTPClient.logger.error(ExceptionUtils.getStackTrace(ex));
                 }
             }
 
@@ -1119,7 +1119,7 @@ public class HTTPClient implements Serializable {
                 try {
                     cs.addCookieStoreInterceptor(new PreloadUnixChromeCookies());
                 } catch (Exception ex) {
-                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                    HTTPClient.logger.error(ExceptionUtils.getStackTrace(ex));
                 }
             }
 
@@ -1127,7 +1127,7 @@ public class HTTPClient implements Serializable {
                 try {
                     cs.addCookieStoreInterceptor(new PreloadWinFirefoxCookies());
                 } catch (Exception ex) {
-                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                    HTTPClient.logger.error(ExceptionUtils.getStackTrace(ex));
                 }
             }
 
@@ -1135,7 +1135,7 @@ public class HTTPClient implements Serializable {
                 try {
                     cs.addCookieStoreInterceptor(new PreloadWinIExplorerCookies());
                 } catch (Exception ex) {
-                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                    HTTPClient.logger.error(ExceptionUtils.getStackTrace(ex));
                 }
             }
 
@@ -1143,7 +1143,7 @@ public class HTTPClient implements Serializable {
                 try {
                     cs.addCookieStoreInterceptor(new PreloadWinChromeCookies());
                 } catch (Exception ex) {
-                    HTTPClient.logger.error(ExceptionUtils.getFullStackTrace(ex));
+                    HTTPClient.logger.error(ExceptionUtils.getStackTrace(ex));
                 }
             }
         } else {

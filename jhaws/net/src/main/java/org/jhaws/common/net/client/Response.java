@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.PrettyXmlSerializer;
@@ -28,8 +28,6 @@ import org.jhaws.common.net.client.forms.Form;
  * Response
  */
 public class Response implements Serializable {
-    protected static final long serialVersionUID = -7030369997895433094L;
-
     public static Response deserialize(InputStream in) throws IOException, ClassNotFoundException {
         ObjectInputStream encoder = new ObjectInputStream(in);
         Object object = encoder.readObject();
@@ -37,6 +35,8 @@ public class Response implements Serializable {
 
         return (Response) object;
     }
+
+    protected static final long serialVersionUID = -7030369997895433094L;
 
     /** date */
     protected Date date;
@@ -203,7 +203,7 @@ public class Response implements Serializable {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

@@ -5,7 +5,7 @@ import java.io.FileFilter;
 import java.util.Date;
 import java.util.HashSet;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
@@ -34,7 +34,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeAddCookie(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -43,7 +43,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClear(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -52,7 +52,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
      *      java.util.Date)
      */
@@ -62,7 +62,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
     }
 
     /**
-     * 
+     *
      * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeGetCookies(util.html.client.cookies.PersistentCookieStore)
      */
     @Override
@@ -122,7 +122,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
                 PreloadWinIExplorerCookies.logger.info("loadIExplorerCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
             }
         } catch (Exception ex) {
-            PreloadWinIExplorerCookies.logger.error(ExceptionUtils.getFullStackTrace(ex));
+            PreloadWinIExplorerCookies.logger.error(ExceptionUtils.getStackTrace(ex));
             this.failed = true;
         }
     }

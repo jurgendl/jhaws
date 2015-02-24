@@ -1,9 +1,8 @@
 package org.jhaws.common.net.client.forms;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.htmlcleaner.TagNode;
 import org.jhaws.common.io.IOFile;
-
 
 /**
  * FileInput
@@ -14,7 +13,7 @@ public class FileInput extends Input {
 
     /**
      * Creates a new FileInput object.
-     * 
+     *
      * @param inputnode
      */
     public FileInput(TagNode inputnode) {
@@ -23,10 +22,10 @@ public class FileInput extends Input {
 
     /**
      * get file
-     * 
+     *
      * @return
      */
     public IOFile getFile() {
-        return StringUtils.isBlank(getValue()) ? null : new IOFile(getValue());
+        return StringUtils.isBlank(this.getValue()) ? null : new IOFile(this.getValue());
     }
 }

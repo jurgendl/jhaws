@@ -13,8 +13,8 @@ import java.util.Locale;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jhaws.common.io.Utils.OSGroup;
 
 /**
@@ -982,7 +982,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
 
     /** constants for overwrite file dialog box: possible options */
     protected static final String[] overwriteOptions = new String[] { "yes", "no", "yes to all", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            "no to all" //$NON-NLS-1$
+        "no to all" //$NON-NLS-1$
     };
 
     /** na */

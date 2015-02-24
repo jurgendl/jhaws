@@ -17,7 +17,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -60,9 +60,6 @@ public class XPathHelper {
         }
     }
 
-    /** http://apache.org/xml/features/nonvalidating/load-external-dtd */
-    protected static final String DTD_NO_VALIDATION = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
-
     public static org.w3c.dom.Document parseXml(byte[] xmlData) throws ParserConfigurationException, SAXException, IOException {
         return XPathHelper.parseXml(new ByteArrayInputStream(xmlData));
     }
@@ -99,12 +96,12 @@ public class XPathHelper {
     }
 
     public static <T> T xpathXml(Class<T> clazz, String expr, byte[] xmlData) throws XPathExpressionException, IOException,
-            ParserConfigurationException, SAXException {
+    ParserConfigurationException, SAXException {
         return XPathHelper.xpathXml(clazz, expr, XPathHelper.parseXml(xmlData));
     }
 
     public static <T> T xpathXml(Class<T> clazz, String expr, byte[] xmlData, String basenodename) throws XPathExpressionException, IOException,
-            ParserConfigurationException, SAXException {
+    ParserConfigurationException, SAXException {
         return XPathHelper.xpathXml(clazz, expr, XPathHelper.parseXml(xmlData), basenodename);
     }
 
@@ -141,12 +138,12 @@ public class XPathHelper {
     }
 
     public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, byte[] xmlData) throws XPathExpressionException, IOException,
-            ParserConfigurationException, SAXException {
+    ParserConfigurationException, SAXException {
         return XPathHelper.xpathXmlList(clazz, expr, XPathHelper.parseXml(xmlData));
     }
 
     public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, byte[] xmlData, String basenodename) throws XPathExpressionException,
-            IOException, ParserConfigurationException, SAXException {
+    IOException, ParserConfigurationException, SAXException {
         return XPathHelper.xpathXmlList(clazz, expr, XPathHelper.parseXml(xmlData), basenodename);
     }
 
@@ -169,4 +166,7 @@ public class XPathHelper {
         }
         return Collections.singletonList((T) result);
     }
+
+    /** http://apache.org/xml/features/nonvalidating/load-external-dtd */
+    protected static final String DTD_NO_VALIDATION = "http://apache.org/xml/features/nonvalidating/load-external-dtd";
 }
