@@ -187,6 +187,13 @@ public class FilePath implements Path, Externalizable {
         return fileName.substring(p + 1);
     }
 
+    public static Path getPath(Path p) {
+        if (p instanceof FilePath) {
+            return FilePath.class.cast(p).path;
+        }
+        return p;
+    }
+
     public static String getShortFileName(Path path) {
         String fileName = path.getFileName().toString();
         int p = fileName.lastIndexOf('.');
@@ -280,6 +287,10 @@ public class FilePath implements Path, Externalizable {
     public static final FilePath USERDIR = new FilePath(System.getProperty("user.home"));
 
     public static final String[] UNITS = new String[] { "bytes", "kB", "MB", "GB", "TB"/* , "PB" */};
+
+    public FilePath() {
+        this.path = Paths.get(".").toAbsolutePath().normalize();
+    }
 
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
@@ -604,7 +615,10 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public boolean equals(Object other) {
-        return this.getPath().equals(other);
+        if (!(other instanceof Path)) {
+            return false;
+        }
+        return this.getPath().equals(FilePath.getPath(Path.class.cast(other)));
     }
 
     public boolean exists(LinkOption... options) {
@@ -707,7 +721,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Path getPath() {
-        return this.path;
+        return FilePath.getPath(this);
     }
 
     public Set<PosixFilePermission> getPosixFilePermissions(LinkOption... options) throws IOException {
@@ -969,7 +983,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path relativize(Path other) {
-        return new FilePath(this.getPath().relativize(other));
+        return new FilePath(this.getPath().relativize(FilePath.getPath(other)));
     }
 
     /**
@@ -978,7 +992,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolve(Path other) {
-        return new FilePath(this.getPath().resolve(other));
+        return new FilePath(this.getPath().resolve(FilePath.getPath(other)));
     }
 
     /**
@@ -996,7 +1010,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolveSibling(Path other) {
-        return new FilePath(this.getPath().resolveSibling(other));
+        return new FilePath(this.getPath().resolveSibling(FilePath.getPath(other)));
     }
 
     /**
@@ -1029,10 +1043,6 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath setOwner(UserPrincipal owner) throws IOException {
         return new FilePath(Files.setOwner(this.getPath(), owner));
-    }
-
-    public void setPath(Path path) {
-        this.path = path;
     }
 
     public FilePath setPosixFilePermissions(Set<PosixFilePermission> perms) throws IOException {
