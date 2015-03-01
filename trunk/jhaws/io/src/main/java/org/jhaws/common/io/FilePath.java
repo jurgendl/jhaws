@@ -424,7 +424,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @throws IOException : thrown exception
      */
-    public boolean compareContents(FilePath file, int maxCompareSize) throws IOException {
+    public boolean compareContents(Path file, int maxCompareSize) throws IOException {
         BufferedInputStream iser1 = null;
         BufferedInputStream iser2 = null;
         try {
@@ -474,12 +474,12 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().compareTo(other);
     }
 
-    public FilePath copyFrom(FilePath source, CopyOption... options) throws IOException {
-        return new FilePath(Files.copy(source, this, options));
-    }
-
     public long copyFrom(InputStream in, CopyOption... options) throws IOException {
         return Files.copy(in, this.getPath(), options);
+    }
+
+    public FilePath copyFrom(Path source, CopyOption... options) throws IOException {
+        return new FilePath(Files.copy(FilePath.getPath(source), this, options));
     }
 
     public long copyTo(OutputStream out) throws IOException {
@@ -813,20 +813,20 @@ public class FilePath implements Path, Externalizable {
         // return Files.lines(this.getPath());
     }
 
-    public FilePath moveFrom(FilePath source) throws IOException {
+    public FilePath moveFrom(Path source) throws IOException {
         return this.moveFrom(source, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public FilePath moveFrom(FilePath source, CopyOption... options) throws IOException {
-        return new FilePath(Files.move(source, this, options));
+    public FilePath moveFrom(Path source, CopyOption... options) throws IOException {
+        return new FilePath(Files.move(FilePath.getPath(source), this, options));
     }
 
-    public FilePath moveTo(FilePath target) throws IOException {
+    public FilePath moveTo(Path target) throws IOException {
         return this.moveTo(target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public FilePath moveTo(FilePath target, CopyOption... options) throws IOException {
-        return new FilePath(Files.move(this, target, options));
+    public FilePath moveTo(Path target, CopyOption... options) throws IOException {
+        return new FilePath(Files.move(this, FilePath.getPath(target), options));
     }
 
     public BufferedInputStream newBufferedInputStream(OpenOption... options) throws IOException {
