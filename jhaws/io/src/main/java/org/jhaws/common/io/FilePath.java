@@ -89,7 +89,7 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    protected static FilePath checkFileIndex(FilePath parent, String outFileName, String extension) {
+    protected static FilePath checkFileIndex(Path parent, String outFileName, String extension) {
         return FilePath.checkFileIndex(parent, outFileName, "_", "0000", extension);
     }
 
@@ -110,7 +110,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @return : IOFile : new indexed File
      */
-    protected static FilePath checkFileIndex(FilePath parent, String outFileName, String sep, String format, String extension) {
+    protected static FilePath checkFileIndex(Path parent, String outFileName, String sep, String format, String extension) {
         String SEPARATOR = sep;
         String FORMAT = sep + format;
         FilePath file = "".equals(extension) ? new FilePath(parent, outFileName) : new FilePath(parent, outFileName + "." + extension);
@@ -783,7 +783,7 @@ public class FilePath implements Path, Externalizable {
         return Files.isRegularFile(this.getPath(), options);
     }
 
-    public boolean isSameFile(FilePath otherPath) throws IOException {
+    public boolean isSameFile(Path otherPath) throws IOException {
         return Files.isSameFile(this.getPath(), otherPath);
     }
 
