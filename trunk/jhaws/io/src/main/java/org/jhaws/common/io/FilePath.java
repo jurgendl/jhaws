@@ -482,16 +482,16 @@ public class FilePath implements Path, Externalizable {
         return Files.copy(in, this.getPath(), options);
     }
 
-    public FilePath copyTo(FilePath target) throws IOException {
-        return this.copyTo(target, StandardCopyOption.REPLACE_EXISTING);
-    }
-
-    public FilePath copyTo(FilePath target, CopyOption... options) throws IOException {
-        return new FilePath(Files.copy(this.getPath(), target, options));
-    }
-
     public long copyTo(OutputStream out) throws IOException {
         return Files.copy(this.getPath(), out);
+    }
+
+    public FilePath copyTo(Path target) throws IOException {
+        return this.copyTo(FilePath.getPath(target), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    public FilePath copyTo(Path target, CopyOption... options) throws IOException {
+        return new FilePath(Files.copy(this.getPath(), FilePath.getPath(target), options));
     }
 
     public Long crc32() throws IOException {
