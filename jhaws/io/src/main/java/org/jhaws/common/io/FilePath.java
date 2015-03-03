@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Closeable;
 import java.io.Externalizable;
 import java.io.File;
 import java.io.IOException;
@@ -45,10 +46,10 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.zip.Adler32;
@@ -64,8 +65,84 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
+    public static class FileLineIterator implements Iterator<String>, Closeable {
+        protected transient final FilePath path;
+
+        protected transient final Charset charset;
+
+        protected transient String line;
+
+        protected transient BufferedReader bufferedReader;
+
+        protected transient boolean openened = false;
+
+        public FileLineIterator(FilePath path) {
+            this(path, Charset.defaultCharset());
+        }
+
+        public FileLineIterator(FilePath path, Charset charset) {
+            this.path = path;
+            this.charset = charset;
+        }
+
+        @Override
+        public void close() throws IOException {
+            BufferedReader br = this.getBufferedReader();
+            if (br != null) {
+                br.close();
+            }
+
+        }
+
+        protected BufferedReader getBufferedReader() throws IOException {
+            if (!this.openened) {
+                this.openened = true;
+                this.bufferedReader = this.path.newBufferedReader();
+            }
+            return this.bufferedReader;
+        }
+
+        @Override
+        public boolean hasNext() {
+            this.optionalReadLine();
+            return this.line != null;
+        }
+
+        @Override
+        public String next() {
+            this.optionalReadLine();
+            if (this.line == null) {
+                throw new NoSuchElementException();
+            }
+            String tmp = this.line;
+            this.line = null;
+            return tmp;
+        }
+
+        protected void optionalReadLine() {
+            if (this.line == null) {
+                try {
+                    BufferedReader br = this.getBufferedReader();
+                    if (br != null) {
+                        this.line = br.readLine();
+                        if (this.line == null) {
+                            this.close();
+                        }
+                    }
+                } catch (IOException ex) {
+                    this.line = null;
+                }
+            }
+        }
+
+        @Override
+        public void remove() {
+            this.line = null;
+        }
+    }
+
     public static class PathIterator implements Iterator<Path> {
-        protected Path path;
+        protected transient Path path;
 
         public PathIterator(Path path) {
             this.path = path;
@@ -165,12 +242,12 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.createTempDirectory(prefix, attrs));
     }
 
-    public static FilePath createDefaultTempFile(String prefix, String extension) throws IOException {
-        return new FilePath(Files.createTempFile(prefix, "." + extension));
+    public static FilePath createDefaultTempFile(String prefix, FileAttribute<?>... attrs) throws IOException {
+        return FilePath.createDefaultTempFile(prefix, null, attrs);
     }
 
-    public static FilePath createDefaultTempFile(String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempFile(prefix, suffix, attrs));
+    public static FilePath createDefaultTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IOException {
+        return new FilePath(Files.createTempFile(prefix + "-", extension == null ? "" : "." + extension, attrs));
     }
 
     public static String getConvertedSize(Long size) {
@@ -183,7 +260,7 @@ public class FilePath implements Path, Externalizable {
 
     public static String getExtension(Path path) {
         String fileName = path.getFileName().toString();
-        int p = fileName.lastIndexOf('.');
+        int p = fileName.lastIndexOf(FilePath.DOT);
         if (p == -1) {
             return null;
         }
@@ -267,6 +344,12 @@ public class FilePath implements Path, Externalizable {
         }
         return new FilePath(new String(fn));
     }
+
+    public static FilePath wrap(Path p) {
+        return p instanceof FilePath ? FilePath.class.cast(p) : new FilePath(p);
+    }
+
+    public static final char DOT = '.';
 
     protected transient Path path;
 
@@ -807,12 +890,8 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().iterator();
     }
 
-    public Collection<String> lines() throws IOException {
-        Collection<String> lines = new ArrayList<>();
-        try (BufferedReader bufferedReader = this.newBufferedReader()) {
-            lines.add(bufferedReader.readLine());
-        }
-        return lines;
+    public FileLineIterator lines() throws IOException {
+        return new FileLineIterator(this);
         // return Files.lines(this.getPath());
     }
 
@@ -897,7 +976,7 @@ public class FilePath implements Path, Externalizable {
         return Files.notExists(this.getPath(), options);
     }
 
-    public PathIterator pathIterator() {
+    public PathIterator paths() {
         return new PathIterator(this);
     }
 
