@@ -3,6 +3,7 @@ package org.jhaws.common.io;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 import org.jhaws.common.io.FilePath.FileLineIterator;
 import org.junit.Assert;
@@ -20,6 +21,45 @@ public class FilePathTest {
         Assert.assertNull(p.getParent());
         p = FilePath.class.cast(p.toAbsolutePath());
         Assert.assertEquals(thisDir, p.getParent());
+    }
+
+    @Test
+    public void equals() {
+        try {
+            StringBuilder chars = new StringBuilder();
+            for (char i = 'a'; i <= 'z'; i++) {
+                chars.append(new Character(i)).append(new Character(Character.toUpperCase(i)));
+            }
+            for (char i = '0'; i <= '9'; i++) {
+                chars.append(new Character(i));
+            }
+            Random r = new Random(System.currentTimeMillis());
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 4444; i++) {
+                sb.append(chars.charAt(r.nextInt(chars.length())));
+                if ((i % 100) == 0) {
+                    sb.append("\n");
+                }
+            }
+            FilePath tmp1File = FilePath.createDefaultTempFile("A" + System.currentTimeMillis(), "txt");
+            FilePath tmp2File = FilePath.createDefaultTempFile("B" + System.currentTimeMillis(), "txt");
+            tmp1File.write(sb.toString().getBytes());
+            int index = 3;
+            char cat = sb.charAt(index);
+            if (Character.isUpperCase(cat)) {
+                sb.setCharAt(index, Character.toLowerCase(cat));
+            } else {
+                sb.setCharAt(index, Character.toUpperCase(cat));
+            }
+            tmp2File.write(sb.toString().getBytes());
+            // Assert.assertTrue(tmp1File.equals(tmp2File, 100));
+            // Assert.assertTrue(tmp1File.equals(tmp2File, 1000));
+            Assert.assertFalse(tmp1File.equals(tmp2File, 10000));
+        } catch (IOException ex) {
+            Assert.fail(String.valueOf(ex));
+        } catch (Exception ex) {
+            Assert.fail(String.valueOf(ex));
+        }
     }
 
     @Test

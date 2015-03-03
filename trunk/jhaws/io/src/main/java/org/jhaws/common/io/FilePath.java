@@ -46,6 +46,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,82 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
+    public static class FileBufferIterator implements Iterator<byte[]>, Closeable {
+        protected transient final FilePath path;
+
+        protected transient byte[] buffer;
+
+        protected transient boolean openened = false;
+
+        protected transient InputStream inputStream;
+
+        protected Integer read = -1;
+
+        public FileBufferIterator(FilePath path) {
+            this(path, 1024);
+        }
+
+        public FileBufferIterator(FilePath path, int length) {
+            this.path = path;
+            this.buffer = new byte[length];
+        }
+
+        @Override
+        public void close() throws IOException {
+            this.openened = true;
+            InputStream is = this.getInputStream();
+            if (is != null) {
+                is.close();
+            }
+        }
+
+        protected InputStream getInputStream() throws IOException {
+            if (!this.openened) {
+                this.openened = true;
+                this.inputStream = this.path.newBufferedInputStream();
+            }
+            return this.inputStream;
+        }
+
+        @Override
+        public boolean hasNext() {
+            this.optionalReadBuffer();
+            return this.read != -1;
+        }
+
+        @Override
+        public byte[] next() {
+            this.optionalReadBuffer();
+            if (this.read == -1) {
+                throw new NoSuchElementException();
+            }
+            return this.buffer;
+        }
+
+        protected void optionalReadBuffer() {
+            if (this.read == -1) {
+                try {
+                    InputStream is = this.getInputStream();
+                    if (is != null) {
+                        this.read = is.read(this.buffer);
+                        if (this.read == -1) {
+                            this.close();
+                        } else if (this.buffer.length != this.read) {
+                            this.buffer = Arrays.copyOf(this.buffer, this.read);// truncate
+                        }
+                    }
+                } catch (IOException ex) {
+                    this.read = -1;
+                }
+            }
+        }
+
+        @Override
+        public void remove() {
+            this.read = -1;
+        }
+    }
+
     public static class FileLineIterator implements Iterator<String>, Closeable {
         protected transient final FilePath path;
 
@@ -439,6 +516,10 @@ public class FilePath implements Path, Externalizable {
         return this.checksum(new Adler32());
     }
 
+    public FileBufferIterator bytes() throws IOException {
+        return new FileBufferIterator(this);
+    }
+
     public FilePath checkDirectory() throws IOException {
         if (!this.isDirectory()) {
             throw new IOException("not a directory");
@@ -465,89 +546,21 @@ public class FilePath implements Path, Externalizable {
      * derived from given File
      */
     public FilePath checkFileIndex() {
-        try {
-            if (!this.exists()) {
-                return this;
-            }
-            String shortFile = this.getShortFileName();
-            String extension = this.getExtension();
-            return FilePath.checkFileIndex(new FilePath(this.getParent()), shortFile, extension);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        if (!this.exists()) {
+            return this;
         }
+        String shortFile = this.getShortFileName();
+        String extension = this.getExtension();
+        return FilePath.checkFileIndex(new FilePath(this.getParent()), shortFile, extension);
     }
 
     public Long checksum(Checksum checksum) throws IOException {
-        InputStream is = null;
-        Long rv = null;
-        try {
-            is = this.newInputStream();
-            int cnt;
-            while ((cnt = is.read()) != -1) {
-                checksum.update(cnt);
+        try (FileBufferIterator bytes = this.bytes()) {
+            while (bytes.hasNext()) {
+                byte[] buffer = bytes.next();
+                checksum.update(buffer, 0, buffer.length);
             }
-            rv = checksum.getValue();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception ex) {
-                    //
-                }
-            }
-        }
-        return rv;
-    }
-
-    /**
-     * compares two files binary, reads only first maxCompareSize bytes
-     *
-     * @param file : IOFile : file to compare to
-     * @param maxCompareSize0 : int : maximum size when comparing files
-     *
-     * @return : boolean : file is equal or not
-     *
-     * @throws IOException : thrown exception
-     */
-    public boolean compareContents(Path file, int maxCompareSize) throws IOException {
-        BufferedInputStream iser1 = null;
-        BufferedInputStream iser2 = null;
-        try {
-            long size = this.size();
-            if (size != Files.size(file)) {
-                return false;
-            }
-            int compareSize = Math.min(maxCompareSize, (int) size);
-            iser1 = this.newBufferedInputStream();
-            byte[] b1 = new byte[compareSize];
-            iser1.read(b1, 0, compareSize);
-            iser2 = this.newBufferedInputStream();
-            byte[] b2 = new byte[compareSize];
-            iser2.read(b2, 0, compareSize);
-            int bpos = 0;
-            while (bpos < compareSize) {
-                if (b1[bpos] != b2[bpos]) {
-                    return false;
-                }
-                bpos++;
-            }
-            return true;
-        } finally {
-            if (iser1 != null) {
-                try {
-                    iser1.close();
-                } catch (Exception ex) {
-                    //
-                }
-            }
-            if (iser2 != null) {
-                try {
-                    iser2.close();
-                } catch (Exception ex) {
-                    //
-                }
-            }
+            return checksum.getValue();
         }
     }
 
@@ -616,8 +629,12 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.createTempDirectory(this.getPath(), prefix, attrs));
     }
 
-    public FilePath createTempFile(String prefix, String suffix, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempFile(this.getPath(), prefix, suffix, attrs));
+    public FilePath createTempFile(String prefix, FileAttribute<?>... attrs) throws IOException {
+        return this.createTempFile(prefix, null, attrs);
+    }
+
+    public FilePath createTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IOException {
+        return new FilePath(Files.createTempFile(this.getPath(), prefix + "-", extension == null ? "" : "." + extension, attrs));
     }
 
     public FilePath delete() throws IOException {
@@ -707,6 +724,48 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().equals(FilePath.getPath(Path.class.cast(other)));
     }
 
+    /**
+     * compares two files binary, reads only first maxCompareSize bytes
+     *
+     * @param file : IOFile : file to compare to
+     * @param maxCompareSize0 : int : maximum size when comparing files
+     *
+     * @return : boolean : file is equal or not
+     *
+     * @throws IOException : thrown exception
+     */
+    public boolean equals(Path file, long maxCompareSize) throws IOException {
+        FilePath otherPath = FilePath.wrap(file);
+        if (this.notExists() || otherPath.notExists() || this.isDirectory() || this.isDirectory()) {
+            return false;
+        }
+        long size = this.getSize();
+        long otherSize = otherPath.getSize();
+        if (size != otherSize) {
+            return false;
+        }
+        long compareSize = Math.min(maxCompareSize, size);
+        long comparedSize = 0l;
+        try (FileBufferIterator buffer = this.bytes(); FileBufferIterator otherBuffer = otherPath.bytes()) {
+            while (buffer.hasNext() || otherBuffer.hasNext()) {
+                if (!buffer.hasNext() || !otherBuffer.hasNext()) {
+                    return false;
+                }
+                byte[] bytes = buffer.next();
+                byte[] otherBytes = otherBuffer.next();
+                if (!Arrays.equals(bytes, otherBytes)) {
+                    System.out.println(Arrays.toString(bytes));
+                    System.out.println(Arrays.toString(otherBytes));
+                    return false;
+                }
+                if ((comparedSize += bytes.length) >= compareSize) {
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
     public boolean exists(LinkOption... options) {
         return Files.exists(this.getPath(), options);
     }
@@ -730,7 +789,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String getConvertedSize() throws IOException {
-        return FilePath.getConvertedSize(this.size());
+        return FilePath.getConvertedSize(this.getSize());
     }
 
     public String getExtension() {
@@ -742,7 +801,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#getFileName()
      */
     @Override
@@ -755,7 +813,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#getFileSystem()
      */
     @Override
@@ -771,12 +828,15 @@ public class FilePath implements Path, Externalizable {
         return Files.getLastModifiedTime(this.getPath(), options);
     }
 
+    public long getLength() throws IOException {
+        return this.getSize();
+    }
+
     public String getName() {
         return this.toString();
     }
 
     /**
-     *
      * @see java.nio.file.Path#getName(int)
      */
     @Override
@@ -785,7 +845,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#getNameCount()
      */
     @Override
@@ -798,7 +857,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#getParent()
      */
     @Override
@@ -815,7 +873,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#getRoot()
      */
     @Override
@@ -827,8 +884,23 @@ public class FilePath implements Path, Externalizable {
         return FilePath.getShortFileName(this);
     }
 
+    public long getSize() throws IOException {
+        return Files.size(this.getPath());
+    }
+
     public Icon getSmallIcon() {
         return FilePath.grabber.getSmallIcon(this.toFile());
+    }
+
+    public long getTotalSize() throws IOException {
+        final AtomicLong size = new AtomicLong(0);
+        this.walkFileTree(new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return size.get();
     }
 
     /**
@@ -1163,10 +1235,6 @@ public class FilePath implements Path, Externalizable {
         return siblings;
     }
 
-    public long size() throws IOException {
-        return Files.size(this.getPath());
-    }
-
     /**
      *
      * @see java.nio.file.Path#startsWith(java.nio.file.Path)
@@ -1228,17 +1296,6 @@ public class FilePath implements Path, Externalizable {
     @Override
     public String toString() {
         return this.getPath().toString();
-    }
-
-    public long totalSize() throws IOException {
-        final AtomicLong size = new AtomicLong(0);
-        this.walkFileTree(new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        return size.get();
     }
 
     /**
