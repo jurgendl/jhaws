@@ -191,8 +191,8 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static Path getPath(Path p) {
-        if (p instanceof FilePath) {
-            return FilePath.class.cast(p).path;
+        while (p instanceof FilePath) {
+            p = FilePath.class.cast(p).path;
         }
         return p;
     }
