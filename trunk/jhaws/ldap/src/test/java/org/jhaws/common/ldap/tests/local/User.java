@@ -2,9 +2,9 @@ package org.jhaws.common.ldap.tests.local;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jhaws.common.ldap.annotations.LdapClass;
 import org.jhaws.common.ldap.annotations.LdapField;
 import org.jhaws.common.ldap.annotations.LdapKey;
@@ -45,7 +45,7 @@ public class User implements Serializable, Comparable<User> {
     private String[] objectClass;
 
     /**
-     * 
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -54,7 +54,7 @@ public class User implements Serializable, Comparable<User> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#equals(Object)
      */
     @Override
@@ -72,7 +72,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor cn
-     * 
+     *
      * @return Returns the cn.
      */
     public final String getCn() {
@@ -81,7 +81,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor description
-     * 
+     *
      * @return Returns the description.
      */
     public final String getDescription() {
@@ -90,7 +90,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor objectClass
-     * 
+     *
      * @return Returns the objectClass.
      */
     public final String[] getObjectClass() {
@@ -99,7 +99,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor reference
-     * 
+     *
      * @return Returns the reference.
      */
     public final String getReference() {
@@ -108,7 +108,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor surname
-     * 
+     *
      * @return Returns the surname.
      */
     public final String getSurname() {
@@ -117,7 +117,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Getter voor telephoneNumber
-     * 
+     *
      * @return Returns the telephoneNumber.
      */
     public final String getTelephoneNumber() {
@@ -125,7 +125,7 @@ public class User implements Serializable, Comparable<User> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -136,7 +136,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor cn
-     * 
+     *
      * @param cn The cn to set.
      */
     public final void setCn(String cn) {
@@ -145,7 +145,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor description
-     * 
+     *
      * @param description The description to set.
      */
     public final void setDescription(String description) {
@@ -154,7 +154,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor objectClass
-     * 
+     *
      * @param objectClass The objectClass to set.
      */
     public final void setObjectClass(String[] objectClass) {
@@ -163,7 +163,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor reference
-     * 
+     *
      * @param seealso The reference to set.
      */
     public final void setReference(String seealso) {
@@ -172,7 +172,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor surname
-     * 
+     *
      * @param sn The surname to set.
      */
     public final void setSurname(String sn) {
@@ -181,7 +181,7 @@ public class User implements Serializable, Comparable<User> {
 
     /**
      * Setter voor telephoneNumber
-     * 
+     *
      * @param telephonenumber The telephoneNumber to set.
      */
     public final void setTelephoneNumber(String telephonenumber) {
@@ -189,7 +189,7 @@ public class User implements Serializable, Comparable<User> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
