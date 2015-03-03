@@ -173,7 +173,10 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.createTempFile(prefix, suffix, attrs));
     }
 
-    public static String getConvertedSize(long size) {
+    public static String getConvertedSize(Long size) {
+        if (size == null) {
+            return "";
+        }
         int scale = (int) (Math.log10(size) / 3);
         return new DecimalFormat().format(size / (1 << (scale * 10))) + "" + FilePath.UNITS[scale];
     }
