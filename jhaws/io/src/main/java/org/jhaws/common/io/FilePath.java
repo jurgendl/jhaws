@@ -105,12 +105,14 @@ public class FilePath implements Path, Externalizable {
 
         @Override
         public boolean hasNext() {
+            System.out.println(this.path + "::hasnext");
             this.optionalReadBuffer();
             return this.read != -1;
         }
 
         @Override
         public byte[] next() {
+            System.out.println(this.path + "::next");
             this.optionalReadBuffer();
             if (this.read == -1) {
                 throw new NoSuchElementException();
@@ -119,20 +121,19 @@ public class FilePath implements Path, Externalizable {
         }
 
         protected void optionalReadBuffer() {
-            if (this.read == -1) {
-                try {
-                    InputStream is = this.getInputStream();
-                    if (is != null) {
-                        this.read = is.read(this.buffer);
-                        if (this.read == -1) {
-                            this.close();
-                        } else if (this.buffer.length != this.read) {
-                            this.buffer = Arrays.copyOf(this.buffer, this.read);// truncate
-                        }
+            try {
+                InputStream is = this.getInputStream();
+                if (is != null) {
+                    this.read = is.read(this.buffer);
+                    System.out.println(this.path + "::" + this.read);
+                    if (this.read == -1) {
+                        this.close();
+                    } else if (this.buffer.length != this.read) {
+                        this.buffer = Arrays.copyOf(this.buffer, this.read);// truncate
                     }
-                } catch (IOException ex) {
-                    this.read = -1;
                 }
+            } catch (IOException ex) {
+                this.read = -1;
             }
         }
 
@@ -517,7 +518,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FileBufferIterator bytes() throws IOException {
-        return new FileBufferIterator(this);
+        return this.bytes(1024);
+    }
+
+    public FileBufferIterator bytes(int size) throws IOException {
+        return new FileBufferIterator(this, size);
     }
 
     public FilePath checkDirectory() throws IOException {
@@ -734,7 +739,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @throws IOException : thrown exception
      */
-    public boolean equals(Path file, long maxCompareSize) throws IOException {
+    public boolean equals(Path file, int bufferLenght, long maxCompareSize) throws IOException {
         FilePath otherPath = FilePath.wrap(file);
         if (this.notExists() || otherPath.notExists() || this.isDirectory() || this.isDirectory()) {
             return false;
@@ -746,16 +751,18 @@ public class FilePath implements Path, Externalizable {
         }
         long compareSize = Math.min(maxCompareSize, size);
         long comparedSize = 0l;
-        try (FileBufferIterator buffer = this.bytes(); FileBufferIterator otherBuffer = otherPath.bytes()) {
+        try (FileBufferIterator buffer = this.bytes(bufferLenght); FileBufferIterator otherBuffer = otherPath.bytes(bufferLenght)) {
             while (buffer.hasNext() || otherBuffer.hasNext()) {
                 if (!buffer.hasNext() || !otherBuffer.hasNext()) {
                     return false;
                 }
                 byte[] bytes = buffer.next();
                 byte[] otherBytes = otherBuffer.next();
+                System.out.println(new String(bytes));
+                System.out.println(new String(otherBytes));
+                System.out.println(new String(bytes).equals(new String(otherBytes)));
+                System.out.println("-------------------------------------");
                 if (!Arrays.equals(bytes, otherBytes)) {
-                    System.out.println(Arrays.toString(bytes));
-                    System.out.println(Arrays.toString(otherBytes));
                     return false;
                 }
                 if ((comparedSize += bytes.length) >= compareSize) {
