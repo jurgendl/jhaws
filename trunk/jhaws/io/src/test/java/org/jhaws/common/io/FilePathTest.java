@@ -26,6 +26,7 @@ public class FilePathTest {
     @Test
     public void equals() {
         try {
+            int index = 25;
             StringBuilder chars = new StringBuilder();
             for (char i = 'a'; i <= 'z'; i++) {
                 chars.append(new Character(i)).append(new Character(Character.toUpperCase(i)));
@@ -33,31 +34,34 @@ public class FilePathTest {
             for (char i = '0'; i <= '9'; i++) {
                 chars.append(new Character(i));
             }
-            Random r = new Random(System.currentTimeMillis());
+            Random r = new Random(0);
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < 4444; i++) {
+            for (int i = 0; i < 30; i++) {
                 sb.append(chars.charAt(r.nextInt(chars.length())));
-                if ((i % 100) == 0) {
-                    sb.append("\n");
+                if (((i % 9) == 0) && (i != 0)) {
+                    sb.append("_");
                 }
             }
-            FilePath tmp1File = FilePath.createDefaultTempFile("A" + System.currentTimeMillis(), "txt");
-            FilePath tmp2File = FilePath.createDefaultTempFile("B" + System.currentTimeMillis(), "txt");
+            FilePath tmp1File = FilePath.createDefaultTempFile("A-" + System.currentTimeMillis(), "txt");
+            System.out.println(tmp1File.toAbsolutePath());
+            FilePath tmp2File = FilePath.createDefaultTempFile("B-" + System.currentTimeMillis(), "txt");
+            System.out.println(tmp2File.toAbsolutePath());
+            System.out.println("=====================================");
+            System.out.println(sb.toString());
+            System.out.println("=====================================");
             tmp1File.write(sb.toString().getBytes());
-            int index = 3;
-            char cat = sb.charAt(index);
-            if (Character.isUpperCase(cat)) {
-                sb.setCharAt(index, Character.toLowerCase(cat));
-            } else {
-                sb.setCharAt(index, Character.toUpperCase(cat));
-            }
+            sb.setCharAt(index, '.');
+            System.out.println(sb.toString());
+            System.out.println("=====================================");
             tmp2File.write(sb.toString().getBytes());
-            // Assert.assertTrue(tmp1File.equals(tmp2File, 100));
-            // Assert.assertTrue(tmp1File.equals(tmp2File, 1000));
-            Assert.assertFalse(tmp1File.equals(tmp2File, 10000));
+            Assert.assertTrue(tmp1File.equals(tmp2File, 10, 5));
+            System.out.println("=====================================");
+            Assert.assertFalse(tmp1File.equals(tmp2File, 10, 50));
         } catch (IOException ex) {
+            ex.printStackTrace(System.out);
             Assert.fail(String.valueOf(ex));
         } catch (Exception ex) {
+            ex.printStackTrace(System.out);
             Assert.fail(String.valueOf(ex));
         }
     }
