@@ -43,20 +43,12 @@ public class FilePathTest {
                 }
             }
             FilePath tmp1File = FilePath.createDefaultTempFile("A-" + System.currentTimeMillis(), "txt");
-            System.out.println(tmp1File.toAbsolutePath());
             FilePath tmp2File = FilePath.createDefaultTempFile("B-" + System.currentTimeMillis(), "txt");
-            System.out.println(tmp2File.toAbsolutePath());
-            System.out.println("=====================================");
-            System.out.println(sb.toString());
-            System.out.println("=====================================");
             tmp1File.write(sb.toString().getBytes());
             sb.setCharAt(index, '.');
-            System.out.println(sb.toString());
-            System.out.println("=====================================");
             tmp2File.write(sb.toString().getBytes());
-            Assert.assertTrue(tmp1File.equals(tmp2File, 10, 5));
-            System.out.println("=====================================");
-            Assert.assertFalse(tmp1File.equals(tmp2File, 10, 50));
+            Assert.assertTrue(tmp1File.equals(tmp2File, 5));
+            Assert.assertFalse(tmp1File.equals(tmp2File, 50));
         } catch (IOException ex) {
             ex.printStackTrace(System.out);
             Assert.fail(String.valueOf(ex));
