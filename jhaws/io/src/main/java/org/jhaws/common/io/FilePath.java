@@ -87,11 +87,11 @@ public class FilePath implements Path, Externalizable {
 
         @Override
         public void close() throws IOException {
+            this.openened = true;
             BufferedReader br = this.getBufferedReader();
             if (br != null) {
                 br.close();
             }
-
         }
 
         protected BufferedReader getBufferedReader() throws IOException {
