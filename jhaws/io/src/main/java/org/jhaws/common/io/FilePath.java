@@ -46,7 +46,6 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -66,80 +65,73 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
-    public static class FileBufferIterator implements Iterator<byte[]>, Closeable {
+
+    public static class FileByteIterator implements Iterator<Byte>, Closeable {
         protected transient final FilePath path;
 
-        protected transient byte[] buffer;
+        protected transient Byte b;
+
+        protected transient BufferedInputStream in;
 
         protected transient boolean openened = false;
 
-        protected transient InputStream inputStream;
-
-        protected Integer read = -1;
-
-        public FileBufferIterator(FilePath path) {
-            this(path, 1024);
-        }
-
-        public FileBufferIterator(FilePath path, int length) {
+        public FileByteIterator(FilePath path) {
             this.path = path;
-            this.buffer = new byte[length];
         }
 
         @Override
         public void close() throws IOException {
             this.openened = true;
-            InputStream is = this.getInputStream();
-            if (is != null) {
-                is.close();
+            BufferedInputStream br = this.in();
+            if (br != null) {
+                br.close();
             }
-        }
-
-        protected InputStream getInputStream() throws IOException {
-            if (!this.openened) {
-                this.openened = true;
-                this.inputStream = this.path.newBufferedInputStream();
-            }
-            return this.inputStream;
         }
 
         @Override
         public boolean hasNext() {
-            System.out.println(this.path + "::hasnext");
-            this.optionalReadBuffer();
-            return this.read != -1;
+            this.optionalRead();
+            return this.b != null;
+        }
+
+        protected BufferedInputStream in() throws IOException {
+            if (!this.openened) {
+                this.openened = true;
+                this.in = this.path.newBufferedInputStream();
+            }
+            return this.in;
         }
 
         @Override
-        public byte[] next() {
-            System.out.println(this.path + "::next");
-            this.optionalReadBuffer();
-            if (this.read == -1) {
+        public Byte next() {
+            this.optionalRead();
+            if (this.b == null) {
                 throw new NoSuchElementException();
             }
-            return this.buffer;
+            Byte tmp = this.b;
+            this.b = null;
+            return tmp;
         }
 
-        protected void optionalReadBuffer() {
-            try {
-                InputStream is = this.getInputStream();
-                if (is != null) {
-                    this.read = is.read(this.buffer);
-                    System.out.println(this.path + "::" + this.read);
-                    if (this.read == -1) {
-                        this.close();
-                    } else if (this.buffer.length != this.read) {
-                        this.buffer = Arrays.copyOf(this.buffer, this.read);// truncate
+        protected void optionalRead() {
+            if (this.b == null) {
+                try {
+                    BufferedInputStream br = this.in();
+                    if (br != null) {
+                        this.b = (byte) br.read();
+                        if (this.b == null) {
+                            this.close();
+                        }
                     }
+                } catch (IOException ex) {
+                    this.b = null;
                 }
-            } catch (IOException ex) {
-                this.read = -1;
             }
         }
 
         @Override
         public void remove() {
-            this.read = -1;
+            this.b = null;
         }
     }
 
@@ -150,7 +142,7 @@ public class FilePath implements Path, Externalizable {
 
         protected transient String line;
 
-        protected transient BufferedReader bufferedReader;
+        protected transient BufferedReader in;
 
         protected transient boolean openened = false;
 
@@ -166,29 +158,29 @@ public class FilePath implements Path, Externalizable {
         @Override
         public void close() throws IOException {
             this.openened = true;
-            BufferedReader br = this.getBufferedReader();
+            BufferedReader br = this.in();
             if (br != null) {
                 br.close();
             }
         }
 
-        protected BufferedReader getBufferedReader() throws IOException {
-            if (!this.openened) {
-                this.openened = true;
-                this.bufferedReader = this.path.newBufferedReader();
-            }
-            return this.bufferedReader;
-        }
-
         @Override
         public boolean hasNext() {
-            this.optionalReadLine();
+            this.optionalRead();
             return this.line != null;
+        }
+
+        protected BufferedReader in() throws IOException {
+            if (!this.openened) {
+                this.openened = true;
+                this.in = this.path.newBufferedReader();
+            }
+            return this.in;
         }
 
         @Override
         public String next() {
-            this.optionalReadLine();
+            this.optionalRead();
             if (this.line == null) {
                 throw new NoSuchElementException();
             }
@@ -197,10 +189,10 @@ public class FilePath implements Path, Externalizable {
             return tmp;
         }
 
-        protected void optionalReadLine() {
+        protected void optionalRead() {
             if (this.line == null) {
                 try {
-                    BufferedReader br = this.getBufferedReader();
+                    BufferedReader br = this.in();
                     if (br != null) {
                         this.line = br.readLine();
                         if (this.line == null) {
@@ -517,12 +509,8 @@ public class FilePath implements Path, Externalizable {
         return this.checksum(new Adler32());
     }
 
-    public FileBufferIterator bytes() throws IOException {
-        return this.bytes(1024);
-    }
-
-    public FileBufferIterator bytes(int size) throws IOException {
-        return new FileBufferIterator(this, size);
+    public FileByteIterator bytes() throws IOException {
+        return new FileByteIterator(this);
     }
 
     public FilePath checkDirectory() throws IOException {
@@ -560,10 +548,9 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Long checksum(Checksum checksum) throws IOException {
-        try (FileBufferIterator bytes = this.bytes()) {
+        try (FileByteIterator bytes = this.bytes()) {
             while (bytes.hasNext()) {
-                byte[] buffer = bytes.next();
-                checksum.update(buffer, 0, buffer.length);
+                checksum.update(bytes.next());
             }
             return checksum.getValue();
         }
@@ -739,7 +726,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @throws IOException : thrown exception
      */
-    public boolean equals(Path file, int bufferLenght, long maxCompareSize) throws IOException {
+    public boolean equals(Path file, long maxCompareSize) throws IOException {
         FilePath otherPath = FilePath.wrap(file);
         if (this.notExists() || otherPath.notExists() || this.isDirectory() || this.isDirectory()) {
             return false;
@@ -751,21 +738,17 @@ public class FilePath implements Path, Externalizable {
         }
         long compareSize = Math.min(maxCompareSize, size);
         long comparedSize = 0l;
-        try (FileBufferIterator buffer = this.bytes(bufferLenght); FileBufferIterator otherBuffer = otherPath.bytes(bufferLenght)) {
+        try (FileByteIterator buffer = this.bytes(); FileByteIterator otherBuffer = otherPath.bytes()) {
             while (buffer.hasNext() || otherBuffer.hasNext()) {
                 if (!buffer.hasNext() || !otherBuffer.hasNext()) {
                     return false;
                 }
-                byte[] bytes = buffer.next();
-                byte[] otherBytes = otherBuffer.next();
-                System.out.println(new String(bytes));
-                System.out.println(new String(otherBytes));
-                System.out.println(new String(bytes).equals(new String(otherBytes)));
-                System.out.println("-------------------------------------");
-                if (!Arrays.equals(bytes, otherBytes)) {
+                Byte thisByte = buffer.next();
+                Byte otherByte = otherBuffer.next();
+                if (thisByte != otherByte) {
                     return false;
                 }
-                if ((comparedSize += bytes.length) >= compareSize) {
+                if (comparedSize++ >= compareSize) {
                     break;
                 }
             }
