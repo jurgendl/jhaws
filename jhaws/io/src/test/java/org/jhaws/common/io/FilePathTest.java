@@ -47,8 +47,8 @@ public class FilePathTest {
             tmp1File.write(sb.toString().getBytes());
             sb.setCharAt(index, '.');
             tmp2File.write(sb.toString().getBytes());
-            Assert.assertTrue(tmp1File.equals(tmp2File, 5));
-            Assert.assertFalse(tmp1File.equals(tmp2File, 50));
+            Assert.assertTrue(tmp1File.equal(tmp2File, 5));
+            Assert.assertFalse(tmp1File.equal(tmp2File, 50));
         } catch (IOException ex) {
             ex.printStackTrace(System.out);
             Assert.fail(String.valueOf(ex));

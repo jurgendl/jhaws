@@ -704,29 +704,22 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().endsWith(other);
     }
 
-    /**
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Path)) {
-            return false;
-        }
-        return this.getPath().equals(FilePath.getPath(Path.class.cast(other)));
+    public boolean equal(Path file) throws IOException {
+        FilePath filePath = FilePath.wrap(file);
+        return this.equal(filePath, filePath.getLength());
     }
 
     /**
-     * compares two files binary, reads only first maxCompareSize bytes
+     * compares two files binary, reads only first limit bytes
      *
-     * @param file : IOFile : file to compare to
-     * @param maxCompareSize0 : int : maximum size when comparing files
+     * @param file : Path : file to compare to
+     * @param limit : int : maximum size when comparing files
      *
      * @return : boolean : file is equal or not
      *
      * @throws IOException : thrown exception
      */
-    public boolean equals(Path file, long maxCompareSize) throws IOException {
+    public boolean equal(Path file, long limit) throws IOException {
         FilePath otherPath = FilePath.wrap(file);
         if (this.notExists() || otherPath.notExists() || this.isDirectory() || this.isDirectory()) {
             return false;
@@ -736,7 +729,7 @@ public class FilePath implements Path, Externalizable {
         if (size != otherSize) {
             return false;
         }
-        long compareSize = Math.min(maxCompareSize, size);
+        long compareSize = Math.min(limit, size);
         long comparedSize = 0l;
         try (FileByteIterator buffer = this.bytes(); FileByteIterator otherBuffer = otherPath.bytes()) {
             while (buffer.hasNext() || otherBuffer.hasNext()) {
@@ -754,6 +747,18 @@ public class FilePath implements Path, Externalizable {
             }
         }
         return true;
+    }
+
+    /**
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Path)) {
+            return false;
+        }
+        return this.getPath().equals(FilePath.getPath(Path.class.cast(other)));
     }
 
     public boolean exists(LinkOption... options) {
