@@ -2,50 +2,100 @@ package org.jhaws.common.io;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 import org.jhaws.common.io.FilePath.FileLineIterator;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class FilePathTest {
+    private String testline = "testline";
+
+    private int total = 10000;
+
     @Test
-    public void lines() {
-        String testline = "testline";
-        BufferedWriter _bw = null;
-        int total = 10000;
-        int i = 0;
+    public void absolute_path() {
+        FilePath thisDir = new FilePath();
+        FilePath p = new FilePath("dummyfile");
+        Assert.assertNull(p.getParent());
+        p = FilePath.class.cast(p.toAbsolutePath());
+        Assert.assertEquals(thisDir, p.getParent());
+    }
+
+    @Test
+    public void lines_closed_auto() {
+        FileLineIterator closeMe = null;
         try {
             FilePath tmpFile = FilePath.createDefaultTempFile(String.valueOf(System.currentTimeMillis()), "csv");
-            System.out.println(tmpFile.toAbsolutePath());
-            try (BufferedWriter bw = tmpFile.newBufferedWriter()) {
-                _bw = bw;
-                for (i = 0; i < total; i++) {
-                    bw.write(testline);
-                    bw.write("\n");
-                }
-            }
-            FileLineIterator lines = tmpFile.lines();
-            i = 0;
-            while (lines.hasNext()) {
-                String line = lines.next();
-                i++;
-                Assert.assertEquals(testline, line);
+            this.lines_prepare(tmpFile);
+            try (FileLineIterator lines = tmpFile.lines()) {
+                closeMe = lines;
             }
         } catch (IOException ex) {
             Assert.fail(String.valueOf(ex));
         } catch (Exception ex) {
             Assert.fail(String.valueOf(ex));
         }
-        Assert.assertNotNull(_bw);
-        Assert.assertEquals(total, i);
+        Assert.assertNotNull(closeMe);
+        Assert.assertFalse(closeMe.hasNext());
+        try {
+            closeMe.next();
+            Assert.fail("NoSuchElementException");// should throw NoSuchElementException
+        } catch (NoSuchElementException ex) {
+            // should throw NoSuchElementException
+        }
     }
 
     @Test
-    public void test() {
-        FilePath thisDir = new FilePath();
-        FilePath p = new FilePath("dummyfile");
-        Assert.assertNull(p.getParent());
-        p = FilePath.class.cast(p.toAbsolutePath());
-        Assert.assertEquals(thisDir, p.getParent());
+    public void lines_closed_early() {
+        try {
+            FilePath tmpFile = FilePath.createDefaultTempFile(String.valueOf(System.currentTimeMillis()), "csv");
+            this.lines_prepare(tmpFile);
+            try (FileLineIterator lines = tmpFile.lines()) {
+                lines.next();
+                lines.close();
+                lines.close();// should not throw exception
+                try {
+                    lines.next();
+                    Assert.fail("NoSuchElementException");// should throw NoSuchElementException
+                } catch (NoSuchElementException ex) {
+                    // should throw NoSuchElementException
+                }
+            }
+        } catch (IOException ex) {
+            Assert.fail(String.valueOf(ex));
+        } catch (Exception ex) {
+            Assert.fail(String.valueOf(ex));
+        }
+    }
+
+    @Test
+    public void lines_normal() {
+        int i = 0;
+        try {
+            FilePath tmpFile = FilePath.createDefaultTempFile(String.valueOf(System.currentTimeMillis()), "csv");
+            this.lines_prepare(tmpFile);
+            try (FileLineIterator lines = tmpFile.lines()) {
+                while (lines.hasNext()) {
+                    String line = lines.next();
+                    i++;
+                    Assert.assertEquals(this.testline, line);
+                }
+            }
+        } catch (IOException ex) {
+            Assert.fail(String.valueOf(ex));
+        } catch (Exception ex) {
+            Assert.fail(String.valueOf(ex));
+        }
+        Assert.assertEquals(this.total, i); // same number of lines
+    }
+
+    private void lines_prepare(FilePath tmpFile) throws IOException {
+        try (BufferedWriter bw = tmpFile.newBufferedWriter()) {
+            for (int i = 0; i < this.total; i++) {
+                bw.write(this.testline);
+                bw.write("\n");
+            }
+        }
     }
 }
