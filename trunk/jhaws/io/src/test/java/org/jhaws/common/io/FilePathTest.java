@@ -2,6 +2,10 @@ package org.jhaws.common.io;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.NoSuchFileException;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -21,6 +25,72 @@ public class FilePathTest {
         Assert.assertNull(p.getParent());
         p = FilePath.class.cast(p.toAbsolutePath());
         Assert.assertEquals(thisDir, p.getParent());
+    }
+
+    @Test
+    public void create_delete() {
+        try {
+            FilePath fp = new FilePath(FilePath.getTempDirectory(), String.valueOf(System.currentTimeMillis()));
+            fp.createDirectory();
+            Assert.assertTrue(fp.exists());
+            try {
+                fp.createDirectory();
+                Assert.fail("FileAlreadyExistsException");
+            } catch (FileAlreadyExistsException ex) {
+                //
+            }
+            fp.delete();
+            Assert.assertFalse(fp.exists());
+            try {
+                fp.delete();
+                Assert.fail("NoSuchFileException");
+            } catch (NoSuchFileException ex) {
+                //
+            }
+            fp.deleteIfExists();
+            fp.deleteIfExists();
+            fp = fp.createDirectory();
+            try {
+                fp.createFile();
+                Assert.fail("AccessDeniedException");
+            } catch (AccessDeniedException ex) {
+                //
+            }
+            FilePath fpp = new FilePath(fp, "file.txt");
+            fpp.createFile();
+            try {
+                fpp.createFile();
+                Assert.fail("FileAlreadyExistsException");
+            } catch (FileAlreadyExistsException ex) {
+                //
+            }
+            try {
+                fp.delete();
+                Assert.fail("DirectoryNotEmptyException");
+            } catch (DirectoryNotEmptyException ex) {
+                //
+            }
+            fp.deleteAll();
+            Assert.assertFalse(fp.exists());
+            try {
+                fp.deleteAll();
+                Assert.fail("NoSuchFileException");
+            } catch (NoSuchFileException ex) {
+                //
+            }
+            fp.deleteAllIfExists();
+            fp.deleteAllIfExists();
+            fp.createDirectoryIfNotExists();
+            Assert.assertTrue(fp.exists());
+            fp.createDirectoryIfNotExists();
+            fpp.createFileIfNotExists();
+            Assert.assertTrue(fpp.exists());
+            fpp.createFileIfNotExists();
+            fp.deleteAllIfExists();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail(String.valueOf(ex));
+        }
     }
 
     @Test
@@ -49,11 +119,9 @@ public class FilePathTest {
             tmp2File.write(sb.toString().getBytes());
             Assert.assertTrue(tmp1File.equal(tmp2File, 5));
             Assert.assertFalse(tmp1File.equal(tmp2File, 50));
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
-            Assert.fail(String.valueOf(ex));
+            Assert.assertFalse(tmp1File.equal(tmp2File));
         } catch (Exception ex) {
-            ex.printStackTrace(System.out);
+            ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
         }
     }
@@ -67,9 +135,8 @@ public class FilePathTest {
             try (FileLineIterator lines = tmpFile.lines()) {
                 closeMe = lines;
             }
-        } catch (IOException ex) {
-            Assert.fail(String.valueOf(ex));
         } catch (Exception ex) {
+            ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
         }
         Assert.assertNotNull(closeMe);
@@ -98,9 +165,8 @@ public class FilePathTest {
                     // should throw NoSuchElementException
                 }
             }
-        } catch (IOException ex) {
-            Assert.fail(String.valueOf(ex));
         } catch (Exception ex) {
+            ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
         }
     }
@@ -118,9 +184,8 @@ public class FilePathTest {
                     Assert.assertEquals(this.testline, line);
                 }
             }
-        } catch (IOException ex) {
-            Assert.fail(String.valueOf(ex));
         } catch (Exception ex) {
+            ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
         }
         Assert.assertEquals(this.total, i); // same number of lines
