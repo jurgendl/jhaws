@@ -1,5 +1,6 @@
 package org.jhaws.common.io;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -197,6 +198,21 @@ public class FilePathTest {
                 bw.write(this.testline);
                 bw.write("\n");
             }
+        }
+    }
+
+    @Test
+    public void size() {
+        try {
+            FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
+            byte[] bytes = "bytes".getBytes();
+            try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
+                out.write(bytes);
+            }
+            Assert.assertEquals(bytes.length, tmp.getTotalSize());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail(String.valueOf(ex));
         }
     }
 }

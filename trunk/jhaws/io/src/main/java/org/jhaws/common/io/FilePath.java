@@ -952,6 +952,7 @@ public class FilePath implements Path, Externalizable {
         this.walkFileTree(new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                size.addAndGet(Files.size(file));
                 return FileVisitResult.CONTINUE;
             }
         });
