@@ -65,6 +65,37 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
+    public static class DeleteAllFilesVisitor extends SimpleFileVisitor<Path> {
+        protected boolean ifExists = false;
+
+        public DeleteAllFilesVisitor() {
+            //
+        }
+
+        public DeleteAllFilesVisitor(boolean ifExists) {
+            this.ifExists = ifExists;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            if (this.ifExists) {
+                Files.deleteIfExists(dir);
+            } else {
+                Files.delete(dir);
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            if (this.ifExists) {
+                Files.delete(file);
+            } else {
+                Files.delete(file);
+            }
+            return FileVisitResult.CONTINUE;
+        }
+    }
 
     public static class FileByteIterator implements Iterator<Byte>, Closeable {
         protected transient final FilePath path;
@@ -325,7 +356,11 @@ public class FilePath implements Path, Externalizable {
             return "";
         }
         int scale = (int) (Math.log10(size) / 3);
-        return new DecimalFormat().format(size / (1 << (scale * 10))) + "" + FilePath.UNITS[scale];
+        return "" + new DecimalFormat().format(size / (1 << (scale * 10))) + "" + FilePath.UNITS[scale];
+    }
+
+    public static FilePath getDesktopDirectory() {
+        return new FilePath(FilePath.DESKTOPDIR);
     }
 
     public static String getExtension(Path path) {
@@ -351,6 +386,14 @@ public class FilePath implements Path, Externalizable {
             return fileName;
         }
         return fileName.substring(0, p);
+    }
+
+    public static FilePath getTempDirectory() {
+        return new FilePath(FilePath.TEMPDIR);
+    }
+
+    public static FilePath getUserHomeDirectory() {
+        return new FilePath(FilePath.USERDIR);
     }
 
     /**
@@ -423,24 +466,16 @@ public class FilePath implements Path, Externalizable {
 
     protected transient Path path;
 
-    protected static ExtensionIconFinder grabber = null;
-
-    static {
-        try {
-            FilePath.grabber = (ExtensionIconFinder) Class.forName("org.jhaws.common.io.SystemIcon").newInstance();
-        } catch (Throwable e) {
-            //
-        }
-    }
+    protected static ExtensionIconFinder grabber = new org.jhaws.common.io.SystemIcon();
 
     /** temp dir */
-    public static final FilePath TEMPDIR = new FilePath(System.getProperty("java.io.tmpdir"));
+    public static final String TEMPDIR = System.getProperty("java.io.tmpdir");
 
     /** desktop */
-    public static final FilePath DESKTOPDIR = new FilePath(FileSystemView.getFileSystemView().getHomeDirectory());
+    public static final String DESKTOPDIR = FileSystemView.getFileSystemView().getHomeDirectory().getAbsolutePath();
 
     /** user home dir */
-    public static final FilePath USERDIR = new FilePath(System.getProperty("user.home"));
+    public static final String USERDIR = System.getProperty("user.home");
 
     public static final String[] UNITS = new String[] { "bytes", "kB", "MB", "GB", "TB"/* , "PB" */};
 
@@ -514,7 +549,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath checkDirectory() throws IOException {
-        if (!this.isDirectory()) {
+        if (this.isFile()) {
             throw new IOException("not a directory");
         }
         return this;
@@ -597,8 +632,22 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(Files.createDirectory(this.getPath(), attrs));
     }
 
+    public FilePath createDirectoryIfNotExists(FileAttribute<?>... attrs) throws IOException {
+        if (this.exists() && this.isDirectory()) {
+            return this;
+        }
+        return this.createDirectory(attrs);
+    }
+
     public FilePath createFile(FileAttribute<?>... attrs) throws IOException {
         return new FilePath(Files.createFile(this.getPath(), attrs));
+    }
+
+    public FilePath createFileIfNotExists(FileAttribute<?>... attrs) throws IOException {
+        if (this.exists() && this.isFile()) {
+            return this;
+        }
+        return this.createFile(attrs);
     }
 
     public FilePath createLinkFrom(Path existing) throws IOException {
@@ -634,9 +683,20 @@ public class FilePath implements Path, Externalizable {
         return this;
     }
 
-    public FilePath deleteIfExists() throws IOException {
-        Files.deleteIfExists(this.getPath());
-        return this;
+    public FilePath deleteAll() throws IOException {
+        return this.walkFileTree(new DeleteAllFilesVisitor(false));
+    }
+
+    public boolean deleteAllIfExists() throws IOException {
+        if (!this.exists()) {
+            return false;
+        }
+        this.walkFileTree(new DeleteAllFilesVisitor(true));
+        return true;
+    }
+
+    public boolean deleteIfExists() throws IOException {
+        return Files.deleteIfExists(this.getPath());
     }
 
     /**
@@ -924,16 +984,16 @@ public class FilePath implements Path, Externalizable {
         return Files.isExecutable(this.getPath());
     }
 
+    public boolean isFile(LinkOption... options) {
+        return Files.isRegularFile(this.getPath(), options);
+    }
+
     public boolean isHidden() throws IOException {
         return Files.isHidden(this.getPath());
     }
 
     public boolean isReadable() {
         return Files.isReadable(this.getPath());
-    }
-
-    public boolean isRegularFile(LinkOption... options) {
-        return Files.isRegularFile(this.getPath(), options);
     }
 
     public boolean isSameFile(Path otherPath) throws IOException {
