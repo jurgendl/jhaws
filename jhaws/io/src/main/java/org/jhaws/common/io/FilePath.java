@@ -9,6 +9,7 @@ import java.io.Externalizable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.LineNumberReader;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.OutputStream;
@@ -885,6 +886,13 @@ public class FilePath implements Path, Externalizable {
 
     public long getLength() throws IOException {
         return this.getSize();
+    }
+
+    public int getLineCount() throws IOException {
+        try (LineNumberReader lnr = new LineNumberReader(this.newBufferedReader())) {
+            lnr.skip(Long.MAX_VALUE);
+            return lnr.getLineNumber() + 1;
+        }
     }
 
     public String getName() {
