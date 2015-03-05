@@ -49,8 +49,11 @@ import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -281,32 +284,32 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static class Filters implements DirectoryStream.Filter<Path> {
-        protected DirectoryStream.Filter<Path>[] filters;
+        protected DirectoryStream.Filter<? super Path>[] filters;
 
         protected boolean and;
 
         protected boolean not;
 
         @SafeVarargs
-        public Filters(boolean and, boolean not, DirectoryStream.Filter<Path>... filters) {
+        public Filters(boolean and, boolean not, DirectoryStream.Filter<? super Path>... filters) {
             this.filters = filters;
             this.and = and;
             this.not = not;
         }
 
         @SafeVarargs
-        public Filters(boolean and, DirectoryStream.Filter<Path>... filters) {
+        public Filters(boolean and, DirectoryStream.Filter<? super Path>... filters) {
             this(and, false, filters);
         }
 
         @SafeVarargs
-        public Filters(DirectoryStream.Filter<Path>... filters) {
+        public Filters(DirectoryStream.Filter<? super Path>... filters) {
             this(true, false, filters);
         }
 
         @Override
         public boolean accept(Path entry) throws IOException {
-            for (DirectoryStream.Filter<Path> filter : this.filters) {
+            for (DirectoryStream.Filter<? super Path> filter : this.filters) {
                 if (!this.and /* or */&& filter.accept(entry)) {
                     return this.not(true);
                 }
@@ -1143,25 +1146,51 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<FilePath> list() throws IOException {
-        return this.list(new AcceptAllFilter());
+        return this.list(false);
+    }
+
+    public List<FilePath> list(boolean iterate) throws IOException {
+        return this.list(iterate, new AcceptAllFilter());
+    }
+
+    public List<FilePath> list(boolean iterate, DirectoryStream.Filter<? super Path> filter) throws IOException {
+        Deque<FilePath> stack = new ArrayDeque<>();
+        List<FilePath> files = new LinkedList<>();
+        stack.push(this);
+        while (!stack.isEmpty()) {
+            try (DirectoryStream<Path> stream = stack.pop().newDirectoryStream(new Filters(false, filter, new DirectoryFilter()))) {
+                for (Path p : stream) {
+                    FilePath child = new FilePath(p);
+                    if (filter.accept(p)) {
+                        files.add(child);
+                    }
+                    if (iterate && child.isDirectory()) {
+                        stack.push(child);
+                    }
+                }
+            }
+        }
+        return files;
     }
 
     public List<FilePath> list(DirectoryStream.Filter<? super Path> filter) throws IOException {
-        List<FilePath> children = new ArrayList<>();
-        try (DirectoryStream<Path> directoryStream = this.newDirectoryStream(filter)) {
-            for (Path child : directoryStream) {
-                children.add(new FilePath(child));
-            }
-        }
-        return children;
+        return this.list(false, filter);
     }
 
     public List<FilePath> listDirectories() throws IOException {
-        return this.list(new DirectoryFilter());
+        return this.listDirectories(false);
+    }
+
+    public List<FilePath> listDirectories(boolean iterate) throws IOException {
+        return this.list(iterate, new DirectoryFilter());
     }
 
     public List<FilePath> listFiles() throws IOException {
-        return this.list(new FileFilter());
+        return this.listFiles(false);
+    }
+
+    public List<FilePath> listFiles(boolean iterate) throws IOException {
+        return this.list(iterate, new FileFilter());
     }
 
     public FilePath moveFrom(Path source) throws IOException {

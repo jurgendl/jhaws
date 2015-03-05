@@ -223,6 +223,18 @@ public class FilePathTest {
             Assert.assertEquals(Arrays.asList(subsubdirfile), subsubdir.listFiles());
             Assert.assertEquals(0, subsubdir.listDirectories().size());
             Assert.assertEquals(Arrays.asList(subsubdirfile), subsubdir.list());
+
+            Assert.assertEquals(Arrays.asList(file, subdirfile, subsubdirfile), tmpDir.listFiles(true));
+            Assert.assertEquals(Arrays.asList(subdir, subsubdir), tmpDir.listDirectories(true));
+            Assert.assertEquals(Arrays.asList(file, subdir, subdirfile, subsubdir, subsubdirfile), tmpDir.list(true));
+
+            Assert.assertEquals(Arrays.asList(subdirfile, subsubdirfile), subdir.listFiles(true));
+            Assert.assertEquals(Arrays.asList(subsubdir), subdir.listDirectories(true));
+            Assert.assertEquals(Arrays.asList(subdirfile, subsubdir, subsubdirfile), subdir.list(true));
+
+            Assert.assertEquals(Arrays.asList(subsubdirfile), subsubdir.listFiles(true));
+            Assert.assertEquals(0, subsubdir.listDirectories(true).size());
+            Assert.assertEquals(Arrays.asList(subsubdirfile), subsubdir.list(true));
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
