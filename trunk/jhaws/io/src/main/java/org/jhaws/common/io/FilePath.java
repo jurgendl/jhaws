@@ -69,6 +69,19 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
+    public static class CompatibleFilter implements DirectoryStream.Filter<Path> {
+        protected java.io.FileFilter fileFilter;
+
+        public CompatibleFilter(java.io.FileFilter fileFilter) {
+            this.fileFilter = fileFilter;
+        }
+
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return this.fileFilter.accept(entry.toFile());
+        }
+    }
+
     public static class DeleteAllFilesVisitor extends SimpleFileVisitor<Path> {
         protected boolean ifExists = false;
 
@@ -98,6 +111,13 @@ public class FilePath implements Path, Externalizable {
                 Files.delete(file);
             }
             return FileVisitResult.CONTINUE;
+        }
+    }
+
+    public static class DirectoryFilter implements DirectoryStream.Filter<Path> {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return Files.isDirectory(entry);
         }
     }
 
@@ -167,6 +187,13 @@ public class FilePath implements Path, Externalizable {
         @Override
         public void remove() {
             this.b = null;
+        }
+    }
+
+    public static class FileFilter implements DirectoryStream.Filter<Path> {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return Files.isRegularFile(entry);
         }
     }
 
@@ -246,6 +273,38 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public static class Filters implements DirectoryStream.Filter<Path> {
+        protected DirectoryStream.Filter<Path>[] filters;
+
+        protected boolean and;
+
+        protected boolean not;
+
+        @SafeVarargs
+        public Filters(boolean and, boolean not, DirectoryStream.Filter<Path>... filters) {
+            this.filters = filters;
+            this.and = and;
+            this.not = not;
+        }
+
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            for (DirectoryStream.Filter<Path> filter : this.filters) {
+                if (!this.and /* or */&& filter.accept(entry)) {
+                    return this.not(true);
+                }
+                if (this.and && !filter.accept(entry)) {
+                    return this.not(false);
+                }
+            }
+            return this.not(this.and);
+        }
+
+        protected boolean not(boolean b) {
+            return this.not ? !b : b;
+        }
+    }
+
     public static class PathIterator implements Iterator<Path> {
         protected transient Path path;
 
@@ -293,6 +352,34 @@ public class FilePath implements Path, Externalizable {
 
     public static FilePath getDesktopDirectory() {
         return new FilePath(FilePath.DESKTOPDIR);
+    }
+
+    public static List<FilePath> getDrives() {
+        List<FilePath> drives = new ArrayList<FilePath>();
+        FileSystemView fsv = FileSystemView.getFileSystemView();
+        // windows
+        if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
+            String systemDriveString = System.getProperty("user.home").substring(0, 2) + File.separator;
+            File systemDriveFile = new File(systemDriveString);
+            File parentSystemDrive = fsv.getParentDirectory(systemDriveFile);
+            for (File f : parentSystemDrive.listFiles()) {
+                try {
+                    if (fsv.isFileSystem(f) && fsv.isDrive(f) && fsv.isTraversable(f) && !fsv.isFloppyDrive(f) && (f.listFiles().length > 0)) {
+                        if (new FilePath(f).getParent() == null) {
+                            drives.add(new FilePath(f));
+                        }
+                    }
+                } catch (Throwable e) {
+                    // not accesible
+                }
+            }
+        } else {
+            // unix
+            for (File f : fsv.getRoots()) {
+                drives.add(new FilePath(f));
+            }
+        }
+        return drives;
     }
 
     public static String getExtension(Path path) {
@@ -708,6 +795,11 @@ public class FilePath implements Path, Externalizable {
         return true;
     }
 
+    public FilePath deleteDoubles() throws IOException {
+        // TODO
+        return this;
+    }
+
     public boolean deleteIfExists() throws IOException {
         return Files.deleteIfExists(this.getPath());
     }
@@ -810,6 +902,15 @@ public class FilePath implements Path, Externalizable {
 
     public boolean exists(LinkOption... options) {
         return Files.exists(this.getPath(), options);
+    }
+
+    /**
+     * flattens this directory, copies all files in all subdirectories to this directory, do not copy doubles, rename if file already exists and isn't
+     * the same, delete all subdirectories afterwards
+     */
+    public FilePath flatten() throws IOException {
+        // TODO
+        return this;
     }
 
     public Object getAttribute(String attribute, LinkOption... options) throws IOException {
@@ -1014,6 +1115,24 @@ public class FilePath implements Path, Externalizable {
     public FileLineIterator lines() throws IOException {
         return new FileLineIterator(this);
         // return Files.lines(this.getPath());
+    }
+
+    public List<FilePath> list(DirectoryStream.Filter<? super Path> filter) throws IOException {
+        List<FilePath> children = new ArrayList<>();
+        try (DirectoryStream<Path> directoryStream = this.newDirectoryStream(filter)) {
+            for (Path child : directoryStream) {
+                children.add(new FilePath(child));
+            }
+        }
+        return children;
+    }
+
+    public List<FilePath> listDirectories() throws IOException {
+        return this.list(new DirectoryFilter());
+    }
+
+    public List<FilePath> listFiles() throws IOException {
+        return this.list(new FileFilter());
     }
 
     public FilePath moveFrom(Path source) throws IOException {
