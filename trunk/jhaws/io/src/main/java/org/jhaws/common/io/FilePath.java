@@ -412,7 +412,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static String getFileSeperator() {
-        return File.separator;
+        return ".";
     }
 
     public static char getFileSeperatorChar() {
@@ -427,7 +427,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static String getPathSeperator() {
-        return File.pathSeparator;
+        return File.separator;
     }
 
     public static char getPathSeperatorChar() {
