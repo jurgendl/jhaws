@@ -7,6 +7,7 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NoSuchFileException;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -198,6 +199,33 @@ public class FilePathTest {
                 bw.write(this.testline);
                 bw.write("\n");
             }
+        }
+    }
+
+    @Test
+    public void list() {
+        try {
+            FilePath tmpDir = FilePath.createDefaultTempDirectory(String.valueOf(System.currentTimeMillis()));
+            FilePath file = tmpDir.child("file").createFile();
+            FilePath subdir = tmpDir.child("subdir").createDirectory();
+            FilePath subdirfile = subdir.child("subdirfile").createFile();
+            FilePath subsubdir = subdir.child("subsubdir").createDirectory();
+            FilePath subsubdirfile = subsubdir.child("subsubdirfile").createFile();
+
+            Assert.assertEquals(Arrays.asList(file), tmpDir.listFiles());
+            Assert.assertEquals(Arrays.asList(subdir), tmpDir.listDirectories());
+            Assert.assertEquals(Arrays.asList(file, subdir), tmpDir.list());
+
+            Assert.assertEquals(Arrays.asList(subdirfile), subdir.listFiles());
+            Assert.assertEquals(Arrays.asList(subsubdir), subdir.listDirectories());
+            Assert.assertEquals(Arrays.asList(subdirfile, subsubdir), subdir.list());
+
+            Assert.assertEquals(Arrays.asList(subsubdirfile), subsubdir.listFiles());
+            Assert.assertEquals(0, subsubdir.listDirectories().size());
+            Assert.assertEquals(Arrays.asList(subsubdirfile), subsubdir.list());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail(String.valueOf(ex));
         }
     }
 

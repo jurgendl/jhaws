@@ -69,6 +69,13 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
+    public static final class AcceptAllFilter implements DirectoryStream.Filter<Path> {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return true;
+        }
+    }
+
     public static class CompatibleFilter implements DirectoryStream.Filter<Path> {
         protected java.io.FileFilter fileFilter;
 
@@ -285,6 +292,16 @@ public class FilePath implements Path, Externalizable {
             this.filters = filters;
             this.and = and;
             this.not = not;
+        }
+
+        @SafeVarargs
+        public Filters(boolean and, DirectoryStream.Filter<Path>... filters) {
+            this(and, false, filters);
+        }
+
+        @SafeVarargs
+        public Filters(DirectoryStream.Filter<Path>... filters) {
+            this(true, false, filters);
         }
 
         @Override
@@ -688,6 +705,14 @@ public class FilePath implements Path, Externalizable {
             }
             return checksum.getValue();
         }
+    }
+
+    public FilePath child(Path other) {
+        return new FilePath(this.getPath().resolve(FilePath.getPath(other)));
+    }
+
+    public FilePath child(String other) {
+        return new FilePath(this.getPath().resolve(other));
     }
 
     /**
@@ -1117,6 +1142,10 @@ public class FilePath implements Path, Externalizable {
         // return Files.lines(this.getPath());
     }
 
+    public List<FilePath> list() throws IOException {
+        return this.list(new AcceptAllFilter());
+    }
+
     public List<FilePath> list(DirectoryStream.Filter<? super Path> filter) throws IOException {
         List<FilePath> children = new ArrayList<>();
         try (DirectoryStream<Path> directoryStream = this.newDirectoryStream(filter)) {
@@ -1321,7 +1350,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolve(Path other) {
-        return new FilePath(this.getPath().resolve(FilePath.getPath(other)));
+        return this.child(other);
     }
 
     /**
@@ -1329,7 +1358,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path resolve(String other) {
-        return new FilePath(this.getPath().resolve(other));
+        return this.child(other);
     }
 
     /**
