@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.Externalizable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
@@ -20,9 +21,11 @@ import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.CopyOption;
 import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.FileVisitOption;
@@ -268,78 +271,6 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    protected static FilePath checkFileIndex(Path parent, String outFileName, String extension) {
-        return FilePath.checkFileIndex(parent, outFileName, "_", "0000", extension);
-    }
-
-    /**
-     * if file does not exists, return it<br>
-     * if file exists and does not end on _9999 (any number), adds _0000 and does index checking<br>
-     * if file exists and does end on _9999 (any number), and does index checking<br>
-     * <br>
-     * index checking:<br>
-     * if file exists, return it<br>
-     * if file does not exists, adds 1 to the index (_0000 goes to _0001) and does further index again
-     *
-     * @param parent : String : the location (path only) of the target file
-     * @param outFileName : String : the name of the target file (without extension and . before extension)
-     * @param sep : String : characters sperating filename from index (example: _ )
-     * @param format : String : number of positions character 0 (example: 0000 )
-     * @param extension : String : the extension of the target file (without . before extension), see class constants FORMAT... for possibilities
-     *
-     * @return : IOFile : new indexed File
-     */
-    protected static FilePath checkFileIndex(Path parent, String outFileName, String sep, String format, String extension) {
-        String SEPARATOR = sep;
-        String FORMAT = sep + format;
-        FilePath file = "".equals(extension) ? new FilePath(parent, outFileName) : new FilePath(parent, outFileName + "." + extension);
-        if (file.exists()) {
-            if (outFileName.length() <= FORMAT.length()) {
-                outFileName = outFileName + FORMAT;
-                if (extension.equals("")) {
-                    file = new FilePath(parent, outFileName);
-                } else {
-                    file = new FilePath(parent, outFileName + "." + extension);
-                }
-            } else {
-                String ch = outFileName.substring(outFileName.length() - FORMAT.length(),
-                        (outFileName.length() - FORMAT.length()) + SEPARATOR.length());
-                String nr = outFileName.substring((outFileName.length() - FORMAT.length()) + SEPARATOR.length(), outFileName.length());
-                boolean isNumber = true;
-                try {
-                    Integer.parseInt(nr);
-                } catch (final NumberFormatException ex) {
-                    isNumber = false;
-                }
-                if (!(isNumber && (ch.compareTo(SEPARATOR) == 0))) {
-                    outFileName = outFileName + FORMAT;
-                    if (extension.equals("")) {
-                        file = new FilePath(parent, outFileName);
-                    } else {
-                        file = new FilePath(parent, outFileName + "." + extension);
-                    }
-                }
-            }
-        }
-        int ind = 0;
-        while (file.exists()) {
-            StringBuilder indStringSB = new StringBuilder(16);
-            int nr0 = FORMAT.length() - SEPARATOR.length() - String.valueOf(ind).length();
-            for (int i = 0; i < nr0; i++) {
-                indStringSB.append("0");
-            }
-            indStringSB.append(String.valueOf(ind));
-            if (extension.equals("")) {
-                file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR + indStringSB.toString());
-            } else {
-                file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR + indStringSB.toString()
-                        + "." + extension);
-            }
-            ind++;
-        }
-        return file;
-    }
-
     public static FilePath createDefaultTempDirectory(String prefix, FileAttribute<?>... attrs) throws IOException {
         return new FilePath(Files.createTempDirectory(prefix, attrs));
     }
@@ -349,7 +280,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static FilePath createDefaultTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempFile(prefix + "-", extension == null ? "" : "." + extension, attrs));
+        return new FilePath(Files.createTempFile(prefix + "-", extension == null ? "" : FilePath.getFileSeperator() + extension, attrs));
     }
 
     public static String getConvertedSize(Long size) {
@@ -366,11 +297,19 @@ public class FilePath implements Path, Externalizable {
 
     public static String getExtension(Path path) {
         String fileName = path.getFileName().toString();
-        int p = fileName.lastIndexOf(FilePath.DOT);
+        int p = fileName.lastIndexOf(FilePath.getFileSeperator());
         if (p == -1) {
             return null;
         }
         return fileName.substring(p + 1);
+    }
+
+    public static String getFileSeperator() {
+        return File.separator;
+    }
+
+    public static char getFileSeperatorChar() {
+        return FilePath.getFileSeperator().charAt(0);
     }
 
     public static Path getPath(Path p) {
@@ -378,6 +317,14 @@ public class FilePath implements Path, Externalizable {
             p = FilePath.class.cast(p).path;
         }
         return p;
+    }
+
+    public static String getPathSeperator() {
+        return File.pathSeparator;
+    }
+
+    public static char getPathSeperatorChar() {
+        return FilePath.getPathSeperator().charAt(0);
     }
 
     public static String getShortFileName(Path path) {
@@ -405,34 +352,33 @@ public class FilePath implements Path, Externalizable {
      * @param os : int : operating system, use FileConv.WIN32, FileConv.DOS, FileConv.UNIX
      *
      * @return : String : converted name
-     * @throws IOException
      */
     public static FilePath legalize(String filename, final OSGroup os) throws IOException {
         filename = new FilePath(filename).getName();
-        while (filename.substring(0, 1).compareTo(".") == 0) {
+        while (filename.substring(0, 1).compareTo(FilePath.getFileSeperator()) == 0) {
             filename = filename.substring(1, filename.length());
         }
         char[] c = new char[0];
         if (os == OSGroup.Dos) {
-            String[] parts = filename.split("\\.");
+            String[] parts = filename.split("\\" + FilePath.getFileSeperator());
             if (parts.length == 1) {
-                if (filename.substring(filename.length() - 1, filename.length()).compareTo(".") != 0) {
-                    filename = filename + ".";
+                if (filename.substring(filename.length() - 1, filename.length()).compareTo(FilePath.getFileSeperator()) != 0) {
+                    filename = filename + FilePath.getFileSeperator();
                 }
 
                 filename = filename + "ext";
             }
             if (parts.length > 2) {
-                filename = parts[0] + "." + parts[parts.length - 1];
+                filename = parts[0] + FilePath.getFileSeperator() + parts[parts.length - 1];
             }
-            parts = filename.split("\\.");
+            parts = filename.split("\\" + FilePath.getFileSeperator());
             if (parts[0].length() > 8) {
                 parts[0] = parts[0].substring(0, 8);
             }
             if (parts[1].length() > 3) {
                 parts[1] = parts[1].substring(0, 3);
             }
-            filename = parts[0] + "." + parts[1];
+            filename = parts[0] + FilePath.getFileSeperator() + parts[1];
             c = Utils.legal(os);
         }
         if (os == OSGroup.Windows) {
@@ -459,11 +405,82 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(new String(fn));
     }
 
+    protected static FilePath newFileIndex(Path parent, String outFileName, String extension) {
+        return FilePath.newFileIndex(parent, outFileName, "_", "0000", extension);
+    }
+
+    /**
+     * if file does not exists, return it<br>
+     * if file exists and does not end on _9999 (any number), adds _0000 and does index checking<br>
+     * if file exists and does end on _9999 (any number), and does index checking<br>
+     * <br>
+     * index checking:<br>
+     * if file exists, return it<br>
+     * if file does not exists, adds 1 to the index (_0000 goes to _0001) and does further index again
+     *
+     * @param parent : String : the location (path only) of the target file
+     * @param outFileName : String : the name of the target file (without extension and . before extension)
+     * @param sep : String : characters sperating filename from index (example: _ )
+     * @param format : String : number of positions character 0 (example: 0000 )
+     * @param extension : String : the extension of the target file (without . before extension), see class constants FORMAT... for possibilities
+     *
+     * @return : IOFile : new indexed File
+     */
+    protected static FilePath newFileIndex(Path parent, String outFileName, String sep, String format, String extension) {
+        String SEPARATOR = sep;
+        String FORMAT = sep + format;
+        FilePath file = "".equals(extension) ? new FilePath(parent, outFileName) : new FilePath(parent, outFileName + FilePath.getFileSeperator()
+                + extension);
+        if (file.exists()) {
+            if (outFileName.length() <= FORMAT.length()) {
+                outFileName = outFileName + FORMAT;
+                if (extension.equals("")) {
+                    file = new FilePath(parent, outFileName);
+                } else {
+                    file = new FilePath(parent, outFileName + FilePath.getFileSeperator() + extension);
+                }
+            } else {
+                String ch = outFileName.substring(outFileName.length() - FORMAT.length(),
+                        (outFileName.length() - FORMAT.length()) + SEPARATOR.length());
+                String nr = outFileName.substring((outFileName.length() - FORMAT.length()) + SEPARATOR.length(), outFileName.length());
+                boolean isNumber = true;
+                try {
+                    Integer.parseInt(nr);
+                } catch (final NumberFormatException ex) {
+                    isNumber = false;
+                }
+                if (!(isNumber && (ch.compareTo(SEPARATOR) == 0))) {
+                    outFileName = outFileName + FORMAT;
+                    if (extension.equals("")) {
+                        file = new FilePath(parent, outFileName);
+                    } else {
+                        file = new FilePath(parent, outFileName + FilePath.getFileSeperator() + extension);
+                    }
+                }
+            }
+        }
+        int ind = 0;
+        while (file.exists()) {
+            StringBuilder indStringSB = new StringBuilder(16);
+            int nr0 = FORMAT.length() - SEPARATOR.length() - String.valueOf(ind).length();
+            for (int i = 0; i < nr0; i++) {
+                indStringSB.append("0");
+            }
+            indStringSB.append(String.valueOf(ind));
+            if (extension.equals("")) {
+                file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR + indStringSB.toString());
+            } else {
+                file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR + indStringSB.toString()
+                        + FilePath.getFileSeperator() + extension);
+            }
+            ind++;
+        }
+        return file;
+    }
+
     public static FilePath wrap(Path p) {
         return p instanceof FilePath ? FilePath.class.cast(p) : new FilePath(p);
     }
-
-    public static final char DOT = '.';
 
     protected transient Path path;
 
@@ -481,12 +498,12 @@ public class FilePath implements Path, Externalizable {
     public static final String[] UNITS = new String[] { "bytes", "kB", "MB", "GB", "TB"/* , "PB" */};
 
     public FilePath() {
-        this.path = Paths.get(".").toAbsolutePath().normalize();
+        this.path = Paths.get(FilePath.getFileSeperator()).toAbsolutePath().normalize();
     }
 
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
-                root.getPackage().getName().replace('.', '/') + (relativePath.startsWith("/") ? "" : "/") + relativePath));
+                root.getPackage().getName().replace('.', FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/") + relativePath));
     }
 
     public FilePath(File file) {
@@ -549,38 +566,32 @@ public class FilePath implements Path, Externalizable {
         return new FileByteIterator(this);
     }
 
-    public FilePath checkDirectory() throws IOException {
+    public FilePath checkDirectory() throws AccessDeniedException {
         if (this.isFile()) {
-            throw new IOException("not a directory");
+            throw new AccessDeniedException(this.toString());
         }
         return this;
     }
 
-    public FilePath checkExists() throws IOException {
+    public FilePath checkExists() throws FileNotFoundException {
         if (!this.exists()) {
-            throw new IOException("does not exists");
+            throw new FileNotFoundException(this.toString());
         }
         return this;
     }
 
-    public FilePath checkFile() throws IOException {
+    public FilePath checkFile() throws AccessDeniedException {
         if (this.isDirectory()) {
-            throw new IOException("not a file");
+            throw new AccessDeniedException(this.toString());
         }
         return this;
     }
 
-    /**
-     * {@link #checkFileIndex(String, String, String, String, String)} but with separator set to '_' and format to '0000' and the other parameters
-     * derived from given File
-     */
-    public FilePath checkFileIndex() {
-        if (!this.exists()) {
-            return this;
+    public FilePath checkNotExists() throws FileAlreadyExistsException {
+        if (this.exists()) {
+            throw new FileAlreadyExistsException(this.toString());
         }
-        String shortFile = this.getShortFileName();
-        String extension = this.getExtension();
-        return FilePath.checkFileIndex(new FilePath(this.getParent()), shortFile, extension);
+        return this;
     }
 
     public Long checksum(Checksum checksum) throws IOException {
@@ -676,7 +687,8 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath createTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempFile(this.getPath(), prefix + "-", extension == null ? "" : "." + extension, attrs));
+        return new FilePath(Files.createTempFile(this.getPath(), prefix + "-", extension == null ? "" : FilePath.getFileSeperator() + extension,
+                attrs));
     }
 
     public FilePath delete() throws IOException {
@@ -706,49 +718,27 @@ public class FilePath implements Path, Externalizable {
      * @param urlSourceFile : URL : file on the web
      *
      * @return : boolean : file downloaded or not
-     *
-     * @throws IOException : IOException
      */
     public boolean download(URL urlSourceFile) throws IOException {
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            if (this.exists()) {
-                long localFileTime = this.getLastModifiedTime().toMillis();
-                URLConnection conn = urlSourceFile.openConnection();
-                long webFileTime = conn.getLastModified();
-                if (webFileTime <= localFileTime) {
-                    return false;
-                }
+        if (this.exists()) {
+            long localFileTime = this.getLastModifiedTime().toMillis();
+            URLConnection conn = urlSourceFile.openConnection();
+            long webFileTime = conn.getLastModified();
+            if (webFileTime <= localFileTime) {
+                return false;
             }
-            is = new BufferedInputStream(urlSourceFile.openStream());
-            os = this.newBufferedOutputStream();
-            int b = is.read();
-            while (b != -1) {
-                os.write(b);
-                b = is.read();
-            }
-            return true;
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception ex) {
-                    //
-                }
-            }
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (Exception ex) {
-                    //
-                }
+            long len = conn.getContentLengthLong();
+            if ((len != -1) && (len == this.getLength())) {
+                return false;
             }
         }
+        try (InputStream in = new BufferedInputStream(urlSourceFile.openStream()); OutputStream out = this.newBufferedOutputStream()) {
+            Utils.copy(in, out);
+        }
+        return true;
     }
 
     /**
-     *
      * @see java.nio.file.Path#endsWith(java.nio.file.Path)
      */
     @Override
@@ -757,7 +747,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#endsWith(java.lang.String)
      */
     @Override
@@ -777,8 +766,6 @@ public class FilePath implements Path, Externalizable {
      * @param limit : int : maximum size when comparing files
      *
      * @return : boolean : file is equal or not
-     *
-     * @throws IOException : thrown exception
      */
     public boolean equal(Path file, long limit) throws IOException {
         FilePath otherPath = FilePath.wrap(file);
@@ -811,7 +798,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -1018,7 +1004,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#iterator()
      */
     @Override
@@ -1091,6 +1076,19 @@ public class FilePath implements Path, Externalizable {
         return Files.newDirectoryStream(this.getPath(), glob);
     }
 
+    /**
+     * {@link #newFileIndex(String, String, String, String, String)} but with separator set to '_' and format to '0000' and the other parameters
+     * derived from given File
+     */
+    public FilePath newFileIndex() {
+        if (!this.exists()) {
+            return this;
+        }
+        String shortFile = this.getShortFileName();
+        String extension = this.getExtension();
+        return FilePath.newFileIndex(new FilePath(this.getParent()), shortFile, extension);
+    }
+
     public InputStream newInputStream(OpenOption... options) throws IOException {
         return Files.newInputStream(this.getPath(), options);
     }
@@ -1100,7 +1098,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#normalize()
      */
     @Override
@@ -1161,7 +1158,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.io.Externalizable#readExternal(java.io.ObjectInput)
      */
     @Override
@@ -1178,7 +1174,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[])
      */
     @Override
@@ -1187,7 +1182,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[], java.nio.file.WatchEvent.Modifier[])
      */
     @Override
@@ -1196,7 +1190,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#relativize(java.nio.file.Path)
      */
     @Override
@@ -1205,7 +1198,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#resolve(java.nio.file.Path)
      */
     @Override
@@ -1214,7 +1206,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#resolve(java.lang.String)
      */
     @Override
@@ -1223,7 +1214,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#resolveSibling(java.nio.file.Path)
      */
     @Override
@@ -1232,7 +1222,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#resolveSibling(java.lang.String)
      */
     @Override
@@ -1300,7 +1289,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#startsWith(java.nio.file.Path)
      */
     @Override
@@ -1309,7 +1297,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#startsWith(java.lang.String)
      */
     @Override
@@ -1318,7 +1305,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#subpath(int, int)
      */
     @Override
@@ -1327,7 +1313,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#toAbsolutePath()
      */
     @Override
@@ -1336,7 +1321,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#toFile()
      */
     @Override
@@ -1345,7 +1329,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#toRealPath(java.nio.file.LinkOption[])
      */
     @Override
@@ -1354,7 +1337,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -1363,7 +1345,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.nio.file.Path#toUri()
      */
     @Override
@@ -1427,7 +1408,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     *
      * @see java.io.Externalizable#writeExternal(java.io.ObjectOutput)
      */
     @Override

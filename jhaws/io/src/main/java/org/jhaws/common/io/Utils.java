@@ -175,7 +175,6 @@ public class Utils {
         try {
             byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
             int read;
-
             while ((read = in.read(buffer)) > 0) {
                 out.write(buffer, 0, read);
             }
@@ -185,7 +184,6 @@ public class Utils {
             } catch (Exception ex) {
                 //
             }
-
             try {
                 out.close();
             } catch (Exception ex) {
