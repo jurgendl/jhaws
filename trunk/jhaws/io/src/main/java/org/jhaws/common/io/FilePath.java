@@ -1157,8 +1157,9 @@ public class FilePath implements Path, Externalizable {
         Deque<FilePath> stack = new ArrayDeque<>();
         List<FilePath> files = new LinkedList<>();
         stack.push(this);
+        Filters filterAndDirs = new Filters(false, filter, new DirectoryFilter());
         while (!stack.isEmpty()) {
-            try (DirectoryStream<Path> stream = stack.pop().newDirectoryStream(new Filters(false, filter, new DirectoryFilter()))) {
+            try (DirectoryStream<Path> stream = stack.pop().newDirectoryStream(filterAndDirs)) {
                 for (Path p : stream) {
                     FilePath child = new FilePath(p);
                     if (filter.accept(p)) {
