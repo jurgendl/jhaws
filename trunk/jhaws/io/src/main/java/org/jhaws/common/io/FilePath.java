@@ -941,6 +941,10 @@ public class FilePath implements Path, Externalizable {
         return this;
     }
 
+    public String getAbsolutePath() {
+        return this.toAbsolutePath().toString();
+    }
+
     public Object getAttribute(String attribute, LinkOption... options) throws IOException {
         return Files.getAttribute(this.getPath(), attribute, options);
     }
@@ -1060,6 +1064,10 @@ public class FilePath implements Path, Externalizable {
 
     public String getShortFileName() {
         return FilePath.getShortFileName(this);
+    }
+
+    public String getShortName() {
+        return this.getShortFileName();
     }
 
     public long getSize() throws IOException {
@@ -1373,6 +1381,14 @@ public class FilePath implements Path, Externalizable {
     @Override
     public Path relativize(Path other) {
         return new FilePath(this.getPath().relativize(FilePath.getPath(other)));
+    }
+
+    public FilePath renameTo(Path target) throws IOException {
+        return this.moveTo(target);
+    }
+
+    public FilePath renameTo(Path target, CopyOption... options) throws IOException {
+        return this.moveTo(target, options);
     }
 
     /**
