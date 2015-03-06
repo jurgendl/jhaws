@@ -76,7 +76,7 @@ import org.jhaws.common.io.Utils.OSGroup;
 public class FilePath implements Path, Externalizable {
     public static final class AcceptAllFilter implements DirectoryStream.Filter<Path> {
         @Override
-        public boolean accept(Path entry) throws IOException {
+        public boolean accept(Path entry) throws IORuntimeException {
             return true;
         }
     }
@@ -89,7 +89,7 @@ public class FilePath implements Path, Externalizable {
         }
 
         @Override
-        public boolean accept(Path entry) throws IOException {
+        public boolean accept(Path entry) throws IORuntimeException {
             return this.fileFilter.accept(entry.toFile());
         }
     }
@@ -128,7 +128,7 @@ public class FilePath implements Path, Externalizable {
 
     public static class DirectoryFilter implements DirectoryStream.Filter<Path> {
         @Override
-        public boolean accept(Path entry) throws IOException {
+        public boolean accept(Path entry) throws IORuntimeException {
             return Files.isDirectory(entry);
         }
     }
@@ -204,7 +204,7 @@ public class FilePath implements Path, Externalizable {
 
     public static class FileFilter implements DirectoryStream.Filter<Path> {
         @Override
-        public boolean accept(Path entry) throws IOException {
+        public boolean accept(Path entry) throws IORuntimeException {
             return Files.isRegularFile(entry);
         }
     }
@@ -327,14 +327,33 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public static class IORuntimeException extends RuntimeException {
+        private static final long serialVersionUID = 1704531721451239444L;
+
+        public IORuntimeException(IOException cause) {
+            super(cause);
+        }
+
+        public IORuntimeException(String message) {
+            super(message);
+        }
+
+        public IORuntimeException(String message, IOException cause) {
+            super(message, cause);
+        }
+
+        public IOException getIOException() {
+            if (this.getCause() == this) {
+                return null;
+            }
+            return (IOException) this.getCause();
+        }
+    }
+
     public static class LastModifiedTimeComparator implements Comparator<FilePath> {
         @Override
         public int compare(FilePath o1, FilePath o2) {
-            try {
-                return new CompareToBuilder().append(o1.getLastModifiedTime(), o2.getLastModifiedTime()).toComparison();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            return new CompareToBuilder().append(o1.getLastModifiedTime(), o2.getLastModifiedTime()).toComparison();
         }
     }
 
@@ -366,24 +385,28 @@ public class FilePath implements Path, Externalizable {
     public static class SizeComparator implements Comparator<FilePath> {
         @Override
         public int compare(FilePath o1, FilePath o2) {
-            try {
-                return new CompareToBuilder().append(o1.getSize(), o2.getSize()).toComparison();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            return new CompareToBuilder().append(o1.getSize(), o2.getSize()).toComparison();
         }
     }
 
-    public static FilePath createDefaultTempDirectory(String prefix, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempDirectory(prefix, attrs));
+    public static FilePath createDefaultTempDirectory(String prefix, FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createTempDirectory(prefix, attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public static FilePath createDefaultTempFile(String prefix, FileAttribute<?>... attrs) throws IOException {
+    public static FilePath createDefaultTempFile(String prefix, FileAttribute<?>... attrs) throws IORuntimeException {
         return FilePath.createDefaultTempFile(prefix, null, attrs);
     }
 
-    public static FilePath createDefaultTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempFile(prefix + "-", extension == null ? "" : FilePath.getFileSeperator() + extension, attrs));
+    public static FilePath createDefaultTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createTempFile(prefix + "-", extension == null ? "" : FilePath.getFileSeperator() + extension, attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     public static String getConvertedSize(Long size) {
@@ -484,7 +507,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @return : String : converted name
      */
-    public static FilePath legalize(String filename, final OSGroup os) throws IOException {
+    public static FilePath legalize(String filename, final OSGroup os) throws IORuntimeException {
         filename = new FilePath(filename).getName();
         while (filename.substring(0, 1).compareTo(FilePath.getFileSeperator()) == 0) {
             filename = filename.substring(1, filename.length());
@@ -519,7 +542,7 @@ public class FilePath implements Path, Externalizable {
             c = Utils.legal(os);
         }
         if (c.length == 0) {
-            throw new IOException("characters for OS not found");
+            throw new IORuntimeException("characters for OS not found");
         }
         char[] fn = filename.toCharArray();
         for (int i = 0; i < fn.length; i++) {
@@ -689,11 +712,11 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public Long adler32() throws IOException {
+    public Long adler32() throws IORuntimeException {
         return this.checksum(new Adler32());
     }
 
-    public FileByteIterator bytes() throws IOException {
+    public FileByteIterator bytes() throws IORuntimeException {
         return new FileByteIterator(this);
     }
 
@@ -725,12 +748,14 @@ public class FilePath implements Path, Externalizable {
         return this;
     }
 
-    public Long checksum(Checksum checksum) throws IOException {
+    public Long checksum(Checksum checksum) throws IORuntimeException {
         try (FileByteIterator bytes = this.bytes()) {
             while (bytes.hasNext()) {
                 checksum.update(bytes.next());
             }
             return checksum.getValue();
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
         }
     }
 
@@ -751,95 +776,151 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().compareTo(other);
     }
 
-    public long copyFrom(InputStream in, CopyOption... options) throws IOException {
-        return Files.copy(in, this.getPath(), options);
+    public long copyFrom(InputStream in, CopyOption... options) throws IORuntimeException {
+        try {
+            return Files.copy(in, this.getPath(), options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath copyFrom(Path source, CopyOption... options) throws IOException {
-        return new FilePath(Files.copy(FilePath.getPath(source), this, options));
+    public FilePath copyFrom(Path source, CopyOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.copy(FilePath.getPath(source), this, options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public long copyTo(OutputStream out) throws IOException {
-        return Files.copy(this.getPath(), out);
+    public long copyTo(OutputStream out) throws IORuntimeException {
+        try {
+            return Files.copy(this.getPath(), out);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath copyTo(Path target) throws IOException {
+    public FilePath copyTo(Path target) throws IORuntimeException {
         return this.copyTo(FilePath.getPath(target), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public FilePath copyTo(Path target, CopyOption... options) throws IOException {
-        return new FilePath(Files.copy(this.getPath(), FilePath.getPath(target), options));
+    public FilePath copyTo(Path target, CopyOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.copy(this.getPath(), FilePath.getPath(target), options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public Long crc32() throws IOException {
+    public Long crc32() throws IORuntimeException {
         return this.checksum(new CRC32());
     }
 
-    public FilePath createDirectories(FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createDirectories(this.getPath(), attrs));
+    public FilePath createDirectories(FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createDirectories(this.getPath(), attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath createDirectory(FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createDirectory(this.getPath(), attrs));
+    public FilePath createDirectory(FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createDirectory(this.getPath(), attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath createDirectoryIfNotExists(FileAttribute<?>... attrs) throws IOException {
+    public FilePath createDirectoryIfNotExists(FileAttribute<?>... attrs) throws IORuntimeException {
         if (this.exists() && this.isDirectory()) {
             return this;
         }
         return this.createDirectory(attrs);
     }
 
-    public FilePath createFile(FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createFile(this.getPath(), attrs));
+    public FilePath createFile(FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createFile(this.getPath(), attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath createFileIfNotExists(FileAttribute<?>... attrs) throws IOException {
+    public FilePath createFileIfNotExists(FileAttribute<?>... attrs) throws IORuntimeException {
         if (this.exists() && this.isFile()) {
             return this;
         }
         return this.createFile(attrs);
     }
 
-    public FilePath createLinkFrom(Path existing) throws IOException {
-        return new FilePath(Files.createLink(this.getPath(), existing));
+    public FilePath createLinkFrom(Path existing) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createLink(this.getPath(), existing));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath createLinkTo(Path link) throws IOException {
-        return new FilePath(Files.createLink(link, this.getPath()));
+    public FilePath createLinkTo(Path link) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createLink(link, this.getPath()));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public Path createSymbolicLinkFrom(Path link, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createSymbolicLink(link, this.getPath(), attrs));
+    public Path createSymbolicLinkFrom(Path link, FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createSymbolicLink(link, this.getPath(), attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public Path createSymbolicLinkTo(Path target, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createSymbolicLink(this.getPath(), target, attrs));
+    public Path createSymbolicLinkTo(Path target, FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createSymbolicLink(this.getPath(), target, attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath createTempDirectory(String prefix, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempDirectory(this.getPath(), prefix, attrs));
+    public FilePath createTempDirectory(String prefix, FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createTempDirectory(this.getPath(), prefix, attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath createTempFile(String prefix, FileAttribute<?>... attrs) throws IOException {
+    public FilePath createTempFile(String prefix, FileAttribute<?>... attrs) throws IORuntimeException {
         return this.createTempFile(prefix, null, attrs);
     }
 
-    public FilePath createTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IOException {
-        return new FilePath(Files.createTempFile(this.getPath(), prefix + "-", extension == null ? "" : FilePath.getFileSeperator() + extension,
-                attrs));
+    public FilePath createTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return new FilePath(Files.createTempFile(this.getPath(), prefix + "-", extension == null ? "" : FilePath.getFileSeperator() + extension,
+                    attrs));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath delete() throws IOException {
-        Files.delete(this.getPath());
+    public FilePath delete() throws IORuntimeException {
+        try {
+            Files.delete(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
         return this;
     }
 
-    public FilePath deleteAll() throws IOException {
+    public FilePath deleteAll() throws IORuntimeException {
         return this.walkFileTree(new DeleteAllFilesVisitor(false));
     }
 
-    public boolean deleteAllIfExists() throws IOException {
+    public boolean deleteAllIfExists() throws IORuntimeException {
         if (!this.exists()) {
             return false;
         }
@@ -847,13 +928,17 @@ public class FilePath implements Path, Externalizable {
         return true;
     }
 
-    public FilePath deleteDoubles() throws IOException {
+    public FilePath deleteDoubles() throws IORuntimeException {
         // TODO
         return this;
     }
 
-    public boolean deleteIfExists() throws IOException {
-        return Files.deleteIfExists(this.getPath());
+    public boolean deleteIfExists() throws IORuntimeException {
+        try {
+            return Files.deleteIfExists(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -863,10 +948,15 @@ public class FilePath implements Path, Externalizable {
      *
      * @return : boolean : file downloaded or not
      */
-    public boolean download(URL urlSourceFile) throws IOException {
+    public boolean download(URL urlSourceFile) throws IORuntimeException {
         if (this.exists()) {
             long localFileTime = this.getLastModifiedTime().toMillis();
-            URLConnection conn = urlSourceFile.openConnection();
+            URLConnection conn;
+            try {
+                conn = urlSourceFile.openConnection();
+            } catch (IOException ex) {
+                throw new IORuntimeException(ex);
+            }
             long webFileTime = conn.getLastModified();
             if (webFileTime <= localFileTime) {
                 return false;
@@ -878,6 +968,8 @@ public class FilePath implements Path, Externalizable {
         }
         try (InputStream in = new BufferedInputStream(urlSourceFile.openStream()); OutputStream out = this.newBufferedOutputStream()) {
             Utils.copy(in, out);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
         }
         return true;
     }
@@ -898,7 +990,7 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().endsWith(other);
     }
 
-    public boolean equal(Path file) throws IOException {
+    public boolean equal(Path file) throws IORuntimeException {
         FilePath filePath = FilePath.wrap(file);
         return this.equal(filePath, filePath.getLength());
     }
@@ -911,7 +1003,7 @@ public class FilePath implements Path, Externalizable {
      *
      * @return : boolean : file is equal or not
      */
-    public boolean equal(Path file, long limit) throws IOException {
+    public boolean equal(Path file, long limit) throws IORuntimeException {
         FilePath otherPath = FilePath.wrap(file);
         if (this.notExists() || otherPath.notExists() || this.isDirectory() || this.isDirectory()) {
             return false;
@@ -937,6 +1029,8 @@ public class FilePath implements Path, Externalizable {
                     break;
                 }
             }
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
         }
         return true;
     }
@@ -960,7 +1054,7 @@ public class FilePath implements Path, Externalizable {
      * flattens this directory, copies all files in all subdirectories to this directory, do not copy doubles, rename if file already exists and isn't
      * the same, delete all subdirectories afterwards
      */
-    public FilePath flatten() throws IOException {
+    public FilePath flatten() throws IORuntimeException {
         // TODO
         return this;
     }
@@ -969,8 +1063,12 @@ public class FilePath implements Path, Externalizable {
         return this.toAbsolutePath().toString();
     }
 
-    public Object getAttribute(String attribute, LinkOption... options) throws IOException {
-        return Files.getAttribute(this.getPath(), attribute, options);
+    public Object getAttribute(String attribute, LinkOption... options) throws IORuntimeException {
+        try {
+            return Files.getAttribute(this.getPath(), attribute, options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     public List<FilePath> getChildren() {
@@ -979,15 +1077,17 @@ public class FilePath implements Path, Externalizable {
             for (Path file : stream) {
                 children.add(new FilePath(file));
             }
-        } catch (IOException | DirectoryIteratorException x) {
+        } catch (IOException ex) {
             // IOException can never be thrown by the iteration.
             // In this snippet, it can only be thrown by newDirectoryStream.
-            throw new RuntimeException(x);
+            throw new IORuntimeException(ex);
+        } catch (DirectoryIteratorException ex) {
+            throw new IORuntimeException(String.valueOf(ex));
         }
         return children;
     }
 
-    public String getConvertedSize() throws IOException {
+    public String getConvertedSize() throws IORuntimeException {
         return FilePath.getConvertedSize(this.getSize());
     }
 
@@ -1007,8 +1107,12 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(this.getPath().getFileName());
     }
 
-    public FileStore getFileStore() throws IOException {
-        return Files.getFileStore(this.getPath());
+    public FileStore getFileStore() throws IORuntimeException {
+        try {
+            return Files.getFileStore(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1023,18 +1127,24 @@ public class FilePath implements Path, Externalizable {
         return FilePath.grabber.getLargeIcon(this.toFile());
     }
 
-    public FileTime getLastModifiedTime(LinkOption... options) throws IOException {
-        return Files.getLastModifiedTime(this.getPath(), options);
+    public FileTime getLastModifiedTime(LinkOption... options) throws IORuntimeException {
+        try {
+            return Files.getLastModifiedTime(this.getPath(), options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public long getLength() throws IOException {
+    public long getLength() throws IORuntimeException {
         return this.getSize();
     }
 
-    public int getLineCount() throws IOException {
+    public int getLineCount() throws IORuntimeException {
         try (LineNumberReader lnr = new LineNumberReader(this.newBufferedReader())) {
             lnr.skip(Long.MAX_VALUE);
             return lnr.getLineNumber() + 1;
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
         }
     }
 
@@ -1058,8 +1168,12 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().getNameCount();
     }
 
-    public UserPrincipal getOwner(LinkOption... options) throws IOException {
-        return Files.getOwner(this.getPath(), options);
+    public UserPrincipal getOwner(LinkOption... options) throws IORuntimeException {
+        try {
+            return Files.getOwner(this.getPath(), options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1074,8 +1188,12 @@ public class FilePath implements Path, Externalizable {
         return FilePath.getPath(this);
     }
 
-    public Set<PosixFilePermission> getPosixFilePermissions(LinkOption... options) throws IOException {
-        return Files.getPosixFilePermissions(this.getPath(), options);
+    public Set<PosixFilePermission> getPosixFilePermissions(LinkOption... options) throws IORuntimeException {
+        try {
+            return Files.getPosixFilePermissions(this.getPath(), options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1094,15 +1212,19 @@ public class FilePath implements Path, Externalizable {
         return this.getShortFileName();
     }
 
-    public long getSize() throws IOException {
-        return Files.size(this.getPath());
+    public long getSize() throws IORuntimeException {
+        try {
+            return Files.size(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     public Icon getSmallIcon() {
         return FilePath.grabber.getSmallIcon(this.toFile());
     }
 
-    public long getTotalSize() throws IOException {
+    public long getTotalSize() throws IORuntimeException {
         final AtomicLong size = new AtomicLong(0);
         this.walkFileTree(new SimpleFileVisitor<Path>() {
             @Override
@@ -1144,16 +1266,24 @@ public class FilePath implements Path, Externalizable {
         return Files.isRegularFile(this.getPath(), options);
     }
 
-    public boolean isHidden() throws IOException {
-        return Files.isHidden(this.getPath());
+    public boolean isHidden() throws IORuntimeException {
+        try {
+            return Files.isHidden(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     public boolean isReadable() {
         return Files.isReadable(this.getPath());
     }
 
-    public boolean isSameFile(Path otherPath) throws IOException {
-        return Files.isSameFile(this.getPath(), otherPath);
+    public boolean isSameFile(Path otherPath) throws IORuntimeException {
+        try {
+            return Files.isSameFile(this.getPath(), otherPath);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     public boolean isSymbolicLink() {
@@ -1172,20 +1302,20 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().iterator();
     }
 
-    public FileLineIterator lines() throws IOException {
+    public FileLineIterator lines() throws IORuntimeException {
         return new FileLineIterator(this);
         // return Files.lines(this.getPath());
     }
 
-    public List<FilePath> list() throws IOException {
+    public List<FilePath> list() throws IORuntimeException {
         return this.list(false);
     }
 
-    public List<FilePath> list(boolean iterate) throws IOException {
+    public List<FilePath> list(boolean iterate) throws IORuntimeException {
         return this.list(iterate, new AcceptAllFilter());
     }
 
-    public List<FilePath> list(boolean iterate, DirectoryStream.Filter<? super Path> filter) throws IOException {
+    public List<FilePath> list(boolean iterate, DirectoryStream.Filter<? super Path> filter) throws IORuntimeException {
         Deque<FilePath> stack = new ArrayDeque<>();
         List<FilePath> files = new LinkedList<>();
         stack.push(this);
@@ -1201,89 +1331,127 @@ public class FilePath implements Path, Externalizable {
                         stack.push(child);
                     }
                 }
+            } catch (IOException ex) {
+                throw new IORuntimeException(ex);
             }
         }
         return files;
     }
 
-    public List<FilePath> list(DirectoryStream.Filter<? super Path> filter) throws IOException {
+    public List<FilePath> list(DirectoryStream.Filter<? super Path> filter) throws IORuntimeException {
         return this.list(false, filter);
     }
 
-    public List<FilePath> listDirectories() throws IOException {
+    public List<FilePath> listDirectories() throws IORuntimeException {
         return this.listDirectories(false);
     }
 
-    public List<FilePath> listDirectories(boolean iterate) throws IOException {
+    public List<FilePath> listDirectories(boolean iterate) throws IORuntimeException {
         return this.list(iterate, new DirectoryFilter());
     }
 
-    public List<FilePath> listFiles() throws IOException {
+    public List<FilePath> listFiles() throws IORuntimeException {
         return this.listFiles(false);
     }
 
-    public List<FilePath> listFiles(boolean iterate) throws IOException {
+    public List<FilePath> listFiles(boolean iterate) throws IORuntimeException {
         return this.list(iterate, new FileFilter());
     }
 
-    public FilePath moveFrom(Path source) throws IOException {
+    public FilePath moveFrom(Path source) throws IORuntimeException {
         return this.moveFrom(source, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public FilePath moveFrom(Path source, CopyOption... options) throws IOException {
-        return new FilePath(Files.move(FilePath.getPath(source), this, options));
+    public FilePath moveFrom(Path source, CopyOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.move(FilePath.getPath(source), this, options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath moveTo(Path target) throws IOException {
+    public FilePath moveTo(Path target) throws IORuntimeException {
         return this.moveTo(target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    public FilePath moveTo(Path target, CopyOption... options) throws IOException {
-        return new FilePath(Files.move(this, FilePath.getPath(target), options));
+    public FilePath moveTo(Path target, CopyOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.move(this, FilePath.getPath(target), options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public BufferedInputStream newBufferedInputStream(OpenOption... options) throws IOException {
+    public BufferedInputStream newBufferedInputStream(OpenOption... options) throws IORuntimeException {
         return new BufferedInputStream(this.newInputStream(options));
     }
 
-    public BufferedOutputStream newBufferedOutputStream(OpenOption... options) throws IOException {
+    public BufferedOutputStream newBufferedOutputStream(OpenOption... options) throws IORuntimeException {
         return new BufferedOutputStream(this.newOutputStream(options));
     }
 
-    public BufferedReader newBufferedReader() throws IOException {
+    public BufferedReader newBufferedReader() throws IORuntimeException {
         return this.newBufferedReader(Charset.defaultCharset());
     }
 
-    public BufferedReader newBufferedReader(Charset cs) throws IOException {
-        return Files.newBufferedReader(this.getPath(), cs);
+    public BufferedReader newBufferedReader(Charset cs) throws IORuntimeException {
+        try {
+            return Files.newBufferedReader(this.getPath(), cs);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public BufferedWriter newBufferedWriter(Charset cs, OpenOption... options) throws IOException {
-        return Files.newBufferedWriter(this.getPath(), cs, options);
+    public BufferedWriter newBufferedWriter(Charset cs, OpenOption... options) throws IORuntimeException {
+        try {
+            return Files.newBufferedWriter(this.getPath(), cs, options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public BufferedWriter newBufferedWriter(OpenOption... options) throws IOException {
+    public BufferedWriter newBufferedWriter(OpenOption... options) throws IORuntimeException {
         return this.newBufferedWriter(Charset.defaultCharset(), options);
     }
 
-    public SeekableByteChannel newByteChannel(OpenOption... options) throws IOException {
-        return Files.newByteChannel(this.getPath(), options);
+    public SeekableByteChannel newByteChannel(OpenOption... options) throws IORuntimeException {
+        try {
+            return Files.newByteChannel(this.getPath(), options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public SeekableByteChannel newByteChannel(Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IOException {
-        return Files.newByteChannel(this.getPath(), options, attrs);
+    public SeekableByteChannel newByteChannel(Set<? extends OpenOption> options, FileAttribute<?>... attrs) throws IORuntimeException {
+        try {
+            return Files.newByteChannel(this.getPath(), options, attrs);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public DirectoryStream<Path> newDirectoryStream() throws IOException {
-        return Files.newDirectoryStream(this.getPath());
+    public DirectoryStream<Path> newDirectoryStream() throws IORuntimeException {
+        try {
+            return Files.newDirectoryStream(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public DirectoryStream<Path> newDirectoryStream(DirectoryStream.Filter<? super Path> filter) throws IOException {
-        return Files.newDirectoryStream(this.getPath(), filter);
+    public DirectoryStream<Path> newDirectoryStream(DirectoryStream.Filter<? super Path> filter) throws IORuntimeException {
+        try {
+            return Files.newDirectoryStream(this.getPath(), filter);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public DirectoryStream<Path> newDirectoryStream(String glob) throws IOException {
-        return Files.newDirectoryStream(this.getPath(), glob);
+    public DirectoryStream<Path> newDirectoryStream(String glob) throws IORuntimeException {
+        try {
+            return Files.newDirectoryStream(this.getPath(), glob);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1299,12 +1467,20 @@ public class FilePath implements Path, Externalizable {
         return FilePath.newFileIndex(new FilePath(this.getParent()), shortFile, extension);
     }
 
-    public InputStream newInputStream(OpenOption... options) throws IOException {
-        return Files.newInputStream(this.getPath(), options);
+    public InputStream newInputStream(OpenOption... options) throws IORuntimeException {
+        try {
+            return Files.newInputStream(this.getPath(), options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public OutputStream newOutputStream(OpenOption... options) throws IOException {
-        return Files.newOutputStream(this.getPath(), options);
+    public OutputStream newOutputStream(OpenOption... options) throws IORuntimeException {
+        try {
+            return Files.newOutputStream(this.getPath(), options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1323,48 +1499,76 @@ public class FilePath implements Path, Externalizable {
         return new PathIterator(this);
     }
 
-    public String probeContentType() throws IOException {
-        return Files.probeContentType(this.getPath());
+    public String probeContentType() throws IORuntimeException {
+        try {
+            return Files.probeContentType(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public InputStream read() throws IOException {
+    public InputStream read() throws IORuntimeException {
         return this.newInputStream();
     }
 
-    public long read(InputStream in) throws IOException {
+    public long read(InputStream in) throws IORuntimeException {
         return this.copyFrom(in);
     }
 
-    public String readAll() throws IOException {
+    public String readAll() throws IORuntimeException {
         return this.readAll(Charset.defaultCharset());
     }
 
-    public String readAll(Charset cs) throws IOException {
-        return new String(Files.readAllBytes(this.getPath()), cs);
+    public String readAll(Charset cs) throws IORuntimeException {
+        try {
+            return new String(Files.readAllBytes(this.getPath()), cs);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public byte[] readAllBytes() throws IOException {
-        return Files.readAllBytes(this.getPath());
+    public byte[] readAllBytes() throws IORuntimeException {
+        try {
+            return Files.readAllBytes(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public ByteBuffer readAllBytesToBuffer() throws IOException {
-        return ByteBuffer.wrap(Files.readAllBytes(this.getPath()));
+    public ByteBuffer readAllBytesToBuffer() throws IORuntimeException {
+        try {
+            return ByteBuffer.wrap(Files.readAllBytes(this.getPath()));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public List<String> readAllLines() throws IOException {
+    public List<String> readAllLines() throws IORuntimeException {
         return this.readAllLines(Charset.defaultCharset());
     }
 
-    public List<String> readAllLines(Charset cs) throws IOException {
-        return Files.readAllLines(this.getPath(), cs);
+    public List<String> readAllLines(Charset cs) throws IORuntimeException {
+        try {
+            return Files.readAllLines(this.getPath(), cs);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public <A extends BasicFileAttributes> A readAttributes(Class<A> type, LinkOption... options) throws IOException {
-        return Files.readAttributes(this.getPath(), type, options);
+    public <A extends BasicFileAttributes> A readAttributes(Class<A> type, LinkOption... options) throws IORuntimeException {
+        try {
+            return Files.readAttributes(this.getPath(), type, options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public Map<String, Object> readAttributes(String attributes, LinkOption... options) throws IOException {
-        return Files.readAttributes(this.getPath(), attributes, options);
+    public Map<String, Object> readAttributes(String attributes, LinkOption... options) throws IORuntimeException {
+        try {
+            return Files.readAttributes(this.getPath(), attributes, options);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1379,24 +1583,36 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public FilePath readSymbolicLink() throws IOException {
-        return new FilePath(Files.readSymbolicLink(this.getPath()));
+    public FilePath readSymbolicLink() throws IORuntimeException {
+        try {
+            return new FilePath(Files.readSymbolicLink(this.getPath()));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
      * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[])
      */
     @Override
-    public WatchKey register(WatchService watcher, Kind<?>... events) throws IOException {
-        return this.getPath().register(watcher, events);
+    public WatchKey register(WatchService watcher, Kind<?>... events) throws IORuntimeException {
+        try {
+            return this.getPath().register(watcher, events);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
      * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[], java.nio.file.WatchEvent.Modifier[])
      */
     @Override
-    public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) throws IOException {
-        return this.getPath().register(watcher, events, modifiers);
+    public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) throws IORuntimeException {
+        try {
+            return this.getPath().register(watcher, events, modifiers);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1407,11 +1623,11 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(this.getPath().relativize(FilePath.getPath(other)));
     }
 
-    public FilePath renameTo(Path target) throws IOException {
+    public FilePath renameTo(Path target) throws IORuntimeException {
         return this.moveTo(target);
     }
 
-    public FilePath renameTo(Path target, CopyOption... options) throws IOException {
+    public FilePath renameTo(Path target, CopyOption... options) throws IORuntimeException {
         return this.moveTo(target, options);
     }
 
@@ -1447,31 +1663,55 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(this.getPath().resolveSibling(other));
     }
 
-    public FilePath setAttribute(String attribute, Object value, LinkOption... options) throws IOException {
-        return new FilePath(Files.setAttribute(this.getPath(), attribute, value, options));
+    public FilePath setAttribute(String attribute, Object value, LinkOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.setAttribute(this.getPath(), attribute, value, options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public boolean setExecutable(boolean executable) throws IOException {
-        Files.setAttribute(this, null, executable);
+    public boolean setExecutable(boolean executable) throws IORuntimeException {
+        try {
+            Files.setAttribute(this, null, executable);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
         return true;
     }
 
-    public boolean setExecutable(boolean executable, boolean ownerOnly) throws IOException {
-        Files.setAttribute(this, null, executable);
-        Files.setAttribute(this, null, ownerOnly);
+    public boolean setExecutable(boolean executable, boolean ownerOnly) throws IORuntimeException {
+        try {
+            Files.setAttribute(this, null, executable);
+            Files.setAttribute(this, null, ownerOnly);
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
         return true;
     }
 
-    public FilePath setLastModifiedTime(FileTime time) throws IOException {
-        return new FilePath(Files.setLastModifiedTime(this.getPath(), time));
+    public FilePath setLastModifiedTime(FileTime time) throws IORuntimeException {
+        try {
+            return new FilePath(Files.setLastModifiedTime(this.getPath(), time));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath setOwner(UserPrincipal owner) throws IOException {
-        return new FilePath(Files.setOwner(this.getPath(), owner));
+    public FilePath setOwner(UserPrincipal owner) throws IORuntimeException {
+        try {
+            return new FilePath(Files.setOwner(this.getPath(), owner));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath setPosixFilePermissions(Set<PosixFilePermission> perms) throws IOException {
-        return new FilePath(Files.setPosixFilePermissions(this.getPath(), perms));
+    public FilePath setPosixFilePermissions(Set<PosixFilePermission> perms) throws IORuntimeException {
+        try {
+            return new FilePath(Files.setPosixFilePermissions(this.getPath(), perms));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     public boolean setReadable(boolean readable) {
@@ -1550,8 +1790,12 @@ public class FilePath implements Path, Externalizable {
      * @see java.nio.file.Path#toRealPath(java.nio.file.LinkOption[])
      */
     @Override
-    public Path toRealPath(LinkOption... options) throws IOException {
-        return new FilePath(this.getPath().toRealPath(options));
+    public Path toRealPath(LinkOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(this.getPath().toRealPath(options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
@@ -1570,7 +1814,7 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().toUri();
     }
 
-    public FilePath walkDirectories(final FileVisit visitor) throws IOException {
+    public FilePath walkDirectories(final FileVisit visitor) {
         return this.walkFileTree(new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -1581,7 +1825,7 @@ public class FilePath implements Path, Externalizable {
         });
     }
 
-    public FilePath walkFiles(final FileVisit visitor) throws IOException {
+    public FilePath walkFiles(final FileVisit visitor) {
         return this.walkFileTree(new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -1592,37 +1836,63 @@ public class FilePath implements Path, Externalizable {
         });
     }
 
-    public FilePath walkFileTree(FileVisitor<? super Path> visitor) throws IOException {
-        return new FilePath(Files.walkFileTree(this.getPath(), visitor));
+    public FilePath walkFileTree(FileVisitor<? super Path> visitor) throws IORuntimeException {
+        try {
+            return new FilePath(Files.walkFileTree(this.getPath(), visitor));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath walkFileTree(Set<FileVisitOption> options, int maxDepth, FileVisitor<? super Path> visitor) throws IOException {
-        return new FilePath(Files.walkFileTree(this.getPath(), options, maxDepth, visitor));
+    public FilePath walkFileTree(Set<FileVisitOption> options, int maxDepth, FileVisitor<? super Path> visitor) throws IORuntimeException {
+        try {
+            return new FilePath(Files.walkFileTree(this.getPath(), options, maxDepth, visitor));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath write(byte[] bytes, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.getPath(), bytes, options));
+    public FilePath write(byte[] bytes, OpenOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.write(this.getPath(), bytes, options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath write(ByteBuffer bytes, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.getPath(), bytes.array(), options));
+    public FilePath write(ByteBuffer bytes, OpenOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.write(this.getPath(), bytes.array(), options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public FilePath write(Iterable<? extends CharSequence> lines, Charset cs, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.getPath(), lines, cs, options));
+    public FilePath write(Iterable<? extends CharSequence> lines, Charset cs, OpenOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.write(this.getPath(), lines, cs, options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
-    public Path write(Iterable<? extends CharSequence> lines, OpenOption... options) throws IOException {
+    public Path write(Iterable<? extends CharSequence> lines, OpenOption... options) throws IORuntimeException {
         try (BufferedWriter bufferedWriter = this.newBufferedWriter(options)) {
             for (CharSequence line : lines) {
                 bufferedWriter.write(line.toString());
             }
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
         }
         return this;// Files.write(this.getPath(), lines, options);
     }
 
-    public FilePath write(String text, Charset charset, OpenOption... options) throws IOException {
-        return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? Charset.defaultCharset() : charset), options));
+    public FilePath write(String text, Charset charset, OpenOption... options) throws IORuntimeException {
+        try {
+            return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? Charset.defaultCharset() : charset), options));
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
     }
 
     /**
