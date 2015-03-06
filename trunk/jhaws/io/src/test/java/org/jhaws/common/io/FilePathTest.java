@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 
 import org.jhaws.common.io.FilePath.FileLineIterator;
+import org.jhaws.common.io.FilePath.IORuntimeException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,16 +39,16 @@ public class FilePathTest {
             try {
                 fp.createDirectory();
                 Assert.fail("FileAlreadyExistsException");
-            } catch (FileAlreadyExistsException ex) {
-                //
+            } catch (IORuntimeException ex) {
+                Assert.assertTrue(ex.getCause() instanceof FileAlreadyExistsException);
             }
             fp.delete();
             Assert.assertFalse(fp.exists());
             try {
                 fp.delete();
                 Assert.fail("NoSuchFileException");
-            } catch (NoSuchFileException ex) {
-                //
+            } catch (IORuntimeException ex) {
+                Assert.assertTrue(ex.getCause() instanceof NoSuchFileException);
             }
             fp.deleteIfExists();
             fp.deleteIfExists();
@@ -55,30 +56,30 @@ public class FilePathTest {
             try {
                 fp.createFile();
                 Assert.fail("AccessDeniedException");
-            } catch (AccessDeniedException ex) {
-                //
+            } catch (IORuntimeException ex) {
+                Assert.assertTrue(ex.getCause() instanceof AccessDeniedException);
             }
             FilePath fpp = new FilePath(fp, "file.txt");
             fpp.createFile();
             try {
                 fpp.createFile();
                 Assert.fail("FileAlreadyExistsException");
-            } catch (FileAlreadyExistsException ex) {
-                //
+            } catch (IORuntimeException ex) {
+                Assert.assertTrue(ex.getCause() instanceof FileAlreadyExistsException);
             }
             try {
                 fp.delete();
                 Assert.fail("DirectoryNotEmptyException");
-            } catch (DirectoryNotEmptyException ex) {
-                //
+            } catch (IORuntimeException ex) {
+                Assert.assertTrue(ex.getCause() instanceof DirectoryNotEmptyException);
             }
             fp.deleteAll();
             Assert.assertFalse(fp.exists());
             try {
                 fp.deleteAll();
                 Assert.fail("NoSuchFileException");
-            } catch (NoSuchFileException ex) {
-                //
+            } catch (IORuntimeException ex) {
+                Assert.assertTrue(ex.getCause() instanceof NoSuchFileException);
             }
             fp.deleteAllIfExists();
             fp.deleteAllIfExists();
