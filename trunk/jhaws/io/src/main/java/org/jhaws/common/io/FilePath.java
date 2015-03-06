@@ -51,6 +51,7 @@ import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -66,6 +67,7 @@ import java.util.zip.Checksum;
 import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.jhaws.common.io.Utils.OSGroup;
 
 /**
@@ -325,6 +327,17 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public static class LastModifiedTimeComparator implements Comparator<FilePath> {
+        @Override
+        public int compare(FilePath o1, FilePath o2) {
+            try {
+                return new CompareToBuilder().append(o1.getLastModifiedTime(), o2.getLastModifiedTime()).toComparison();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
     public static class PathIterator implements Iterator<Path> {
         protected transient Path path;
 
@@ -347,6 +360,17 @@ public class FilePath implements Path, Externalizable {
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    public static class SizeComparator implements Comparator<FilePath> {
+        @Override
+        public int compare(FilePath o1, FilePath o2) {
+            try {
+                return new CompareToBuilder().append(o1.getSize(), o2.getSize()).toComparison();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
