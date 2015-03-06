@@ -1015,7 +1015,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String getName() {
-        return this.toString();
+        return this.getFileName().toString();
     }
 
     /**
