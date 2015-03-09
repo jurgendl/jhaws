@@ -130,6 +130,26 @@ public class FilePathTest {
     }
 
     @Test
+    public void extension() {
+        try {
+            Assert.assertNull(new FilePath("dir/test").getExtension());
+            Assert.assertEquals("txt", new FilePath("dir", "test.txt").getExtension());
+            Assert.assertEquals("TXT", new FilePath("dir", "test.TXT").getExtension());
+            Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.doc", new FilePath("dir", "test.TXT").changeExtension("doc")
+                    .getFullPathName());
+            Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.DOC", new FilePath("dir", "test.TXT").changeExtension("DOC")
+                    .getFullPathName());
+            Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.TXT.doc", new FilePath("dir", "test.TXT").addExtension("doc")
+                    .getFullPathName());
+            Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.TXT.DOC", new FilePath("dir", "test.TXT").addExtension("DOC")
+                    .getFullPathName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail(String.valueOf(ex));
+        }
+    }
+
+    @Test
     public void lines_closed_auto() {
         FileLineIterator closeMe = null;
         try {
