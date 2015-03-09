@@ -1,5 +1,7 @@
 package org.jhaws.common.io;
 
+import java.awt.Desktop;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -14,6 +16,7 @@ import java.io.LineNumberReader;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -64,6 +67,7 @@ import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
@@ -459,11 +463,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static String getFileSeperator() {
-        return ".";
+        return String.valueOf(FilePath.DOT);
     }
 
     public static char getFileSeperatorChar() {
-        return FilePath.getFileSeperator().charAt(0);
+        return FilePath.DOT;
     }
 
     public static Path getPath(Path p) {
@@ -483,7 +487,7 @@ public class FilePath implements Path, Externalizable {
 
     public static String getShortFileName(Path path) {
         String fileName = path.getFileName().toString();
-        int p = fileName.lastIndexOf('.');
+        int p = fileName.lastIndexOf(FilePath.DOT);
         if (p == -1) {
             return fileName;
         }
@@ -636,6 +640,8 @@ public class FilePath implements Path, Externalizable {
         return p instanceof FilePath ? FilePath.class.cast(p) : new FilePath(p);
     }
 
+    public static final char DOT = '.';
+
     protected transient Path path;
 
     protected static ExtensionIconFinder grabber = new org.jhaws.common.io.SystemIcon();
@@ -657,7 +663,8 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
-                root.getPackage().getName().replace('.', FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/") + relativePath));
+                root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/")
+                        + relativePath));
     }
 
     public FilePath(File file) {
@@ -712,12 +719,22 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public FilePath addExtension(String extension) {
+        return this.getParent() == null ? new FilePath(this.getFullFileName() + FilePath.DOT + extension) : new FilePath(this.getParent(),
+                this.getFullFileName() + FilePath.DOT + extension);
+    }
+
     public Long adler32() throws IORuntimeException {
         return this.checksum(new Adler32());
     }
 
     public FileByteIterator bytes() throws IORuntimeException {
         return new FileByteIterator(this);
+    }
+
+    public FilePath changeExtension(String extension) {
+        return this.getParent() == null ? new FilePath(this.getShortFileName() + FilePath.DOT + extension) : new FilePath(this.getParent(),
+                this.getShortFileName() + FilePath.DOT + extension);
     }
 
     public FilePath checkDirectory() throws AccessDeniedException {
@@ -1091,6 +1108,10 @@ public class FilePath implements Path, Externalizable {
         return FilePath.getConvertedSize(this.getSize());
     }
 
+    public Charset getDefaultCharset() {
+        return Charset.defaultCharset();
+    }
+
     public String getExtension() {
         return FilePath.getExtension(this.getPath());
     }
@@ -1121,6 +1142,14 @@ public class FilePath implements Path, Externalizable {
     @Override
     public FileSystem getFileSystem() {
         return this.getPath().getFileSystem();
+    }
+
+    public String getFullFileName() {
+        return this.getPath().getFileName().toString();
+    }
+
+    public String getFullPathName() {
+        return this.getPath().toString();
     }
 
     public Icon getLargeIcon() {
@@ -1181,6 +1210,10 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public Path getParent() {
+        return this.getParentPath();
+    }
+
+    public FilePath getParentPath() {
         return this.getPath().getParent() == null ? null : new FilePath(this.getPath().getParent());
     }
 
@@ -1206,10 +1239,6 @@ public class FilePath implements Path, Externalizable {
 
     public String getShortFileName() {
         return FilePath.getShortFileName(this);
-    }
-
-    public String getShortName() {
-        return this.getShortFileName();
     }
 
     public long getSize() throws IORuntimeException {
@@ -1391,7 +1420,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public BufferedReader newBufferedReader() throws IORuntimeException {
-        return this.newBufferedReader(Charset.defaultCharset());
+        return this.newBufferedReader(this.getDefaultCharset());
     }
 
     public BufferedReader newBufferedReader(Charset cs) throws IORuntimeException {
@@ -1411,7 +1440,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public BufferedWriter newBufferedWriter(OpenOption... options) throws IORuntimeException {
-        return this.newBufferedWriter(Charset.defaultCharset(), options);
+        return this.newBufferedWriter(this.getDefaultCharset(), options);
     }
 
     public SeekableByteChannel newByteChannel(OpenOption... options) throws IORuntimeException {
@@ -1495,6 +1524,14 @@ public class FilePath implements Path, Externalizable {
         return Files.notExists(this.getPath(), options);
     }
 
+    public void open() {
+        try {
+            Desktop.getDesktop().open(this.toFile());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
+    }
+
     public PathIterator paths() {
         return new PathIterator(this);
     }
@@ -1516,7 +1553,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String readAll() throws IORuntimeException {
-        return this.readAll(Charset.defaultCharset());
+        return this.readAll(this.getDefaultCharset());
     }
 
     public String readAll(Charset cs) throws IORuntimeException {
@@ -1544,7 +1581,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<String> readAllLines() throws IORuntimeException {
-        return this.readAllLines(Charset.defaultCharset());
+        return this.readAllLines(this.getDefaultCharset());
     }
 
     public List<String> readAllLines(Charset cs) throws IORuntimeException {
@@ -1580,6 +1617,14 @@ public class FilePath implements Path, Externalizable {
             this.path = Paths.get(new URI(in.readUTF()));
         } catch (URISyntaxException ex) {
             throw new IOException(ex);
+        }
+    }
+
+    public BufferedImage readImage() throws IORuntimeException {
+        try {
+            return ImageIO.read(this.newInputStream());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
         }
     }
 
@@ -1814,6 +1859,14 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().toUri();
     }
 
+    public URL toUrl() {
+        try {
+            return this.toUri().toURL();
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public FilePath walkDirectories(final FileVisit visitor) {
         return this.walkFileTree(new SimpleFileVisitor<Path>() {
             @Override
@@ -1889,10 +1942,14 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath write(String text, Charset charset, OpenOption... options) throws IORuntimeException {
         try {
-            return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? Charset.defaultCharset() : charset), options));
+            return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? this.getDefaultCharset() : charset), options));
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         }
+    }
+
+    public FilePath write(String text, OpenOption... options) throws IORuntimeException {
+        return this.write(text, this.getDefaultCharset(), options);
     }
 
     /**
