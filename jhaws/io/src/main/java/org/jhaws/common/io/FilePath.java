@@ -664,7 +664,7 @@ public class FilePath implements Path, Externalizable {
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
                 root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/")
-                        + relativePath));
+                + relativePath));
     }
 
     public FilePath(File file) {
@@ -676,7 +676,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath(FilePath file) {
-        if (this.getPath() == null) {
+        if (file.getPath() == null) {
             throw new NullPointerException();
         }
         this.path = file.path;
