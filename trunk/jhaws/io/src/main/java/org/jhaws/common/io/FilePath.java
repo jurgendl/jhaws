@@ -664,7 +664,7 @@ public class FilePath implements Path, Externalizable {
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
                 root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/")
-                + relativePath));
+                        + relativePath));
     }
 
     public FilePath(File file) {
@@ -790,7 +790,7 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public int compareTo(Path other) {
-        return this.getPath().compareTo(other);
+        return this.getPath().compareTo(FilePath.getPath(other));
     }
 
     public long copyFrom(InputStream in, CopyOption... options) throws IORuntimeException {
