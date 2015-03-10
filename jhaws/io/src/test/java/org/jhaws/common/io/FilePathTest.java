@@ -8,6 +8,7 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
@@ -90,6 +91,45 @@ public class FilePathTest {
             Assert.assertTrue(fpp.exists());
             fpp.createFileIfNotExists();
             fp.deleteAllIfExists();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail(String.valueOf(ex));
+        }
+    }
+
+    @Test
+    public void doubles() {
+        String same = "same";
+        try {
+            FilePath tmpDir = FilePath.createDefaultTempDirectory(String.valueOf(System.currentTimeMillis()));
+            FilePath subdir = tmpDir.child("subdir").createDirectories();
+            FilePath file1 = tmpDir.child("file1");
+            try (BufferedWriter out = file1.newBufferedWriter()) {
+                out.write(same);
+            }
+            FilePath file2 = tmpDir.child("file2");
+            try (BufferedWriter out = file2.newBufferedWriter()) {
+                out.write(same);
+            }
+            FilePath file3 = tmpDir.child("file3");
+            try (BufferedWriter out = file3.newBufferedWriter()) {
+                out.write(same);
+                out.write(same);
+            }
+            FilePath file4 = subdir.child("file4");
+            try (BufferedWriter out = file4.newBufferedWriter()) {
+                out.write(same);
+            }
+            Assert.assertTrue(file1.exists());
+            Assert.assertTrue(file2.exists());
+            Assert.assertTrue(file3.exists());
+            Assert.assertTrue(file4.exists());
+            List<FilePath> doubles = tmpDir.deleteDoubles();
+            Assert.assertTrue(file1.exists() != file2.exists());
+            Assert.assertEquals(1, doubles.size());
+            Assert.assertTrue(doubles.iterator().next().notExists());
+            Assert.assertTrue(file3.exists());
+            Assert.assertTrue(file4.exists());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));

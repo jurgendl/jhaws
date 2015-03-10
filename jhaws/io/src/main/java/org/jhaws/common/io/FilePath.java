@@ -56,6 +56,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -248,6 +250,9 @@ public class FilePath implements Path, Externalizable {
                         BufferedInputStream br = this.in();
                         if (br != null) {
                             this.b = (byte) br.read();
+                            if (this.b == -1) {
+                                this.b = null;
+                            }
                             if (this.b == null) {
                                 this.close();
                             }
@@ -671,7 +676,7 @@ public class FilePath implements Path, Externalizable {
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
                 root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/")
-                        + relativePath));
+                + relativePath));
     }
 
     public FilePath(File file) {
@@ -731,7 +736,7 @@ public class FilePath implements Path, Externalizable {
                 this.getFullFileName() + FilePath.DOT + extension);
     }
 
-    public Long adler32() throws IORuntimeException {
+    public long adler32() throws IORuntimeException {
         return this.checksum(new Adler32());
     }
 
@@ -772,7 +777,7 @@ public class FilePath implements Path, Externalizable {
         return this;
     }
 
-    public Long checksum(Checksum checksum) throws IORuntimeException {
+    public long checksum(Checksum checksum) throws IORuntimeException {
         try (Iterators.FileByteIterator bytes = this.bytes()) {
             while (bytes.hasNext()) {
                 checksum.update(bytes.next());
@@ -836,7 +841,7 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public Long crc32() throws IORuntimeException {
+    public long crc32() throws IORuntimeException {
         return this.checksum(new CRC32());
     }
 
@@ -952,9 +957,52 @@ public class FilePath implements Path, Externalizable {
         return true;
     }
 
-    public FilePath deleteDoubles() throws IORuntimeException {
-        // TODO
-        return this;
+    public List<FilePath> deleteDoubles() throws IORuntimeException {
+        final List<FilePath> deleted = new ArrayList<>();
+        try {
+            final Map<Long, Map<FilePath, Long>> files = new HashMap<>();
+            Files.walkFileTree(this.getPath(), new HashSet<FileVisitOption>(), 1, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    if (attrs.isRegularFile()) {
+                        long size = attrs.size();
+                        FilePath filePath = new FilePath(file);
+                        Map<FilePath, Long> checkSum = files.get(size);
+                        if (checkSum == null) {
+                            checkSum = new HashMap<>();
+                            checkSum.put(filePath, null);
+                            files.put(size, checkSum);
+                        } else {
+                            Long crc32 = null;
+                            boolean delete = false;
+                            for (Map.Entry<FilePath, Long> entry : checkSum.entrySet()) {
+                                Long other_crc32 = entry.getValue();
+                                if (other_crc32 == null) {
+                                    other_crc32 = entry.getKey().crc32();
+                                    checkSum.put(entry.getKey(), other_crc32);
+                                }
+                                if (crc32 == null) {
+                                    crc32 = filePath.crc32();
+                                }
+                                if (crc32 == other_crc32.longValue()) {
+                                    delete = true;
+                                    break;
+                                }
+                            }
+                            if (delete) {
+                                deleted.add(filePath.delete());
+                            } else {
+                                checkSum.put(filePath, crc32);
+                            }
+                        }
+                    }
+                    return super.visitFile(file, attrs);
+                }
+            });
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
+        return deleted;
     }
 
     public boolean deleteIfExists() throws IORuntimeException {
