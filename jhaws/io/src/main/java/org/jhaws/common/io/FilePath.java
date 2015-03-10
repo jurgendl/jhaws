@@ -78,227 +78,67 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @since 1.7
  */
 public class FilePath implements Path, Externalizable {
-    public static final class AcceptAllFilter implements DirectoryStream.Filter<Path> {
-        @Override
-        public boolean accept(Path entry) throws IORuntimeException {
-            return true;
-        }
-    }
-
-    public static class CompatibleFilter implements DirectoryStream.Filter<Path> {
-        protected java.io.FileFilter fileFilter;
-
-        public CompatibleFilter(java.io.FileFilter fileFilter) {
-            this.fileFilter = fileFilter;
-        }
-
-        @Override
-        public boolean accept(Path entry) throws IORuntimeException {
-            return this.fileFilter.accept(entry.toFile());
-        }
-    }
-
-    public static class DeleteAllFilesVisitor extends SimpleFileVisitor<Path> {
-        protected boolean ifExists = false;
-
-        public DeleteAllFilesVisitor() {
-            //
-        }
-
-        public DeleteAllFilesVisitor(boolean ifExists) {
-            this.ifExists = ifExists;
-        }
-
-        @Override
-        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-            if (this.ifExists) {
-                Files.deleteIfExists(dir);
-            } else {
-                Files.delete(dir);
-            }
-            return FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            if (this.ifExists) {
-                Files.delete(file);
-            } else {
-                Files.delete(file);
-            }
-            return FileVisitResult.CONTINUE;
-        }
-    }
-
-    public static class DirectoryFilter implements DirectoryStream.Filter<Path> {
-        @Override
-        public boolean accept(Path entry) throws IORuntimeException {
-            return Files.isDirectory(entry);
-        }
-    }
-
-    public static class FileByteIterator implements Iterator<Byte>, Closeable {
-        protected transient final FilePath path;
-
-        protected transient Byte b;
-
-        protected transient BufferedInputStream in;
-
-        protected transient boolean openened = false;
-
-        public FileByteIterator(FilePath path) {
-            this.path = path;
-        }
-
-        @Override
-        public void close() throws IOException {
-            this.openened = true;
-            BufferedInputStream br = this.in();
-            if (br != null) {
-                br.close();
+    public abstract static class Comparators implements Comparator<FilePath> {
+        public static class LastModifiedTimeComparator extends Comparators {
+            @Override
+            public int compare(FilePath o1, FilePath o2) {
+                return new CompareToBuilder().append(o1.getLastModifiedTime(), o2.getLastModifiedTime()).toComparison();
             }
         }
 
-        @Override
-        public boolean hasNext() {
-            this.optionalRead();
-            return this.b != null;
-        }
-
-        protected BufferedInputStream in() throws IOException {
-            if (!this.openened) {
-                this.openened = true;
-                this.in = this.path.newBufferedInputStream();
+        public static class SizeComparator extends Comparators {
+            @Override
+            public int compare(FilePath o1, FilePath o2) {
+                return new CompareToBuilder().append(o1.getFileSize(), o2.getFileSize()).toComparison();
             }
-            return this.in;
-        }
-
-        @Override
-        public Byte next() {
-            this.optionalRead();
-            if (this.b == null) {
-                throw new NoSuchElementException();
-            }
-            Byte tmp = this.b;
-            this.b = null;
-            return tmp;
-        }
-
-        protected void optionalRead() {
-            if (this.b == null) {
-                try {
-                    BufferedInputStream br = this.in();
-                    if (br != null) {
-                        this.b = (byte) br.read();
-                        if (this.b == null) {
-                            this.close();
-                        }
-                    }
-                } catch (IOException ex) {
-                    this.b = null;
-                }
-            }
-        }
-
-        @Override
-        public void remove() {
-            this.b = null;
-        }
-    }
-
-    public static class FileFilter implements DirectoryStream.Filter<Path> {
-        @Override
-        public boolean accept(Path entry) throws IORuntimeException {
-            return Files.isRegularFile(entry);
-        }
-    }
-
-    public static class FileLineIterator implements Iterator<String>, Closeable {
-        protected transient final FilePath path;
-
-        protected transient final Charset charset;
-
-        protected transient String line;
-
-        protected transient BufferedReader in;
-
-        protected transient boolean openened = false;
-
-        public FileLineIterator(FilePath path) {
-            this(path, Charset.defaultCharset());
-        }
-
-        public FileLineIterator(FilePath path, Charset charset) {
-            this.path = path;
-            this.charset = charset;
-        }
-
-        @Override
-        public void close() throws IOException {
-            this.openened = true;
-            BufferedReader br = this.in();
-            if (br != null) {
-                br.close();
-            }
-        }
-
-        @Override
-        public boolean hasNext() {
-            this.optionalRead();
-            return this.line != null;
-        }
-
-        protected BufferedReader in() throws IOException {
-            if (!this.openened) {
-                this.openened = true;
-                this.in = this.path.newBufferedReader();
-            }
-            return this.in;
-        }
-
-        @Override
-        public String next() {
-            this.optionalRead();
-            if (this.line == null) {
-                throw new NoSuchElementException();
-            }
-            String tmp = this.line;
-            this.line = null;
-            return tmp;
-        }
-
-        protected void optionalRead() {
-            if (this.line == null) {
-                try {
-                    BufferedReader br = this.in();
-                    if (br != null) {
-                        this.line = br.readLine();
-                        if (this.line == null) {
-                            this.close();
-                        }
-                    }
-                } catch (IOException ex) {
-                    this.line = null;
-                }
-            }
-        }
-
-        @Override
-        public void remove() {
-            this.line = null;
         }
     }
 
     public static class Filters implements DirectoryStream.Filter<Path> {
+        public static final class AcceptAllFilter extends Filters {
+            @Override
+            public boolean accept(Path entry) throws IOException {
+                return true;
+            }
+        }
+
+        public static class CompatibleFilter extends Filters {
+            protected java.io.FileFilter fileFilter;
+
+            public CompatibleFilter(java.io.FileFilter fileFilter) {
+                this.fileFilter = fileFilter;
+            }
+
+            @Override
+            public boolean accept(Path entry) throws IOException {
+                return this.fileFilter.accept(entry.toFile());
+            }
+        }
+
+        public static class DirectoryFilter extends Filters {
+            @Override
+            public boolean accept(Path entry) throws IOException {
+                return Files.isDirectory(entry);
+            }
+        }
+
+        public static class FileFilter extends Filters {
+            @Override
+            public boolean accept(Path entry) throws IOException {
+                return Files.isRegularFile(entry);
+            }
+        }
+
         protected DirectoryStream.Filter<? super Path>[] filters;
 
         protected boolean and;
 
         protected boolean not;
 
+        @SuppressWarnings("unchecked")
         @SafeVarargs
         public Filters(boolean and, boolean not, DirectoryStream.Filter<? super Path>... filters) {
-            this.filters = filters;
+            this.filters = filters.length == 0 ? new DirectoryStream.Filter[] { this } : filters;
             this.and = and;
             this.not = not;
         }
@@ -354,42 +194,209 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public static class LastModifiedTimeComparator implements Comparator<FilePath> {
-        @Override
-        public int compare(FilePath o1, FilePath o2) {
-            return new CompareToBuilder().append(o1.getLastModifiedTime(), o2.getLastModifiedTime()).toComparison();
+    public abstract static class Iterators {
+        public static class FileByteIterator implements Iterator<Byte>, Closeable {
+            protected transient final FilePath path;
+
+            protected transient Byte b;
+
+            protected transient BufferedInputStream in;
+
+            protected transient boolean openened = false;
+
+            public FileByteIterator(FilePath path) {
+                this.path = path;
+            }
+
+            @Override
+            public void close() throws IOException {
+                this.openened = true;
+                BufferedInputStream br = this.in();
+                if (br != null) {
+                    br.close();
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+                this.optionalRead();
+                return this.b != null;
+            }
+
+            protected BufferedInputStream in() throws IOException {
+                if (!this.openened) {
+                    this.openened = true;
+                    this.in = this.path.newBufferedInputStream();
+                }
+                return this.in;
+            }
+
+            @Override
+            public Byte next() {
+                this.optionalRead();
+                if (this.b == null) {
+                    throw new NoSuchElementException();
+                }
+                Byte tmp = this.b;
+                this.b = null;
+                return tmp;
+            }
+
+            protected void optionalRead() {
+                if (this.b == null) {
+                    try {
+                        BufferedInputStream br = this.in();
+                        if (br != null) {
+                            this.b = (byte) br.read();
+                            if (this.b == null) {
+                                this.close();
+                            }
+                        }
+                    } catch (IOException ex) {
+                        this.b = null;
+                    }
+                }
+            }
+
+            @Override
+            public void remove() {
+                this.b = null;
+            }
+        }
+
+        public static class FileLineIterator implements Iterator<String>, Closeable {
+            protected transient final FilePath path;
+
+            protected transient final Charset charset;
+
+            protected transient String line;
+
+            protected transient BufferedReader in;
+
+            protected transient boolean openened = false;
+
+            public FileLineIterator(FilePath path) {
+                this(path, Charset.defaultCharset());
+            }
+
+            public FileLineIterator(FilePath path, Charset charset) {
+                this.path = path;
+                this.charset = charset;
+            }
+
+            @Override
+            public void close() throws IOException {
+                this.openened = true;
+                BufferedReader br = this.in();
+                if (br != null) {
+                    br.close();
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+                this.optionalRead();
+                return this.line != null;
+            }
+
+            protected BufferedReader in() throws IOException {
+                if (!this.openened) {
+                    this.openened = true;
+                    this.in = this.path.newBufferedReader();
+                }
+                return this.in;
+            }
+
+            @Override
+            public String next() {
+                this.optionalRead();
+                if (this.line == null) {
+                    throw new NoSuchElementException();
+                }
+                String tmp = this.line;
+                this.line = null;
+                return tmp;
+            }
+
+            protected void optionalRead() {
+                if (this.line == null) {
+                    try {
+                        BufferedReader br = this.in();
+                        if (br != null) {
+                            this.line = br.readLine();
+                            if (this.line == null) {
+                                this.close();
+                            }
+                        }
+                    } catch (IOException ex) {
+                        this.line = null;
+                    }
+                }
+            }
+
+            @Override
+            public void remove() {
+                this.line = null;
+            }
+        }
+
+        public static class PathIterator implements Iterator<Path> {
+            protected transient Path path;
+
+            public PathIterator(Path path) {
+                this.path = path;
+            }
+
+            @Override
+            public boolean hasNext() {
+                Path parent = this.path.getParent();
+                return parent != null;
+            }
+
+            @Override
+            public Path next() {
+                this.path = this.path.getParent();
+                return this.path;
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException();
+            }
         }
     }
 
-    public static class PathIterator implements Iterator<Path> {
-        protected transient Path path;
+    public static class Visitors extends SimpleFileVisitor<Path> {
+        public static class DeleteAllFilesVisitor extends Visitors {
+            protected boolean ifExists = false;
 
-        public PathIterator(Path path) {
-            this.path = path;
-        }
+            public DeleteAllFilesVisitor() {
+                //
+            }
 
-        @Override
-        public boolean hasNext() {
-            Path parent = this.path.getParent();
-            return parent != null;
-        }
+            public DeleteAllFilesVisitor(boolean ifExists) {
+                this.ifExists = ifExists;
+            }
 
-        @Override
-        public Path next() {
-            this.path = this.path.getParent();
-            return this.path;
-        }
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (this.ifExists) {
+                    Files.deleteIfExists(dir);
+                } else {
+                    Files.delete(dir);
+                }
+                return FileVisitResult.CONTINUE;
+            }
 
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    public static class SizeComparator implements Comparator<FilePath> {
-        @Override
-        public int compare(FilePath o1, FilePath o2) {
-            return new CompareToBuilder().append(o1.getFileSize(), o2.getFileSize()).toComparison();
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (this.ifExists) {
+                    Files.deleteIfExists(file);
+                } else {
+                    Files.delete(file);
+                }
+                return FileVisitResult.CONTINUE;
+            }
         }
     }
 
@@ -728,8 +735,8 @@ public class FilePath implements Path, Externalizable {
         return this.checksum(new Adler32());
     }
 
-    public FileByteIterator bytes() throws IORuntimeException {
-        return new FileByteIterator(this);
+    public Iterators.FileByteIterator bytes() throws IORuntimeException {
+        return new Iterators.FileByteIterator(this);
     }
 
     public FilePath changeExtension(String extension) {
@@ -766,7 +773,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Long checksum(Checksum checksum) throws IORuntimeException {
-        try (FileByteIterator bytes = this.bytes()) {
+        try (Iterators.FileByteIterator bytes = this.bytes()) {
             while (bytes.hasNext()) {
                 checksum.update(bytes.next());
             }
@@ -934,14 +941,14 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath deleteAll() throws IORuntimeException {
-        return this.walkFileTree(new DeleteAllFilesVisitor(false));
+        return this.walkFileTree(new Visitors.DeleteAllFilesVisitor(false));
     }
 
     public boolean deleteAllIfExists() throws IORuntimeException {
         if (!this.exists()) {
             return false;
         }
-        this.walkFileTree(new DeleteAllFilesVisitor(true));
+        this.walkFileTree(new Visitors.DeleteAllFilesVisitor(true));
         return true;
     }
 
@@ -1032,7 +1039,7 @@ public class FilePath implements Path, Externalizable {
         }
         long compareSize = Math.min(limit, size);
         long comparedSize = 0l;
-        try (FileByteIterator buffer = this.bytes(); FileByteIterator otherBuffer = otherPath.bytes()) {
+        try (Iterators.FileByteIterator buffer = this.bytes(); Iterators.FileByteIterator otherBuffer = otherPath.bytes()) {
             while (buffer.hasNext() || otherBuffer.hasNext()) {
                 if (!buffer.hasNext() || !otherBuffer.hasNext()) {
                     return false;
@@ -1327,8 +1334,8 @@ public class FilePath implements Path, Externalizable {
         return this.getPath().iterator();
     }
 
-    public FileLineIterator lines() throws IORuntimeException {
-        return new FileLineIterator(this);
+    public Iterators.FileLineIterator lines() throws IORuntimeException {
+        return new Iterators.FileLineIterator(this);
         // return Files.lines(this.getPath());
     }
 
@@ -1337,14 +1344,14 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<FilePath> list(boolean iterate) throws IORuntimeException {
-        return this.list(iterate, new AcceptAllFilter());
+        return this.list(iterate, new Filters.AcceptAllFilter());
     }
 
     public List<FilePath> list(boolean iterate, DirectoryStream.Filter<? super Path> filter) throws IORuntimeException {
         Deque<FilePath> stack = new ArrayDeque<>();
         List<FilePath> files = new LinkedList<>();
         stack.push(this);
-        Filters filterAndDirs = new Filters(false, filter, new DirectoryFilter());
+        Filters filterAndDirs = new Filters(false, filter, new Filters.DirectoryFilter());
         while (!stack.isEmpty()) {
             try (DirectoryStream<Path> stream = stack.pop().newDirectoryStream(filterAndDirs)) {
                 for (Path p : stream) {
@@ -1372,7 +1379,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<FilePath> listDirectories(boolean iterate) throws IORuntimeException {
-        return this.list(iterate, new DirectoryFilter());
+        return this.list(iterate, new Filters.DirectoryFilter());
     }
 
     public List<FilePath> listFiles() throws IORuntimeException {
@@ -1380,7 +1387,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<FilePath> listFiles(boolean iterate) throws IORuntimeException {
-        return this.list(iterate, new FileFilter());
+        return this.list(iterate, new Filters.FileFilter());
     }
 
     public FilePath moveFrom(Path source) throws IORuntimeException {
@@ -1528,8 +1535,8 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public PathIterator paths() {
-        return new PathIterator(this);
+    public Iterators.PathIterator paths() {
+        return new Iterators.PathIterator(this);
     }
 
     public String probeContentType() throws IORuntimeException {
@@ -1953,6 +1960,6 @@ public class FilePath implements Path, Externalizable {
      */
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeUTF(this.getPath().toUri().toString());
+        out.writeUTF(this.toUri().toString());
     }
 }

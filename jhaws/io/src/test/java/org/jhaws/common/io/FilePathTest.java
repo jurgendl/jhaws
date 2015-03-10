@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-import org.jhaws.common.io.FilePath.FileLineIterator;
 import org.jhaws.common.io.FilePath.IORuntimeException;
+import org.jhaws.common.io.FilePath.Iterators.FileLineIterator;
 import org.junit.Assert;
 import org.junit.Test;
 
