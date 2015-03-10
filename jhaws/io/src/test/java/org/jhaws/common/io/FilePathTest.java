@@ -190,6 +190,41 @@ public class FilePathTest {
     }
 
     @Test
+    public void flatten() {
+        String same = "same";
+        try {
+            FilePath tmpDir = FilePath.createDefaultTempDirectory(String.valueOf(System.currentTimeMillis()));
+            FilePath subdir = tmpDir.child("subdir").createDirectories();
+            FilePath file1 = tmpDir.child("file1");
+            try (BufferedWriter out = file1.newBufferedWriter()) {
+                out.write(same);
+            }
+            FilePath file2 = tmpDir.child("file2");
+            try (BufferedWriter out = file2.newBufferedWriter()) {
+                out.write(same);
+            }
+            FilePath file3 = tmpDir.child("file3");
+            try (BufferedWriter out = file3.newBufferedWriter()) {
+                out.write(same);
+                out.write(same);
+            }
+            FilePath file4 = subdir.child("file3");
+            try (BufferedWriter out = file4.newBufferedWriter()) {
+                out.write(same);
+            }
+            tmpDir.flatten();
+            Assert.assertTrue(file1.exists());
+            Assert.assertTrue(file2.exists());
+            Assert.assertTrue(file3.exists());
+            Assert.assertTrue(subdir.notExists());
+            Assert.assertTrue(file4.notExists());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail(String.valueOf(ex));
+        }
+    }
+
+    @Test
     public void lines_closed_auto() {
         FileLineIterator closeMe = null;
         try {
