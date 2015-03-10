@@ -389,7 +389,7 @@ public class FilePath implements Path, Externalizable {
     public static class SizeComparator implements Comparator<FilePath> {
         @Override
         public int compare(FilePath o1, FilePath o2) {
-            return new CompareToBuilder().append(o1.getSize(), o2.getSize()).toComparison();
+            return new CompareToBuilder().append(o1.getFileSize(), o2.getFileSize()).toComparison();
         }
     }
 
@@ -507,7 +507,7 @@ public class FilePath implements Path, Externalizable {
      * <i>_</i> , a missing extensions is adapted to extension <i>ext</i>
      *
      * @param filename : String : current name
-     * @param os : int : operating system, use FileConv.WIN32, FileConv.DOS, FileConv.UNIX
+     * @param os : int : operating system
      *
      * @return : String : converted name
      */
@@ -979,7 +979,7 @@ public class FilePath implements Path, Externalizable {
                 return false;
             }
             long len = conn.getContentLengthLong();
-            if ((len != -1) && (len == this.getLength())) {
+            if ((len != -1) && (len == this.getFileSize())) {
                 return false;
             }
         }
@@ -1009,7 +1009,7 @@ public class FilePath implements Path, Externalizable {
 
     public boolean equal(Path file) throws IORuntimeException {
         FilePath filePath = FilePath.wrap(file);
-        return this.equal(filePath, filePath.getLength());
+        return this.equal(filePath, filePath.getFileSize());
     }
 
     /**
@@ -1025,8 +1025,8 @@ public class FilePath implements Path, Externalizable {
         if (this.notExists() || otherPath.notExists() || this.isDirectory() || this.isDirectory()) {
             return false;
         }
-        long size = this.getSize();
-        long otherSize = otherPath.getSize();
+        long size = this.getFileSize();
+        long otherSize = otherPath.getFileSize();
         if (size != otherSize) {
             return false;
         }
@@ -1104,8 +1104,8 @@ public class FilePath implements Path, Externalizable {
         return children;
     }
 
-    public String getConvertedSize() throws IORuntimeException {
-        return FilePath.getConvertedSize(this.getSize());
+    public String getConvertedFileSize() throws IORuntimeException {
+        return FilePath.getConvertedSize(this.getFileSize());
     }
 
     public Charset getDefaultCharset() {
@@ -1128,6 +1128,14 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(this.getPath().getFileName());
     }
 
+    public long getFileSize() throws IORuntimeException {
+        try {
+            return Files.size(this.getPath());
+        } catch (IOException ex) {
+            throw new IORuntimeException(ex);
+        }
+    }
+
     public FileStore getFileStore() throws IORuntimeException {
         try {
             return Files.getFileStore(this.getPath());
@@ -1142,6 +1150,18 @@ public class FilePath implements Path, Externalizable {
     @Override
     public FileSystem getFileSystem() {
         return this.getPath().getFileSystem();
+    }
+
+    public long getFolderSize() throws IORuntimeException {
+        final AtomicLong size = new AtomicLong(0);
+        this.walkFileTree(new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                size.addAndGet(attrs.size());
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return size.get();
     }
 
     public String getFullFileName() {
@@ -1162,10 +1182,6 @@ public class FilePath implements Path, Externalizable {
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         }
-    }
-
-    public long getLength() throws IORuntimeException {
-        return this.getSize();
     }
 
     public int getLineCount() throws IORuntimeException {
@@ -1241,28 +1257,8 @@ public class FilePath implements Path, Externalizable {
         return FilePath.getShortFileName(this);
     }
 
-    public long getSize() throws IORuntimeException {
-        try {
-            return Files.size(this.getPath());
-        } catch (IOException ex) {
-            throw new IORuntimeException(ex);
-        }
-    }
-
     public Icon getSmallIcon() {
         return FilePath.grabber.getSmallIcon(this.toFile());
-    }
-
-    public long getTotalSize() throws IORuntimeException {
-        final AtomicLong size = new AtomicLong(0);
-        this.walkFileTree(new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                size.addAndGet(Files.size(file));
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        return size.get();
     }
 
     /**

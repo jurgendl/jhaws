@@ -280,7 +280,7 @@ public class FilePathTest {
             try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
                 out.write(bytes);
             }
-            Assert.assertEquals(bytes.length, tmp.getTotalSize());
+            Assert.assertEquals(bytes.length, tmp.getFolderSize());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
