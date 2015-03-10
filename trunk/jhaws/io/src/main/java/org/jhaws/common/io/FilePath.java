@@ -73,6 +73,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.jhaws.common.io.Utils.OSGroup;
 
@@ -599,12 +600,12 @@ public class FilePath implements Path, Externalizable {
     protected static FilePath newFileIndex(Path parent, String outFileName, String sep, String format, String extension) {
         String SEPARATOR = sep;
         String FORMAT = sep + format;
-        FilePath file = "".equals(extension) ? new FilePath(parent, outFileName) : new FilePath(parent, outFileName + FilePath.getFileSeperator()
-                + extension);
+        FilePath file = StringUtils.isBlank(extension) ? new FilePath(parent, outFileName) : new FilePath(parent, outFileName
+                + FilePath.getFileSeperator() + extension);
         if (file.exists()) {
             if (outFileName.length() <= FORMAT.length()) {
                 outFileName = outFileName + FORMAT;
-                if (extension.equals("")) {
+                if (StringUtils.isBlank(extension)) {
                     file = new FilePath(parent, outFileName);
                 } else {
                     file = new FilePath(parent, outFileName + FilePath.getFileSeperator() + extension);
@@ -621,7 +622,7 @@ public class FilePath implements Path, Externalizable {
                 }
                 if (!(isNumber && (ch.compareTo(SEPARATOR) == 0))) {
                     outFileName = outFileName + FORMAT;
-                    if (extension.equals("")) {
+                    if (StringUtils.isBlank(extension)) {
                         file = new FilePath(parent, outFileName);
                     } else {
                         file = new FilePath(parent, outFileName + FilePath.getFileSeperator() + extension);
@@ -676,7 +677,7 @@ public class FilePath implements Path, Externalizable {
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
                 root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/")
-                + relativePath));
+                        + relativePath));
     }
 
     public FilePath(File file) {
@@ -1127,7 +1128,25 @@ public class FilePath implements Path, Externalizable {
      * the same, delete all subdirectories afterwards
      */
     public FilePath flatten() throws IORuntimeException {
-        // TODO
+        final FilePath root = this;
+        this.walkFileTree(new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (!root.equals(dir)) {
+                    new FilePath(dir).delete();
+                }
+                return super.postVisitDirectory(dir, exc);
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (!root.equals(file.getParent())) {
+                    FilePath target = new FilePath(root, file.getFileName().toString()).newFileIndex();
+                    new FilePath(file).renameTo(target);
+                }
+                return super.visitFile(file, attrs);
+            }
+        });
         return this;
     }
 
@@ -1444,7 +1463,7 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath moveFrom(Path source, CopyOption... options) throws IORuntimeException {
         try {
-            return new FilePath(Files.move(FilePath.getPath(source), this, options));
+            return new FilePath(Files.move(FilePath.getPath(source), FilePath.getPath(this), options));
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         }
@@ -1456,7 +1475,7 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath moveTo(Path target, CopyOption... options) throws IORuntimeException {
         try {
-            return new FilePath(Files.move(this, FilePath.getPath(target), options));
+            return new FilePath(Files.move(FilePath.getPath(this), FilePath.getPath(target), options));
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
         }
@@ -1539,7 +1558,7 @@ public class FilePath implements Path, Externalizable {
      * derived from given File
      */
     public FilePath newFileIndex() {
-        if (!this.exists()) {
+        if (this.notExists()) {
             return this;
         }
         String shortFile = this.getShortFileName();
@@ -1585,6 +1604,11 @@ public class FilePath implements Path, Externalizable {
 
     public Iterators.PathIterator paths() {
         return new Iterators.PathIterator(this);
+    }
+
+    public Iterators.PathIterator pathsToRoot() {
+        return new Iterators.PathIterator(FilePath.wrap(this.toAbsolutePath()));
+
     }
 
     public String probeContentType() throws IORuntimeException {
