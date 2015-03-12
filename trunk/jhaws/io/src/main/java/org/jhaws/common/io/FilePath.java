@@ -677,7 +677,7 @@ public class FilePath implements Path, Externalizable {
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
                 root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/")
-                        + relativePath));
+                + relativePath));
     }
 
     public FilePath(File file) {
@@ -1470,7 +1470,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath moveTo(Path target) throws IORuntimeException {
-        return this.moveTo(target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+        return this.moveTo(target, StandardCopyOption.REPLACE_EXISTING);
     }
 
     public FilePath moveTo(Path target, CopyOption... options) throws IORuntimeException {

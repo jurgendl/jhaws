@@ -338,6 +338,48 @@ public class FilePathTest {
     }
 
     @Test
+    public void move() {
+        try {
+            FilePath tmpDir = FilePath.createDefaultTempDirectory("A" + String.valueOf(System.currentTimeMillis()));
+            FilePath file = tmpDir.child("file").createFile();
+            FilePath subdir = tmpDir.child("subdir").createDirectory();
+            FilePath subdirfile = subdir.child("subdirfile").createFile();
+            FilePath subsubdir = subdir.child("subsubdir").createDirectory();
+            FilePath subsubdirfile = subsubdir.child("subsubdirfile").createFile();
+
+            FilePath tmpDir2 = FilePath.createDefaultTempDirectory("B" + String.valueOf(System.currentTimeMillis()));
+            tmpDir.moveTo(tmpDir2);
+
+            FilePath file2 = tmpDir2.child("file");
+            FilePath subdir2 = tmpDir2.child("subdir");
+            FilePath subdirfile2 = subdir2.child("subdirfile");
+            FilePath subsubdir2 = subdir2.child("subsubdir");
+            FilePath subsubdirfile2 = subsubdir2.child("subsubdirfile");
+
+            Assert.assertTrue(file.notExists());
+            Assert.assertTrue(subdir.notExists());
+            Assert.assertTrue(subdirfile.notExists());
+            Assert.assertTrue(subsubdir.notExists());
+            Assert.assertTrue(subsubdirfile.notExists());
+
+            Assert.assertTrue(file2.exists());
+            Assert.assertTrue(subdir2.exists());
+            Assert.assertTrue(subdirfile2.exists());
+            Assert.assertTrue(subsubdir2.exists());
+            Assert.assertTrue(subsubdirfile2.exists());
+
+            FilePath tmpDir3 = new FilePath(tmpDir2.getParent(), "C" + String.valueOf(System.currentTimeMillis()));
+            Assert.assertTrue(tmpDir3.notExists());
+            tmpDir2.moveTo(tmpDir3);
+            Assert.assertTrue(tmpDir3.exists());
+            Assert.assertTrue(tmpDir2.notExists());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail(String.valueOf(ex));
+        }
+    }
+
+    @Test
     public void seperators() {
         try {
             Assert.assertEquals("\\", FilePath.getPathSeperator());
