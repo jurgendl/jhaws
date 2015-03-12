@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -310,6 +311,77 @@ public class FilePath implements Path, Externalizable {
                     this.openened = true;
                     this.in = this.path.newBufferedReader();
                 }
+                return this.in;
+            }
+
+            @Override
+            public String next() {
+                this.optionalRead();
+                if (this.line == null) {
+                    throw new NoSuchElementException();
+                }
+                String tmp = this.line;
+                this.line = null;
+                return tmp;
+            }
+
+            protected void optionalRead() {
+                if (this.line == null) {
+                    try {
+                        BufferedReader br = this.in();
+                        if (br != null) {
+                            this.line = br.readLine();
+                            if (this.line == null) {
+                                this.close();
+                            }
+                        }
+                    } catch (IOException ex) {
+                        this.line = null;
+                    }
+                }
+            }
+
+            @Override
+            public void remove() {
+                this.line = null;
+            }
+        }
+
+        public static class LineIterator implements Iterator<String>, Closeable {
+            protected transient String line;
+
+            protected transient BufferedReader in;
+
+            protected transient boolean openened = true;
+
+            public LineIterator(BufferedReader in) {
+                this.in = in;
+            }
+
+            public LineIterator(InputStream in) {
+                this(in, Charset.defaultCharset());
+            }
+
+            public LineIterator(InputStream in, Charset cs) {
+                this(new BufferedReader(new InputStreamReader(in, cs)));
+            }
+
+            @Override
+            public void close() throws IOException {
+                this.openened = true;
+                BufferedReader br = this.in();
+                if (br != null) {
+                    br.close();
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+                this.optionalRead();
+                return this.line != null;
+            }
+
+            protected BufferedReader in() throws IOException {
                 return this.in;
             }
 
@@ -677,7 +749,7 @@ public class FilePath implements Path, Externalizable {
     public FilePath(Class<?> root, String relativePath) {
         this(root.getClassLoader().getResource(
                 root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar()) + (relativePath.startsWith("/") ? "" : "/")
-                + relativePath));
+                        + relativePath));
     }
 
     public FilePath(File file) {
