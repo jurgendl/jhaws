@@ -76,6 +76,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.jhaws.common.io.FilePath.Visitors.MoveAllFilesVisitor;
 import org.jhaws.common.io.Utils.OSGroup;
 
 /**
@@ -473,6 +474,41 @@ public class FilePath implements Path, Externalizable {
                 } else {
                     Files.delete(file);
                 }
+                return FileVisitResult.CONTINUE;
+            }
+        }
+
+        public static class MoveAllFilesVisitor extends Visitors {
+            protected FilePath source;
+
+            protected FilePath target;
+
+            public MoveAllFilesVisitor(Path source, Path target) {
+                this.source = FilePath.wrap(source);
+                this.target = FilePath.wrap(target);
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                try {
+                    Files.delete(dir);
+                } catch (java.nio.file.DirectoryNotEmptyException ex) {
+                    for (Object o : FilePath.wrap(dir).listFiles()) {
+                        System.out.println(o);
+                    }
+                    for (Object o : FilePath.wrap(dir).listDirectories()) {
+                        System.out.println(o);
+                    }
+                    throw ex;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                FilePath targetPath = FilePath.wrap(this.target.resolve(this.source.relativize(file)));
+                targetPath.getParentPath().createDirectories();
+                targetPath.moveFrom(file, StandardCopyOption.REPLACE_EXISTING);
                 return FileVisitResult.CONTINUE;
             }
         }
@@ -1542,7 +1578,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath moveTo(Path target) throws IORuntimeException {
-        return this.moveTo(target, StandardCopyOption.REPLACE_EXISTING);
+        FilePath tp = FilePath.wrap(target);
+        if (tp.notExists()) {
+            return this.moveTo(target, StandardCopyOption.REPLACE_EXISTING);
+        }
+        return this.walkFileTree(new MoveAllFilesVisitor(this, tp));
     }
 
     public FilePath moveTo(Path target, CopyOption... options) throws IORuntimeException {
