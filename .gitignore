@@ -6,3 +6,6 @@ target
 /jhaws/net/.settings/org.eclipse.jdt.core.prefs
 /jhaws/net/.settings/org.eclipse.wst.common.component
 /jhaws/net/.settings/org.eclipse.wst.common.project.facet.core.xml
+/jhaws/io/.settings/org.eclipse.wst.common.project.facet.core.xml
+/jhaws/io/.settings/org.eclipse.jdt.core.prefs
+/jhaws/io/.settings/org.eclipse.wst.common.component
