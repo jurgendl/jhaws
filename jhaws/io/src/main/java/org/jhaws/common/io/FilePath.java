@@ -55,6 +55,7 @@ import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -100,6 +101,42 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static class Filters implements DirectoryStream.Filter<Path> {
+        public static class ExtensionFilter extends Filters {
+            protected List<String> ext;
+
+            public ExtensionFilter() {
+                ext = new ArrayList<>();
+            }
+
+            public ExtensionFilter(List<String> ext) {
+                this.ext = ext;
+            }
+
+            public ExtensionFilter(String... ext) {
+                this(Arrays.asList(ext));
+            }
+
+            @Override
+            public boolean accept(Path entry) {
+                String extension = wrap(entry).getExtension();
+                return ext.stream().anyMatch((e) -> e.equalsIgnoreCase(extension));
+            }
+
+            public List<String> getExt() {
+                return ext;
+            }
+
+            public void setExt(List<String> ext) {
+                this.ext = ext;
+            }
+        }
+
+        public static class ImageFilter extends Filters.ExtensionFilter {
+            public ImageFilter() {
+                super("jpg", "jpeg", "png", "gif", "bmp", "webp");
+            }
+        }
+
         public static final class AcceptAllFilter extends Filters {
             @Override
             public boolean accept(Path entry) throws IOException {
