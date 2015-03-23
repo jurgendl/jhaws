@@ -106,10 +106,15 @@
 		</developer>
 	</developers>
 	<contributors />
-	<scm>
+	<!-- <scm>
 		<connection>scm:svn:http://jhaws.googlecode.com/svn/trunk</connection>
 		<developerConnection>scm:svn:https://jhaws.googlecode.com/svn/trunk</developerConnection>
 		<url>http://jhaws.googlecode.com/svn/trunk</url>
+	</scm> -->
+	<scm>
+		<connection>scm:git:git@github.com:jurgendl/jhaws.git</connection>
+		<url>scm:git:git@github.com:jurgendl/jhaws.git</url>
+		<developerConnection>scm:git:git@github.com:jurgendl/jhaws.git</developerConnection>
 	</scm>
 	<!--
 	<repositories>
