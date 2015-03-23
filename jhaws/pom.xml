@@ -6,7 +6,18 @@
 	<packaging>pom</packaging>
 	<name>modules</name>
 	<description>modules</description>
-	<url>http://jhaws.googlecode.com</url>
+	<url>https://github.com/jurgendl/jhaws</url>
+	<!--
+	http://cemerick.com/2010/08/24/hosting-maven-repos-on-github/
+	deploy snapshot:
+	mvn -DaltDeploymentRepository=snapshot-repo::default::file:../mvn-repo/snapshots clean deploy
+	release:
+	mvn release:prepare
+	mvn release:perform
+	git checkout jhaws-1.0.2
+	mvn -DaltDeploymentRepository=repo::default::file:../mvn-repo/releases clean deploy
+	git checkout master
+	-->
 	<properties>
 		<targetJdk>1.7</targetJdk><!-- should be compatible with 1.6 and higher -->
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- fixed encoding -->
@@ -67,31 +78,22 @@
 	</profiles>
 	<licenses>
 		<license>
-			<name>GNU Lesser General Public License v2.1</name>
-			<url>http://www.gnu.org/licenses/lgpl-2.1.txt</url>
+			<name>The MIT License (MIT)</name>
+			<url>https://raw.githubusercontent.com/jurgendl/jhaws/master/LICENSE.md</url>
 		</license>
 	</licenses>
 	<issueManagement>
-		<system>Google</system>
-		<url>http://code.google.com/p/jhaws/issues/list</url>
-	</issueManagement>	
+		<system>github</system>
+		<url>https://github.com/jurgendl/jhaws/issues</url>
+	</issueManagement>
 	<distributionManagement>
-		<!--
-		<site>
-			<id>hql-builder.googlecode.site</id>
-			<name>hql-builder.googlecode.site</name>
-			<url>scm:svn:https://jhaws.googlecode.com/svn/site</url>
-		</site>
-		-->
 		<repository>
-			<id>jhaws.googlecode.releases</id>
-			<name>jhaws.googlecode.releases</name>
-			<url>dav:https://jhaws.googlecode.com/svn/maven2</url>
+			<id>repo</id>
+			<url>https://github.com/jurgendl/mvn-repo/raw/master/releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>jhaws.googlecode.snapshots</id>
-			<name>jhaws.googlecode.snapshots</name>
-			<url>dav:https://jhaws.googlecode.com/svn/maven2-snapshots</url>
+			<id>snapshot-repo</id>
+			<url>https://github.com/jurgendl/mvn-repo/raw/master/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<inceptionYear>2013</inceptionYear>
@@ -106,24 +108,18 @@
 		</developer>
 	</developers>
 	<contributors />
-	<!-- <scm>
-		<connection>scm:svn:http://jhaws.googlecode.com/svn/trunk</connection>
-		<developerConnection>scm:svn:https://jhaws.googlecode.com/svn/trunk</developerConnection>
-		<url>http://jhaws.googlecode.com/svn/trunk</url>
-	</scm> -->
 	<scm>
 		<connection>scm:git:git@github.com:jurgendl/jhaws.git</connection>
 		<url>scm:git:git@github.com:jurgendl/jhaws.git</url>
 		<developerConnection>scm:git:git@github.com:jurgendl/jhaws.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
-	<!--
 	<repositories>
 		<repository>
-			<id>jhaws.googlecode</id>
-			<url>http://jhaws.googlecode.com/svn/maven2</url>
+			<id>github</id>
+			<url>https://github.com/jurgendl/mvn-repo/raw/master/releases/</url>
 		</repository>
 	</repositories>
-	-->
 	<build>
 		<extensions>
 			<extension>
@@ -136,7 +132,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.5.1</version>
 				<configuration>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>src</releaseProfiles>
