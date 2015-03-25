@@ -10,3 +10,4 @@ target
 /jhaws/io/.settings/org.eclipse.jdt.core.prefs
 /jhaws/io/.settings/org.eclipse.wst.common.component
 /jhaws/io/.settings/org.eclipse.wst.common.project.facet.core.xml
+*.iml
