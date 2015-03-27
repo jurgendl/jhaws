@@ -312,14 +312,14 @@ public abstract class AbstractSpringLdapDao<T extends Serializable & Comparable<
 		return this.search(_base, query, controls);
 	}
 
-	protected final List<T> search(@SuppressWarnings("hiding") String base, final String query, final SearchControls controls) {
+	protected final List<T> search(String _base, final String query, final SearchControls controls) {
 		AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - start"); //$NON-NLS-1$
-		AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - base=" + base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
+		AbstractSpringLdapDao.logger.debug("search(String, SearchControls) - base=" + _base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
 
 		List<T> list = null;
 
 		try {
-			list = this.ldapOperations.search(base, query, controls, this.contextMapper);
+			list = this.ldapOperations.search(_base, query, controls, this.contextMapper);
 		} catch (final UncategorizedLdapException ule) {
 			if (ule.getCause().getClass().equals(InvalidNameException.class)) {
 				throw new IllegalArgumentException("login gegevens zijn mogelijk verkeerd", ule); //$NON-NLS-1$
