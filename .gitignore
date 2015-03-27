@@ -14,3 +14,4 @@ target
 org.eclipse.wst.validation.prefs
 org.eclipse.core.resources.prefs
 org.eclipse.jdt.core.prefs
+/jhaws/lang/.settings/org.eclipse.wst.common.project.facet.core.xml
