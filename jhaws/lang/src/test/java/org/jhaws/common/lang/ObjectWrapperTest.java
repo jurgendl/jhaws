@@ -3,16 +3,15 @@ package org.jhaws.common.lang;
 import org.junit.Assert;
 import org.junit.Test;
 
-@SuppressWarnings("unused")
 public class ObjectWrapperTest {
 	public static class ChildClass extends ParentClass {
-		private String normalFieldChild = "normalFieldChild";
+		String normalFieldChild = "normalFieldChild";
 
-		private final String finalFieldChild = "finalFieldChild";
+		final String finalFieldChild = "finalFieldChild";
 
-		private static String staticFieldChild = "staticFieldChild";
+		static String staticFieldChild = "staticFieldChild";
 
-		private static final String finalStaticFieldChild = "finalStaticFieldChild";
+		static final String finalStaticFieldChild = "finalStaticFieldChild";
 	}
 
 	public static class OtherChildClass extends ParentClass {
@@ -20,13 +19,13 @@ public class ObjectWrapperTest {
 	}
 
 	public static class ParentClass {
-		private String normalField = "normalField";
+		String normalField = "normalField";
 
-		private final String finalField = "finalField";
+		final String finalField = "finalField";
 
-		private static String staticField = "staticField";
+		static String staticField = "staticField";
 
-		private static final String finalStaticField = "finalStaticField";
+		static final String finalStaticField = "finalStaticField";
 	}
 
 	@Test

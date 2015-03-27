@@ -1,15 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.jhaws.common</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.0.2-SNAPSHOT</version>
-		<relativePath>../parent/pom.xml</relativePath>
-	</parent>
+	<groupId>org.jhaws.common</groupId>
 	<artifactId>ldap</artifactId>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>ldap classes</name>
 	<description>ldap classes</description>
 	<properties>
+		<targetJdk>1.7</targetJdk>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<spring.version>3.2.13.RELEASE</spring.version>
 		<spring.ldap.version>2.0.2.RELEASE</spring.ldap.version>
 	</properties>
@@ -18,13 +16,13 @@
 			<id>atlassian</id>
 			<url>http://repository.atlassian.com/maven2</url>
 		</repository>
-		<repository>
+		<!-- <repository>
 			<id>java.net</id>
 			<name>http://download.java.net/maven/2</name>
 			<url>http://download.java.net/maven/2</url>
 			<layout>default</layout>
-		</repository>
-		<repository>
+		</repository> -->
+		<!-- <repository>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -32,7 +30,7 @@
 			<id>maven.snapshots</id>
 			<name>http://snapshots.maven.codehaus.org/maven2/</name>
 			<url>http://snapshots.maven.codehaus.org/maven2/</url>
-		</repository>
+		</repository> -->
 	</repositories>
 	<dependencies>
 		<dependency>
@@ -107,4 +105,20 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${targetJdk}</source>
+					<target>${targetJdk}</target>
+					<optimize>true</optimize>
+					<verbose>false</verbose>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
