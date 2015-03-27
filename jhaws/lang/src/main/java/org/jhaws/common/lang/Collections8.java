@@ -397,6 +397,10 @@ public interface Collections8 {
 		return t.negate();
 	}
 
+	public static <T> Predicate<T> notNull() {
+		return (t) -> t != null;
+	}
+
 	public static <E> Predicate<E> contains(Collection<E> collection) {
 		return collection::contains;
 	}
