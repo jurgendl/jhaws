@@ -11,3 +11,6 @@ target
 /jhaws/io/.settings/org.eclipse.wst.common.component
 /jhaws/io/.settings/org.eclipse.wst.common.project.facet.core.xml
 *.iml
+org.eclipse.wst.validation.prefs
+org.eclipse.core.resources.prefs
+org.eclipse.jdt.core.prefs
