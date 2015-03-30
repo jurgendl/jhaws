@@ -3,6 +3,7 @@ package org.jhaws.common.io;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,28 +60,49 @@ public class Processes {
 
 	@SafeVarargs
 	public static void callProcess(List<String> command, FilePath dir, Consumer<String>... consumers) throws IOException {
-		callProcess(new HashMap<>(), command, dir, consumers);
+		callProcess(null, new HashMap<>(), command, dir, null, null, consumers);
 	}
 
 	@SafeVarargs
-	public static void callProcess(Map<String, String> env, List<String> command, FilePath dir, Consumer<String>... consumers) throws IOException {
+	public static void callProcess(FilePath input, Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog, FilePath errorLog,
+			Consumer<String>... consumers) throws IOException {
 		ProcessBuilder builder = new ProcessBuilder(command);
 		if (env != null) {
 			builder.environment().putAll(env);
 		}
 		if (dir != null) {
-			builder.directory(dir.checkExists().checkDirectory().toFile());
+			if (dir.notExists()) {
+				dir.createDirectories();
+			} else {
+				if (!dir.isDirectory()) {
+					throw new IOException(dir + " is not a directory");
+				}
+			}
+			builder.directory(dir.toFile());
 		}
-		builder.redirectInput(Redirect.INHERIT);
-		builder.redirectOutput(Redirect.INHERIT); // Redirect.to(file)
-		builder.redirectError(Redirect.INHERIT); // Redirect.to(file)
+		if (input != null)
+			builder.redirectInput(Redirect.from(input.toFile()));
+		else
+			builder.redirectInput(Redirect.INHERIT);
+		if (outputLog != null)
+			if (outputLog.exists())
+				builder.redirectOutput(Redirect.appendTo(outputLog.toFile()));
+			else
+				builder.redirectOutput(Redirect.to(outputLog.toFile()));
+		else
+			builder.redirectOutput(Redirect.INHERIT);
+		if (errorLog != null)
+			if (errorLog.exists())
+				builder.redirectError(Redirect.appendTo(errorLog.toFile()));
+			else
+				builder.redirectError(Redirect.to(errorLog.toFile()));
+		else
+			builder.redirectError(Redirect.INHERIT);
 		Process process = builder.start();
-		Consumer<String> consumer = consumers[0];
-		for (int i = 1; i < consumers.length; i++) {
-			consumer = consumer.andThen(consumers[i]);
-		}
+		Consumer<String> allConsumers = consumers[0];
+		Arrays.stream(consumers).skip(1).forEach(allConsumers::andThen);
 		try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
-			StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(consumer);
+			StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
 		}
 		process.destroy();
 	}
