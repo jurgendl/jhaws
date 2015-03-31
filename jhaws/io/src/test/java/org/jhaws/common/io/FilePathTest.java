@@ -3,6 +3,7 @@ package org.jhaws.common.io;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileAlreadyExistsException;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-import org.jhaws.common.io.FilePath.IORuntimeException;
 import org.jhaws.common.io.FilePath.Iterators.FileLineIterator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class FilePathTest {
             try {
                 fp.createDirectory();
                 Assert.fail("FileAlreadyExistsException");
-            } catch (IORuntimeException ex) {
+            } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof FileAlreadyExistsException);
             }
             fp.delete();
@@ -48,7 +48,7 @@ public class FilePathTest {
             try {
                 fp.delete();
                 Assert.fail("NoSuchFileException");
-            } catch (IORuntimeException ex) {
+            } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof NoSuchFileException);
             }
             fp.deleteIfExists();
@@ -57,7 +57,7 @@ public class FilePathTest {
             try {
                 fp.createFile();
                 Assert.fail("AccessDeniedException");
-            } catch (IORuntimeException ex) {
+            } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof AccessDeniedException);
             }
             FilePath fpp = new FilePath(fp, "file.txt");
@@ -65,13 +65,13 @@ public class FilePathTest {
             try {
                 fpp.createFile();
                 Assert.fail("FileAlreadyExistsException");
-            } catch (IORuntimeException ex) {
+            } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof FileAlreadyExistsException);
             }
             try {
                 fp.delete();
                 Assert.fail("DirectoryNotEmptyException");
-            } catch (IORuntimeException ex) {
+            } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof DirectoryNotEmptyException);
             }
             fp.deleteAll();
@@ -79,7 +79,7 @@ public class FilePathTest {
             try {
                 fp.deleteAll();
                 Assert.fail("NoSuchFileException");
-            } catch (IORuntimeException ex) {
+            } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof NoSuchFileException);
             }
             fp.deleteAllIfExists();
