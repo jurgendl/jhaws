@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
@@ -21,6 +22,15 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -126,7 +136,7 @@ public interface Collections8 {
     @SafeVarargs
     public static <T, C extends Collection<T>> C filter(C collection, boolean parallel, Predicate<? super T>... predicates) {
         AtomicReference<Stream<T>> streamReference = new AtomicReference<>(stream(collection, parallel));
-        stream(predicates).forEach((predicate) -> streamReference.set(streamReference.get().filter(predicate)));
+        stream(predicates).forEach(predicate -> streamReference.set(streamReference.get().filter(predicate)));
         C collected = streamReference.get().collect(collector(collection));
         return collected;
     }
@@ -157,15 +167,24 @@ public interface Collections8 {
         return stream.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue(), rejectDuplicateKeys(), mapSupplier));
     }
 
-    /**
-     * Supplier<Map<K, V>> mapSupplier = LinkedHashMap::new;
-     */
     public static <K, V> Supplier<Map<K, V>> newLinkedMap() {
         return LinkedHashMap::new;
     }
 
     public static <K, V> Supplier<? extends Map<K, V>> newMap() {
         return HashMap::new;
+    }
+
+    public static <K, V> Supplier<? extends NavigableMap<K, V>> newNavigableMap() {
+        return TreeMap::new;
+    }
+
+    public static <K, V> Supplier<? extends ConcurrentNavigableMap<K, V>> newConcurrentNavigableMap() {
+        return ConcurrentSkipListMap::new;
+    }
+
+    public static <K, V> Supplier<? extends ConcurrentMap<K, V>> newConcurrentMap() {
+        return ConcurrentHashMap::new;
     }
 
     public static <T> Supplier<? extends Deque<T>> newDeque() {
@@ -186,6 +205,18 @@ public interface Collections8 {
 
     public static <T> Supplier<? extends SortedSet<T>> newSortedSet() {
         return TreeSet::new;
+    }
+
+    public static <T> Supplier<? extends BlockingQueue<T>> newBlockingQueue() {
+        return LinkedBlockingDeque::new;
+    }
+
+    public static <T> Supplier<? extends BlockingDeque<T>> newBlockingDeque() {
+        return LinkedBlockingDeque::new;
+    }
+
+    public static <T> Supplier<? extends TransferQueue<T>> newTransferQueue() {
+        return LinkedTransferQueue::new;
     }
 
     public static <T, C extends Collection<T>> Collector<T, ?, C> toCollector(Supplier<C> supplier) {
@@ -361,6 +392,22 @@ public interface Collections8 {
 
     public static <T> Deque<T> toDeque(T[] array) {
         return stream(array).collect(collectDeque());
+    }
+
+    public static <T, C extends Collection<T>> C to(T[] array, Supplier<C> supplier) {
+        return to(array, toCollector(supplier));
+    }
+
+    public static <T, C extends Collection<T>> C to(T[] array, Collector<T, ?, C> collector) {
+        return stream(array).collect(collector);
+    }
+
+    public static <T, C extends Collection<T>> C to(Collection<T> collection, Supplier<C> supplier) {
+        return to(collection, toCollector(supplier));
+    }
+
+    public static <T, C extends Collection<T>> C to(Collection<T> collection, Collector<T, ?, C> collector) {
+        return stream(collection).collect(collector);
     }
 
     public static <T> boolean containsAny(Collection<T> c1, Collection<T> c2) {
