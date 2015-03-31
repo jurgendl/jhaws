@@ -155,7 +155,7 @@ public interface Collections8 {
 		return map(stream, Collections8.<K, V> newMap());
 	}
 
-	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<Map<K, V>> mapSupplier) {
+	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
 		return stream.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue(), rejectDuplicateKeys(), mapSupplier));
 	}
 
@@ -166,47 +166,52 @@ public interface Collections8 {
 		return LinkedHashMap::new;
 	}
 
-	/**
-	 * Supplier<Map<K, V>> mapSupplier = HashMap::new;
-	 */
-	public static <K, V> Supplier<Map<K, V>> newMap() {
+	public static <K, V> Supplier<? extends Map<K, V>> newMap() {
 		return HashMap::new;
 	}
 
-	public static <T> Supplier<Deque<T>> newDeque() {
+	public static <T> Supplier<? extends Deque<T>> newDeque() {
 		return LinkedList::new;
 	}
 
-	public static <T> Supplier<List<T>> newList() {
+	public static <T> Supplier<? extends List<T>> newList() {
 		return ArrayList::new;
 	}
 
-	public static <T> Supplier<Queue<T>> newQueue() {
+	public static <T> Supplier<? extends Queue<T>> newQueue() {
 		return LinkedList::new;
 	}
 
-	public static <T> Supplier<Set<T>> newSet() {
+	public static <T> Supplier<? extends Set<T>> newSet() {
 		return HashSet::new;
 	}
 
-	public static <T, C extends Collection<T>> Collector<T, ?, C> dequeCollector() {
-		return toCollector(newDeque());
-	}
-
-	public static <T, C extends Collection<T>> Collector<T, ?, C> listCollector() {
-		return toCollector(newList());
-	}
-
-	public static <T, C extends Collection<T>> Collector<T, ?, C> queueCollector() {
-		return toCollector(newQueue());
-	}
-
-	public static <T, C extends Set<T>> Collector<T, ?, C> setCollector() {
-		return toCollector(newSet());
+	public static <T> Supplier<? extends SortedSet<T>> newSortedSet() {
+		return TreeSet::new;
 	}
 
 	public static <T, C extends Collection<T>> Collector<T, ?, C> toCollector(Supplier<C> supplier) {
 		return Collectors.toCollection(supplier);
+	}
+
+	public static <T, C extends Collection<T>> Collector<T, ?, C> collectDeque() {
+		return toCollector(newDeque());
+	}
+
+	public static <T, C extends Collection<T>> Collector<T, ?, C> collectList() {
+		return toCollector(newList());
+	}
+
+	public static <T, C extends Collection<T>> Collector<T, ?, C> collectQueue() {
+		return toCollector(newQueue());
+	}
+
+	public static <T, C extends Set<T>> Collector<T, ?, C> collectSet() {
+		return toCollector(newSet());
+	}
+
+	public static <T, C extends SortedSet<T>> Collector<T, ?, C> collectSortedSet() {
+		return toCollector(newSortedSet());
 	}
 
 	/**
@@ -214,10 +219,6 @@ public interface Collections8 {
 	 */
 	public static <K, V> Supplier<SortedMap<K, V>> newSortedMap() {
 		return TreeMap::new;
-	}
-
-	public static <T> Collector<T, ?, SortedSet<T>> newSortedSet() {
-		return Collectors.toCollection(TreeSet::new);
 	}
 
 	public static <T> Collector<T, ?, TransferQueue<T>> newTransferQueue() {
@@ -328,29 +329,43 @@ public interface Collections8 {
 	}
 
 	public static <T> List<T> toList(Collection<T> collection) {
-		return stream(collection).collect(toCollector(newList()));
+		return stream(collection).collect(collectList());
 	}
 
 	public static <T> List<T> toList(T[] array) {
-		return stream(array).collect(toCollector(newList()));
-
+		return stream(array).collect(collectList());
 	}
 
 	public static <T> Set<T> toSet(Collection<T> collection) {
-		return stream(collection).collect(toCollector(newSet()));
+		return stream(collection).collect(collectSet());
 	}
 
 	public static <T> Set<T> toSet(T[] array) {
-		return stream(array).collect(toCollector(newSet()));
-
+		return stream(array).collect(collectSet());
 	}
 
 	public static <T> Set<T> toSortedSet(Collection<T> collection) {
-		return stream(collection).collect(newSortedSet());
+		return stream(collection).collect(collectSortedSet());
 	}
 
 	public static <T> SortedSet<T> toSortedSet(T[] array) {
-		return stream(array).collect(newSortedSet());
+		return stream(array).collect(collectSortedSet());
+	}
+
+	public static <T> Queue<T> toQueue(Collection<T> collection) {
+		return stream(collection).collect(collectQueue());
+	}
+
+	public static <T> Queue<T> toQueue(T[] array) {
+		return stream(array).collect(collectQueue());
+	}
+
+	public static <T> Deque<T> toDeque(Collection<T> collection) {
+		return stream(collection).collect(collectDeque());
+	}
+
+	public static <T> Deque<T> toDeque(T[] array) {
+		return stream(array).collect(collectDeque());
 	}
 
 	public static <T> boolean containsAny(Collection<T> c1, Collection<T> c2) {
