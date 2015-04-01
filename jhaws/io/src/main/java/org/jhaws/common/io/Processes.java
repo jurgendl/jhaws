@@ -18,98 +18,102 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Processes {
-    private static Logger logger = LoggerFactory.getLogger(Processes.class);
+	private static Logger logger = LoggerFactory.getLogger(Processes.class);
 
-    public static class Lines implements Consumer<String> {
-        List<String> lines = new ArrayList<>();
+	public static class Lines implements Consumer<String> {
+		List<String> lines = new ArrayList<>();
 
-        @Override
-        public void accept(String t) {
-            this.lines.add(t);
-        }
+		@Override
+		public void accept(String t) {
+			this.lines.add(t);
+		}
 
-        public List<String> lines() {
-            return this.lines;
-        }
+		public List<String> lines() {
+			return this.lines;
+		}
 
-        @Override
-        public String toString() {
-            return this.lines.toString();
-        }
-    }
+		@Override
+		public String toString() {
+			return this.lines.toString();
+		}
+	}
 
-    public static class Text implements Consumer<String> {
-        StringBuilder linesText = new StringBuilder();
+	public static class Text implements Consumer<String> {
+		StringBuilder linesText = new StringBuilder();
 
-        @Override
-        public void accept(String t) {
-            this.linesText.append(t).append("\n");
-        }
+		@Override
+		public void accept(String t) {
+			this.linesText.append(t).append("\n");
+		}
 
-        public String getText() {
-            return this.linesText.toString();
-        }
+		public String getText() {
+			return this.linesText.toString();
+		}
 
-        @Override
-        public String toString() {
-            return this.getText();
-        }
-    }
+		@Override
+		public String toString() {
+			return this.getText();
+		}
+	}
 
-    public static class Out implements Consumer<String> {
-        @Override
-        public void accept(String t) {
-            System.out.println("> " + t);
-        }
-    }
+	public static class Out implements Consumer<String> {
+		@Override
+		public void accept(String t) {
+			System.out.println("> " + t);
+		}
+	}
 
-    @SafeVarargs
-    public static void callProcess(List<String> command, FilePath dir, Consumer<String>... consumers) throws IOException {
-        callProcess(null, new HashMap<>(), command, dir, null, null, consumers);
-    }
+	@SafeVarargs
+	public static <C extends Consumer<String>> C callProcess(List<String> command, FilePath dir, C consumer, Consumer<String>... consumers) throws IOException {
+		return callProcess(null, new HashMap<>(), command, dir, null, null, consumer, consumers);
+	}
 
-    @SafeVarargs
-    public static void callProcess(FilePath input, Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog,
-            FilePath errorLog, Consumer<String>... consumers) throws IOException {
-        logger.debug("{}> {}", dir.getAbsolutePath(), command.stream().collect(Collectors.joining(" ")));
-        ProcessBuilder builder = new ProcessBuilder(command);
-        if (env != null) {
-            builder.environment().putAll(env);
-        }
-        if (dir != null) {
-            if (dir.notExists()) {
-                dir.createDirectories();
-            } else {
-                if (!dir.isDirectory()) {
-                    throw new IOException(dir + " is not a directory");
-                }
-            }
-            builder.directory(dir.toFile());
-        }
-        if (input != null)
-            builder.redirectInput(Redirect.from(input.toFile()));
-        else {/* builder.redirectInput(Redirect.INHERIT); */
-        }
-        if (outputLog != null)
-            if (outputLog.exists())
-                builder.redirectOutput(Redirect.appendTo(outputLog.toFile()));
-            else
-                builder.redirectOutput(Redirect.to(outputLog.toFile()));
-        else {/* builder.redirectOutput(Redirect.INHERIT); */
-        }
-        if (errorLog != null)
-            if (errorLog.exists())
-                builder.redirectError(Redirect.appendTo(errorLog.toFile()));
-            else
-                builder.redirectError(Redirect.to(errorLog.toFile()));
-        else {/* builder.redirectError(Redirect.INHERIT); */
-        }
-        Process process = builder.start();
-        Consumer<String> allConsumers = consumers[0];
-        Arrays.stream(consumers).skip(1).forEach(allConsumers::andThen);
-        try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
-            StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
-        }
-        process.destroy();
-    }
+	@SafeVarargs
+	public static <C extends Consumer<String>> C callProcess(FilePath input, Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog, FilePath errorLog,
+			C consumer, Consumer<String>... consumers) throws IOException {
+		logger.debug("{}> {}", dir.getAbsolutePath(), command.stream().collect(Collectors.joining(" ")));
+		ProcessBuilder builder = new ProcessBuilder(command);
+		if (env != null) {
+			builder.environment().putAll(env);
+		}
+		if (dir != null) {
+			if (dir.notExists()) {
+				dir.createDirectories();
+			} else {
+				if (!dir.isDirectory()) {
+					throw new IOException(dir + " is not a directory");
+				}
+			}
+			builder.directory(dir.toFile());
+		}
+		if (input != null)
+			builder.redirectInput(Redirect.from(input.toFile()));
+		else {
+			// builder.redirectInput(Redirect.INHERIT);
+		}
+		if (outputLog != null)
+			if (outputLog.exists())
+				builder.redirectOutput(Redirect.appendTo(outputLog.toFile()));
+			else
+				builder.redirectOutput(Redirect.to(outputLog.toFile()));
+		else {
+			builder.redirectOutput(Redirect.INHERIT);
+		}
+		if (errorLog != null)
+			if (errorLog.exists())
+				builder.redirectError(Redirect.appendTo(errorLog.toFile()));
+			else
+				builder.redirectError(Redirect.to(errorLog.toFile()));
+		else {
+			builder.redirectError(Redirect.INHERIT);
+		}
+		Process process = builder.start();
+		Consumer<String> allConsumers = consumer;
+		Arrays.stream(consumers).forEach(allConsumers::andThen);
+		try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
+			StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
+		}
+		process.destroy();
+		return consumer;
+	}
 }
