@@ -15,9 +15,12 @@ public class Collections8Test {
 	}
 
 	@Test
-	public void test2() {
-		String s = "test string, 123, abc, the end";
-		String t = new RegexIterator("(1)(2)", s).stream(m -> "[" + m.group(1) + "/" + m.group(2) + "]");
-		Assert.assertEquals("test string, [1/2]3, abc, the end", t);
+	public void testRegexIterator() {
+		RegexIterator it = new RegexIterator("(\\d)(\\d)", "test string, 123, abc, the end");
+		Assert.assertEquals("test string, [1/2]3, abc, the end", it.stream(match -> "[" + match.group(1) + "/" + match.group(2) + "]"));
+		Assert.assertEquals("test string, 3, abc, the end", it.stream(match -> ""));
+		Assert.assertEquals("test string, 0.53, abc, the end", it.stream(match -> Double.parseDouble(match.group(1)) / Double.parseDouble(match.group(2))));
+		Assert.assertEquals(Arrays.asList("12"), it.simple());
+		Assert.assertEquals(Arrays.asList(Arrays.asList("1", "2")), it.all());
 	}
 }

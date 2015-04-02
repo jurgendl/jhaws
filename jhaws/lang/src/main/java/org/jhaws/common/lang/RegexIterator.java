@@ -1,13 +1,15 @@
 package org.jhaws.common.lang;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegexIterator implements Iterator<Matcher> {
+public class RegexIterator implements Iterator<Match>, Match {
 	protected Matcher matcher;
 
 	public Matcher matcher() {
@@ -31,8 +33,8 @@ public class RegexIterator implements Iterator<Matcher> {
 	}
 
 	@Override
-	public Matcher next() {
-		return matcher;
+	public Match next() {
+		return this;
 	}
 
 	@Override
@@ -40,18 +42,94 @@ public class RegexIterator implements Iterator<Matcher> {
 		return matcher.find();
 	}
 
-	public <C extends Consumer<Matcher>> C stream(C consumer) {
+	@Override
+	public int start() {
+		return matcher.start();
+	}
+
+	@Override
+	public int start(int group) {
+		return matcher.start(group);
+	}
+
+	@Override
+	public int start(String name) {
+		return matcher.start(name);
+	}
+
+	@Override
+	public int end() {
+		return matcher.end();
+	}
+
+	@Override
+	public int end(int group) {
+		return matcher.end(group);
+	}
+
+	@Override
+	public int end(String name) {
+		return matcher.end(name);
+	}
+
+	@Override
+	public String group() {
+		return matcher.group();
+	}
+
+	@Override
+	public List<String> groups() {
+		List<String> tmp = new ArrayList<>();
+		for (int i = 1; i <= matcher.groupCount(); i++) {
+			tmp.add(matcher.group(i));
+		}
+		return tmp;
+	}
+
+	@Override
+	public String group(int group) {
+		return matcher.group(group);
+	}
+
+	@Override
+	public String group(String name) {
+		return matcher.group(name);
+	}
+
+	@Override
+	public int groupCount() {
+		return matcher.groupCount();
+	}
+
+	public <C extends Consumer<Match>> C stream(C consumer) {
+		matcher.reset();
 		Collections8.stream(this).forEach(consumer);
 		return consumer;
 	}
 
-	public String stream(Function<Matcher, String> converter) {
-		return stream((matcher, buffer) -> matcher.appendReplacement(buffer, converter.apply(matcher)));
+	public List<List<String>> all() {
+		List<List<String>> matches = new ArrayList<>();
+		stream((Consumer<Match>) match -> matches.add(match.groups()));
+		return matches;
 	}
 
-	public String stream(BiConsumer<Matcher, StringBuffer> consumer) {
+	public List<String> simple() {
+		List<String> matches = new ArrayList<>();
+		stream((Consumer<Match>) match -> matches.add(match.group()));
+		return matches;
+	}
+
+	public String stream(Function<Match, ?> converter) {
+		return stream((match, buffer) -> RegexIterator.this.matcher.appendReplacement(buffer, toString(converter.apply(match))));
+	}
+
+	protected String toString(Object converted) {
+		return converted == null ? "" : converted.toString();
+	}
+
+	public String stream(BiConsumer<Match, StringBuffer> consumer) {
 		StringBuffer buffer = new StringBuffer();
-		stream((Consumer<Matcher>) matcher -> consumer.accept(matcher, buffer));
+		stream((Consumer<Match>) match -> consumer.accept(match, buffer));
 		matcher.appendTail(buffer);
 		return buffer.toString();
 	}

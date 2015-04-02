@@ -481,4 +481,12 @@ public interface Collections8 {
 	public static <T, V> Predicate<T> containsNotValue(Map<?, V> map, Function<T, V> converter) {
 		return not(containsValue(map, converter));
 	}
+
+	public static <X, Y> Function<X, Y> makeNull() {
+		return x -> null;
+	}
+
+	public static <X> Supplier<X> getNull() {
+		return () -> null;
+	}
 }
