@@ -1283,8 +1283,8 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * flattens this directory, copies all files in all subdirectories to this
-	 * directory, do not copy doubles, rename if file already exists and isn't
-	 * the same, delete all subdirectories afterwards
+	 * directory, deletes doubles, rename if file already exists and isn't the
+	 * same, delete all subdirectories afterwards
 	 */
 	public FilePath flatten() throws UncheckedIOException {
 		final FilePath root = this;
@@ -1943,6 +1943,10 @@ public class FilePath implements Path, Externalizable {
 	 */
 	@Override
 	public Path resolve(String other) {
+		return this.resolvePath(other);
+	}
+
+	public FilePath resolvePath(String other) {
 		return this.child(other);
 	}
 
@@ -1959,6 +1963,10 @@ public class FilePath implements Path, Externalizable {
 	 */
 	@Override
 	public Path resolveSibling(String other) {
+		return resolveSiblingPath(other);
+	}
+
+	private Path resolveSiblingPath(String other) {
 		return new FilePath(this.getPath().resolveSibling(other));
 	}
 
