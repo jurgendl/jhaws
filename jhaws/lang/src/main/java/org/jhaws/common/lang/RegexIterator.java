@@ -9,6 +9,9 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @since 1.8
+ */
 public class RegexIterator implements Iterator<Match>, Match {
 	protected Matcher matcher;
 
