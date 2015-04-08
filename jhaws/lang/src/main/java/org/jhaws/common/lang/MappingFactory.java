@@ -94,10 +94,10 @@ public class MappingFactory {
 	protected Map<String, Property<Object, Object>> info(Class<?> clazz) throws MappingException {
 		if (!this.info.containsKey(clazz)) {
 			try {
-				Map<String, PropertyDescriptor> originalMap = Collections8.stream(Introspector.getBeanInfo(clazz).getPropertyDescriptors(), this.parallel)
+				Map<String, PropertyDescriptor> originalMap = Collections8.stream(this.parallel, Introspector.getBeanInfo(clazz).getPropertyDescriptors())
 						.filter((t) -> ((t.getWriteMethod() != null) && (t.getReadMethod() != null)))
 						.collect(Collectors.toMap(PropertyDescriptor::getName, Function.<PropertyDescriptor> identity()));
-				Map<String, Property<Object, Object>> convertedMap = Collections8.stream(originalMap, this.parallel).collect(
+				Map<String, Property<Object, Object>> convertedMap = Collections8.stream(this.parallel, originalMap).collect(
 						Collectors.toMap(Entry::getKey, e -> new Property<>(e.getValue())));
 				this.info.put(clazz, convertedMap);
 			} catch (IntrospectionException ex) {

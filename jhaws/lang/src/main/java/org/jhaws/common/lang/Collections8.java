@@ -42,6 +42,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -140,8 +141,8 @@ public interface Collections8 {
 	}
 
 	@SafeVarargs
-	public static <T, C extends Collection<T>> C filter(C collection, boolean parallel, Predicate<? super T>... predicates) {
-		AtomicReference<Stream<T>> streamReference = new AtomicReference<>(stream(collection, parallel));
+	public static <T, C extends Collection<T>> C filter(boolean parallel, C collection, Predicate<? super T>... predicates) {
+		AtomicReference<Stream<T>> streamReference = new AtomicReference<>(stream(parallel, collection));
 		stream(predicates).forEach(predicate -> streamReference.set(streamReference.get().filter(predicate)));
 		C collected = streamReference.get().collect(collector(collection));
 		return collected;
@@ -149,7 +150,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T, C extends Collection<T>> C filter(C collection, Predicate<? super T>... predicates) {
-		return filter(collection, false, predicates);
+		return filter(false, collection, predicates);
 	}
 
 	public static <T> T last(List<T> dd) {
@@ -158,11 +159,11 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Map<K, V> map(Collection<Map.Entry<K, V>> entries) {
-		return map(entries, false);
+		return map(false, entries);
 	}
 
-	public static <K, V> Map<K, V> map(Collection<Map.Entry<K, V>> entries, boolean parallel) {
-		return map(stream(entries, parallel));
+	public static <K, V> Map<K, V> map(boolean parallel, Collection<Map.Entry<K, V>> entries) {
+		return map(stream(parallel, entries));
 	}
 
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream) {
@@ -266,25 +267,25 @@ public interface Collections8 {
 	}
 
 	public static <T extends Comparable<? super T>> List<T> sort(Collection<T> collection) {
-		return sort(collection, false);
+		return sort(false, collection);
 	}
 
-	public static <T extends Comparable<? super T>> List<T> sort(Collection<T> collection, boolean parallel) {
-		return stream(collection, parallel).sorted().collect(toCollector(newList()));
+	public static <T extends Comparable<? super T>> List<T> sort(boolean parallel, Collection<T> collection) {
+		return stream(parallel, collection).sorted().collect(toCollector(newList()));
 	}
 
-	public static <T> List<T> sort(Collection<T> collection, boolean parallel, Comparator<? super T> comparator) {
-		return stream(collection, parallel).sorted(comparator).collect(toCollector(newList()));
+	public static <T> List<T> sort(boolean parallel, Collection<T> collection, Comparator<? super T> comparator) {
+		return stream(parallel, collection).sorted(comparator).collect(toCollector(newList()));
 	}
 
 	public static <T> List<T> sort(Collection<T> collection, Comparator<? super T> comparator) {
-		return sort(collection, false, comparator);
+		return sort(false, collection, comparator);
 	}
 
 	public static <T, P> List<T> sortBy(Collection<T> collection, List<P> orderByMe, Function<T, P> map) {
 		return collection.stream()
 				.sorted((o1, o2) -> new CompareToBuilder().append(noNegIndex(orderByMe.indexOf(map.apply(o1))), noNegIndex(orderByMe.indexOf(map.apply(o2)))).toComparison())
-				.collect(toCollector(newList()));
+				.collect(collectList());
 	}
 
 	public static <T, P> List<T> sortBy(Collection<T> collection, List<T> orderByMe) {
@@ -300,10 +301,10 @@ public interface Collections8 {
 	}
 
 	public static <T> Stream<T> stream(Collection<T> collection) {
-		return stream(collection, false);
+		return stream(false, collection);
 	}
 
-	public static <T> Stream<T> stream(Collection<T> collection, boolean parallel) {
+	public static <T> Stream<T> stream(boolean parallel, Collection<T> collection) {
 		return StreamSupport.stream(collection.spliterator(), parallel);
 	}
 
@@ -324,44 +325,45 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Stream<Map.Entry<K, V>> stream(Map<K, V> map) {
-		return stream(map, false);
+		return stream(false, map);
 	}
 
-	public static <K, V> Stream<Map.Entry<K, V>> stream(Map<K, V> map, boolean parallel) {
+	public static <K, V> Stream<Map.Entry<K, V>> stream(boolean parallel, Map<K, V> map) {
 		return StreamSupport.stream(map.entrySet().spliterator(), parallel);
 	}
 
 	public static Stream<Path> stream(Path path) {
-		return stream(path, false);
+		return stream(false, path);
 	}
 
-	public static Stream<Path> stream(Path path, boolean parallel) {
+	public static Stream<Path> stream(boolean parallel, Path path) {
 		return StreamSupport.stream(path.spliterator(), parallel);
 	}
 
 	@SafeVarargs
 	public static <T> Stream<T> stream(T... array) {
-		return stream(array, false);
+		return stream(false, array);
 	}
 
-	public static <T> Stream<T> stream(T[] array, boolean parallel) {
+	@SafeVarargs
+	public static <T> Stream<T> stream(boolean parallel, T... array) {
 		return StreamSupport.stream(Spliterators.spliterator(array, 0, array.length, Spliterator.ORDERED | Spliterator.IMMUTABLE), parallel);
 	}
 
 	public static <T> Stream<T> streamDetached(Collection<T> collection) {
-		return streamDetached(collection, false);
+		return streamDetached(false, collection);
 	}
 
-	public static <T> Stream<T> streamDetached(Collection<T> collection, boolean parallel) {
-		return stream(array(collection), parallel);
+	public static <T> Stream<T> streamDetached(boolean parallel, Collection<T> collection) {
+		return stream(parallel, array(collection));
 	}
 
 	public static <K, V> Stream<Map.Entry<K, V>> streamDetached(Map<K, V> map) {
-		return streamDetached(map, false);
+		return streamDetached(false, map);
 	}
 
-	public static <K, V> Stream<Map.Entry<K, V>> streamDetached(Map<K, V> map, boolean parallel) {
-		return stream(array(map), parallel);
+	public static <K, V> Stream<Map.Entry<K, V>> streamDetached(boolean parallel, Map<K, V> map) {
+		return stream(parallel, array(map));
 	}
 
 	public static Stream<Path> streamFully(Path path) {
@@ -507,5 +509,13 @@ public interface Collections8 {
 
 	public static <X> Supplier<X> getNull() {
 		return () -> null;
+	}
+
+	public static IntStream streamp(String text) {
+		return text.chars();
+	}
+
+	public static Stream<Character> stream(String text) {
+		return streamp(text).mapToObj(i -> (char) i);
 	}
 }
