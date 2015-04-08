@@ -74,7 +74,7 @@ public class Processes {
             FilePath outputLog, FilePath errorLog, C consumer, Consumer<String>... consumers) throws IOException {
         logger.debug("{}> {}", dir.getAbsolutePath(), command.stream().collect(Collectors.joining(" ")));
         ProcessBuilder builder = new ProcessBuilder(command);
-        if (env != null) {
+        if (env != null && env.size() > 0) {
             builder.environment().putAll(env);
         }
         if (dir != null) {
@@ -98,7 +98,7 @@ public class Processes {
             else
                 builder.redirectOutput(Redirect.to(outputLog.toFile()));
         else {
-            builder.redirectOutput(Redirect.INHERIT);
+            // builder.redirectOutput(Redirect.INHERIT);
         }
         if (errorLog != null)
             if (errorLog.exists())
@@ -106,7 +106,7 @@ public class Processes {
             else
                 builder.redirectError(Redirect.to(errorLog.toFile()));
         else {
-            builder.redirectError(Redirect.INHERIT);
+            // builder.redirectError(Redirect.INHERIT);
         }
         Process process = builder.start();
         Consumer<String> allConsumers = consumer;
