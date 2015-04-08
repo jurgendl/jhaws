@@ -1,5 +1,8 @@
 package org.jhaws.common.lang;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +53,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
  * @see java.util.stream.StreamSupport
  * @see java.util.stream.Collectors
  * @see java.util.stream.Collector
+ * 
+ * @since 1.8
  */
 public interface Collections8 {
 	public static class PathIterator implements Iterator<Path> {
@@ -310,6 +315,14 @@ public interface Collections8 {
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
 	}
 
+	public static Stream<String> line(Path path) {
+		try {
+			return Files.lines(path);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+	}
+
 	public static <K, V> Stream<Map.Entry<K, V>> stream(Map<K, V> map) {
 		return stream(map, false);
 	}
@@ -326,7 +339,8 @@ public interface Collections8 {
 		return StreamSupport.stream(path.spliterator(), parallel);
 	}
 
-	public static <T> Stream<T> stream(T[] array) {
+	@SafeVarargs
+	public static <T> Stream<T> stream(T... array) {
 		return stream(array, false);
 	}
 
@@ -358,7 +372,8 @@ public interface Collections8 {
 		return stream(collection).collect(collectList());
 	}
 
-	public static <T> List<T> toList(T[] array) {
+	@SafeVarargs
+	public static <T> List<T> toList(T... array) {
 		return stream(array).collect(collectList());
 	}
 
@@ -366,7 +381,8 @@ public interface Collections8 {
 		return stream(collection).collect(collectSet());
 	}
 
-	public static <T> Set<T> toSet(T[] array) {
+	@SafeVarargs
+	public static <T> Set<T> toSet(T... array) {
 		return stream(array).collect(collectSet());
 	}
 
@@ -374,7 +390,8 @@ public interface Collections8 {
 		return stream(collection).collect(collectSortedSet());
 	}
 
-	public static <T> SortedSet<T> toSortedSet(T[] array) {
+	@SafeVarargs
+	public static <T> SortedSet<T> toSortedSet(T... array) {
 		return stream(array).collect(collectSortedSet());
 	}
 
@@ -382,7 +399,8 @@ public interface Collections8 {
 		return stream(collection).collect(collectQueue());
 	}
 
-	public static <T> Queue<T> toQueue(T[] array) {
+	@SafeVarargs
+	public static <T> Queue<T> toQueue(T... array) {
 		return stream(array).collect(collectQueue());
 	}
 
@@ -390,7 +408,8 @@ public interface Collections8 {
 		return stream(collection).collect(collectDeque());
 	}
 
-	public static <T> Deque<T> toDeque(T[] array) {
+	@SafeVarargs
+	public static <T> Deque<T> toDeque(T... array) {
 		return stream(array).collect(collectDeque());
 	}
 
