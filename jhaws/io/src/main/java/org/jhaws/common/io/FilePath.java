@@ -159,7 +159,7 @@ public class FilePath implements Path, Externalizable {
 
 		public static final class AcceptAllFilter extends Filters {
 			@Override
-			public boolean accept(Path entry) throws IOException {
+			public boolean accept(Path entry) {
 				return true;
 			}
 		}
@@ -172,21 +172,21 @@ public class FilePath implements Path, Externalizable {
 			}
 
 			@Override
-			public boolean accept(Path entry) throws IOException {
+			public boolean accept(Path entry) {
 				return this.fileFilter.accept(entry.toFile());
 			}
 		}
 
 		public static class DirectoryFilter extends Filters {
 			@Override
-			public boolean accept(Path entry) throws IOException {
+			public boolean accept(Path entry) {
 				return Files.isDirectory(entry);
 			}
 		}
 
 		public static class FileFilter extends Filters {
 			@Override
-			public boolean accept(Path entry) throws IOException {
+			public boolean accept(Path entry) {
 				return Files.isRegularFile(entry);
 			}
 		}
@@ -216,13 +216,21 @@ public class FilePath implements Path, Externalizable {
 		}
 
 		@Override
-		public boolean accept(Path entry) throws IOException {
+		public boolean accept(Path entry) {
 			for (DirectoryStream.Filter<? super Path> filter : this.filters) {
-				if (!this.and /* or */&& filter.accept(entry)) {
-					return this.not(true);
+				try {
+					if (!this.and /* or */&& filter.accept(entry)) {
+						return this.not(true);
+					}
+				} catch (IOException e) {
+					return false;
 				}
-				if (this.and && !filter.accept(entry)) {
-					return this.not(false);
+				try {
+					if (this.and && !filter.accept(entry)) {
+						return this.not(false);
+					}
+				} catch (IOException e) {
+					return false;
 				}
 			}
 			return this.not(this.and);
