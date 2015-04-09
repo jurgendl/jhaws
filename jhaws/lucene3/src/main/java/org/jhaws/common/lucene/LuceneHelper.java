@@ -868,6 +868,7 @@ public class LuceneHelper {
                 if (this.luceneVersion == null) {
                     this.luceneVersion = "Unknown";
                 }
+                jarf.close();
             } catch (Exception ex) {
                 ex.printStackTrace(System.out);
                 this.luceneVersion = "Unknown";

@@ -692,6 +692,7 @@ public class LuceneIndex implements LuceneInterface {
                 if (this.luceneVersion == null) {
                     this.luceneVersion = "Unknown"; //$NON-NLS-1$
                 }
+                jarf.close();
             } catch (Exception ex) {
                 ex.printStackTrace(System.out);
                 this.luceneVersion = "Unknown"; //$NON-NLS-1$
