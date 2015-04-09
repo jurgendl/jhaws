@@ -1,6 +1,7 @@
 package org.jhaws.common.io;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,13 +66,13 @@ public class Processes {
 
     @SafeVarargs
     public static <C extends Consumer<String>> C callProcess(List<String> command, FilePath dir, C consumer, Consumer<String>... consumers)
-            throws IOException {
+            throws UncheckedIOException {
         return callProcess(null, new HashMap<>(), command, dir, null, null, consumer, consumers);
     }
 
     @SafeVarargs
     public static <C extends Consumer<String>> C callProcess(FilePath input, Map<String, String> env, List<String> command, FilePath dir,
-            FilePath outputLog, FilePath errorLog, C consumer, Consumer<String>... consumers) throws IOException {
+            FilePath outputLog, FilePath errorLog, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
         logger.debug("{}> {}", dir.getAbsolutePath(), command.stream().collect(Collectors.joining(" ")));
         ProcessBuilder builder = new ProcessBuilder(command);
         if (env != null && env.size() > 0) {
@@ -82,7 +83,7 @@ public class Processes {
                 dir.createDirectories();
             } else {
                 if (!dir.isDirectory()) {
-                    throw new IOException(dir + " is not a directory");
+                    throw new UncheckedIOException(new IOException(dir + " is not a directory"));
                 }
             }
             builder.directory(dir.toFile());
@@ -108,11 +109,18 @@ public class Processes {
         else {
             // builder.redirectError(Redirect.INHERIT);
         }
-        Process process = builder.start();
+        Process process;
+        try {
+            process = builder.start();
+        } catch (IOException e1) {
+            throw new UncheckedIOException(e1);
+        }
         Consumer<String> allConsumers = consumer;
         Arrays.stream(consumers).forEach(allConsumers::andThen);
         try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
             StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
+        } catch (IOException e1) {
+            throw new UncheckedIOException(e1);
         }
         try {
             process.waitFor();
