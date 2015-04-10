@@ -212,12 +212,21 @@ public class FilePathTest {
             try (BufferedWriter out = file4.newBufferedWriter()) {
                 out.write(same);
             }
+            FilePath subdir2 = subdir.child("subdir2").createDirectories();
+            FilePath file5 = subdir2.child("file5");
+            try (BufferedWriter out = file5.newBufferedWriter()) {
+                out.write(same);
+            }
             tmpDir.flatten();
             Assert.assertTrue(file1.exists());
             Assert.assertTrue(file2.exists());
             Assert.assertTrue(file3.exists());
             Assert.assertTrue(subdir.notExists());
             Assert.assertTrue(file4.notExists());
+            Assert.assertTrue(tmpDir.child(file4.getFileName()).exists());
+            Assert.assertTrue(subdir2.notExists());
+            Assert.assertTrue(file5.notExists());
+            Assert.assertTrue(tmpDir.child(file5.getFileName()).exists());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));

@@ -1320,18 +1320,29 @@ public class FilePath implements Path, Externalizable {
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                 if (!root.equals(dir)) {
-                    new FilePath(dir).delete();
+                    FilePath fpd = new FilePath(dir);
+                    try {
+                        fpd.delete();
+                    } catch (UncheckedIOException e) {
+                        if (e.getCause() instanceof java.nio.file.DirectoryNotEmptyException) {
+                            try {
+                                Thread.sleep(250);
+                            } catch (InterruptedException e1) {
+                                //
+                            }
+                            fpd.delete();
+                        }
+                    }
                 }
-                return super.postVisitDirectory(dir, exc);
+                return FileVisitResult.CONTINUE;
             }
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (!root.equals(file.getParent())) {
-                    FilePath target = new FilePath(root, file.getFileName().toString()).newFileIndex();
-                    new FilePath(file).renameTo(target);
+                    new FilePath(file).renameTo(new FilePath(root, file.getFileName().toString()).newFileIndex());
                 }
-                return super.visitFile(file, attrs);
+                return FileVisitResult.CONTINUE;
             }
         });
         return this;
