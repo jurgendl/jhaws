@@ -122,7 +122,8 @@ public class FilePath implements Path, Externalizable {
             }
 
             public ExtensionFilter(List<String> ext) {
-                this.ext = ext;
+                this();
+                this.ext.addAll(ext);
             }
 
             public ExtensionFilter(String... ext) {
@@ -141,6 +142,11 @@ public class FilePath implements Path, Externalizable {
 
             public void setExt(List<String> ext) {
                 this.ext = ext;
+            }
+
+            public Filters add(String ext) {
+                this.ext.add(ext);
+                return this;
             }
         }
 
