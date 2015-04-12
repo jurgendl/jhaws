@@ -132,8 +132,8 @@ public class FilePath implements Path, Externalizable {
 
             @Override
             public boolean accept(Path entry) {
-                String extension = wrap(entry).getExtension().toLowerCase();
-                return ext.contains(extension);
+                String extension = wrap(entry).getExtension();
+                return extension == null ? false : ext.contains(extension.toLowerCase());
             }
 
             public List<String> getExt() {
@@ -146,6 +146,11 @@ public class FilePath implements Path, Externalizable {
 
             public Filters add(String ext) {
                 this.ext.add(ext);
+                return this;
+            }
+
+            public Filters add(Filters.ExtensionFilter otherFilter) {
+                this.ext.addAll(otherFilter.ext);
                 return this;
             }
         }
