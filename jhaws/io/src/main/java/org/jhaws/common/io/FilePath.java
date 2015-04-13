@@ -55,6 +55,7 @@ import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -627,7 +628,11 @@ public class FilePath implements Path, Externalizable {
             return "";
         }
         int scale = (int) (Math.log10(size) / 3);
-        return "" + new DecimalFormat().format(size / (1 << (scale * 10))) + "" + FilePath.UNITS[scale];
+        NumberFormat nf = NumberFormat.getNumberInstance();
+        DecimalFormat df = (DecimalFormat) nf;
+        df.setMinimumFractionDigits(0);
+        df.setMaximumFractionDigits(2);
+        return "" + df.format((double) size / (1 << (scale * 10))) + "" + FilePath.UNITS[scale];
     }
 
     public static FilePath getDesktopDirectory() {
