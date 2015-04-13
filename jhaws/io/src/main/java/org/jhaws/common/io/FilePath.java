@@ -150,6 +150,11 @@ public class FilePath implements Path, Externalizable {
                 return this;
             }
 
+            public Filters remove(String ext) {
+                this.ext.remove(ext);
+                return this;
+            }
+
             public Filters add(Filters.ExtensionFilter otherFilter) {
                 this.ext.addAll(otherFilter.ext);
                 return this;
