@@ -527,4 +527,9 @@ public interface Collections8 {
     public static Stream<Character> stream(String text) {
         return streamp(text).mapToObj(i -> (char) i);
     }
+
+    public static <T, S extends Comparable<? super S>> List<T> sortBy(Collection<T> sortMe, Map<T, S> sortByMe) {
+        return sortMe.stream().sorted((x, y) -> new CompareToBuilder().append(sortByMe.get(x), sortByMe.get(y)).toComparison())
+                .collect(collectList());
+    }
 }
