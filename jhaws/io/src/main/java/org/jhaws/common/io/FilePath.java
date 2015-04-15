@@ -172,19 +172,19 @@ public class FilePath implements Path, Externalizable {
 			}
 		}
 
-		public static class FlashVideoFilter extends Filters.ExtensionFilter {
-			private static final long serialVersionUID = 4338488348271169459L;
-
-			public FlashVideoFilter() {
-				super("flv", "swf", "fla");
-			}
-		}
-
 		public static class VideoFilter extends Filters.ExtensionFilter {
 			private static final long serialVersionUID = -7739502555496394554L;
 
 			public VideoFilter() {
-				super("mp4", "webm", "mpg", "mpeg", "wmv", "avi", "mov", "asf", "rm", "divx");
+				super("flv", "webm", "mp4", "m4v", "mpg", "mpeg", "wmv", "avi", "mov", "asf", "rm", "divx");
+			}
+		}
+
+		public static class Html5VideoFilter extends Filters.ExtensionFilter {
+			private static final long serialVersionUID = -7433598725949137242L;
+
+			public Html5VideoFilter() {
+				super("flv", "webm", "mp4", "m4v");
 			}
 		}
 
