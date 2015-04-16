@@ -123,7 +123,7 @@ public class RegexIterator implements Iterator<Match>, Match {
 	}
 
 	public String stream(Function<Match, ?> converter) {
-		return stream((match, buffer) -> RegexIterator.this.matcher.appendReplacement(buffer, toString(converter.apply(match))));
+		return stream((BiConsumer<Match, StringBuffer>) (match, buffer) -> RegexIterator.this.matcher.appendReplacement(buffer, toString(converter.apply(match))));
 	}
 
 	protected String toString(Object converted) {
