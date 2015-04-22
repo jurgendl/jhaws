@@ -10,7 +10,7 @@
 	<name>net</name>
 	<description>http(s) protocol made simple, build around Apache httpcomponents</description>
 	<properties>
-		<httpcomponents.version>4.4</httpcomponents.version>
+		<httpcomponents.version>4.4.1</httpcomponents.version>
 	</properties>
 	<dependencies>
 		<dependency>
