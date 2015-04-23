@@ -176,7 +176,7 @@ public class FilePath implements Path, Externalizable {
             private static final long serialVersionUID = -7739502555496394554L;
 
             public VideoFilter() {
-                super("flv", "webm", "mp4", "m4v", "mpg", "mpeg", "wmv", "avi", "mov", "asf", "rm", "divx");
+                super("flv", "webm", "mp4", "m4v", "mpg", "mpeg", "wmv", "avi", "mov", "asf", "rm", "divx", "mkv");
             }
         }
 
