@@ -85,6 +85,11 @@ public interface Collections8 {
 		return (k, v) -> k;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> T[] array(T item) {
+		return (T[]) new Object[] { item };
+	}
+
 	public static <T> T[] array(Collection<T> collection) {
 		return array(collection.stream());
 	}
@@ -529,5 +534,10 @@ public interface Collections8 {
 
 	public static <T, S extends Comparable<? super S>> List<T> sortBy(Collection<T> sortMe, Map<T, S> sortByMe) {
 		return sortMe.stream().sorted((x, y) -> new CompareToBuilder().append(sortByMe.get(x), sortByMe.get(y)).toComparison()).collect(collectList());
+	}
+
+	public static <T> List<KeyValue<T, T>> match(List<T> keys, List<T> values) {
+		return values.stream().parallel().filter(Collections8.contains(keys)).map(value -> new KeyValue<>(keys.get(keys.indexOf(value)), value))
+				.collect(Collections8.collectList());
 	}
 }
