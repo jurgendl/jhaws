@@ -188,6 +188,14 @@ public class FilePath implements Path, Externalizable {
             }
         }
 
+        public static class FlashVideoFilter extends Filters.ExtensionFilter {
+            private static final long serialVersionUID = 4338488348271169459L;
+
+            public FlashVideoFilter() {
+                super("flv");
+            }
+        }
+
         public static class IIOImageFilter extends Filters.ExtensionFilter {
             private static final long serialVersionUID = 5142335960151096949L;
 
