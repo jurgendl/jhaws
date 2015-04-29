@@ -291,10 +291,10 @@ public interface Collections8 {
     }
 
     public static <T, P> List<T> sortBy(Collection<T> collection, List<P> orderByMe, Function<T, P> map) {
-        return collection.stream()
+        return collection
+                .stream()
                 .sorted((o1, o2) -> new CompareToBuilder().append(noNegIndex(orderByMe.indexOf(map.apply(o1))),
-                        noNegIndex(orderByMe.indexOf(map.apply(o2)))).toComparison())
-                .collect(collectList());
+                        noNegIndex(orderByMe.indexOf(map.apply(o2)))).toComparison()).collect(collectList());
     }
 
     public static <T, P> List<T> sortBy(Collection<T> collection, List<T> orderByMe) {
@@ -537,21 +537,17 @@ public interface Collections8 {
     }
 
     public static <T, S extends Comparable<? super S>> List<T> sortBy(Collection<T> sortMe, Map<T, S> sortByMe) {
-        return sortMe.stream()
-                .sorted((x, y) -> new CompareToBuilder().append(sortByMe.get(x), sortByMe.get(y)).toComparison())
+        return sortMe.stream().sorted((x, y) -> new CompareToBuilder().append(sortByMe.get(x), sortByMe.get(y)).toComparison())
                 .collect(collectList());
     }
 
     public static <T> List<KeyValue<T, T>> match(List<T> keys, List<T> values) {
-        return values.stream()
-                .parallel()
-                .filter(Collections8.contains(keys))
-                .map(value -> new KeyValue<>(keys.get(keys.indexOf(value)), value))
+        return values.stream().parallel().filter(Collections8.contains(keys)).map(value -> new KeyValue<>(keys.get(keys.indexOf(value)), value))
                 .collect(Collections8.collectList());
     }
 
     public static <T> T optional(T value, Supplier<T> orElse) {
-        return Optional.of(value).orElse(orElse.get());
+        return Optional.ofNullable(value).orElse(orElse.get());
     }
 
     public static <T> Consumer<T> consume() {
