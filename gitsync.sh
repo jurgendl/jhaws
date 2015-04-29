@@ -13,11 +13,11 @@ while [ -z "$message" ]; do
 	read -p "Commit message: " message
 done
 #message=${message:-"update"}
-echo "> git commit -v -am '$message'"
+echo "> git commit -v -a -m '$message'"
 git commit -v -am "$message"
 echo $line
 while true; do
-    read -p "Push (y/n)?" yn
+    read -p "Push (y/n)? " yn
     case $yn in
         [Yy]* ) 
 			echo "> git push -v"
