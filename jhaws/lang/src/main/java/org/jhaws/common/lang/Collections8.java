@@ -290,14 +290,20 @@ public interface Collections8 {
         return sort(false, collection, comparator);
     }
 
-    public static <T, P> List<T> sortBy(Collection<T> collection, List<P> orderByMe, Function<T, P> map) {
-        return collection
-                .stream()
-                .sorted((o1, o2) -> new CompareToBuilder().append(noNegIndex(orderByMe.indexOf(map.apply(o1))),
-                        noNegIndex(orderByMe.indexOf(map.apply(o2)))).toComparison()).collect(collectList());
+    public static <T, A> List<T> sortBy(Collection<T> collection, List<A> orderByMe, Function<T, A> map) {
+        return collection.stream().sorted(sortBy(orderByMe, map)).collect(collectList());
     }
 
-    public static <T, P> List<T> sortBy(Collection<T> collection, List<T> orderByMe) {
+    public static <T, A> Comparator<T> sortBy(List<A> orderByMe, Function<T, A> map) {
+        return (o1, o2) -> new CompareToBuilder().append(noNegIndex(orderByMe.indexOf(map.apply(o1))), noNegIndex(orderByMe.indexOf(map.apply(o2))))
+                .toComparison();
+    }
+
+    public static <T> Comparator<T> sortBy(List<T> orderByMe) {
+        return sortBy(orderByMe, id());
+    }
+
+    public static <T> List<T> sortBy(Collection<T> collection, List<T> orderByMe) {
         return sortBy(collection, orderByMe, id());
     }
 
