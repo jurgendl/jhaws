@@ -47,7 +47,7 @@ public class LuceneIndexImpl implements LuceneInterface {
      * 
      * @throws IOException na
      */
-    public static LuceneInterface get(final IODirectory indexdir, @SuppressWarnings("unused") final boolean cleanFirst) throws IOException {
+    public static LuceneInterface get(final IODirectory indexdir,  final boolean cleanFirst) throws IOException {
         return new LuceneIndexImpl(indexdir);
     }
 

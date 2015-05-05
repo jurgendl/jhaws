@@ -6,7 +6,7 @@ import java.util.HashSet;
 /**
  * PreloadUnixFirefoxCookies
  */
-@SuppressWarnings("unused")
+
 public class PreloadUnixFirefoxCookies implements CookieStoreInterceptor {
     /** field */
     protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$

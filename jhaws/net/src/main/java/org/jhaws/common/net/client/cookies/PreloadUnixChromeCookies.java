@@ -6,7 +6,7 @@ import java.util.HashSet;
 /**
  * PreloadWinChromeCookies
  */
-@SuppressWarnings("unused")
+
 public class PreloadUnixChromeCookies implements CookieStoreInterceptor {
     public static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
 

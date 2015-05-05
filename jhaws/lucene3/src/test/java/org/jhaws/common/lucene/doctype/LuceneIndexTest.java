@@ -31,7 +31,7 @@ public class LuceneIndexTest {
     /** index */
     private LuceneIndex index;
 
-    @SuppressWarnings("unused")
+    
     private static int i = 0;
 
     /**

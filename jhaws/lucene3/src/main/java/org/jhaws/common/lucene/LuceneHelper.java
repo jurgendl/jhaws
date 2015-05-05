@@ -81,7 +81,7 @@ public class LuceneHelper {
             return null;
         }
 
-        @SuppressWarnings("unused")
+        
         public void test() throws IOException {
             URL u = new URL("doc", "localhost", 0, "/file", LuceneHelper.DOC_HANDLER);
             System.out.println(u);

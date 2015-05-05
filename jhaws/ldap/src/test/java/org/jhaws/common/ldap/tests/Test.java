@@ -41,7 +41,7 @@ public class Test {
     /**
      * TESTING
      */
-    @SuppressWarnings("unused")
+    
     public static void main(final String[] args) {
         ClassPathXmlApplicationContext ctx = null;
         try {

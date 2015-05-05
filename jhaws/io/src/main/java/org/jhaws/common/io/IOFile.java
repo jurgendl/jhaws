@@ -1828,7 +1828,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
      *
      * @throws IOException : thrown exception
      */
-    public IOFile writeBytes(final byte[] source, @SuppressWarnings("unused") final boolean append) throws IOException {
+    public IOFile writeBytes(final byte[] source,  final boolean append) throws IOException {
         try {
             this.getParentDirectory().create();
             Utils.write(source, this);

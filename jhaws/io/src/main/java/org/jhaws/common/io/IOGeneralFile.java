@@ -28,7 +28,7 @@ import org.jhaws.common.io.Utils.OSGroup;
  * @see util.io.IOGeneralFile
  * @see util.io.IODirectory
  */
-@SuppressWarnings("unused")
+
 public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements Comparable<File> {
     public static enum Replace {
         ALWAYS, NEWER_AND_NON_EXISTING, ONLY_NEWER, ONLY_NOT_EXISTING;
