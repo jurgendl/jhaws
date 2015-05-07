@@ -42,7 +42,8 @@ public class Test {
      * TESTING
      */
     
-    public static void main(final String[] args) {
+	@SuppressWarnings("unused")
+	public static void main(final String[] args) {
         ClassPathXmlApplicationContext ctx = null;
         try {
             ctx = new ClassPathXmlApplicationContext("spring.xml"); //$NON-NLS-1$

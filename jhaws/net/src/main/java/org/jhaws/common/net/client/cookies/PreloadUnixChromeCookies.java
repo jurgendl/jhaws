@@ -25,10 +25,12 @@ public class PreloadUnixChromeCookies implements CookieStoreInterceptor {
     }
 
     /** domainsLoaded */
-    private HashSet<String> domainsLoaded = new HashSet<String>();
+	@SuppressWarnings("unused")
+	private HashSet<String> domainsLoaded = new HashSet<String>();
 
     /** failed */
-    private boolean failed = false;
+	@SuppressWarnings("unused")
+	private boolean failed = false;
 
     /**
      * Creates a new PreloadUnixChromeCookies object.
