@@ -76,11 +76,11 @@ public class KeyValue<K, V> implements Serializable {
 		return true;
 	}
 
-	public boolean isEquals(Function<K, ?> kf, Function<V, ?> vf) {
+	public <I> boolean isEquals(Function<K, I> kf, Function<V, I> vf) {
 		return new EqualsBuilder().append(kf.apply(key), vf.apply(value)).isEquals();
 	}
 
-	public boolean notEquals(Function<K, ?> kf, Function<V, ?> vf) {
+	public <I> boolean notEquals(Function<K, I> kf, Function<V, I> vf) {
 		return !isEquals(kf, vf);
 	}
 

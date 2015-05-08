@@ -547,8 +547,8 @@ public interface Collections8 {
                 .collect(collectList());
     }
 
-    public static <T> List<KeyValue<T, T>> match(List<T> keys, List<T> values) {
-        return values.stream().parallel().filter(Collections8.contains(keys)).map(value -> new KeyValue<>(keys.get(keys.indexOf(value)), value))
+	public static <T> List<Pair<T>> match(List<T> keys, List<T> values) {
+		return values.stream().parallel().filter(Collections8.contains(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value))
                 .collect(Collections8.collectList());
     }
 
