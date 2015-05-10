@@ -67,7 +67,7 @@ public class Processes {
     @SafeVarargs
     public static <C extends Consumer<String>> C callProcess(List<String> command, FilePath dir, C consumer, Consumer<String>... consumers)
             throws UncheckedIOException {
-        return callProcess(null, new HashMap<>(), command, dir, null, null, consumer, consumers);
+		return callProcess(null, new HashMap<>(), command, dir, null, FilePath.createDefaultTempFile(String.valueOf(System.currentTimeMillis())), consumer, consumers);
     }
 
     @SafeVarargs
