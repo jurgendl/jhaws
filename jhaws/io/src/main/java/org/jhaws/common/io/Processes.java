@@ -115,13 +115,15 @@ public class Processes {
         } catch (IOException e1) {
             throw new UncheckedIOException(e1);
         }
-        Consumer<String> allConsumers = consumer;
-        Arrays.stream(consumers).forEach(allConsumers::andThen);
-        try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
-            StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
-        } catch (IOException e1) {
-            throw new UncheckedIOException(e1);
-        }
+		if (consumer != null) {
+			Consumer<String> allConsumers = consumer;
+			Arrays.stream(consumers).forEach(allConsumers::andThen);
+			try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
+				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
+			} catch (IOException e1) {
+				throw new UncheckedIOException(e1);
+			}
+		}
         try {
             process.waitFor();
         } catch (InterruptedException e) {

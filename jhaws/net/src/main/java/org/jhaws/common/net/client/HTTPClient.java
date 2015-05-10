@@ -801,7 +801,7 @@ public class HTTPClient implements Serializable {
                     break;
 
                 case HttpStatus.SC_NOT_FOUND:
-                    throw new IOException(httpRequest.getURI() + " " + status.getReasonPhrase());
+					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
 
                 case HttpStatus.SC_UNAUTHORIZED:
                     throw new RuntimeException("not implemented: " + status);
@@ -831,11 +831,14 @@ public class HTTPClient implements Serializable {
                 // Header header = response.getFirstHeader(HTTPClientDefaults.LOCATION);
                 //
                 // return new Response(header.getValue());
+				case HttpStatus.SC_BAD_GATEWAY:
+					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
+
                 case HttpStatus.SC_GATEWAY_TIMEOUT:
-                    throw new IOException(status.getReasonPhrase());
+					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
 
                 case HttpStatus.SC_FORBIDDEN:
-                    throw new IOException(status.getReasonPhrase());
+					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
 
                 default:
                     throw new RuntimeException("not implemented: " + status);
