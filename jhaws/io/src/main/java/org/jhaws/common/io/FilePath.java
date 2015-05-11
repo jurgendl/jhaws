@@ -996,6 +996,11 @@ public class FilePath implements Path, Externalizable {
 				+ extension);
 	}
 
+	public FilePath appendExtension(String extension) {
+		return this.getParent() == null ? new FilePath(this.getFileNameString() + FilePath.DOT + extension) : new FilePath(this.getParent(), this.getFileNameString()
+				+ FilePath.DOT + extension);
+	}
+
 	public FilePath checkDirectory() throws AccessDeniedException {
 		if (this.isFile()) {
 			throw new AccessDeniedException(this.toString());
