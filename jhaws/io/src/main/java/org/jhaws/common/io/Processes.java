@@ -67,7 +67,7 @@ public class Processes {
     @SafeVarargs
     public static <C extends Consumer<String>> C callProcess(List<String> command, FilePath dir, C consumer, Consumer<String>... consumers)
             throws UncheckedIOException {
-		return callProcess(null, new HashMap<>(), command, dir, null, FilePath.createDefaultTempFile(String.valueOf(System.currentTimeMillis())), consumer, consumers);
+		return callProcess(null, new HashMap<>(), command, dir, null, null, consumer, consumers);
     }
 
     @SafeVarargs
@@ -75,6 +75,7 @@ public class Processes {
             FilePath outputLog, FilePath errorLog, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
         logger.debug("{}> {}", dir.getAbsolutePath(), command.stream().collect(Collectors.joining(" ")));
         ProcessBuilder builder = new ProcessBuilder(command);
+		builder.redirectErrorStream(true);
         if (env != null && env.size() > 0) {
             builder.environment().putAll(env);
         }
@@ -107,7 +108,7 @@ public class Processes {
             else
                 builder.redirectError(Redirect.to(errorLog.toFile()));
         else {
-            // builder.redirectError(Redirect.INHERIT);
+			builder.redirectError(Redirect.PIPE);
         }
         Process process;
         try {
