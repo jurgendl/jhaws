@@ -1,5 +1,9 @@
 package org.jhaws.common.lang;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toMap;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -44,13 +48,10 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  * @see java.util.stream.Stream
@@ -178,7 +179,7 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
-		return stream.collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue(), rejectDuplicateKeys(), mapSupplier));
+		return stream.collect(toMap(e -> e.getKey(), e -> e.getValue(), rejectDuplicateKeys(), mapSupplier));
 	}
 
 	public static <K, V> Supplier<Map<K, V>> newLinkedMap() {
@@ -234,27 +235,27 @@ public interface Collections8 {
 	}
 
 	public static <T, C extends Collection<T>> Collector<T, ?, C> toCollector(Supplier<C> supplier) {
-		return Collectors.toCollection(supplier);
+		return toCollection(supplier);
 	}
 
 	public static <T> Collector<T, ?, Deque<T>> collectDeque() {
-		return Collections8.toCollector(Collections8.newDeque());
+		return toCollector(newDeque());
 	}
 
 	public static <T> Collector<T, ?, List<T>> collectList() {
-		return Collections8.toCollector(Collections8.newList());
+		return toCollector(newList());
 	}
 
 	public static <T> Collector<T, ?, Queue<T>> collectQueue() {
-		return Collections8.toCollector(Collections8.newQueue());
+		return toCollector(newQueue());
 	}
 
 	public static <T> Collector<T, ?, Set<T>> collectSet() {
-		return Collections8.toCollector(Collections8.newSet());
+		return toCollector(newSet());
 	}
 
 	public static <T> Collector<T, ?, SortedSet<T>> collectSortedSet() {
-		return Collections8.toCollector(Collections8.newSortedSet());
+		return toCollector(newSortedSet());
 	}
 
 	/**
@@ -294,7 +295,7 @@ public interface Collections8 {
 	}
 
 	public static <T, A> Comparator<T> sortBy(List<A> orderByMe, Function<T, A> map) {
-		return (x, y) -> new CompareToBuilder().append(noNegIndex(orderByMe.indexOf(map.apply(x))), noNegIndex(orderByMe.indexOf(map.apply(y)))).toComparison();
+		return (x, y) -> new Integer(noNegIndex(orderByMe.indexOf(map.apply(x)))).compareTo(new Integer(noNegIndex(orderByMe.indexOf(map.apply(y)))));
 	}
 
 	public static <T> Comparator<T> sortBy(List<T> orderByMe) {
@@ -464,7 +465,7 @@ public interface Collections8 {
 	}
 
 	public static <T> Predicate<T> is(T x) {
-		return t -> new EqualsBuilder().append(t, x).isEquals();
+		return t -> equals(t, x);
 	}
 
 	public static <T> Predicate<T> isNot(T x) {
@@ -544,11 +545,11 @@ public interface Collections8 {
 	}
 
 	public static <T, S extends Comparable<? super S>> List<T> sortBy(Collection<T> sortMe, Map<T, S> sortByMe) {
-		return sortMe.stream().sorted((x, y) -> new CompareToBuilder().append(sortByMe.get(x), sortByMe.get(y)).toComparison()).collect(collectList());
+		return sortMe.stream().sorted((x, y) -> sortByMe.get(x).compareTo(sortByMe.get(y))).collect(collectList());
 	}
 
 	public static <T> List<Pair<T>> match(List<T> keys, List<T> values) {
-		return values.stream().parallel().filter(Collections8.containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(Collections8.collectList());
+		return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
 	}
 
 	public static <T> T optional(T value, Supplier<T> orElse) {
@@ -572,6 +573,23 @@ public interface Collections8 {
 	}
 
 	public static String join(Collection<String> strings, String delimiter) {
-		return stream(strings).collect(Collectors.joining(delimiter));
+		return stream(strings).collect(joining(delimiter));
+	}
+
+	/**
+	 * @see http://stackoverflow.com/questions/24010109/java-8-stream-reverse-order
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> Stream<T> reverse(Stream<T> input) {
+		Object[] temp = input.toArray();
+		return (Stream<T>) IntStream.range(0, temp.length).mapToObj(i -> temp[temp.length - i - 1]);
+	}
+
+	public static boolean equals(Object first, Object second) {
+		if (first == second) return true;
+		if (first == null && second == null) return true;
+		if (first == null || second == null) return false;
+		if (first.getClass() != second.getClass()) return false;
+		return first.equals(second);
 	}
 }
