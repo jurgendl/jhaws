@@ -465,7 +465,7 @@ public interface Collections8 {
 	}
 
 	public static <T> Predicate<T> is(T x) {
-		return t -> equals(t, x);
+		return t -> isEquals(t, x);
 	}
 
 	public static <T> Predicate<T> isNot(T x) {
@@ -553,7 +553,15 @@ public interface Collections8 {
 	}
 
 	public static <T> T optional(T value, Supplier<T> orElse) {
-		return Optional.ofNullable(value).orElse(orElse.get());
+		return Optional.ofNullable(value).orElseGet(orElse);
+	}
+
+	public static <T> T optional(T oldValue, T newValue, Consumer<T> whenDifferent) {
+		if (notEquals(oldValue, newValue)) {
+			whenDifferent.accept(newValue);
+			return newValue;
+		}
+		return oldValue;
 	}
 
 	public static <T> Consumer<T> consume() {
@@ -585,7 +593,11 @@ public interface Collections8 {
 		return (Stream<T>) IntStream.range(0, temp.length).mapToObj(i -> temp[temp.length - i - 1]);
 	}
 
-	public static boolean equals(Object first, Object second) {
+	public static boolean notEquals(Object first, Object second) {
+		return !isEquals(first, second);
+	}
+
+	public static boolean isEquals(Object first, Object second) {
 		if (first == second) return true;
 		if (first == null && second == null) return true;
 		if (first == null || second == null) return false;
