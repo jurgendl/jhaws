@@ -115,8 +115,9 @@ public class Processes {
 		} catch (IOException e1) {
 			throw new UncheckedIOException(e1);
 		}
+		Consumer<String> allConsumers = null;
 		if (consumer != null) {
-			Consumer<String> allConsumers = consumer;
+			allConsumers = consumer;
 			Arrays.stream(consumers).forEach(allConsumers::andThen);
 			try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
 				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
@@ -126,9 +127,8 @@ public class Processes {
 		}
 		try {
 			int exitValue = process.waitFor();
-			if (exitValue != 0) {
-				throw new UncheckedIOException(new IOException("exit value " + exitValue));
-			}
+			if (allConsumers != null)
+				allConsumers.accept("exit value=" + exitValue);
 		} catch (InterruptedException e) {
 			//
 		} finally {
