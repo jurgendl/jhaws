@@ -9,8 +9,8 @@ public interface RunUntil extends Runnable {
 	@Override
 	default public void run() {
 		AtomicReference<Boolean> running = new AtomicReference<>(Boolean.TRUE);
+		long wait;
 		do {
-			long wait;
 			if ((wait = infinite(running)) > 0l) {
 				try {
 					Thread.sleep(wait);
@@ -18,6 +18,6 @@ public interface RunUntil extends Runnable {
 					//
 				}
 			}
-		} while (running.get());
+		} while (running.get() && wait >= 0);
 	}
 }
