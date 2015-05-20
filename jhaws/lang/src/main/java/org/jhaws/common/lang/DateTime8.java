@@ -22,6 +22,36 @@ public class DateTime8 {
         DateTime8.decimalSeperator = decimalSeperator;
     }
 
+	public static String printshort(Duration duration) {
+		long days = duration.toDays();
+		duration = duration.minusDays(days);
+		long hours = duration.toHours();
+		duration = duration.minusHours(hours);
+		long minutes = duration.toMinutes();
+		duration = duration.minusMinutes(minutes);
+		long seconds = duration.toMillis() / 1000;
+		duration = duration.minusSeconds(seconds);
+		long millis = duration.toMillis();
+		StringBuilder formatted = new StringBuilder();
+		if ((days != 0) || (formatted.length() > 0)) {
+			throw new UnsupportedOperationException();
+		}
+		if ((hours != 0) || (formatted.length() > 0)) {
+			formatted.append(hours).append(":");
+		}
+		if ((minutes != 0) || (formatted.length() > 0)) {
+			formatted.append(minutes).append(":");
+		}
+		if ((seconds != 0) || (formatted.length() > 0)) {
+			if (millis > 0) {
+				formatted.append(seconds).append(getDecimalSeperator()).append(millis).append("s");
+			} else {
+				formatted.append(seconds);
+			}
+		}
+		return formatted.toString();
+	}
+
     public static String print(Duration duration) {
         long days = duration.toDays();
         duration = duration.minusDays(days);
