@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.jhaws.common</groupId>
-			<artifactId>web</artifactId>
+			<artifactId>jhaws-web</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

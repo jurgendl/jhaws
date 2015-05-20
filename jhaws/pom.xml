@@ -119,7 +119,7 @@
 		<repository>
 			<id>github</id>
 			<!-- <url>https://github.com/jurgendl/mvn-repo/raw/master/releases/</url> -->
-			<url>http://raw.githubusercontent.com/jurgendl/mvn-repo/master/releases/</url>
+			<url>https://raw.githubusercontent.com/jurgendl/mvn-repo/master/releases/</url>
 		</repository>
 	</repositories>
 	<build>
