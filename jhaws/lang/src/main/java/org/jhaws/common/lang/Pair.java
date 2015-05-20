@@ -9,6 +9,10 @@ public class Pair<P> extends KeyValue<P, P> {
 		super();
 	}
 
+	public Pair(P keyValue) {
+		super(keyValue, keyValue);
+	}
+
 	public Pair(P key, P value) {
 		super(key, value);
 	}
