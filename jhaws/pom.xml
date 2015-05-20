@@ -41,7 +41,8 @@
 		<module>io</module>
 		<module>net</module>
 		<module>ldap</module>
-		<module>lucene4</module>
+		<module>web</module>
+		<module>wicket</module>
 	</modules>
 	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
 	<profiles>

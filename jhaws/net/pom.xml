@@ -6,7 +6,7 @@
 		<version>1.0.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>net</artifactId>
+	<artifactId>jhaws-net</artifactId>
 	<name>net</name>
 	<description>http(s) protocol made simple, build around Apache httpcomponents</description>
 	<properties>
@@ -21,7 +21,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jhaws.common</groupId>
-			<artifactId>io</artifactId>
+			<artifactId>jhaws-io</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

@@ -6,7 +6,7 @@
 		<version>1.0.2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>io</artifactId>
+	<artifactId>jhaws-io</artifactId>
 	<name>io</name>
 	<description>io</description>
 	<dependencies>
