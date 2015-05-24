@@ -3,6 +3,11 @@ package org.jhaws.common.lang;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.regex.Pattern;
 
 public class DateTime8 {
     public static char decimalSeperator;
@@ -83,4 +88,40 @@ public class DateTime8 {
         }
         return formatted.toString();
     }
+
+	public static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
+			.appendValue(ChronoField.MINUTE_OF_HOUR).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE).appendLiteral(".").appendValue(ChronoField.MILLI_OF_SECOND)
+			.toFormatter();
+
+	public static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
+			.appendValue(ChronoField.MINUTE_OF_HOUR).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE).toFormatter();
+
+	public static Pattern PS = Pattern.compile("(\\d\\d:\\d\\d:\\d\\d)");
+
+	public static Pattern PM = Pattern.compile("(\\d\\d:\\d\\d:\\d\\d.\\d\\d)");
+
+	public static Pattern PL = Pattern.compile("(\\d\\d:\\d\\d:\\d\\d.\\d\\d\\d)");
+
+	public static LocalTime parseTime(String s) {
+		LocalTime time;
+		if (PL.matcher(s).matches()) {
+			time = LocalTime.parse(s, TIME_PARSER_MILLIS);
+		} else if (PM.matcher(s).matches()) {
+			time = LocalTime.parse(s, TIME_PARSER_MILLIS);
+			time = time.with(ChronoField.MILLI_OF_SECOND, time.get(ChronoField.MILLI_OF_SECOND) * 10);
+		} else if (PS.matcher(s).matches()) {
+			time = LocalTime.parse(s, TIME_PARSER_SEC);
+		} else {
+			throw new IllegalArgumentException();
+		}
+		return time;
+	}
+
+	public static Duration parseDuration(String from, String to) {
+		return Duration.between(parseTime(from), parseTime(to));
+	}
+
+	public static Duration toDuration(LocalTime time) {
+		return Duration.between(LocalTime.of(0, 0, 0), time);
+	}
 }
