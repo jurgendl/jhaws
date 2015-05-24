@@ -664,7 +664,7 @@ public class FilePath implements Path, Externalizable {
 
 	public static String getConvertedSize(Long size) {
 		if (size == null || size == 0l) {
-			return "";
+			return 0 + UNITS[0];
 		}
 		int scale = (int) (Math.log10(size) / 3);
 		NumberFormat nf = NumberFormat.getNumberInstance();
