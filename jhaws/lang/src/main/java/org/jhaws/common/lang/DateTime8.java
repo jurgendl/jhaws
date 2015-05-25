@@ -10,6 +10,8 @@ import java.time.temporal.ChronoField;
 import java.util.regex.Pattern;
 
 public class DateTime8 {
+	public static final LocalTime START_OF_DAY = LocalTime.of(0, 0, 0);
+
 	public static char decimalSeperator;
 
 	static {
@@ -144,6 +146,10 @@ public class DateTime8 {
 	}
 
 	public static Duration toDuration(LocalTime time) {
-		return Duration.between(LocalTime.of(0, 0, 0), time);
+		return Duration.between(START_OF_DAY, time);
+	}
+
+	public static LocalTime toTime(Duration duration) {
+		return START_OF_DAY.plus(duration);
 	}
 }
