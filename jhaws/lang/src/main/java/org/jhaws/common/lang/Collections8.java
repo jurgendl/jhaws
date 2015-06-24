@@ -48,6 +48,7 @@ import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -603,5 +604,9 @@ public interface Collections8 {
 		if (first == null || second == null) return false;
 		if (first.getClass() != second.getClass()) return false;
 		return first.equals(second);
+	}
+
+	public static <T, G> Map<G, List<T>> groupBy(Stream<T> stream, Function<T, G> groupBy) {
+		return stream.collect(Collectors.groupingBy(groupBy));
 	}
 }

@@ -2410,4 +2410,12 @@ public class FilePath implements Path, Externalizable {
 		}
 		return sb.toString();
 	}
+
+	public String getCanonicalPath() {
+		try {
+			return toFile().getCanonicalPath();
+		} catch (IOException ex) {
+			return normalize().toString();
+		}
+	}
 }
