@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
@@ -127,10 +128,13 @@ public class FilePathTest {
 			Assert.assertTrue(file2.exists());
 			Assert.assertTrue(file3.exists());
 			Assert.assertTrue(file4.exists());
-			List<FilePath> doubles = tmpDir.deleteDoubles();
+			Collection<FilePath>[] doubles = tmpDir.deleteDuplicates();
 			Assert.assertTrue(file1.exists() != file2.exists());
-			Assert.assertEquals(1, doubles.size());
-			Assert.assertTrue(doubles.iterator().next().notExists());
+			Assert.assertEquals(1, doubles.length);
+			Arrays.stream(doubles).forEach(c -> {
+				c.stream().limit(1).forEach(fp -> Assert.assertTrue(fp.exists()));
+				c.stream().skip(1).forEach(fp -> Assert.assertTrue(fp.notExists()));
+			});
 			Assert.assertTrue(file3.exists());
 			Assert.assertTrue(file4.exists());
 		} catch (Exception ex) {

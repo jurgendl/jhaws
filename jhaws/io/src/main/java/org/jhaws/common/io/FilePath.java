@@ -60,6 +60,7 @@ import java.text.NumberFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -1208,43 +1209,107 @@ public class FilePath implements Path, Externalizable {
 		return true;
 	}
 
-	public List<FilePath> deleteDoubles() throws UncheckedIOException {
-		final List<FilePath> deleted = new ArrayList<>();
+	public Collection<FilePath>[] deleteDuplicates() throws UncheckedIOException {
+		return deleteDuplicates(true);
+	}
+
+	public static class FindDuplicateMeta {
+		private final FilePath file;
+		private final Long length;
+		private Long check;
+
+		public FindDuplicateMeta(FilePath file) {
+			this.file = file;
+			this.length = file.getFileSize();
+		}
+
+		public FilePath getFile() {
+			return file;
+		}
+
+		public Long getLength() {
+			return length;
+		}
+
+		public Long getCheck() {
+			if (check == null) check = file.adler32();
+			return check;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((file == null) ? 0 : file.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) return true;
+			if (obj == null) return false;
+			if (getClass() != obj.getClass()) return false;
+			FindDuplicateMeta other = (FindDuplicateMeta) obj;
+			if (file == null) {
+				if (other.file != null) return false;
+			} else if (!file.equals(other.file)) return false;
+			return true;
+		}
+
+		public String naturalKey() {
+			return getLength() + "_" + getCheck();
+		}
+
+		public boolean naturalEquals(FindDuplicateMeta other) {
+			if (!getLength().equals(other.getLength())) {
+				return false;
+			}
+			return getCheck().equals(other.getCheck());
+		}
+
+		@Override
+		public String toString() {
+			return "FindDoublesMeta [file=" + file + ", length=" + length + ", check=" + check + "]";
+		}
+	}
+
+	public static class FindDuplicateData {
+		private final List<FindDuplicateMeta> files = new ArrayList<>();
+		private final Map<String, List<FilePath>> duplicates = new HashMap<>();
+
+		public boolean add(FilePath file) {
+			FindDuplicateMeta meta = new FindDuplicateMeta(file);
+			FindDuplicateMeta duplicate = files.stream().filter(meta::naturalEquals).findFirst().orElse(null);
+			if (duplicate != null) {
+				String key = duplicate.naturalKey();
+				List<FilePath> list = duplicates.get(key);
+				if (list == null) {
+					list = new ArrayList<>();
+					duplicates.put(key, list);
+					list.add(duplicate.getFile());
+				}
+				list.add(meta.getFile());
+			}
+			files.add(meta);
+			return duplicate != null;
+		}
+
+		@SuppressWarnings("unchecked")
+		public Collection<FilePath>[] getDuplicates() {
+			return duplicates.values().toArray(new Collection[duplicates.size()]);
+		}
+	}
+
+	public Collection<FilePath>[] deleteDuplicates(boolean doDelete) throws UncheckedIOException {
+		FindDuplicateData data = new FindDuplicateData();
 		try {
-			final Map<Long, Map<FilePath, Long>> files = new HashMap<>();
 			Files.walkFileTree(this.getPath(), new HashSet<FileVisitOption>(), 1, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if (attrs.isRegularFile()) {
-						long size = attrs.size();
-						FilePath filePath = new FilePath(file);
-						Map<FilePath, Long> checkSum = files.get(size);
-						if (checkSum == null) {
-							checkSum = new HashMap<>();
-							checkSum.put(filePath, null);
-							files.put(size, checkSum);
-						} else {
-							Long crc32 = null;
-							boolean delete = false;
-							for (Map.Entry<FilePath, Long> entry : checkSum.entrySet()) {
-								Long other_crc32 = entry.getValue();
-								if (other_crc32 == null) {
-									other_crc32 = entry.getKey().crc32();
-									checkSum.put(entry.getKey(), other_crc32);
-								}
-								if (crc32 == null) {
-									crc32 = filePath.crc32();
-								}
-								if (crc32 == other_crc32.longValue()) {
-									delete = true;
-									break;
-								}
-							}
-							if (delete) {
-								deleted.add(filePath.delete());
-							} else {
-								checkSum.put(filePath, crc32);
-							}
+						FilePath fp = new FilePath(file);
+						if (data.add(fp) && doDelete) {
+							fp.delete();
 						}
 					}
 					return super.visitFile(file, attrs);
@@ -1253,7 +1318,7 @@ public class FilePath implements Path, Externalizable {
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
-		return deleted;
+		return data.getDuplicates();
 	}
 
 	public boolean deleteIfExists() throws UncheckedIOException {
