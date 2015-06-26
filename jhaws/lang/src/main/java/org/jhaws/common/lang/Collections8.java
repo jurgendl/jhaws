@@ -339,6 +339,14 @@ public interface Collections8 {
 		}
 	}
 
+	public static <K, V> Stream<V> streamValues(Map<K, V> map) {
+		return stream(map).map(entry -> entry.getValue());
+	}
+
+	public static <K, V> Stream<Stream<V>> streamDeepValues(Map<K, ? extends Collection<V>> map) {
+		return stream(map).map(entry -> entry.getValue()).map(collection -> stream(collection));
+	}
+
 	public static <K, V> Stream<Map.Entry<K, V>> stream(Map<K, V> map) {
 		return stream(false, map);
 	}
@@ -606,7 +614,11 @@ public interface Collections8 {
 		return first.equals(second);
 	}
 
-	public static <T, G> Map<G, List<T>> groupBy(Stream<T> stream, Function<T, G> groupBy) {
+	public static <V, K> Map<K, List<V>> groupBy(Stream<V> stream, Function<V, K> groupBy) {
 		return stream.collect(Collectors.groupingBy(groupBy));
+	}
+
+	public static <T> Comparator<T> dummyComparator() {
+		return (x, y) -> 0;
 	}
 }
