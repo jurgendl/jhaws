@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TransferQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -180,7 +181,7 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
-		return stream.collect(toMap(e -> e.getKey(), e -> e.getValue(), rejectDuplicateKeys(), mapSupplier));
+		return stream.collect(toMap(keyMapper(), valueMapper(), rejectDuplicateKeys(), mapSupplier));
 	}
 
 	public static <K, V> Supplier<Map<K, V>> newLinkedMap() {
@@ -340,11 +341,11 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Stream<V> streamValues(Map<K, V> map) {
-		return stream(map).map(entry -> entry.getValue());
+		return stream(map).map(valueMapper());
 	}
 
 	public static <K, V> Stream<Stream<V>> streamDeepValues(Map<K, ? extends Collection<V>> map) {
-		return stream(map).map(entry -> entry.getValue()).map(collection -> stream(collection));
+		return stream(map).map(valueMapper()).map(collection -> stream(collection));
 	}
 
 	public static <K, V> Stream<Map.Entry<K, V>> stream(Map<K, V> map) {
@@ -620,5 +621,21 @@ public interface Collections8 {
 
 	public static <T> Comparator<T> dummyComparator() {
 		return (x, y) -> 0;
+	}
+
+	public static <T> Collection<Collection<T>> split(Collection<T> all, int maxSize) {
+		int totalSize = all.size();
+		AtomicInteger ai = new AtomicInteger(0);
+		int groups = (totalSize / maxSize) + (totalSize % maxSize > 0 ? 1 : 0);
+		Map<Integer, List<T>> g = all.stream().parallel().collect(Collectors.groupingBy(s -> ai.addAndGet(1) % groups));
+		return stream(g).map(valueMapper()).collect(collectList());
+	}
+
+	public static <K, V> Function<Entry<K, V>, V> valueMapper() {
+		return e -> e.getValue();
+	}
+
+	public static <K, V> Function<Entry<K, V>, K> keyMapper() {
+		return e -> e.getKey();
 	}
 }

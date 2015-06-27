@@ -2,6 +2,7 @@ package org.jhaws.common.lang;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jhaws.common.lang.functions.EConsumer;
@@ -31,18 +32,18 @@ public class Collections8Test {
 	public void testException() {
 		List<String> asList = Arrays.asList("1", "2", "3");
 		try {
-			asList.stream().parallel().filter(EPredicate.enhance(e -> throwEx(e))).forEach(EConsumer.enhance(e -> throwEx(e)));
+			asList.stream().filter(EPredicate.enhance(e -> throwEx(e))).forEach(EConsumer.enhance(e -> throwEx(e)));
 			Assert.fail("must throw exception");
 		} catch (Exception e) {
-			Assert.assertTrue(e.getCause() instanceof ChkException);
-			Assert.assertTrue(asList.contains(e.getCause().getMessage()));
+			Assert.assertTrue("" + e.getCause(), e.getCause() instanceof ChkException);
+			Assert.assertTrue(e.getCause().getMessage(), asList.contains(e.getCause().getMessage()));
 		}
 		try {
-			asList.stream().parallel().filter((EPredicate<String>) e -> throwEx(e)).forEach((EConsumer<String>) e -> throwEx(e));
+			asList.stream().filter((EPredicate<String>) e -> throwEx(e)).forEach((EConsumer<String>) e -> throwEx(e));
 			Assert.fail("must throw exception");
 		} catch (Exception e) {
-			Assert.assertTrue(e.getCause() instanceof ChkException);
-			Assert.assertTrue(asList.contains(e.getCause().getMessage()));
+			Assert.assertTrue("" + e.getCause(), e.getCause() instanceof ChkException);
+			Assert.assertTrue(e.getCause().getMessage(), asList.contains(e.getCause().getMessage()));
 		}
 	}
 
@@ -56,5 +57,19 @@ public class Collections8Test {
 		public ChkException(String message) {
 			super(message);
 		}
+	}
+
+	@Test
+	public void testSizePartitioning() {
+		HashSet<String> all = new HashSet<>();
+		for (int i = 0; i < 168000; i++) {
+			all.add(java.util.UUID.randomUUID().toString());
+		}
+		int maxSize = 9000;
+		HashSet<String> all2 = new HashSet<>();
+		for (Collection<String> gg : Collections8.split(all, maxSize)) {
+			all2.addAll(gg);
+		}
+		Assert.assertEquals(all, all2);
 	}
 }
