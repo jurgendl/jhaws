@@ -624,6 +624,7 @@ public interface Collections8 {
 	}
 
 	public static <T> Collection<Collection<T>> split(Collection<T> all, int maxSize) {
+		if (all.size() <= maxSize) return Arrays.asList(all);
 		int totalSize = all.size();
 		AtomicInteger ai = new AtomicInteger(0);
 		int groups = (totalSize / maxSize) + (totalSize % maxSize > 0 ? 1 : 0);
