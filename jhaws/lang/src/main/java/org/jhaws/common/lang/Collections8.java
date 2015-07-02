@@ -48,6 +48,8 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -63,6 +65,42 @@ import java.util.stream.StreamSupport;
  * @since 1.8
  */
 public interface Collections8 {
+	public static class RegexIterator implements Iterator<String> {
+		protected Pattern pattern;
+
+		protected String regex;
+
+		protected Matcher matcher;
+
+		protected Boolean hasNext = null;
+
+		public RegexIterator(String text, String regex) {
+			this.pattern = Pattern.compile(regex);
+			this.regex = regex;
+			this.matcher = pattern.matcher(text);
+		}
+
+		@Override
+		public boolean hasNext() {
+			if (hasNext == null) {
+				hasNext = matcher.find();
+			}
+			return hasNext;
+		}
+
+		@Override
+		public String next() {
+			if (hasNext == null) {
+				hasNext();
+			}
+			if (hasNext) {
+				hasNext = null;
+				return matcher.group();
+			}
+			return null;
+		}
+	}
+
 	public static class PathIterator implements Iterator<Path> {
 		protected Path path;
 
@@ -638,5 +676,9 @@ public interface Collections8 {
 
 	public static <K, V> Function<Entry<K, V>, K> keyMapper() {
 		return e -> e.getKey();
+	}
+
+	public static Stream<String> regex(String text, String regex) {
+		return stream(new RegexIterator(text, regex));
 	}
 }
