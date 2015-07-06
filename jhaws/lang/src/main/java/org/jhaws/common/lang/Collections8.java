@@ -359,15 +359,23 @@ public interface Collections8 {
 	}
 
 	public static <T> Stream<T> stream(boolean parallel, Collection<T> collection) {
-		return StreamSupport.stream(collection.spliterator(), parallel);
+		return collection == null ? Stream.empty() : StreamSupport.stream(collection.spliterator(), parallel);
 	}
 
-	public static <T> Stream<T> stream(Iterable<T> iteratable) {
-		return StreamSupport.stream(iteratable.spliterator(), false);
+	public static <T> Stream<T> stream(Iterable<T> iterable) {
+		return stream(false, iterable);
 	}
 
 	public static <T> Stream<T> stream(Iterator<T> iterator) {
-		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
+		return stream(false, iterator);
+	}
+
+	public static <T> Stream<T> stream(boolean parallel, Iterable<T> iterable) {
+		return iterable == null ? Stream.empty() : StreamSupport.stream(iterable.spliterator(), parallel);
+	}
+
+	public static <T> Stream<T> stream(boolean parallel, Iterator<T> iterator) {
+		return iterator == null ? Stream.empty() : StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
 	}
 
 	public static Stream<String> line(Path path) {
@@ -391,7 +399,7 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Stream<Map.Entry<K, V>> stream(boolean parallel, Map<K, V> map) {
-		return StreamSupport.stream(map.entrySet().spliterator(), parallel);
+		return map == null ? Stream.empty() : StreamSupport.stream(map.entrySet().spliterator(), parallel);
 	}
 
 	public static Stream<Path> stream(Path path) {
@@ -409,6 +417,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T> Stream<T> stream(boolean parallel, T... array) {
+		if (array == null) return Stream.empty();
 		// StreamSupport.stream(Spliterators.spliterator(array, 0, array.length, Spliterator.ORDERED | Spliterator.IMMUTABLE), parallel);
 		Stream<T> stream = Arrays.stream(array);
 		if (parallel) stream = stream.parallel();
@@ -662,6 +671,7 @@ public interface Collections8 {
 	}
 
 	public static <T> Collection<Collection<T>> split(Collection<T> all, int maxSize) {
+		if (maxSize < 1) throw new IllegalArgumentException("maxSize<1");
 		if (all.size() <= maxSize) return Arrays.asList(all);
 		int totalSize = all.size();
 		AtomicInteger ai = new AtomicInteger(0);
