@@ -378,7 +378,7 @@ public interface Collections8 {
 		return iterator == null ? Stream.empty() : StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
 	}
 
-	public static Stream<String> line(Path path) {
+	public static Stream<String> lines(Path path) {
 		try {
 			return Files.lines(path);
 		} catch (IOException e) {

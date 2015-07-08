@@ -2368,6 +2368,7 @@ public class FilePath implements Path, Externalizable {
 		try (BufferedWriter bufferedWriter = this.newBufferedWriter(options)) {
 			for (CharSequence line : lines) {
 				bufferedWriter.write(line.toString());
+				bufferedWriter.newLine();
 			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
