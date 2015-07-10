@@ -691,4 +691,8 @@ public interface Collections8 {
 	public static Stream<String> regex(String text, String regex) {
 		return stream(new RegexIterator(text, regex));
 	}
+
+	public static <T> T[] copy(T[] array) {
+		return Arrays.copyOf(array, array.length);
+	}
 }
