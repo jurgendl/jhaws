@@ -11,13 +11,14 @@
 	http://cemerick.com/2010/08/24/hosting-maven-repos-on-github/
 	
 	deploy snapshot:
-	mvn -DaltDeploymentRepository=snapshot-repo::default::file:../mvn-repo/snapshots clean deploy
+	mvn -DaltDeploymentRepository=snapshot-repo::default::file:../../mvn-repo/snapshots clean deploy
 	release:
 	mvn release:prepare
 	mvn release:perform
 	
+	mvn release:prepare
 	git checkout modules-2.0.0
-	mvn -DaltDeploymentRepository=repo::default::file:../mvn-repo/releases clean deploy
+	mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy
 	git checkout master
 	-->
 	<properties>
