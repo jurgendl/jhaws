@@ -17,3 +17,4 @@ org.eclipse.jdt.core.prefs
 /jhaws/lang/.settings/org.eclipse.wst.common.project.facet.core.xml
 *.releaseBackup
 release.properties
+pom.xml.releaseBackup
