@@ -9,12 +9,14 @@
 	<url>https://github.com/jurgendl/jhaws</url>
 	<!--
 	http://cemerick.com/2010/08/24/hosting-maven-repos-on-github/
+	
 	deploy snapshot:
 	mvn -DaltDeploymentRepository=snapshot-repo::default::file:../mvn-repo/snapshots clean deploy
 	release:
 	mvn release:prepare
 	mvn release:perform
-	git checkout jhaws-1.0.2
+	
+	git checkout jhaws-2.0.0
 	mvn -DaltDeploymentRepository=repo::default::file:../mvn-repo/releases clean deploy
 	git checkout master
 	-->
