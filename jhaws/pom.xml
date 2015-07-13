@@ -16,7 +16,7 @@
 	mvn release:prepare
 	mvn release:perform
 	
-	git checkout jhaws-2.0.0
+	git checkout modules-2.0.0
 	mvn -DaltDeploymentRepository=repo::default::file:../mvn-repo/releases clean deploy
 	git checkout master
 	-->
