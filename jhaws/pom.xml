@@ -105,7 +105,7 @@
 		<developer>
 			<id />
 			<timezone>+1</timezone>
-			<name>Jurgen</name>
+			<name>jurgendl</name>
 			<roles>
 				<role>Project owner</role>
 			</roles>
@@ -213,15 +213,17 @@
 					<charset>${project.build.sourceEncoding}</charset>
 					<docencoding>${project.build.sourceEncoding}</docencoding>
 					<encoding>${project.build.sourceEncoding}</encoding>
-					<sourceExcludes>
-						<sourceExclude>**/.svn/**</sourceExclude>
-					</sourceExcludes>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 	<reporting>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -255,7 +257,7 @@
 				<!--https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities-->
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>1.2.1</version>
+				<version>1.2.11</version>
 				<!-- in build/plugins -->
 				<!--<configuration>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
@@ -310,11 +312,14 @@
 					<classDirectory>${project.build.directory}/classes</classDirectory>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
+			<!-- makes site size very large -->
+			<!--
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jxr-plugin</artifactId>
 				<version>2.4</version>
-			</plugin> -->
+			</plugin>
+			-->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
