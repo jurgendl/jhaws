@@ -47,7 +47,7 @@ public interface Indexable<T> {
 		Document d = new Document();
 		if (getUuid() != null) d.add(new StringField(LuceneIndex.DOC_UUID, getUuid(), Field.Store.YES));
 		if (getVersion() != null) d.add(new IntField(LuceneIndex.DOC_VERSION, getVersion(), Field.Store.YES));
-        d.add(new LongField(LuceneIndex.DOC_LASTMOD, Date.from(getLastmodified().toInstant(ZoneOffset.ofHours(0))).getTime(), Field.Store.YES));
+		d.add(new LongField(LuceneIndex.DOC_LASTMOD, Date.from(getLastmodified().toInstant(ZoneOffset.ofHours(0))).getTime(), Field.Store.YES));
 		return d;
 	}
 
