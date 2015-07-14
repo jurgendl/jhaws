@@ -74,6 +74,8 @@ public class LuceneIndex implements Runnable {
 
     public static final String DOC_UUID = "DOC_UUID";
 
+    public static final String DOC_LASTMOD = "lastmod";
+
     protected Directory index;
 
     protected Analyzer indexAnalyzer;
