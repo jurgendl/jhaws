@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD })
 @Inherited
 public @interface IndexField {
-	String name() default "";
+	String value() default "";
 }

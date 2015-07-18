@@ -1,32 +1,19 @@
 package org.jhaws.common.lucene;
 
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.apache.lucene.document.Document;
-import org.jhaws.common.lucene.Indexable.IndexableAdapter;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class LuceneDocumentBuilderTest {
-	public static class It extends IndexableAdapter<It> {
+	public static class It extends BuildableIndexable<It> {
 		@IndexField
 		private String field1;
 
 		@IndexField
 		private String field2;
-
-		@Override
-		public It retrieve(Document d) {
-			retrieveBase(d);
-			return this;
-		}
-
-		@Override
-		public Document indexable() {
-			Document d = super.indexable();
-			return d;
-		}
 
 		public String getField1() {
 			return field1;
@@ -47,16 +34,25 @@ public class LuceneDocumentBuilderTest {
 
 	@Test
 	public void test() {
-		It it = new It();
-		it.setLastmodified(new Date());
-		it.setUuid("uuid");
-		it.setVersion(1);
-		LuceneDocumentBuilder<It> b = new LuceneDocumentBuilder<It>() {};
-		Document d = b.buildDocument(it);
-		It it2 = b.retrieveFromDocument(d);
-		Assert.assertFalse(it == it2);
-		Assert.assertEquals(it.getUuid(), it2.getUuid());
-		Assert.assertEquals(it.getVersion(), it2.getVersion());
-		Assert.assertEquals(it.getLastmodified(), it2.getLastmodified());
+		try {
+			It it = new It();
+			it.setLastmodified(LocalDateTime.now());
+			it.setUuid("uuid");
+			it.setVersion(1);
+			it.setField1("field1");
+			it.setField2("field2");
+			Document d = it.indexable();
+			It it2 = new It();
+			it2 = it2.retrieve(d);
+			Assert.assertFalse(it == it2);
+			Assert.assertEquals(it.getUuid(), it2.getUuid());
+			Assert.assertEquals(it.getVersion(), it2.getVersion());
+			Assert.assertEquals(it.getLastmodified(), it2.getLastmodified());
+			Assert.assertEquals(it.getField1(), it2.getField1());
+			Assert.assertEquals(it.getField2(), it2.getField2());
+		} catch (RuntimeException ex) {
+			ex.printStackTrace(System.out);
+			throw ex;
+		}
 	}
 }

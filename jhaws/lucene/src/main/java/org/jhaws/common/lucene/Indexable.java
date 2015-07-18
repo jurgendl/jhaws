@@ -13,32 +13,6 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.Term;
 
 public interface Indexable<T> {
-	public static abstract class IndexableAdapter<X> implements Indexable<X> {
-		private Integer version;
-
-		private String uuid;
-
-		@Override
-		public Integer getVersion() {
-			return version;
-		}
-
-		@Override
-		public void setVersion(Integer version) {
-			this.version = version;
-		}
-
-		@Override
-		public String getUuid() {
-			return uuid;
-		}
-
-		@Override
-		public void setUuid(String uuid) {
-			this.uuid = uuid;
-		}
-	}
-
 	public default Term term() {
 		return new Term(LuceneIndex.DOC_UUID, getUuid().toString());
 	}
@@ -54,7 +28,12 @@ public interface Indexable<T> {
 	public default void retrieveBase(Document doc) {
 		if (doc.getField(LuceneIndex.DOC_UUID) != null) setUuid(doc.get(LuceneIndex.DOC_UUID));
 		if (doc.getField(LuceneIndex.DOC_VERSION) != null) setVersion(doc.getField(LuceneIndex.DOC_VERSION).numericValue().intValue());
-		if (doc.getField(LuceneIndex.DOC_LASTMOD) != null) setLastmodified(new Date(Long.class.cast(doc.getField(LuceneIndex.DOC_LASTMOD).numericValue())));
+		if (doc.getField(LuceneIndex.DOC_LASTMOD) != null) {
+			Number l = doc.getField(LuceneIndex.DOC_LASTMOD).numericValue();
+			Date d = new Date(Long.class.cast(l));
+			LocalDateTime dt = LocalDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault());
+			setLastmodified(dt);
+		}
 	}
 
 	public T retrieve(Document doc);
@@ -63,7 +42,7 @@ public interface Indexable<T> {
 		return LocalDateTime.ofInstant(new Date(0).toInstant(), ZoneId.systemDefault());
 	}
 
-    public default void setLastmodified(Date lastmodified) {
+	public default void setLastmodified(LocalDateTime lastmodified) {
 		//
 	}
 
