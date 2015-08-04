@@ -21,7 +21,7 @@ public class DateTime8Test {
 
 	@Test
 	public void testPrint() {
-		System.out.println(DateTime8.TIME_PARSER_SEC.format(DateTime8.toTime(Duration.ofMillis(8921266l))));
+		System.out.println(DateTime8.TIME_PARSER_SEC.format(DateTime8.toLocalTime(Duration.ofMillis(8921266l))));
 		System.out.println(DateTime8.print(Duration.ofMillis(8921266l)));
 		System.out.println(DateTime8.printshort(Duration.ofMillis(8921266l)));
 	}

@@ -1,14 +1,26 @@
 package org.jhaws.common.lang;
 
+import java.nio.file.attribute.FileTime;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
+import java.util.Date;
 import java.util.regex.Pattern;
 
+/**
+ * @see http://blog.progs.be/542/date-to-java-time
+ */
 public class DateTime8 {
 	public static final LocalTime START_OF_DAY = LocalTime.of(0, 0, 0);
 
@@ -149,7 +161,71 @@ public class DateTime8 {
 		return Duration.between(START_OF_DAY, time);
 	}
 
-	public static LocalTime toTime(Duration duration) {
+	public static LocalTime toLocalTime(Duration duration) {
 		return START_OF_DAY.plus(duration);
+	}
+	
+	public static LocalDate toLocalDate(Date date) {
+		return toLocalDate(date, ZoneId.systemDefault());
+	}
+	
+	public static LocalDate toLocalDate(Instant instant) {
+		return toLocalDate(instant, ZoneId.systemDefault());
+	}
+	
+	public static LocalDate toLocalDate(Date date, ZoneId zone) {
+		return toLocalDate( Instant.ofEpochMilli(date.getTime()), zone );
+	}
+	
+	public static LocalDate toLocalDate(Instant instant, ZoneId zone) {
+		return LocalDateTime.ofInstant(instant, zone).toLocalDate();
+	}
+
+	public static LocalDateTime toLocalDateTime(Date date) {
+		return toLocalDateTime(date, ZoneId.systemDefault());
+	}
+
+	public static LocalDateTime toLocalDateTime(Date date, ZoneId zone) {
+		return toLocalDateTime(date.toInstant(), zone);
+	}
+
+	public static LocalDateTime toLocalDateTime(Instant instant, ZoneId zone) {
+		return  LocalDateTime.ofInstant(instant, zone);
+	}
+
+	public static LocalDateTime toLocalDateTime(Instant instant) {
+		return toLocalDateTime(instant, ZoneId.systemDefault());
+	}
+
+	public static Date toDate(ChronoLocalDate date) {
+		return toDate(date,ZoneId.systemDefault());
+	}
+
+	public static Date toDate(ChronoLocalDate date, ZoneId zone) {
+		return toDate(date.atTime(LocalTime.ofSecondOfDay(0)).atZone(zone).toInstant());
+	}
+
+	public static Date toDate(@SuppressWarnings("rawtypes") ChronoLocalDateTime date) {
+		return toDate(date, 0);
+	}
+
+	public static Date toDate(@SuppressWarnings("rawtypes") ChronoLocalDateTime date, int zoneOffset) {
+		return toDate(date.toInstant(ZoneOffset.ofHours(zoneOffset)));
+	}
+
+	public static Date toDate(Instant instant) {
+		return Date.from(instant);
+	}
+
+	public static LocalDateTime now() {
+		return LocalDateTime.now();
+	}
+
+	public static LocalDateTime toLocalDateTime(FileTime time) {
+		return toLocalDateTime(time.toInstant());
+	}
+
+	public static LocalDateTime toLocalDateTime(FileTime time, ZoneId zone) {
+		return toLocalDateTime(time.toInstant(), zone);
 	}
 }

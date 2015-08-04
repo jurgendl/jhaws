@@ -1,25 +1,63 @@
 package org.jhaws.common.lucene;
 
+import java.time.LocalDateTime;
+
 import org.apache.lucene.document.Document;
 
-public class BuildableIndexable<T> extends IndexableAdapter<T> {
+public class BuildableIndexable<T> implements Indexable<T> {
 	protected transient LuceneDocumentBuilder<T> builder;
+
+	@IndexField(LuceneIndex.DOC_VERSION)
+	protected Integer version;
+
+	@IndexField(LuceneIndex.DOC_UUID)
+	protected String uuid;
+
+	@IndexField(LuceneIndex.DOC_LASTMOD)
+	protected LocalDateTime lastmodified;
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public LocalDateTime getLastmodified() {
+		return lastmodified;
+	}
+
+	public void setLastmodified(LocalDateTime lastmodified) {
+		this.lastmodified = lastmodified;
+	}
 
 	@SuppressWarnings("unchecked")
 	public BuildableIndexable() {
 		builder = new LuceneDocumentBuilder<T>((Class<T>) getClass()) {};
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public T retrieve(Document doc) {
-		builder.retrieveFromDocument(doc);
-		return (T) this;
+		return builder.retrieveFromDocument(doc, cast());
 	}
 
 	@SuppressWarnings("unchecked")
+	protected T cast() {
+		return (T) this;
+	}
+
+
 	@Override
 	public Document indexable() {
-		return builder.buildDocument((T) this);
+		return builder.buildDocument(cast());
 	}
 }

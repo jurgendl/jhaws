@@ -70,7 +70,7 @@ public class SystemIcon implements ExtensionIconFinder {
      *
      * @see util.io.ExtensionIconFinder#getSmallIcon(util.io.IOFile)
      */
-    @SuppressWarnings("restriction")
+	@SuppressWarnings("restriction")
     @Override
     public Icon getSmallIcon(java.io.File file) {
         try {

@@ -1082,7 +1082,7 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File implements C
      *
      * @return
      */
-    @SuppressWarnings("restriction")
+	@SuppressWarnings("restriction")
     public Icon getLargeIcon() {
         try {
             return new ImageIcon(sun.awt.shell.ShellFolder.getShellFolder(this).getIcon(true));

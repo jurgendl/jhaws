@@ -46,6 +46,7 @@
 		<module>ldap</module>
 		<module>web</module>
 		<module>wicket</module>
+		<module>lucene</module>
 	</modules>
 	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
 	<profiles>
