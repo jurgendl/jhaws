@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.regex.Pattern;
 
 /**
+ * @see http://www.mscharhag.com/2014/02/java-8-datetime-api.html
  * @see http://blog.progs.be/542/date-to-java-time
  */
 public class DateTime8 {
