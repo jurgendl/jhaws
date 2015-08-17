@@ -322,10 +322,10 @@ public class LuceneIndex implements Runnable {
         redo.stream().map(Pair::getKey).forEach(delete::add);
         redo.stream().map(Pair::getValue).forEach(create::add);
 
-        if(delete.size()>0)
-        logger.info("-{}", delete.size());
-        if(create.size()>0)
-        logger.info("+{}", create.size());
+        if(delete.size()-redo.size()>0)
+        logger.info("-{}", delete.size()-redo.size());
+        if(create.size()-redo.size()>0)
+        logger.info("+{}", create.size()-redo.size());
         delete.parallelStream().forEach(onDelete.andThen(e -> log("sync:index:delete", e)));
         create.parallelStream().forEach(onCreate.andThen(f -> log("sync:index:create", f)));
 

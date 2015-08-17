@@ -1118,6 +1118,9 @@ public class FilePath implements Path, Externalizable {
 		if (this.exists() && this.isDirectory()) {
 			return this;
 		}
+		if (this.exists()) {
+			throw new UncheckedIOException(new IOException( "file is not a directory"));
+		}
 		return this.createDirectory(attrs);
 	}
 
