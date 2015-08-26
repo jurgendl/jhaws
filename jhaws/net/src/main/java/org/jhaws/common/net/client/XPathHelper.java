@@ -129,7 +129,7 @@ public class XPathHelper {
 				Node node = nodes.item(i);
 				results.add(node);
 			}
-			return (T) (results.size() == 0 ? null : (results.size() == 1 ? results.get(0) : results));
+			return (T) (results.isEmpty() ? null : (results.size() == 1 ? results.get(0) : results));
 		} catch (javax.xml.xpath.XPathExpressionException ex) {
 			return (T) xpr.evaluate(doc);
 		}

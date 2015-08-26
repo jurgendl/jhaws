@@ -179,7 +179,7 @@ public class Response implements Serializable {
     public String getTitle() throws IOException {
         List<? extends TagNode> res = this.getNode().getElementListByName("title", false);
 
-        return (res.size() == 0) ? null : res.get(0).getText().toString();
+        return res.isEmpty() ? null : res.get(0).getText().toString();
     }
 
     public Response serialize(OutputStream out) throws IOException {

@@ -939,7 +939,7 @@ public class HTTPClient implements Serializable {
         HttpPost method;
         HttpEntity entity;
 
-        if ((prms.getAttachments() == null) || (prms.getAttachments().size() == 0)) {
+        if ((prms.getAttachments() == null) || (prms.getAttachments().isEmpty())) {
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 
             for (Map.Entry<String, String> entry : prms.getFormValues().entrySet()) {

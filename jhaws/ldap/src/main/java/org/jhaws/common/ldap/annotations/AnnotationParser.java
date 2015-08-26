@@ -224,7 +224,7 @@ public final class AnnotationParser {
      * gets objectClass
      */
     public String[] getObjectClass() {
-        if (this.objectClass.size() == 0) {
+        if (this.objectClass.isEmpty()) {
             IllegalArgumentException ex = new IllegalArgumentException("no objectClass set"); //$NON-NLS-1$
             AnnotationParser.logger.error("{}", ex);
             throw ex;
@@ -409,13 +409,13 @@ public final class AnnotationParser {
     protected void initStep4() {
         AnnotationParser.logger.debug("initStep4() - start"); //$NON-NLS-1$
 
-        if (this.getKeyParts().size() == 0) {
+        if (this.getKeyParts().isEmpty()) {
             IllegalArgumentException ex = new IllegalArgumentException("no keys found"); //$NON-NLS-1$
             AnnotationParser.logger.error("{}", ex);
             throw ex;
         }
 
-        if (this.objectClass.size() == 0) {
+        if (this.objectClass.isEmpty()) {
             AnnotationParser.logger.warn("no objectClass set, findAll/CRUD operations can't be used"); //$NON-NLS-1$
         }
 
