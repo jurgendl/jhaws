@@ -22,6 +22,8 @@ public class TestResource {
 
     public static final String GET = "get";
 
+    public static final String GET_BODY = "getbody";
+
     public static final String PUT = "put/{" + PATH_PARAM + "}";
 
     public static final String DELETE = "delete/{" + PATH_PARAM + "}";
@@ -29,6 +31,13 @@ public class TestResource {
     public static final String GET_WITH_PARAMS = "getwithparams/{" + PATH_PARAM + "}";
 
     public static final String GET_WITH_QUERY = "getwithquery";
+
+    @GET
+    @Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+    @Path(GET_BODY)
+    public TestBody getBody() {
+        return new TestBody("getbody");
+    }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -57,7 +66,7 @@ public class TestResource {
 
     @PUT
     @Path(PUT)
-    @Consumes(MediaType.TEXT_XML)
+    @Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
     public void put(@PathParam(PATH_PARAM) String pathParam, TestBody testBody) {
         put = pathParam;
         putBody = testBody;

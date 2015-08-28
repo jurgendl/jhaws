@@ -2,6 +2,7 @@ package org.jhaws.common.net.client.tests;
 
 import java.net.URI;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
@@ -15,7 +16,7 @@ import org.junit.Test;
  * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy-reference-guide-en-US.pdf
  */
 public class NewHttpClientTest {
-    private static InMemoryRestServer server;
+    private static TestRestServer server;
 
     private static HTTPClient hc;
 
@@ -25,7 +26,7 @@ public class NewHttpClientTest {
     public static void beforeClass() throws Exception {
         hc = new HTTPClient();
         testResource = new TestResource();
-        server = InMemoryRestServer.create(testResource);
+        server = TestRestServer.create(testResource);
     }
 
     @AfterClass
@@ -37,6 +38,19 @@ public class NewHttpClientTest {
     public void test_get() {
         try {
             URI uri = getBase().path(TestResource.GET).build();
+            String rec = server.resteasyClient.target(uri).request().get(String.class);
+            String hcr = new String(hc.get(uri).getResponse());
+            Assert.assertEquals(rec, hcr);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            Assert.fail(String.valueOf(e));
+        }
+    }
+    
+    @Test
+    public void test_getBody() {
+        try {
+            URI uri = getBase().path(TestResource.GET_BODY).build();
             String rec = server.resteasyClient.target(uri).request().get(String.class);
             String hcr = new String(hc.get(uri).getResponse());
             Assert.assertEquals(rec, hcr);
@@ -86,12 +100,17 @@ public class NewHttpClientTest {
     @Test
     public void test_put() {
         URI uri = getBase().path(TestResource.PUT).build("putId");
-        // server.resteasyClient.target(uri).request().put(Entity.xml(new TestBody("putBody")));
+        TestBody entity = new TestBody("putBody");
+        Entity<TestBody> xmle = Entity.xml(entity);
+        System.out.println(xmle);
+        server.resteasyClient.target(uri).request().put(xmle);
         Object rec1 = testResource.put;
         Object rec2 = testResource.putBody;
         testResource.put = null;
         testResource.putBody = null;
-        hc.put(uri, HTTPClientUtils.marshall(new TestBody("putBody"), "UTF-8"), MediaType.TEXT_XML, "UTF-8");
+        String xml = HTTPClientUtils.marshall(entity, "UTF-8");
+        System.out.println(xml);
+        hc.put(uri, xml, MediaType.TEXT_XML, "UTF-8");
         Object hcr1 = testResource.put;
         Object hcr2 = testResource.putBody;
         Assert.assertEquals(rec1, hcr1);

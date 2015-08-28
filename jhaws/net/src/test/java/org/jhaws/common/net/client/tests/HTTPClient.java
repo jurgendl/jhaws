@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.net.URI;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;

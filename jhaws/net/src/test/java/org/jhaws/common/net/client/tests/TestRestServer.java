@@ -12,32 +12,33 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.plugins.server.embedded.SecurityDomain;
 import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
+import org.jboss.resteasy.spi.ResteasyDeployment;
 
-public class InMemoryRestServer implements AutoCloseable {
-    private int port;
+public class TestRestServer implements AutoCloseable {
+    int port;
 
-    private Set<Object> objects = new HashSet<Object>();
+    Set<Object> objects = new HashSet<Object>();
 
-    private Set<Class<?>> classes = new HashSet<Class<?>>();
+    Set<Class<?>> classes = new HashSet<Class<?>>();
 
-    private TJWSEmbeddedJaxrsServer server;
+    TJWSEmbeddedJaxrsServer server;
 
-    private SecurityDomain securityDomain;
+    SecurityDomain securityDomain;
 
     ResteasyClient resteasyClient;
 
-    private String bindAddress = "localhost";
+    String bindAddress = "localhost";
 
-    private InMemoryRestServer(Object... objects) {
+    private TestRestServer(Object... objects) {
         append(objects);
     }
 
-    public static InMemoryRestServer create(Object... objects) throws IOException {
+    public static TestRestServer create(Object... objects) throws IOException {
         return create(null, objects);
     }
 
-    public static InMemoryRestServer create(SecurityDomain securityDomain, Object... objects) throws IOException {
-        InMemoryRestServer inMemoryRestServer = new InMemoryRestServer(objects);
+    public static TestRestServer create(SecurityDomain securityDomain, Object... objects) throws IOException {
+        TestRestServer inMemoryRestServer = new TestRestServer(objects);
         inMemoryRestServer.withDefaults(securityDomain);
         inMemoryRestServer.start();
         return inMemoryRestServer;
@@ -64,18 +65,19 @@ public class InMemoryRestServer implements AutoCloseable {
         server.setPort(port);
         server.setBindAddress(bindAddress);
         server.setSecurityDomain(securityDomain);
+        ResteasyDeployment deployment = server.getDeployment();
         for (Object object : objects) {
             if (object instanceof Application) {
-                server.getDeployment().setApplication((Application) object);
+                deployment.setApplication((Application) object);
             } else {
-                server.getDeployment().getResources().add(object);
+                deployment.getResources().add(object);
             }
         }
         for (Class<?> resourceOrProvider : classes) {
             if (Application.class.isAssignableFrom(resourceOrProvider)) {
-                server.getDeployment().setApplicationClass(resourceOrProvider.getName());
+                deployment.setApplicationClass(resourceOrProvider.getName());
             } else {
-                server.getDeployment().getProviderClasses().add(resourceOrProvider.getName());
+                deployment.getProviderClasses().add(resourceOrProvider.getName());
             }
         }
         server.start();
