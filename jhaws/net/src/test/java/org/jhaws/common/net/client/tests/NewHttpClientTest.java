@@ -6,6 +6,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.jhaws.common.net.client.tests.HTTPClient.Response;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -21,6 +22,10 @@ public class NewHttpClientTest {
     private static HTTPClient hc;
 
     private static TestResource testResource;
+
+    private UriBuilder getBase() {
+        return UriBuilder.fromPath(server.baseUri()).path(TestResource.PATH);
+    }
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -46,13 +51,13 @@ public class NewHttpClientTest {
             Assert.fail(String.valueOf(e));
         }
     }
-    
+
     @Test
     public void test_getBody() {
         try {
             URI uri = getBase().path(TestResource.GET_BODY).build();
-            String rec = server.resteasyClient.target(uri).request().get(String.class);
-            String hcr = new String(hc.get(uri).getResponse());
+            TestBody rec = HTTPClientUtils.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class));
+            TestBody hcr = HTTPClientUtils.unmarshall(TestBody.class, hc.get(uri).getResponse());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -90,10 +95,10 @@ public class NewHttpClientTest {
     public void test_delete() {
         URI uri = getBase().path(TestResource.DELETE).build("deleteId");
         server.resteasyClient.target(uri).request().delete();
-        Object rec = testResource.delete;
+        String rec = String.class.cast(testResource.delete);
         testResource.delete = null;
         hc.delete(uri);
-        Object hcr = testResource.delete;
+        String hcr = String.class.cast(testResource.delete);
         Assert.assertEquals(rec, hcr);
     }
 
@@ -104,20 +109,23 @@ public class NewHttpClientTest {
         Entity<TestBody> xmle = Entity.xml(entity);
         System.out.println(xmle);
         server.resteasyClient.target(uri).request().put(xmle);
-        Object rec1 = testResource.put;
-        Object rec2 = testResource.putBody;
+        String rec1 = String.class.cast(testResource.put);
+        TestBody rec2 = TestBody.class.cast(testResource.putBody);
         testResource.put = null;
         testResource.putBody = null;
         String xml = HTTPClientUtils.marshall(entity, "UTF-8");
         System.out.println(xml);
         hc.put(uri, xml, MediaType.TEXT_XML, "UTF-8");
-        Object hcr1 = testResource.put;
-        Object hcr2 = testResource.putBody;
+        String hcr1 = String.class.cast(testResource.put);
+        TestBody hcr2 = TestBody.class.cast(testResource.putBody);
         Assert.assertEquals(rec1, hcr1);
         Assert.assertEquals(rec2, hcr2);
     }
 
-    private UriBuilder getBase() {
-        return UriBuilder.fromPath(server.baseUri()).path(TestResource.PATH);
+    @Test
+    public void test_head() {
+        URI uri = getBase().path(TestResource.GET).build();
+        Response head = hc.head(uri);
+        Assert.assertNull(head.getResponse());
     }
 }

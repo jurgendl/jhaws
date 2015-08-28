@@ -3,6 +3,7 @@ package org.jhaws.common.net.client.tests;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -40,6 +41,7 @@ public class TestResource {
     }
 
     @GET
+    @HEAD
     @Produces(MediaType.TEXT_PLAIN)
     @Path(GET)
     public String get() {

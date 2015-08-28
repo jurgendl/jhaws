@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.net.URI;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -17,11 +21,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpTrace;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.jhaws.common.net.client.HTTPClientDefaults;
-import org.apache.http.entity.ContentType;
 
 /**
  * @see https://hc.apache.org/
@@ -52,6 +56,9 @@ public class HTTPClient {
     protected Response execute(HttpRequestBase req) {
         try {
             HttpResponse httpResponse = getHttpClient().execute(req);
+            for (Header header : httpResponse.getAllHeaders()) {
+                httpResponse.addHeader(header.getName(), header.getValue());
+            }
             Response response = new Response();
             response.statusCode = httpResponse.getStatusLine().getStatusCode();
             if (httpResponse.getEntity() != null)
@@ -116,6 +123,16 @@ public class HTTPClient {
 
         private byte[] response;
 
+        private final Map<String, String> headers = new HashMap<>();
+
+        protected void addHeader(String key, String value) {
+            headers.put(key, value);
+        }
+
+        public Map<String, String> getHeaders() {
+            return Collections.unmodifiableMap(headers);
+        }
+
         public int getStatusCode() {
             return statusCode;
         }
@@ -134,7 +151,7 @@ public class HTTPClient {
 
         @Override
         public String toString() {
-            return statusCode + "," + (response != null);
+            return statusCode + "," + (response != null) + "," + headers;
         }
     }
 }
