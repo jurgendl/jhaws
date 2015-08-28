@@ -9,7 +9,7 @@ import org.bouncycastle.util.encoders.Base64;
 /**
  * security using BouncyCastle
  */
-public class SecureMeHard implements Security {
+public class SecureMeBC implements Security {
     static {
         java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
@@ -55,17 +55,17 @@ public class SecureMeHard implements Security {
 
     private Seed key;
 
-    public SecureMeHard() {
+    public SecureMeBC() {
         this.key = new Seed();
     }
 
     @Override
     public String decrypt(byte[] pass) throws Exception {
-        return SecureMeHard.decrypt(new String(pass), this.key.key);
+        return SecureMeBC.decrypt(new String(pass), this.key.key);
     }
 
     @Override
     public byte[] encrypt(String pass) throws Exception {
-        return SecureMeHard.encrypt(pass, this.key.key).getBytes();
+        return SecureMeBC.encrypt(pass, this.key.key).getBytes();
     }
 }

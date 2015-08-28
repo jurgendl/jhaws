@@ -1,7 +1,7 @@
 package org.jhaws.common.net.client.forms;
 
 import org.htmlcleaner.TagNode;
-import org.jhaws.common.io.security.SecureMeHard;
+import org.jhaws.common.io.security.SecureMeBC;
 import org.jhaws.common.io.security.Security;
 
 /**
@@ -11,7 +11,7 @@ public class Password extends Input {
     private static final long serialVersionUID = -3366809266365586314L;
 
     /** secure */
-    private Security secure = new SecureMeHard();
+    private Security secure = new SecureMeBC();
 
     /** cipher */
     private byte[] data;
