@@ -9,6 +9,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.jhaws.common.net.client.tests.HTTPClient.DeleteParams;
+import org.jhaws.common.net.client.tests.HTTPClient.GetParams;
+import org.jhaws.common.net.client.tests.HTTPClient.HeadParams;
+import org.jhaws.common.net.client.tests.HTTPClient.PutParams;
 import org.jhaws.common.net.client.tests.HTTPClient.Response;
 import org.jhaws.common.net.client.xml.XmlMarshalling;
 import org.junit.AfterClass;
@@ -53,7 +57,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET).build();
             String rec = server.resteasyClient.target(uri).request().get(String.class);
-            String hcr = new String(hc.get(uri).getResponse());
+            String hcr = new String(hc.get(new GetParams(uri)).getResponse());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -66,7 +70,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET_BODY).build();
             TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), UTF_8);
-            TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(uri).getResponse());
+            TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetParams(uri)).getResponse());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -79,7 +83,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET_WITH_PARAMS).build("pathValue");
             String rec = server.resteasyClient.target(uri).request().get(String.class);
-            String hcr = new String(hc.get(uri).getResponse());
+            String hcr = new String(hc.get(new GetParams(uri)).getResponse());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -92,7 +96,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET_WITH_QUERY).queryParam(TestResource.QUERY_PARAM, "queryValue").build();
             String rec = server.resteasyClient.target(uri).request().get(String.class);
-            String hcr = new String(hc.get(uri).getResponse());
+            String hcr = new String(hc.get(new GetParams(uri)).getResponse());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -106,7 +110,7 @@ public class NewHttpClientTest {
         server.resteasyClient.target(uri).request().delete();
         String rec = String.class.cast(testResource.delete);
         testResource.delete = null;
-        hc.delete(uri);
+        hc.delete(new DeleteParams(uri));
         String hcr = String.class.cast(testResource.delete);
         Assert.assertEquals(rec, hcr);
     }
@@ -124,7 +128,7 @@ public class NewHttpClientTest {
         testResource.putBody = null;
         String xml = xmlMarshalling.marshall(entity, UTF_8);
         System.out.println(xml);
-        hc.put(uri, xml, MediaType.TEXT_XML, UTF_8);
+        hc.put(new PutParams(uri, xml, MediaType.TEXT_XML));
         String hcr1 = String.class.cast(testResource.put);
         TestBody hcr2 = TestBody.class.cast(testResource.putBody);
         Assert.assertEquals(rec1, hcr1);
@@ -135,19 +139,19 @@ public class NewHttpClientTest {
     public void test_head() {
         URI uri = getBase().path(TestResource.GET).build();
 
-        Map<String, List<Object>> mg1 = new TreeMap<>(hc.get(uri).getHeaders());
+        Map<String, List<Object>> mg1 = new TreeMap<>(hc.get(new GetParams(uri)).getHeaders());
         javax.ws.rs.core.Response response = server.resteasyClient.target(uri).request().get();
         Map<String, List<Object>> mg2 = new TreeMap<>(response.getHeaders());
         response.close();
 
-        Response head = hc.head(uri);
+        Response head = hc.head(new HeadParams(uri));
         Assert.assertNull(head.getResponse());
 
         Map<String, List<Object>> mh1 = new TreeMap<>(head.getHeaders());
         response = server.resteasyClient.target(uri).request().head();
         Map<String, List<Object>> mh2 = new TreeMap<>(response.getHeaders());
         response.close();
-        
+
         // transfer-encoding=[chunked] missing in other
         mg1.remove("transfer-encoding");
         mg2.remove("transfer-encoding");
