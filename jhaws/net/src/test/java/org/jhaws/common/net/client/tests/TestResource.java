@@ -32,6 +32,12 @@ public class TestResource {
     public static final String GET_WITH_PARAMS = "getwithparams/{" + PATH_PARAM + "}";
 
     public static final String GET_WITH_QUERY = "getwithquery";
+    
+    Object put;
+
+    Object putBody;
+    
+    Object delete;
 
     @GET
     @Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
@@ -62,10 +68,6 @@ public class TestResource {
         return QUERY_PARAM + IS + queryParam;
     }
 
-    Object put;
-
-    Object putBody;
-
     @PUT
     @Path(PUT)
     @Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
@@ -73,8 +75,6 @@ public class TestResource {
         put = pathParam;
         putBody = testBody;
     }
-
-    Object delete;
 
     @DELETE
     @Path(DELETE)

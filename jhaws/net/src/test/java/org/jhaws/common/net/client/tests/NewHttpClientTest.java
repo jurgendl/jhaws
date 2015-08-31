@@ -7,6 +7,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.jhaws.common.net.client.tests.HTTPClient.Response;
+import org.jhaws.common.net.client.xml.XmlMarshalling;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -22,6 +23,8 @@ public class NewHttpClientTest {
     private static HTTPClient hc;
 
     private static TestResource testResource;
+    
+    private static XmlMarshalling xmlMarshalling;
 
     private UriBuilder getBase() {
         return UriBuilder.fromPath(server.baseUri()).path(TestResource.PATH);
@@ -32,6 +35,7 @@ public class NewHttpClientTest {
         hc = new HTTPClient();
         testResource = new TestResource();
         server = TestRestServer.create(testResource);
+        xmlMarshalling = new XmlMarshalling(TestBody.class);
     }
 
     @AfterClass
@@ -56,8 +60,8 @@ public class NewHttpClientTest {
     public void test_getBody() {
         try {
             URI uri = getBase().path(TestResource.GET_BODY).build();
-            TestBody rec = HTTPClientUtils.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class));
-            TestBody hcr = HTTPClientUtils.unmarshall(TestBody.class, hc.get(uri).getResponse());
+            TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), "UTF-8");
+            TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(uri).getResponse());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -113,7 +117,7 @@ public class NewHttpClientTest {
         TestBody rec2 = TestBody.class.cast(testResource.putBody);
         testResource.put = null;
         testResource.putBody = null;
-        String xml = HTTPClientUtils.marshall(entity, "UTF-8");
+        String xml = xmlMarshalling.marshall(entity, "UTF-8");
         System.out.println(xml);
         hc.put(uri, xml, MediaType.TEXT_XML, "UTF-8");
         String hcr1 = String.class.cast(testResource.put);
