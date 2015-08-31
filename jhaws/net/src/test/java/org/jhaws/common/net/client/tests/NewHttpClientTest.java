@@ -1,6 +1,9 @@
 package org.jhaws.common.net.client.tests;
 
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
@@ -18,12 +21,14 @@ import org.junit.Test;
  * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy-reference-guide-en-US.pdf
  */
 public class NewHttpClientTest {
+    private static final String UTF_8 = "UTF-8";
+
     private static TestRestServer server;
 
     private static HTTPClient hc;
 
     private static TestResource testResource;
-    
+
     private static XmlMarshalling xmlMarshalling;
 
     private UriBuilder getBase() {
@@ -60,7 +65,7 @@ public class NewHttpClientTest {
     public void test_getBody() {
         try {
             URI uri = getBase().path(TestResource.GET_BODY).build();
-            TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), "UTF-8");
+            TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), UTF_8);
             TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(uri).getResponse());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
@@ -117,9 +122,9 @@ public class NewHttpClientTest {
         TestBody rec2 = TestBody.class.cast(testResource.putBody);
         testResource.put = null;
         testResource.putBody = null;
-        String xml = xmlMarshalling.marshall(entity, "UTF-8");
+        String xml = xmlMarshalling.marshall(entity, UTF_8);
         System.out.println(xml);
-        hc.put(uri, xml, MediaType.TEXT_XML, "UTF-8");
+        hc.put(uri, xml, MediaType.TEXT_XML, UTF_8);
         String hcr1 = String.class.cast(testResource.put);
         TestBody hcr2 = TestBody.class.cast(testResource.putBody);
         Assert.assertEquals(rec1, hcr1);
@@ -129,7 +134,26 @@ public class NewHttpClientTest {
     @Test
     public void test_head() {
         URI uri = getBase().path(TestResource.GET).build();
+
+        Map<String, List<Object>> mg1 = new TreeMap<>(hc.get(uri).getHeaders());
+        javax.ws.rs.core.Response response = server.resteasyClient.target(uri).request().get();
+        Map<String, List<Object>> mg2 = new TreeMap<>(response.getHeaders());
+        response.close();
+
         Response head = hc.head(uri);
         Assert.assertNull(head.getResponse());
+
+        Map<String, List<Object>> mh1 = new TreeMap<>(head.getHeaders());
+        response = server.resteasyClient.target(uri).request().head();
+        Map<String, List<Object>> mh2 = new TreeMap<>(response.getHeaders());
+        response.close();
+        
+        // transfer-encoding=[chunked] missing in other
+        mg1.remove("transfer-encoding");
+        mg2.remove("transfer-encoding");
+
+        Assert.assertEquals(mg2, mh2);
+        Assert.assertEquals(mg1, mh1);
+        Assert.assertEquals(mh1, mh2);
     }
 }

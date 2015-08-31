@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.Header;
@@ -56,13 +58,14 @@ public class HTTPClient {
     protected Response execute(HttpRequestBase req) {
         try {
             HttpResponse httpResponse = getHttpClient().execute(req);
-            for (Header header : httpResponse.getAllHeaders()) {
-                httpResponse.addHeader(header.getName(), header.getValue());
-            }
             Response response = new Response();
+            for (Header header : httpResponse.getAllHeaders()) {
+                response.addHeader(header.getName(), header.getValue());
+            }
             response.statusCode = httpResponse.getStatusLine().getStatusCode();
             if (httpResponse.getEntity() != null)
                 response.response = EntityUtils.toByteArray(httpResponse.getEntity());
+            EntityUtils.consumeQuietly(httpResponse.getEntity());
             switch (response.statusCode) {
                 case HttpStatus.SC_OK:
                     break;
@@ -123,13 +126,18 @@ public class HTTPClient {
 
         private byte[] response;
 
-        private final Map<String, String> headers = new HashMap<>();
+        private final Map<String, List<Object>> headers = new HashMap<>();
 
-        protected void addHeader(String key, String value) {
-            headers.put(key, value);
+        protected void addHeader(String key, Object value) {
+            List<Object> list = headers.get(key);
+            if (list == null) {
+                list = new ArrayList<>();
+                headers.put(key, list);
+            }
+            list.add(value);
         }
 
-        public Map<String, String> getHeaders() {
+        public Map<String, List<Object>> getHeaders() {
             return Collections.unmodifiableMap(headers);
         }
 
