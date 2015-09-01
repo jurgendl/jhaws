@@ -378,7 +378,7 @@ public class HTTPClient implements Serializable {
         this.version = 0;
 
         try {
-            this.secure = (Security) Class.forName("org.jhaws.common.io.security.SecureMeHard").newInstance();
+            this.secure = (Security) Class.forName("org.jhaws.common.io.security.SecureMeBC").newInstance();
         } catch (Exception ex1) {
             try {
                 this.secure = (Security) Class.forName("org.jhaws.common.io.security.SecureMe").newInstance();

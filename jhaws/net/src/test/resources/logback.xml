@@ -1,5 +1,5 @@
 <configuration debug="false" scan="true">
-	<property name="pattern" value="\\(%file:%line\\) %message%n"/>
+	<property name="pattern" value="%level %logger \\(%file:%line\\) %message %n"/>
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset>UTF-8</charset>
@@ -7,5 +7,6 @@
 			<outputPatternAsHeader>false</outputPatternAsHeader>
 		</encoder>
 	</appender>
-	<root level="deug"><appender-ref ref="CONSOLE" /></root>
+	<logger name="org.apache.http.wire" level="info" />
+	<root level="debug"><appender-ref ref="CONSOLE" /></root>
 </configuration>

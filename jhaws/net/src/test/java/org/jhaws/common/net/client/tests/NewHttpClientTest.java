@@ -9,6 +9,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.jhaws.common.net.client.forms.Form;
 import org.jhaws.common.net.client.tests.HTTPClient.DeleteParams;
 import org.jhaws.common.net.client.tests.HTTPClient.GetParams;
 import org.jhaws.common.net.client.tests.HTTPClient.HeadParams;
@@ -57,7 +58,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET).build();
             String rec = server.resteasyClient.target(uri).request().get(String.class);
-            String hcr = new String(hc.get(new GetParams(uri)).getResponse());
+            String hcr = hc.get(new GetParams(uri)).getContentString();
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -70,7 +71,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET_BODY).build();
             TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), UTF_8);
-            TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetParams(uri)).getResponse());
+            TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetParams(uri)).getContent());
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -83,7 +84,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET_WITH_PARAMS).build("pathValue");
             String rec = server.resteasyClient.target(uri).request().get(String.class);
-            String hcr = new String(hc.get(new GetParams(uri)).getResponse());
+            String hcr = hc.get(new GetParams(uri)).getContentString();
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -96,7 +97,7 @@ public class NewHttpClientTest {
         try {
             URI uri = getBase().path(TestResource.GET_WITH_QUERY).queryParam(TestResource.QUERY_PARAM, "queryValue").build();
             String rec = server.resteasyClient.target(uri).request().get(String.class);
-            String hcr = new String(hc.get(new GetParams(uri)).getResponse());
+            String hcr = hc.get(new GetParams(uri)).getContentString();
             Assert.assertEquals(rec, hcr);
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -145,7 +146,7 @@ public class NewHttpClientTest {
         response.close();
 
         Response head = hc.head(new HeadParams(uri));
-        Assert.assertNull(head.getResponse());
+        Assert.assertNull(head.getContent());
 
         Map<String, List<Object>> mh1 = new TreeMap<>(head.getHeaders());
         response = server.resteasyClient.target(uri).request().head();
@@ -159,5 +160,14 @@ public class NewHttpClientTest {
         Assert.assertEquals(mg2, mh2);
         Assert.assertEquals(mg1, mh1);
         Assert.assertEquals(mh1, mh2);
+    }
+
+    @Test
+    public void test_form() {
+        HTTPClient hc = new HTTPClient();
+        Form form = hc.get(new GetParams("http://www.google.com")).getForms().get(0);
+        form.setValue("q", "java");
+        form.setValue("source", "hp");
+        Assert.assertEquals(200, hc.submit(form).getStatusCode());
     }
 }

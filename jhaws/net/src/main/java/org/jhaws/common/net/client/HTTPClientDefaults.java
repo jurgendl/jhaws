@@ -1,5 +1,6 @@
 package org.jhaws.common.net.client;
 
+
 /**
  * HTTPClientDefaults
  */
@@ -70,7 +71,8 @@ public interface HTTPClientDefaults {
     public static final String ANDROID_S3 = "Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
 
     /** http.protocol.single-cookie-header */
-    public static final String PARAM_SINGLE_COOKIE_HEADER = "http.protocol.single-cookie-header";
+    @SuppressWarnings("deprecation")
+    public static final String PARAM_SINGLE_COOKIE_HEADER = org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER;
 
     /** 3000L */
     public static final int TIMEOUT = 3000;
@@ -80,4 +82,6 @@ public interface HTTPClientDefaults {
 
     /** "Date" */
     public static final String DATE = "Date";
+    
+    public static final String POST = "post";
 }

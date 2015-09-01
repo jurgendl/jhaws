@@ -73,6 +73,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -2010,11 +2011,15 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public Stream<String> stream() throws UncheckedIOException {
-		return this.stream(this.getDefaultCharset());
+	public Stream<String> streamContentString() throws UncheckedIOException {
+		return this.streamContentString(this.getDefaultCharset());
+	}
+	
+	public Stream<Path> streamChildren() {
+	    return StreamSupport.stream(newDirectoryStream().spliterator(), false);
 	}
 
-	public Stream<String> stream(Charset cs) throws UncheckedIOException {
+	public Stream<String> streamContentString(Charset cs) throws UncheckedIOException {
 		try {
 			return Files.lines(this.getPath(), cs);
 		} catch (IOException ex) {
