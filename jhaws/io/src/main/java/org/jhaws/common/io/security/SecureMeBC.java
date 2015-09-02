@@ -11,7 +11,7 @@ import org.bouncycastle.util.encoders.Base64;
  */
 public class SecureMeBC implements Security {
     static {
-        java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        BC.provide();
     }
 
     public static String decrypt(String name, byte[] keyString) throws Exception {

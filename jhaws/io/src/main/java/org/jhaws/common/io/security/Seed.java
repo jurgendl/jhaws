@@ -9,7 +9,7 @@ import org.bouncycastle.crypto.prng.ThreadedSeedGenerator;
 
 public class Seed {
     static {
-        java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        BC.provide();
     }
 
     private static final ThreadedSeedGenerator sgen = new ThreadedSeedGenerator();
