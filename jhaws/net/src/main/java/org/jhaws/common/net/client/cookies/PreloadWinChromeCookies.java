@@ -110,7 +110,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
             String url = "jdbc:sqlite:/" + ff3c.getAbsolutePath().replace('\\', '/');
             String query = "select name, value, host_key, path, expires_utc from cookies where host_key like '" + domain + "%' or host_key like '." + domain + "%' or host_key like 'www." + domain + "%'"; //$NON-NLS-3$ //$NON-NLS-4$
             Connection con = DriverManager.getConnection(url, null, null);
-            con.setReadOnly(true);
+            //con.setReadOnly(true);
             con.setAutoCommit(false);
 
             Statement stmt = con.createStatement();

@@ -1,6 +1,5 @@
-package org.jhaws.common.net.client.tests;
+package org.jhaws.common.net.client.tmp;
 
-import static java.nio.file.Files.readAllBytes;
 import static java.util.stream.StreamSupport.stream;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -21,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -43,12 +43,11 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.FormBodyPartBuilder;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -135,6 +134,10 @@ public class HTTPClient {
                 forms.add(new Form(uri, formnode));
             }
             return forms;
+        }
+        
+        public Form getForm(String id) {
+        	return getForms().stream().filter(f -> f.getId().equals(id)).findFirst().get();
         }
 
         @Override
@@ -364,8 +367,10 @@ public class HTTPClient {
         private static final long serialVersionUID = -3939699621850878105L;
 
         private HashMap<String, Path> attachments = new HashMap<String, Path>();
+        
+        private String name;
 
-        public PostParams() {
+		public PostParams() {
             super();
         }
 
@@ -392,6 +397,14 @@ public class HTTPClient {
         public void setAttachments(HashMap<String, Path> attachments) {
             this.attachments = attachments;
         }
+        
+        public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
     }
 
     protected String charSet = HTTPClientDefaults.CHARSET;
@@ -574,41 +587,50 @@ public class HTTPClient {
     }
 
     public Response post(PostParams post) {
-        HttpPost req = new HttpPost(post.getUri());
+    	RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
+//    	.map(e -> new BasicNameValuePair(e.getKey(), e.getValue()))
+//    	.forEach(
+//    		builder::addParameter);
+		HttpUriRequest req = builder.build();
+    	
+    	
+//        HttpPost req = new HttpPost(post.getUri());
+//
+//        HttpEntity body = null;
+//
+//        if (post.getBody() != null) {
+//            body = new StringEntity(post.getBody(), ContentType.create(post.getMime(), charSet));
+//        }
+//
+//        if (!post.getFormValues().isEmpty() || !post.getAttachments().isEmpty()) {
+//            if (body != null) {
+//                throw new IllegalArgumentException("multiple bodies");
+//            }
+//
+//            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+//
+//            FormBodyPartBuilder fbpBuilder = FormBodyPartBuilder.create();
+//            fbpBuilder.setName(post.getName());
+//            stream(post.getFormValues().entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> fbpBuilder.addField(e.getKey(), i)));
+//            builder.addPart(fbpBuilder.build());
+//
+//            stream(post.getAttachments().entrySet().spliterator(), false).forEach(e -> {
+//                try {
+//                    builder.addBinaryBody(e.getValue().getFileName().toString(), readAllBytes(e.getValue()));
+//                } catch (IOException ioex) {
+//                    throw new UncheckedIOException(ioex);
+//                }
+//            });
+//
+//            body = builder.build();
+//        }
+//
+//        if (body != null) {
+//            req.setEntity(body);
+//        }
 
-        HttpEntity body = null;
-
-        if (post.getBody() != null) {
-            body = new StringEntity(post.getBody(), ContentType.create(post.getMime(), charSet));
-        }
-
-        if (!post.getFormValues().isEmpty() || !post.getAttachments().isEmpty()) {
-            if (body != null) {
-                throw new IllegalArgumentException("multiple bodies");
-            }
-
-            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-
-            FormBodyPartBuilder fbpBuilder = FormBodyPartBuilder.create();
-            stream(post.getFormValues().entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> fbpBuilder.addField(e.getKey(), i)));
-            builder.addPart(fbpBuilder.build());
-
-            stream(post.getAttachments().entrySet().spliterator(), false).forEach(e -> {
-                try {
-                    builder.addBinaryBody(e.getValue().getFileName().toString(), readAllBytes(e.getValue()));
-                } catch (IOException ioex) {
-                    throw new UncheckedIOException(ioex);
-                }
-            });
-
-            body = builder.build();
-        }
-
-        if (body != null) {
-            req.setEntity(body);
-        }
-
-        return execute(req);
+     //   return execute(req);
+		return null;
     }
 
     public Response head(HeadParams head) {
@@ -669,14 +691,14 @@ public class HTTPClient {
         URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
         PostParams post = new PostParams(uri);
         form.getInputElements().forEach(e -> post.addFormValue(e.getName(), e.getValue()));
-        PostParams pp = PostParams.class.cast(post);
         form.getInputElements()
                 .stream()
                 .filter(e -> isNotBlank(e.getName()))
                 .filter(e -> isNotBlank(e.getValue()))
                 .filter(e -> e instanceof FileInput)
                 .map(e -> FileInput.class.cast(e))
-                .forEach(e -> pp.attachments.put(e.getName(), new FilePath(e.getFile())));
+                .forEach(e -> post.attachments.put(e.getName(), new FilePath(e.getFile())));
+        post.setName(form.getId());
         return post(post);
     }
 

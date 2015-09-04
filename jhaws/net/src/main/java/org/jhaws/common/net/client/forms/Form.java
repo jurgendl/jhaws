@@ -22,157 +22,165 @@ import org.htmlcleaner.TagNode;
  * Form
  */
 public class Form implements Serializable, Iterable<InputElement> {
-    public static Form deserialize(InputStream in) throws IOException, ClassNotFoundException {
-        ObjectInputStream encoder = new ObjectInputStream(new BufferedInputStream(in));
-        Object object = encoder.readObject();
-        encoder.close();
+	public static Form deserialize(InputStream in) throws IOException, ClassNotFoundException {
+		ObjectInputStream encoder = new ObjectInputStream(new BufferedInputStream(in));
+		Object object = encoder.readObject();
+		encoder.close();
 
-        return (Form) object;
-    }
+		return (Form) object;
+	}
 
-    private static final long serialVersionUID = 7602293891493494638L;
+	private static final long serialVersionUID = 7602293891493494638L;
 
-    /** inputElements */
-    private Map<String, InputElement> inputElements = new LinkedHashMap<String, InputElement>();
+	private Map<String, InputElement> inputElements = new LinkedHashMap<String, InputElement>();
 
-    /** action */
-    private String action;
+	private String action;
 
-    /** id */
-    private String id;
+	private String id;
 
-    /** method */
-    private String method;
+	private String method;
 
-    /** url */
-    private URI url;
+private URI url;
 
-    /**
-     * Creates a new Form object.
-     */
-    public Form() {
-        super();
-    }
+	public Form() {
+		super();
+	}
 
-    public Form(URI url, TagNode formnode) {
-        this.url = url;
-        this.id = formnode.getAttributeByName("id");
-        this.method = formnode.getAttributeByName("method");
-        this.action = formnode.getAttributeByName("action");
+	public Form(String id) {
+		this.id = id;
+	}
 
-        List<? extends TagNode> inputlist = formnode.getElementListByName("input", true);
+	public Form(URI url, TagNode formnode) {
+		this.url = url;
+		this.id = formnode.getAttributeByName("id");
+		this.method = formnode.getAttributeByName("method");
+		this.action = formnode.getAttributeByName("action");
 
-        for (TagNode inputnode : inputlist) {
-            String type = inputnode.getAttributeByName("type");
+		List<? extends TagNode> inputlist = formnode.getElementListByName("input", true);
 
-            if ("checkbox".equals(type) || "radio".equals(type)) {
-                InputSelection newe = new InputSelection(inputnode);
-                InputSelection e = (InputSelection) this.inputElements.get(newe.getName());
+		for (TagNode inputnode : inputlist) {
+			String type = inputnode.getAttributeByName("type");
 
-                if (e == null) {
-                    this.inputElements.put(newe.getName(), newe);
-                } else {
-                    e.addOption(inputnode.getAttributeByName("value"));
-                }
-            } else if ("password".equals(type)) {
-                final Password e = new Password(inputnode);
-                this.inputElements.put(e.getName(), e);
-            } else if ("file".equals(type)) {
-                final FileInput e = new FileInput(inputnode);
-                this.inputElements.put(e.getName(), e);
-            } else {
-                final Input e = new Input(inputnode);
-                this.inputElements.put(e.getName(), e);
-            }
-        }
+			if ("checkbox".equals(type) || "radio".equals(type)) {
+				InputSelection newe = new InputSelection(inputnode);
+				InputSelection e = (InputSelection) this.inputElements.get(newe.getName());
 
-        List<? extends TagNode> selectlist = formnode.getElementListByName("select", true);
+				if (e == null) {
+					this.inputElements.put(newe.getName(), newe);
+				} else {
+					e.addOption(inputnode.getAttributeByName("value"));
+				}
+			} else if ("password".equals(type)) {
+				final Password e = new Password(inputnode);
+				this.inputElements.put(e.getName(), e);
+			} else if ("file".equals(type)) {
+				final FileInput e = new FileInput(inputnode);
+				this.inputElements.put(e.getName(), e);
+			} else {
+				final Input e = new Input(inputnode);
+				this.inputElements.put(e.getName(), e);
+			}
+		}
 
-        for (TagNode selectnode : selectlist) {
-            final Selection e = new Selection(selectnode);
-            this.inputElements.put(e.getName(), e);
-        }
+		List<? extends TagNode> selectlist = formnode.getElementListByName("select", true);
 
-        List<? extends TagNode> textarealist = formnode.getElementListByName("textarea", true);
+		for (TagNode selectnode : selectlist) {
+			final Selection e = new Selection(selectnode);
+			this.inputElements.put(e.getName(), e);
+		}
 
-        for (TagNode textareanode : textarealist) {
-            final TextArea e = new TextArea(textareanode);
-            this.inputElements.put(e.getName(), e);
-        }
-    }
+		List<? extends TagNode> textarealist = formnode.getElementListByName("textarea", true);
 
-    public boolean contains(String string) {
-        return this.inputElements.keySet().contains(string);
-    }
+		for (TagNode textareanode : textarealist) {
+			final TextArea e = new TextArea(textareanode);
+			this.inputElements.put(e.getName(), e);
+		}
+	}
 
-    public String getAction() {
-        return this.action;
-    }
+	public boolean contains(String string) {
+		return this.inputElements.keySet().contains(string);
+	}
 
-    public String getId() {
-        return this.id;
-    }
+	public String getAction() {
+		return this.action;
+	}
 
-    public InputElement getInputElement(String name) {
-        return this.inputElements.get(name);
-    }
+	public String getId() {
+		return this.id;
+	}
 
-    public Collection<InputElement> getInputElements() {
-        return Collections.unmodifiableCollection(this.inputElements.values());
-    }
+	public InputElement getInputElement(String name) {
+		return this.inputElements.get(name);
+	}
 
-    public String getMethod() {
-        return this.method;
-    }
+	public Collection<InputElement> getInputElements() {
+		return Collections.unmodifiableCollection(this.inputElements.values());
+	}
 
-    public URI getUrl() {
-        return this.url;
-    }
+	public String getMethod() {
+		return this.method;
+	}
 
-    /**
-     *
-     * @see java.lang.Iterable#iterator()
-     */
-    @Override
-    public Iterator<InputElement> iterator() {
-        return this.inputElements.values().iterator();
-    }
+	public URI getUrl() {
+		return this.url;
+	}
 
-    public void removeInputElement(String name) {
-        this.inputElements.remove(name);
-    }
+	@Override
+	public Iterator<InputElement> iterator() {
+		return this.inputElements.values().iterator();
+	}
 
-    public Form serialize(OutputStream out) throws IOException {
-        ObjectOutputStream encoder = new ObjectOutputStream(new BufferedOutputStream(out));
-        encoder.writeObject(this);
-        encoder.close();
+	public void removeInputElement(String name) {
+		this.inputElements.remove(name);
+	}
 
-        return this;
-    }
+	public Form serialize(OutputStream out) throws IOException {
+		ObjectOutputStream encoder = new ObjectOutputStream(new BufferedOutputStream(out));
+		encoder.writeObject(this);
+		encoder.close();
 
-    public InputElement setValue(String name, String value) {
-        InputElement inputElement = this.getInputElement(name);
-        if (inputElement == null) {
-            inputElement = new Input(null, name, name);
-            this.inputElements.put(name, inputElement);
-        }
-        inputElement.setValue(value);
-        return inputElement;
-    }
+		return this;
+	}
 
-    /**
-     *
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("form: id=").append(this.id).append(",method=").append(this.method).append(",action=")
-                .append(this.action).append(";");
+	public InputElement setValue(String name, String value) {
+		InputElement inputElement = this.getInputElement(name);
+		if (inputElement == null) {
+			inputElement = new Input(null, name, name);
+			this.inputElements.put(name, inputElement);
+		}
+		inputElement.setValue(value);
+		return inputElement;
+	}
 
-        for (InputElement element : this.getInputElements()) {
-            sb.append("\n\t").append(element);
-        }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("form: id=").append(this.id).append(",method=").append(this.method)
+				.append(",action=").append(this.action).append(";");
 
-        return sb.toString();
-    }
+		for (InputElement element : this.getInputElements()) {
+			sb.append("\n\t").append(element);
+		}
+
+		return sb.toString();
+	}
+	
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public void setInputElements(Map<String, InputElement> inputElements) {
+		this.inputElements = inputElements;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setUrl(URI url) {
+		this.url = url;
+	}
 }

@@ -2,8 +2,10 @@ package org.jhaws.common.net.client.tests;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,6 +20,8 @@ public class TestResource {
     public static final String PATH_PARAM = "pathParam";
 
     public static final String QUERY_PARAM = "queryParam";
+    
+    public static final String FORM_PARAM = "formParam";
 
     public static final String PATH = "testresource";
 
@@ -26,6 +30,8 @@ public class TestResource {
     public static final String GET_BODY = "getbody";
 
     public static final String PUT = "put/{" + PATH_PARAM + "}";
+    
+    public static final String POST = "post";
 
     public static final String DELETE = "delete/{" + PATH_PARAM + "}";
 
@@ -80,5 +86,11 @@ public class TestResource {
     @Path(DELETE)
     public void delete(@PathParam(PATH_PARAM) String pathParam) {
         delete = pathParam;
+    }
+    
+    @POST
+    @Path(POST)
+    public String post(@FormParam(FORM_PARAM) String formParam) {
+    	return formParam;
     }
 }

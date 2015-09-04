@@ -158,7 +158,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
                     PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - String query=" + query); //$NON-NLS-1$
 
                     Connection con = DriverManager.getConnection(url, null, null);
-                    con.setReadOnly(true);
+                    //con.setReadOnly(true);
 
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
