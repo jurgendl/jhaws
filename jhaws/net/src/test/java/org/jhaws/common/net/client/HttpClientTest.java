@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tests;
+package org.jhaws.common.net.client;
 
 import java.util.Arrays;
 

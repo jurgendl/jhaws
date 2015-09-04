@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tests;
+package org.jhaws.common.net.client.tmp;
 
 import java.net.URI;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.junit.Test;
  * @see https://dzone.com/articles/how-test-rest-api-junit
  * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy-reference-guide-en-US.pdf
  */
-public class NewHttpClientTest {
+public class HttpClientTest {
 	private static final String UTF_8 = "UTF-8";
 
 	private static TestRestServer server;

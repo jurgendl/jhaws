@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tests;
+package org.jhaws.common.net.client.tmp;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
