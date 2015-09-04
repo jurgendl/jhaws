@@ -112,12 +112,14 @@
 			<groupId>net.sf.jtidy</groupId>
 			<artifactId>jtidy</artifactId>
 			<version>r938</version>
+			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.7.2</version>
+			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -167,6 +169,19 @@
 			<version>3.0.12.Final</version>
 			<scope>test</scope>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>3.0.12.Final</version>
+			<scope>test</scope>
+			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>

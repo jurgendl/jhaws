@@ -4,28 +4,26 @@ import org.apache.commons.lang3.StringUtils;
 import org.htmlcleaner.TagNode;
 import org.jhaws.common.io.IOFile;
 
-/**
- * FileInput
- */
 public class FileInput extends Input {
+	private static final long serialVersionUID = -5620942678431367341L;
 
-    private static final long serialVersionUID = -5620942678431367341L;
+	public FileInput(TagNode inputnode) {
+		super(inputnode);
+	}
 
-    /**
-     * Creates a new FileInput object.
-     *
-     * @param inputnode
-     */
-    public FileInput(TagNode inputnode) {
-        super(inputnode);
-    }
+	public FileInput(String id_name) {
+		this(id_name, id_name);
+	}
 
-    /**
-     * get file
-     *
-     * @return
-     */
-    public IOFile getFile() {
-        return StringUtils.isBlank(this.getValue()) ? null : new IOFile(this.getValue());
-    }
+	public FileInput(String id, String name) {
+		super(InputType.file, id, name);
+	}
+
+	public IOFile getFile() {
+		return StringUtils.isBlank(this.getValue()) ? null : new IOFile(this.getValue());
+	}
+
+	public void setFile(IOFile file) {
+		setValue(file == null ? null : file.getAbsolutePath());
+	}
 }

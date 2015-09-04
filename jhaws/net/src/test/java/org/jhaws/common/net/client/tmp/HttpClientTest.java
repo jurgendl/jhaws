@@ -1,5 +1,6 @@
 package org.jhaws.common.net.client.tmp;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import org.jhaws.common.io.IOFile;
+import org.jhaws.common.net.client.HTTPClientDefaults;
+import org.jhaws.common.net.client.forms.FileInput;
 import org.jhaws.common.net.client.forms.Form;
-import org.jhaws.common.net.client.tmp.HTTPClient;
 import org.jhaws.common.net.client.tmp.HTTPClient.DeleteParams;
 import org.jhaws.common.net.client.tmp.HTTPClient.GetParams;
 import org.jhaws.common.net.client.tmp.HTTPClient.HeadParams;
@@ -26,6 +29,7 @@ import org.junit.Test;
  * @see http://www.mastertheboss.com/jboss-frameworks/resteasy/resteasy-tutorial-part-two-web-parameters
  * @see https://dzone.com/articles/how-test-rest-api-junit
  * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy-reference-guide-en-US.pdf
+ * @see http://www.baeldung.com/httpclient-multipart-upload
  */
 public class HttpClientTest {
 	private static final String UTF_8 = "UTF-8";
@@ -177,16 +181,33 @@ public class HttpClientTest {
 
 	@Test
 	public void test_post() {
+		URI uri = getBase().path(TestResource.POST).build();
+		Form form = new Form("formid");
+		form.setMethod(HTTPClientDefaults.POST);
+		form.setUrl(uri);
+		String value = "formValue";
+		form.setValue(TestResource.FORM_PARAM, value);
+		Assert.assertEquals(value, hc.submit(form).getContentString());	
+	}
+	
+	@Test
+	public void test_post_multi() {
+		URI uri = getBase().path(TestResource.POST_MULTI).build();
+		Form form = new Form("formid");
+		FileInput f = new FileInput("fileinput");
+		IOFile newTmpFile = IOFile.newTmpFile();
+		String bytes = "newTmpFile";
 		try {
-			URI uri = getBase().path(TestResource.POST).build();
-			Form form = new Form("formid");
-			form.setMethod("POST");
-			form.setUrl(uri);
-			String value = "formValue";
-			form.setValue(TestResource.FORM_PARAM, value);
-			Assert.assertEquals(value, hc.submit(form).getContentString());
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
+			newTmpFile.writeBytes(bytes.getBytes());
+		} catch (IOException e) {
+			//
 		}
+		f.setFile(newTmpFile);
+		form.addInputElements(f.getName() ,f);
+		form.setMethod(HTTPClientDefaults.POST);
+		form.setUrl(uri);
+		String value = "formValue";
+		form.setValue(TestResource.FORM_PARAM, value);
+		Assert.assertEquals(bytes, hc.submit(form).getContentString());	
 	}
 }

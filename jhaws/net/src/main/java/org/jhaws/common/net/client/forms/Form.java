@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,15 +17,11 @@ import java.util.Map;
 
 import org.htmlcleaner.TagNode;
 
-/**
- * Form
- */
 public class Form implements Serializable, Iterable<InputElement> {
 	public static Form deserialize(InputStream in) throws IOException, ClassNotFoundException {
 		ObjectInputStream encoder = new ObjectInputStream(new BufferedInputStream(in));
 		Object object = encoder.readObject();
 		encoder.close();
-
 		return (Form) object;
 	}
 
@@ -40,7 +35,7 @@ public class Form implements Serializable, Iterable<InputElement> {
 
 	private String method;
 
-private URI url;
+	private URI url;
 
 	public Form() {
 		super();
@@ -114,7 +109,7 @@ private URI url;
 	}
 
 	public Collection<InputElement> getInputElements() {
-		return Collections.unmodifiableCollection(this.inputElements.values());
+		return this.inputElements.values();
 	}
 
 	public String getMethod() {
@@ -138,7 +133,6 @@ private URI url;
 		ObjectOutputStream encoder = new ObjectOutputStream(new BufferedOutputStream(out));
 		encoder.writeObject(this);
 		encoder.close();
-
 		return this;
 	}
 
@@ -156,20 +150,26 @@ private URI url;
 	public String toString() {
 		StringBuilder sb = new StringBuilder("form: id=").append(this.id).append(",method=").append(this.method)
 				.append(",action=").append(this.action).append(";");
-
 		for (InputElement element : this.getInputElements()) {
 			sb.append("\n\t").append(element);
 		}
-
 		return sb.toString();
 	}
-	
+
 	public void setMethod(String method) {
 		this.method = method;
 	}
 
 	public void setInputElements(Map<String, InputElement> inputElements) {
 		this.inputElements = inputElements;
+	}
+	
+	public void addInputElements(String key, InputElement inputElement) {
+		inputElements.put(key, inputElement);		
+	}
+
+	public void removeInputElements(String key) {
+		inputElements.remove(key);
 	}
 
 	public void setAction(String action) {
