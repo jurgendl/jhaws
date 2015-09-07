@@ -9,6 +9,8 @@ import static org.apache.http.util.EntityUtils.toByteArray;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -55,7 +57,9 @@ import org.jhaws.common.net.client.tmp.forms.Form;
 
 /**
  * @see https://hc.apache.org/
- * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient- tutorial.pdf
+ * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-tutorial.pdf
+ * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced.html
+ * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientChunkEncodedPost.java
  */
 public class HTTPClient implements Closeable {
     protected String charSet = HTTPClientDefaults.CHARSET;
@@ -148,7 +152,7 @@ public class HTTPClient implements Closeable {
     }
 
     @SuppressWarnings("deprecation")
-    protected Response execute(HttpUriRequest req) {
+    protected Response execute(OutputStream out, HttpUriRequest req) {
         req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
 
         HttpClientContext context = HttpClientContext.create();
@@ -161,7 +165,7 @@ public class HTTPClient implements Closeable {
                         new UsernamePasswordCredentials(user, getPass()));
                 context.setCredentialsProvider(credsProvider);
             } else {
-                response = buildResponse(req, httpResponse);
+                response = buildResponse(out, req, httpResponse);
             }
             consumeQuietly(httpResponse.getEntity());
         } catch (IOException ioex) {
@@ -169,7 +173,7 @@ public class HTTPClient implements Closeable {
         }
         if (response == null) {
             try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
-                response = buildResponse(req, httpResponse);
+                response = buildResponse(out, req, httpResponse);
                 consumeQuietly(httpResponse.getEntity());
             } catch (IOException ioex) {
                 throw new UncheckedIOException(ioex);
@@ -178,7 +182,7 @@ public class HTTPClient implements Closeable {
         return response;
     }
 
-    protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse) throws IOException {
+    protected Response buildResponse(OutputStream out, HttpUriRequest req, CloseableHttpResponse httpResponse) throws IOException {
         Response response = new Response();
         response.setUri(req.getURI());
         for (Header header : httpResponse.getAllHeaders()) {
@@ -196,22 +200,38 @@ public class HTTPClient implements Closeable {
         }
         HttpEntity entity = httpResponse.getEntity();
         if (entity != null) {
-            response.setContent(toByteArray(entity));
-            response.setContentLength(entity.getContentLength());
-            response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
-            response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
+            if (out != null) {
+                entity.writeTo(out);
+//                int size = 100;
+//                byte[] buffer = new byte[size];
+//                int read;
+//                try (InputStream in = entity.getContent()) {
+//                    read = in.read(buffer);
+//                    while (read > 0) {
+//                        out.write(buffer, 0, read);
+//                        System.out.println("**"+read+"**");
+//                        out.flush();
+//                        read = in.read(buffer);
+//                    }
+//                }
+            } else {
+                response.setContent(toByteArray(entity));
+                response.setContentLength(entity.getContentLength());
+                response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
+                response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
+            }
         }
         return response;
     }
 
     public Response get(GetParams get) {
         HttpGet req = new HttpGet(toFullUri(get));
-        return execute(req);
+        return execute(get.getOutputStream(), req);
     }
 
     public Response delete(DeleteParams delete) {
         HttpDelete req = new HttpDelete(toFullUri(delete));
-        return execute(req);
+        return execute(delete.getOutputStream(), req);
     }
 
     public Response put(PutParams put) {
@@ -234,7 +254,7 @@ public class HTTPClient implements Closeable {
         if (body != null)
             req.setEntity(body);
 
-        return execute(req);
+        return execute(put.getOutputStream(), req);
     }
 
     public Response post(PostParams post) {
@@ -256,22 +276,22 @@ public class HTTPClient implements Closeable {
             post.getFormValues().entrySet().forEach(entry -> entry.getValue().forEach(element -> builder.addParameter(entry.getKey(), element)));
             req = builder.build();
         }
-        return execute(req);
+        return execute(post.getOutputStream(), req);
     }
 
     public Response head(HeadParams head) {
         HttpHead req = new HttpHead(head.getUri());
-        return execute(req);
+        return execute(null, req);
     }
 
     public Response options(OptionsParams options) {
         HttpOptions req = new HttpOptions(options.getUri());
-        return execute(req);
+        return execute(null, req);
     }
 
     public Response trace(TraceParams trace) {
         HttpTrace req = new HttpTrace(trace.getUri());
-        return execute(req);
+        return execute(null, req);
     }
 
     protected String getPass() {
@@ -337,7 +357,7 @@ public class HTTPClient implements Closeable {
 
     @Override
     public void close() {
-        if(httpClient!=null) {
+        if (httpClient != null) {
             try {
                 httpClient.close();
             } catch (IOException e) {

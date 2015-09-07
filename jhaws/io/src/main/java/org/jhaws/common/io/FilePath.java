@@ -657,13 +657,14 @@ public class FilePath implements Path, Externalizable {
         return FilePath.createDefaultTempFile(System.currentTimeMillis() + "-" + RND.nextLong(), null, attrs);
     }
 
-    public static FilePath createDefaultTempFile(String prefix, FileAttribute<?>... attrs) throws UncheckedIOException {
-        return FilePath.createDefaultTempFile(prefix, null, attrs);
+    public static FilePath createDefaultTempFile(String extension, FileAttribute<?>... attrs) throws UncheckedIOException {
+        return FilePath.createDefaultTempFile(null, extension, attrs);
     }
 
     public static FilePath createDefaultTempFile(String prefix, String extension, FileAttribute<?>... attrs) throws UncheckedIOException {
         try {
-            return new FilePath(Files.createTempFile(prefix + "-", extension == null ? "" : FilePath.getFileSeperator() + extension, attrs));
+            return new FilePath(Files.createTempFile(prefix == null ? null : prefix + "-",
+                    extension == null ? "" : FilePath.getFileSeperator() + extension, attrs));
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
