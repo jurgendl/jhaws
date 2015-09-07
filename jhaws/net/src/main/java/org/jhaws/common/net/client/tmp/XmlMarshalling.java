@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.xml;
+package org.jhaws.common.net.client.tmp;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

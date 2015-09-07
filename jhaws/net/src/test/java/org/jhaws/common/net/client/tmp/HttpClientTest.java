@@ -1,6 +1,5 @@
 package org.jhaws.common.net.client.tmp;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -10,16 +9,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.jhaws.common.io.IOFile;
+import org.jhaws.common.io.FilePath;
 import org.jhaws.common.net.client.HTTPClientDefaults;
-import org.jhaws.common.net.client.forms.FileInput;
-import org.jhaws.common.net.client.forms.Form;
-import org.jhaws.common.net.client.tmp.HTTPClient.DeleteParams;
-import org.jhaws.common.net.client.tmp.HTTPClient.GetParams;
-import org.jhaws.common.net.client.tmp.HTTPClient.HeadParams;
-import org.jhaws.common.net.client.tmp.HTTPClient.PutParams;
-import org.jhaws.common.net.client.tmp.HTTPClient.Response;
-import org.jhaws.common.net.client.xml.XmlMarshalling;
+import org.jhaws.common.net.client.tmp.forms.FileInput;
+import org.jhaws.common.net.client.tmp.forms.Form;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -57,6 +50,7 @@ public class HttpClientTest {
 	@AfterClass
 	public static void afterClass() throws Exception {
 		server.close();
+		hc.close();
 	}
 
 	@Test
@@ -172,11 +166,12 @@ public class HttpClientTest {
 
 	@Test
 	public void test_form() {
-		HTTPClient hc = new HTTPClient();
-		Form form = hc.get(new GetParams("http://www.google.com")).getForms().get(0);
-		form.setValue("q", "java");
-		form.setValue("source", "hp");
-		Assert.assertEquals(200, hc.submit(form).getStatusCode());
+		try(HTTPClient hc = new HTTPClient()){
+    		Form form = hc.get(new GetParams("http://www.google.com")).getForms().get(0);
+    		form.setValue("q", "java");
+    		form.setValue("source", "hp");
+    		Assert.assertEquals(200, hc.submit(form).getStatusCode());
+		}
 	}
 
 	@Test
@@ -195,14 +190,10 @@ public class HttpClientTest {
 		URI uri = getBase().path(TestResource.POST_MULTI).build();
 		Form form = new Form("formid");
 		FileInput f = new FileInput("fileinput");
-		IOFile newTmpFile = IOFile.newTmpFile();
+		FilePath tmp = FilePath.createDefaultTempFile();
 		String bytes = "newTmpFile";
-		try {
-			newTmpFile.writeBytes(bytes.getBytes());
-		} catch (IOException e) {
-			//
-		}
-		f.setFile(newTmpFile);
+		tmp.write(bytes);
+		f.setFile(tmp);
 		form.addInputElements(f.getName() ,f);
 		form.setMethod(HTTPClientDefaults.POST);
 		form.setUrl(uri);
