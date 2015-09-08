@@ -1,6 +1,5 @@
 package org.jhaws.common.net.client.tmp;
 
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,8 +10,6 @@ public class GetParams extends Params {
     private static final long serialVersionUID = 4305650301682256528L;
 
     protected Map<String, List<String>> formValues = new HashMap<String, List<String>>();
-    
-    protected OutputStream outputStream;
 
     public GetParams() {
         super();
@@ -41,13 +38,5 @@ public class GetParams extends Params {
             formValues.put(key, list);
         }
         list.add(value);
-    }
-
-    public OutputStream getOutputStream() {
-        return outputStream;
-    }
-
-    public void setOutputStream(OutputStream outputStream) {
-        this.outputStream = outputStream;
     }
 }

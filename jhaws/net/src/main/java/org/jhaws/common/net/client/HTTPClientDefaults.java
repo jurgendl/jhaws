@@ -5,6 +5,8 @@ package org.jhaws.common.net.client;
  * HTTPClientDefaults
  */
 public interface HTTPClientDefaults {
+    public static final int BUFF_LEN = 1024 * 8;
+    
     /** Location */
     public static final String LOCATION = "Location";
 

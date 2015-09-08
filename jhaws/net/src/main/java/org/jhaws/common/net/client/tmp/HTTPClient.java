@@ -9,11 +9,12 @@ import static org.apache.http.util.EntityUtils.toByteArray;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -47,6 +48,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
+import org.apache.http.nio.client.methods.HttpAsyncMethods;
+import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
 import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.security.SecureMe;
@@ -66,13 +69,19 @@ public class HTTPClient implements Closeable {
 
     protected transient CloseableHttpClient httpClient;
 
-    protected String userAgent = HTTPClientDefaults.CHROME;
+    protected transient org.apache.http.impl.nio.client.CloseableHttpAsyncClient asyncHttpclient;
 
-    protected String user;
+    protected transient RequestConfig requestConfig;
+
+    protected transient RedirectStrategy redirectStrategy;
+
+    protected transient String user;
 
     protected transient byte[] pass;
 
     protected transient Security security;
+
+    protected String userAgent = HTTPClientDefaults.CHROME;
 
     public String getUserAgent() {
         return userAgent;
@@ -82,63 +91,84 @@ public class HTTPClient implements Closeable {
         this.userAgent = userAgent;
     }
 
+    protected RequestConfig getRequestConfig() {
+        if (requestConfig == null) {
+            requestConfig = RequestConfig.custom()//
+                    .setContentCompressionEnabled(true)//
+                    .setMaxRedirects(5)//
+                    .setCircularRedirectsAllowed(false)//
+                    .setConnectionRequestTimeout(HTTPClientDefaults.TIMEOUT)//
+                    .setConnectTimeout(HTTPClientDefaults.TIMEOUT)//
+                    .setExpectContinueEnabled(HTTPClientDefaults.EXPECT_CONTINUE)//
+                    .setRedirectsEnabled(true)//
+                    .setCookieSpec(HTTPClientDefaults.BROWSER_COMPATIBILITY)//
+                    .build();
+        }
+        return requestConfig;
+    }
+
+    protected RedirectStrategy getRedirectStrategy() {
+        if (redirectStrategy == null) {
+            redirectStrategy = new LaxRedirectStrategy() {
+                @Override
+                public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+                    HttpUriRequest redirect = super.getRedirect(request, response, context);
+                    // HTTPClient.this.chain.add(redirect.getURI());
+                    // HTTPClient.this.domain = redirect.getURI().getHost();
+                    System.out.println("redirect: " + redirect.getURI());
+                    return redirect;
+                }
+
+                @Override
+                public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+                    if (response == null) {
+                        throw new IllegalArgumentException("HTTP response may not be null");
+                    }
+
+                    int statusCode = response.getStatusLine().getStatusCode();
+                    String method = request.getRequestLine().getMethod();
+                    Header locationHeader = response.getFirstHeader("location");
+
+                    switch (statusCode) {
+                        case HttpStatus.SC_MOVED_TEMPORARILY:
+                            return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
+                                    || method.equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
+                        case HttpStatus.SC_MOVED_PERMANENTLY:
+                        case HttpStatus.SC_TEMPORARY_REDIRECT:
+                            return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
+                                    || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
+                        case HttpStatus.SC_SEE_OTHER:
+                            return true;
+                        default:
+                            return false;
+                    } // end of switch
+                }
+            };
+        }
+        return redirectStrategy;
+    }
+
     protected CloseableHttpClient getHttpClient() {
         if (httpClient == null) {
             httpClient = HttpClientBuilder.create()//
                     .setUserAgent(getUserAgent())//
                     .setRedirectStrategy(getRedirectStrategy())//
-                    .setDefaultRequestConfig(//
-                            RequestConfig.custom()//
-                                    .setContentCompressionEnabled(true)//
-                                    .setMaxRedirects(5)//
-                                    .setCircularRedirectsAllowed(false)//
-                                    .setConnectionRequestTimeout(HTTPClientDefaults.TIMEOUT)//
-                                    .setConnectTimeout(HTTPClientDefaults.TIMEOUT)//
-                                    .setExpectContinueEnabled(HTTPClientDefaults.EXPECT_CONTINUE)//
-                                    .setRedirectsEnabled(true)//
-                                    .setCookieSpec(HTTPClientDefaults.BROWSER_COMPATIBILITY)//
-                                    .build())//
+                    .setDefaultRequestConfig(getRequestConfig())//
                     .build();//
         }
         return httpClient;
     }
 
-    protected RedirectStrategy getRedirectStrategy() {
-        return new LaxRedirectStrategy() {
-            @Override
-            public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
-                HttpUriRequest redirect = super.getRedirect(request, response, context);
-                // HTTPClient.this.chain.add(redirect.getURI());
-                // HTTPClient.this.domain = redirect.getURI().getHost();
-                System.out.println("redirect: " + redirect.getURI());
-                return redirect;
-            }
-
-            @Override
-            public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
-                if (response == null) {
-                    throw new IllegalArgumentException("HTTP response may not be null");
-                }
-
-                int statusCode = response.getStatusLine().getStatusCode();
-                String method = request.getRequestLine().getMethod();
-                Header locationHeader = response.getFirstHeader("location");
-
-                switch (statusCode) {
-                    case HttpStatus.SC_MOVED_TEMPORARILY:
-                        return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
-                                || method.equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
-                    case HttpStatus.SC_MOVED_PERMANENTLY:
-                    case HttpStatus.SC_TEMPORARY_REDIRECT:
-                        return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
-                                || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
-                    case HttpStatus.SC_SEE_OTHER:
-                        return true;
-                    default:
-                        return false;
-                } // end of switch
-            }
-        };
+    protected org.apache.http.impl.nio.client.CloseableHttpAsyncClient getAsyncHttpclient() {
+        if (asyncHttpclient == null) {
+            asyncHttpclient = org.apache.http.impl.nio.client.HttpAsyncClients.custom()//
+                    .setUserAgent(getUserAgent())//
+                    .setRedirectStrategy(getRedirectStrategy())//
+                    .setDefaultRequestConfig(getRequestConfig())//
+                    .build();
+            asyncHttpclient.start();
+        }
+        return asyncHttpclient;
     }
 
     protected URI toFullUri(GetParams get) {
@@ -151,9 +181,8 @@ public class HTTPClient implements Closeable {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    protected Response execute(OutputStream out, HttpUriRequest req) {
-        req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
+    public Response execute(HttpUriRequest req) {
+        prepareRequest(req);
 
         HttpClientContext context = HttpClientContext.create();
         context.setCredentialsProvider(new SystemDefaultCredentialsProvider());
@@ -165,7 +194,7 @@ public class HTTPClient implements Closeable {
                         new UsernamePasswordCredentials(user, getPass()));
                 context.setCredentialsProvider(credsProvider);
             } else {
-                response = buildResponse(out, req, httpResponse);
+                response = buildResponse(req, httpResponse);
             }
             consumeQuietly(httpResponse.getEntity());
         } catch (IOException ioex) {
@@ -173,7 +202,7 @@ public class HTTPClient implements Closeable {
         }
         if (response == null) {
             try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
-                response = buildResponse(out, req, httpResponse);
+                response = buildResponse(req, httpResponse);
                 consumeQuietly(httpResponse.getEntity());
             } catch (IOException ioex) {
                 throw new UncheckedIOException(ioex);
@@ -182,7 +211,7 @@ public class HTTPClient implements Closeable {
         return response;
     }
 
-    protected Response buildResponse(OutputStream out, HttpUriRequest req, CloseableHttpResponse httpResponse) throws IOException {
+    protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse) throws IOException {
         Response response = new Response();
         response.setUri(req.getURI());
         for (Header header : httpResponse.getAllHeaders()) {
@@ -200,41 +229,35 @@ public class HTTPClient implements Closeable {
         }
         HttpEntity entity = httpResponse.getEntity();
         if (entity != null) {
-            if (out != null) {
-                entity.writeTo(out);
-//                int size = 100;
-//                byte[] buffer = new byte[size];
-//                int read;
-//                try (InputStream in = entity.getContent()) {
-//                    read = in.read(buffer);
-//                    while (read > 0) {
-//                        out.write(buffer, 0, read);
-//                        System.out.println("**"+read+"**");
-//                        out.flush();
-//                        read = in.read(buffer);
-//                    }
-//                }
-            } else {
-                response.setContent(toByteArray(entity));
-                response.setContentLength(entity.getContentLength());
-                response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
-                response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
-            }
+            response.setContent(toByteArray(entity));
+            response.setContentLength(entity.getContentLength());
+            response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
+            response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
         }
         return response;
     }
 
     public Response get(GetParams get) {
-        HttpGet req = new HttpGet(toFullUri(get));
-        return execute(get.getOutputStream(), req);
+        return execute(createGet(get));
+    }
+
+    public HttpGet createGet(GetParams get) {
+        return new HttpGet(toFullUri(get));
     }
 
     public Response delete(DeleteParams delete) {
-        HttpDelete req = new HttpDelete(toFullUri(delete));
-        return execute(delete.getOutputStream(), req);
+        return execute(createDelete(delete));
+    }
+
+    public HttpDelete createDelete(DeleteParams delete) {
+        return new HttpDelete(toFullUri(delete));
     }
 
     public Response put(PutParams put) {
+        return execute(createPut(put));
+    }
+
+    public HttpPut createPut(PutParams put) {
         HttpPut req = new HttpPut(put.getUri());
 
         HttpEntity body = null;
@@ -251,13 +274,17 @@ public class HTTPClient implements Closeable {
             // TODO
         }
 
-        if (body != null)
+        if (body != null) {
             req.setEntity(body);
-
-        return execute(put.getOutputStream(), req);
+        }
+        return req;
     }
 
     public Response post(PostParams post) {
+        return execute(createPost(post));
+    }
+
+    public HttpUriRequest createPost(PostParams post) {
         HttpUriRequest req;
         if (post.getBody() != null) {
             RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
@@ -276,22 +303,31 @@ public class HTTPClient implements Closeable {
             post.getFormValues().entrySet().forEach(entry -> entry.getValue().forEach(element -> builder.addParameter(entry.getKey(), element)));
             req = builder.build();
         }
-        return execute(post.getOutputStream(), req);
+        return req;
     }
 
     public Response head(HeadParams head) {
-        HttpHead req = new HttpHead(head.getUri());
-        return execute(null, req);
+        return execute(createHead(head));
+    }
+
+    public HttpHead createHead(HeadParams head) {
+        return new HttpHead(head.getUri());
     }
 
     public Response options(OptionsParams options) {
-        HttpOptions req = new HttpOptions(options.getUri());
-        return execute(null, req);
+        return execute(createOptions(options));
+    }
+
+    public HttpOptions createOptions(OptionsParams options) {
+        return new HttpOptions(options.getUri());
     }
 
     public Response trace(TraceParams trace) {
-        HttpTrace req = new HttpTrace(trace.getUri());
-        return execute(null, req);
+        return execute(createTrace(trace));
+    }
+
+    public HttpTrace createTrace(TraceParams trace) {
+        return new HttpTrace(trace.getUri());
     }
 
     protected String getPass() {
@@ -334,6 +370,10 @@ public class HTTPClient implements Closeable {
     }
 
     public Response post(Form form) {
+        return post(createPost(form));
+    }
+
+    public PostParams createPost(Form form) {
         URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
         PostParams post = new PostParams(uri);
         form.getInputElements().stream().filter(e -> !(e instanceof FileInput)).forEach(e -> post.addFormValue(e.getName(), e.getValue()));
@@ -345,14 +385,18 @@ public class HTTPClient implements Closeable {
                 .map(e -> FileInput.class.cast(e))
                 .forEach(e -> post.getAttachments().put(e.getName(), new FilePath(e.getFile())));
         post.setName(form.getId());
-        return post(post);
+        return post;
     }
 
     public Response get(Form form) {
+        return get(createGet(form));
+    }
+
+    public GetParams createGet(Form form) {
         URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
         GetParams get = new GetParams(uri);
         form.getInputElements().forEach(e -> get.addFormValue(e.getName(), e.getValue()));
-        return get(get);
+        return get;
     }
 
     @Override
@@ -360,9 +404,55 @@ public class HTTPClient implements Closeable {
         if (httpClient != null) {
             try {
                 httpClient.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                //
             }
+            httpClient = null;
         }
+        if (asyncHttpclient != null) {
+            try {
+                asyncHttpclient.close();
+            } catch (Exception e) {
+                //
+            }
+            asyncHttpclient = null;
+        }
+        redirectStrategy = null;
+        requestConfig = null;
+        resetAuthentication();
+    }
+
+    public void execute(HttpUriRequest req, OutputStream out) {
+        prepareRequest(req);
+
+        HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
+
+        Future<OutputStream> future = getAsyncHttpclient().execute(areq, new AsyncConsumer(out), null);
+        try {
+            future.get();
+        } catch (ExecutionException e) {
+            wrap(e.getCause());
+        } catch (InterruptedException e) {
+            //
+        }
+    }
+
+    protected void wrap(Throwable cause) throws UncheckedIOException, RuntimeException {
+        if (cause instanceof RuntimeException) {
+            throw RuntimeException.class.cast(cause);
+        }
+        if (cause instanceof IOException) {
+            throw new UncheckedIOException(IOException.class.cast(cause));
+        }
+        throw new RuntimeException(cause);
+    }
+
+    @SuppressWarnings("deprecation")
+    protected void prepareRequest(HttpUriRequest req) {
+        req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
+    }
+
+    protected void prepareRequest(HttpAsyncRequestProducer req) {
+        // req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
     }
 }

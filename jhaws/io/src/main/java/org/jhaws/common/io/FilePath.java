@@ -44,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchEvent.Modifier;
 import java.nio.file.WatchKey;
@@ -465,8 +466,8 @@ public class FilePath implements Path, Externalizable {
                 this(in, Charset.defaultCharset());
             }
 
-            public LineIterator(InputStream in, Charset cs) {
-                this(new BufferedReader(new InputStreamReader(in, cs)));
+            public LineIterator(InputStream in, Charset charset) {
+                this(new BufferedReader(new InputStreamReader(in, charset)));
             }
 
             @Override
@@ -1848,17 +1849,17 @@ public class FilePath implements Path, Externalizable {
         return this.newBufferedReader(this.getDefaultCharset());
     }
 
-    public BufferedReader newBufferedReader(Charset cs) throws UncheckedIOException {
+    public BufferedReader newBufferedReader(Charset charset) throws UncheckedIOException {
         try {
-            return Files.newBufferedReader(this.getPath(), cs);
+            return Files.newBufferedReader(this.getPath(), charset);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
     }
 
-    public BufferedWriter newBufferedWriter(Charset cs, OpenOption... options) throws UncheckedIOException {
+    public BufferedWriter newBufferedWriter(Charset charset, OpenOption... options) throws UncheckedIOException {
         try {
-            return Files.newBufferedWriter(this.getPath(), cs, options);
+            return Files.newBufferedWriter(this.getPath(), charset, options);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -1986,9 +1987,9 @@ public class FilePath implements Path, Externalizable {
         return this.readAll(this.getDefaultCharset());
     }
 
-    public String readAll(Charset cs) throws UncheckedIOException {
+    public String readAll(Charset charset) throws UncheckedIOException {
         try {
-            return new String(Files.readAllBytes(this.getPath()), cs);
+            return new String(Files.readAllBytes(this.getPath()), charset);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -2014,9 +2015,9 @@ public class FilePath implements Path, Externalizable {
         return this.readAllLines(this.getDefaultCharset());
     }
 
-    public List<String> readAllLines(Charset cs) throws UncheckedIOException {
+    public List<String> readAllLines(Charset charset) throws UncheckedIOException {
         try {
-            return Files.readAllLines(this.getPath(), cs);
+            return Files.readAllLines(this.getPath(), charset);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -2030,9 +2031,9 @@ public class FilePath implements Path, Externalizable {
         return StreamSupport.stream(newDirectoryStream().spliterator(), false);
     }
 
-    public Stream<String> streamContentString(Charset cs) throws UncheckedIOException {
+    public Stream<String> streamContentString(Charset charset) throws UncheckedIOException {
         try {
-            return Files.lines(this.getPath(), cs);
+            return Files.lines(this.getPath(), charset);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -2359,6 +2360,54 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public FilePath writeNew(byte... bytes) throws UncheckedIOException {
+        return write(bytes, StandardOpenOption.CREATE_NEW);
+    }
+
+    public FilePath writeNew(ByteBuffer bytes) throws UncheckedIOException {
+        return write(bytes, StandardOpenOption.CREATE_NEW);
+    }
+
+    public FilePath writeNew(Iterable<? extends CharSequence> lines, Charset charset) throws UncheckedIOException {
+        return write(lines, charset, StandardOpenOption.CREATE_NEW);
+    }
+
+    public FilePath writeNew(Iterable<? extends CharSequence> lines) throws UncheckedIOException {
+        return writeNew(lines, this.getDefaultCharset());
+    }
+
+    public FilePath writeNew(String text, Charset charset) throws UncheckedIOException {
+        return write(text, charset, StandardOpenOption.CREATE_NEW);
+    }
+
+    public FilePath writeNew(String text) throws UncheckedIOException {
+        return writeNew(text, this.getDefaultCharset());
+    }
+
+    public FilePath writeAppend(byte... bytes) throws UncheckedIOException {
+        return write(bytes, StandardOpenOption.APPEND);
+    }
+
+    public FilePath writeAppend(ByteBuffer bytes) throws UncheckedIOException {
+        return write(bytes, StandardOpenOption.APPEND);
+    }
+
+    public FilePath writeAppend(Iterable<? extends CharSequence> lines, Charset charset) throws UncheckedIOException {
+        return write(lines, charset, StandardOpenOption.APPEND);
+    }
+
+    public FilePath writeAppend(Iterable<? extends CharSequence> lines) throws UncheckedIOException {
+        return writeAppend(lines, this.getDefaultCharset());
+    }
+
+    public FilePath writeAppend(String text, Charset charset) throws UncheckedIOException {
+        return write(text, charset, StandardOpenOption.APPEND);
+    }
+
+    public FilePath writeAppend(String text) throws UncheckedIOException {
+        return writeAppend(text, this.getDefaultCharset());
+    }
+
     public FilePath write(byte[] bytes, OpenOption... options) throws UncheckedIOException {
         try {
             return new FilePath(Files.write(this.getPath(), bytes, options));
@@ -2369,30 +2418,29 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath write(ByteBuffer bytes, OpenOption... options) throws UncheckedIOException {
         try {
-            return new FilePath(Files.write(this.getPath(), bytes.array(), options));
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
-
-    public FilePath write(Iterable<? extends CharSequence> lines, Charset cs, OpenOption... options) throws UncheckedIOException {
-        try {
-            return new FilePath(Files.write(this.getPath(), lines, cs, options));
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
-
-    public Path write(Iterable<? extends CharSequence> lines, OpenOption... options) throws UncheckedIOException {
-        try (BufferedWriter bufferedWriter = this.newBufferedWriter(options)) {
-            for (CharSequence line : lines) {
-                bufferedWriter.write(line.toString());
-                bufferedWriter.newLine();
+            byte[] array;
+            if (bytes.limit() == bytes.capacity()) {
+                array = bytes.array();
+            } else {
+                array = new byte[bytes.limit()];
+                bytes.get(array, 0, bytes.limit());
             }
+            return new FilePath(Files.write(this.getPath(), array, options));
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
-        return this;// Files.write(this.getPath(), lines, options);
+    }
+
+    public FilePath write(Iterable<? extends CharSequence> lines, Charset charset, OpenOption... options) throws UncheckedIOException {
+        try {
+            return new FilePath(Files.write(this.getPath(), lines, charset, options));
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    public FilePath write(Iterable<? extends CharSequence> lines, OpenOption... options) throws UncheckedIOException {
+        return write(lines, this.getDefaultCharset(), options);
     }
 
     public FilePath write(String text, Charset charset, OpenOption... options) throws UncheckedIOException {

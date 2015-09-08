@@ -68,8 +68,10 @@ public class TestResource {
     Object delete;
 
     List<String> written = new ArrayList<>();
-    
+
     Boolean streamBusy = null;
+
+    Random r = new Random(System.currentTimeMillis());
 
     @GET
     @Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
@@ -175,25 +177,26 @@ public class TestResource {
             public void write(OutputStream output) throws IOException, WebApplicationException {
                 written.clear();
                 streamBusy = true;
-                Random r = new Random(System.currentTimeMillis());
                 int w = 0;
                 for (int i = 0; i < 10; i++) {
-                    for (int j = 0; j < 100; j++) {
-                        output.write((char) ((int) 'a' + r.nextInt(25)));
+                    for (int j = 0; j < 4; j++) {
+                        for (int k = 0; k < 20; k++) {
+                            output.write((char) ((int) 'a' + k/* r.nextInt(25) */));
+                        }
                     }
-                    long currentTimeMillis = System.currentTimeMillis();
+                    long currentTimeMillis = 0;//System.currentTimeMillis();
                     w += 100 + 1 + 9 + 1 + ("" + currentTimeMillis).length() + 1;
                     String log = String.format("%09d", w) + "," + currentTimeMillis;
-                    System.out.println("> " + log);
+                    // System.out.println("> " + log);
                     written.add(log);
                     output.write('\n');
                     output.write(log.getBytes());
                     output.write('\n');
-                    try {
-                        Thread.sleep(3000l);
-                    } catch (Exception e) {
-                        //
-                    }
+                    // try {
+                    // Thread.sleep(3000l);
+                    // } catch (Exception e) {
+                    // //
+                    // }
                 }
                 streamBusy = false;
             }

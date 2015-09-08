@@ -1,6 +1,5 @@
 package org.jhaws.common.net.client.tmp;
 
-import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.commons.io.output.TeeOutputStream;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.net.client.HTTPClientDefaults;
 import org.jhaws.common.net.client.tmp.forms.FileInput;
@@ -206,28 +204,16 @@ public class HttpClientTest {
     public void test_stream() {
         URI uri = getBase().path(TestResource.STREAM).build();
         GetParams get = new GetParams(uri);
-        ByteArrayOutputStream b = new ByteArrayOutputStream();
-        FilePath tf = FilePath.createDefaultTempFile("txt");
-        System.out.println(tf);
-        TeeOutputStream tee = new TeeOutputStream(b, tf.newOutputStream());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!Boolean.FALSE.equals(testResource.streamBusy)) {
-                    System.out.println("< " + b.toByteArray().length);
-                    for (String i : testResource.written) {
-                        System.out.println("< " + i);
-                    }
-                    try {
-                        Thread.sleep(3000l);
-                    } catch (InterruptedException e) {
-                        //
-                    }
-                }
-                System.out.println("< " + b.toByteArray().length);
-            }
-        }).start();
-        get.setOutputStream(tee);
-        hc.get(get);
+
+        FilePath tmp1 = FilePath.getTempDirectory().child("hctest_1_.txt");
+        tmp1.deleteIfExists();
+        tmp1.write(hc.get(get).getContent());
+
+        FilePath tmp2 = FilePath.getTempDirectory().child("hctest_2_.txt");
+        tmp2.deleteIfExists();
+        hc.execute(hc.createGet(get), tmp2.newBufferedOutputStream());
+
+        Assert.assertEquals(tmp2.getFileSize(), tmp1.getFileSize());
+        Assert.assertEquals(tmp2.readAll(), tmp1.readAll());
     }
 }
