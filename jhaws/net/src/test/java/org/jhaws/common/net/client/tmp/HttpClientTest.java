@@ -211,7 +211,7 @@ public class HttpClientTest {
 
         FilePath tmp2 = FilePath.getTempDirectory().child("hctest_2_.txt");
         tmp2.deleteIfExists();
-        hc.execute(hc.createGet(get), tmp2.newBufferedOutputStream());
+        hc.execute(null, hc.createGet(get), tmp2.newBufferedOutputStream());
 
         Assert.assertEquals(tmp2.getFileSize(), tmp1.getFileSize());
         Assert.assertEquals(tmp2.readAll(), tmp1.readAll());

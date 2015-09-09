@@ -18,6 +18,7 @@ import java.util.concurrent.Future;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -115,7 +116,7 @@ public class HTTPClient implements Closeable {
                     HttpUriRequest redirect = super.getRedirect(request, response, context);
                     // HTTPClient.this.chain.add(redirect.getURI());
                     // HTTPClient.this.domain = redirect.getURI().getHost();
-                    System.out.println("redirect: " + redirect.getURI());
+                    // System.out.println("redirect: " + redirect.getURI());
                     return redirect;
                 }
 
@@ -171,9 +172,9 @@ public class HTTPClient implements Closeable {
         return asyncHttpclient;
     }
 
-    protected URI toFullUri(GetParams get) {
+    protected URI toFullUri(AbstractGetParams<? extends AbstractGetParams<?>> get) {
         URIBuilder uriBuilder = new URIBuilder(get.getUri());
-        stream(get.formValues.entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
+        stream(get.getFormValues().entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
         try {
             return uriBuilder.build();
         } catch (URISyntaxException e1) {
@@ -181,17 +182,17 @@ public class HTTPClient implements Closeable {
         }
     }
 
-    public Response execute(HttpUriRequest req) {
-        prepareRequest(req);
+    public Response execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
+        prepareRequest(params, req);
 
         HttpClientContext context = HttpClientContext.create();
         context.setCredentialsProvider(new SystemDefaultCredentialsProvider());
         Response response = null;
         try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
-            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED && user != null && pass != null) {
+            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED && getUser() != null && pass != null) {
                 CredentialsProvider credsProvider = new BasicCredentialsProvider();
                 credsProvider.setCredentials(new AuthScope(req.getURI().getHost(), AuthScope.ANY_PORT),
-                        new UsernamePasswordCredentials(user, getPass()));
+                        new UsernamePasswordCredentials(getUser(), getPass()));
                 context.setCredentialsProvider(credsProvider);
             } else {
                 response = buildResponse(req, httpResponse);
@@ -238,7 +239,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response get(GetParams get) {
-        return execute(createGet(get));
+        return execute(get, createGet(get));
     }
 
     public HttpGet createGet(GetParams get) {
@@ -246,7 +247,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response delete(DeleteParams delete) {
-        return execute(createDelete(delete));
+        return execute(delete, createDelete(delete));
     }
 
     public HttpDelete createDelete(DeleteParams delete) {
@@ -254,7 +255,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response put(PutParams put) {
-        return execute(createPut(put));
+        return execute(put, createPut(put));
     }
 
     public HttpPut createPut(PutParams put) {
@@ -281,7 +282,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response post(PostParams post) {
-        return execute(createPost(post));
+        return execute(post, createPost(post));
     }
 
     public HttpUriRequest createPost(PostParams post) {
@@ -307,7 +308,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response head(HeadParams head) {
-        return execute(createHead(head));
+        return execute(head, createHead(head));
     }
 
     public HttpHead createHead(HeadParams head) {
@@ -315,7 +316,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response options(OptionsParams options) {
-        return execute(createOptions(options));
+        return execute(options, createOptions(options));
     }
 
     public HttpOptions createOptions(OptionsParams options) {
@@ -323,7 +324,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response trace(TraceParams trace) {
-        return execute(createTrace(trace));
+        return execute(trace, createTrace(trace));
     }
 
     public HttpTrace createTrace(TraceParams trace) {
@@ -332,7 +333,7 @@ public class HTTPClient implements Closeable {
 
     protected String getPass() {
         try {
-            return getSecurity().decrypt(this.pass);
+            return getSecurity().decrypt(pass);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -422,8 +423,8 @@ public class HTTPClient implements Closeable {
         resetAuthentication();
     }
 
-    public void execute(HttpUriRequest req, OutputStream out) {
-        prepareRequest(req);
+    public void execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req, OutputStream out) {
+        prepareRequest(params, req);
 
         HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
 
@@ -448,11 +449,14 @@ public class HTTPClient implements Closeable {
     }
 
     @SuppressWarnings("deprecation")
-    protected void prepareRequest(HttpUriRequest req) {
+    protected void prepareRequest(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
         req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
+        if (params != null && params.getAccept() != null) {
+            req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+        }
     }
 
-    protected void prepareRequest(HttpAsyncRequestProducer req) {
-        // req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
+    protected String getUser() {
+        return user;
     }
 }

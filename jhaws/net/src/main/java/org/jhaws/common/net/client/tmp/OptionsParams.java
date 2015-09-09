@@ -2,7 +2,7 @@ package org.jhaws.common.net.client.tmp;
 
 import java.net.URI;
 
-public class OptionsParams extends GetParams {
+public class OptionsParams extends AbstractGetParams<OptionsParams> {
     private static final long serialVersionUID = -3335823798615631641L;
 
     public OptionsParams() {

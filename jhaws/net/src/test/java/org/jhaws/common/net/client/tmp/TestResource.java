@@ -45,6 +45,8 @@ public class TestResource {
 
     public static final String GET = "get";
 
+    public static final String GET_DOUBLE = "getdouble";
+
     public static final String GET_BODY = "getbody";
 
     public static final String PUT = "put/{" + PATH_PARAM + "}";
@@ -201,5 +203,17 @@ public class TestResource {
                 streamBusy = false;
             }
         };
+    }
+    
+    @Path(GET_DOUBLE)
+    @Produces("text/xml")
+    public String getDoubleXml() {
+        return "<xmlcontent></xmlcontent>";
+    }
+
+    @Path(GET_DOUBLE)
+    @Produces("text/plain")
+    public String getDoublePlain() {
+        return "textcontent";
     }
 }
