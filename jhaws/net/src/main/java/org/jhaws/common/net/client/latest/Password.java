@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tmp;
+package org.jhaws.common.net.client.latest;
 
 import org.htmlcleaner.TagNode;
 import org.jhaws.common.io.security.SecureMeBC;

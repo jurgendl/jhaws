@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tmp;
+package org.jhaws.common.net.client.latest;
 
 public interface HTTPClientDefaults {
     public static final int BUFF_LEN = 1024 * 8;

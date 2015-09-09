@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tmp;
+package org.jhaws.common.net.client.latest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.htmlcleaner.TagNode;

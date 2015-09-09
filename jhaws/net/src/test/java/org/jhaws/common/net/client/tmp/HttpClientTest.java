@@ -11,6 +11,15 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.net.client.HTTPClientDefaults;
+import org.jhaws.common.net.client.latest.DeleteParams;
+import org.jhaws.common.net.client.latest.FileInput;
+import org.jhaws.common.net.client.latest.Form;
+import org.jhaws.common.net.client.latest.GetParams;
+import org.jhaws.common.net.client.latest.HTTPClient;
+import org.jhaws.common.net.client.latest.HeadParams;
+import org.jhaws.common.net.client.latest.PutParams;
+import org.jhaws.common.net.client.latest.Response;
+import org.jhaws.common.net.client.latest.XmlMarshalling;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
