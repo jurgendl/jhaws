@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client;
+package org.jhaws.common.net.client.tmp;
 
 import java.util.HashMap;
 import java.util.Iterator;

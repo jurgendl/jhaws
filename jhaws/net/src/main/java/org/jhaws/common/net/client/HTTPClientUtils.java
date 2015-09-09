@@ -16,7 +16,6 @@ import org.apache.http.client.utils.URIUtils;
 import org.jhaws.common.io.IOFile;
 import org.jhaws.common.net.client.cookies.CookieStore;
 
-
 public class HTTPClientUtils {
     /** mimeTypes */
     protected static MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();

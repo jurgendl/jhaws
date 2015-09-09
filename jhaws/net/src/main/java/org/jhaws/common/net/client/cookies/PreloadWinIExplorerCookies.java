@@ -73,9 +73,9 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
             }
 
             String d = store.getClient().getDomain();
-            
-            if(d==null)
-            	return;
+
+            if (d == null)
+                return;
 
             if (this.domainsLoaded.contains(d)) {
                 return;

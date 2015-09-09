@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.jhaws.common.io.IODirectory;
 
-
 /**
  * CookieStoreInterceptor
  */

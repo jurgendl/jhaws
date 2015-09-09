@@ -55,9 +55,6 @@ import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.io.security.Security;
-import org.jhaws.common.net.client.HTTPClientDefaults;
-import org.jhaws.common.net.client.tmp.forms.FileInput;
-import org.jhaws.common.net.client.tmp.forms.Form;
 
 /**
  * @see https://hc.apache.org/

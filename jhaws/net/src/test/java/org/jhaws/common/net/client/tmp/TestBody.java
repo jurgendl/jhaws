@@ -26,7 +26,7 @@ public class TestBody {
     public String toString() {
         return "TestBody [body=" + body + "]";
     }
-    
+
     @Override
     public int hashCode() {
         final int prime = 31;

@@ -26,12 +26,12 @@ public class PreloadUnixFirefoxCookies implements CookieStoreInterceptor {
     }
 
     /** domainsLoaded */
-	@SuppressWarnings("unused")
-	private HashSet<String> domainsLoaded = new HashSet<String>();
+    @SuppressWarnings("unused")
+    private HashSet<String> domainsLoaded = new HashSet<String>();
 
     /** failed */
-	@SuppressWarnings("unused")
-	private boolean failed = false;
+    @SuppressWarnings("unused")
+    private boolean failed = false;
 
     /**
      * Creates a new PreloadUnixFirefoxCookies object.
@@ -68,7 +68,8 @@ public class PreloadUnixFirefoxCookies implements CookieStoreInterceptor {
 
     /**
      * 
-     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+     * @see org.jhaws.common.net.client.cookies.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+     *      java.util.Date)
      */
     @Override
     public void beforeClearExpired(CookieStore store, Date date) {

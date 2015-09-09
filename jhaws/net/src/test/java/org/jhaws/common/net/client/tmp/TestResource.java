@@ -186,7 +186,7 @@ public class TestResource {
                             output.write((char) ((int) 'a' + k/* r.nextInt(25) */));
                         }
                     }
-                    long currentTimeMillis = 0;//System.currentTimeMillis();
+                    long currentTimeMillis = 0;// System.currentTimeMillis();
                     w += 100 + 1 + 9 + 1 + ("" + currentTimeMillis).length() + 1;
                     String log = String.format("%09d", w) + "," + currentTimeMillis;
                     // System.out.println("> " + log);
@@ -204,7 +204,7 @@ public class TestResource {
             }
         };
     }
-    
+
     @Path(GET_DOUBLE)
     @Produces("text/xml")
     public String getDoubleXml() {

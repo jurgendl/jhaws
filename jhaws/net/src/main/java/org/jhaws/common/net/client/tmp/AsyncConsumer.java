@@ -9,7 +9,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.nio.IOControl;
 import org.apache.http.nio.client.methods.AsyncByteConsumer;
 import org.apache.http.protocol.HttpContext;
-import org.jhaws.common.net.client.HTTPClientDefaults;
 
 public class AsyncConsumer extends AsyncByteConsumer<OutputStream> {
     protected final OutputStream out;

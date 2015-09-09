@@ -415,8 +415,8 @@ public class HTTPClient implements Serializable {
 
                 switch (statusCode) {
                     case HttpStatus.SC_MOVED_TEMPORARILY:
-                        return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method
-                                .equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
+                        return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
+                                || method.equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
                     case HttpStatus.SC_MOVED_PERMANENTLY:
                     case HttpStatus.SC_TEMPORARY_REDIRECT:
                         return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
@@ -734,9 +734,9 @@ public class HTTPClient implements Serializable {
         return this.userAgent;
     }
 
-    protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest, String ccpt) throws IOException,
-    org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException,
-    org.apache.http.client.ClientProtocolException {
+    protected synchronized ResponseContext innerExecute(HttpRequestBase httpRequest, String ccpt)
+            throws IOException, org.jhaws.common.net.client.InternalServerError, org.apache.http.conn.ConnectTimeoutException,
+            org.apache.http.client.ClientProtocolException {
         HTTPClient.logger.info("url=" + httpRequest.getURI());
         this.chain.add(httpRequest.getURI());
 
@@ -753,9 +753,7 @@ public class HTTPClient implements Serializable {
                 AuthScope scope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
 
                 if (this.getHttpclient().getCredentialsProvider().getCredentials(scope) == null) {
-                    this.getHttpclient()
-                    .getCredentialsProvider()
-                    .setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+                    this.getHttpclient().getCredentialsProvider().setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
                             new UsernamePasswordCredentials(this.user, this.getPass()));
 
                     AuthCache authCache = new BasicAuthCache();
@@ -770,8 +768,8 @@ public class HTTPClient implements Serializable {
             }
 
             try {
-                response = this.caching ? this.getHttpclientcacher().execute(httpRequest, httpContext) : this.getHttpclient().execute(httpRequest,
-                        httpContext);
+                response = this.caching ? this.getHttpclientcacher().execute(httpRequest, httpContext)
+                        : this.getHttpclient().execute(httpRequest, httpContext);
             } catch (ClientProtocolException ex) {
                 // if ((ex.getCause() != null) && ex.getCause() instanceof CircularRedirectException && isHandleRedirects()) {
                 // setHandleRedirects(false);
@@ -801,7 +799,7 @@ public class HTTPClient implements Serializable {
                     break;
 
                 case HttpStatus.SC_NOT_FOUND:
-					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
+                    throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
 
                 case HttpStatus.SC_UNAUTHORIZED:
                     throw new RuntimeException("not implemented: " + status);
@@ -824,21 +822,21 @@ public class HTTPClient implements Serializable {
                     throw new InternalServerError((fetchContent == null) ? status.getReasonPhrase() : new String(fetchContent));
                 }
 
-                // case HttpStatus.SC_MOVED_PERMANENTLY:
-                // case HttpStatus.SC_MOVED_TEMPORARILY:
-                // case HttpStatus.SC_SEE_OTHER:
-                // case HttpStatus.SC_TEMPORARY_REDIRECT:
-                // Header header = response.getFirstHeader(HTTPClientDefaults.LOCATION);
-                //
-                // return new Response(header.getValue());
-				case HttpStatus.SC_BAD_GATEWAY:
-					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
+                    // case HttpStatus.SC_MOVED_PERMANENTLY:
+                    // case HttpStatus.SC_MOVED_TEMPORARILY:
+                    // case HttpStatus.SC_SEE_OTHER:
+                    // case HttpStatus.SC_TEMPORARY_REDIRECT:
+                    // Header header = response.getFirstHeader(HTTPClientDefaults.LOCATION);
+                    //
+                    // return new Response(header.getValue());
+                case HttpStatus.SC_BAD_GATEWAY:
+                    throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
 
                 case HttpStatus.SC_GATEWAY_TIMEOUT:
-					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
+                    throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
 
                 case HttpStatus.SC_FORBIDDEN:
-					throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
+                    throw new IOException(httpRequest.getURI() + ": " + status.getReasonPhrase());
 
                 default:
                     throw new RuntimeException("not implemented: " + status);
@@ -970,8 +968,8 @@ public class HTTPClient implements Serializable {
         return this.post(new PostParams(url, formValues));
     }
 
-    public Response post(String url, HashMap<String, String> formValues, HashMap<String, IOFile> attachments) throws HttpException, IOException,
-    URISyntaxException {
+    public Response post(String url, HashMap<String, String> formValues, HashMap<String, IOFile> attachments)
+            throws HttpException, IOException, URISyntaxException {
         return this.post(new PostParams(url, formValues, attachments));
     }
 

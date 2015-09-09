@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
-import org.jhaws.common.net.client.tmp.forms.Form;
 
 public class Response implements Serializable {
     private static final long serialVersionUID = 1806430557697629499L;

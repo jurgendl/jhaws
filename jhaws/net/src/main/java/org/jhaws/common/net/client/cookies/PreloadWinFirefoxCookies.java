@@ -154,11 +154,12 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
                     String url = "jdbc:sqlite:/" + ff3c.getAbsolutePath().replace('\\', '/');
                     PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - String url=" + url);
 
-                    String query = "select name, value, host, path, expiry from moz_cookies where host like '" + domain + "%' or host like '." + domain + "%' or host like 'www." + domain + "%'"; //$NON-NLS-3$ //$NON-NLS-4$
+                    String query = "select name, value, host, path, expiry from moz_cookies where host like '" + domain + "%' or host like '."
+                            + domain + "%' or host like 'www." + domain + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
                     PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - String query=" + query); //$NON-NLS-1$
 
                     Connection con = DriverManager.getConnection(url, null, null);
-                    //con.setReadOnly(true);
+                    // con.setReadOnly(true);
 
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);

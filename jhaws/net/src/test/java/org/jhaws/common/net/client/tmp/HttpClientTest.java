@@ -11,8 +11,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.net.client.HTTPClientDefaults;
-import org.jhaws.common.net.client.tmp.forms.FileInput;
-import org.jhaws.common.net.client.tmp.forms.Form;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

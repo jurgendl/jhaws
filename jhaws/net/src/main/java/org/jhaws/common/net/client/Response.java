@@ -208,9 +208,14 @@ public class Response implements Serializable {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("filename", this.filename).append("mime", this.mime)
-                .append("date", this.date).append("redirect", this.redirect).append("chain", this.chain).append("content", this.content != null)
-                .append("content.size", this.content == null ? -1 : this.content.length).toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("filename", this.filename)
+                .append("mime", this.mime)
+                .append("date", this.date)
+                .append("redirect", this.redirect)
+                .append("chain", this.chain)
+                .append("content", this.content != null)
+                .append("content.size", this.content == null ? -1 : this.content.length)
+                .toString();
     }
 
     /**
