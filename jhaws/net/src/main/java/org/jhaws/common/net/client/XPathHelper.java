@@ -60,15 +60,25 @@ public class XPathHelper {
         }
     }
 
-    public static org.w3c.dom.Document parseXml(byte[] xmlData) throws ParserConfigurationException, SAXException, IOException {
+    public static org.w3c.dom.Document parseXml(byte[] xmlData) {
         return XPathHelper.parseXml(new ByteArrayInputStream(xmlData));
     }
 
-    public static org.w3c.dom.Document parseXml(InputStream xmlFile) throws ParserConfigurationException, SAXException, IOException {
+    public static org.w3c.dom.Document parseXml(InputStream xmlFile) {
         DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
         domFactory.setNamespaceAware(true); // never forget this!
-        DocumentBuilder builder = domFactory.newDocumentBuilder();
-        org.w3c.dom.Document doc = builder.parse(xmlFile);
+        DocumentBuilder builder;
+        try {
+            builder = domFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+        org.w3c.dom.Document doc;
+        try {
+            doc = builder.parse(xmlFile);
+        } catch (SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
         return doc;
     }
 
@@ -95,24 +105,21 @@ public class XPathHelper {
         return xpr.toString();
     }
 
-    public static <T> T xpathXml(Class<T> clazz, String expr, byte[] xmlData)
-            throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+    public static <T> T xpathXml(Class<T> clazz, String expr, byte[] xmlData) {
         return XPathHelper.xpathXml(clazz, expr, XPathHelper.parseXml(xmlData));
     }
 
-    public static <T> T xpathXml(Class<T> clazz, String expr, byte[] xmlData, String basenodename)
-            throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+    public static <T> T xpathXml(Class<T> clazz, String expr, byte[] xmlData, String basenodename) {
         return XPathHelper.xpathXml(clazz, expr, XPathHelper.parseXml(xmlData), basenodename);
     }
 
-    public static <T> T xpathXml(Class<T> clazz, String expr, org.w3c.dom.Document doc) throws XPathExpressionException, IOException {
+    public static <T> T xpathXml(Class<T> clazz, String expr, org.w3c.dom.Document doc) {
         String basenodename = expr.substring(1, expr.indexOf('/', 2)).replaceAll("default:", "");
         return XPathHelper.xpathXml(clazz, expr, doc, basenodename);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T xpathXml(Class<T> clazz, String expr, org.w3c.dom.Document doc, String basenodename)
-            throws XPathExpressionException, IOException {
+    public static <T> T xpathXml(Class<T> clazz, String expr, org.w3c.dom.Document doc, String basenodename) {
         NodeList elementsByTagName = doc.getElementsByTagName(basenodename);
         if (elementsByTagName.getLength() == 0) {
             return null;
@@ -121,7 +128,12 @@ public class XPathHelper {
         NamedNodeMap attributes = item.getAttributes();
         XPath xpath = XPathFactory.newInstance().newXPath();
         xpath.setNamespaceContext(new NSHandler(attributes));
-        XPathExpression xpr = xpath.compile(expr);
+        XPathExpression xpr;
+        try {
+            xpr = xpath.compile(expr);
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e);
+        }
         try {
             Object evaluate = xpr.evaluate(doc, XPathConstants.NODESET);
             NodeList nodes = NodeList.class.cast(evaluate);
@@ -133,21 +145,23 @@ public class XPathHelper {
             }
             return (T) (results.isEmpty() ? null : (results.size() == 1 ? results.get(0) : results));
         } catch (javax.xml.xpath.XPathExpressionException ex) {
-            return (T) xpr.evaluate(doc);
+            try {
+                return (T) xpr.evaluate(doc);
+            } catch (XPathExpressionException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, byte[] xmlData)
-            throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, byte[] xmlData) {
         return XPathHelper.xpathXmlList(clazz, expr, XPathHelper.parseXml(xmlData));
     }
 
-    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, byte[] xmlData, String basenodename)
-            throws XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, byte[] xmlData, String basenodename) {
         return XPathHelper.xpathXmlList(clazz, expr, XPathHelper.parseXml(xmlData), basenodename);
     }
 
-    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, org.w3c.dom.Document doc) throws XPathExpressionException, IOException {
+    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, org.w3c.dom.Document doc) {
         int p1 = expr.indexOf("/") + 1;
         int p2 = expr.indexOf("/", p1);
         String basenodename = expr.substring(p1, p2).replaceAll("default:", "");
@@ -155,8 +169,7 @@ public class XPathHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, org.w3c.dom.Document doc, String basenodename)
-            throws XPathExpressionException, IOException {
+    public static <T> List<T> xpathXmlList(Class<T> clazz, String expr, org.w3c.dom.Document doc, String basenodename) {
         Object result = XPathHelper.xpathXml(Object.class, expr, doc, basenodename);
         if (result == null) {
             return Collections.emptyList();
