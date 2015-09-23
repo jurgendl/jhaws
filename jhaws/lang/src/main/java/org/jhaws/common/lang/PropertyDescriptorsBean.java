@@ -6,8 +6,8 @@ import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.stream;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.function.Function.identity;
-import static java.util.regex.Pattern.matches;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Stream.of;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
-import static java.util.stream.Stream.*;
 
 public class PropertyDescriptorsBean {
     private static final String SPLIT = "_";
@@ -37,7 +36,7 @@ public class PropertyDescriptorsBean {
             get.putAll(stream(current.getDeclaredMethods())//
                     .parallel()
                     .filter(mf)
-                    .filter(m -> matches("^get.+", m.getName()))
+                    .filter(m -> m.getName().matches("^get.+"))
                     .filter(m -> !Void.TYPE.isAssignableFrom(m.getReturnType()))
                     .filter(m -> m.getParameterTypes().length == 0)
                     .filter(m -> !get.containsKey(getKey(m)))
@@ -45,7 +44,7 @@ public class PropertyDescriptorsBean {
             is.putAll(stream(current.getDeclaredMethods())//
                     .parallel()
                     .filter(mf)
-                    .filter(m -> matches("^is.+", m.getName()))
+                    .filter(m -> m.getName().matches("^is.+"))
                     .filter(m -> !Void.TYPE.isAssignableFrom(m.getReturnType()))
                     .filter(m -> m.getParameterTypes().length == 0)
                     .filter(m -> !is.containsKey(isKey(m)))
@@ -53,7 +52,7 @@ public class PropertyDescriptorsBean {
             set.putAll(stream(current.getDeclaredMethods())//
                     .parallel()
                     .filter(mf)
-                    .filter(m -> matches("^set.+", m.getName()))
+                    .filter(m -> m.getName().matches("^set.+"))
                     .filter(m -> Void.TYPE.isAssignableFrom(m.getReturnType()))
                     .filter(m -> m.getParameterTypes().length == 1)
                     .filter(m -> !set.containsKey(setKey(m)))
