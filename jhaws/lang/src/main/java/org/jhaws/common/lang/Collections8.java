@@ -704,12 +704,12 @@ public interface Collections8 {
     }
 
     @SafeVarargs
-    public static <K, V> Stream<Entry<K, V>> streamMulti(Map<K, V>... maps) {
+    public static <K, V> Stream<Entry<K, V>> streamMaps(Map<K, V>... maps) {
         return Stream.of(maps).map(Map::entrySet).flatMap(Collection::stream);
     }
 
-    public static <K, V> Collector<V, ?, Map<K, V>> mapCollector(Function<V, K> keyMapper) {
-        return Collectors.toMap(keyMapper, Function.identity(), keepFirst());
+    public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper) {
+        return Collectors.toMap(keyMapper, id(), keepFirst());
     }
 
     public static <T> BinaryOperator<T> keepFirst() {
