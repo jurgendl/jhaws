@@ -214,7 +214,12 @@ public interface Collections8 {
     }
 
     public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
-        return stream.collect(Collectors.toMap(keyMapper(), valueMapper(), rejectDuplicateKeys(), mapSupplier));
+        Function<Entry<K, V>, K> keyMapper = Collections8.<K, V> keyMapper();
+        Function<Entry<K, V>, V> valueMapper = Collections8.<K, V> valueMapper();
+        BinaryOperator<V> keepFirst = Collections8.<V> keepFirst();
+        Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, keepFirst, mapSupplier);
+        Map<K, V> map = stream.collect(c);
+        return map;
     }
 
     public static <K, V> Supplier<Map<K, V>> newLinkedMap() {
@@ -643,7 +648,7 @@ public interface Collections8 {
     }
 
     /**
-     * @see http://stackoverflow.com/questions/24010109/java-8-stream-reverse-order
+     * stackoverflow.com/questions/24010109/java-8-stream-reverse-order
      */
     @SuppressWarnings("unchecked")
     public static <T> Stream<T> reverse(Stream<T> input) {
@@ -720,12 +725,12 @@ public interface Collections8 {
         return (p1, p2) -> p2;
     }
 
-    public static <T extends Comparable<? super T>> Comparator<? super T> natural() {
+    public static <T extends Comparable<? super T>> Comparator<T> natural() {
         return Comparator.<T> naturalOrder();
     }
 
     public static <T extends Comparable<? super T>> BinaryOperator<T> keepMin() {
-        return keepMin(natural());
+        return keepMin(Collections8.<T> natural());
     }
 
     public static <T> BinaryOperator<T> keepMin(Comparator<T> comparator) {
@@ -733,7 +738,7 @@ public interface Collections8 {
     }
 
     public static <T extends Comparable<? super T>> BinaryOperator<T> keepMax() {
-        return keepMax(natural());
+        return keepMax(Collections8.<T> natural());
     }
 
     public static <T> BinaryOperator<T> keepMax(Comparator<T> comparator) {
