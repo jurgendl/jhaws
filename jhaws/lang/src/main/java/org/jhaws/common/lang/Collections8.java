@@ -415,7 +415,7 @@ public interface Collections8 {
         if (array == null)
             return Stream.empty();
         // StreamSupport.stream(Spliterators.spliterator(array, 0, array.length, Spliterator.ORDERED | Spliterator.IMMUTABLE), parallel);
-        Stream<T> stream = stream(array);
+        Stream<T> stream = Arrays.stream(array);
         if (parallel)
             stream = stream.parallel();
         return stream;
