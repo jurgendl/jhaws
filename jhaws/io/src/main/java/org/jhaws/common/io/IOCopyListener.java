@@ -3,36 +3,38 @@ package org.jhaws.common.io;
 /**
  * IOCopyListener
  */
+@Deprecated
+@SuppressWarnings("deprecation")
 public interface IOCopyListener {
-    /**
-     * copyFailed
-     * 
-     * @param ioFile
-     * @param target
-     * @param ex
-     */
-    public void copyFailed(IOFile ioFile, IOFile target, Exception ex);
+	/**
+	 * copyFailed
+	 * 
+	 * @param ioFile
+	 * @param target
+	 * @param ex
+	 */
+	public void copyFailed(IOFile ioFile, IOFile target, Exception ex);
 
-    /**
-     * copyFinished
-     * 
-     * @param ioFile
-     * @param target
-     */
-    public void copyFinished(IOFile ioFile, IOFile target);
+	/**
+	 * copyFinished
+	 * 
+	 * @param ioFile
+	 * @param target
+	 */
+	public void copyFinished(IOFile ioFile, IOFile target);
 
-    /**
-     * copyProgress
-     * 
-     * @param total
-     */
-    public void copyProgress(long total);
+	/**
+	 * copyProgress
+	 * 
+	 * @param total
+	 */
+	public void copyProgress(long total);
 
-    /**
-     * copyStarted
-     * 
-     * @param ioFile
-     * @param target
-     */
-    public void copyStarted(IOFile ioFile, IOFile target);
+	/**
+	 * copyStarted
+	 * 
+	 * @param ioFile
+	 * @param target
+	 */
+	public void copyStarted(IOFile ioFile, IOFile target);
 }

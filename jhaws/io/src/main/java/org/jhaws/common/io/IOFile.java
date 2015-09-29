@@ -36,6 +36,8 @@ import org.jhaws.common.io.filter.VideoFileFilter;
  * @see IOGeneralFile
  * @see IODirectory
  */
+@Deprecated
+@SuppressWarnings({ "deprecation", "resource" })
 public class IOFile extends IOGeneralFile<IOFile> {
 	/**
 	 * delete ShutDownHook
@@ -1024,7 +1026,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 	 * @return : ImageIcon
 	 */
 	public Icon getLargeIcon1() {
-		return (IOFile.grabber == null) ? null : IOFile.grabber.getLargeIcon(this);
+		return (IOFile.grabber == null) ? null : IOFile.grabber.getLargeIcon(new FilePath(this));
 	}
 
 	/**
@@ -1033,7 +1035,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 	 * @return : ImageIcon
 	 */
 	public Icon getLargeIcon2() {
-		return (IOFile.grabber_alt == null) ? null : IOFile.grabber_alt.getLargeIcon(this);
+		return (IOFile.grabber_alt == null) ? null : IOFile.grabber_alt.getLargeIcon(new FilePath(this));
 	}
 
 	/**
@@ -1077,7 +1079,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 	 * @return : ImageIcon
 	 */
 	public Icon getSmallIcon1() {
-		return (IOFile.grabber == null) ? null : IOFile.grabber.getSmallIcon(this);
+		return (IOFile.grabber == null) ? null : IOFile.grabber.getSmallIcon(new FilePath(this));
 	}
 
 	/**
@@ -1086,7 +1088,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 	 * @return : ImageIcon
 	 */
 	public Icon getSmallIcon2() {
-		return (IOFile.grabber_alt == null) ? null : IOFile.grabber_alt.getSmallIcon(this);
+		return (IOFile.grabber_alt == null) ? null : IOFile.grabber_alt.getSmallIcon(new FilePath(this));
 	}
 
 	/**

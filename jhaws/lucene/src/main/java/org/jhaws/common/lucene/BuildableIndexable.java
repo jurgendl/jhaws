@@ -16,26 +16,32 @@ public class BuildableIndexable<T> implements Indexable<T> {
 	@IndexField(LuceneIndex.DOC_LASTMOD)
 	protected LocalDateTime lastmodified;
 
+	@Override
 	public Integer getVersion() {
 		return version;
 	}
 
+	@Override
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
 
+	@Override
 	public String getUuid() {
 		return uuid;
 	}
 
+	@Override
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
 
+	@Override
 	public LocalDateTime getLastmodified() {
 		return lastmodified;
 	}
 
+	@Override
 	public void setLastmodified(LocalDateTime lastmodified) {
 		this.lastmodified = lastmodified;
 	}
@@ -54,7 +60,6 @@ public class BuildableIndexable<T> implements Indexable<T> {
 	protected T cast() {
 		return (T) this;
 	}
-
 
 	@Override
 	public Document indexable() {

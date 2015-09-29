@@ -10,29 +10,32 @@ import org.jhaws.common.io.IOFile;
  * 
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
+@Deprecated
+@SuppressWarnings("deprecation")
 public class OnlyFilesFilter extends FileFilter {
-    /**
-     * Creates a new OnlyFilesFilter object.
-     */
-    public OnlyFilesFilter() {
-        this("all files"); //$NON-NLS-1$
-    }
+	/**
+	 * Creates a new OnlyFilesFilter object.
+	 */
+	public OnlyFilesFilter() {
+		this("all files"); //$NON-NLS-1$
+	}
 
-    /**
-     * Creates a new OnlyFilesFilter object.
-     * 
-     * @param description description
-     */
-    public OnlyFilesFilter(String description) {
-        super(description);
-    }
+	/**
+	 * Creates a new OnlyFilesFilter object.
+	 * 
+	 * @param description
+	 *            description
+	 */
+	public OnlyFilesFilter(String description) {
+		super(description);
+	}
 
-    /**
-     * 
-     * @see org.jhaws.common.io.filter.FileFilter#acceptRealFile(util.io.IOFile)
-     */
-    @Override
-    public final boolean acceptRealFile(IOFile f) {
-        return true;
-    }
+	/**
+	 * 
+	 * @see org.jhaws.common.io.filter.FileFilter#acceptRealFile(util.io.IOFile)
+	 */
+	@Override
+	public final boolean acceptRealFile(IOFile f) {
+		return true;
+	}
 }

@@ -8,21 +8,23 @@ import javax.swing.Icon;
  * @author Jurgen
  */
 public interface ExtensionIconFinder {
-    /**
-     * na
-     *
-     * @param file na
-     *
-     * @return
-     */
-    public abstract Icon getLargeIcon(java.io.File file);
+	/**
+	 * na
+	 *
+	 * @param file
+	 *            na
+	 *
+	 * @return
+	 */
+	public abstract Icon getLargeIcon(FilePath file);
 
-    /**
-     * na
-     *
-     * @param file na
-     *
-     * @return
-     */
-    public abstract Icon getSmallIcon(java.io.File file);
+	/**
+	 * na
+	 *
+	 * @param file
+	 *            na
+	 *
+	 * @return
+	 */
+	public abstract Icon getSmallIcon(FilePath file);
 }

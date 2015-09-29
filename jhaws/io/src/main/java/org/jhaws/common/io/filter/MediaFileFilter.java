@@ -8,20 +8,23 @@ package org.jhaws.common.io.filter;
  * 
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
+@Deprecated
+@SuppressWarnings("deprecation")
 public class MediaFileFilter extends Operator.OrFileFilter {
-    /**
-     * Creates a new MediaFileFilter object.
-     * 
-     * @param description description
-     */
-    public MediaFileFilter(String description) {
-        super(description, new AbstractFileFilter[] { new VideoFileFilter(), new AudioFileFilter() });
-    }
+	/**
+	 * Creates a new MediaFileFilter object.
+	 * 
+	 * @param description
+	 *            description
+	 */
+	public MediaFileFilter(String description) {
+		super(description, new AbstractFileFilter[] { new VideoFileFilter(), new AudioFileFilter() });
+	}
 
-    /**
-     * Creates a new MediaFileFilter object.
-     */
-    public MediaFileFilter() {
-        this("media files"); //$NON-NLS-1$
-    }
+	/**
+	 * Creates a new MediaFileFilter object.
+	 */
+	public MediaFileFilter() {
+		this("media files"); //$NON-NLS-1$
+	}
 }
