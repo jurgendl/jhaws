@@ -29,7 +29,6 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.CopyOption;
-import java.nio.file.DirectoryIteratorException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileStore;
@@ -74,6 +73,7 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import java.util.zip.Adler32;
@@ -86,6 +86,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.jhaws.common.io.FilePath.Filters.DirectoryFilter;
 import org.jhaws.common.io.FilePath.Visitors.CopyAllFilesVisitor;
 import org.jhaws.common.io.FilePath.Visitors.MoveAllFilesVisitor;
 import org.jhaws.common.io.Utils.OSGroup;
@@ -140,7 +141,7 @@ public class FilePath implements Path, Externalizable {
 
 			@Override
 			public boolean accept(Path entry) {
-				String extension = wrap(entry).getExtension();
+				String extension = of(entry).getExtension();
 				return extension == null ? false : ext.contains(extension.toLowerCase());
 			}
 
@@ -615,8 +616,8 @@ public class FilePath implements Path, Externalizable {
 
 			public MoveOrCopyAllFilesVisitor(boolean move, Path source, Path target) {
 				this.move = move;
-				this.source = FilePath.wrap(source);
-				this.target = FilePath.wrap(target);
+				this.source = of(source);
+				this.target = of(target);
 			}
 
 			@Override
@@ -625,10 +626,10 @@ public class FilePath implements Path, Externalizable {
 					try {
 						Files.delete(dir);
 					} catch (java.nio.file.DirectoryNotEmptyException ex) {
-						for (Object o : FilePath.wrap(dir).listFiles()) {
+						for (Object o : of(dir).listFiles()) {
 							System.out.println(o);
 						}
-						for (Object o : FilePath.wrap(dir).listDirectories()) {
+						for (Object o : of(dir).listDirectories()) {
 							System.out.println(o);
 						}
 						throw ex;
@@ -638,7 +639,7 @@ public class FilePath implements Path, Externalizable {
 
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				FilePath targetPath = FilePath.wrap(this.target.resolve(this.source.relativize(file)));
+				FilePath targetPath = of(this.target.resolve(this.source.relativize(file)));
 				targetPath.getParentPath().createDirectories();
 				if (move)
 					targetPath.moveFrom(file, StandardCopyOption.REPLACE_EXISTING);
@@ -905,8 +906,20 @@ public class FilePath implements Path, Externalizable {
 		return file;
 	}
 
-	public static FilePath wrap(Path p) {
-		return p instanceof FilePath ? FilePath.class.cast(p) : new FilePath(p);
+	public static FilePath of(Path path) {
+		return path instanceof FilePath ? FilePath.class.cast(path) : new FilePath(path);
+	}
+
+	public static FilePath of(File file) {
+		return new FilePath(file);
+	}
+
+	public static FilePath of(URI uri) {
+		return new FilePath(uri);
+	}
+
+	public static FilePath of(URL url) {
+		return new FilePath(url);
 	}
 
 	public static final char DOT = '.';
@@ -945,22 +958,8 @@ public class FilePath implements Path, Externalizable {
 		this.path = Paths.get(dir.toURI()).resolve(file);
 	}
 
-	public FilePath(FilePath file) {
-		if (file.getPath() == null) {
-			throw new NullPointerException();
-		}
-		this.path = file.path;
-	}
-
-	public FilePath(FilePath dir, String file) {
-		this.path = dir.resolve(file);
-	}
-
 	public FilePath(Path path) {
-		if (path == null) {
-			throw new NullPointerException();
-		}
-		this.path = path;
+		this.path = getPath(path);
 	}
 
 	public FilePath(Path dir, String file) {
@@ -1404,7 +1403,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public boolean equal(Path file) throws UncheckedIOException {
-		FilePath filePath = FilePath.wrap(file);
+		FilePath filePath = of(file);
 		return this.equal(filePath, filePath.getFileSize());
 	}
 
@@ -1419,7 +1418,7 @@ public class FilePath implements Path, Externalizable {
 	 * @return : boolean : file is equal or not
 	 */
 	public boolean equal(Path file, long limit) throws UncheckedIOException {
-		FilePath otherPath = FilePath.wrap(file);
+		FilePath otherPath = of(file);
 		if (this.notExists() || otherPath.notExists() || this.isDirectory() || this.isDirectory()) {
 			return false;
 		}
@@ -1516,19 +1515,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public List<FilePath> getChildren() {
-		List<FilePath> children = new ArrayList<>();
-		try (DirectoryStream<Path> stream = this.newDirectoryStream()) {
-			for (Path file : stream) {
-				children.add(new FilePath(file));
-			}
-		} catch (IOException ex) {
-			// IOException can never be thrown by the iteration.
-			// In this snippet, it can only be thrown by newDirectoryStream.
-			throw new UncheckedIOException(ex);
-		} catch (DirectoryIteratorException ex) {
-			throw new UncheckedIOException(new IOException(String.valueOf(ex)));
-		}
-		return children;
+		return streamChildren().map(c -> new FilePath(c)).collect(Collectors.toList());
 	}
 
 	public String getConvertedFileSize() throws UncheckedIOException {
@@ -1773,19 +1760,19 @@ public class FilePath implements Path, Externalizable {
 		stack.push(this);
 		Filters filterAndDirs = new Filters(false, filter, new Filters.DirectoryFilter());
 		while (!stack.isEmpty()) {
-			try (DirectoryStream<Path> stream = stack.pop().newDirectoryStream(filterAndDirs)) {
-				for (Path p : stream) {
-					FilePath child = new FilePath(p);
+			stack.pop().streamChildren(filterAndDirs).forEach(p -> {
+				FilePath child = new FilePath(p);
+				try {
 					if (filter.accept(p)) {
 						files.add(child);
 					}
-					if (iterate && child.isDirectory()) {
-						stack.push(child);
-					}
+				} catch (IOException ex) {
+					//
 				}
-			} catch (IOException ex) {
-				throw new UncheckedIOException(ex);
-			}
+				if (iterate && child.isDirectory()) {
+					stack.push(child);
+				}
+			});
 		}
 		return files;
 	}
@@ -1823,7 +1810,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath moveAllTo(Path target) throws UncheckedIOException {
-		FilePath tp = FilePath.wrap(target);
+		FilePath tp = of(target);
 		if (tp.notExists()) {
 			return this.moveTo(target, StandardCopyOption.REPLACE_EXISTING);
 		}
@@ -1831,7 +1818,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath copyAllTo(Path target) throws UncheckedIOException {
-		FilePath tp = FilePath.wrap(target);
+		FilePath tp = of(target);
 		if (tp.notExists()) {
 			return this.copyTo(target, StandardCopyOption.REPLACE_EXISTING);
 		}
@@ -1894,25 +1881,25 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public DirectoryStream<Path> newDirectoryStream() throws UncheckedIOException {
+	public Stream<Path> streamChildren() throws UncheckedIOException {
 		try {
-			return Files.newDirectoryStream(this.getPath());
+			return StreamSupport.stream(Files.newDirectoryStream(this.getPath()).spliterator(), false);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 	}
 
-	public DirectoryStream<Path> newDirectoryStream(DirectoryStream.Filter<? super Path> filter) throws UncheckedIOException {
+	public Stream<Path> streamChildren(DirectoryStream.Filter<? super Path> filter) throws UncheckedIOException {
 		try {
-			return Files.newDirectoryStream(this.getPath(), filter);
+			return StreamSupport.stream(Files.newDirectoryStream(this.getPath(), filter).spliterator(), false);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 	}
 
-	public DirectoryStream<Path> newDirectoryStream(String glob) throws UncheckedIOException {
+	public Stream<Path> streamChildren(String glob) throws UncheckedIOException {
 		try {
-			return Files.newDirectoryStream(this.getPath(), glob);
+			return StreamSupport.stream(Files.newDirectoryStream(this.getPath(), glob).spliterator(), false);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -1971,7 +1958,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public Iterators.PathIterator pathsToRoot() {
-		return new Iterators.PathIterator(FilePath.wrap(this.toAbsolutePath()));
+		return new Iterators.PathIterator((this.toAbsolutePath()));
 
 	}
 
@@ -2033,10 +2020,6 @@ public class FilePath implements Path, Externalizable {
 
 	public Stream<String> streamContentString() throws UncheckedIOException {
 		return this.streamContentString(this.getDefaultCharset());
-	}
-
-	public Stream<Path> streamChildren() {
-		return StreamSupport.stream(newDirectoryStream().spliterator(), false);
 	}
 
 	public Stream<String> streamContentString(Charset charset) throws UncheckedIOException {
@@ -2326,9 +2309,21 @@ public class FilePath implements Path, Externalizable {
 		return this.walkFileTree(new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-				FileVisitResult preVisitDirectory = super.preVisitDirectory(dir, attrs);
-				visitor.visit(new FilePath(dir), attrs);
-				return preVisitDirectory;
+				return visitor.visit(new FilePath(dir)) ? FileVisitResult.CONTINUE : FileVisitResult.TERMINATE;
+			}
+		});
+	}
+
+	public FilePath walkAll(final FileVisit visitor) {
+		return this.walkFileTree(new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				return visitor.visit(new FilePath(file)) ? FileVisitResult.CONTINUE : FileVisitResult.TERMINATE;
+			}
+
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+				return visitor.visit(new FilePath(dir)) ? FileVisitResult.CONTINUE : FileVisitResult.TERMINATE;
 			}
 		});
 	}
@@ -2337,9 +2332,7 @@ public class FilePath implements Path, Externalizable {
 		return this.walkFileTree(new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				FileVisitResult visitFile = super.visitFile(file, attrs);
-				visitor.visit(new FilePath(file), attrs);
-				return visitFile;
+				return visitor.visit(new FilePath(file)) ? FileVisitResult.CONTINUE : FileVisitResult.TERMINATE;
 			}
 		});
 	}
@@ -2485,5 +2478,20 @@ public class FilePath implements Path, Externalizable {
 		} catch (IOException ex) {
 			return normalize().toString();
 		}
+	}
+
+	public FilePath deleteEmptyDirectories() {
+		if (exists() && isDirectory())
+			streamChildrenForDeletion(this);
+		return this;
+	}
+
+	private void streamChildrenForDeletion(Path f) {
+		FilePath filePath = FilePath.of(f);
+		if (filePath.isDirectory())
+			if (filePath.streamChildren().count() == 0)
+				filePath.delete();
+			else
+				filePath.streamChildren(new DirectoryFilter()).forEach(this::streamChildrenForDeletion);
 	}
 }
