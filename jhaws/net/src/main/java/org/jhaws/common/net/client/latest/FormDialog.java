@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -55,21 +53,13 @@ public class FormDialog extends JDialog {
         JPanel actionpanel = new JPanel(new FlowLayout());
 
         JButton ok = new JButton("ok");
-        ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FormDialog.this.cancelled = false;
-                FormDialog.this.dispose();
-            }
-        });
+        ok.addActionListener(e -> {
+		    FormDialog.this.cancelled = false;
+		    FormDialog.this.dispose();
+		});
 
         JButton cancel = new JButton("cancel");
-        cancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FormDialog.this.dispose();
-            }
-        });
+        cancel.addActionListener(e -> FormDialog.this.dispose());
 
         actionpanel.add(ok);
         actionpanel.add(cancel);

@@ -1,7 +1,6 @@
 package org.jhaws.common.lang;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +14,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 
@@ -37,36 +35,33 @@ public class Mapping<S, T> {
 			f.setSuperclass(targetClass);
 			@SuppressWarnings("unchecked")
 			T proxy = (T) f.createClass().newInstance();
-			ProxyObject.class.cast(proxy).setHandler(new MethodHandler() {
-				@Override
-				public Object invoke(Object self, Method method, Method proceed, Object[] args) throws Throwable {
-					// FIXME java.lang.IllegalAccessException: Class
-					// org.tools.hqlbuilder.common.Mapping$1 can not access a
-					// member of class
-					// java.lang.Object with modifiers "protected"
-					// String propertyName = method.getName().substring(3);
-					// propertyName =
-					// Character.toLowerCase(propertyName.charAt(0)) +
-					// propertyName.substring(1);
-					// Property<Object, Object> pd =
-					// targetInfo.get(propertyName);
-					// Object invoke = method.getReturnType().newInstance();
-					// pd.write(target, invoke);
-					// return invoke;
-					try {
-						Object invoke = method.invoke(target, args);
-						if (method.getName().startsWith("get") && (args.length == 0) && (invoke == null)) {
-							String propertyName = method.getName().substring(3);
-							propertyName = Character.toLowerCase(propertyName.charAt(0)) + propertyName.substring(1);
-							Property<Object, Object> pd = targetInfo.get(propertyName);
-							invoke = method.getReturnType().newInstance();
-							pd.write(target, invoke);
-						}
-						return invoke;
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						return null;
+			ProxyObject.class.cast(proxy).setHandler((self, method, proceed, args) -> {
+				// FIXME java.lang.IllegalAccessException: Class
+				// org.tools.hqlbuilder.common.Mapping$1 can not access a
+				// member of class
+				// java.lang.Object with modifiers "protected"
+				// String propertyName = method.getName().substring(3);
+				// propertyName =
+				// Character.toLowerCase(propertyName.charAt(0)) +
+				// propertyName.substring(1);
+				// Property<Object, Object> pd =
+				// targetInfo.get(propertyName);
+				// Object invoke = method.getReturnType().newInstance();
+				// pd.write(target, invoke);
+				// return invoke;
+				try {
+					Object invoke = method.invoke(target, args);
+					if (method.getName().startsWith("get") && (args.length == 0) && (invoke == null)) {
+						String propertyName = method.getName().substring(3);
+						propertyName = Character.toLowerCase(propertyName.charAt(0)) + propertyName.substring(1);
+						Property<Object, Object> pd = targetInfo.get(propertyName);
+						invoke = method.getReturnType().newInstance();
+						pd.write(target, invoke);
 					}
+					return invoke;
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					return null;
 				}
 			});
 			return proxy;

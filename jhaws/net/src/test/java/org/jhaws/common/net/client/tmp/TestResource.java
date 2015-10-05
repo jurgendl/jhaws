@@ -1,7 +1,6 @@
 package org.jhaws.common.net.client.tmp;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +19,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.StreamingOutput;
@@ -171,34 +169,31 @@ public class TestResource {
 	@Path(STREAM)
 	@Produces("application/octet-stream")
 	public StreamingOutput stream() {
-		return new StreamingOutput() {
-			@Override
-			public void write(OutputStream output) throws IOException, WebApplicationException {
-				written.clear();
-				streamBusy = true;
-				int w = 0;
-				for (int i = 0; i < 10; i++) {
-					for (int j = 0; j < 4; j++) {
-						for (int k = 0; k < 20; k++) {
-							output.write((char) ('a' + k/* r.nextInt(25) */));
-						}
+		return output -> {
+			written.clear();
+			streamBusy = true;
+			int w = 0;
+			for (int i = 0; i < 10; i++) {
+				for (int j = 0; j < 4; j++) {
+					for (int k = 0; k < 20; k++) {
+						output.write((char) ('a' + k/* r.nextInt(25) */));
 					}
-					long currentTimeMillis = 0;// System.currentTimeMillis();
-					w += 100 + 1 + 9 + 1 + ("" + currentTimeMillis).length() + 1;
-					String log = String.format("%09d", w) + "," + currentTimeMillis;
-					// System.out.println("> " + log);
-					written.add(log);
-					output.write('\n');
-					output.write(log.getBytes());
-					output.write('\n');
-					// try {
-					// Thread.sleep(3000l);
-					// } catch (Exception e) {
-					// //
-					// }
 				}
-				streamBusy = false;
+				long currentTimeMillis = 0;// System.currentTimeMillis();
+				w += 100 + 1 + 9 + 1 + ("" + currentTimeMillis).length() + 1;
+				String log = String.format("%09d", w) + "," + currentTimeMillis;
+				// System.out.println("> " + log);
+				written.add(log);
+				output.write('\n');
+				output.write(log.getBytes());
+				output.write('\n');
+				// try {
+				// Thread.sleep(3000l);
+				// } catch (Exception e) {
+				// //
+				// }
 			}
+			streamBusy = false;
 		};
 	}
 
