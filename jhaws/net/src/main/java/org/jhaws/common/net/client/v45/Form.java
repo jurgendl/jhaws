@@ -148,6 +148,11 @@ public class Form implements Serializable, Iterable<InputElement> {
 		return inputElement;
 	}
 
+	public Form value(String name, String value) {
+		setValue(name, value);
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("form: id=").append(this.id).append(",method=").append(this.method).append(",action=").append(this.action).append(";");
