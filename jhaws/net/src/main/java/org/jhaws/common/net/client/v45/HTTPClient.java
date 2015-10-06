@@ -107,12 +107,7 @@ public class HTTPClient implements Closeable {
 		return requestConfig;
 	}
 
-	private ThreadLocal<List<URI>> chain = new ThreadLocal<List<URI>>() {
-		@Override
-		protected java.util.List<URI> initialValue() {
-			return new ArrayList<URI>();
-		};
-	};
+	private ThreadLocal<List<URI>> chain;
 
 	protected RedirectStrategy getRedirectStrategy() {
 		if (redirectStrategy == null) {
@@ -188,7 +183,12 @@ public class HTTPClient implements Closeable {
 	public Response execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
 		prepareRequest(params, req);
 
-		chain.get();
+		chain = new ThreadLocal<List<URI>>() {
+			@Override
+			protected java.util.List<URI> initialValue() {
+				return new ArrayList<URI>();
+			};
+		};
 
 		HttpClientContext context = HttpClientContext.create();
 		context.setCredentialsProvider(new SystemDefaultCredentialsProvider());
