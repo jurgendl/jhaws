@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.latest;
+package org.jhaws.common.net.client.v45;
 
 import static java.util.stream.StreamSupport.stream;
 import static org.apache.commons.lang3.StringUtils.isBlank;

@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.latest;
+package org.jhaws.common.net.client.v45;
 
 import java.util.ArrayList;
 import java.util.Collections;

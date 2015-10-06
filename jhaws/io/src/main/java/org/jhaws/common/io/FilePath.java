@@ -923,9 +923,11 @@ public class FilePath implements Path, Externalizable {
 		return new FilePath(url);
 	}
 
-	public static final char DOT = '.';
+	public static final String PROPERTIES = "properties";
 
-	protected transient Path path;
+	public static final String XML = "xml";
+
+	public static final char DOT = '.';
 
 	protected static ExtensionIconFinder grabber = new org.jhaws.common.io.SystemIcon();
 
@@ -941,6 +943,8 @@ public class FilePath implements Path, Externalizable {
 	public static final String USERDIR = System.getProperty("user.home");
 
 	public static final String[] UNITS = new String[] { "bytes", "kB", "MB", "GB", "TB" };
+
+	protected transient Path path;
 
 	public FilePath() {
 		this.path = Paths.get(FilePath.getFileSeperator()).toAbsolutePath().normalize();
@@ -2531,10 +2535,29 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
+	public FilePath writeProperties(Properties properties, String comment) {
+		String ext = getExtension();
+		try (OutputStream out = newOutputStream()) {
+			if (XML.equalsIgnoreCase(ext)) {
+				properties.storeToXML(out, comment);
+			} else {
+				properties.store(out, comment);
+			}
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		return this;
+	}
+
 	public Properties loadProperties() {
+		String ext = getExtension();
 		try (InputStream in = newInputStream()) {
 			Properties properties = new Properties();
-			properties.load(in);
+			if (XML.equalsIgnoreCase(ext)) {
+				properties.loadFromXML(in);
+			} else {
+				properties.load(in);
+			}
 			return properties;
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
