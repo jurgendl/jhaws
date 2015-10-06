@@ -70,6 +70,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -1058,6 +1059,38 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath child(String other) {
 		return new FilePath(this.getPath().resolve(other));
+	}
+
+	public FilePath dir(Path other) throws UncheckedIOException {
+		try {
+			return child(other).checkDirectory();
+		} catch (AccessDeniedException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public FilePath dir(String other) throws UncheckedIOException {
+		try {
+			return child(other).checkDirectory();
+		} catch (AccessDeniedException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public FilePath file(Path other) throws UncheckedIOException {
+		try {
+			return child(other).checkFile();
+		} catch (AccessDeniedException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public FilePath file(String other) throws UncheckedIOException {
+		try {
+			return child(other).checkFile();
+		} catch (AccessDeniedException ex) {
+			throw new UncheckedIOException(ex);
+		}
 	}
 
 	/**
@@ -2481,17 +2514,30 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath deleteEmptyDirectories() {
-		if (exists() && isDirectory())
+		if (exists() && isDirectory()) {
 			streamChildrenForDeletion(this);
+		}
 		return this;
 	}
 
 	private void streamChildrenForDeletion(Path f) {
 		FilePath filePath = FilePath.of(f);
-		if (filePath.isDirectory())
-			if (filePath.streamChildren().count() == 0)
+		if (filePath.isDirectory()) {
+			if (filePath.streamChildren().count() == 0) {
 				filePath.delete();
-			else
+			} else {
 				filePath.streamChildren(new DirectoryFilter()).forEach(this::streamChildrenForDeletion);
+			}
+		}
+	}
+
+	public Properties loadProperties() {
+		try (InputStream in = newInputStream()) {
+			Properties properties = new Properties();
+			properties.load(in);
+			return properties;
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
 	}
 }
