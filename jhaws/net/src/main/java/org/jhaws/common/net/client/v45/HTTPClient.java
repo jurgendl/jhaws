@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -63,397 +65,400 @@ import org.jhaws.common.io.security.Security;
  * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientChunkEncodedPost.java
  */
 public class HTTPClient implements Closeable {
-    protected String charSet = HTTPClientDefaults.CHARSET;
+	protected String charSet = HTTPClientDefaults.CHARSET;
 
-    protected transient CloseableHttpClient httpClient;
+	protected transient CloseableHttpClient httpClient;
 
-    protected transient org.apache.http.impl.nio.client.CloseableHttpAsyncClient asyncHttpclient;
+	protected transient org.apache.http.impl.nio.client.CloseableHttpAsyncClient asyncHttpclient;
 
-    protected transient RequestConfig requestConfig;
+	protected transient RequestConfig requestConfig;
 
-    protected transient RedirectStrategy redirectStrategy;
+	protected transient RedirectStrategy redirectStrategy;
 
-    protected transient String user;
+	protected transient String user;
 
-    protected transient byte[] pass;
+	protected transient byte[] pass;
 
-    protected transient Security security;
+	protected transient Security security;
 
-    protected String userAgent = HTTPClientDefaults.CHROME;
+	protected String userAgent = HTTPClientDefaults.CHROME;
 
-    public String getUserAgent() {
-        return userAgent;
-    }
+	public String getUserAgent() {
+		return userAgent;
+	}
 
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
+	}
 
-    protected RequestConfig getRequestConfig() {
-        if (requestConfig == null) {
-            requestConfig = RequestConfig.custom()//
-                    .setContentCompressionEnabled(true)//
-                    .setMaxRedirects(5)//
-                    .setCircularRedirectsAllowed(false)//
-                    .setConnectionRequestTimeout(HTTPClientDefaults.TIMEOUT)//
-                    .setConnectTimeout(HTTPClientDefaults.TIMEOUT)//
-                    .setExpectContinueEnabled(HTTPClientDefaults.EXPECT_CONTINUE)//
-                    .setRedirectsEnabled(true)//
-                    .setCookieSpec(HTTPClientDefaults.BROWSER_COMPATIBILITY)//
-                    .build();
-        }
-        return requestConfig;
-    }
+	protected RequestConfig getRequestConfig() {
+		if (requestConfig == null) {
+			requestConfig = RequestConfig.custom()//
+					.setContentCompressionEnabled(true)//
+					.setMaxRedirects(5)//
+					.setCircularRedirectsAllowed(false)//
+					.setConnectionRequestTimeout(HTTPClientDefaults.TIMEOUT)//
+					.setConnectTimeout(HTTPClientDefaults.TIMEOUT)//
+					.setExpectContinueEnabled(HTTPClientDefaults.EXPECT_CONTINUE)//
+					.setRedirectsEnabled(true)//
+					.setCookieSpec(HTTPClientDefaults.BROWSER_COMPATIBILITY)//
+					.build();
+		}
+		return requestConfig;
+	}
 
-    protected RedirectStrategy getRedirectStrategy() {
-        if (redirectStrategy == null) {
-            redirectStrategy = new LaxRedirectStrategy() {
-                @Override
-                public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
-                    HttpUriRequest redirect = super.getRedirect(request, response, context);
-                    // HTTPClient.this.chain.add(redirect.getURI());
-                    // HTTPClient.this.domain = redirect.getURI().getHost();
-                    // System.out.println("redirect: " + redirect.getURI());
-                    return redirect;
-                }
+	private ThreadLocal<List<URI>> chain = new ThreadLocal<List<URI>>() {
+		@Override
+		protected java.util.List<URI> initialValue() {
+			return new ArrayList<URI>();
+		};
+	};
 
-                @Override
-                public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
-                    if (response == null) {
-                        throw new IllegalArgumentException("HTTP response may not be null");
-                    }
+	protected RedirectStrategy getRedirectStrategy() {
+		if (redirectStrategy == null) {
+			redirectStrategy = new LaxRedirectStrategy() {
+				@Override
+				public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+					HttpUriRequest redirect = super.getRedirect(request, response, context);
+					chain.get().add(redirect.getURI());
+					return redirect;
+				}
 
-                    int statusCode = response.getStatusLine().getStatusCode();
-                    String method = request.getRequestLine().getMethod();
-                    Header locationHeader = response.getFirstHeader("location");
+				@Override
+				public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+					if (response == null) {
+						throw new IllegalArgumentException("HTTP response may not be null");
+					}
 
-                    switch (statusCode) {
-                        case HttpStatus.SC_MOVED_TEMPORARILY:
-                            return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
-                                    || method.equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
-                        case HttpStatus.SC_MOVED_PERMANENTLY:
-                        case HttpStatus.SC_TEMPORARY_REDIRECT:
-                            return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
-                                    || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
-                        case HttpStatus.SC_SEE_OTHER:
-                            return true;
-                        default:
-                            return false;
-                    } // end of switch
-                }
-            };
-        }
-        return redirectStrategy;
-    }
+					int statusCode = response.getStatusLine().getStatusCode();
+					String method = request.getRequestLine().getMethod();
+					Header locationHeader = response.getFirstHeader("location");
 
-    protected CloseableHttpClient getHttpClient() {
-        if (httpClient == null) {
-            httpClient = HttpClientBuilder.create()//
-                    .setUserAgent(getUserAgent())//
-                    .setRedirectStrategy(getRedirectStrategy())//
-                    .setDefaultRequestConfig(getRequestConfig())//
-                    .build();//
-        }
-        return httpClient;
-    }
+					switch (statusCode) {
+						case HttpStatus.SC_MOVED_TEMPORARILY:
+							return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method.equalsIgnoreCase(HttpHead.METHOD_NAME))
+									&& (locationHeader != null);
+						case HttpStatus.SC_MOVED_PERMANENTLY:
+						case HttpStatus.SC_TEMPORARY_REDIRECT:
+							return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
+						case HttpStatus.SC_SEE_OTHER:
+							return true;
+						default:
+							return false;
+					} // end of switch
+				}
+			};
+		}
+		return redirectStrategy;
+	}
 
-    protected org.apache.http.impl.nio.client.CloseableHttpAsyncClient getAsyncHttpclient() {
-        if (asyncHttpclient == null) {
-            asyncHttpclient = org.apache.http.impl.nio.client.HttpAsyncClients.custom()//
-                    .setUserAgent(getUserAgent())//
-                    .setRedirectStrategy(getRedirectStrategy())//
-                    .setDefaultRequestConfig(getRequestConfig())//
-                    .build();
-            asyncHttpclient.start();
-        }
-        return asyncHttpclient;
-    }
+	protected CloseableHttpClient getHttpClient() {
+		if (httpClient == null) {
+			httpClient = HttpClientBuilder.create()//
+					.setUserAgent(getUserAgent())//
+					.setRedirectStrategy(getRedirectStrategy())//
+					.setDefaultRequestConfig(getRequestConfig())//
+					.build();//
+		}
+		return httpClient;
+	}
 
-    protected URI toFullUri(AbstractGetParams<? extends AbstractGetParams<?>> get) {
-        URIBuilder uriBuilder = new URIBuilder(get.getUri());
-        stream(get.getFormValues().entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
-        try {
-            return uriBuilder.build();
-        } catch (URISyntaxException e1) {
-            throw new RuntimeException(e1);
-        }
-    }
+	protected org.apache.http.impl.nio.client.CloseableHttpAsyncClient getAsyncHttpclient() {
+		if (asyncHttpclient == null) {
+			asyncHttpclient = org.apache.http.impl.nio.client.HttpAsyncClients.custom()//
+					.setUserAgent(getUserAgent())//
+					.setRedirectStrategy(getRedirectStrategy())//
+					.setDefaultRequestConfig(getRequestConfig())//
+					.build();
+			asyncHttpclient.start();
+		}
+		return asyncHttpclient;
+	}
 
-    public Response execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
-        prepareRequest(params, req);
+	protected URI toFullUri(AbstractGetParams<? extends AbstractGetParams<?>> get) {
+		URIBuilder uriBuilder = new URIBuilder(get.getUri());
+		stream(get.getFormValues().entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
+		try {
+			return uriBuilder.build();
+		} catch (URISyntaxException e1) {
+			throw new RuntimeException(e1);
+		}
+	}
 
-        HttpClientContext context = HttpClientContext.create();
-        context.setCredentialsProvider(new SystemDefaultCredentialsProvider());
-        Response response = null;
-        try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
-            if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED && getUser() != null && pass != null) {
-                CredentialsProvider credsProvider = new BasicCredentialsProvider();
-                credsProvider.setCredentials(new AuthScope(req.getURI().getHost(), AuthScope.ANY_PORT),
-                        new UsernamePasswordCredentials(getUser(), getPass()));
-                context.setCredentialsProvider(credsProvider);
-            } else {
-                response = buildResponse(req, httpResponse);
-            }
-            consumeQuietly(httpResponse.getEntity());
-        } catch (IOException ioex) {
-            throw new UncheckedIOException(ioex);
-        }
-        if (response == null) {
-            try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
-                response = buildResponse(req, httpResponse);
-                consumeQuietly(httpResponse.getEntity());
-            } catch (IOException ioex) {
-                throw new UncheckedIOException(ioex);
-            }
-        }
-        return response;
-    }
+	public Response execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
+		prepareRequest(params, req);
 
-    protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse) throws IOException {
-        Response response = new Response();
-        response.setUri(req.getURI());
-        for (Header header : httpResponse.getAllHeaders()) {
-            response.addHeader(header.getName(), header.getValue());
-        }
-        response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
-        response.setLocale(httpResponse.getLocale());
-        switch (httpResponse.getStatusLine().getStatusCode()) {
-            case HttpStatus.SC_OK:// 200
-                break;
-            case HttpStatus.SC_NOT_FOUND: // 404
-                break;
-            case HttpStatus.SC_UNAUTHORIZED: // 401
-                break;
-        }
-        HttpEntity entity = httpResponse.getEntity();
-        if (entity != null) {
-            response.setContent(toByteArray(entity));
-            response.setContentLength(entity.getContentLength());
-            response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
-            response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
-        }
-        return response;
-    }
+		chain.get();
 
-    public Response get(GetParams get) {
-        return execute(get, createGet(get));
-    }
+		HttpClientContext context = HttpClientContext.create();
+		context.setCredentialsProvider(new SystemDefaultCredentialsProvider());
+		Response response = null;
+		try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
+			if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED && getUser() != null && pass != null) {
+				CredentialsProvider credsProvider = new BasicCredentialsProvider();
+				credsProvider.setCredentials(new AuthScope(req.getURI().getHost(), AuthScope.ANY_PORT), new UsernamePasswordCredentials(getUser(), getPass()));
+				context.setCredentialsProvider(credsProvider);
+			} else {
+				response = buildResponse(req, httpResponse);
+			}
+			consumeQuietly(httpResponse.getEntity());
+		} catch (IOException ioex) {
+			throw new UncheckedIOException(ioex);
+		}
+		if (response == null) {
+			try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
+				response = buildResponse(req, httpResponse);
+				consumeQuietly(httpResponse.getEntity());
+			} catch (IOException ioex) {
+				throw new UncheckedIOException(ioex);
+			}
+		}
+		return response;
+	}
 
-    public HttpGet createGet(GetParams get) {
-        return new HttpGet(toFullUri(get));
-    }
+	protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse) throws IOException {
+		Response response = new Response();
+		List<URI> uris = chain.get();
+		uris.add(0, req.getURI());
+		response.setChain(uris);
+		response.setUri(req.getURI());
+		for (Header header : httpResponse.getAllHeaders()) {
+			response.addHeader(header.getName(), header.getValue());
+		}
+		response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+		response.setLocale(httpResponse.getLocale());
+		switch (httpResponse.getStatusLine().getStatusCode()) {
+			case HttpStatus.SC_OK:// 200
+				break;
+			case HttpStatus.SC_NOT_FOUND: // 404
+				break;
+			case HttpStatus.SC_UNAUTHORIZED: // 401
+				break;
+		}
+		HttpEntity entity = httpResponse.getEntity();
+		if (entity != null) {
+			response.setContent(toByteArray(entity));
+			response.setContentLength(entity.getContentLength());
+			response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
+			response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
+		}
+		return response;
+	}
 
-    public Response delete(DeleteParams delete) {
-        return execute(delete, createDelete(delete));
-    }
+	public Response get(GetParams get) {
+		return execute(get, createGet(get));
+	}
 
-    public HttpDelete createDelete(DeleteParams delete) {
-        return new HttpDelete(toFullUri(delete));
-    }
+	public HttpGet createGet(GetParams get) {
+		return new HttpGet(toFullUri(get));
+	}
 
-    public Response put(PutParams put) {
-        return execute(put, createPut(put));
-    }
+	public Response delete(DeleteParams delete) {
+		return execute(delete, createDelete(delete));
+	}
 
-    public HttpPut createPut(PutParams put) {
-        HttpPut req = new HttpPut(put.getUri());
+	public HttpDelete createDelete(DeleteParams delete) {
+		return new HttpDelete(toFullUri(delete));
+	}
 
-        HttpEntity body = null;
+	public Response put(PutParams put) {
+		return execute(put, createPut(put));
+	}
 
-        if (put.getBody() != null) {
-            body = new StringEntity(put.getBody(), ContentType.create(put.getMime(), charSet));
-        }
+	public HttpPut createPut(PutParams put) {
+		HttpPut req = new HttpPut(put.getUri());
 
-        if (!put.getFormValues().isEmpty()) {
-            if (body != null) {
-                throw new IllegalArgumentException("multiple bodies");
-            }
+		HttpEntity body = null;
 
-            // TODO
-        }
+		if (put.getBody() != null) {
+			body = new StringEntity(put.getBody(), ContentType.create(put.getMime(), charSet));
+		}
 
-        if (body != null) {
-            req.setEntity(body);
-        }
-        return req;
-    }
+		if (!put.getFormValues().isEmpty()) {
+			if (body != null) {
+				throw new IllegalArgumentException("multiple bodies");
+			}
 
-    public Response post(PostParams post) {
-        return execute(post, createPost(post));
-    }
+			// TODO
+		}
 
-    public HttpUriRequest createPost(PostParams post) {
-        HttpUriRequest req;
-        if (post.getBody() != null) {
-            RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-            builder.setEntity(new StringEntity(post.getBody(), ContentType.create(post.getMime(), charSet)));
-            req = builder.build();
-        } else if (post.getAttachments().size() > 0) {
-            MultipartEntityBuilder mb = MultipartEntityBuilder.create();
-            mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            post.getAttachments().entrySet().forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
-            post.getFormValues().entrySet().forEach(entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
-            req = new HttpPost(post.getUri());
-            HttpEntity body = mb.build();
-            HttpPost.class.cast(req).setEntity(body);
-        } else {
-            RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-            post.getFormValues().entrySet().forEach(entry -> entry.getValue().forEach(element -> builder.addParameter(entry.getKey(), element)));
-            req = builder.build();
-        }
-        return req;
-    }
+		if (body != null) {
+			req.setEntity(body);
+		}
+		return req;
+	}
 
-    public Response head(HeadParams head) {
-        return execute(head, createHead(head));
-    }
+	public Response post(PostParams post) {
+		return execute(post, createPost(post));
+	}
 
-    public HttpHead createHead(HeadParams head) {
-        return new HttpHead(head.getUri());
-    }
+	public HttpUriRequest createPost(PostParams post) {
+		HttpUriRequest req;
+		if (post.getBody() != null) {
+			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
+			builder.setEntity(new StringEntity(post.getBody(), ContentType.create(post.getMime(), charSet)));
+			req = builder.build();
+		} else if (post.getAttachments().size() > 0) {
+			MultipartEntityBuilder mb = MultipartEntityBuilder.create();
+			mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			post.getAttachments().entrySet().forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
+			post.getFormValues().entrySet().forEach(entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
+			req = new HttpPost(post.getUri());
+			HttpEntity body = mb.build();
+			HttpPost.class.cast(req).setEntity(body);
+		} else {
+			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
+			post.getFormValues().entrySet().forEach(entry -> entry.getValue().forEach(element -> builder.addParameter(entry.getKey(), element)));
+			req = builder.build();
+		}
+		return req;
+	}
 
-    public Response options(OptionsParams options) {
-        return execute(options, createOptions(options));
-    }
+	public Response head(HeadParams head) {
+		return execute(head, createHead(head));
+	}
 
-    public HttpOptions createOptions(OptionsParams options) {
-        return new HttpOptions(options.getUri());
-    }
+	public HttpHead createHead(HeadParams head) {
+		return new HttpHead(head.getUri());
+	}
 
-    public Response trace(TraceParams trace) {
-        return execute(trace, createTrace(trace));
-    }
+	public Response options(OptionsParams options) {
+		return execute(options, createOptions(options));
+	}
 
-    public HttpTrace createTrace(TraceParams trace) {
-        return new HttpTrace(trace.getUri());
-    }
+	public HttpOptions createOptions(OptionsParams options) {
+		return new HttpOptions(options.getUri());
+	}
 
-    protected String getPass() {
-        try {
-            return getSecurity().decrypt(pass);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+	public Response trace(TraceParams trace) {
+		return execute(trace, createTrace(trace));
+	}
 
-    public HTTPClient resetAuthentication() {
-        this.user = null;
-        this.pass = null;
-        this.security = null;
-        return this;
-    }
+	public HttpTrace createTrace(TraceParams trace) {
+		return new HttpTrace(trace.getUri());
+	}
 
-    public void setAuthentication(String user, String pass) {
-        this.user = user;
-        try {
-            this.pass = getSecurity().encrypt(pass);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+	protected String getPass() {
+		try {
+			return getSecurity().decrypt(pass);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    protected Security getSecurity() {
-        if (security == null) {
-            try {
-                security = Security.class.cast(Class.forName("org.jhaws.common.io.security.SecureMeBC").newInstance());
-            } catch (Exception ignore) {
-                security = new SecureMe();
-            }
-        }
-        return security;
-    }
+	public HTTPClient resetAuthentication() {
+		this.user = null;
+		this.pass = null;
+		this.security = null;
+		return this;
+	}
 
-    public Response submit(Form form) {
-        return HTTPClientDefaults.POST.equalsIgnoreCase(form.getMethod()) ? post(form) : get(form);
-    }
+	public void setAuthentication(String user, String pass) {
+		this.user = user;
+		try {
+			this.pass = getSecurity().encrypt(pass);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-    public Response post(Form form) {
-        return post(createPost(form));
-    }
+	protected Security getSecurity() {
+		if (security == null) {
+			try {
+				security = Security.class.cast(Class.forName("org.jhaws.common.io.security.SecureMeBC").newInstance());
+			} catch (Exception ignore) {
+				security = new SecureMe();
+			}
+		}
+		return security;
+	}
 
-    public PostParams createPost(Form form) {
-        URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
-        PostParams post = new PostParams(uri);
-        form.getInputElements().stream().filter(e -> !(e instanceof FileInput)).forEach(e -> post.addFormValue(e.getName(), e.getValue()));
-        form.getInputElements()
-                .stream()
-                .filter(e -> isNotBlank(e.getName()))
-                .filter(e -> isNotBlank(e.getValue()))
-                .filter(e -> e instanceof FileInput)
-                .map(e -> FileInput.class.cast(e))
-                .forEach(e -> post.getAttachments().put(e.getName(), new FilePath(e.getFile())));
-        post.setName(form.getId());
-        return post;
-    }
+	public Response submit(Form form) {
+		return HTTPClientDefaults.POST.equalsIgnoreCase(form.getMethod()) ? post(form) : get(form);
+	}
 
-    public Response get(Form form) {
-        return get(createGet(form));
-    }
+	public Response post(Form form) {
+		return post(createPost(form));
+	}
 
-    public GetParams createGet(Form form) {
-        URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
-        GetParams get = new GetParams(uri);
-        form.getInputElements().forEach(e -> get.addFormValue(e.getName(), e.getValue()));
-        return get;
-    }
+	public PostParams createPost(Form form) {
+		URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
+		PostParams post = new PostParams(uri);
+		form.getInputElements().stream().filter(e -> !(e instanceof FileInput)).forEach(e -> post.addFormValue(e.getName(), e.getValue()));
+		form.getInputElements().stream().filter(e -> isNotBlank(e.getName())).filter(e -> isNotBlank(e.getValue())).filter(e -> e instanceof FileInput)
+				.map(e -> FileInput.class.cast(e)).forEach(e -> post.getAttachments().put(e.getName(), new FilePath(e.getFile())));
+		post.setName(form.getId());
+		return post;
+	}
 
-    @Override
-    public void close() {
-        if (httpClient != null) {
-            try {
-                httpClient.close();
-            } catch (Exception e) {
-                //
-            }
-            httpClient = null;
-        }
-        if (asyncHttpclient != null) {
-            try {
-                asyncHttpclient.close();
-            } catch (Exception e) {
-                //
-            }
-            asyncHttpclient = null;
-        }
-        redirectStrategy = null;
-        requestConfig = null;
-        resetAuthentication();
-    }
+	public Response get(Form form) {
+		return get(createGet(form));
+	}
 
-    public void execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req, OutputStream out) {
-        prepareRequest(params, req);
+	public GetParams createGet(Form form) {
+		URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
+		GetParams get = new GetParams(uri);
+		form.getInputElements().forEach(e -> get.addFormValue(e.getName(), e.getValue()));
+		return get;
+	}
 
-        HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
+	@Override
+	public void close() {
+		if (httpClient != null) {
+			try {
+				httpClient.close();
+			} catch (Exception e) {
+				//
+			}
+			httpClient = null;
+		}
+		if (asyncHttpclient != null) {
+			try {
+				asyncHttpclient.close();
+			} catch (Exception e) {
+				//
+			}
+			asyncHttpclient = null;
+		}
+		redirectStrategy = null;
+		requestConfig = null;
+		resetAuthentication();
+	}
 
-        Future<OutputStream> future = getAsyncHttpclient().execute(areq, new AsyncConsumer(out), null);
-        try {
-            future.get();
-        } catch (ExecutionException e) {
-            wrap(e.getCause());
-        } catch (InterruptedException e) {
-            //
-        }
-    }
+	public void execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req, OutputStream out) {
+		prepareRequest(params, req);
 
-    protected void wrap(Throwable cause) throws UncheckedIOException, RuntimeException {
-        if (cause instanceof RuntimeException) {
-            throw RuntimeException.class.cast(cause);
-        }
-        if (cause instanceof IOException) {
-            throw new UncheckedIOException(IOException.class.cast(cause));
-        }
-        throw new RuntimeException(cause);
-    }
+		HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
 
-    @SuppressWarnings("deprecation")
-    protected void prepareRequest(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
-        req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
-        if (params != null && params.getAccept() != null) {
-            req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
-        }
-    }
+		Future<OutputStream> future = getAsyncHttpclient().execute(areq, new AsyncConsumer(out), null);
+		try {
+			future.get();
+		} catch (ExecutionException e) {
+			wrap(e.getCause());
+		} catch (InterruptedException e) {
+			//
+		}
+	}
 
-    protected String getUser() {
-        return user;
-    }
+	protected void wrap(Throwable cause) throws UncheckedIOException, RuntimeException {
+		if (cause instanceof RuntimeException) {
+			throw RuntimeException.class.cast(cause);
+		}
+		if (cause instanceof IOException) {
+			throw new UncheckedIOException(IOException.class.cast(cause));
+		}
+		throw new RuntimeException(cause);
+	}
+
+	@SuppressWarnings("deprecation")
+	protected void prepareRequest(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
+		req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
+		if (params != null && params.getAccept() != null) {
+			req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+		}
+	}
+
+	protected String getUser() {
+		return user;
+	}
 }
