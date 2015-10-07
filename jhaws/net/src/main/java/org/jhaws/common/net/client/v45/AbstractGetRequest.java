@@ -6,20 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractGetParams<T extends AbstractGetParams<? super T>> extends AbstractParams<T> {
+public abstract class AbstractGetRequest<T extends AbstractGetRequest<? super T>> extends AbstractRequest<T> {
     private static final long serialVersionUID = 4305650301682256528L;
 
     protected Map<String, List<String>> formValues = new HashMap<String, List<String>>();
 
-    public AbstractGetParams() {
+    public AbstractGetRequest() {
         super();
     }
 
-    public AbstractGetParams(URI uri) {
+    public AbstractGetRequest(URI uri) {
         setUri(uri);
     }
 
-    public AbstractGetParams(String uri) {
+    public AbstractGetRequest(String uri) {
         setUri(uri);
     }
 

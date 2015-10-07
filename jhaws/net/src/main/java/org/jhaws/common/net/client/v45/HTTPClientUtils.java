@@ -1,7 +1,6 @@
 package org.jhaws.common.net.client.v45;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
@@ -12,7 +11,6 @@ import java.net.URL;
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -23,7 +21,6 @@ import org.apache.http.client.utils.URIUtils;
 import org.jhaws.common.io.FilePath;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 public class HTTPClientUtils {
 	/** mimeTypes */
@@ -68,16 +65,9 @@ public class HTTPClientUtils {
 	public static String pretty(String xml) {
 		try {
 			// java.lang.System.setProperty("javax.xml.transform.TransformerFactory", "org.apache.xalan.xsltc.trax.TransformerFactoryImpl");
-			DocumentBuilderFactory dbFactory;
-			DocumentBuilder dBuilder;
-			Document original = null;
-			try {
-				dbFactory = DocumentBuilderFactory.newInstance();
-				dBuilder = dbFactory.newDocumentBuilder();
-				original = dBuilder.parse(new InputSource(new InputStreamReader(new ByteArrayInputStream(xml.getBytes("UTF-8")))));
-			} catch (SAXException | IOException | ParserConfigurationException e) {
-				e.printStackTrace();
-			}
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document original = dBuilder.parse(new InputSource(new InputStreamReader(new ByteArrayInputStream(xml.getBytes("UTF-8")))));
 			StringWriter stringWriter = new StringWriter();
 			StreamResult xmlOutput = new StreamResult(stringWriter);
 			TransformerFactory tf = TransformerFactory.newInstance();
@@ -91,7 +81,8 @@ public class HTTPClientUtils {
 			transformer.transform(new DOMSource(original), xmlOutput);
 			return xmlOutput.getWriter().toString();
 		} catch (Exception ex) {
-			throw new RuntimeException("Error converting to String", ex);
+			// ex.printStackTrace();
+			return xml;
 		}
 	}
 }

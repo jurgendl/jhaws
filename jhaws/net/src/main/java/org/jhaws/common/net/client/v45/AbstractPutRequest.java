@@ -2,32 +2,32 @@ package org.jhaws.common.net.client.v45;
 
 import java.net.URI;
 
-public abstract class AbstractPutParams<T extends AbstractPutParams<? super T>> extends AbstractGetParams<T> {
+public abstract class AbstractPutRequest<T extends AbstractPutRequest<? super T>> extends AbstractGetRequest<T> {
     private static final long serialVersionUID = -6103040334975043729L;
 
     protected String body;
 
     protected String mime;
 
-    public AbstractPutParams() {
+    public AbstractPutRequest() {
         super();
     }
 
-    public AbstractPutParams(URI uri) {
+    public AbstractPutRequest(URI uri) {
         super(uri);
     }
 
-    public AbstractPutParams(String uri) {
+    public AbstractPutRequest(String uri) {
         super(uri);
     }
 
-    public AbstractPutParams(String uri, String body, String mime) {
+    public AbstractPutRequest(String uri, String body, String mime) {
         super(uri);
         this.body = body;
         this.mime = mime;
     }
 
-    public AbstractPutParams(URI uri, String body, String mime) {
+    public AbstractPutRequest(URI uri, String body, String mime) {
         super(uri);
         this.body = body;
         this.mime = mime;

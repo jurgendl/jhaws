@@ -170,7 +170,7 @@ public class HTTPClient implements Closeable {
 		return asyncHttpclient;
 	}
 
-	protected URI toFullUri(AbstractGetParams<? extends AbstractGetParams<?>> get) {
+	protected URI toFullUri(AbstractGetRequest<? extends AbstractGetRequest<?>> get) {
 		URIBuilder uriBuilder = new URIBuilder(get.getUri());
 		stream(get.getFormValues().entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
 		try {
@@ -180,7 +180,7 @@ public class HTTPClient implements Closeable {
 		}
 	}
 
-	public Response execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
+	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
 		prepareRequest(params, req);
 
 		chain = new ThreadLocal<List<URI>>() {
@@ -245,27 +245,27 @@ public class HTTPClient implements Closeable {
 		return response;
 	}
 
-	public Response get(GetParams get) {
+	public Response get(GetRequest get) {
 		return execute(get, createGet(get));
 	}
 
-	public HttpGet createGet(GetParams get) {
+	public HttpGet createGet(GetRequest get) {
 		return new HttpGet(toFullUri(get));
 	}
 
-	public Response delete(DeleteParams delete) {
+	public Response delete(DeleteRequest delete) {
 		return execute(delete, createDelete(delete));
 	}
 
-	public HttpDelete createDelete(DeleteParams delete) {
+	public HttpDelete createDelete(DeleteRequest delete) {
 		return new HttpDelete(toFullUri(delete));
 	}
 
-	public Response put(PutParams put) {
+	public Response put(PutRequest put) {
 		return execute(put, createPut(put));
 	}
 
-	public HttpPut createPut(PutParams put) {
+	public HttpPut createPut(PutRequest put) {
 		HttpPut req = new HttpPut(put.getUri());
 
 		HttpEntity body = null;
@@ -288,11 +288,11 @@ public class HTTPClient implements Closeable {
 		return req;
 	}
 
-	public Response post(PostParams post) {
+	public Response post(PostRequest post) {
 		return execute(post, createPost(post));
 	}
 
-	public HttpUriRequest createPost(PostParams post) {
+	public HttpUriRequest createPost(PostRequest post) {
 		HttpUriRequest req;
 		if (post.getBody() != null) {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
@@ -314,27 +314,27 @@ public class HTTPClient implements Closeable {
 		return req;
 	}
 
-	public Response head(HeadParams head) {
+	public Response head(HeadRequest head) {
 		return execute(head, createHead(head));
 	}
 
-	public HttpHead createHead(HeadParams head) {
+	public HttpHead createHead(HeadRequest head) {
 		return new HttpHead(head.getUri());
 	}
 
-	public Response options(OptionsParams options) {
+	public Response options(OptionsRequest options) {
 		return execute(options, createOptions(options));
 	}
 
-	public HttpOptions createOptions(OptionsParams options) {
+	public HttpOptions createOptions(OptionsRequest options) {
 		return new HttpOptions(options.getUri());
 	}
 
-	public Response trace(TraceParams trace) {
+	public Response trace(TraceRequest trace) {
 		return execute(trace, createTrace(trace));
 	}
 
-	public HttpTrace createTrace(TraceParams trace) {
+	public HttpTrace createTrace(TraceRequest trace) {
 		return new HttpTrace(trace.getUri());
 	}
 
@@ -381,9 +381,9 @@ public class HTTPClient implements Closeable {
 		return post(createPost(form));
 	}
 
-	public PostParams createPost(Form form) {
+	public PostRequest createPost(Form form) {
 		URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
-		PostParams post = new PostParams(uri);
+		PostRequest post = new PostRequest(uri);
 		form.getInputElements().stream().filter(e -> !(e instanceof FileInput)).forEach(e -> post.addFormValue(e.getName(), e.getValue()));
 		form.getInputElements().stream().filter(e -> isNotBlank(e.getName())).filter(e -> isNotBlank(e.getValue())).filter(e -> e instanceof FileInput)
 				.map(e -> FileInput.class.cast(e)).forEach(e -> post.getAttachments().put(e.getName(), new FilePath(e.getFile())));
@@ -395,9 +395,9 @@ public class HTTPClient implements Closeable {
 		return get(createGet(form));
 	}
 
-	public GetParams createGet(Form form) {
+	public GetRequest createGet(Form form) {
 		URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
-		GetParams get = new GetParams(uri);
+		GetRequest get = new GetRequest(uri);
 		form.getInputElements().forEach(e -> get.addFormValue(e.getName(), e.getValue()));
 		return get;
 	}
@@ -425,7 +425,7 @@ public class HTTPClient implements Closeable {
 		resetAuthentication();
 	}
 
-	public void execute(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req, OutputStream out) {
+	public void execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out) {
 		prepareRequest(params, req);
 
 		HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
@@ -451,7 +451,7 @@ public class HTTPClient implements Closeable {
 	}
 
 	@SuppressWarnings("deprecation")
-	protected void prepareRequest(AbstractParams<? extends AbstractParams<?>> params, HttpUriRequest req) {
+	protected void prepareRequest(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
 		req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
 		if (params != null && params.getAccept() != null) {
 			req.setHeader(HttpHeaders.ACCEPT, params.getAccept());

@@ -2,18 +2,18 @@ package org.jhaws.common.net.client.v45;
 
 import java.net.URI;
 
-public class TraceParams extends AbstractGetParams<TraceParams> {
+public class TraceRequest extends AbstractGetRequest<TraceRequest> {
     private static final long serialVersionUID = -113043755384527216L;
 
-    public TraceParams() {
+    public TraceRequest() {
         super();
     }
 
-    public TraceParams(URI uri) {
+    public TraceRequest(URI uri) {
         super(uri);
     }
 
-    public TraceParams(String uri) {
+    public TraceRequest(String uri) {
         super(uri);
     }
 }

@@ -4,30 +4,30 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.HashMap;
 
-public class PostParams extends AbstractPutParams<PostParams> {
+public class PostRequest extends AbstractPutRequest<PostRequest> {
     private static final long serialVersionUID = -3939699621850878105L;
 
     private HashMap<String, Path> attachments = new HashMap<String, Path>();
 
     private String name;
 
-    public PostParams() {
+    public PostRequest() {
         super();
     }
 
-    public PostParams(URI uri) {
+    public PostRequest(URI uri) {
         super(uri);
     }
 
-    public PostParams(String uri) {
+    public PostRequest(String uri) {
         super(uri);
     }
 
-    public PostParams(String uri, String body, String mime) {
+    public PostRequest(String uri, String body, String mime) {
         super(uri, body, mime);
     }
 
-    public PostParams(URI uri, String body, String mime) {
+    public PostRequest(URI uri, String body, String mime) {
         super(uri, body, mime);
     }
 
@@ -35,7 +35,7 @@ public class PostParams extends AbstractPutParams<PostParams> {
         return attachments;
     }
 
-    public PostParams setAttachments(HashMap<String, Path> attachments) {
+    public PostRequest setAttachments(HashMap<String, Path> attachments) {
         this.attachments = attachments;
         return cast();
     }
@@ -44,7 +44,7 @@ public class PostParams extends AbstractPutParams<PostParams> {
         return name;
     }
 
-    public PostParams setName(String name) {
+    public PostRequest setName(String name) {
         this.name = name;
         return cast();
     }

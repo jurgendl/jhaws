@@ -95,7 +95,7 @@ public class Response implements Serializable {
 
 	@Override
 	public String toString() {
-		return statusCode + "," + (content != null) + "," + headers;
+		return "statusCode=" + statusCode + ";content=" + (content != null);
 	}
 
 	public URI getUri() {

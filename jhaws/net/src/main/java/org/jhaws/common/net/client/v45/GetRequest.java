@@ -2,18 +2,18 @@ package org.jhaws.common.net.client.v45;
 
 import java.net.URI;
 
-public class GetParams extends AbstractGetParams<GetParams> {
+public class GetRequest extends AbstractGetRequest<GetRequest> {
     private static final long serialVersionUID = -5590561779919482437L;
 
-    public GetParams() {
+    public GetRequest() {
         super();
     }
 
-    public GetParams(String uri) {
+    public GetRequest(String uri) {
         super(uri);
     }
 
-    public GetParams(URI uri) {
+    public GetRequest(URI uri) {
         super(uri);
     }
 }
