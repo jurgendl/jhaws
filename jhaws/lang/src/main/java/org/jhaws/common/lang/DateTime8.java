@@ -98,7 +98,7 @@ public class DateTime8 {
 			}
 			formatted.append(minutes).append("m");
 		}
-		if ((seconds != 0) || (formatted.length() > 0)) {
+		{
 			if (seconds < 10 && formatted.length() > 0) {
 				formatted.append("0");
 			}
@@ -114,24 +114,18 @@ public class DateTime8 {
 				formatted.append(millis);
 			}
 			formatted.append("s");
-		} else {
-			if (millis < 100) {
-				formatted.append("0");
-			}
-			if (millis < 10) {
-				formatted.append("0");
-			}
-			formatted.append(millis).append("ms");
 		}
 		return formatted.toString();
 	}
 
-	public static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
-			.appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).appendLiteral(".").appendValue(ChronoField.MILLI_OF_SECOND)
-			.toFormatter();
+	public static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder()
+			.appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":").appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+			.appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).appendLiteral(".")
+			.appendValue(ChronoField.MILLI_OF_SECOND).toFormatter();
 
-	public static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
-			.appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).toFormatter();
+	public static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder()
+			.appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":").appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+			.appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).toFormatter();
 
 	public static Pattern PS = Pattern.compile("(\\d\\d:\\d\\d:\\d\\d)");
 
@@ -165,19 +159,19 @@ public class DateTime8 {
 	public static LocalTime toLocalTime(Duration duration) {
 		return START_OF_DAY.plus(duration);
 	}
-	
+
 	public static LocalDate toLocalDate(Date date) {
 		return toLocalDate(date, ZoneId.systemDefault());
 	}
-	
+
 	public static LocalDate toLocalDate(Instant instant) {
 		return toLocalDate(instant, ZoneId.systemDefault());
 	}
-	
+
 	public static LocalDate toLocalDate(Date date, ZoneId zone) {
-		return toLocalDate( Instant.ofEpochMilli(date.getTime()), zone );
+		return toLocalDate(Instant.ofEpochMilli(date.getTime()), zone);
 	}
-	
+
 	public static LocalDate toLocalDate(Instant instant, ZoneId zone) {
 		return LocalDateTime.ofInstant(instant, zone).toLocalDate();
 	}
@@ -191,7 +185,7 @@ public class DateTime8 {
 	}
 
 	public static LocalDateTime toLocalDateTime(Instant instant, ZoneId zone) {
-		return  LocalDateTime.ofInstant(instant, zone);
+		return LocalDateTime.ofInstant(instant, zone);
 	}
 
 	public static LocalDateTime toLocalDateTime(Instant instant) {
@@ -199,7 +193,7 @@ public class DateTime8 {
 	}
 
 	public static Date toDate(ChronoLocalDate date) {
-		return toDate(date,ZoneId.systemDefault());
+		return toDate(date, ZoneId.systemDefault());
 	}
 
 	public static Date toDate(ChronoLocalDate date, ZoneId zone) {
