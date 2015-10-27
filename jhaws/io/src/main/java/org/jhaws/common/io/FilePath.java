@@ -567,7 +567,7 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public static class Visitors extends SimpleFileVisitor<Path>implements Serializable {
+	public static class Visitors extends SimpleFileVisitor<Path> implements Serializable {
 		private static final long serialVersionUID = 7414917192031528908L;
 
 		public static class DeleteAllFilesVisitor extends Visitors {
@@ -2082,6 +2082,18 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
+	public String readAllText() throws UncheckedIOException {
+		return readAllText(getDefaultCharset());
+	}
+
+	public String readAllText(Charset charset) throws UncheckedIOException {
+		try {
+			return new String(Files.readAllBytes(this.getPath()), charset);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
 	public ByteBuffer readAllBytesToBuffer() throws UncheckedIOException {
 		try {
 			return ByteBuffer.wrap(Files.readAllBytes(this.getPath()));
@@ -2375,7 +2387,7 @@ public class FilePath implements Path, Externalizable {
 	 */
 	@Override
 	public String toString() {
-		return this.getPath().toString();
+		return getFilePathString();
 	}
 
 	/**
@@ -2550,6 +2562,10 @@ public class FilePath implements Path, Externalizable {
 
 	public String getFileNameString() {
 		return getFileName().toString();
+	}
+
+	public String getFilePathString() {
+		return getPath().toString();
 	}
 
 	public String getSortableFileName() {
