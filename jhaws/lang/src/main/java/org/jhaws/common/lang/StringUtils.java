@@ -3,6 +3,8 @@ package org.jhaws.common.lang;
 import java.text.Normalizer;
 
 public interface StringUtils {
+	public static final char[] REGULARS = "\\<([{^-=$!|]})?*+.>".toCharArray();
+
 	public static final char[] whitespace_chars = ( //
 	"\u0009" // CHARACTER TABULATION
 			+ "\n" // LINE FEED (LF)
@@ -101,5 +103,25 @@ public interface StringUtils {
 			}
 		}
 		return sb.toString();
+	}
+
+	public static String regularize(String s) {
+		for (int i = 0; i < REGULARS.length; i++) {
+			s = s.replaceAll("\\" + REGULARS[i], "\\\\" + REGULARS[i]);
+		}
+		return s;
+	}
+
+	public static String escape(String s) {
+		s = s.replaceAll("\\\\", "\\\\\\\\");
+		s = s.replaceAll("\"", "\\\\\"");
+		return s;
+	}
+
+	/**
+	 * @see http://stackoverflow.com/questions/4775898/java-regex-until-certain-word-text-characters
+	 */
+	public static String regularUntil(String s) {
+		return "(.*?)\\b" + s + ".*";
 	}
 }
