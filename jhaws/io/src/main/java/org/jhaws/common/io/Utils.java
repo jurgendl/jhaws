@@ -125,13 +125,16 @@ public class Utils {
 		Netware_4_11, //
 		OS_2, //
 		Solaris, //
+		SunOS, //
 		Windows_2000, //
 		Windows_7, //
 		Windows_8, //
+		Windows_8_1, //
 		Windows_10, //
 		Windows_95, //
 		Windows_98, //
 		Windows_NT, //
+		Windows_2003, //
 		Windows_Vista, //
 		Windows_XP, //
 		unknown;//
@@ -841,7 +844,9 @@ public class Utils {
 				case Windows_Vista:
 				case Windows_XP:
 				case Windows_8:
+				case Windows_8_1:
 				case Windows_10:
+				case Windows_2003:
 					_osgroup = OSGroup.Windows;
 
 					break;
@@ -855,9 +860,9 @@ public class Utils {
 				case Netware_4_11:
 				case OS_2:
 				case Solaris:
-					_osgroup = OSGroup.unknown;
-
+				case SunOS:
 					break;
+
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

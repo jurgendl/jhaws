@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
@@ -48,7 +49,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -518,11 +521,11 @@ public interface Collections8 {
 	}
 
 	public static <T> Predicate<T> notNull() {
-		return t -> t != null;
+		return Objects::nonNull;
 	}
 
 	public static <T> Predicate<T> isNull() {
-		return t -> t == null;
+		return Objects::isNull;
 	}
 
 	public static <T> Predicate<T> is(T x) {
@@ -665,8 +668,6 @@ public interface Collections8 {
 			return true;
 		if (first == null || second == null)
 			return false;
-		if (first.getClass() != second.getClass())
-			return false;
 		return first.equals(second);
 	}
 
@@ -741,5 +742,58 @@ public interface Collections8 {
 
 	public static <T> BinaryOperator<T> keepMax(Comparator<T> comparator) {
 		return BinaryOperator.maxBy(comparator);
+	}
+
+	public static IntStream streamInt(int max) {
+		return streamInt(0, 1, max);
+	}
+
+	public static LongStream streamLong(long max) {
+		return streamLong(0, 1, max);
+	}
+
+	public static DoubleStream streamDouble(double max) {
+		return streamDouble(0.0, 1.0, max);
+	}
+
+	public static IntStream streamInt(int start, int max) {
+		return streamInt(start, 1, max);
+	}
+
+	public static LongStream streamLong(long start, long max) {
+		return streamLong(start, 1, max);
+	}
+
+	public static DoubleStream streamDouble(double start, double max) {
+		return streamDouble(start, 1.0, max);
+	}
+
+	public static IntStream streamInt(int start, int step, int max) {
+		return IntStream.iterate(start, i -> i + step).limit(max - start);
+	}
+
+	public static LongStream streamLong(long start, long step, long max) {
+		return LongStream.iterate(start, i -> i + step).limit(max - start);
+	}
+
+	public static DoubleStream streamDouble(double start, double step, double max) {
+		return DoubleStream.iterate(start, i -> i + step).limit((long) (max - start));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T[] toArray(Collection<T> collection) {
+		return (T[]) collection.toArray();
+	}
+
+	public static <T> Stream<T> concatenate(Stream<Collection<T>> streams) {
+		return concatenateStreams(streams.map(Collection::stream));
+	}
+
+	public static <T> Stream<T> concatenate(Collection<Stream<T>> collentionStreams) {
+		return concatenateStreams(collentionStreams.stream());
+	}
+
+	public static <T> Stream<T> concatenateStreams(Stream<Stream<T>> streamStreams) {
+		return streamStreams.flatMap(Function.identity());
 	}
 }
