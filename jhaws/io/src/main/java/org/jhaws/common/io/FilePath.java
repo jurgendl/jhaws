@@ -567,7 +567,7 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public static class Visitors extends SimpleFileVisitor<Path> implements Serializable {
+	public static class Visitors extends SimpleFileVisitor<Path>implements Serializable {
 		private static final long serialVersionUID = 7414917192031528908L;
 
 		public static class DeleteAllFilesVisitor extends Visitors {
@@ -988,8 +988,10 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath(Class<?> root, String relativePath) throws UncheckedIOException {
 		this(root.getClassLoader()
-				.getResource(root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar())
-						+ (relativePath.startsWith("/") ? "" : "/") + relativePath));
+				.getResource((root.getPackage() == null ? ""
+						: root.getPackage().getName().replace(FilePath.DOT, FilePath.getPathSeperatorChar())
+								+ (relativePath.startsWith("/") ? "" : "/"))
+						+ relativePath));
 	}
 
 	public FilePath(File file) {
@@ -2633,5 +2635,9 @@ public class FilePath implements Path, Externalizable {
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
+	}
+
+	public boolean isEmpty() {
+		return (isFile() && getFileSize() == 0) || (isDirectory() && getChildren().size() == 0);
 	}
 }
