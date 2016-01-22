@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.Spliterators;
+import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingDeque;
@@ -116,6 +117,120 @@ public interface Collections8 {
 		public Path next() {
 			this.path = this.path.getParent();
 			return this.path;
+		}
+	}
+
+	public static interface Opt<T> {
+		<P> Opt<P> nest(Function<T, P> getter);
+
+		<P> Opt<P> eager(Function<T, P> getter);
+
+		<P> Opt<P> reusable(Function<T, P> getter);
+
+		T get();
+
+		T or(Supplier<? extends T> supplier);
+
+		public static <T> Opt<T> eager(T value) {
+			return new EagerOpt<>(value);
+		}
+
+		public static <T> Opt<T> reusable(T value) {
+			return new ReusableOpt<>(value);
+		}
+	}
+
+	static class EagerOpt<T> implements Opt<T> {
+		protected final T value;
+
+		protected EagerOpt(T value) {
+			this.value = value;
+		}
+
+		@Override
+		public T get() {
+			return value;
+		}
+
+		@Override
+		public T or(Supplier<? extends T> supplier) {
+			return Optional.ofNullable(get()).orElseGet(supplier);
+		}
+
+		@Override
+		public <P> Opt<P> nest(Function<T, P> get) {
+			return eager(get);
+		}
+
+		@Override
+		public <P> Opt<P> eager(Function<T, P> get) {
+			return new EagerOpt<>(value == null ? null : get.apply(value));
+		}
+
+		@Override
+		public <P> Opt<P> reusable(Function<T, P> get) {
+			return new ReusableOpt<>(get()).nest(get);
+		}
+	}
+
+	static class ReusableOpt<P, T> implements Opt<T> {
+		protected final ReusableOpt<P, T> parent;
+
+		protected final Function<P, T> getter;
+
+		protected final T value;
+
+		protected ReusableOpt(T value) {
+			this.value = value;
+			this.parent = null;
+			this.getter = null;
+		}
+
+		protected ReusableOpt(ReusableOpt<P, T> parent, Function<P, T> getter) {
+			this.value = null;
+			this.parent = parent;
+			this.getter = getter;
+		}
+
+		@Override
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		public T get() {
+			if (value != null)
+				return value;
+			Stack<ReusableOpt> stack = new Stack<>();
+			stack.add(this);
+			ReusableOpt current = this.parent;
+			while (current != null) {
+				stack.add(current);
+				current = current.parent;
+			}
+			Object currentValue = stack.pop().value;
+			while (!stack.isEmpty() && currentValue != null) {
+				current = stack.pop();
+				currentValue = current.getter.apply(currentValue);
+			}
+			return (T) currentValue;
+		}
+
+		@Override
+		public T or(Supplier<? extends T> supplier) {
+			return Optional.ofNullable(get()).orElseGet(supplier);
+		}
+
+		@Override
+		public <X> Opt<X> nest(Function<T, X> get) {
+			return reusable(get);
+		}
+
+		@Override
+		public <X> Opt<X> eager(Function<T, X> get) {
+			return new EagerOpt<>(get()).nest(get);
+		}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public <X> Opt<X> reusable(Function<T, X> get) {
+			return new ReusableOpt<>((ReusableOpt<T, X>) this, get);
 		}
 	}
 
@@ -795,5 +910,13 @@ public interface Collections8 {
 
 	public static <T> Stream<T> concatenateStreams(Stream<Stream<T>> streamStreams) {
 		return streamStreams.flatMap(Function.identity());
+	}
+
+	public static <T> Opt<T> eager(T value) {
+		return Opt.eager(value);
+	}
+
+	public static <T> Opt<T> reusable(T value) {
+		return Opt.reusable(value);
 	}
 }

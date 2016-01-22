@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.jhaws.common.lang.Collections8.Opt;
 import org.jhaws.common.lang.functions.EConsumer;
 import org.jhaws.common.lang.functions.EPredicate;
 import org.junit.Assert;
@@ -71,5 +72,79 @@ public class Collections8Test {
 			all2.addAll(gg);
 		}
 		Assert.assertEquals(all, all2);
+	}
+
+	public static class TPersoon {
+		TPersoonNaam naam;
+
+		public TPersoonNaam getNaam() {
+			return this.naam;
+		}
+
+		public void setNaam(TPersoonNaam naam) {
+			this.naam = naam;
+		}
+	}
+
+	public static class TPersoonNaam {
+		TNaam naam;
+
+		public TNaam getNaam() {
+			return this.naam;
+		}
+
+		public void setNaam(TNaam naam) {
+			this.naam = naam;
+		}
+	}
+
+	public static class TNaam {
+		String naam;
+
+		public String getNaam() {
+			return this.naam;
+		}
+
+		public void setNaam(String naam) {
+			this.naam = naam;
+		}
+	}
+
+	@Test
+	public void testEagerOpt1() {
+		TPersoon persoon = new TPersoon();
+		Assert.assertNull(Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
+		TPersoonNaam pn = new TPersoonNaam();
+		persoon.setNaam(pn);
+		TNaam n = new TNaam();
+		pn.setNaam(n);
+		n.setNaam("naam");
+		Assert.assertEquals(n.getNaam(), Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
+	}
+
+	@Test
+	public void testEagerOpt2() {
+		TPersoon persoon = new TPersoon();
+		Opt<String> notReusable = Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam);
+		Assert.assertNull(notReusable.get());
+		TPersoonNaam pn = new TPersoonNaam();
+		persoon.setNaam(pn);
+		TNaam n = new TNaam();
+		pn.setNaam(n);
+		n.setNaam("naam");
+		Assert.assertNull(notReusable.get());
+	}
+
+	@Test
+	public void testReusableOpt() {
+		TPersoon persoon = new TPersoon();
+		Opt<String> opt = Opt.reusable(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam);
+		Assert.assertNull(opt.get());
+		TPersoonNaam pn = new TPersoonNaam();
+		persoon.setNaam(pn);
+		TNaam n = new TNaam();
+		pn.setNaam(n);
+		n.setNaam("naam");
+		Assert.assertEquals(n.getNaam(), opt.get());
 	}
 }
