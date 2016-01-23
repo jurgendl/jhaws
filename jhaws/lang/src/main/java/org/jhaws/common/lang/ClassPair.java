@@ -1,42 +1,22 @@
 package org.jhaws.common.lang;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+public class ClassPair<S, T> extends KeyValue<Class<S>, Class<T>> {
+	private static final long serialVersionUID = -5930427872429137357L;
 
-public class ClassPair<S, T> {
-    private final Class<S> sourceClass;
+	public ClassPair(Class<S> key, Class<T> value) {
+		super(key, value);
+	}
 
-    private final Class<T> targetClass;
+	public Class<S> getSourceClass() {
+		return getKey();
+	}
 
-    public ClassPair(Class<S> sourceClass, Class<T> targetClass) {
-        this.sourceClass = sourceClass;
-        this.targetClass = targetClass;
-    }
+	public Class<T> getTargetClass() {
+		return getValue();
+	}
 
-    public Class<S> getSourceClass() {
-        return this.sourceClass;
-    }
-
-    public Class<T> getTargetClass() {
-        return this.targetClass;
-    }
-
-    @Override
-    public String toString() {
-        return sourceClass.getName() + ">" + targetClass.getName();
-    }
-
-    @Override
-    public boolean equals(final Object other) {
-        if (!(other instanceof ClassPair)) {
-            return false;
-        }
-        ClassPair<?, ?> castOther = (ClassPair<?, ?>) other;
-        return new EqualsBuilder().append(sourceClass, castOther.sourceClass).append(targetClass, castOther.targetClass).isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(sourceClass).append(targetClass).toHashCode();
-    }
+	@Override
+	public String toString() {
+		return getSourceClass().getName() + ">" + getTargetClass().getName();
+	}
 }

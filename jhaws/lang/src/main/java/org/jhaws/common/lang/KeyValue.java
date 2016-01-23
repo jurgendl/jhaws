@@ -5,21 +5,22 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-public class KeyValue<K, V> implements Serializable {
+public class KeyValue<K, V> extends Value<V>implements Serializable {
 	private static final long serialVersionUID = 5148190064982535265L;
 
-	private K key;
+	public static <T, U> KeyValue<T, U> value(T key, U value) {
+		return new KeyValue<>(key, value);
+	}
 
-	private V value;
+	protected K key;
 
 	public KeyValue() {
 		super();
 	}
 
 	public KeyValue(K key, V value) {
-		super();
+		super(value);
 		this.key = key;
-		this.value = value;
 	}
 
 	public K getKey() {
@@ -30,17 +31,9 @@ public class KeyValue<K, V> implements Serializable {
 		this.key = key;
 	}
 
-	public V getValue() {
-		return value;
-	}
-
-	public void setValue(V value) {
-		this.value = value;
-	}
-
 	@Override
 	public String toString() {
-		return "KeyValue [key=" + key + ", value=" + value + "]";
+		return key + "=" + value;
 	}
 
 	@Override
@@ -64,15 +57,13 @@ public class KeyValue<K, V> implements Serializable {
 		if (key == null) {
 			if (other.key != null)
 				return false;
-		} else
-			if (!key.equals(other.key))
-				return false;
+		} else if (!key.equals(other.key))
+			return false;
 		if (value == null) {
 			if (other.value != null)
 				return false;
-		} else
-			if (!value.equals(other.value))
-				return false;
+		} else if (!value.equals(other.value))
+			return false;
 		return true;
 	}
 
