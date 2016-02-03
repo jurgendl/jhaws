@@ -1,9 +1,12 @@
 package org.jhaws.common.lang;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -451,14 +454,18 @@ public interface Collections8 {
 	}
 
 	public static <T> Comparator<T> sortBy(List<T> orderByMe) {
-		return sortBy(orderByMe, id());
+		return sortBy(orderByMe, self());
 	}
 
 	public static <T> List<T> sortBy(Collection<T> collection, List<T> orderByMe) {
-		return sortBy(collection, orderByMe, id());
+		return sortBy(collection, orderByMe, self());
 	}
 
 	public static <T> Function<T, T> id() {
+		return self();
+	}
+
+	public static <T> Function<T, T> self() {
 		return Function.identity();
 	}
 
@@ -820,7 +827,7 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper) {
-		return Collectors.toMap(keyMapper, id(), keepFirst());
+		return Collectors.toMap(keyMapper, self(), keepFirst());
 	}
 
 	public static <T> BinaryOperator<T> keepFirst() {
@@ -910,5 +917,44 @@ public interface Collections8 {
 
 	public static <T> Opt<T> optionalReusable(T value) {
 		return Opt.reusable(value);
+	}
+
+	/**
+	 * c1 - c2, does not change input collections
+	 */
+	public static <T> Collection<T> subtract(Collection<T> c1, Collection<T> c2) {
+		Collection<T> tmp = new ArrayDeque<T>(c1);
+		tmp.removeAll(c2);
+		return tmp;
+	}
+
+	/**
+	 * intersection of c1 and c2, does not change input collections
+	 */
+	public static <T> Collection<T> intersection(Collection<T> c1, Collection<T> c2) {
+		return c1.stream().filter(c2::contains).collect(collectList());
+	}
+
+	/**
+	 * intersection of c1 and c2, does not change input collections
+	 */
+	public static <T> Collection<T> union(Collection<T> c1, Collection<T> c2) {
+		Collection<T> tmp = new ArrayDeque<T>(c1.size() + c2.size());
+		tmp.addAll(c1);
+		tmp.addAll(c2);
+		return tmp;
+	}
+
+	public static <K, I, O> void sync(Map<K, I> incoming, Map<K, O> existing, BiConsumer<K, O> toRemove, Supplier<O> constructor, BiConsumer<I, O> toMatch) {
+		sync(incoming, existing, toRemove, (k, i) -> toMatch.accept(i, constructor.get()), toMatch);
+	}
+
+	public static <K, I, O> void sync(Map<K, I> incoming, Map<K, O> existing, BiConsumer<K, O> toRemove, BiConsumer<K, I> toAdd, BiConsumer<I, O> toMatch) {
+		Map<K, O> mapToRemove = subtract(existing.keySet(), incoming.keySet()).stream().collect(toMap(self(), existing::get));
+		Map<K, I> mapToCreate = subtract(incoming.keySet(), existing.keySet()).stream().collect(toMap(self(), incoming::get));
+		Map<I, O> mapToMatch = intersection(incoming.keySet(), existing.keySet()).stream().collect(toMap(incoming::get, existing::get));
+		mapToMatch.forEach(toMatch);
+		mapToCreate.forEach(toAdd);
+		mapToRemove.forEach(toRemove);
 	}
 }
