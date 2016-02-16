@@ -1,7 +1,5 @@
 package org.jhaws.common.lang;
 
-import static java.util.stream.Collectors.toMap;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -945,16 +943,83 @@ public interface Collections8 {
 		return tmp;
 	}
 
-	public static <K, I, O> void sync(Map<K, I> incoming, Map<K, O> existing, BiConsumer<K, O> toRemove, Supplier<O> constructor, BiConsumer<I, O> toMatch) {
-		sync(incoming, existing, toRemove, (k, i) -> toMatch.accept(i, constructor.get()), toMatch);
+	/**
+	 * aanTeMakenAct roept teBewaren op met als nieuw object aangeboden door param constructor, constructor en teBewaren zijn niet nullable
+	 * 
+	 * @see #sync(Map, Map, BiConsumer, BiConsumer, BiConsumer)
+	 */
+	public static <K, N, B> void sync(//
+			Map<K, N> nieuwe, //
+			Map<K, B> bestaande, //
+			BiConsumer<K, B> teVerwijderenAct, //
+			Supplier<B> constructor, //
+			BiConsumer<N, B> teBewaren//
+	) {
+		if (constructor == null || teBewaren == null)
+			throw new NullPointerException();
+		sync(nieuwe, bestaande, teVerwijderenAct, (k, i) -> teBewaren.accept(i, constructor.get()), teBewaren);
 	}
 
-	public static <K, I, O> void sync(Map<K, I> incoming, Map<K, O> existing, BiConsumer<K, O> toRemove, BiConsumer<K, I> toAdd, BiConsumer<I, O> toMatch) {
-		Map<K, O> mapToRemove = subtract(existing.keySet(), incoming.keySet()).stream().collect(toMap(self(), existing::get));
-		Map<K, I> mapToCreate = subtract(incoming.keySet(), existing.keySet()).stream().collect(toMap(self(), incoming::get));
-		Map<I, O> mapToMatch = intersection(incoming.keySet(), existing.keySet()).stream().collect(toMap(incoming::get, existing::get));
-		mapToMatch.forEach(toMatch);
-		mapToCreate.forEach(toAdd);
-		mapToRemove.forEach(toRemove);
+	/**
+	 * synchroniseer een nieuwe collectie met een bestaande collecte
+	 *
+	 * @param nieuwe
+	 *            nieuwe collectie vooraf gemapt op key, zie {@link #getMap(Collection, Function)}
+	 * @param bestaande
+	 *            bestaande collectie vooraf gemapt op key, zie {@link #getMap(Collection, Function)}
+	 * @param teVerwijderenAct
+	 *            nullable, actie op te roepen indien verwijderen, krijgt key en bestaand object binnen
+	 * @param aanTeMakenAct
+	 *            nullable, actie op te roepen indien nieuw object aan te maken, krijgt key en nieuw object binnen
+	 * @param teBewaren
+	 *            nullable, actie op te roepen indien overeenkomst, krijgt key en nieuw en bestaand object binnen
+	 * 
+	 * @param <K>
+	 *            key waarop vergeleken moet worden
+	 * @param <N>
+	 *            nieuwe object
+	 * @param <B>
+	 *            bestaand object
+	 */
+	public static <K, N, B> void sync(//
+			Map<K, N> nieuwe, //
+			Map<K, B> bestaande, //
+			BiConsumer<K, B> teVerwijderenAct, //
+			BiConsumer<K, N> aanTeMakenAct, //
+			BiConsumer<N, B> teBewaren//
+	) {
+		Map<K, B> teVerwijderen = subtract(bestaande.keySet(), nieuwe.keySet()).stream().collect(Collectors.toMap(Function.identity(), bestaande::get));
+		Map<K, N> aanTeMaken = subtract(nieuwe.keySet(), bestaande.keySet()).stream().collect(Collectors.toMap(Function.identity(), nieuwe::get));
+		Map<N, B> overeenkomst = intersection(nieuwe.keySet(), bestaande.keySet()).stream().collect(Collectors.toMap(nieuwe::get, bestaande::get));
+		if (teBewaren != null)
+			overeenkomst.forEach(teBewaren);
+		if (aanTeMakenAct != null)
+			aanTeMaken.forEach(aanTeMakenAct);
+		if (teVerwijderenAct != null)
+			teVerwijderen.forEach(teVerwijderenAct);
+	}
+
+	public static <K, V> Map<K, V> getMap(Collection<V> values, Function<V, K> keyMapper) {
+		return values.stream().collect(Collectors.toMap(keyMapper, self()));
+	}
+
+	public static <K, V> Map<K, V> getMap(Collection<V> values, Supplier<K> keyMapper) {
+		return values.stream().collect(Collectors.toMap(supplierToFunction(keyMapper), self()));
+	}
+
+	public static <K, V> Map<K, V> getKeyMap(Collection<K> values, Function<K, V> valueMapper) {
+		return values.stream().collect(Collectors.toMap(self(), valueMapper));
+	}
+
+	public static <K, V> Map<K, V> getKeyMap(Collection<K> values, Supplier<V> valueMapper) {
+		return values.stream().collect(Collectors.toMap(self(), supplierToFunction(valueMapper)));
+	}
+
+	public static <S, X> Function<X, S> supplierToFunction(Supplier<S> supplier) {
+		return any -> supplier.get();
+	}
+
+	public static <T> Supplier<T> supplyAny(T object) {
+		return () -> object;
 	}
 }
