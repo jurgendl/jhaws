@@ -1,5 +1,6 @@
 package org.jhaws.common.lang;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,6 +13,40 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class Collections8Test {
+	private static final int warmup = 100;
+
+	private static final int testcount = 10000;
+
+	@Test
+	public void testSpeed() {
+		System.out.println("");
+		System.out.println("");
+		System.out.println("");
+		String[] array = new String[10000];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = String.valueOf(System.currentTimeMillis());
+		}
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < warmup; i++) {
+			List<String> l = Collections8.toList(array);
+		}
+		start = System.currentTimeMillis();
+		for (int i = 0; i < warmup; i++) {
+			List<String> l = new ArrayList<String>(Arrays.asList(array));
+		}
+		start = System.currentTimeMillis();
+		for (int i = 0; i < testcount; i++) {
+			List<String> l = Collections8.toList(array);
+		}
+		System.out.println("new:" + (System.currentTimeMillis() - start));
+		start = System.currentTimeMillis();
+		for (int i = 0; i < testcount; i++) {
+			List<String> l = new ArrayList<String>(Arrays.asList(array));
+		}
+		System.out.println("old:" + (System.currentTimeMillis() - start));
+		start = System.currentTimeMillis();
+	}
+
 	@Test
 	public void test1() {
 		Collection<String> c = Arrays.asList("v1", "v2", "v3");
@@ -111,7 +146,7 @@ public class Collections8Test {
 	}
 
 	@Test
-	public void testEagerOpt1() {
+	public void testEagerOpt1a() {
 		TPersoon persoon = new TPersoon();
 		Assert.assertNull(Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
 		TPersoonNaam pn = new TPersoonNaam();
@@ -120,6 +155,18 @@ public class Collections8Test {
 		pn.setNaam(n);
 		n.setNaam("naam");
 		Assert.assertEquals(n.getNaam(), Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
+	}
+
+	@Test
+	public void testEagerOpt1b() {
+		TPersoon persoon = new TPersoon();
+		Assert.assertNull(Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).get(TNaam::getNaam));
+		TPersoonNaam pn = new TPersoonNaam();
+		persoon.setNaam(pn);
+		TNaam n = new TNaam();
+		pn.setNaam(n);
+		n.setNaam("naam");
+		Assert.assertEquals(n.getNaam(), Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).get(TNaam::getNaam));
 	}
 
 	@Test
@@ -136,7 +183,7 @@ public class Collections8Test {
 	}
 
 	@Test
-	public void testReusableOpt() {
+	public void testReusableOpta() {
 		TPersoon persoon = new TPersoon();
 		Opt<String> opt = Opt.reusable(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam);
 		Assert.assertNull(opt.get());
@@ -146,5 +193,18 @@ public class Collections8Test {
 		pn.setNaam(n);
 		n.setNaam("naam");
 		Assert.assertEquals(n.getNaam(), opt.get());
+	}
+
+	@Test
+	public void testReusableOptb() {
+		TPersoon persoon = new TPersoon();
+		Opt<TNaam> opt = Opt.reusable(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam);
+		Assert.assertNull(opt.get(TNaam::getNaam));
+		TPersoonNaam pn = new TPersoonNaam();
+		persoon.setNaam(pn);
+		TNaam n = new TNaam();
+		pn.setNaam(n);
+		n.setNaam("naam");
+		Assert.assertEquals(n.getNaam(), opt.get(TNaam::getNaam));
 	}
 }

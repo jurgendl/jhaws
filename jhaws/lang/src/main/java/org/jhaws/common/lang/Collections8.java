@@ -130,7 +130,11 @@ public interface Collections8 {
 
 		T get();
 
-		default T or(Supplier<? extends T> supplier) {
+		default <X> X get(Function<T, X> get) {
+			return nest(get).get();
+		}
+
+		default T or(Supplier<T> supplier) {
 			return Optional.ofNullable(get()).orElseGet(supplier);
 		}
 
@@ -909,11 +913,11 @@ public interface Collections8 {
 		return streamStreams.flatMap(Function.identity());
 	}
 
-	public static <T> Opt<T> optionalEager(T value) {
+	public static <T> Opt<T> eager(T value) {
 		return Opt.eager(value);
 	}
 
-	public static <T> Opt<T> optionalReusable(T value) {
+	public static <T> Opt<T> reusable(T value) {
 		return Opt.reusable(value);
 	}
 
