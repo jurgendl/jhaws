@@ -181,7 +181,8 @@ public class HTTPClient implements Closeable {
 	}
 
 	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-		prepareRequest(params, req);
+		if (params != null)
+			prepareRequest(params, req);
 
 		chain = new ThreadLocal<List<URI>>() {
 			@Override
