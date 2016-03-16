@@ -58,6 +58,20 @@ import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.io.security.Security;
 
+// preemptive authentication
+//
+// HttpHost targetHost = new HttpHost(server, port, protocol);
+// BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
+// credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+// new UsernamePasswordCredentials(user, pass));
+// AuthCache authCache = new BasicAuthCache();
+// BasicScheme basicAuth = new BasicScheme();
+// authCache.put(targetHost, basicAuth);
+// HttpClientContext context = HttpClientContext.create();
+// context.setCredentialsProvider(credsProvider);
+// context.setAuthCache(authCache);
+// httpclient.execute(targetHost, post, context);
+
 /**
  * @see https://hc.apache.org/
  * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-tutorial.pdf
