@@ -15,18 +15,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.RequestConfig;
@@ -46,6 +49,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -57,20 +62,6 @@ import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.io.security.Security;
-
-// preemptive authentication
-//
-// HttpHost targetHost = new HttpHost(server, port, protocol);
-// BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
-// credsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-// new UsernamePasswordCredentials(user, pass));
-// AuthCache authCache = new BasicAuthCache();
-// BasicScheme basicAuth = new BasicScheme();
-// authCache.put(targetHost, basicAuth);
-// HttpClientContext context = HttpClientContext.create();
-// context.setCredentialsProvider(credsProvider);
-// context.setAuthCache(authCache);
-// httpclient.execute(targetHost, post, context);
 
 /**
  * @see https://hc.apache.org/
@@ -205,17 +196,27 @@ public class HTTPClient implements Closeable {
 			};
 		};
 
+		URI uri = req.getURI();
 		HttpClientContext context = HttpClientContext.create();
-		context.setCredentialsProvider(new SystemDefaultCredentialsProvider());
+		HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+
+		if (user != null && pass != null) {
+			BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+			credentialsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials(user, getPass()));
+			context.setCredentialsProvider(credentialsProvider);
+			AuthCache authCache = new BasicAuthCache();
+			BasicScheme basicAuth = new BasicScheme();
+			authCache.put(targetHost, basicAuth);
+			context.setAuthCache(authCache);
+		} else {
+			CredentialsProvider credentialsProvider = new SystemDefaultCredentialsProvider();
+			context.setCredentialsProvider(credentialsProvider);
+		}
+
 		Response response = null;
-		try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
-			if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED && getUser() != null && pass != null) {
-				CredentialsProvider credsProvider = new BasicCredentialsProvider();
-				credsProvider.setCredentials(new AuthScope(req.getURI().getHost(), AuthScope.ANY_PORT), new UsernamePasswordCredentials(getUser(), getPass()));
-				context.setCredentialsProvider(credsProvider);
-			} else {
-				response = buildResponse(req, httpResponse);
-			}
+
+		try (CloseableHttpResponse httpResponse = getHttpClient().execute(targetHost, req, context)) {
+			response = buildResponse(req, httpResponse);
 			consumeQuietly(httpResponse.getEntity());
 		} catch (IOException ioex) {
 			throw new UncheckedIOException(ioex);
@@ -242,14 +243,16 @@ public class HTTPClient implements Closeable {
 		}
 		response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
 		response.setLocale(httpResponse.getLocale());
-		switch (httpResponse.getStatusLine().getStatusCode()) {
-			case HttpStatus.SC_OK:// 200
-				break;
-			case HttpStatus.SC_NOT_FOUND: // 404
-				break;
-			case HttpStatus.SC_UNAUTHORIZED: // 401
-				break;
-		}
+		// switch (httpResponse.getStatusLine().getStatusCode()) {
+		// case HttpStatus.SC_OK:// 200
+		// break;
+		// case HttpStatus.SC_ACCEPTED:// 202
+		// break;
+		// case HttpStatus.SC_NOT_FOUND: // 404
+		// break;
+		// case HttpStatus.SC_UNAUTHORIZED: // 401
+		// break;
+		// }
 		HttpEntity entity = httpResponse.getEntity();
 		if (entity != null) {
 			response.setContent(toByteArray(entity));
@@ -380,7 +383,7 @@ public class HTTPClient implements Closeable {
 	protected Security getSecurity() {
 		if (security == null) {
 			try {
-				security = Security.class.cast(Class.forName("org.jhaws.common.io.security.SecureMeBC").newInstance());
+				security = new org.jhaws.common.io.security.SecureMeBC();
 			} catch (Exception ignore) {
 				security = new SecureMe();
 			}
@@ -404,6 +407,10 @@ public class HTTPClient implements Closeable {
 				.map(e -> FileInput.class.cast(e)).forEach(e -> post.getAttachments().put(e.getName(), new FilePath(e.getFile())));
 		post.setName(form.getId());
 		return post;
+	}
+
+	public Response get(String url) {
+		return get(new GetRequest(URI.create(url)));
 	}
 
 	public Response get(Form form) {
@@ -442,9 +449,7 @@ public class HTTPClient implements Closeable {
 
 	public void execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out) {
 		prepareRequest(params, req);
-
 		HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
-
 		Future<OutputStream> future = getAsyncHttpclient().execute(areq, new AsyncConsumer(out), null);
 		try {
 			future.get();
@@ -468,8 +473,14 @@ public class HTTPClient implements Closeable {
 	@SuppressWarnings("deprecation")
 	protected void prepareRequest(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
 		req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
-		if (params != null && params.getAccept() != null) {
-			req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+		if (params != null) {
+			if (params.getAccept() != null)
+				req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+			for (Map.Entry<String, Object> h : params.getHeaders().entrySet()) {
+				if (h.getValue() == null)
+					continue;
+				req.setHeader(h.getKey(), String.valueOf(h.getValue()));
+			}
 		}
 	}
 

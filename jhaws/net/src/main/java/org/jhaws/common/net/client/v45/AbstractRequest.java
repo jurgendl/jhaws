@@ -2,6 +2,8 @@ package org.jhaws.common.net.client.v45;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractRequest<T extends AbstractRequest<? super T>> implements Serializable {
 	private static final long serialVersionUID = -8834915649537196310L;
@@ -9,6 +11,8 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
 	protected URI uri;
 
 	protected String accept;
+
+	protected Map<String, Object> headers = new HashMap<>();
 
 	public AbstractRequest() {
 		super();
@@ -50,8 +54,24 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
 		return cast();
 	}
 
+	public void addHeader(String key, Object value) {
+		headers.put(key, value);
+	}
+
+	public void removeHeader(String key) {
+		headers.remove(key);
+	}
+
 	@Override
 	public String toString() {
 		return "AbstractParams [uri=" + this.uri + ", accept=" + this.accept + "]";
+	}
+
+	public Map<String, Object> getHeaders() {
+		return this.headers;
+	}
+
+	public void setHeaders(Map<String, Object> headers) {
+		this.headers = headers;
 	}
 }
