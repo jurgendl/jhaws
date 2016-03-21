@@ -231,11 +231,28 @@ public interface Collections8 {
 		}
 	}
 
+	public static <T> BinaryOperator<T> keepFirst() {
+		return (p1, p2) -> p1;
+	}
+
+	public static <T> BinaryOperator<T> keepLast() {
+		return (p1, p2) -> p2;
+	}
+
 	/**
 	 * BinaryOperator<V> binaryOperator = (k, v) -> k;
 	 */
 	public static <V> BinaryOperator<V> acceptDuplicateKeys() {
-		return (k, v) -> k;
+		return keepFirst();
+	}
+
+	/**
+	 * @throws IllegalArgumentException
+	 */
+	public static <V> BinaryOperator<V> rejectDuplicateKeys() {
+		return (k, v) -> {
+			throw new IllegalArgumentException("duplicate key");
+		};
 	}
 
 	@SuppressWarnings("unchecked")
@@ -420,15 +437,6 @@ public interface Collections8 {
 	 */
 	public static <K, V> Supplier<SortedMap<K, V>> newSortedMap() {
 		return TreeMap::new;
-	}
-
-	/**
-	 * @throws IllegalArgumentException
-	 */
-	public static <V> BinaryOperator<V> rejectDuplicateKeys() {
-		return (k, v) -> {
-			throw new IllegalArgumentException("duplicate key");
-		};
 	}
 
 	public static <T extends Comparable<? super T>> List<T> sort(Collection<T> collection) {
@@ -830,14 +838,6 @@ public interface Collections8 {
 
 	public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper) {
 		return Collectors.toMap(keyMapper, self(), keepFirst());
-	}
-
-	public static <T> BinaryOperator<T> keepFirst() {
-		return (p1, p2) -> p1;
-	}
-
-	public static <T> BinaryOperator<T> keepLast() {
-		return (p1, p2) -> p2;
 	}
 
 	public static <T extends Comparable<? super T>> Comparator<T> natural() {
