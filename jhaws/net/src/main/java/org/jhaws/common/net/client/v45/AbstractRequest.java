@@ -54,12 +54,14 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
 		return cast();
 	}
 
-	public void addHeader(String key, Object value) {
+	public T addHeader(String key, Object value) {
 		headers.put(key, value);
+		return cast();
 	}
 
-	public void removeHeader(String key) {
+	public T removeHeader(String key) {
 		headers.remove(key);
+		return cast();
 	}
 
 	@Override
@@ -71,7 +73,8 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
 		return this.headers;
 	}
 
-	public void setHeaders(Map<String, Object> headers) {
+	public T setHeaders(Map<String, Object> headers) {
 		this.headers = headers;
+		return cast();
 	}
 }
