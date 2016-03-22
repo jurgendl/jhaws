@@ -49,6 +49,7 @@ import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -603,6 +604,14 @@ public interface Collections8 {
 
 	public static <T> Function<T, T> self() {
 		return Function.identity();
+	}
+
+	public static <T> UnaryOperator<T> idu() {
+		return selfu();
+	}
+
+	public static <T> UnaryOperator<T> selfu() {
+		return t -> t;
 	}
 
 	static int noNegIndex(int i) {
