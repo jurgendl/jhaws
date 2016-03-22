@@ -340,7 +340,7 @@ public interface Collections8 {
 			BiConsumer<List<T>, T> accumulator0 = elementsListAccumulator();
 			setAccumulator(accumulator0);
 			setCombiner(elementsListCombiner(accumulator0));
-			setFinisher(Collections8.<List<T>, List<T>>cast());
+			setFinisher(Collections8.cast());
 			setCharacteristics(Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH)));
 		}
 	}
@@ -1170,18 +1170,16 @@ public interface Collections8 {
 	}
 
 	public static <T> BiConsumer<List<T>, T> uniqueElementsListAccumulator() {
-		BiConsumer<List<T>, T> _accumulator = (List<T> a, T t) -> {
+		return (List<T> a, T t) -> {
 			if (!a.contains(t))
 				a.add(t);
 		};
-		return _accumulator;
 	}
 
 	public static <T> BinaryOperator<List<T>> elementsListCombiner(BiConsumer<List<T>, T> elementsListAccumulator) {
-		BinaryOperator<List<T>> _combiner = (List<T> a1, List<T> a2) -> {
+		return (List<T> a1, List<T> a2) -> {
 			a2.stream().forEach(a2e -> elementsListAccumulator.accept(a1, a2e));
 			return a1;
 		};
-		return _combiner;
 	}
 }
