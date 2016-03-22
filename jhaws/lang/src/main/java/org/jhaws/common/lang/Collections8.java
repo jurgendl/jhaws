@@ -8,8 +8,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -56,6 +58,8 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  * @see java.util.stream.Stream
@@ -231,6 +235,124 @@ public interface Collections8 {
 		}
 	}
 
+	public static class CustomCollector<T, A, R> implements Collector<T, A, R> {
+		protected Supplier<A> supplier;
+
+		protected BiConsumer<A, T> accumulator;
+
+		protected BinaryOperator<A> combiner;
+
+		protected Function<A, R> finisher;
+
+		protected Set<Characteristics> characteristics;
+
+		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Function<A, R> finisher, Set<Characteristics> characteristics) {
+			this.supplier = supplier;
+			this.accumulator = accumulator;
+			this.combiner = combiner;
+			this.finisher = finisher;
+			this.characteristics = characteristics;
+		}
+
+		@SuppressWarnings("unchecked")
+		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Set<Characteristics> characteristics) {
+			this(supplier, accumulator, combiner, x -> (R) x, characteristics);
+		}
+
+		@SuppressWarnings("unchecked")
+		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner) {
+			this(supplier, accumulator, combiner, x -> (R) x, Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH)));
+		}
+
+		public CustomCollector() {
+			super();
+		}
+
+		@Override
+		public Supplier<A> supplier() {
+			return supplier;
+		}
+
+		@Override
+		public BiConsumer<A, T> accumulator() {
+			return accumulator;
+		}
+
+		@Override
+		public BinaryOperator<A> combiner() {
+			return combiner;
+		}
+
+		@Override
+		public Function<A, R> finisher() {
+			return finisher;
+		}
+
+		@Override
+		public Set<Characteristics> characteristics() {
+			return characteristics;
+		}
+
+		public Supplier<A> getSupplier() {
+			return this.supplier;
+		}
+
+		public void setSupplier(Supplier<A> supplier) {
+			this.supplier = supplier;
+		}
+
+		public BiConsumer<A, T> getAccumulator() {
+			return this.accumulator;
+		}
+
+		public void setAccumulator(BiConsumer<A, T> accumulator) {
+			this.accumulator = accumulator;
+		}
+
+		public BinaryOperator<A> getCombiner() {
+			return this.combiner;
+		}
+
+		public void setCombiner(BinaryOperator<A> combiner) {
+			this.combiner = combiner;
+		}
+
+		public Function<A, R> getFinisher() {
+			return this.finisher;
+		}
+
+		public void setFinisher(Function<A, R> finisher) {
+			this.finisher = finisher;
+		}
+
+		public Set<Characteristics> getCharacteristics() {
+			return this.characteristics;
+		}
+
+		public void setCharacteristics(Set<Characteristics> characteristics) {
+			this.characteristics = characteristics;
+		}
+	}
+
+	public static class ListCollector<T> extends CustomCollector<T, List<T>, List<T>> {
+		public ListCollector() {
+			setSupplier(ArrayList::new);
+			BiConsumer<List<T>, T> accumulator0 = elementsListAccumulator();
+			setAccumulator(accumulator0);
+			setCombiner(elementsListCombiner(accumulator0));
+			setFinisher(Collections8.<List<T>, List<T>>cast());
+			setCharacteristics(Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH)));
+		}
+	}
+
+	public static class ListUQCollector<T> extends ListCollector<T> {
+		public ListUQCollector() {
+			BiConsumer<List<T>, T> accumulator0 = uniqueElementsListAccumulator();
+			setAccumulator(accumulator0);
+			setCombiner(elementsListCombiner(accumulator0));
+		}
+	}
+
 	public static <T> BinaryOperator<T> keepFirst() {
 		return (p1, p2) -> p1;
 	}
@@ -249,9 +371,11 @@ public interface Collections8 {
 	/**
 	 * @throws IllegalArgumentException
 	 */
-	public static <V> BinaryOperator<V> rejectDuplicateKeys() {
-		return (k, v) -> {
-			throw new IllegalArgumentException("duplicate key");
+	public static <V> BinaryOperator<V> rejectDuplicateKeys() throws IllegalArgumentException {
+		return (a, b) -> {
+			if (new EqualsBuilder().append(a, b).isEquals())
+				return a;
+			throw new IllegalArgumentException("duplicate key: " + a + " <> " + b);
 		};
 	}
 
@@ -283,8 +407,8 @@ public interface Collections8 {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> Function<Object, T> cast() {
-		return o -> (T) o;
+	public static <X, T> Function<X, T> cast() {
+		return x -> (T) x;
 	}
 
 	public static <T> Function<Object, T> cast(Class<T> type) {
@@ -416,7 +540,10 @@ public interface Collections8 {
 
 	public static <T> Collector<T, ?, List<T>> collectList() {
 		return Collectors.toList();
-		// return toCollector(newList());
+	}
+
+	public static <T> ListCollector<T> collectListUQ() {
+		return new ListUQCollector<>();
 	}
 
 	public static <T> Collector<T, ?, Queue<T>> collectQueue() {
@@ -425,7 +552,6 @@ public interface Collections8 {
 
 	public static <T> Collector<T, ?, Set<T>> collectSet() {
 		return Collectors.toSet();
-		// return toCollector(newSet());
 	}
 
 	public static <T> Collector<T, ?, SortedSet<T>> collectSortedSet() {
@@ -573,6 +699,10 @@ public interface Collections8 {
 
 	public static Stream<Path> streamFully(Path path) {
 		return stream(new PathIterator(path));
+	}
+
+	public static <T, U> Stream<U> stream(Collection<T> input, Function<T, Collection<U>> mapping) {
+		return input.stream().map(mapping).map(Collection::stream).flatMap(id());
 	}
 
 	public static <T> List<T> toList(Collection<T> collection) {
@@ -836,8 +966,16 @@ public interface Collections8 {
 		return Stream.of(maps).map(Map::entrySet).flatMap(Collection::stream);
 	}
 
+	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
+		return Collectors.toMap(keyMapper, valueMapper, duplicateValues);
+	}
+
+	public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper, BinaryOperator<V> duplicateValues) {
+		return collectMap(keyMapper, self(), duplicateValues);
+	}
+
 	public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper) {
-		return Collectors.toMap(keyMapper, self(), keepFirst());
+		return collectMap(keyMapper, keepFirst());
 	}
 
 	public static <T extends Comparable<? super T>> Comparator<T> natural() {
@@ -1025,5 +1163,25 @@ public interface Collections8 {
 
 	public static <T> Supplier<T> supplyAny(T object) {
 		return () -> object;
+	}
+
+	public static <T> BiConsumer<List<T>, T> elementsListAccumulator() {
+		return (List<T> a, T t) -> a.add(t);
+	}
+
+	public static <T> BiConsumer<List<T>, T> uniqueElementsListAccumulator() {
+		BiConsumer<List<T>, T> _accumulator = (List<T> a, T t) -> {
+			if (!a.contains(t))
+				a.add(t);
+		};
+		return _accumulator;
+	}
+
+	public static <T> BinaryOperator<List<T>> elementsListCombiner(BiConsumer<List<T>, T> elementsListAccumulator) {
+		BinaryOperator<List<T>> _combiner = (List<T> a1, List<T> a2) -> {
+			a2.stream().forEach(a2e -> elementsListAccumulator.accept(a1, a2e));
+			return a1;
+		};
+		return _combiner;
 	}
 }
