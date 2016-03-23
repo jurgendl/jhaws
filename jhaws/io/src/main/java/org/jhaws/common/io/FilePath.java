@@ -775,6 +775,13 @@ public class FilePath implements Path, Externalizable {
 
 	public static String getShortFileName(Path path) {
 		String fileName = path.getFileName().toString();
+		return getShortFileName(fileName);
+	}
+
+	public static String getShortFileName(String fileName) {
+		if (fileName.contains("/")) {
+			fileName = fileName.substring(fileName.lastIndexOf("/") + 1);
+		}
 		int p = fileName.lastIndexOf(FilePath.DOT);
 		if (p == -1) {
 			return fileName;

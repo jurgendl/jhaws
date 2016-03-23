@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @since 1.8
@@ -37,7 +39,7 @@ public class RegexIterator implements Iterator<Match>, Match {
 
 	@Override
 	public Match next() {
-		return this;
+		return new MatchImpl(matcher);
 	}
 
 	@Override
@@ -106,8 +108,21 @@ public class RegexIterator implements Iterator<Match>, Match {
 
 	public <C extends Consumer<Match>> C streamConsumer(C consumer) {
 		matcher.reset();
-		Collections8.stream(this).forEach(consumer);
+		stream().forEach(consumer);
 		return consumer;
+	}
+
+	@Override
+	public String toString() {
+		return group();
+	}
+
+	public Stream<Match> parallelStream() {
+		return stream().collect(Collectors.toList()).parallelStream();
+	}
+
+	public Stream<Match> stream() {
+		return Collections8.stream(this);
 	}
 
 	public List<List<String>> all() {

@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -410,7 +411,19 @@ public class HTTPClient implements Closeable {
 	}
 
 	public Response get(String url) {
-		return get(new GetRequest(URI.create(url)));
+		return get(URI.create(url));
+	}
+
+	public Response get(URI url) {
+		return get(new GetRequest(url));
+	}
+
+	public Response get(URL url) {
+		try {
+			return get(url.toURI());
+		} catch (URISyntaxException ex) {
+			throw new IllegalArgumentException("" + url);
+		}
 	}
 
 	public Response get(Form form) {
