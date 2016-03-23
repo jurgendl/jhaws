@@ -2624,10 +2624,13 @@ public class FilePath implements Path, Externalizable {
 		return this;
 	}
 
-	public Properties loadProperties() {
+	public Properties readProperties() {
+		return readProperties(new Properties());
+	}
+
+	public Properties readProperties(Properties properties) {
 		String ext = getExtension();
 		try (InputStream in = newInputStream()) {
-			Properties properties = new Properties();
 			if (XML.equalsIgnoreCase(ext)) {
 				properties.loadFromXML(in);
 			} else {
