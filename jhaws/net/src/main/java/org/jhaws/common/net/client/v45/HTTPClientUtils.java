@@ -71,10 +71,12 @@ public class HTTPClientUtils {
 	/** formatted/readable xml */
 	public static String pretty(String xml) {
 		try {
-			// java.lang.System.setProperty("javax.xml.transform.TransformerFactory", "org.apache.xalan.xsltc.trax.TransformerFactoryImpl");
+			// java.lang.System.setProperty("javax.xml.transform.TransformerFactory",
+			// "org.apache.xalan.xsltc.trax.TransformerFactoryImpl");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document original = dBuilder.parse(new InputSource(new InputStreamReader(new ByteArrayInputStream(xml.getBytes("UTF-8")))));
+			Document original = dBuilder
+					.parse(new InputSource(new InputStreamReader(new ByteArrayInputStream(xml.getBytes("UTF-8")))));
 			StringWriter stringWriter = new StringWriter();
 			StreamResult xmlOutput = new StreamResult(stringWriter);
 			TransformerFactory tf = TransformerFactory.newInstance();
@@ -94,7 +96,13 @@ public class HTTPClientUtils {
 	}
 
 	public static URI encode(String url) {
-		String regex = "^((?<scheme>[^:]+)://)?(?<host>[^/]+/){1}(?<paths>([^/]+/)*)(?<file>[^\\?]+)(?<paramsstart>\\??)(?<params>([^=]+=[^&]+&){0,}([^=]+=.+){0,1})$";
+		return encode(url, false);
+	}
+
+	public static URI encode(String url, boolean hasParameters) {
+		String regex = hasParameters
+				? "^((?<scheme>[^:]+)://)?(?<host>[^/]+/){1}(?<paths>([^/]+/)*)(?<file>[^\\?]+)(?<paramsstart>\\??)(?<params>([^=]+=[^&]+&){0,}([^=]+=.+){0,1})$"
+				: "^((?<scheme>[^:]+)://)?(?<host>[^/]+/){1}(?<paths>([^/]+/)*)(?<file>.+)$";
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(url);
 		if (m.find() && url.equals(m.group())) {
@@ -103,9 +111,9 @@ public class HTTPClientUtils {
 				urib.setScheme(m.group("scheme"));
 			}
 			String path = Arrays.stream(m.group("paths").split("/")).map(t -> t + "/").collect(Collectors.joining());
-			String file = Optional.of(m.group("file")).orElse("");
+			String file = Optional.of(m.group("file")).orElse("").replaceAll("&amp;", "&");
 			urib.setPath(path + file);
-			if (StringUtils.isNotBlank(m.group("paramsstart"))) {
+			if (hasParameters && StringUtils.isNotBlank(m.group("paramsstart"))) {
 				Arrays.stream(m.group("params").split("&")).map(kv -> kv.split("=")).forEach((String[] kva) -> {
 					urib.addParameter(kva[0], kva[1]);
 				});
