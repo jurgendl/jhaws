@@ -21,6 +21,8 @@
 	mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy
 	git checkout master
 	mvn versions:set -DnewVersion=2.0.3-SNAPSHOT
+	delete versionbackup
+	commit/push
 	-->
 	<properties>
 		<targetJdk>1.8</targetJdk><!-- should be compatible with 1.6 and higher -->
