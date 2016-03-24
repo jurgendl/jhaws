@@ -7,5 +7,5 @@
 			<outputPatternAsHeader>false</outputPatternAsHeader>
 		</encoder>
 	</appender>
-	<root level="warn"><appender-ref ref="CONSOLE" /></root>
+	<root level="info"><appender-ref ref="CONSOLE" /></root>
 </configuration>
