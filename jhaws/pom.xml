@@ -47,6 +47,7 @@
 		<module>web</module>
 		<module>wicket</module>
 		<module>lucene</module>
+		<module>svn</module>
 	</modules>
 	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
 	<profiles>

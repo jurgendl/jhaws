@@ -1,4 +1,4 @@
-<configuration debug="false" scan="true">
+<configuration debug="true" scan="true">
 	<property name="pattern" value="%level %logger \\(%file:%line\\) %message %n"/>
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
