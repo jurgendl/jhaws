@@ -139,6 +139,7 @@
 			</extension>
 		</extensions>
 		<plugins>
+			<!-- http://stackoverflow.com/questions/4725668/how-to-deploy-snapshot-with-sources-and-javadoc -->
 			<plugin>
 			  <artifactId>maven-source-plugin</artifactId>
 			  <executions>
@@ -148,6 +149,17 @@
 				  <goals><goal>jar-no-fork</goal></goals> 
 				</execution>
 			  </executions>
+			</plugin>
+			<plugin> 
+			  <!-- explicitly define maven-deploy-plugin after other to force exec order -->
+			  <artifactId>maven-deploy-plugin</artifactId> 
+			  <executions> 
+				<execution> 
+				  <id>deploy</id>
+				  <phase>deploy</phase>
+				  <goals><goal>deploy</goal></goals> 
+				</execution> 
+			  </executions> 
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
