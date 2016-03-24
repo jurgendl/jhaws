@@ -17,7 +17,11 @@ public class SvnStatus extends RootBeanImpl implements Iterable<ChangeList> {
 
 	private List<ChangeList> changelist;
 
+	@SuppressWarnings("unchecked")
 	public List<ChangeList> getChangelist() {
+		if (changelist == null) {
+			return Collections.EMPTY_LIST;
+		}
 		return changelist;
 	}
 
@@ -33,12 +37,8 @@ public class SvnStatus extends RootBeanImpl implements Iterable<ChangeList> {
 		this.target = target;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<ChangeList> iterator() {
-		if (changelist == null) {
-			return Collections.EMPTY_LIST.iterator();
-		}
-		return changelist.iterator();
+		return getChangelist().iterator();
 	}
 }

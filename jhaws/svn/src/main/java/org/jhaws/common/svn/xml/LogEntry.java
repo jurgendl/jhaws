@@ -22,7 +22,11 @@ public class LogEntry extends Commit implements Iterable<Path> {
 		this.msg = msg;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Path> getPath() {
+		if (path == null) {
+			return Collections.EMPTY_LIST;
+		}
 		return path;
 	}
 
@@ -35,12 +39,8 @@ public class LogEntry extends Commit implements Iterable<Path> {
 		return "LogEntry [" + (this.msg != null ? "msg=" + this.msg : "") + "]";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<Path> iterator() {
-		if (path == null) {
-			return Collections.EMPTY_LIST.iterator();
-		}
-		return path.iterator();
+		return getPath().iterator();
 	}
 }

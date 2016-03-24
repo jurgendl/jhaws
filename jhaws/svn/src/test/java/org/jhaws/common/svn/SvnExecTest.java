@@ -28,11 +28,11 @@ public class SvnExecTest {
 			for (ChangeList cl : SvnExec.svn_status(projectdir))
 				System.out.println(cl);
 			System.out.println("=========================");
-			for (EntryList el : SvnExec.svn_ls(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "branches")))
+			for (EntryList el : SvnExec.svn_ls(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags")))
 				for (Entry e : el)
 					System.out.println(e);
 			System.out.println("=========================");
-			for (EntryList el : SvnExec.svn_ls_tag(projectdir))
+			for (EntryList el : SvnExec.svn_ls_tag(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags")))
 				for (Entry e : el)
 					System.out.println(e);
 			System.out.println("=========================");

@@ -12,7 +12,11 @@ public class EntryList implements Iterable<Entry> {
 
 	private List<Entry> entry;
 
+	@SuppressWarnings("unchecked")
 	public List<Entry> getEntry() {
+		if (entry == null) {
+			return Collections.EMPTY_LIST;
+		}
 		return entry;
 	}
 
@@ -33,12 +37,8 @@ public class EntryList implements Iterable<Entry> {
 		return "List [" + (this.path != null ? "path=" + this.path : "") + "]";
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<Entry> iterator() {
-		if (entry == null) {
-			return Collections.EMPTY_LIST.iterator();
-		}
-		return entry.iterator();
+		return getEntry().iterator();
 	}
 }

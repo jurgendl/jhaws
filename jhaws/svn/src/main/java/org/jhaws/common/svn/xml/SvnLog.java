@@ -15,17 +15,17 @@ import org.jhaws.common.svn.xml.Svn.RootBeanImpl;
 public class SvnLog extends RootBeanImpl implements Iterable<LogEntry> {
 	private List<LogEntry> logentry;
 
+	@SuppressWarnings("unchecked")
 	public List<LogEntry> getLogentry() {
+		if (logentry == null) {
+			return Collections.EMPTY_LIST;
+		}
 		return logentry;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<LogEntry> iterator() {
-		if (logentry == null) {
-			return Collections.EMPTY_LIST.iterator();
-		}
-		return logentry.iterator();
+		return getLogentry().iterator();
 	}
 
 	public void setLogentry(List<LogEntry> logentry) {

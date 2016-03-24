@@ -199,7 +199,7 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn log -v -q --stop-on-copy --xml {tag} {path}
+	 * svn log -v -q --stop-on-copy --xml {tag}
 	 */
 	public static SvnLog svn_log_tag(File projectdir, String tag) {
 		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("tag", tag);
@@ -207,10 +207,10 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn ls --xml {path} "^/tag"
+	 * svn ls --xml "^/tag" {tag}
 	 */
-	public static SvnList svn_ls_tag(File projectdir) {
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".");
+	public static SvnList svn_ls_tag(File projectdir, String tag) {
+		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("tag", tag);
 		return Svn.lists(new ByteArrayInputStream(exec(false, projectdir, parameters, cmds_svn_ls_tag)));
 	}
 }

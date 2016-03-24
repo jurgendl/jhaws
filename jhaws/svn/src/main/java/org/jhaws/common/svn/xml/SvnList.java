@@ -15,7 +15,11 @@ import org.jhaws.common.svn.xml.Svn.RootBeanImpl;
 public class SvnList extends RootBeanImpl implements Iterable<EntryList> {
 	private List<EntryList> list;
 
+	@SuppressWarnings("unchecked")
 	public List<EntryList> getList() {
+		if (list == null) {
+			return Collections.EMPTY_LIST;
+		}
 		return list;
 	}
 
@@ -23,12 +27,8 @@ public class SvnList extends RootBeanImpl implements Iterable<EntryList> {
 		this.list = list;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Iterator<EntryList> iterator() {
-		if (list == null) {
-			return Collections.EMPTY_LIST.iterator();
-		}
-		return list.iterator();
+		return getList().iterator();
 	}
 }
