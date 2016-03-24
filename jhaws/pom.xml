@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>modules</artifactId>
-	<version>2.0.1</version>
+	<version>2.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>modules</name>
 	<description>modules</description>
@@ -17,9 +17,10 @@
 	mvn release:perform
 	
 	mvn release:prepare
-	git checkout modules-2.0.0
+	git checkout modules-2.0.2
 	mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy
 	git checkout master
+	mvn versions:set -DnewVersion=2.0.3-SNAPSHOT
 	-->
 	<properties>
 		<targetJdk>1.8</targetJdk><!-- should be compatible with 1.6 and higher -->
