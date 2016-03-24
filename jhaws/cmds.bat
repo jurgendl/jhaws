@@ -108,7 +108,7 @@ goto start
 :lrelease
 cls
 call mvn -T 1C -Dmaven.tomcat.skip=true -e release:prepare
-call mvn -T 1C -Dmaven.tomcat.skip=true -e release:perform
+rem call mvn -T 1C -Dmaven.tomcat.skip=true -e release:perform
 pause
 goto start
 
