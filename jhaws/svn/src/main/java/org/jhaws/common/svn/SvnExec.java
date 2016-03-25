@@ -104,22 +104,23 @@ public class SvnExec {
 		cmds_svn_ls_tag = settings.getProperty("cmds.svn.ls.tag").split(" ");
 	}
 
+	public static IMap<String, String> createParameters() {
+		return new IMap<String, String>().add("path", ".");
+	}
+
 	/**
 	 * svn ls --xml {path}
 	 */
 	public static SvnList svn_ls(File projectdir, String branchroot) {
-		IMap<String, String> parameters = new IMap<String, String>().add("path", branchroot);
-		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		return Svn.lists(new ByteArrayInputStream(exec(returnValue, false, projectdir, parameters, cmds_svn_ls)));
+		return Svn.lists(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, new IMap<String, String>().add("path", branchroot), cmds_svn_ls)));
 	}
 
 	/**
 	 * svn --quiet revert {path}
 	 */
 	public static int svn_revert(File projectdir) {
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".");
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		exec(returnValue, true, projectdir, parameters, cmds_svn_revert);
+		exec(returnValue, true, projectdir, createParameters(), cmds_svn_revert);
 		return returnValue.getValue();
 	}
 
@@ -127,9 +128,8 @@ public class SvnExec {
 	 * svn update {path} --non-interactive --accept postpone
 	 */
 	public static int svn_update(File projectdir) {
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".");
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		exec(returnValue, true, projectdir, parameters, cmds_svn_update);
+		exec(returnValue, true, projectdir, createParameters(), cmds_svn_update);
 		return returnValue.getValue();
 	}
 
@@ -137,9 +137,7 @@ public class SvnExec {
 	 * svn status {path} --non-interactive --xml --show-updates
 	 */
 	public static SvnStatus svn_status(File projectdir) {
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".");
-		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		return Svn.status(new ByteArrayInputStream(exec(returnValue, false, projectdir, parameters, cmds_svn_status)));
+		return Svn.status(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters(), cmds_svn_status)));
 	}
 
 	/**
@@ -147,8 +145,7 @@ public class SvnExec {
 	 */
 	public static int svn_commit(File projectdir, String clname, File logfile) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("cl", clname).add("log", logfile.getAbsolutePath());
-		exec(returnValue, true, projectdir, parameters, cmds_svn_commit);
+		exec(returnValue, true, projectdir, createParameters().add("cl", clname).add("log", logfile.getAbsolutePath()), cmds_svn_commit);
 		return returnValue.getValue();
 	}
 
@@ -157,8 +154,7 @@ public class SvnExec {
 	 */
 	public static int svn_changelist(File projectdir, String clname, String el) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("cl", clname).add("files", el);
-		exec(returnValue, true, projectdir, parameters, cmds_svn_changelist);
+		exec(returnValue, true, projectdir, createParameters().add("cl", clname).add("files", el), cmds_svn_changelist);
 		return returnValue.getValue();
 	}
 
@@ -167,8 +163,7 @@ public class SvnExec {
 	 */
 	public static int svn_changelist_clear(File projectdir, String clname) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").copy().add("cl", clname);
-		exec(returnValue, true, projectdir, parameters, cmds_svn_changelist_clear);
+		exec(returnValue, true, projectdir, createParameters().copy().add("cl", clname), cmds_svn_changelist_clear);
 		return returnValue.getValue();
 	}
 
@@ -176,9 +171,7 @@ public class SvnExec {
 	 * svn info {path} --non-interactive --xml
 	 */
 	public static SvnInfo svn_info(File projectdir) {
-		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".");
-		return Svn.info(new ByteArrayInputStream(exec(returnValue, false, projectdir, parameters, cmds_svn_info)));
+		return Svn.info(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters(), cmds_svn_info)));
 	}
 
 	/**
@@ -186,8 +179,7 @@ public class SvnExec {
 	 */
 	public static int svn_switch(File projectdir, String latest) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("url", latest);
-		exec(returnValue, true, projectdir, parameters, cmds_svn_switch);
+		exec(returnValue, true, projectdir, createParameters().add("url", latest), cmds_svn_switch);
 		return returnValue.getValue();
 	}
 
@@ -195,9 +187,7 @@ public class SvnExec {
 	 * svn log -r {r}:HEAD --stop-on-copy --limit {limit} --xml {path}
 	 */
 	public static SvnLog svn_log(File projectdir, String r, int limit) {
-		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("r", r).add("limit", String.valueOf(limit));
-		return Svn.log(new ByteArrayInputStream(exec(returnValue, false, projectdir, parameters, cmds_svn_log)));
+		return Svn.log(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
 	}
 
 	/**
@@ -205,8 +195,7 @@ public class SvnExec {
 	 */
 	public static int svn_copy(File projectdir, String branchurl, String tag) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("branchurl", branchurl).add("tag", tag);
-		exec(returnValue, false, projectdir, parameters, cmds_svn_log);
+		exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("tag", tag), cmds_svn_log);
 		return returnValue.getValue();
 	}
 
@@ -214,17 +203,13 @@ public class SvnExec {
 	 * svn log -v -q --stop-on-copy --xml {tag}
 	 */
 	public static SvnLog svn_log_tag(File projectdir, String tag) {
-		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("tag", tag);
-		return Svn.log(new ByteArrayInputStream(exec(returnValue, false, projectdir, parameters, cmds_svn_log_tag)));
+		return Svn.log(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters().add("tag", tag), cmds_svn_log_tag)));
 	}
 
 	/**
 	 * svn ls --xml "^/tag" {tag}
 	 */
 	public static SvnList svn_ls_tag(File projectdir, String tag) {
-		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		IMap<String, String> parameters = new IMap<String, String>().add("path", ".").add("tag", tag);
-		return Svn.lists(new ByteArrayInputStream(exec(returnValue, false, projectdir, parameters, cmds_svn_ls_tag)));
+		return Svn.lists(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters().add("tag", tag), cmds_svn_ls_tag)));
 	}
 }
