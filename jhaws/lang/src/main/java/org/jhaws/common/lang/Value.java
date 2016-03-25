@@ -1,6 +1,7 @@
 package org.jhaws.common.lang;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 public class Value<T> implements Serializable {
 	private static final long serialVersionUID = -5341543889953418944L;
@@ -31,8 +32,9 @@ public class Value<T> implements Serializable {
 		return getValue();
 	}
 
-	public void set(T value) {
+	public Value<T> set(T value) {
 		setValue(value);
+		return this;
 	}
 
 	public String toString() {
@@ -62,5 +64,22 @@ public class Value<T> implements Serializable {
 		} else if (!this.value.equals(other.value))
 			return false;
 		return true;
+	}
+
+	public Value<T> setOr(T t, Consumer<T> f) {
+		if (set()) {
+			f.accept(get());
+		} else {
+			set(t);
+		}
+		return this;
+	}
+
+	public boolean set() {
+		return value != null;
+	}
+
+	public void reset() {
+		value = null;
 	}
 }
