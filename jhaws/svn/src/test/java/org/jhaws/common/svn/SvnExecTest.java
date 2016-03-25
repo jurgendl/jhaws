@@ -7,7 +7,9 @@ import org.jhaws.common.svn.xml.Entry;
 import org.jhaws.common.svn.xml.EntryList;
 import org.jhaws.common.svn.xml.LogEntry;
 import org.jhaws.common.svn.xml.SvnInfo;
+import org.jhaws.common.svn.xml.SvnList;
 import org.jhaws.common.svn.xml.SvnLog;
+import org.jhaws.common.svn.xml.SvnStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +27,17 @@ public class SvnExecTest {
 			for (LogEntry le : svn_log)
 				System.out.println(le);
 			System.out.println("=========================");
-			for (ChangeList cl : SvnExec.svn_status(projectdir))
+			SvnStatus svn_status = SvnExec.svn_status(projectdir);
+			for (ChangeList cl : svn_status)
 				System.out.println(cl);
 			System.out.println("=========================");
-			for (EntryList el : SvnExec.svn_ls(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags")))
+			SvnList svn_ls = SvnExec.svn_ls(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
+			for (EntryList el : svn_ls)
 				for (Entry e : el)
 					System.out.println(e);
 			System.out.println("=========================");
-			for (EntryList el : SvnExec.svn_ls_tag(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags")))
+			SvnList svn_ls_tag = SvnExec.svn_ls_tag(projectdir, ""/* svn_info.getEntry().getUrl().replaceAll("trunk", "tags") */);
+			for (EntryList el : svn_ls_tag)
 				for (Entry e : el)
 					System.out.println(e);
 			System.out.println("=========================");
