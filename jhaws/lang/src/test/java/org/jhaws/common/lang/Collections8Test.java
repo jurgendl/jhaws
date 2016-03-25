@@ -17,6 +17,7 @@ public class Collections8Test {
 
 	private static final int testcount = 10000;
 
+	@SuppressWarnings("unused")
 	@Test
 	public void testSpeed() {
 		System.out.println("");
@@ -57,9 +58,11 @@ public class Collections8Test {
 	@Test
 	public void testRegexIterator() {
 		RegexIterator it = new RegexIterator("(\\d)(\\d)", "test string, 123, abc, the end");
-		Assert.assertEquals("test string, [1/2]3, abc, the end", it.streamFunction(match -> "[" + match.group(1) + "/" + match.group(2) + "]"));
+		Assert.assertEquals("test string, [1/2]3, abc, the end",
+				it.streamFunction(match -> "[" + match.group(1) + "/" + match.group(2) + "]"));
 		Assert.assertEquals("test string, 3, abc, the end", it.streamFunction(match -> ""));
-		Assert.assertEquals("test string, 0.53, abc, the end", it.streamFunction(match -> Double.parseDouble(match.group(1)) / Double.parseDouble(match.group(2))));
+		Assert.assertEquals("test string, 0.53, abc, the end",
+				it.streamFunction(match -> Double.parseDouble(match.group(1)) / Double.parseDouble(match.group(2))));
 		Assert.assertEquals(Arrays.asList("12"), it.simple());
 		Assert.assertEquals(Arrays.asList(Arrays.asList("1", "2")), it.all());
 	}
@@ -148,13 +151,15 @@ public class Collections8Test {
 	@Test
 	public void testEagerOpt1a() {
 		TPersoon persoon = new TPersoon();
-		Assert.assertNull(Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
+		Assert.assertNull(
+				Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);
 		TNaam n = new TNaam();
 		pn.setNaam(n);
 		n.setNaam("naam");
-		Assert.assertEquals(n.getNaam(), Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
+		Assert.assertEquals(n.getNaam(),
+				Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
 	}
 
 	@Test
@@ -166,13 +171,15 @@ public class Collections8Test {
 		TNaam n = new TNaam();
 		pn.setNaam(n);
 		n.setNaam("naam");
-		Assert.assertEquals(n.getNaam(), Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).get(TNaam::getNaam));
+		Assert.assertEquals(n.getNaam(),
+				Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).get(TNaam::getNaam));
 	}
 
 	@Test
 	public void testEagerOpt2() {
 		TPersoon persoon = new TPersoon();
-		Opt<String> notReusable = Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam);
+		Opt<String> notReusable = Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam)
+				.nest(TNaam::getNaam);
 		Assert.assertNull(notReusable.get());
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);
@@ -185,7 +192,8 @@ public class Collections8Test {
 	@Test
 	public void testReusableOpta() {
 		TPersoon persoon = new TPersoon();
-		Opt<String> opt = Opt.reusable(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam);
+		Opt<String> opt = Opt.reusable(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam)
+				.nest(TNaam::getNaam);
 		Assert.assertNull(opt.get());
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);
