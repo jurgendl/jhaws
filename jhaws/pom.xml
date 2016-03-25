@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>modules</artifactId>
-	<version>2.0.3-SNAPSHOT</version>
+	<version>2.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>modules</name>
 	<description>modules</description>
@@ -17,11 +17,12 @@
 	mvn release:perform
 	
 	mvn release:prepare
-	git checkout modules-2.0.2
+	git checkout modules-2.0.3
+	set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_51
 	mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy
 	git checkout master
-	mvn versions:set -DnewVersion=2.0.3-SNAPSHOT
-	delete pom.xml.releaseBackup & release.properties
+	mvn versions:set -DnewVersion=2.0.4-SNAPSHOT
+	delete pom.xml.releaseBackup & release.properties & pom.xml.releaseBackup & pom.xml.versionsBackup
 	commit/push
 	-->
 	<properties>
