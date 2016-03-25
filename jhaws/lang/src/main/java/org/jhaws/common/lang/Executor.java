@@ -1,4 +1,4 @@
-package org.jhaws.common.svn;
+package org.jhaws.common.lang;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -105,7 +105,8 @@ public class Executor {
 	}
 
 	public static int print(File dir, Map<String, String> env, String... cmd) throws IOException {
-		ProcessBuilder create = create(dir, env, cmd).redirectInput(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).redirectError(Redirect.INHERIT);
+		ProcessBuilder create = create(dir, env, cmd).redirectInput(Redirect.INHERIT).redirectOutput(Redirect.INHERIT)
+				.redirectError(Redirect.INHERIT);
 		return start(create);
 	}
 
@@ -121,21 +122,22 @@ public class Executor {
 		return returnValue;
 	}
 
-	public static void replace(ValueHolder<String> v, Map.Entry<String, String> entry) {
+	public static void replace(Value<String> v, Map.Entry<String, String> entry) {
 		v.setValue(v.getValue().replaceAll("\\{" + entry.getKey() + "\\}", String.valueOf(entry.getValue())));
 	}
 
 	public static byte[] exec(boolean print, File projectdir, IMap<String, String> params, String... cmds) {
-		return exec(new ValueHolder<Integer>(-1), print, projectdir, params, cmds);
+		return exec(new Value<Integer>(-1), print, projectdir, params, cmds);
 	}
 
-	public static byte[] exec(ValueHolder<Integer> returnValue, boolean print, File projectdir, IMap<String, String> params, String... cmds) {
+	public static byte[] exec(Value<Integer> returnValue, boolean print, File projectdir, IMap<String, String> params,
+			String... cmds) {
 		logger.info("{}", projectdir);
 		logger.info("{}", Arrays.stream(cmds).collect(Collectors.joining(" ")));
 		if (params != null) {
 			params.forEach((k, v) -> logger.info("{}={}", k, v));
 			cmds = Arrays.stream(cmds).map((String cmdri) -> {
-				ValueHolder<String> v = new ValueHolder<>(cmdri);
+				Value<String> v = new Value<>(cmdri);
 				params.entrySet().stream().forEach(entry -> replace(v, entry));
 				return v.getValue();
 			}).collect(Collectors.toList()).toArray(new String[0]);
@@ -154,7 +156,8 @@ public class Executor {
 		return byteArray;
 	}
 
-	public static InputStream call(ValueHolder<Integer> returnValue, File projectRoot, IMap<String, String> prms, String... cmd) {
+	public static InputStream call(Value<Integer> returnValue, File projectRoot, IMap<String, String> prms,
+			String... cmd) {
 		return new ByteArrayInputStream(exec(returnValue, false, projectRoot, prms, cmd));
 	}
 

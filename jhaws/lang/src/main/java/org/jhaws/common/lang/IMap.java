@@ -1,4 +1,4 @@
-package org.jhaws.common.svn;
+package org.jhaws.common.lang;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
