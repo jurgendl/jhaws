@@ -8,18 +8,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.io.IOUtils;
-import org.clapper.util.classutil.ClassFinder;
-import org.clapper.util.classutil.ClassInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 
 public class Svn {
 	private static final Logger logger = LoggerFactory.getLogger(Svn.class);
@@ -66,19 +68,16 @@ public class Svn {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static JAXBContext getJaxbContext() throws JAXBException {
 		if (Svn.jaxbContext == null) {
-			ClassFinder cf = new ClassFinder();
-			cf.addClassPath();
-			Collection<ClassInfo> classes = new ArrayList<ClassInfo>();
-			cf.findClasses(classes, (ci, cfi) -> ci.getClassName().startsWith(Svn.class.getName()) && !ci.getClassName().startsWith(Svn.class.getName() + "$")
-					&& !ci.getClassName().equals(Svn.class.getName()));
+			ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
+			provider.addIncludeFilter(new AnnotationTypeFilter(XmlRootElement.class));
+			Set<BeanDefinition> beans = provider.findCandidateComponents(Svn.class.getPackage().getName());
 			ArrayList<Class<? extends RootBeanImpl>> c = new ArrayList<Class<? extends RootBeanImpl>>();
-			for (ClassInfo clazz : classes) {
+			for (BeanDefinition bd : beans) {
 				try {
-					@SuppressWarnings("unchecked")
-					Class<? extends RootBeanImpl> cast = (Class<? extends RootBeanImpl>) Class.forName(clazz.getClassName());
-					c.add(cast);
+					c.add((Class<? extends RootBeanImpl>) Class.forName(bd.getBeanClassName()));
 				} catch (ClassNotFoundException ex) {
 					throw new RuntimeException(ex);
 				}
