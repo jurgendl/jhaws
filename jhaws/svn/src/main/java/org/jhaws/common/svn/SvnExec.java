@@ -109,14 +109,14 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn ls --xml {path}
+	 * svn ls --xml {path} --non-interactive
 	 */
 	public static SvnList svn_ls(File projectdir, String branchroot) {
 		return Svn.lists(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, new IMap<String, String>().add("path", branchroot), cmds_svn_ls)));
 	}
 
 	/**
-	 * svn --quiet revert {path}
+	 * svn --quiet revert {path} --non-interactive
 	 */
 	public static int svn_revert(File projectdir) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
@@ -150,7 +150,7 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn changelist {cl} {files}
+	 * svn changelist {cl} {files} --non-interactive
 	 */
 	public static int svn_changelist(File projectdir, String clname, String el) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
@@ -159,7 +159,7 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn changelist --remove --changelist {cl} --depth infinity {path}
+	 * svn changelist --remove --changelist {cl} --depth infinity {path} --non-interactive
 	 */
 	public static int svn_changelist_clear(File projectdir, String clname) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
@@ -175,7 +175,7 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn switch {url} {path}
+	 * svn switch {url} {path} --non-interactive
 	 */
 	public static int svn_switch(File projectdir, String latest) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
@@ -184,14 +184,14 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn log -r {r}:HEAD --stop-on-copy --limit {limit} --xml {path}
+	 * svn log -r {r}:HEAD --stop-on-copy --limit {limit} --xml {path} --non-interactive
 	 */
 	public static SvnLog svn_log(File projectdir, String r, int limit) {
 		return Svn.log(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
 	}
 
 	/**
-	 * svn copy {branchurl} {tag} -m [release]
+	 * svn copy {branchurl} {tag} -m [release] --non-interactive
 	 */
 	public static int svn_copy(File projectdir, String branchurl, String tag) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
@@ -200,14 +200,14 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn log -v -q --stop-on-copy --xml {tag}
+	 * svn log -v -q --stop-on-copy --xml {tag} --non-interactive
 	 */
 	public static SvnLog svn_log_tag(File projectdir, String tag) {
 		return Svn.log(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters().add("tag", tag), cmds_svn_log_tag)));
 	}
 
 	/**
-	 * svn ls --xml "^/tag" {tag}
+	 * svn ls --xml "^/tag" {tag} --non-interactive
 	 */
 	public static SvnList svn_ls_tag(File projectdir, String tag) {
 		return Svn.lists(new ByteArrayInputStream(exec(new ValueHolder<>(-1), false, projectdir, createParameters().add("tag", tag), cmds_svn_ls_tag)));
