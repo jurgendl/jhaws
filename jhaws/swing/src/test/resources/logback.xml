@@ -1,0 +1,11 @@
+<configuration debug="true" scan="true">
+	<property name="pattern" value="\\(%file:%line\\) %message%n"/>
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset>UTF-8</charset>
+			<pattern>${pattern}</pattern>
+			<outputPatternAsHeader>false</outputPatternAsHeader>
+		</encoder>
+	</appender>
+	<root level="info"><appender-ref ref="CONSOLE" /></root>
+</configuration>

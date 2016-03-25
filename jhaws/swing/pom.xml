@@ -1,30 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.jhaws.common</groupId>
-	<artifactId>modules</artifactId>
-	<version>2.0.3-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>modules</name>
-	<description>modules</description>
-	<url>https://github.com/jurgendl/jhaws</url>
-	<!--
-	http://cemerick.com/2010/08/24/hosting-maven-repos-on-github/
-	
-	deploy snapshot:
-	mvn -DaltDeploymentRepository=snapshot-repo::default::file:../../mvn-repo/snapshots clean deploy
-	release:
-	mvn release:prepare
-	mvn release:perform
-	
-	mvn release:prepare
-	git checkout modules-2.0.3
-	set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_51
-	mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy
-	git checkout master
-	mvn versions:set -DnewVersion=2.0.4-SNAPSHOT
-	delete pom.xml.releaseBackup & release.properties & pom.xml.releaseBackup & pom.xml.versionsBackup
-	commit/push
-	-->
+	<parent>
+		<groupId>org.jhaws.common</groupId>
+		<artifactId>modules</artifactId>
+		<version>2.0.3-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>jhaws-swing</artifactId>
+	<packaging>jar</packaging>
+	<name>jhaws-swing</name>
+	<description>Java Swing components</description>
 	<properties>
 		<targetJdk>1.8</targetJdk><!-- should be compatible with 1.6 and higher -->
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- fixed encoding -->
@@ -42,31 +27,146 @@
 		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
 		<!-- maven-surefire-plugin -->
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+		<!-- versions -->
+		<version.glazedlists>1.9.1</version.glazedlists>
+		<version.commons.lang3>3.4</version.commons.lang3>
+		<version.miglayout>4.2</version.miglayout>
+		<version.javassist>3.20.0-GA</version.javassist>
+		<version.commons.beanutils>1.9.2</version.commons.beanutils>
+		<version.xhtmlrenderer>9.0.8</version.xhtmlrenderer>
+		<version.commons.codec>1.10</version.commons.codec>
+		<version.poi>3.10-FINAL</version.poi>
+		<version.slf4j>1.7.19</version.slf4j>
+		<version.logback>1.1.6</version.logback>
+		<version.junit>4.12</version.junit>
+		<version.ostermiller>1.07.00</version.ostermiller>
 	</properties>
-	<modules>
-		<module>lang</module>
-		<module>io</module>
-		<module>net</module>
-		<module>ldap</module>
-		<module>web</module>
-		<module>wicket</module>
-		<module>lucene</module>
-		<module>svn</module>
-		<module>swing</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>net.java.dev.glazedlists</groupId>
+			<artifactId>glazedlists_java15</artifactId>
+			<version>${version.glazedlists}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${version.commons.lang3}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.miglayout</groupId>
+			<artifactId>miglayout-swing</artifactId>
+			<version>${version.miglayout}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>${version.javassist}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${version.commons.beanutils}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-collections</artifactId>
+					<groupId>commons-collections</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-pdf-itext5</artifactId>
+			<version>${version.xhtmlrenderer}</version>
+		</dependency>
+		<dependency><!-- must be place before poi -->
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${version.commons.codec}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${version.poi}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>stax</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>xml-apis</artifactId>
+					<groupId>xml-apis</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.ostermiller</groupId>
+			<artifactId>utils</artifactId>
+			<version>${version.ostermiller}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${version.logback}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${version.logback}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${version.junit}</version>
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
 	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
 	<profiles>
 		<profile>
-			<!-- 
-				"mvn clean package -P nodebuginfo"
-				wil create an optimized (without debugging info) jar: hql-builder-nodebug-{version}.jar
-				
-				"mvn clean package"
-				wil create a jar without debugging info: hql-builder-{version}.jar
-			 -->
+			<id>src</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.2.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- "mvn clean package -P nodebuginfo" wil create an optimized (without 
+				debugging info) jar: swing-easy-nodebug-{version}.jar "mvn clean package" 
+				wil create a jar without debugging info: swing-easy-{version}.jar -->
 			<id>nodebuginfo</id>
 			<build>
-				<finalName>${artifactId}-nodebuginfo-${version}</finalName>
+				<finalName>${project.artifactId}-nodebuginfo-${project.version}</finalName>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -79,7 +179,7 @@
 							<optimize>true</optimize>
 							<verbose>false</verbose>
 							<encoding>${project.build.sourceEncoding}</encoding>
-							<debug>false</debug> 
+							<debug>false</debug>
 							<debuglevel>none</debuglevel><!-- lines, vars, and source or none -->
 						</configuration>
 					</plugin>
@@ -87,15 +187,16 @@
 			</build>
 		</profile>
 	</profiles>
+	<!-- FIXME all below -->
 	<licenses>
 		<license>
 			<name>The MIT License (MIT)</name>
-			<url>https://raw.githubusercontent.com/jurgendl/jhaws/master/LICENSE.md</url>
+			<url>https://raw.githubusercontent.com/jurgendl/swing-easy/master/LICENSE.md</url>
 		</license>
 	</licenses>
 	<issueManagement>
 		<system>github</system>
-		<url>https://github.com/jurgendl/jhaws/issues</url>
+		<url>https://github.com/jurgendl/swing-easy/issues</url>
 	</issueManagement>
 	<distributionManagement>
 		<repository>
@@ -107,7 +208,7 @@
 			<url>https://github.com/jurgendl/mvn-repo/raw/master/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-	<inceptionYear>2013</inceptionYear>
+	<inceptionYear>2011</inceptionYear>
 	<developers>
 		<developer>
 			<id />
@@ -120,10 +221,10 @@
 	</developers>
 	<contributors />
 	<scm>
-		<connection>scm:git:git@github.com:jurgendl/jhaws.git</connection>
-		<url>scm:git:git@github.com:jurgendl/jhaws.git</url>
-		<developerConnection>scm:git:git@github.com:jurgendl/jhaws.git</developerConnection>
-		<tag>modules-2.0.1</tag>
+		<connection>scm:git:git@github.com:jurgendl/swing-easy.git</connection>
+		<url>scm:git:git@github.com:jurgendl/swing-easy.git</url>
+		<developerConnection>scm:git:git@github.com:jurgendl/swing-easy.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
 	<repositories>
 		<repository>
@@ -166,7 +267,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
+				<version>2.5.1</version>
 				<configuration>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>src</releaseProfiles>

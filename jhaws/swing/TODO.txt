@@ -1,0 +1,24 @@
+
+    add new functionality by adding a new key binding: 
+    Action action = new AbstractAction() {...};
+    String keyStrokeAndKey = "control Z";
+    KeyStroke keyStroke = KeyStroke.getKeyStroke(keyStrokeAndKey);
+    component.getInputMap(...).put(keyStroke, keyStrokeAndKey);
+    component.getActionMap().put(keyStrokeAndKey, action);
+     
+    change existing functionality by replacing the Action of an existing binding: 
+    Action action = new AbstractAction() {...};
+    KeyStroke keyStroke = KeyStroke.getKeyStroke("control Z");
+    InputMap im = component.getInputMap(...);
+    component.getActionMap().put(im.get(keyStroke), action);
+     
+    share an Action with a different KeyStroke: 
+    KeyStroke existingKeyStroke = KeyStroke.getKeyStroke("ENTER");
+    KeyStroke addedKeyStroke = KeyStroke.getKeyStroke("control Z");
+    InputMap im = component.getInputMap(...);
+    im.put(addedKeyStroke, im.get(existingKeyStroke));
+     
+    remove a key binding: 
+    KeyStroke remove = KeyStroke.getKeyStroke(...);
+    InputMap im = component.getInputMap(...);
+    im.put(remove, "none");

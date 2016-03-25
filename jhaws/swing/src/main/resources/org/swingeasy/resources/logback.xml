@@ -1,0 +1,17 @@
+<configuration debug="false" scan="true">
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset>UTF-8</charset>
+			<pattern>%date{HH:mm:ss.SSS}|%-5level|%thread| \\(%class.java:%line\\) |%message%n</pattern>
+			<outputPatternAsHeader>false</outputPatternAsHeader>
+		</encoder>
+	</appender>
+
+	<logger name="org.swingeasy" level="info" />
+
+	<root level="info">
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+</configuration>

@@ -1,0 +1,7 @@
+    Ctrl-G: Ga naar pagina ... (Go to)
+    Ctrl-K: Link invoegen (Insert hyperlink)
+    Ctrl-M: Inspringen (First Indent)
+    Ctrl-N: Nieuw (bv. een nieuw bestand maken)
+    Ctrl-T: Hanging Indent (Hanging Indent)
+    Ctrl-W: Document Afsluiten (Close)
+.

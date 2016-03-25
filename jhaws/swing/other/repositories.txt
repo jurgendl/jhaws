@@ -1,0 +1,2 @@
+http://repo1.maven.org/maven2/
+https://swing-easy.googlecode.com/svn/maven2/
