@@ -35,7 +35,7 @@ public class SvnExec {
 
 	private static String[] cmds_svn_copy;
 
-	private static String[] cmds_svn_log_tag;
+	private static String[] cmds_svn_log2;
 
 	static {
 		Properties settings = new Properties();
@@ -55,7 +55,7 @@ public class SvnExec {
 		cmds_svn_switch = settings.getProperty("cmds.svn.switch").split(" ");
 		cmds_svn_log = settings.getProperty("cmds.svn.log").split(" ");
 		cmds_svn_copy = settings.getProperty("cmds.svn.copy").split(" ");
-		cmds_svn_log_tag = settings.getProperty("cmds.svn.log.tag").split(" ");
+		cmds_svn_log2 = settings.getProperty("cmds.svn.log2").split(" ");
 	}
 
 	public static IMap<String, String> createParameters() {
@@ -154,18 +154,18 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn log -v -q --stop-on-copy --xml {tag} --non-interactive
+	 * svn log -v -q --stop-on-copy --xml {path} --non-interactive
 	 */
-	public static SvnLog log2(File projectdir, String tag) {
-		return Svn.log(new ByteArrayInputStream(Executor.exec(new ValueHolder<>(-1), false, projectdir, createParameters().add("tag", tag), cmds_svn_log_tag)));
+	public static SvnLog log2(File projectdir, String path) {
+		return Svn.log(new ByteArrayInputStream(Executor.exec(new ValueHolder<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_log2)));
 	}
 
 	/**
-	 * svn copy {branchurl} {tag} -m [release] --non-interactive
+	 * svn copy {branchurl} {path} -m [release] --non-interactive
 	 */
-	public static int copy(File projectdir, String branchurl, String tag) {
+	public static int copy(File projectdir, String branchurl, String path) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		Executor.exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("tag", tag), cmds_svn_copy);
+		Executor.exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("path", path), cmds_svn_copy);
 		return returnValue.getValue();
 	}
 }
