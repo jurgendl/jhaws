@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Properties;
 
-import org.jhaws.common.svn.xml.Svn;
 import org.jhaws.common.svn.xml.SvnInfo;
 import org.jhaws.common.svn.xml.SvnList;
 import org.jhaws.common.svn.xml.SvnLog;

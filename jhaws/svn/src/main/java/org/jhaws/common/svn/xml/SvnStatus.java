@@ -8,11 +8,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.jhaws.common.svn.xml.Svn.RootBeanImpl;
-
 @XmlRootElement(name = "status")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SvnStatus extends RootBeanImpl implements Iterable<ChangeList> {
+public class SvnStatus extends SvnRootBean implements Iterable<ChangeList> {
 	private Target target;
 
 	private List<ChangeList> changelist;

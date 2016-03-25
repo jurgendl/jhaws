@@ -8,11 +8,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.jhaws.common.svn.xml.Svn.RootBeanImpl;
-
 @XmlRootElement(name = "log")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SvnLog extends RootBeanImpl implements Iterable<LogEntry> {
+public class SvnLog extends SvnRootBean implements Iterable<LogEntry> {
 	private List<LogEntry> logentry;
 
 	@SuppressWarnings("unchecked")
