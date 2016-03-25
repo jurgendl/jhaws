@@ -58,6 +58,7 @@ public class Collections8Test {
 	@Test
 	public void testRegexIterator() {
 		RegexIterator it = new RegexIterator("(\\d)(\\d)", "test string, 123, abc, the end");
+		// FIXME
 		Assert.assertEquals("test string, [1/2]3, abc, the end",
 				it.streamFunction(match -> "[" + match.group(1) + "/" + match.group(2) + "]"));
 		Assert.assertEquals("test string, 3, abc, the end", it.streamFunction(match -> ""));
