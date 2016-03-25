@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>modules</artifactId>
-	<version>2.0.2</version>
+	<version>2.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>modules</name>
 	<description>modules</description>
@@ -121,7 +121,7 @@
 		<connection>scm:git:git@github.com:jurgendl/jhaws.git</connection>
 		<url>scm:git:git@github.com:jurgendl/jhaws.git</url>
 		<developerConnection>scm:git:git@github.com:jurgendl/jhaws.git</developerConnection>
-		<tag>modules-2.0.2</tag>
+		<tag>modules-2.0.1</tag>
 	</scm>
 	<repositories>
 		<repository>
