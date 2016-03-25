@@ -2,13 +2,18 @@ package org.jhaws.common.svn;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,4 +120,42 @@ public class Executor {
 		process.destroy();
 		return returnValue;
 	}
+
+	public static void replace(ValueHolder<String> v, Map.Entry<String, String> entry) {
+		v.setValue(v.getValue().replaceAll("\\{" + entry.getKey() + "\\}", String.valueOf(entry.getValue())));
+	}
+
+	public static byte[] exec(boolean print, File projectdir, IMap<String, String> params, String... cmds) {
+		return exec(new ValueHolder<Integer>(-1), print, projectdir, params, cmds);
+	}
+
+	public static byte[] exec(ValueHolder<Integer> returnValue, boolean print, File projectdir, IMap<String, String> params, String... cmds) {
+		logger.info("{}", projectdir);
+		logger.info("{}", Arrays.stream(cmds).collect(Collectors.joining(" ")));
+		if (params != null) {
+			params.forEach((k, v) -> logger.info("{}={}", k, v));
+			cmds = Arrays.stream(cmds).map((String cmdri) -> {
+				ValueHolder<String> v = new ValueHolder<>(cmdri);
+				params.entrySet().stream().forEach(entry -> replace(v, entry));
+				return v.getValue();
+			}).collect(Collectors.toList()).toArray(new String[0]);
+		}
+		logger.info("{}", Arrays.stream(cmds).collect(Collectors.joining(" ")));
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		try {
+			OutParseProcessOutput boutppo = new OutParseProcessOutput(bout);
+			returnValue.setValue(Executor.parseProcessOutput(Executor.create(projectdir, null, cmds).start(),
+					print ? new Executor.MultiParseProcessOutput(boutppo, line -> logger.info("{}", line)) : boutppo));
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		byte[] byteArray = bout.toByteArray();
+		logger.info(">> {}", new String(byteArray));
+		return byteArray;
+	}
+
+	public static InputStream call(ValueHolder<Integer> returnValue, File projectRoot, IMap<String, String> prms, String... cmd) {
+		return new ByteArrayInputStream(exec(returnValue, false, projectRoot, prms, cmd));
+	}
+
 }

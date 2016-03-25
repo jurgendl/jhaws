@@ -20,23 +20,23 @@ public class SvnExecTest {
 		try {
 			File projectdir = new File(args[0]);
 			System.out.println("=========================");
-			SvnInfo svn_info = SvnExec.svn_info(projectdir);
+			SvnInfo svn_info = SvnExec.info(projectdir);
 			System.out.println(svn_info);
 			System.out.println("=========================");
-			SvnLog svn_log = SvnExec.svn_log(projectdir, "10000", 20);
+			SvnLog svn_log = SvnExec.log(projectdir, "10000", 20);
 			for (LogEntry le : svn_log)
 				System.out.println(le);
 			System.out.println("=========================");
-			SvnStatus svn_status = SvnExec.svn_status(projectdir);
+			SvnStatus svn_status = SvnExec.status(projectdir, false);
 			for (ChangeList cl : svn_status)
 				System.out.println(cl);
 			System.out.println("=========================");
-			SvnList svn_ls = SvnExec.svn_ls(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
+			SvnList svn_ls = SvnExec.list(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
 			for (EntryList el : svn_ls)
 				for (Entry e : el)
 					System.out.println(e);
 			System.out.println("=========================");
-			SvnList svn_ls_tag = SvnExec.svn_ls_tag(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
+			SvnList svn_ls_tag = SvnExec.list(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
 			for (EntryList el : svn_ls_tag)
 				for (Entry e : el)
 					System.out.println(e);
