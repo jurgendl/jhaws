@@ -195,7 +195,7 @@ public class SvnExec {
 	 */
 	public static int svn_copy(File projectdir, String branchurl, String tag) {
 		ValueHolder<Integer> returnValue = new ValueHolder<>(-1);
-		exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("tag", tag), cmds_svn_log);
+		exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("tag", tag), cmds_svn_copy);
 		return returnValue.getValue();
 	}
 
