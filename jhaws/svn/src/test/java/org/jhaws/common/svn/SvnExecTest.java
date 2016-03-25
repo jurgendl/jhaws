@@ -36,7 +36,7 @@ public class SvnExecTest {
 				for (Entry e : el)
 					System.out.println(e);
 			System.out.println("=========================");
-			SvnList svn_ls_tag = SvnExec.svn_ls_tag(projectdir, ""/* svn_info.getEntry().getUrl().replaceAll("trunk", "tags") */);
+			SvnList svn_ls_tag = SvnExec.svn_ls_tag(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
 			for (EntryList el : svn_ls_tag)
 				for (Entry e : el)
 					System.out.println(e);
