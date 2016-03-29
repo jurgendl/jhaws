@@ -127,9 +127,13 @@
 	</scm>
 	<repositories>
 		<repository>
-			<id>github</id>
-			<!-- <url>https://github.com/jurgendl/mvn-repo/raw/master/releases/</url> -->
-			<url>https://raw.githubusercontent.com/jurgendl/mvn-repo/master/releases/</url>
+			<id>jurgendl.github.com</id>
+			<url>http://github.com/jurgendl/mvn-repo/raw/master/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>warn</checksumPolicy>
+			</releases>
 		</repository>
 	</repositories>
 	<build>

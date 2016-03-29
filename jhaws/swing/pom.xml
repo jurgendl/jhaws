@@ -137,6 +137,17 @@
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
+    <repositories>
+        <repository>
+            <id>github.com</id>
+            <url>http://github.com/jurgendl/mvn-repo/raw/master/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
 	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
 	<profiles>
 		<profile>
@@ -226,13 +237,6 @@
 		<developerConnection>scm:git:git@github.com:jurgendl/swing-easy.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
-	<repositories>
-		<repository>
-			<id>github</id>
-			<!-- <url>https://github.com/jurgendl/mvn-repo/raw/master/releases/</url> -->
-			<url>https://raw.githubusercontent.com/jurgendl/mvn-repo/master/releases/</url>
-		</repository>
-	</repositories>
 	<build>
 		<extensions>
 			<extension>
