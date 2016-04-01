@@ -1,11 +1,10 @@
 package org.jhaws.common.lang;
 
-import java.io.Serializable;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-public class KeyValue<K, V> extends Value<V>implements Serializable {
+public class KeyValue<K, V> extends Value<V> {
 	private static final long serialVersionUID = 5148190064982535265L;
 
 	public static <T, U> KeyValue<T, U> value(T key, U value) {

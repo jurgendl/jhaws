@@ -37,6 +37,7 @@ public class Value<T> implements Serializable {
 		return this;
 	}
 
+	@Override
 	public String toString() {
 		return String.valueOf(value);
 	}

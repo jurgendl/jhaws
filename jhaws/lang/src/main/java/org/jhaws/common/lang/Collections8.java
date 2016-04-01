@@ -614,7 +614,7 @@ public interface Collections8 {
 		return t -> t;
 	}
 
-	static int noNegIndex(int i) {
+	public static int noNegIndex(int i) {
 		return i == -1 ? Integer.MAX_VALUE : i;
 	}
 
