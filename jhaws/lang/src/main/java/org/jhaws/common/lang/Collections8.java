@@ -859,6 +859,10 @@ public interface Collections8 {
 		return x -> true;
 	}
 
+	public static <X> Predicate<X> always(boolean b) {
+		return x -> b;
+	}
+
 	public static <X> Predicate<X> never() {
 		return x -> false;
 	}
@@ -1190,5 +1194,21 @@ public interface Collections8 {
 			a2.stream().forEach(a2e -> elementsListAccumulator.accept(a1, a2e));
 			return a1;
 		};
+	}
+
+	public static <T> Consumer<T> when(Predicate<T> restriction, Consumer<T> whenTrue, Consumer<T> whenFalse) {
+		return t -> (restriction.test(t) ? whenTrue : whenFalse).accept(t);
+	}
+
+	public static <T> Consumer<T> when(boolean restriction, Consumer<T> whenTrue, Consumer<T> whenFalse) {
+		return when(always(restriction), whenTrue, whenFalse);
+	}
+
+	public static <T> void when(Predicate<T> restriction, Consumer<T> whenTrue, Consumer<T> whenFalse, T subject) {
+		when(restriction, whenTrue, whenFalse).accept(subject);
+	}
+
+	public static <T> void when(boolean restriction, Consumer<T> whenTrue, Consumer<T> whenFalse, T subject) {
+		when(restriction, whenTrue, whenFalse).accept(subject);
 	}
 }
