@@ -55,7 +55,8 @@ public interface StringUtils {
 				wasWhiteSpace = true;
 			} else {
 				if (wasWhiteSpace) {
-					sb.append(" "); // replace all previous whitespaces by a single space
+					sb.append(" "); // replace all previous whitespaces by a
+									// single space
 				}
 				sb.append(c); // append non-whitespace character
 				wasWhiteSpace = false;
@@ -85,7 +86,8 @@ public interface StringUtils {
 	}
 
 	public static String splitCamelCase(String s) {
-		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])", "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
+		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
+				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
 	}
 
 	public static String sortable(String string) {
@@ -119,9 +121,22 @@ public interface StringUtils {
 	}
 
 	/**
-	 * @see http://stackoverflow.com/questions/4775898/java-regex-until-certain-word-text-characters
+	 * @see http://stackoverflow.com/questions/4775898/java-regex-until-certain-
+	 *      word-text-characters
 	 */
 	public static String regularUntil(String s) {
 		return "(.*?)\\b" + s + ".*";
+	}
+
+	public static boolean isNotBlank(String s) {
+		return org.apache.commons.lang3.StringUtils.isNotBlank(s);
+	}
+
+	public static boolean isBlank(String s) {
+		return org.apache.commons.lang3.StringUtils.isBlank(s);
+	}
+
+	public static boolean isNotEmpty(String s) {
+		return org.apache.commons.lang3.StringUtils.isNotEmpty(s);
 	}
 }
