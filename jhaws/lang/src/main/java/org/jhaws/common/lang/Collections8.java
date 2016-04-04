@@ -598,6 +598,22 @@ public interface Collections8 {
 		return sortBy(collection, orderByMe, self());
 	}
 
+	public static <T, S extends Comparable<? super S>> Stream<T> sortBy(Stream<T> sortMe, Map<T, S> sortByMe) {
+		return sortMe.sorted((x, y) -> sortByMe.get(x).compareTo(sortByMe.get(y)));
+	}
+
+	public static <T, A> Stream<T> sortBy(Stream<T> collection, List<A> orderByMe, Function<T, A> map) {
+		return collection.sorted(sortBy(orderByMe, map));
+	}
+
+	public static <T> Stream<T> sortBy(Stream<T> collection, List<T> orderByMe) {
+		return sortBy(collection, orderByMe, self());
+	}
+
+	public static <T, S extends Comparable<? super S>> List<T> sortBy(Collection<T> sortMe, Map<T, S> sortByMe) {
+		return sortMe.stream().sorted((x, y) -> sortByMe.get(x).compareTo(sortByMe.get(y))).collect(collectList());
+	}
+
 	public static <T> Function<T, T> id() {
 		return self();
 	}
@@ -875,10 +891,6 @@ public interface Collections8 {
 		return streamp(text).mapToObj(i -> (char) i);
 	}
 
-	public static <T, S extends Comparable<? super S>> List<T> sortBy(Collection<T> sortMe, Map<T, S> sortByMe) {
-		return sortMe.stream().sorted((x, y) -> sortByMe.get(x).compareTo(sortByMe.get(y))).collect(collectList());
-	}
-
 	public static <T> List<Pair<T>> match(List<T> keys, List<T> values) {
 		return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
 	}
@@ -944,18 +956,6 @@ public interface Collections8 {
 
 	public static <T> Comparator<T> dummyComparator() {
 		return (x, y) -> 0;
-	}
-
-	public static <T> Collection<Collection<T>> split(Collection<T> all, int maxSize) {
-		if (maxSize < 1)
-			throw new IllegalArgumentException("maxSize<1");
-		if (all.size() <= maxSize)
-			return Arrays.asList(all);
-		int totalSize = all.size();
-		AtomicInteger ai = new AtomicInteger(0);
-		int groups = (totalSize / maxSize) + (totalSize % maxSize > 0 ? 1 : 0);
-		Map<Integer, List<T>> g = all.stream().parallel().collect(Collectors.groupingBy(s -> ai.addAndGet(1) % groups));
-		return stream(g).map(valueMapper()).collect(collectList());
 	}
 
 	public static <K, V> Function<Entry<K, V>, V> valueMapper() {
@@ -1061,7 +1061,7 @@ public interface Collections8 {
 	}
 
 	public static <T> Stream<T> concatenateStreams(Stream<Stream<T>> streamStreams) {
-		return streamStreams.flatMap(Function.identity());
+		return streamStreams.flatMap(id());
 	}
 
 	public static <T> Opt<T> eager(T value) {
@@ -1143,8 +1143,8 @@ public interface Collections8 {
 			BiConsumer<K, N> aanTeMakenAct, //
 			BiConsumer<N, B> teBewaren//
 	) {
-		Map<K, B> teVerwijderen = subtract(bestaande.keySet(), nieuwe.keySet()).stream().collect(Collectors.toMap(Function.identity(), bestaande::get));
-		Map<K, N> aanTeMaken = subtract(nieuwe.keySet(), bestaande.keySet()).stream().collect(Collectors.toMap(Function.identity(), nieuwe::get));
+		Map<K, B> teVerwijderen = subtract(bestaande.keySet(), nieuwe.keySet()).stream().collect(Collectors.toMap(id(), bestaande::get));
+		Map<K, N> aanTeMaken = subtract(nieuwe.keySet(), bestaande.keySet()).stream().collect(Collectors.toMap(id(), nieuwe::get));
 		Map<N, B> overeenkomst = intersection(nieuwe.keySet(), bestaande.keySet()).stream().collect(Collectors.toMap(nieuwe::get, bestaande::get));
 		if (teBewaren != null)
 			overeenkomst.forEach(teBewaren);
@@ -1210,5 +1210,21 @@ public interface Collections8 {
 
 	public static <T> void when(boolean restriction, Consumer<T> whenTrue, Consumer<T> whenFalse, T subject) {
 		when(restriction, whenTrue, whenFalse).accept(subject);
+	}
+
+	public static <T> Collection<Collection<T>> split(Collection<T> all, int maxSize) {
+		if (maxSize < 1)
+			throw new IllegalArgumentException("maxSize<1");
+		if (all.size() <= maxSize)
+			return Arrays.asList(all);
+		int totalSize = all.size();
+		AtomicInteger ai = new AtomicInteger(0);
+		int groups = (totalSize / maxSize) + (totalSize % maxSize > 0 ? 1 : 0);
+		Map<Integer, List<T>> g = all.stream().parallel().collect(Collectors.groupingBy(s -> ai.addAndGet(1) % groups));
+		return stream(g).map(valueMapper()).collect(collectList());
+	}
+
+	public static <T> Stream<List<T>> split(List<T> elements, int count) {
+		return elements.stream().collect(Collectors.groupingBy(c -> elements.indexOf(c) / count)).values().stream();
 	}
 }
