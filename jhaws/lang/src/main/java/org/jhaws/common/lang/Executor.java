@@ -100,8 +100,6 @@ public class Executor {
 			}
 			processor.process(line);
 		}
-		// process.destroy();
-		// return process.exitValue();
 		int returnValue = -1;
 		try {
 			returnValue = process.waitFor();
