@@ -43,6 +43,7 @@ import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -882,6 +883,18 @@ public interface Collections8 {
 
 	public static <X> Predicate<X> never() {
 		return x -> false;
+	}
+
+	public static <X, Y> BiPredicate<X, Y> alwaysToo() {
+		return (x, y) -> true;
+	}
+
+	public static <X, Y> BiPredicate<X, Y> alwaysToo(boolean b) {
+		return (x, y) -> b;
+	}
+
+	public static <X, Y> BiPredicate<X, Y> neverToo() {
+		return (x, y) -> false;
 	}
 
 	public static IntStream streamp(String text) {
