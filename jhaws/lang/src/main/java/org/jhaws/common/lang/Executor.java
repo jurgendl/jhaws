@@ -100,13 +100,20 @@ public class Executor {
 			}
 			processor.process(line);
 		}
+		// process.destroy();
+		// return process.exitValue();
+		int returnValue = -1;
+		try {
+			returnValue = process.waitFor();
+		} catch (InterruptedException ex) {
+			//
+		}
 		process.destroy();
-		return process.exitValue();
+		return returnValue;
 	}
 
 	public static int print(File dir, Map<String, String> env, String... cmd) throws IOException {
-		ProcessBuilder create = create(dir, env, cmd).redirectInput(Redirect.INHERIT).redirectOutput(Redirect.INHERIT)
-				.redirectError(Redirect.INHERIT);
+		ProcessBuilder create = create(dir, env, cmd).redirectInput(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).redirectError(Redirect.INHERIT);
 		return start(create);
 	}
 
@@ -130,8 +137,7 @@ public class Executor {
 		return exec(new Value<Integer>(-1), print, projectdir, params, cmds);
 	}
 
-	public static byte[] exec(Value<Integer> returnValue, boolean print, File projectdir, IMap<String, String> params,
-			String... cmds) {
+	public static byte[] exec(Value<Integer> returnValue, boolean print, File projectdir, IMap<String, String> params, String... cmds) {
 		logger.info("{}", projectdir);
 		logger.info("{}", Arrays.stream(cmds).collect(Collectors.joining(" ")));
 		if (params != null) {
@@ -156,8 +162,7 @@ public class Executor {
 		return byteArray;
 	}
 
-	public static InputStream call(Value<Integer> returnValue, File projectRoot, IMap<String, String> prms,
-			String... cmd) {
+	public static InputStream call(Value<Integer> returnValue, File projectRoot, IMap<String, String> prms, String... cmd) {
 		return new ByteArrayInputStream(exec(returnValue, false, projectRoot, prms, cmd));
 	}
 
