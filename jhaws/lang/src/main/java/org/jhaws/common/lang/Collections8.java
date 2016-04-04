@@ -68,6 +68,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
  * @see java.util.stream.Collectors
  * @see java.util.stream.Collector
  * @since 1.8
+ * @see https://technology.amis.nl/2013/10/05/java-8-collection-enhancements-leveraging-lambda-expressions-or-how-java-emulates-sql/
  */
 public interface Collections8 {
 	public static class RegexIterator implements Iterator<String> {
