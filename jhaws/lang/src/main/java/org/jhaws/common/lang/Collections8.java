@@ -129,26 +129,44 @@ public interface Collections8 {
 	}
 
 	public static interface Opt<T> {
+		/** default vorig type */
 		<X> Opt<X> nest(Function<T, X> getter);
 
+		/** ga verder eager */
 		<X> Opt<X> eager(Function<T, X> getter);
 
+		/** ga verder reusable = lazy */
 		<X> Opt<X> reusable(Function<T, X> getter);
 
+		/** geeft waarde terug */
 		T get();
 
+		/** voert {@link #nest(Function)} uit en dan {@link #get()} */
 		default <X> X get(Function<T, X> get) {
 			return nest(get).get();
 		}
 
+		/** voert {@link #get()} uit en wanneer null, voert {@link Supplier} uit en geeft die waarde */
 		default T or(Supplier<T> supplier) {
 			return Optional.ofNullable(get()).orElseGet(supplier);
 		}
 
+		/** voert {@link #get()} uit en wanneer null, geeft meegegeven waarde */
+		default T or(T value) {
+			return Optional.ofNullable(get()).orElse(value);
+		}
+
+		/** default eager */
+		public static <T> Opt<T> opt(T value) {
+			return eager(value);
+		}
+
+		/** start eager */
 		public static <T> Opt<T> eager(T value) {
 			return new OptEager<>(value);
 		}
 
+		/** start reusable = lazy */
 		public static <T> Opt<T> reusable(T value) {
 			return new OptReusable<>(value);
 		}
