@@ -46,6 +46,7 @@
 	<modules>
 		<module>lang</module>
 		<module>io</module>
+		<module>g11n</module>
 		<module>net</module>
 		<module>ldap</module>
 		<module>web</module>
