@@ -153,34 +153,34 @@ public class Collections8Test {
 	public void testEagerOpt1a() {
 		TPersoon persoon = new TPersoon();
 		Assert.assertNull(
-				Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
+				Opt.eager(persoon).opt(TPersoon::getNaam).opt(TPersoonNaam::getNaam).opt(TNaam::getNaam).get());
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);
 		TNaam n = new TNaam();
 		pn.setNaam(n);
 		n.setNaam("naam");
 		Assert.assertEquals(n.getNaam(),
-				Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).nest(TNaam::getNaam).get());
+				Opt.eager(persoon).opt(TPersoon::getNaam).opt(TPersoonNaam::getNaam).opt(TNaam::getNaam).get());
 	}
 
 	@Test
 	public void testEagerOpt1b() {
 		TPersoon persoon = new TPersoon();
-		Assert.assertNull(Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).get(TNaam::getNaam));
+		Assert.assertNull(Opt.eager(persoon).opt(TPersoon::getNaam).opt(TPersoonNaam::getNaam).get(TNaam::getNaam));
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);
 		TNaam n = new TNaam();
 		pn.setNaam(n);
 		n.setNaam("naam");
 		Assert.assertEquals(n.getNaam(),
-				Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam).get(TNaam::getNaam));
+				Opt.eager(persoon).opt(TPersoon::getNaam).opt(TPersoonNaam::getNaam).get(TNaam::getNaam));
 	}
 
 	@Test
 	public void testEagerOpt2() {
 		TPersoon persoon = new TPersoon();
-		Opt<String> notReusable = Opt.eager(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam)
-				.nest(TNaam::getNaam);
+		Opt<String> notReusable = Opt.eager(persoon).opt(TPersoon::getNaam).opt(TPersoonNaam::getNaam)
+				.opt(TNaam::getNaam);
 		Assert.assertNull(notReusable.get());
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);
@@ -193,8 +193,8 @@ public class Collections8Test {
 	@Test
 	public void testReusableOpta() {
 		TPersoon persoon = new TPersoon();
-		Opt<String> opt = Opt.reusable(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam)
-				.nest(TNaam::getNaam);
+		Opt<String> opt = Opt.reusable(persoon).opt(TPersoon::getNaam).opt(TPersoonNaam::getNaam)
+				.opt(TNaam::getNaam);
 		Assert.assertNull(opt.get());
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);
@@ -207,7 +207,7 @@ public class Collections8Test {
 	@Test
 	public void testReusableOptb() {
 		TPersoon persoon = new TPersoon();
-		Opt<TNaam> opt = Opt.reusable(persoon).nest(TPersoon::getNaam).nest(TPersoonNaam::getNaam);
+		Opt<TNaam> opt = Opt.reusable(persoon).opt(TPersoon::getNaam).opt(TPersoonNaam::getNaam);
 		Assert.assertNull(opt.get(TNaam::getNaam));
 		TPersoonNaam pn = new TPersoonNaam();
 		persoon.setNaam(pn);

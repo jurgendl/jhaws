@@ -130,7 +130,7 @@ public interface Collections8 {
 
 	public static interface Opt<T> {
 		/** default vorig type */
-		<X> Opt<X> nest(Function<T, X> getter);
+		<X> Opt<X> opt(Function<T, X> getter);
 
 		/** ga verder eager */
 		<X> Opt<X> eager(Function<T, X> getter);
@@ -141,9 +141,9 @@ public interface Collections8 {
 		/** geeft waarde terug */
 		T get();
 
-		/** voert {@link #nest(Function)} uit en dan {@link #get()} */
+		/** voert {@link #opt(Function)} uit en dan {@link #get()} */
 		default <X> X get(Function<T, X> get) {
-			return nest(get).get();
+			return opt(get).get();
 		}
 
 		/** voert {@link #get()} uit en wanneer null, voert {@link Supplier} uit en geeft die waarde */
@@ -157,7 +157,7 @@ public interface Collections8 {
 		}
 
 		/** default eager */
-		public static <T> Opt<T> opt(T value) {
+		public static <T> Opt<T> optional(T value) {
 			return eager(value);
 		}
 
@@ -185,7 +185,7 @@ public interface Collections8 {
 		}
 
 		@Override
-		public <P> Opt<P> nest(Function<T, P> get) {
+		public <P> Opt<P> opt(Function<T, P> get) {
 			return eager(get);
 		}
 
@@ -196,7 +196,7 @@ public interface Collections8 {
 
 		@Override
 		public <P> Opt<P> reusable(Function<T, P> get) {
-			return new OptReusable<>(get()).nest(get);
+			return new OptReusable<>(get()).opt(get);
 		}
 	}
 
@@ -240,13 +240,13 @@ public interface Collections8 {
 		}
 
 		@Override
-		public <X> Opt<X> nest(Function<T, X> get) {
+		public <X> Opt<X> opt(Function<T, X> get) {
 			return reusable(get);
 		}
 
 		@Override
 		public <X> Opt<X> eager(Function<T, X> get) {
-			return new OptEager<>(get()).nest(get);
+			return new OptEager<>(get()).opt(get);
 		}
 
 		@Override
