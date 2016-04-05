@@ -18,3 +18,5 @@ org.eclipse.jdt.core.prefs
 *.releaseBackup
 release.properties
 pom.xml.releaseBackup
+org.eclipse.wst.common.component
+org.eclipse.wst.common.project.facet.core.xml
