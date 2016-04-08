@@ -68,12 +68,11 @@ public class SvnExec {
 	 * svn ls --xml {path} --non-interactive
 	 */
 	public static SvnList list(File projectdir, String path) {
-		return Svn.lists(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir,
-				new IMap<String, String>().add("path", path), cmds_svn_ls)));
+		return Svn.lists(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_ls)));
 	}
 
 	/**
-	 * svn --quiet revert {path} --non-interactive
+	 * svn --quiet revert {path} --non-interactive --depth infinity
 	 */
 	public static int revert(File projectdir) {
 		Value<Integer> returnValue = new Value<>(-1);
@@ -94,38 +93,34 @@ public class SvnExec {
 	 * svn status {path} {noignore} --non-interactive --xml --show-updates
 	 */
 	public static SvnStatus status(File projectdir, boolean noIgnore) {
-		return Svn.status(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir,
-				createParameters().add("noignore", noIgnore ? "--no-ignore" : ""), cmds_svn_status)));
+		return Svn.status(
+				new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, createParameters().add("noignore", noIgnore ? "--no-ignore" : ""), cmds_svn_status)));
 	}
 
 	/**
-	 * svn commit {path} --non-interactive --file {log} --changelist {cl}
+	 * svn commit {path} --non-interactive --file {log} --changelist {changelistName}
 	 */
-	public static int commit(File projectdir, String clname, File logfile) {
+	public static int commit(File projectdir, String changelistName, File logfile) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir,
-				createParameters().add("cl", clname).add("log", logfile.getAbsolutePath()), cmds_svn_commit);
+		Executor.exec(returnValue, true, projectdir, createParameters().add("changelistName", changelistName).add("log", logfile.getAbsolutePath()), cmds_svn_commit);
 		return returnValue.getValue();
 	}
 
 	/**
-	 * svn changelist {cl} {files} --non-interactive
+	 * svn changelist {changelistName} {files} --non-interactive
 	 */
-	public static int changelist(File projectdir, String clname, String files) {
+	public static int changelist(File projectdir, String changelistName, String files) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters().add("cl", clname).add("files", files),
-				cmds_svn_changelist);
+		Executor.exec(returnValue, true, projectdir, createParameters().add("changelistName", changelistName).add("files", files), cmds_svn_changelist);
 		return returnValue.getValue();
 	}
 
 	/**
-	 * svn changelist --remove --changelist {cl} --depth infinity {path}
-	 * --non-interactive
+	 * svn changelist --remove --changelist {changelistName} --depth infinity {path} --non-interactive
 	 */
-	public static int changelistClear(File projectdir, String clname) {
+	public static int changelistClear(File projectdir, String changelistName) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters().copy().add("cl", clname),
-				cmds_svn_changelist_clear);
+		Executor.exec(returnValue, true, projectdir, createParameters().copy().add("changelistName", changelistName), cmds_svn_changelist_clear);
 		return returnValue.getValue();
 	}
 
@@ -140,8 +135,7 @@ public class SvnExec {
 	 * svn info {path} --non-interactive --xml
 	 */
 	public static SvnInfo info(File projectdir, String path) {
-		return Svn.info(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir,
-				new IMap<String, String>().add("path", path), cmds_svn_info)));
+		return Svn.info(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_info)));
 	}
 
 	/**
@@ -154,20 +148,18 @@ public class SvnExec {
 	}
 
 	/**
-	 * svn log -r {r}:HEAD --stop-on-copy --limit {limit} --xml {path}
-	 * --non-interactive
+	 * svn log -r {r}:HEAD --stop-on-copy --limit {limit} --xml {path} --non-interactive
 	 */
 	public static SvnLog log(File projectdir, String r, int limit) {
-		return Svn.log(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir,
-				createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
+		return Svn
+				.log(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
 	}
 
 	/**
 	 * svn log -v -q --stop-on-copy --xml {path} --non-interactive
 	 */
 	public static SvnLog log2(File projectdir, String path) {
-		return Svn.log(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir,
-				new IMap<String, String>().add("path", path), cmds_svn_log2)));
+		return Svn.log(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_log2)));
 	}
 
 	/**
@@ -175,8 +167,7 @@ public class SvnExec {
 	 */
 	public static int copy(File projectdir, String branchurl, String path) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("path", path),
-				cmds_svn_copy);
+		Executor.exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("path", path), cmds_svn_copy);
 		return returnValue.getValue();
 	}
 }
