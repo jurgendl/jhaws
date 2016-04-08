@@ -18,10 +18,10 @@
 	
 	set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_77
 	mvn release:prepare
-	git checkout modules-4.0.3
+	git checkout modules-4.0.4
 	mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy
 	git checkout master
-	mvn versions:set -DnewVersion=4.0.3-SNAPSHOT
+	mvn versions:set -DnewVersion=4.0.5-SNAPSHOT
 	delete pom.xml.releaseBackup & release.properties & pom.xml.releaseBackup & pom.xml.versionsBackup
 	commit/commit/push
 	-->
