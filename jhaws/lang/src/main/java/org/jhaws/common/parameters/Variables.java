@@ -19,8 +19,8 @@ public class Variables<T> {
 
 	public Variables(Class<T> c) {
 		type = c;
-		vars = stream(c.getDeclaredFields()).map(field -> new Variable<>(field, field.getDeclaredAnnotation(Parameter.class))).filter(p -> p.parameter != null)
-				.collect(collectList());
+		vars = stream(c.getDeclaredFields()).filter(field -> field.getDeclaredAnnotation(Parameter.class) != null)
+				.map(field -> new Variable<>(field, field.getDeclaredAnnotation(Parameter.class))).collect(collectList());
 	}
 
 	public Variables<T> parameters(String... args) {
@@ -34,7 +34,7 @@ public class Variables<T> {
 				currentVariable = variable;
 			} else {
 				if (currentVariable == null)
-					throw new NullPointerException();
+					throw new IllegalArgumentException(value);
 				currentVariable.add(value);
 			}
 		}
