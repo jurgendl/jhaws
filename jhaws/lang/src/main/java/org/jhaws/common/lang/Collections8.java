@@ -519,6 +519,10 @@ public interface Collections8 {
 		return ConcurrentHashMap::new;
 	}
 
+	public static <T> Supplier<Stack<T>> newStack() {
+		return Stack::new;
+	}
+
 	public static <T> Supplier<Deque<T>> newDeque() {
 		return LinkedList::new;
 	}
@@ -553,6 +557,10 @@ public interface Collections8 {
 
 	public static <T, C extends Collection<T>> Collector<T, ?, C> toCollector(Supplier<C> supplier) {
 		return Collectors.toCollection(supplier);
+	}
+
+	public static <T> Collector<T, ?, Stack<T>> collectStack() {
+		return toCollector(newStack());
 	}
 
 	public static <T> Collector<T, ?, Deque<T>> collectDeque() {
@@ -793,6 +801,15 @@ public interface Collections8 {
 	@SafeVarargs
 	public static <T> Deque<T> toDeque(T... array) {
 		return stream(array).collect(collectDeque());
+	}
+
+	public static <T> Stack<T> toStack(Collection<T> collection) {
+		return stream(collection).collect(collectStack());
+	}
+
+	@SafeVarargs
+	public static <T> Stack<T> toStack(T... array) {
+		return stream(array).collect(collectStack());
 	}
 
 	public static <T, C extends Collection<T>> C to(T[] array, Supplier<C> supplier) {
@@ -1258,5 +1275,9 @@ public interface Collections8 {
 
 	public static <T> Stream<List<T>> split(List<T> elements, int count) {
 		return elements.stream().collect(Collectors.groupingBy(c -> elements.indexOf(c) / count)).values().stream();
+	}
+
+	public static <T> Function<List<T>, T> first() {
+		return list -> list.isEmpty() ? null : list.get(0);
 	}
 }
