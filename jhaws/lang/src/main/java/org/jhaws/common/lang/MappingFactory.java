@@ -94,7 +94,7 @@ public class MappingFactory {
 		if (!this.info.containsKey(clazz)) {
 			try {
 				Map<String, PropertyDescriptor> originalMap = Collections8
-						.stream(this.parallel, Introspector.getBeanInfo(clazz).getPropertyDescriptors())
+						.streamArray(this.parallel, Introspector.getBeanInfo(clazz).getPropertyDescriptors())
 						.filter((t) -> ((t.getWriteMethod() != null) && (t.getReadMethod() != null))).collect(Collectors
 								.toMap(PropertyDescriptor::getName, Function.<PropertyDescriptor> identity()));
 				Map<String, Property<Object, Object>> convertedMap = Collections8.stream(this.parallel, originalMap)
@@ -177,7 +177,7 @@ public class MappingFactory {
 
 	protected <S, T, Col> Col mapArrayToCollection(Map<Object, Object> context, S[] sourceArray, Class<T> targetClass,
 			Collector<T, ?, Col> factory) {
-		return this.mapStream(context, Collections8.stream(this.parallel, sourceArray), targetClass, factory);
+		return this.mapStream(context, Collections8.streamArray(this.parallel, sourceArray), targetClass, factory);
 	}
 
 	protected <S, T, Col> Col mapCollection(Map<Object, Object> context, Collection<S> sourceCollection,

@@ -463,7 +463,7 @@ public interface Collections8 {
 	@SafeVarargs
 	public static <T, C extends Collection<T>> C filter(boolean parallel, C collection, Predicate<? super T>... predicates) {
 		AtomicReference<Stream<T>> streamReference = new AtomicReference<>(stream(parallel, collection));
-		stream(predicates).forEach(predicate -> streamReference.set(streamReference.get().filter(predicate)));
+		streamArray(predicates).forEach(predicate -> streamReference.set(streamReference.get().filter(predicate)));
 		C collected = streamReference.get().collect(collector(collection));
 		return collected;
 	}
@@ -719,12 +719,12 @@ public interface Collections8 {
 	}
 
 	@SafeVarargs
-	public static <T> Stream<T> stream(T... array) {
-		return stream(false, array);
+	public static <T> Stream<T> streamArray(T... array) {
+		return streamArray(false, array);
 	}
 
 	@SafeVarargs
-	public static <T> Stream<T> stream(boolean parallel, T... array) {
+	public static <T> Stream<T> streamArray(boolean parallel, T... array) {
 		if (array == null)
 			return Stream.empty();
 		// StreamSupport.stream(Spliterators.spliterator(array, 0, array.length, Spliterator.ORDERED | Spliterator.IMMUTABLE), parallel);
@@ -739,7 +739,7 @@ public interface Collections8 {
 	}
 
 	public static <T> Stream<T> streamDetached(boolean parallel, Collection<T> collection) {
-		return stream(parallel, array(collection));
+		return streamArray(parallel, array(collection));
 	}
 
 	public static <K, V> Stream<Map.Entry<K, V>> streamDetached(Map<K, V> map) {
@@ -747,7 +747,7 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Stream<Map.Entry<K, V>> streamDetached(boolean parallel, Map<K, V> map) {
-		return stream(parallel, array(map));
+		return streamArray(parallel, array(map));
 	}
 
 	public static Stream<Path> streamFully(Path path) {
@@ -764,7 +764,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T> List<T> toList(T... array) {
-		return stream(array).collect(collectList());
+		return streamArray(array).collect(collectList());
 	}
 
 	public static <T> Set<T> toSet(Collection<T> collection) {
@@ -773,7 +773,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T> Set<T> toSet(T... array) {
-		return stream(array).collect(collectSet());
+		return streamArray(array).collect(collectSet());
 	}
 
 	public static <T> Set<T> toSortedSet(Collection<T> collection) {
@@ -782,7 +782,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T> SortedSet<T> toSortedSet(T... array) {
-		return stream(array).collect(collectSortedSet());
+		return streamArray(array).collect(collectSortedSet());
 	}
 
 	public static <T> Queue<T> toQueue(Collection<T> collection) {
@@ -791,7 +791,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T> Queue<T> toQueue(T... array) {
-		return stream(array).collect(collectQueue());
+		return streamArray(array).collect(collectQueue());
 	}
 
 	public static <T> Deque<T> toDeque(Collection<T> collection) {
@@ -800,7 +800,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T> Deque<T> toDeque(T... array) {
-		return stream(array).collect(collectDeque());
+		return streamArray(array).collect(collectDeque());
 	}
 
 	public static <T> Stack<T> toStack(Collection<T> collection) {
@@ -809,7 +809,7 @@ public interface Collections8 {
 
 	@SafeVarargs
 	public static <T> Stack<T> toStack(T... array) {
-		return stream(array).collect(collectStack());
+		return streamArray(array).collect(collectStack());
 	}
 
 	public static <T, C extends Collection<T>> C to(T[] array, Supplier<C> supplier) {
@@ -817,7 +817,7 @@ public interface Collections8 {
 	}
 
 	public static <T, C extends Collection<T>> C to(T[] array, Collector<T, ?, C> collector) {
-		return stream(array).collect(collector);
+		return streamArray(array).collect(collector);
 	}
 
 	public static <T, C extends Collection<T>> C to(Collection<T> collection, Supplier<C> supplier) {
