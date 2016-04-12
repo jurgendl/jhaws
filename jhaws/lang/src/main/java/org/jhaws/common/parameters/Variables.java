@@ -1,5 +1,8 @@
 package org.jhaws.common.parameters;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,12 +10,26 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Variables<T> {
-	protected List<Variable<?>> vars;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Variables<T> {
 	protected Class<T> type;
 
-	protected String[] parameters;
+	protected transient String[] parameters;
+
+	protected T config;
+
+	protected transient List<Variable<?>> vars;
+
+	public Variables() {
+		super();
+	}
 
 	@SuppressWarnings("unchecked")
 	public Variables(T o) {
@@ -20,6 +37,10 @@ public class Variables<T> {
 	}
 
 	public Variables(Class<T> c) {
+		init(c);
+	}
+
+	protected void init(Class<T> c) {
 		type = c;
 		vars = Arrays.stream(c.getDeclaredFields()).filter(field -> field.getDeclaredAnnotation(Parameter.class) != null)
 				.map(field -> new Variable<>(field, field.getDeclaredAnnotation(Parameter.class))).collect(Collectors.toList());
@@ -48,19 +69,22 @@ public class Variables<T> {
 		return this;
 	}
 
-	public void pverror(PVException ex) {
+	protected void pverror(PVException ex) {
 		System.out.println("error: " + ex.getMessage());
 		log();
 		throw ex;
 	}
 
 	public Variables<T> log() {
-		IntStream.range(0, parameters.length).mapToObj(i -> (i + 1) + ": " + parameters[i]).forEach(System.out::println);
-		IntStream.range(0, vars.size()).mapToObj(i -> "parameter " + (i + 1) + ": " + vars.get(i)).forEach(System.out::println);
+		if (parameters != null)
+			IntStream.range(0, parameters.length).mapToObj(i -> (i + 1) + ": " + parameters[i]).forEach(System.out::println);
+		if (vars != null)
+			IntStream.range(0, vars.size()).mapToObj(i -> "parameter " + (i + 1) + ": " + vars.get(i)).forEach(System.out::println);
 		return this;
 	}
 
 	public Variables<T> apply(T obj) {
+		this.config = obj;
 		try {
 			vars.stream().forEach(var -> var.defaults(obj));
 		} catch (Exception ex) {
@@ -80,5 +104,29 @@ public class Variables<T> {
 		} catch (InstantiationException | IllegalAccessException ex) {
 			throw new IllegalArgumentException(ex);
 		}
+	}
+
+	public Variables<T> saveConfig(File file) {
+		try {
+			JAXBContext.newInstance(Variables.class, type).createMarshaller().marshal(this, file);
+		} catch (JAXBException ex) {
+			throw new RuntimeException(ex);
+		}
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Variables<T> loadConfig(Class<T> type, File file) {
+		try (FileInputStream in = new FileInputStream(file)) {
+			Variables<T> vars = (Variables<T>) (JAXBContext.newInstance(Variables.class, type).createUnmarshaller().unmarshal(in));
+			vars.init(type);
+			return vars;
+		} catch (JAXBException | IOException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public T getConfig() {
+		return this.config;
 	}
 }
