@@ -1280,4 +1280,12 @@ public interface Collections8 {
 	public static <T> Function<List<T>, T> first() {
 		return list -> list.isEmpty() ? null : list.get(0);
 	}
+
+	public static String joining(Stream<String> stream, String delimiter) {
+		return stream.collect(Collectors.joining(delimiter));
+	}
+
+	public static Stream<String> split(String string, String delimiter) {
+		return streamArray(string.split(delimiter));
+	}
 }
