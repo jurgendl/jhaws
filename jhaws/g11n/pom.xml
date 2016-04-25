@@ -11,8 +11,8 @@
 	<description>g11n (globalization) = i18n (internationalization) + L10n (localization)</description>
 	<properties>
 		<version.junit>4.12</version.junit>
-		<version.slf4j>1.7.19</version.slf4j>
-		<version.logback>1.1.6</version.logback>
+		<version.slf4j>1.7.21</version.slf4j>
+		<version.logback>1.1.7</version.logback>
 	</properties>
 	<dependencies>
 		<dependency>

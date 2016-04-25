@@ -12,8 +12,8 @@
 	<properties>
 		<version.junit>4.12</version.junit>
 		<version.commons.lang3>3.4</version.commons.lang3>
-		<version.slf4j>1.7.19</version.slf4j>
-		<version.logback>1.1.6</version.logback>
+		<version.slf4j>1.7.21</version.slf4j>
+		<version.logback>1.1.7</version.logback>
 		<version.javassist>3.20.0-GA</version.javassist>
 		<version.lambdaj>2.3.3</version.lambdaj>
 		<version.cglib>3.2.1</version.cglib>
