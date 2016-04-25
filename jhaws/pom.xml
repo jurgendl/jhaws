@@ -73,16 +73,16 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>3.5.1</version>
-						<configuration>
-							<fork>true</fork>
-							<source>${targetJdk}</source>
-							<target>${targetJdk}</target>
-							<optimize>true</optimize>
-							<verbose>false</verbose>
-							<encoding>${project.build.sourceEncoding}</encoding>
-							<debug>false</debug> 
-							<debuglevel>none</debuglevel><!-- lines, vars, and source or none -->
-						</configuration>
+                        <configuration>
+                            <fork>true</fork>
+                            <source>${targetJdk}</source>
+                            <target>${targetJdk}</target>
+                            <optimize>true</optimize>
+                            <verbose>false</verbose>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <debug>false</debug>
+                            <debuglevel>none</debuglevel>
+                        </configuration>
 					</plugin>
 				</plugins>
 			</build>
@@ -203,16 +203,17 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
-				<configuration>
-					<fork>true</fork>
-					<source>${targetJdk}</source>
-					<target>${targetJdk}</target>
-					<optimize>true</optimize>
-					<verbose>false</verbose>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<debug>true</debug>
-					<debuglevel>lines,vars,source</debuglevel>
-				</configuration>
+                <configuration>
+                    <fork>true</fork>
+                    <source>${targetJdk}</source>
+                    <target>${targetJdk}</target>
+                    <optimize>true</optimize>
+                    <verbose>false</verbose>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <debug>true</debug>
+                    <debuglevel>lines,vars,source</debuglevel>
+                    <compilerArgument>-parameters</compilerArgument>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
