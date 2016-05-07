@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.Date;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -127,25 +128,41 @@ public class DateTime8 {
 			.appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":").appendValue(ChronoField.MINUTE_OF_HOUR, 2)
 			.appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).toFormatter();
 
-	public static Pattern PS = Pattern.compile("(\\d\\d:\\d\\d:\\d\\d)");
+	static Pattern TIME_PATTERN = Pattern.compile("^(\\d{1,2}:){0,1}(\\d{1,2}:){0,1}(\\d{1,2}){1}(\\.\\d{1,3}){0,1}$");
 
-	public static Pattern PM = Pattern.compile("(\\d\\d:\\d\\d:\\d\\d.\\d\\d)");
-
-	public static Pattern PL = Pattern.compile("(\\d\\d:\\d\\d:\\d\\d.\\d\\d\\d)");
-
-	public static LocalTime parseTime(String s) {
-		LocalTime time;
-		if (PL.matcher(s).matches()) {
-			time = LocalTime.parse(s, TIME_PARSER_MILLIS);
-		} else if (PM.matcher(s).matches()) {
-			time = LocalTime.parse(s, TIME_PARSER_MILLIS);
-			time = time.with(ChronoField.MILLI_OF_SECOND, time.get(ChronoField.MILLI_OF_SECOND) * 10);
-		} else if (PS.matcher(s).matches()) {
-			time = LocalTime.parse(s, TIME_PARSER_SEC);
-		} else {
-			throw new IllegalArgumentException();
+	public static LocalTime parseTime(String text) {
+		Matcher matcher = TIME_PATTERN.matcher(text);
+		matcher.matches();
+		String p1 = matcher.group(1);
+		String p2 = matcher.group(2);
+		String p3 = matcher.group(3);
+		String milliseconds = matcher.group(4);
+		int h = 0;
+		int m = 0;
+		int s = 0;
+		int ms = 0;
+		if (p1 != null && p2 != null) {
+			h = Integer.parseInt(p1.replaceAll(":", ""));
+			m = Integer.parseInt(p2.replaceAll(":", ""));
+		} else if (p1 != null && p2 == null) {
+			m = Integer.parseInt(p1.replaceAll(":", ""));
+		} else if (p1 == null && p2 != null) {
+			m = Integer.parseInt(p2.replaceAll(":", ""));
 		}
-		return time;
+		if (p3 != null) {
+			s = Integer.parseInt(p3);
+		}
+		if (milliseconds != null) {
+			ms = Integer.parseInt(milliseconds.replaceAll("\\.", ""));
+			if (ms < 10) {
+				ms *= 100000000;
+			} else if (ms < 100) {
+				ms *= 10000000;
+			} else {
+				ms *= 1000000;
+			}
+		}
+		return LocalTime.of(h, m, s, ms);
 	}
 
 	public static Duration parseDuration(String from, String to) {
