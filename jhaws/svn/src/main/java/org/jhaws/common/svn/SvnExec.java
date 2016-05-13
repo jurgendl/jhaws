@@ -25,6 +25,8 @@ public class SvnExec {
 
 	private static String[] cmds_svn_commit;
 
+	private static String[] cmds_svn_commit_direct;
+
 	private static String[] cmds_svn_changelist;
 
 	private static String[] cmds_svn_changelist_clear;
@@ -51,6 +53,7 @@ public class SvnExec {
 		cmds_svn_update = settings.getProperty("cmds.svn.update").split(" ");
 		cmds_svn_status = settings.getProperty("cmds.svn.status").split(" ");
 		cmds_svn_commit = settings.getProperty("cmds.svn.commit").split(" ");
+		cmds_svn_commit_direct = settings.getProperty("cmds.svn.commit.direct").split(" ");
 		cmds_svn_changelist = settings.getProperty("cmds.svn.changelist").split(" ");
 		cmds_svn_changelist_clear = settings.getProperty("cmds.svn.changelist.clear").split(" ");
 		cmds_svn_info = settings.getProperty("cmds.svn.info").split(" ");
@@ -103,6 +106,15 @@ public class SvnExec {
 	public static int commit(File projectdir, String changelistName, File logfile) {
 		Value<Integer> returnValue = new Value<>(-1);
 		Executor.exec(returnValue, true, projectdir, createParameters().add("changelistName", changelistName).add("log", logfile.getAbsolutePath()), cmds_svn_commit);
+		return returnValue.getValue();
+	}
+
+	/**
+	 * svn commit {path} --non-interactive --file {log}
+	 */
+	public static int commitDirect(File projectdir, File logfile) {
+		Value<Integer> returnValue = new Value<>(-1);
+		Executor.exec(returnValue, true, projectdir, createParameters().add("log", logfile.getAbsolutePath()), cmds_svn_commit_direct);
 		return returnValue.getValue();
 	}
 
