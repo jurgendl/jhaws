@@ -61,7 +61,9 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.jhaws.common.lang.functions.BufferFunction;
 
 /**
  * @see java.util.stream.Stream
@@ -69,7 +71,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
  * @see java.util.stream.Collectors
  * @see java.util.stream.Collector
  * @since 1.8
- * @see https://technology.amis.nl/2013/10/05/java-8-collection-enhancements-leveraging-lambda-expressions-or-how-java-emulates-sql/
+ * @see https://technology.amis.nl/2013/10/05/java-8-collection-enhancements-
+ *      leveraging-lambda-expressions-or-how-java-emulates-sql/
  */
 public interface Collections8 {
 	public static class RegexIterator implements Iterator<String> {
@@ -146,7 +149,10 @@ public interface Collections8 {
 			return opt(get).get();
 		}
 
-		/** voert {@link #get()} uit en wanneer null, voert {@link Supplier} uit en geeft die waarde */
+		/**
+		 * voert {@link #get()} uit en wanneer null, voert {@link Supplier} uit
+		 * en geeft die waarde
+		 */
 		default T or(Supplier<T> supplier) {
 			return Optional.ofNullable(get()).orElseGet(supplier);
 		}
@@ -267,7 +273,8 @@ public interface Collections8 {
 
 		protected Set<Characteristics> characteristics;
 
-		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Function<A, R> finisher, Set<Characteristics> characteristics) {
+		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner,
+				Function<A, R> finisher, Set<Characteristics> characteristics) {
 			this.supplier = supplier;
 			this.accumulator = accumulator;
 			this.combiner = combiner;
@@ -276,13 +283,15 @@ public interface Collections8 {
 		}
 
 		@SuppressWarnings("unchecked")
-		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Set<Characteristics> characteristics) {
+		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner,
+				Set<Characteristics> characteristics) {
 			this(supplier, accumulator, combiner, x -> (R) x, characteristics);
 		}
 
 		@SuppressWarnings("unchecked")
 		public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner) {
-			this(supplier, accumulator, combiner, x -> (R) x, Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH)));
+			this(supplier, accumulator, combiner, x -> (R) x,
+					Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH)));
 		}
 
 		public CustomCollector() {
@@ -419,7 +428,7 @@ public interface Collections8 {
 	}
 
 	public static <T> T[] newArray(int size) {
-		return Collections8.<T>newArray().apply(size);
+		return Collections8.<T> newArray().apply(size);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -443,25 +452,26 @@ public interface Collections8 {
 	@SuppressWarnings("unchecked")
 	public static <T, C extends Collection<T>> Collector<T, ?, C> collector(C collection) {
 		if (collection instanceof Deque) {
-			return (Collector<T, ?, C>) Collections8.<T>collectDeque();
+			return (Collector<T, ?, C>) Collections8.<T> collectDeque();
 		}
 		if (collection instanceof Queue) {
-			return (Collector<T, ?, C>) Collections8.<T>collectQueue();
+			return (Collector<T, ?, C>) Collections8.<T> collectQueue();
 		}
 		if (collection instanceof List) {
-			return (Collector<T, ?, C>) Collections8.<T>collectList();
+			return (Collector<T, ?, C>) Collections8.<T> collectList();
 		}
 		if (collection instanceof SortedSet) {
-			return (Collector<T, ?, C>) Collections8.<T>collectSortedSet();
+			return (Collector<T, ?, C>) Collections8.<T> collectSortedSet();
 		}
 		if (collection instanceof Set) {
-			return (Collector<T, ?, C>) Collections8.<T>collectSet();
+			return (Collector<T, ?, C>) Collections8.<T> collectSet();
 		}
 		throw new UnsupportedOperationException(collection.getClass().getName());
 	}
 
 	@SafeVarargs
-	public static <T, C extends Collection<T>> C filter(boolean parallel, C collection, Predicate<? super T>... predicates) {
+	public static <T, C extends Collection<T>> C filter(boolean parallel, C collection,
+			Predicate<? super T>... predicates) {
 		AtomicReference<Stream<T>> streamReference = new AtomicReference<>(stream(parallel, collection));
 		streamArray(predicates).forEach(predicate -> streamReference.set(streamReference.get().filter(predicate)));
 		C collected = streamReference.get().collect(collector(collection));
@@ -487,14 +497,15 @@ public interface Collections8 {
 	}
 
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream) {
-		return map(stream, Collections8.<K, V>newMap());
+		return map(stream, Collections8.<K, V> newMap());
 	}
 
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
-		Function<Entry<K, V>, K> keyMapper = Collections8.<K, V>keyMapper();
-		Function<Entry<K, V>, V> valueMapper = Collections8.<K, V>valueMapper();
-		BinaryOperator<V> keepFirst = Collections8.<V>keepFirst();
-		Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, keepFirst, mapSupplier);
+		Function<Entry<K, V>, K> keyMapper = Collections8.<K, V> keyMapper();
+		Function<Entry<K, V>, V> valueMapper = Collections8.<K, V> valueMapper();
+		BinaryOperator<V> keepFirst = Collections8.<V> keepFirst();
+		Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, keepFirst,
+				mapSupplier);
 		Map<K, V> map = stream.collect(c);
 		return map;
 	}
@@ -615,7 +626,8 @@ public interface Collections8 {
 	}
 
 	public static <T, A> Comparator<T> sortBy(List<A> orderByMe, Function<T, A> map) {
-		return (x, y) -> new Integer(noNegIndex(orderByMe.indexOf(map.apply(x)))).compareTo(new Integer(noNegIndex(orderByMe.indexOf(map.apply(y)))));
+		return (x, y) -> new Integer(noNegIndex(orderByMe.indexOf(map.apply(x))))
+				.compareTo(new Integer(noNegIndex(orderByMe.indexOf(map.apply(y)))));
 	}
 
 	public static <T> Comparator<T> sortBy(List<T> orderByMe) {
@@ -683,7 +695,8 @@ public interface Collections8 {
 	}
 
 	public static <T> Stream<T> stream(boolean parallel, Iterator<T> iterator) {
-		return iterator == null ? Stream.empty() : StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
+		return iterator == null ? Stream.empty()
+				: StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), parallel);
 	}
 
 	public static Stream<String> lines(Path path) {
@@ -727,7 +740,8 @@ public interface Collections8 {
 	public static <T> Stream<T> streamArray(boolean parallel, T... array) {
 		if (array == null)
 			return Stream.empty();
-		// StreamSupport.stream(Spliterators.spliterator(array, 0, array.length, Spliterator.ORDERED | Spliterator.IMMUTABLE), parallel);
+		// StreamSupport.stream(Spliterators.spliterator(array, 0, array.length,
+		// Spliterator.ORDERED | Spliterator.IMMUTABLE), parallel);
 		Stream<T> stream = Arrays.stream(array);
 		if (parallel)
 			stream = stream.parallel();
@@ -941,7 +955,8 @@ public interface Collections8 {
 	}
 
 	public static <T> List<Pair<T>> match(List<T> keys, List<T> values) {
-		return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
+		return values.stream().parallel().filter(containedIn(keys))
+				.map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
 	}
 
 	public static <T> T optional(T value, Supplier<T> orElse) {
@@ -1028,11 +1043,13 @@ public interface Collections8 {
 		return Stream.of(maps).map(Map::entrySet).flatMap(Collection::stream);
 	}
 
-	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
+	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
+			BinaryOperator<V> duplicateValues) {
 		return Collectors.toMap(keyMapper, valueMapper, duplicateValues);
 	}
 
-	public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper, BinaryOperator<V> duplicateValues) {
+	public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper,
+			BinaryOperator<V> duplicateValues) {
 		return collectMap(keyMapper, self(), duplicateValues);
 	}
 
@@ -1041,11 +1058,11 @@ public interface Collections8 {
 	}
 
 	public static <T extends Comparable<? super T>> Comparator<T> natural() {
-		return Comparator.<T>naturalOrder();
+		return Comparator.<T> naturalOrder();
 	}
 
 	public static <T extends Comparable<? super T>> BinaryOperator<T> keepMin() {
-		return keepMin(Collections8.<T>natural());
+		return keepMin(Collections8.<T> natural());
 	}
 
 	public static <T> BinaryOperator<T> keepMin(Comparator<T> comparator) {
@@ -1053,7 +1070,7 @@ public interface Collections8 {
 	}
 
 	public static <T extends Comparable<? super T>> BinaryOperator<T> keepMax() {
-		return keepMax(Collections8.<T>natural());
+		return keepMax(Collections8.<T> natural());
 	}
 
 	public static <T> BinaryOperator<T> keepMax(Comparator<T> comparator) {
@@ -1148,7 +1165,8 @@ public interface Collections8 {
 	}
 
 	/**
-	 * aanTeMakenAct roept teBewaren op met als nieuw object aangeboden door param constructor, constructor en teBewaren zijn niet nullable
+	 * aanTeMakenAct roept teBewaren op met als nieuw object aangeboden door
+	 * param constructor, constructor en teBewaren zijn niet nullable
 	 * 
 	 * @see #sync(Map, Map, BiConsumer, BiConsumer, BiConsumer)
 	 */
@@ -1168,15 +1186,20 @@ public interface Collections8 {
 	 * synchroniseer een nieuwe collectie met een bestaande collecte
 	 *
 	 * @param nieuwe
-	 *            nieuwe collectie vooraf gemapt op key, zie {@link #getMap(Collection, Function)}
+	 *            nieuwe collectie vooraf gemapt op key, zie
+	 *            {@link #getMap(Collection, Function)}
 	 * @param bestaande
-	 *            bestaande collectie vooraf gemapt op key, zie {@link #getMap(Collection, Function)}
+	 *            bestaande collectie vooraf gemapt op key, zie
+	 *            {@link #getMap(Collection, Function)}
 	 * @param teVerwijderenAct
-	 *            nullable, actie op te roepen indien verwijderen, krijgt key en bestaand object binnen
+	 *            nullable, actie op te roepen indien verwijderen, krijgt key en
+	 *            bestaand object binnen
 	 * @param aanTeMakenAct
-	 *            nullable, actie op te roepen indien nieuw object aan te maken, krijgt key en nieuw object binnen
+	 *            nullable, actie op te roepen indien nieuw object aan te maken,
+	 *            krijgt key en nieuw object binnen
 	 * @param teBewaren
-	 *            nullable, actie op te roepen indien overeenkomst, krijgt key en nieuw en bestaand object binnen
+	 *            nullable, actie op te roepen indien overeenkomst, krijgt key
+	 *            en nieuw en bestaand object binnen
 	 * 
 	 * @param <K>
 	 *            key waarop vergeleken moet worden
@@ -1192,9 +1215,12 @@ public interface Collections8 {
 			BiConsumer<K, N> aanTeMakenAct, //
 			BiConsumer<N, B> teBewaren//
 	) {
-		Map<K, B> teVerwijderen = subtract(bestaande.keySet(), nieuwe.keySet()).stream().collect(Collectors.toMap(id(), bestaande::get));
-		Map<K, N> aanTeMaken = subtract(nieuwe.keySet(), bestaande.keySet()).stream().collect(Collectors.toMap(id(), nieuwe::get));
-		Map<N, B> overeenkomst = intersection(nieuwe.keySet(), bestaande.keySet()).stream().collect(Collectors.toMap(nieuwe::get, bestaande::get));
+		Map<K, B> teVerwijderen = subtract(bestaande.keySet(), nieuwe.keySet()).stream()
+				.collect(Collectors.toMap(id(), bestaande::get));
+		Map<K, N> aanTeMaken = subtract(nieuwe.keySet(), bestaande.keySet()).stream()
+				.collect(Collectors.toMap(id(), nieuwe::get));
+		Map<N, B> overeenkomst = intersection(nieuwe.keySet(), bestaande.keySet()).stream()
+				.collect(Collectors.toMap(nieuwe::get, bestaande::get));
 		if (teBewaren != null)
 			overeenkomst.forEach(teBewaren);
 		if (aanTeMakenAct != null)
@@ -1287,5 +1313,18 @@ public interface Collections8 {
 
 	public static Stream<String> split(String string, String delimiter) {
 		return streamArray(string.split(delimiter));
+	}
+
+	public static <T, A> List<T> sortBy(Collection<T> collection, Function<T, A> map) {
+		return sortBy(collection, map, false);
+	}
+
+	public static <T, A> List<T> sortBy(Collection<T> collection, Function<T, A> map, boolean buffer) {
+		return collection.stream().sorted(comparator(map, buffer)).collect(collectList());
+	}
+
+	public static <T> Comparator<T> comparator(Function<T, ?> compareThis, boolean buffer) {
+		Function<T, ?> actual = buffer ? new BufferFunction<>(compareThis) : compareThis;
+		return (t1, t2) -> new CompareToBuilder().append(actual.apply(t1), actual.apply(t2)).toComparison();
 	}
 }
