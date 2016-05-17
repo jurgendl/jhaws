@@ -21,7 +21,7 @@
 	git checkout modules-4.0.4
 	mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy
 	git checkout master
-	mvn versions:set -DnewVersion=4.0.5-SNAPSHOT
+	mvn versions:set -DgenerateBackupPoms=false -DnewVersion=4.0.5-SNAPSHOT
 	delete pom.xml.releaseBackup & release.properties & pom.xml.releaseBackup & pom.xml.versionsBackup
 	commit/commit/push
 	-->
