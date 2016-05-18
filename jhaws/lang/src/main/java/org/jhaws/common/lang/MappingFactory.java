@@ -65,8 +65,7 @@ public class MappingFactory {
 				} else if (targetType.equals(sourceType)) {
 					mapping.add((ctx, source, target) -> targetPD.write(target, sourcePD.read(source)));
 				} else if (this.getConversionService().canConvert(sourceType, targetType)) {
-					mapping.add((ctx, source, target) -> targetPD.write(target,
-							this.convert(sourcePD.read(source), targetType)));
+					mapping.add((ctx, source, target) -> targetPD.write(target, this.convert(sourcePD.read(source), targetType)));
 				} else {
 					mapping.conditional(property);
 				}
@@ -80,8 +79,7 @@ public class MappingFactory {
 	}
 
 	/**
-	 * return previous set {@link ConversionService} or create new
-	 * {@link DefaultConversionService}
+	 * return previous set {@link ConversionService} or create new {@link DefaultConversionService}
 	 */
 	public ConversionService getConversionService() {
 		if (this.conversionService == null) {
@@ -93,10 +91,9 @@ public class MappingFactory {
 	protected Map<String, Property<Object, Object>> info(Class<?> clazz) throws MappingException {
 		if (!this.info.containsKey(clazz)) {
 			try {
-				Map<String, PropertyDescriptor> originalMap = Collections8
-						.streamArray(this.parallel, Introspector.getBeanInfo(clazz).getPropertyDescriptors())
-						.filter((t) -> ((t.getWriteMethod() != null) && (t.getReadMethod() != null))).collect(Collectors
-								.toMap(PropertyDescriptor::getName, Function.<PropertyDescriptor> identity()));
+				Map<String, PropertyDescriptor> originalMap = Collections8.streamArray(this.parallel, Introspector.getBeanInfo(clazz).getPropertyDescriptors())
+						.filter((t) -> ((t.getWriteMethod() != null) && (t.getReadMethod() != null)))
+						.collect(Collectors.toMap(PropertyDescriptor::getName, Function.<PropertyDescriptor>identity()));
 				Map<String, Property<Object, Object>> convertedMap = Collections8.stream(this.parallel, originalMap)
 						.collect(Collectors.toMap(Entry::getKey, e -> new Property<>(e.getValue())));
 				this.info.put(clazz, convertedMap);
@@ -171,26 +168,21 @@ public class MappingFactory {
 	}
 
 	protected <S, T> T[] mapArray(Map<Object, Object> context, S[] sourceArray, Class<T> targetClass) {
-		return Collections8
-				.array(this.mapArrayToCollection(context, sourceArray, targetClass, Collections8.collectList()));
+		return Collections8.array((Class<T>) Object.class, this.mapArrayToCollection(context, sourceArray, targetClass, Collections8.collectList()));
 	}
 
-	protected <S, T, Col> Col mapArrayToCollection(Map<Object, Object> context, S[] sourceArray, Class<T> targetClass,
-			Collector<T, ?, Col> factory) {
+	protected <S, T, Col> Col mapArrayToCollection(Map<Object, Object> context, S[] sourceArray, Class<T> targetClass, Collector<T, ?, Col> factory) {
 		return this.mapStream(context, Collections8.streamArray(this.parallel, sourceArray), targetClass, factory);
 	}
 
-	protected <S, T, Col> Col mapCollection(Map<Object, Object> context, Collection<S> sourceCollection,
-			Class<T> targetClass, Collector<T, ?, Col> factory) {
+	protected <S, T, Col> Col mapCollection(Map<Object, Object> context, Collection<S> sourceCollection, Class<T> targetClass, Collector<T, ?, Col> factory) {
 		return this.mapStream(context, Collections8.stream(this.parallel, sourceCollection), targetClass, factory);
 	}
 
-	protected <S, T> T[] mapCollectionToArray(Map<Object, Object> context, Collection<S> sourceCollection,
-			Class<T> targetClass) {
+	protected <S, T> T[] mapCollectionToArray(Map<Object, Object> context, Collection<S> sourceCollection, Class<T> targetClass) {
 		// return Collections8.toArray(targetClass, this.mapCollection(context,
 		// sourceCollection, targetClass, Collections8.list()));
-		return Collections8.array(this.mapCollection(context, sourceCollection, targetClass,
-				Collections8.toCollector(Collections8.newList())));
+		return Collections8.array((Class<T>) Object.class, this.mapCollection(context, sourceCollection, targetClass, Collections8.toCollector(Collections8.newList())));
 	}
 
 	/**
@@ -211,8 +203,7 @@ public class MappingFactory {
 		return (Mapping<S, T>) this.mappings.get(classPair);
 	}
 
-	protected <S, T, Col> Col mapStream(Map<Object, Object> context, Stream<S> stream, Class<T> targetClass,
-			Collector<T, ?, Col> factory) {
+	protected <S, T, Col> Col mapStream(Map<Object, Object> context, Stream<S> stream, Class<T> targetClass, Collector<T, ?, Col> factory) {
 		return stream.map(source -> this.map(context, source, targetClass)).collect(factory);
 	}
 
