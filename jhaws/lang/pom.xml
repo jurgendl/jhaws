@@ -17,7 +17,7 @@
 		<version.javassist>3.20.0-GA</version.javassist>
 		<version.lambdaj>2.3.3</version.lambdaj>
 		<version.cglib>3.2.1</version.cglib>
-		<version.spring>4.2.5.RELEASE</version.spring>
+		<version.spring>4.2.6.RELEASE</version.spring>
 	</properties>
 	<dependencies>
 		<dependency>
