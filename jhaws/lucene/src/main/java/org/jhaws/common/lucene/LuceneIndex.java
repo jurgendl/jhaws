@@ -4,15 +4,15 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.lucene.document.Field.Store.NO;
 import static org.apache.lucene.document.Field.Store.YES;
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
-import static org.jhaws.common.lang.Collections8.collectList;
-import static org.jhaws.common.lang.Collections8.groupBy;
-import static org.jhaws.common.lang.Collections8.match;
-import static org.jhaws.common.lang.Collections8.notContainedIn;
-import static org.jhaws.common.lang.Collections8.optional;
-import static org.jhaws.common.lang.Collections8.split;
-import static org.jhaws.common.lang.Collections8.stream;
-import static org.jhaws.common.lang.Collections8.streamDeepValues;
-import static org.jhaws.common.lang.Collections8.toList;
+import static org.jhaws.common.lang.CollectionUtils8.collectList;
+import static org.jhaws.common.lang.CollectionUtils8.groupBy;
+import static org.jhaws.common.lang.CollectionUtils8.match;
+import static org.jhaws.common.lang.CollectionUtils8.notContainedIn;
+import static org.jhaws.common.lang.CollectionUtils8.optional;
+import static org.jhaws.common.lang.CollectionUtils8.split;
+import static org.jhaws.common.lang.CollectionUtils8.stream;
+import static org.jhaws.common.lang.CollectionUtils8.streamDeepValues;
+import static org.jhaws.common.lang.CollectionUtils8.toList;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -50,7 +50,7 @@ import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.Version;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.lang.Collections8;
+import org.jhaws.common.lang.CollectionUtils8;
 import org.jhaws.common.lang.Pair;
 import org.jhaws.common.lang.functions.EConsumer;
 import org.jhaws.common.lang.functions.ESupplier;
@@ -294,9 +294,9 @@ public class LuceneIndex implements Runnable {
 				f.setVersion(docVersion);
 		});
 
-		Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) Collections8::consume);
-		Consumer<F> onCreate = optional(onCreateOptional, (Supplier<Consumer<F>>) Collections8::consume);
-		BiConsumer<F, F> onRematch2 = optional(onRematchOptional, (Supplier<BiConsumer<F, F>>) Collections8::biconsume);
+		Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
+		Consumer<F> onCreate = optional(onCreateOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
+		BiConsumer<F, F> onRematch2 = optional(onRematchOptional, (Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
 		Consumer<Pair<F>> onRematch = p -> onRematch2.accept(p.getKey(), p.getValue());
 
 		List<F> delete = indexed.parallelStream().filter(notContainedIn(fetched)).collect(collectList());

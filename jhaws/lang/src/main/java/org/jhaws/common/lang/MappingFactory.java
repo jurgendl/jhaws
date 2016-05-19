@@ -1,5 +1,12 @@
 package org.jhaws.common.lang;
 
+import static org.jhaws.common.lang.CollectionUtils8.array;
+import static org.jhaws.common.lang.CollectionUtils8.collectList;
+import static org.jhaws.common.lang.CollectionUtils8.newList;
+import static org.jhaws.common.lang.CollectionUtils8.stream;
+import static org.jhaws.common.lang.CollectionUtils8.streamArray;
+import static org.jhaws.common.lang.CollectionUtils8.toCollector;
+
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -91,11 +98,10 @@ public class MappingFactory {
 	protected Map<String, Property<Object, Object>> info(Class<?> clazz) throws MappingException {
 		if (!this.info.containsKey(clazz)) {
 			try {
-				Map<String, PropertyDescriptor> originalMap = Collections8.streamArray(this.parallel, Introspector.getBeanInfo(clazz).getPropertyDescriptors())
+				Map<String, PropertyDescriptor> originalMap = streamArray(this.parallel, Introspector.getBeanInfo(clazz).getPropertyDescriptors())
 						.filter((t) -> ((t.getWriteMethod() != null) && (t.getReadMethod() != null)))
 						.collect(Collectors.toMap(PropertyDescriptor::getName, Function.<PropertyDescriptor>identity()));
-				Map<String, Property<Object, Object>> convertedMap = Collections8.stream(this.parallel, originalMap)
-						.collect(Collectors.toMap(Entry::getKey, e -> new Property<>(e.getValue())));
+				Map<String, Property<Object, Object>> convertedMap = stream(this.parallel, originalMap).collect(Collectors.toMap(Entry::getKey, e -> new Property<>(e.getValue())));
 				this.info.put(clazz, convertedMap);
 			} catch (IntrospectionException ex) {
 				throw new MappingException(ex);
@@ -168,21 +174,21 @@ public class MappingFactory {
 	}
 
 	protected <S, T> T[] mapArray(Map<Object, Object> context, S[] sourceArray, Class<T> targetClass) {
-		return Collections8.array((Class<T>) Object.class, this.mapArrayToCollection(context, sourceArray, targetClass, Collections8.collectList()));
+		return array((Class<T>) Object.class, this.mapArrayToCollection(context, sourceArray, targetClass, collectList()));
 	}
 
 	protected <S, T, Col> Col mapArrayToCollection(Map<Object, Object> context, S[] sourceArray, Class<T> targetClass, Collector<T, ?, Col> factory) {
-		return this.mapStream(context, Collections8.streamArray(this.parallel, sourceArray), targetClass, factory);
+		return this.mapStream(context, streamArray(this.parallel, sourceArray), targetClass, factory);
 	}
 
 	protected <S, T, Col> Col mapCollection(Map<Object, Object> context, Collection<S> sourceCollection, Class<T> targetClass, Collector<T, ?, Col> factory) {
-		return this.mapStream(context, Collections8.stream(this.parallel, sourceCollection), targetClass, factory);
+		return this.mapStream(context, stream(this.parallel, sourceCollection), targetClass, factory);
 	}
 
 	protected <S, T> T[] mapCollectionToArray(Map<Object, Object> context, Collection<S> sourceCollection, Class<T> targetClass) {
 		// return Collections8.toArray(targetClass, this.mapCollection(context,
 		// sourceCollection, targetClass, Collections8.list()));
-		return Collections8.array((Class<T>) Object.class, this.mapCollection(context, sourceCollection, targetClass, Collections8.toCollector(Collections8.newList())));
+		return array((Class<T>) Object.class, this.mapCollection(context, sourceCollection, targetClass, toCollector(newList())));
 	}
 
 	/**

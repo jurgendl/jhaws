@@ -24,7 +24,7 @@ public class ParentIterator<T> implements Iterator<T> {
 		Objects.nonNull(initial);
 		this.initial = initial;
 		this.nextItem = new BufferUnaryOperator<>(nextItem);
-		this.accept = accept == null ? Collections8.<T>notNull() : Collections8.<T>notNull().and(accept);
+		this.accept = accept == null ? CollectionUtils8.<T>notNull() : CollectionUtils8.<T>notNull().and(accept);
 	}
 
 	@Override

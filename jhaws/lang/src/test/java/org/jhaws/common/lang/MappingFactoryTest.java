@@ -1,5 +1,8 @@
 package org.jhaws.common.lang;
 
+import static org.jhaws.common.lang.CollectionUtils8.newList;
+import static org.jhaws.common.lang.CollectionUtils8.toCollector;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +86,7 @@ public class MappingFactoryTest {
 		pc.add(p2);
 		Pojo[] pa = { p1, p2 };
 		{
-			List<DTO> c = this.mappingFactory.map(pc, DTO.class, Collections8.toCollector(Collections8.newList()));
+			List<DTO> c = this.mappingFactory.map(pc, DTO.class, toCollector(newList()));
 			Assert.assertEquals(pc.size(), c.size());
 			Assert.assertEquals(c.get(0).getVeld1(), p1.getVeld1());
 			Assert.assertEquals(c.get(0).getVeld2().intValue(), p1.getVeld2());
@@ -113,7 +116,7 @@ public class MappingFactoryTest {
 			Assert.assertEquals(a[1].getVeld3(), p2.getVeld3());
 		}
 		{
-			List<DTO> c = this.mappingFactory.map(pa, DTO.class, Collections8.toCollector(Collections8.newList()));
+			List<DTO> c = this.mappingFactory.map(pa, DTO.class, toCollector(newList()));
 			Assert.assertEquals(pc.size(), c.size());
 			Assert.assertEquals(c.get(0).getVeld1(), p1.getVeld1());
 			Assert.assertEquals(c.get(0).getVeld2().intValue(), p1.getVeld2());

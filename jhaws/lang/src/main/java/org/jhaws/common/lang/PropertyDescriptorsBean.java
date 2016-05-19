@@ -4,11 +4,11 @@ import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Collections.unmodifiableMap;
-import static org.jhaws.common.lang.Collections8.collectMap;
-import static org.jhaws.common.lang.Collections8.notNull;
-import static org.jhaws.common.lang.Collections8.stream;
-import static org.jhaws.common.lang.Collections8.streamArray;
-import static org.jhaws.common.lang.Collections8.streamMaps;
+import static org.jhaws.common.lang.CollectionUtils8.collectMap;
+import static org.jhaws.common.lang.CollectionUtils8.notNull;
+import static org.jhaws.common.lang.CollectionUtils8.stream;
+import static org.jhaws.common.lang.CollectionUtils8.streamArray;
+import static org.jhaws.common.lang.CollectionUtils8.streamMaps;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;

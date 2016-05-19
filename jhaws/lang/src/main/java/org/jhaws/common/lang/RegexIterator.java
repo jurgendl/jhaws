@@ -122,7 +122,7 @@ public class RegexIterator implements Iterator<Match>, Match {
 	}
 
 	public Stream<Match> stream() {
-		return Collections8.stream(this);
+		return CollectionUtils8.stream(this);
 	}
 
 	public List<List<String>> all() {
