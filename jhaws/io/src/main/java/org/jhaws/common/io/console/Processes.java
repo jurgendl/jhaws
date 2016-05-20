@@ -1,4 +1,4 @@
-package org.jhaws.common.io;
+package org.jhaws.common.io.console;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.FilePath.Iterators.LineIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,13 @@ public class Processes {
 		@Override
 		public void accept(String t) {
 			System.out.println("> " + t);
+		}
+	}
+
+	public static class Log implements Consumer<String> {
+		@Override
+		public void accept(String t) {
+			logger.info("> " + t);
 		}
 	}
 
@@ -129,11 +137,27 @@ public class Processes {
 			int exitValue = process.waitFor();
 			if (allConsumers != null)
 				allConsumers.accept("exit value=" + exitValue);
+			if (exitValue != 0)
+				throw new ExitValueException(exitValue);
 		} catch (InterruptedException e) {
 			//
 		} finally {
 			process.destroy();
 		}
 		return consumer;
+	}
+
+	public static class ExitValueException extends RuntimeException {
+		private static final long serialVersionUID = 1501172862513358486L;
+		private int exitValue;
+
+		public ExitValueException(int exitValue) {
+			super(String.valueOf(exitValue));
+			this.exitValue = exitValue;
+		}
+
+		public int getExitValue() {
+			return this.exitValue;
+		}
 	}
 }
