@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Properties;
 
-import org.jhaws.common.lang.Executor;
+import org.jhaws.common.io.console.ProcessExecutor;
 import org.jhaws.common.lang.IMap;
 import org.jhaws.common.lang.Value;
 import org.jhaws.common.svn.xml.SvnInfo;
@@ -71,7 +71,7 @@ public class SvnExec {
 	 * svn ls --xml {path} --non-interactive
 	 */
 	public static SvnList list(File projectdir, String path) {
-		return Svn.lists(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_ls)));
+		return Svn.lists(new ByteArrayInputStream(ProcessExecutor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_ls)));
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class SvnExec {
 	 */
 	public static int revert(File projectdir) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters(), cmds_svn_revert);
+		ProcessExecutor.exec(returnValue, true, projectdir, createParameters(), cmds_svn_revert);
 		return returnValue.getValue();
 	}
 
@@ -88,7 +88,7 @@ public class SvnExec {
 	 */
 	public static int update(File projectdir) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters(), cmds_svn_update);
+		ProcessExecutor.exec(returnValue, true, projectdir, createParameters(), cmds_svn_update);
 		return returnValue.getValue();
 	}
 
@@ -97,7 +97,7 @@ public class SvnExec {
 	 */
 	public static SvnStatus status(File projectdir, boolean noIgnore) {
 		return Svn.status(
-				new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, createParameters().add("noignore", noIgnore ? "--no-ignore" : ""), cmds_svn_status)));
+				new ByteArrayInputStream(ProcessExecutor.exec(new Value<>(-1), false, projectdir, createParameters().add("noignore", noIgnore ? "--no-ignore" : ""), cmds_svn_status)));
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class SvnExec {
 	 */
 	public static int commit(File projectdir, String changelistName, File logfile) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters().add("changelistName", changelistName).add("log", logfile.getAbsolutePath()), cmds_svn_commit);
+		ProcessExecutor.exec(returnValue, true, projectdir, createParameters().add("changelistName", changelistName).add("log", logfile.getAbsolutePath()), cmds_svn_commit);
 		return returnValue.getValue();
 	}
 
@@ -114,7 +114,7 @@ public class SvnExec {
 	 */
 	public static int commitDirect(File projectdir, File logfile) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters().add("log", logfile.getAbsolutePath()), cmds_svn_commit_direct);
+		ProcessExecutor.exec(returnValue, true, projectdir, createParameters().add("log", logfile.getAbsolutePath()), cmds_svn_commit_direct);
 		return returnValue.getValue();
 	}
 
@@ -123,7 +123,7 @@ public class SvnExec {
 	 */
 	public static int changelist(File projectdir, String changelistName, String files) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters().add("changelistName", changelistName).add("files", files), cmds_svn_changelist);
+		ProcessExecutor.exec(returnValue, true, projectdir, createParameters().add("changelistName", changelistName).add("files", files), cmds_svn_changelist);
 		return returnValue.getValue();
 	}
 
@@ -132,7 +132,7 @@ public class SvnExec {
 	 */
 	public static int changelistClear(File projectdir, String changelistName) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters().copy().add("changelistName", changelistName), cmds_svn_changelist_clear);
+		ProcessExecutor.exec(returnValue, true, projectdir, createParameters().copy().add("changelistName", changelistName), cmds_svn_changelist_clear);
 		return returnValue.getValue();
 	}
 
@@ -147,7 +147,7 @@ public class SvnExec {
 	 * svn info {path} --non-interactive --xml
 	 */
 	public static SvnInfo info(File projectdir, String path) {
-		return Svn.info(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_info)));
+		return Svn.info(new ByteArrayInputStream(ProcessExecutor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_info)));
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class SvnExec {
 	 */
 	public static int switchBranch(File projectdir, String latest) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, true, projectdir, createParameters().add("url", latest), cmds_svn_switch);
+		ProcessExecutor.exec(returnValue, true, projectdir, createParameters().add("url", latest), cmds_svn_switch);
 		return returnValue.getValue();
 	}
 
@@ -164,14 +164,14 @@ public class SvnExec {
 	 */
 	public static SvnLog log(File projectdir, String r, int limit) {
 		return Svn
-				.log(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
+				.log(new ByteArrayInputStream(ProcessExecutor.exec(new Value<>(-1), false, projectdir, createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
 	}
 
 	/**
 	 * svn log -v -q --stop-on-copy --xml {path} --non-interactive
 	 */
 	public static SvnLog log2(File projectdir, String path) {
-		return Svn.log(new ByteArrayInputStream(Executor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_log2)));
+		return Svn.log(new ByteArrayInputStream(ProcessExecutor.exec(new Value<>(-1), false, projectdir, new IMap<String, String>().add("path", path), cmds_svn_log2)));
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class SvnExec {
 	 */
 	public static int copy(File projectdir, String branchurl, String path) {
 		Value<Integer> returnValue = new Value<>(-1);
-		Executor.exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("path", path), cmds_svn_copy);
+		ProcessExecutor.exec(returnValue, false, projectdir, createParameters().add("branchurl", branchurl).add("path", path), cmds_svn_copy);
 		return returnValue.getValue();
 	}
 }

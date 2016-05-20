@@ -1,4 +1,4 @@
-package org.jhaws.common.lang;
+package org.jhaws.common.io.console;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,11 +15,13 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.jhaws.common.lang.IMap;
+import org.jhaws.common.lang.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Executor {
-	private static final Logger logger = LoggerFactory.getLogger(Executor.class);
+public class ProcessExecutor {
+	private static final Logger logger = LoggerFactory.getLogger(ProcessExecutor.class);
 
 	public static class MultiParseProcessOutput implements ParseProcessOutput {
 		/** others */
@@ -150,8 +152,8 @@ public class Executor {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		try {
 			OutParseProcessOutput boutppo = new OutParseProcessOutput(bout);
-			returnValue.setValue(Executor.parseProcessOutput(Executor.create(projectdir, null, cmds).start(),
-					print ? new Executor.MultiParseProcessOutput(boutppo, line -> logger.info("{}", line)) : boutppo));
+			returnValue.setValue(ProcessExecutor.parseProcessOutput(ProcessExecutor.create(projectdir, null, cmds).start(),
+					print ? new ProcessExecutor.MultiParseProcessOutput(boutppo, line -> logger.info("{}", line)) : boutppo));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -163,5 +165,4 @@ public class Executor {
 	public static InputStream call(Value<Integer> returnValue, File projectRoot, IMap<String, String> prms, String... cmd) {
 		return new ByteArrayInputStream(exec(returnValue, false, projectRoot, prms, cmd));
 	}
-
 }
