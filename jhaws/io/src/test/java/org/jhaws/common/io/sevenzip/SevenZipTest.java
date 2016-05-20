@@ -12,8 +12,8 @@ public class SevenZipTest {
 		tmp.child("testfile1.txt").write("testfile1.txt");
 		tmp.child("subdir").createDirectoryIfNotExists().child("testfile2.txt").write("testfile2.txt");
 		FilePath archive = tmpdir.child("7ztestarchive.7z");
-		ws7.compress(archive, tmp.getAbsolutePath() + "/*.*");
-		ws7.list(archive);
+		ws7.compress(archive, null, tmp.getAbsolutePath() + "/*.*");
+		ws7.list(archive, null);
 		FilePath target = tmpdir.child("7ztestextract");
 		ws7.extract(archive, null, target);
 	}

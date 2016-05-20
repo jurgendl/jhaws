@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.console.ProcessExecutor;
 import org.jhaws.common.lang.Value;
@@ -104,40 +105,46 @@ public class SevenZip {
 		}
 	}
 
-	public void compress(FilePath archive, String... sources) {
+	public void compress(FilePath archive, String password, String... sources) {
 		List<String> cmd = new ArrayList<>();
 		cmd.add(executable.getAbsolutePath());
 		cmd.add("a");
 		cmd.add("-bd");
 		cmd.add("-r");
 		cmd.add("-y");
+		if (StringUtils.isNotBlank(password))
+			cmd.add("-p" + password);
 		cmd.add(archive.getAbsolutePath());
 		cmd.addAll(Arrays.asList(sources));
 		exec(archive.getParentPath().toFile(), cmd);
 	}
 
-	public void extract(FilePath archive, String filter, FilePath target) {
-		if (filter == null)
-			filter = "*.*";
+	public void extract(FilePath archive, String password, FilePath target, String... filters) {
+		if (filters == null)
+			filters = new String[] { "*.*" };
 		List<String> cmd = new ArrayList<>();
 		cmd.add(executable.getAbsolutePath());
 		cmd.add("x");
 		cmd.add("-bd");
 		cmd.add("-r");
 		cmd.add("-y");
+		if (StringUtils.isNotBlank(password))
+			cmd.add("-p" + password);
 		cmd.add(archive.getAbsolutePath());
 		cmd.add(target.getAbsolutePath());
-		cmd.add(filter);
+		cmd.addAll(Arrays.asList(filters));
 		exec(archive.getParentPath().toFile(), cmd);
 	}
 
-	public void list(FilePath archive) {
+	public void list(FilePath archive, String password) {
 		List<String> cmd = new ArrayList<>();
 		cmd.add(executable.getAbsolutePath());
 		cmd.add("l");
 		cmd.add("-bd");
 		cmd.add("-r");
 		cmd.add("-y");
+		if (StringUtils.isNotBlank(password))
+			cmd.add("-p" + password);
 		cmd.add(archive.getAbsolutePath());
 		exec(archive.getParentPath().toFile(), cmd);
 	}
