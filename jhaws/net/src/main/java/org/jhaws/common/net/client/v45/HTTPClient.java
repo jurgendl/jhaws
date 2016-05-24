@@ -16,7 +16,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -483,17 +482,24 @@ public class HTTPClient implements Closeable {
 		throw new RuntimeException(cause);
 	}
 
-	@SuppressWarnings("deprecation")
 	protected void prepareRequest(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-		req.getParams().setParameter(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, HTTPClientDefaults.SINGLE_COOKIE_HEADER);
+		prepareRequest_singleCookieHeader(params, req);
+		prepareRequest_accept(params, req);
+		prepareRequest_additionalHeaders(params, req);
+	}
+
+	protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+		req.setHeader(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, String.valueOf(HTTPClientDefaults.SINGLE_COOKIE_HEADER));
+	}
+
+	protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+		if (params != null && params.getAccept() != null)
+			req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+	}
+
+	protected void prepareRequest_additionalHeaders(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
 		if (params != null) {
-			if (params.getAccept() != null)
-				req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
-			for (Map.Entry<String, Object> h : params.getHeaders().entrySet()) {
-				if (h.getValue() == null)
-					continue;
-				req.setHeader(h.getKey(), String.valueOf(h.getValue()));
-			}
+			params.getHeaders().entrySet().stream().filter(h -> h.getValue() != null).forEach(h -> req.setHeader(h.getKey(), String.valueOf(h.getValue())));
 		}
 	}
 
