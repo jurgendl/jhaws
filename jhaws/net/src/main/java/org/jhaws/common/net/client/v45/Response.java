@@ -90,7 +90,7 @@ public class Response implements Serializable {
 	}
 
 	public Form getForm(String id) {
-		return getForms().stream().filter(f -> f.getId().equals(id)).findFirst().get();
+		return getForms().stream().filter(f -> f.getId().equals(id)).findFirst().orElse(null);
 	}
 
 	@Override
