@@ -1679,7 +1679,7 @@ public class FilePath implements Path, Externalizable {
 
 	public BasicFileAttributes getAttributes() {
 		try {
-			return Files.readAttributes(this, BasicFileAttributes.class);
+			return Files.readAttributes(getPath(), BasicFileAttributes.class);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
