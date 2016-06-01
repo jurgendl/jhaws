@@ -1677,6 +1677,22 @@ public class FilePath implements Path, Externalizable {
 		return FilePath.grabber.getLargeIcon(this);
 	}
 
+	public BasicFileAttributes getAttributes() {
+		try {
+			return Files.readAttributes(this, BasicFileAttributes.class);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public FileTime getLastAccessTime() {
+		return getAttributes().lastAccessTime();
+	}
+
+	public FileTime getCreationTime() {
+		return getAttributes().creationTime();
+	}
+
 	public FileTime getLastModifiedTime(LinkOption... options) {
 		try {
 			return Files.getLastModifiedTime(this.getPath(), options);
