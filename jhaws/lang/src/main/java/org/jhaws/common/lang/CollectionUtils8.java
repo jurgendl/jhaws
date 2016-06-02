@@ -1302,4 +1302,8 @@ public interface CollectionUtils8 {
 	public static <T> Comparator<T> comparator(Function<T, ?> compareThis) {
 		return (t1, t2) -> new CompareToBuilder().append(compareThis.apply(t1), compareThis.apply(t2)).toComparison();
 	}
+
+	public static <T, U> Stream<U> filterClass(Stream<T> stream, Class<U> type) {
+		return stream.filter(t -> type.isAssignableFrom(t.getClass())).map(t -> type.cast(t));
+	}
 }
