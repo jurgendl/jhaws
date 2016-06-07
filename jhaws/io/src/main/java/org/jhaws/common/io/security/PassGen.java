@@ -33,7 +33,16 @@ public class PassGen {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(pass(20));
+		System.out.println(specialpass());
+		System.out.println(pass());
+	}
+
+	public static String specialpass(int length) {
+		return pass(length, PassType.lowercase, PassType.uppercase, PassType.numbers, PassType.special);
+	}
+
+	public static String specialpass() {
+		return specialpass(20);
 	}
 
 	public static String pass(int length) {
@@ -41,7 +50,7 @@ public class PassGen {
 	}
 
 	public static String pass() {
-		return pass(30);
+		return pass(20);
 	}
 
 	public static String pass(int length, PassType type, PassType... types) {
