@@ -24,6 +24,7 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
@@ -1305,5 +1306,9 @@ public interface CollectionUtils8 {
 
 	public static <T, U> Stream<U> filterClass(Stream<T> stream, Class<U> type) {
 		return stream.filter(t -> type.isAssignableFrom(t.getClass())).map(t -> type.cast(t));
+	}
+
+	public static Stream<Pair<String>> stream(Properties properties) {
+		return stream(false, properties).map(entry -> new Pair<>(String.valueOf(entry.getKey()), String.valueOf(entry.getValue())));
 	}
 }
