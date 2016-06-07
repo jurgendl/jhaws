@@ -16,7 +16,7 @@ public class PassGen {
 
 	private static final String STRING_UC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	private static final String STRING_SP = "~!#$%^_-+[](){}<>";
+	private static final String STRING_SP = "~#$%^_-";
 
 	private static final SecureRandom random = new SecureRandom();
 
@@ -33,11 +33,15 @@ public class PassGen {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(pass());
+		System.out.println(pass(20));
+	}
+
+	public static String pass(int length) {
+		return pass(length, PassType.lowercase, PassType.uppercase, PassType.numbers);
 	}
 
 	public static String pass() {
-		return pass(30, PassType.lowercase, PassType.uppercase, PassType.numbers, PassType.special);
+		return pass(30);
 	}
 
 	public static String pass(int length, PassType type, PassType... types) {
@@ -64,7 +68,8 @@ public class PassGen {
 			length -= 1;
 			S += STRING_SP;
 		}
-		RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random).chars().mapToObj(c -> String.valueOf((char) c)).forEach(list::add);
+		RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random).chars()
+				.mapToObj(c -> String.valueOf((char) c)).forEach(list::add);
 		Collections.shuffle(list);
 		String p = list.stream().collect(Collectors.joining());
 		return p;
