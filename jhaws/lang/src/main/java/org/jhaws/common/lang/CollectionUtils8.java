@@ -576,6 +576,10 @@ public interface CollectionUtils8 {
 		return Collectors.toList();
 	}
 
+	public static <T, C extends Collection<T>> Collector<T, ?, C> collection(Supplier<C> newCollection) {
+		return Collectors.toCollection(newCollection);
+	}
+
 	public static <T> ListCollector<T> collectListUQ() {
 		return new ListUQCollector<>();
 	}
