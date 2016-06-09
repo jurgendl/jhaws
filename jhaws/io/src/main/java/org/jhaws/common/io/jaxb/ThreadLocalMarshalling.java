@@ -36,7 +36,7 @@ public class ThreadLocalMarshalling {
 
 	protected boolean formatOutput = true;
 
-	private static JAXBContext getJaxbContext(Class<?> atLeastOneClass, Class<?>... dtoClasses) {
+	public static JAXBContext getJaxbContext(Class<?> atLeastOneClass, Class<?>... dtoClasses) {
 		try {
 			List<Class<?>> tmp = new ArrayList<>();
 			tmp.add(atLeastOneClass);
@@ -48,7 +48,7 @@ public class ThreadLocalMarshalling {
 		}
 	}
 
-	private static JAXBContext getJaxbContext(Package atLeastOnePackage, Package... packages) {
+	public static List<Class<?>> getJaxbClasses(Package atLeastOnePackage, Package... packages) {
 		// @XmlType(factoryClass=ObjectFactory.class, factoryMethod="createBean")
 		List<Package> tmp = new ArrayList<>();
 		tmp.add(atLeastOnePackage);
@@ -64,7 +64,7 @@ public class ThreadLocalMarshalling {
 		};
 		scanner.addIncludeFilter(TypeFilter);
 		List<Class<?>> classesToBeBound = new ArrayList<>();
-		for (Package p : tmp)
+		for (Package p : tmp) {
 			for (BeanDefinition bd : scanner.findCandidateComponents(p.getName())) {
 				try {
 					classesToBeBound.add(Class.forName(bd.getBeanClassName()));
@@ -72,6 +72,12 @@ public class ThreadLocalMarshalling {
 					throw new RuntimeException(ex);
 				}
 			}
+		}
+		return classesToBeBound;
+	}
+
+	public static JAXBContext getJaxbContext(Package atLeastOnePackage, Package... packages) {
+		List<Class<?>> classesToBeBound = getJaxbClasses(atLeastOnePackage, packages);
 		try {
 			return JAXBContext.newInstance(classesToBeBound.toArray(new Class[classesToBeBound.size()]));
 		} catch (JAXBException ex) {
