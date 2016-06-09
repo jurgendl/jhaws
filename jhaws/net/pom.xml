@@ -15,6 +15,11 @@
 		<version.logback>1.1.7</version.logback>
 		<version.commons.lang3>3.4</version.commons.lang3>
 		<version.bouncycastle>1.54</version.bouncycastle>
+        <version.httpcomponents>4.5.2</version.httpcomponents>
+        <version.httpcomponents.nio>4.4.4</version.httpcomponents.nio>
+        <version.httpcomponents.cache>4.1.1</version.httpcomponents.cache>
+        <version.resteasy>3.0.12.Final</version.resteasy>
+        <version.xhtmlrenderer>9.0.8</version.xhtmlrenderer>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -58,12 +63,12 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
-			<version>4.5.2</version>
+			<version>${version.httpcomponents}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.2</version>
+			<version>${version.httpcomponents}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-logging</artifactId>
@@ -78,17 +83,17 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient-win</artifactId>
-			<version>4.5.2</version>
+			<version>${version.httpcomponents}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore-nio</artifactId>
-			<version>4.4.4</version>
+			<version>${version.httpcomponents.nio}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient-cache</artifactId>
-			<version>4.5.2</version>
+			<version>${version.httpcomponents}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-logging</artifactId>
@@ -99,7 +104,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
-			<version>4.1.1</version>
+			<version>${version.httpcomponents.cache}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>commons-logging</artifactId>
@@ -130,12 +135,7 @@
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
 			<artifactId>flying-saucer-pdf-itext5</artifactId>
-			<version>9.0.8</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>jaxrs-api</artifactId>
-			<version>3.0.12.Final</version>
+			<version>${version.xhtmlrenderer}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jtidy</groupId>
@@ -156,7 +156,7 @@
 			<version>1.9.22</version>
 			<scope>test</scope>
 			<optional>true</optional>
-		</dependency>	
+		</dependency>
 		<dependency>
 			<groupId>org.ccil.cowan.tagsoup</groupId>
 			<artifactId>tagsoup</artifactId>
@@ -179,29 +179,34 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>jaxrs-api</artifactId>
+			<version>${version.resteasy}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-client</artifactId>
-			<version>3.0.12.Final</version>
+			<version>${version.resteasy}</version>
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxb-provider</artifactId>
-			<version>3.0.12.Final</version>
+			<version>${version.resteasy}</version>
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-json-p-provider</artifactId>
-			<version>3.0.12.Final</version>
+			<version>${version.resteasy}</version>
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-multipart-provider</artifactId>
-			<version>3.0.12.Final</version>
+			<version>${version.resteasy}</version>
 			<scope>test</scope>
 			<optional>true</optional>
 			<exclusions>
@@ -214,7 +219,7 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>tjws</artifactId>
-			<version>3.0.12.Final</version>
+			<version>${version.resteasy}</version>
 			<scope>test</scope>
 			<optional>true</optional>
 			<exclusions>
