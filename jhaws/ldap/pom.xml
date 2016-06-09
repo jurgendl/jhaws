@@ -22,8 +22,8 @@
 		<maven.compiler.verbose>true</maven.compiler.verbose>
 		<maven.compiler.debug>true</maven.compiler.debug>
 		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<!-- versions -->
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<version.junit>4.12</version.junit>
 		<version.slf4j>1.7.21</version.slf4j>
 		<version.logback>1.1.7</version.logback>
