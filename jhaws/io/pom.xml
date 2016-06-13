@@ -20,11 +20,11 @@
         <version.commons.io>2.5</version.commons.io>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.jhaws.common</groupId>
-			<artifactId>jhaws-io</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${version.commons.io}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-lang</artifactId>

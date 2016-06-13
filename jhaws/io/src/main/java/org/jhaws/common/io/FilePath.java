@@ -90,6 +90,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.jhaws.common.io.FilePath.Filters.DirectoryFilter;
@@ -2683,5 +2684,21 @@ public class FilePath implements Path, Externalizable {
 			}
 		});
 		return this;
+	}
+
+	public void write(InputStream binaryStream) {
+		try (BufferedInputStream in = new BufferedInputStream(binaryStream); BufferedOutputStream out = newBufferedOutputStream()) {
+			IOUtils.copy(in, out);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public void read(OutputStream binaryStream) {
+		try (BufferedOutputStream out = new BufferedOutputStream(binaryStream); BufferedInputStream in = newBufferedInputStream()) {
+			IOUtils.copy(in, out);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
 	}
 }
