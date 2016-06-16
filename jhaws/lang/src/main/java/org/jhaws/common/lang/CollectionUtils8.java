@@ -135,11 +135,21 @@ public interface CollectionUtils8 {
 		/** default vorig type */
 		<X> Opt<X> opt(Function<T, X> getter);
 
+		/** default vorig type */
+		default <X> Opt<X> nest(Function<T, X> getter) {
+			return opt(getter);
+		}
+
 		/** ga verder eager */
 		<X> Opt<X> eager(Function<T, X> getter);
 
 		/** ga verder reusable = lazy */
 		<X> Opt<X> reusable(Function<T, X> getter);
+
+		/** ga verder reusable = lazy */
+		default <X> Opt<X> lazy(Function<T, X> getter) {
+			return reusable(getter);
+		};
 
 		/** geeft waarde terug */
 		T get();
@@ -174,6 +184,11 @@ public interface CollectionUtils8 {
 		/** start reusable = lazy */
 		public static <T> Opt<T> reusable(T value) {
 			return new OptReusable<>(value);
+		}
+
+		/** start reusable = lazy */
+		public static <T> Opt<T> lazy(T value) {
+			return reusable(value);
 		}
 	}
 
