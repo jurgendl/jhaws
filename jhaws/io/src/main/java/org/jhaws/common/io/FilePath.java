@@ -2741,10 +2741,10 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public void renameShortFilename(String filename) {
-		renameFilename(filename + (StringUtils.isBlank(getExtension()) ? "" : "." + getExtension()));
+		renameFileName(filename + (StringUtils.isBlank(getExtension()) ? "" : "." + getExtension()));
 	}
 
-	public void renameFilename(String filename) {
+	public void renameFileName(String filename) {
 		moveTo(getParentPath().child(filename));
 	}
 }
