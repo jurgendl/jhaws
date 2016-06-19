@@ -135,11 +135,21 @@ public interface CollectionUtils8 {
 		/** default vorig type */
 		<X> Opt<X> opt(Function<T, X> getter);
 
+		/** default vorig type */
+		default <X> Opt<X> nest(Function<T, X> getter) {
+			return opt(getter);
+		}
+
 		/** ga verder eager */
 		<X> Opt<X> eager(Function<T, X> getter);
 
 		/** ga verder reusable = lazy */
 		<X> Opt<X> reusable(Function<T, X> getter);
+
+		/** ga verder reusable = lazy */
+		default <X> Opt<X> lazy(Function<T, X> getter) {
+			return reusable(getter);
+		};
 
 		/** geeft waarde terug */
 		T get();
@@ -175,6 +185,13 @@ public interface CollectionUtils8 {
 		public static <T> Opt<T> reusable(T value) {
 			return new OptReusable<>(value);
 		}
+
+		/** start reusable = lazy */
+		public static <T> Opt<T> lazy(T value) {
+			return reusable(value);
+		}
+
+		<X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters);
 	}
 
 	static class OptEager<T> implements Opt<T> {
@@ -202,6 +219,11 @@ public interface CollectionUtils8 {
 		@Override
 		public <P> Opt<P> reusable(Function<T, P> get) {
 			return new OptReusable<>(get()).opt(get);
+		}
+
+		@Override
+		public <X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters) {
+			return streamArray(getters).map(g -> get(g)).filter(notNull()).findFirst().orElse(null);
 		}
 	}
 
@@ -258,6 +280,15 @@ public interface CollectionUtils8 {
 		@SuppressWarnings("unchecked")
 		public <X> Opt<X> reusable(Function<T, X> get) {
 			return new OptReusable<>((OptReusable<T, X>) this, get);
+		}
+
+		<X> X gett(@SuppressWarnings("unchecked") Function<T, X>... getters) {
+			return streamArray(getters).map(g -> get(g)).filter(notNull()).findFirst().orElse(null);
+		}
+
+		@Override
+		public <X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters) {
+			return streamArray(getters).map(g -> get(g)).filter(notNull()).findFirst().orElse(null);
 		}
 	}
 
