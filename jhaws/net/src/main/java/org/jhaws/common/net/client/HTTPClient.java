@@ -496,16 +496,16 @@ public class HTTPClient implements Closeable {
 	}
 
 	protected void prepareRequest(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-		if (user != null && pass != null) {
-			prepareRequest_prememptiveAuthentication(params, req);
-		}
+		prepareRequest_prememptiveAuthentication(params, req);
 		prepareRequest_singleCookieHeader(params, req);
 		prepareRequest_accept(params, req);
 		prepareRequest_additionalHeaders(params, req);
 	}
 
 	protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-		req.setHeader(HTTPClientDefaults.PARAM_PREEMPTIVE_AUTHENTICATION, String.valueOf(Boolean.TRUE));
+		if (user != null && pass != null) {
+			req.setHeader(HTTPClientDefaults.PARAM_PREEMPTIVE_AUTHENTICATION, String.valueOf(Boolean.TRUE));
+		}
 	}
 
 	protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
@@ -513,8 +513,9 @@ public class HTTPClient implements Closeable {
 	}
 
 	protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-		if (params != null && params.getAccept() != null)
+		if (params != null && params.getAccept() != null) {
 			req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+		}
 	}
 
 	protected void prepareRequest_additionalHeaders(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
