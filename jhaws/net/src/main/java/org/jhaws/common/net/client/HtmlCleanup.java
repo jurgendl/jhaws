@@ -22,10 +22,8 @@ public class HtmlCleanup {
 			tidy.setDropEmptyParas(true);
 			tidy.setMakeClean(true);
 			tidy.parse(in, out);
-
 			in.close();
 			out.close();
-
 			return out;
 		}
 	}

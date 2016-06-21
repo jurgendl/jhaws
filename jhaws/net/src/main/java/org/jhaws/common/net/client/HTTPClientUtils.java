@@ -1,22 +1,35 @@
 package org.jhaws.common.net.client;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIUtils;
-import org.jhaws.common.io.IOFile;
-import org.jhaws.common.net.client.cookies.CookieStore;
+import org.jhaws.common.io.FilePath;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 
-@SuppressWarnings("deprecation")
 public class HTTPClientUtils {
 	/** mimeTypes */
 	protected static MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
@@ -52,27 +65,70 @@ public class HTTPClientUtils {
 		return URIUtils.resolve(original, newRelative);
 	}
 
-	public static synchronized String getMimeType(IOFile file) {
+	public static synchronized String getMimeType(FilePath file) {
+		return mimeTypes.getContentType(file.toFile());
+	}
+
+	public static synchronized String getMimeType(File file) {
 		return mimeTypes.getContentType(file);
 	}
 
-	public static HTTPClient deserialize(InputStream in) throws IOException, ClassNotFoundException {
-		try (ObjectInputStream encoder = new ObjectInputStream(in)) {
-			Object object = encoder.readObject();
-			CookieStore cs = (CookieStore) encoder.readObject();
-			encoder.close();
-			HTTPClient hc = (HTTPClient) object;
-			hc.setCookieStore(cs);
-
-			return hc;
+	/** formatted/readable xml */
+	public static String pretty(String xml) {
+		try {
+			// java.lang.System.setProperty("javax.xml.transform.TransformerFactory",
+			// "org.apache.xalan.xsltc.trax.TransformerFactoryImpl");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document original = dBuilder.parse(new InputSource(new InputStreamReader(new ByteArrayInputStream(xml.getBytes("UTF-8")))));
+			StringWriter stringWriter = new StringWriter();
+			StreamResult xmlOutput = new StreamResult(stringWriter);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			tf.setAttribute("indent-number", 4);
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.transform(new DOMSource(original), xmlOutput);
+			return xmlOutput.getWriter().toString();
+		} catch (Exception ex) {
+			// ex.printStackTrace();
+			return xml;
 		}
 	}
 
-	public static void serialize(HTTPClient client, OutputStream out) throws IOException {
-		try (ObjectOutputStream encoder = new ObjectOutputStream(out)) {
-			encoder.writeObject(client);
-			encoder.writeObject(client.getCookieStore());
-			encoder.close();
-		}
+	public static URI encode(String url) {
+		return encode(url, false);
 	}
+
+	public static URI encode(String url, boolean hasParameters) {
+		String regex = hasParameters
+				? "^((?<scheme>[^:]+)://)?(?<host>[^/]+/){1}(?<paths>([^/]+/)*)(?<file>[^\\?]+)(?<paramsstart>\\??)(?<params>([^=]+=[^&]+&){0,}([^=]+=.+){0,1})$"
+				: "^((?<scheme>[^:]+)://)?(?<host>[^/]+/){1}(?<paths>([^/]+/)*)(?<file>.+)$";
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(url);
+		if (m.find() && url.equals(m.group())) {
+			URIBuilder urib = new URIBuilder().setHost(m.group("host"));
+			if (StringUtils.isNotBlank(m.group("scheme"))) {
+				urib.setScheme(m.group("scheme"));
+			}
+			String path = Arrays.stream(m.group("paths").split("/")).map(t -> t + "/").collect(Collectors.joining());
+			String file = Optional.of(m.group("file")).orElse("").replaceAll("&amp;", "&");
+			urib.setPath(path + file);
+			if (hasParameters && StringUtils.isNotBlank(m.group("paramsstart"))) {
+				Arrays.stream(m.group("params").split("&")).map(kv -> kv.split("=")).forEach((String[] kva) -> {
+					urib.addParameter(kva[0], kva[1]);
+				});
+			}
+			try {
+				return urib.build();
+			} catch (URISyntaxException ex) {
+				throw new IllegalArgumentException(ex);
+			}
+		}
+		throw new IllegalArgumentException("encodeURL: " + url);
+	}
+
 }
