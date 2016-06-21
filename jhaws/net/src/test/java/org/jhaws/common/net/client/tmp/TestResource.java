@@ -25,7 +25,6 @@ import javax.ws.rs.core.StreamingOutput;
 
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.jboss.resteasy.util.GenericType;
 
 @Path(TestResource.PATH)
 public class TestResource {
@@ -137,7 +136,7 @@ public class TestResource {
 					if ("octet-stream".equals(p.getMediaType().getSubtype())) {
 						String fileName = getFileName(p.getHeaders());
 						list.add(fileName);
-						content.put(fileName, p.getBody(new GenericType<byte[]>() {}));
+						content.put(fileName, p.getBody(new javax.ws.rs.core.GenericType<byte[]>() {}));
 					} else {
 						list.add(p.getBodyAsString());
 					}

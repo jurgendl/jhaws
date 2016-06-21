@@ -18,7 +18,8 @@
         <version.httpcomponents>4.5.2</version.httpcomponents>
         <version.httpcomponents.nio>4.4.4</version.httpcomponents.nio>
         <version.httpcomponents.cache>4.1.1</version.httpcomponents.cache>
-        <version.resteasy>3.0.12.Final</version.resteasy>
+        <version.resteasy>3.0.17.Final</version.resteasy>
+        <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs>
         <version.xhtmlrenderer>9.0.8</version.xhtmlrenderer>
 	</properties>
 	<dependencies>
@@ -180,7 +181,7 @@
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>jaxrs-api</artifactId>
-			<version>${version.resteasy}</version>
+			<version>${version.resteasy.jaxrs}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
