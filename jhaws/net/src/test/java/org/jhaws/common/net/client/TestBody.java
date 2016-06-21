@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tmp;
+package org.jhaws.common.net.client;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

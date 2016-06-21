@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.tmp;
+package org.jhaws.common.net.client;
 
 import java.io.IOException;
 import java.net.ServerSocket;
