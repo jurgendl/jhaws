@@ -118,8 +118,11 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
         @Override
         public String toString() {
             if (this.toString == null) {
-                this.toString = new ToStringBuilder(this).append("hasSelection", this.hasSelection).append("hasText", this.hasText)
-                        .append("canUndo", this.canUndo).append("canRedo", this.canRedo).toString();
+                this.toString = new ToStringBuilder(this).append("hasSelection", this.hasSelection)
+                        .append("hasText", this.hasText)
+                        .append("canUndo", this.canUndo)
+                        .append("canRedo", this.canRedo)
+                        .toString();
             }
             return this.toString;
         }
@@ -263,8 +266,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
     /**
      * JDOC
      */
-    public abstract static class EComponentPopupMenuAction<C extends ReadableComponent> extends AbstractAction implements EComponentI,
-    HasParentComponent {
+    public abstract static class EComponentPopupMenuAction<C extends ReadableComponent> extends AbstractAction
+            implements EComponentI, HasParentComponent {
         private static final long serialVersionUID = 3408961844539862485L;
 
         protected String key;
@@ -1169,7 +1172,6 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
     /**
      * get text data on clipboard or null
      */
-    @SuppressWarnings("null")
     public static String pasteFromClipboard() {
         String result = "";
         // odd: the Object param of getContents is not currently used
@@ -1212,9 +1214,9 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
     private static final long serialVersionUID = 8362926178135321789L;
 
     public static final int[] conditions = {
-        JComponent.WHEN_FOCUSED,
-        JComponent.WHEN_IN_FOCUSED_WINDOW,
-        JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT };
+            JComponent.WHEN_FOCUSED,
+            JComponent.WHEN_IN_FOCUSED_WINDOW,
+            JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT };
 
     public static final String DELETE = "delete-next";
 
@@ -1276,8 +1278,9 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
     public void checkEnabled() {
         if (this.component instanceof WritableComponent) {
             WritableComponent writableComponent = WritableComponent.class.cast(this.component);
-            CheckEnabled cfg = new CheckEnabled(writableComponent.hasSelection(), writableComponent.hasText(), this.undoRedoManager == null ? false
-                    : this.undoRedoManager.canUndo(), this.undoRedoManager == null ? false : this.undoRedoManager.canRedo());
+            CheckEnabled cfg = new CheckEnabled(writableComponent.hasSelection(), writableComponent.hasText(),
+                    this.undoRedoManager == null ? false : this.undoRedoManager.canUndo(),
+                    this.undoRedoManager == null ? false : this.undoRedoManager.canRedo());
             // System.out.println(cfg);
             for (int i = 0; i < this.getComponentCount(); i++) {
                 Component menuItem = this.getComponent(i);

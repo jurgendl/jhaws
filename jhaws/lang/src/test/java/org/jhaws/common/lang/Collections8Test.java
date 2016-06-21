@@ -21,7 +21,6 @@ public class Collections8Test {
 
 	private static final int testcount = 10000;
 
-	@SuppressWarnings("unused")
 	@Test
 	public void testSpeed() {
 		System.out.println("");
