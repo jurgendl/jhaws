@@ -88,6 +88,8 @@ public class HTTPClient implements Closeable {
 
 	protected String userAgent = HTTPClientDefaults.CHROME;
 
+	protected org.apache.http.client.CookieStore cookieStore;
+
 	public String getUserAgent() {
 		return userAgent;
 	}
@@ -155,7 +157,7 @@ public class HTTPClient implements Closeable {
 	protected CloseableHttpClient getHttpClient() {
 		if (httpClient == null) {
 			httpClient = HttpClientBuilder.create()//
-					.setDefaultCookieStore(new CookieStore()) //
+					.setDefaultCookieStore(getCookieStore()) //
 					.setUserAgent(getUserAgent())//
 					.setRedirectStrategy(getRedirectStrategy())//
 					.setDefaultRequestConfig(getRequestConfig())//
@@ -494,9 +496,16 @@ public class HTTPClient implements Closeable {
 	}
 
 	protected void prepareRequest(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+		if (user != null && pass != null) {
+			prepareRequest_prememptiveAuthentication(params, req);
+		}
 		prepareRequest_singleCookieHeader(params, req);
 		prepareRequest_accept(params, req);
 		prepareRequest_additionalHeaders(params, req);
+	}
+
+	protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+		req.setHeader(HTTPClientDefaults.PARAM_PREEMPTIVE_AUTHENTICATION, String.valueOf(Boolean.TRUE));
 	}
 
 	protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
@@ -516,5 +525,15 @@ public class HTTPClient implements Closeable {
 
 	protected String getUser() {
 		return user;
+	}
+
+	public org.apache.http.client.CookieStore getCookieStore() {
+		if (cookieStore == null)
+			cookieStore = new org.jhaws.common.net.client.CookieStore();
+		return this.cookieStore;
+	}
+
+	public void setCookieStore(org.apache.http.client.CookieStore cookieStore) {
+		this.cookieStore = cookieStore;
 	}
 }

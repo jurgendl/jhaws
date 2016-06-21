@@ -1,85 +1,90 @@
 package org.jhaws.common.net.client;
 
 public interface HTTPClientDefaults {
-    public static final int BUFF_LEN = 1024 * 8;
+	/** "http.authentication.preemptive" */
+	public static final String PARAM_PREEMPTIVE_AUTHENTICATION = "http.authentication.preemptive";
 
-    /** Location */
-    public static final String LOCATION = "Location";
+	/** 8kb */
+	public static final int BUFF_LEN = 1024 * 8;
 
-    /** Content-Encoding */
-    public static final String CONTENT_ENCODING = org.apache.http.protocol.HTTP.CONTENT_ENCODING;
+	/** Location */
+	public static final String LOCATION = "Location";
 
-    /** false */
-    public static final boolean HANDLE_REDIRECTS = true;
+	/** Content-Encoding */
+	public static final String CONTENT_ENCODING = org.apache.http.protocol.HTTP.CONTENT_ENCODING;
 
-    /** accept types */
-    public static final String ACCEPT = "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
+	/** false */
+	public static final boolean HANDLE_REDIRECTS = true;
 
-    /** gzip, deflate */
-    public static final String ACCEPT_ENCODING = "gzip, deflate";
+	/** accept types */
+	public static final String ACCEPT = "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*";
 
-    /** default language, en */
-    public static final String ACCEPT_LANGUAGE = "en";
+	/** gzip, deflate */
+	public static final String ACCEPT_ENCODING = "gzip, deflate";
 
-    /** 300 */
-    public static final int KEEP_ALIVE = 300;
+	/** default language, en */
+	public static final String ACCEPT_LANGUAGE = "en";
 
-    /** Keep-Alive */
-    public static final String PARAM_KEEP_ALIVE = org.apache.http.protocol.HTTP.CONN_KEEP_ALIVE;
+	/** 300 */
+	public static final int KEEP_ALIVE = 300;
 
-    /** Accept-Language */
-    public static final String PARAM_ACCEPT_LANGUAGE = "Accept-Language";
+	/** Keep-Alive */
+	public static final String PARAM_KEEP_ALIVE = org.apache.http.protocol.HTTP.CONN_KEEP_ALIVE;
 
-    /** Accept-Encoding */
-    public static final String PARAM_ACCEPT_ENCODING = "Accept-Encoding";
+	/** Accept-Language */
+	public static final String PARAM_ACCEPT_LANGUAGE = "Accept-Language";
 
-    /** Accept */
-    public static final String PARAM_ACCEPT = "Accept";
+	/** Accept-Encoding */
+	public static final String PARAM_ACCEPT_ENCODING = "Accept-Encoding";
 
-    /** false */
-    public static final boolean EXPECT_CONTINUE = true;
+	/** Accept */
+	public static final String PARAM_ACCEPT = "Accept";
 
-    /** UTF-8 */
-    @SuppressWarnings("deprecation")
-    public static final String CHARSET = org.apache.http.protocol.HTTP.UTF_8;
+	/** false */
+	public static final boolean EXPECT_CONTINUE = true;
 
-    /** true */
-    public static final boolean SINGLE_COOKIE_HEADER = true;
+	/** UTF-8 */
+	@SuppressWarnings("deprecation")
+	public static final String CHARSET = org.apache.http.protocol.HTTP.UTF_8;
 
-    /** compatibility */
-    @SuppressWarnings("deprecation")
-    public static final String BROWSER_COMPATIBILITY = org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY;
+	/** true */
+	public static final boolean SINGLE_COOKIE_HEADER = true;
 
-    /** 1.1 */
-    public static final org.apache.http.HttpVersion HTTP_VERSION = org.apache.http.HttpVersion.HTTP_1_1;
+	/** compatibility */
+	@SuppressWarnings("deprecation")
+	public static final String BROWSER_COMPATIBILITY = org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY;
 
-    /** Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0 */
-    public static final String FIREFOX = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0";
+	/** 1.1 */
+	public static final org.apache.http.HttpVersion HTTP_VERSION = org.apache.http.HttpVersion.HTTP_1_1;
 
-    /** Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36 */
-    public static final String CHROME = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
+	/** Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0 */
+	public static final String FIREFOX = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0";
 
-    /**
-     * Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media
-     * Center PC 6.0; .NET4.0C; .NET4.0E)
-     */
-    public static final String IEXPLORER = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)";
+	/** Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36 */
+	public static final String CHROME = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36";
 
-    /** Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 */
-    public static final String ANDROID_S3 = "Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
+	/**
+	 * Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C;
+	 * .NET4.0E)
+	 */
+	public static final String IEXPLORER = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)";
 
-    /** http.protocol.single-cookie-header */
-    @SuppressWarnings("deprecation")
-    public static final String PARAM_SINGLE_COOKIE_HEADER = org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER;
+	/** Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30 */
+	public static final String ANDROID_S3 = "Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
 
-    /** 3000L */
-    public static final int TIMEOUT = 3000;
+	/** http.protocol.single-cookie-header */
+	@SuppressWarnings("deprecation")
+	public static final String PARAM_SINGLE_COOKIE_HEADER = org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER;
 
-    /** "Content-Type" */
-    public static final String CONTENT_TYPE = org.apache.http.protocol.HTTP.CONTENT_TYPE;
+	/** 3000 */
+	public static final int TIMEOUT = 3000;
 
-    /** "Date" */
-    public static final String DATE = "Date";
+	/** "Content-Type" */
+	public static final String CONTENT_TYPE = org.apache.http.protocol.HTTP.CONTENT_TYPE;
 
-    public static final String POST = "post";
+	/** "Date" */
+	public static final String DATE = "Date";
+
+	/** "post" */
+	public static final String POST = "post";
 }
