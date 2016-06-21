@@ -16,11 +16,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -58,14 +57,13 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
-import org.apache.http.nio.client.methods.HttpAsyncMethods;
-import org.apache.http.nio.protocol.HttpAsyncRequestProducer;
 import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.io.security.Security;
 
 /**
+ * @see http://stackoverflow.com/questions/10146692/how-do-i-write-to-an-outputstream-using-defaulthttpclient
  * @see https://hc.apache.org/
  * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-tutorial.pdf
  * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced.html
@@ -76,7 +74,7 @@ public class HTTPClient implements Closeable {
 
 	protected transient CloseableHttpClient httpClient;
 
-	protected transient org.apache.http.impl.nio.client.CloseableHttpAsyncClient asyncHttpclient;
+	// protected transient org.apache.http.impl.nio.client.CloseableHttpAsyncClient asyncHttpclient;
 
 	protected transient RequestConfig requestConfig;
 
@@ -157,6 +155,7 @@ public class HTTPClient implements Closeable {
 	protected CloseableHttpClient getHttpClient() {
 		if (httpClient == null) {
 			httpClient = HttpClientBuilder.create()//
+					.setDefaultCookieStore(new CookieStore()) //
 					.setUserAgent(getUserAgent())//
 					.setRedirectStrategy(getRedirectStrategy())//
 					.setDefaultRequestConfig(getRequestConfig())//
@@ -165,17 +164,17 @@ public class HTTPClient implements Closeable {
 		return httpClient;
 	}
 
-	protected org.apache.http.impl.nio.client.CloseableHttpAsyncClient getAsyncHttpclient() {
-		if (asyncHttpclient == null) {
-			asyncHttpclient = org.apache.http.impl.nio.client.HttpAsyncClients.custom()//
-					.setUserAgent(getUserAgent())//
-					.setRedirectStrategy(getRedirectStrategy())//
-					.setDefaultRequestConfig(getRequestConfig())//
-					.build();
-			asyncHttpclient.start();
-		}
-		return asyncHttpclient;
-	}
+	// protected org.apache.http.impl.nio.client.CloseableHttpAsyncClient getAsyncHttpclient() {
+	// if (asyncHttpclient == null) {
+	// asyncHttpclient = org.apache.http.impl.nio.client.HttpAsyncClients.custom()//
+	// .setUserAgent(getUserAgent())//
+	// .setRedirectStrategy(getRedirectStrategy())//
+	// .setDefaultRequestConfig(getRequestConfig())//
+	// .build();
+	// asyncHttpclient.start();
+	// }
+	// return asyncHttpclient;
+	// }
 
 	protected URI toFullUri(AbstractGetRequest<? extends AbstractGetRequest<?>> get) {
 		URIBuilder uriBuilder = new URIBuilder(get.getUri());
@@ -188,6 +187,10 @@ public class HTTPClient implements Closeable {
 	}
 
 	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+		return execute(params, req, null);
+	}
+
+	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out) {
 		if (params != null)
 			prepareRequest(params, req);
 
@@ -203,38 +206,38 @@ public class HTTPClient implements Closeable {
 		HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
 
 		if (user != null && pass != null) {
-			BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+			CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 			credentialsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials(user, getPass()));
 			context.setCredentialsProvider(credentialsProvider);
-			AuthCache authCache = new BasicAuthCache();
-			BasicScheme basicAuth = new BasicScheme();
-			authCache.put(targetHost, basicAuth);
-			context.setAuthCache(authCache);
 		} else {
 			CredentialsProvider credentialsProvider = new SystemDefaultCredentialsProvider();
 			context.setCredentialsProvider(credentialsProvider);
 		}
 
-		Response response = null;
+		AuthCache authCache = new BasicAuthCache();
+		BasicScheme basicAuth = new BasicScheme();
+		authCache.put(targetHost, basicAuth);
+		context.setAuthCache(authCache);
 
+		Response response = null;
 		try (CloseableHttpResponse httpResponse = getHttpClient().execute(targetHost, req, context)) {
-			response = buildResponse(req, httpResponse);
+			response = buildResponse(req, httpResponse, out);
 			consumeQuietly(httpResponse.getEntity());
 		} catch (IOException ioex) {
 			throw new UncheckedIOException(ioex);
 		}
-		if (response == null) {
-			try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
-				response = buildResponse(req, httpResponse);
-				consumeQuietly(httpResponse.getEntity());
-			} catch (IOException ioex) {
-				throw new UncheckedIOException(ioex);
-			}
-		}
+		// if (response == null) {
+		// try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
+		// response = buildResponse(req, httpResponse, out);
+		// consumeQuietly(httpResponse.getEntity());
+		// } catch (IOException ioex) {
+		// throw new UncheckedIOException(ioex);
+		// }
+		// }
 		return response;
 	}
 
-	protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse) throws IOException {
+	protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse, OutputStream out) throws IOException {
 		Response response = new Response();
 		List<URI> uris = chain.get();
 		uris.add(0, req.getURI());
@@ -257,7 +260,12 @@ public class HTTPClient implements Closeable {
 		// }
 		HttpEntity entity = httpResponse.getEntity();
 		if (entity != null) {
-			response.setContent(toByteArray(entity));
+			if (out != null) {
+				IOUtils.copy(entity.getContent(), out);
+				out.flush();
+			} else {
+				response.setContent(toByteArray(entity));
+			}
 			response.setContentLength(entity.getContentLength());
 			response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
 			response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
@@ -449,31 +457,31 @@ public class HTTPClient implements Closeable {
 			}
 			httpClient = null;
 		}
-		if (asyncHttpclient != null) {
-			try {
-				asyncHttpclient.close();
-			} catch (Exception e) {
-				//
-			}
-			asyncHttpclient = null;
-		}
+		// if (asyncHttpclient != null) {
+		// try {
+		// asyncHttpclient.close();
+		// } catch (Exception e) {
+		// //
+		// }
+		// asyncHttpclient = null;
+		// }
 		redirectStrategy = null;
 		requestConfig = null;
 		resetAuthentication();
 	}
 
-	public void execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out) {
-		prepareRequest(params, req);
-		HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
-		Future<OutputStream> future = getAsyncHttpclient().execute(areq, new AsyncConsumer(out), null);
-		try {
-			future.get();
-		} catch (ExecutionException e) {
-			wrap(e.getCause());
-		} catch (InterruptedException e) {
-			//
-		}
-	}
+	// public void execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out) {
+	// prepareRequest(params, req);
+	// HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
+	// Future<OutputStream> future = getAsyncHttpclient().execute(areq, new AsyncConsumer(out), null);
+	// try {
+	// future.get();
+	// } catch (ExecutionException e) {
+	// wrap(e.getCause());
+	// } catch (InterruptedException e) {
+	// //
+	// }
+	// }
 
 	protected void wrap(Throwable cause) throws UncheckedIOException, RuntimeException {
 		if (cause instanceof RuntimeException) {

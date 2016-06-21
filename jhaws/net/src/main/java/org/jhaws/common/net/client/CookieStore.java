@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.obsolete;
+package org.jhaws.common.net.client;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -23,8 +23,6 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("deprecation")
-@Deprecated
 public class CookieStore implements org.apache.http.client.CookieStore, Externalizable {
 	/**
 	 * SerializableCookie
@@ -336,18 +334,11 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 	/** backing store */
 	protected transient org.apache.http.client.CookieStore cookieStore = new BasicCookieStore();
 
-	/** client */
-	protected transient HTTPClient client;
-
 	/** interceptors */
 	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<CookieStoreInterceptor>();
 
 	public CookieStore() {
 		super();
-	}
-
-	public CookieStore(HTTPClient client) {
-		this.client = client;
 	}
 
 	/**
@@ -395,10 +386,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		return this.cookieStore.clearExpired(date);
-	}
-
-	public HTTPClient getClient() {
-		return this.client;
 	}
 
 	/**
@@ -456,10 +443,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
 			return this;
 		}
-	}
-
-	public void setClient(HTTPClient client) {
-		this.client = client;
 	}
 
 	public void setCookieStore(org.apache.http.client.CookieStore cookieStore) {

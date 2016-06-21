@@ -3,7 +3,9 @@ package org.jhaws.common.net.client.obsolete;
 import java.util.Date;
 import java.util.HashSet;
 
-@SuppressWarnings("deprecation")
+import org.jhaws.common.net.client.CookieStore;
+import org.jhaws.common.net.client.CookieStoreInterceptor;
+
 @Deprecated
 public class PreloadUnixChromeCookies implements CookieStoreInterceptor {
 	public static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$

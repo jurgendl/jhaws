@@ -17,6 +17,8 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
+import org.jhaws.common.net.client.CookieStore;
+import org.jhaws.common.net.client.CookieStoreInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +101,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 				return;
 			}
 
-			String domain = store.getClient().getDomain();
+			String domain = null;// store.getClient().getDomain();
 
 			if (this.domainsLoaded.contains(domain)) {
 				return;
@@ -108,7 +110,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 			this.domainsLoaded.add(domain);
 
 			final Set<Cookie> cookies = new HashSet<Cookie>();
-			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home, "Application Data/Mozilla/Firefox");
+			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(), "Application Data/Mozilla/Firefox");
 			IOFile ini = new IOFile(ffr, "profiles.ini");
 			PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - IOFile ini=" + ini); //$NON-NLS-1$
 

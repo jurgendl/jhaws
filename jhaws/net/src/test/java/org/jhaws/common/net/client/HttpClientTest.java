@@ -11,15 +11,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.net.XmlMarshalling;
-import org.jhaws.common.net.client.DeleteRequest;
-import org.jhaws.common.net.client.FileInput;
-import org.jhaws.common.net.client.Form;
-import org.jhaws.common.net.client.GetRequest;
-import org.jhaws.common.net.client.HTTPClient;
-import org.jhaws.common.net.client.HTTPClientDefaults;
-import org.jhaws.common.net.client.HeadRequest;
-import org.jhaws.common.net.client.PutRequest;
-import org.jhaws.common.net.client.Response;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -209,6 +200,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_stream() {
+		Object o = server;
+
 		URI uri = getBase().path(TestResource.STREAM).build();
 		GetRequest get = new GetRequest(uri);
 
@@ -218,9 +211,9 @@ public class HttpClientTest {
 
 		FilePath tmp2 = FilePath.getTempDirectory().child("hctest_2_.txt");
 		tmp2.deleteIfExists();
-		hc.execute(null, hc.createGet(get), tmp2.newBufferedOutputStream());
+		hc.execute(get, hc.createGet(get), tmp2.newBufferedOutputStream());
 
-		Assert.assertEquals(tmp2.getFileSize(), tmp1.getFileSize());
-		Assert.assertEquals(tmp2.readAll(), tmp1.readAll());
+		Assert.assertEquals(tmp1.getFileSize(), tmp2.getFileSize());
+		Assert.assertEquals(tmp1.readAll(), tmp2.readAll());
 	}
 }

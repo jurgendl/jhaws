@@ -1,13 +1,11 @@
-package org.jhaws.common.net.client.obsolete;
+package org.jhaws.common.net.client;
 
 import java.util.Date;
 
-import org.jhaws.common.io.IODirectory;
+import org.jhaws.common.io.FilePath;
 
-@SuppressWarnings("deprecation")
-@Deprecated
 public interface CookieStoreInterceptor {
-	public static final IODirectory user_home = IODirectory.getUserDir();
+	public static final FilePath user_home = FilePath.getUserHomeDirectory();
 
 	public void beforeAddCookie(CookieStore store);
 

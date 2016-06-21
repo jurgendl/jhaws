@@ -9,6 +9,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
+import org.jhaws.common.net.client.CookieStore;
+import org.jhaws.common.net.client.CookieStoreInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +72,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 				return;
 			}
 
-			String d = store.getClient().getDomain();
+			String d = null;// store.getClient().getDomain();
 
 			if (d == null)
 				return;
@@ -85,7 +87,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 			final String domain = d.substring(0, p);
 			PreloadWinIExplorerCookies.logger.info("loadIExplorerCookiesWin(String) - domain=" + domain); //$NON-NLS-1$
 
-			IODirectory dir = new IODirectory(CookieStoreInterceptor.user_home, "Cookies");
+			IODirectory dir = new IODirectory(CookieStoreInterceptor.user_home.toFile(), "Cookies");
 			PreloadWinIExplorerCookies.logger.info("loadIExplorerCookiesWin(String) - IODirectory dir=" + dir); //$NON-NLS-1$
 
 			IOFile[] cookie_files = dir.listIOFiles(new FileFilter() {

@@ -3,7 +3,9 @@ package org.jhaws.common.net.client.obsolete;
 import java.util.Date;
 import java.util.HashSet;
 
-@SuppressWarnings("deprecation")
+import org.jhaws.common.net.client.CookieStore;
+import org.jhaws.common.net.client.CookieStoreInterceptor;
+
 @Deprecated
 public class PreloadUnixFirefoxCookies implements CookieStoreInterceptor {
 	/** field */

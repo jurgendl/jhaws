@@ -86,6 +86,7 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.IOFile;
 import org.jhaws.common.io.security.Security;
+import org.jhaws.common.net.client.CookieStore;
 import org.jhaws.common.net.client.HTTPClientDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -604,7 +605,7 @@ public class HTTPClient implements Serializable {
 
 	public CookieStore getCookieStore() {
 		if (this.cookieStore == null) {
-			this.cookieStore = new CookieStore(this);
+			this.cookieStore = new CookieStore();
 		}
 		return this.cookieStore;
 	}

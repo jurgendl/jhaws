@@ -13,6 +13,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
+import org.jhaws.common.net.client.CookieStore;
+import org.jhaws.common.net.client.CookieStoreInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +97,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 				return;
 			}
 
-			String domain = store.getClient().getDomain();
+			String domain = null;// store.getClient().getDomain();
 
 			if (this.domainsLoaded.contains(domain)) {
 				return;
@@ -103,7 +105,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 
 			this.domainsLoaded.add(domain);
 
-			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home, "Local Settings/Application Data/Google/Chrome/User Data/Default");
+			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(), "Local Settings/Application Data/Google/Chrome/User Data/Default");
 			IOFile ff3c = new IOFile(ffr, "Cookies");
 			String url = "jdbc:sqlite:/" + ff3c.getAbsolutePath().replace('\\', '/');
 			String query = "select name, value, host_key, path, expires_utc from cookies where host_key like '" + domain + "%' or host_key like '." + domain

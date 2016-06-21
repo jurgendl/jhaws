@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
+import org.jhaws.common.net.client.CookieStore;
+
 @SuppressWarnings("deprecation")
 @Deprecated
 public class HTTPClientUtils extends org.jhaws.common.net.client.HTTPClientUtils {
