@@ -1,14 +1,14 @@
-package org.jhaws.common.net.client.obsolete;
+package org.jhaws.common.net.client;
 
 import java.util.Arrays;
 
 import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.net.client.HTTPClient;
-import org.jhaws.common.net.client.obsolete.Password;
+import org.jhaws.common.net.client.Password;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class HttpClientTest {
+public class HttpClientOtherTest {
 	@Test
 	public void test() {
 		try (HTTPClient hc = new HTTPClient()) {
