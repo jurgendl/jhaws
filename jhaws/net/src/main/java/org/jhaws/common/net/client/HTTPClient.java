@@ -63,11 +63,11 @@ import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.io.security.Security;
 
 /**
+ * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/
  * @see http://stackoverflow.com/questions/10146692/how-do-i-write-to-an-outputstream-using-defaulthttpclient
  * @see https://hc.apache.org/
  * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-tutorial.pdf
  * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced.html
- * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/ClientChunkEncodedPost.java
  */
 public class HTTPClient implements Closeable {
 	protected String charSet = HTTPClientDefaults.CHARSET;
