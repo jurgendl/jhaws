@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.old;
+package org.jhaws.common.net.client.obsolete;
 
 import java.util.Arrays;
 
