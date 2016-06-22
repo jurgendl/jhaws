@@ -20,9 +20,11 @@ import org.jboss.resteasy.core.ResourceInvoker;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.core.ResourceMethodRegistry;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 @Component
 @Path("/overview")
+@Controller
 public class OverviewResource {
 	private static final class MethodDescription {
 		private String method;
