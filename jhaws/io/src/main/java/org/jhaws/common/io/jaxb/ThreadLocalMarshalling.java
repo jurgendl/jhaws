@@ -22,6 +22,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.jhaws.common.lang.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.classreading.MetadataReader;
@@ -32,7 +33,7 @@ import org.springframework.core.type.filter.TypeFilter;
 public class ThreadLocalMarshalling {
 	protected final JAXBContext jaxbContext;
 
-	protected String charSet = "UTF-8";
+	protected String charSet = StringUtils.UTF8;
 
 	protected boolean formatOutput = true;
 

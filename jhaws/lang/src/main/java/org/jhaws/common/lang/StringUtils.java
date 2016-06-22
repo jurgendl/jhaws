@@ -3,6 +3,8 @@ package org.jhaws.common.lang;
 import java.text.Normalizer;
 
 public interface StringUtils {
+	public static final String UTF8 = "UTF-8";
+
 	public static final char[] REGULARS = "\\<([{^-=$!|]})?*+.>".toCharArray();
 
 	public static final char[] whitespace_chars = ( //
@@ -86,8 +88,7 @@ public interface StringUtils {
 	}
 
 	public static String splitCamelCase(String s) {
-		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
-				"(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
+		return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])", "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
 	}
 
 	public static String sortable(String string) {
@@ -121,8 +122,7 @@ public interface StringUtils {
 	}
 
 	/**
-	 * @see http://stackoverflow.com/questions/4775898/java-regex-until-certain-
-	 *      word-text-characters
+	 * @see http://stackoverflow.com/questions/4775898/java-regex-until-certain- word-text-characters
 	 */
 	public static String regularUntil(String s) {
 		return "(.*?)\\b" + s + ".*";

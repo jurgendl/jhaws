@@ -23,10 +23,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URIUtils;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -80,7 +80,7 @@ public class HTTPClientUtils {
 			// "org.apache.xalan.xsltc.trax.TransformerFactoryImpl");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document original = dBuilder.parse(new InputSource(new InputStreamReader(new ByteArrayInputStream(xml.getBytes("UTF-8")))));
+			Document original = dBuilder.parse(new InputSource(new InputStreamReader(new ByteArrayInputStream(xml.getBytes(StringUtils.UTF8)))));
 			StringWriter stringWriter = new StringWriter();
 			StreamResult xmlOutput = new StreamResult(stringWriter);
 			TransformerFactory tf = TransformerFactory.newInstance();
@@ -90,7 +90,7 @@ public class HTTPClientUtils {
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+			transformer.setOutputProperty(OutputKeys.ENCODING, StringUtils.UTF8);
 			transformer.transform(new DOMSource(original), xmlOutput);
 			return xmlOutput.getWriter().toString();
 		} catch (Exception ex) {
@@ -130,5 +130,4 @@ public class HTTPClientUtils {
 		}
 		throw new IllegalArgumentException("encodeURL: " + url);
 	}
-
 }

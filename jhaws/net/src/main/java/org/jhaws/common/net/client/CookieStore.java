@@ -20,6 +20,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.cookie.SetCookie;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.jhaws.common.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -426,7 +427,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 			byte[] buffer = new byte[size];
 			in.read(buffer);
 
-			return new String(buffer, "UTF-8");
+			return new String(buffer, StringUtils.UTF8);
 		}
 
 		return null;
@@ -465,7 +466,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
 	protected void writeUTF(ObjectOutput out, String value) throws IOException {
 		if ((value != null) && (value.length() > 0)) {
-			byte[] bytes = value.getBytes("UTF-8");
+			byte[] bytes = value.getBytes(StringUtils.UTF8);
 			out.writeInt(bytes.length);
 			out.write(bytes);
 		} else {

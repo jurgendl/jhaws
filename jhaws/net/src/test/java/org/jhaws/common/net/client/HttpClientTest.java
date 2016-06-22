@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.net.XmlMarshalling;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -23,8 +24,6 @@ import org.junit.Test;
  * @see http://www.baeldung.com/httpclient-multipart-upload
  */
 public class HttpClientTest {
-	private static final String UTF_8 = "UTF-8";
-
 	private static TestRestServer server;
 
 	private static HTTPClient hc;
@@ -68,7 +67,7 @@ public class HttpClientTest {
 	public void test_getBody() {
 		try {
 			URI uri = getBase().path(TestResource.GET_BODY).build();
-			TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), UTF_8);
+			TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
 			TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetRequest(uri)).getContent());
 			Assert.assertEquals(rec, hcr);
 		} catch (Exception e) {
@@ -125,7 +124,7 @@ public class HttpClientTest {
 		TestBody rec2 = TestBody.class.cast(testResource.putBody);
 		testResource.put = null;
 		testResource.putBody = null;
-		String xml = xmlMarshalling.marshall(entity, UTF_8);
+		String xml = xmlMarshalling.marshall(entity, StringUtils.UTF8);
 		System.out.println(xml);
 		hc.put(new PutRequest(uri, xml, MediaType.TEXT_XML));
 		String hcr1 = String.class.cast(testResource.put);

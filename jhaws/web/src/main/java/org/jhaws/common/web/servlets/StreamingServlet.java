@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jhaws.common.lang.StringUtils;
 
 /**
  * A file servlet supporting resume of downloads and client-side caching and GZIP of text content. This servlet can also be used for images, client-side caching would become more
@@ -44,9 +45,12 @@ public abstract class StreamingServlet extends HttpServlet {
 		/**
 		 * Construct a byte range.
 		 *
-		 * @param start Start of the byte range.
-		 * @param end End of the byte range.
-		 * @param total Total length of the byte source.
+		 * @param start
+		 *            Start of the byte range.
+		 * @param end
+		 *            End of the byte range.
+		 * @param total
+		 *            Total length of the byte source.
 		 */
 		public Range(long start, long end, long total) {
 			this.start = start;
@@ -56,9 +60,6 @@ public abstract class StreamingServlet extends HttpServlet {
 		}
 
 	}
-
-	// Constants ----------------------------------------------------------------------------------
-	public static final String UTF8 = "UTF-8";
 
 	// Properties ---------------------------------------------------------------------------------
 
@@ -74,7 +75,7 @@ public abstract class StreamingServlet extends HttpServlet {
 
 	public static String decode(String name) {
 		try {
-			return URLDecoder.decode(name, StreamingServlet.UTF8);
+			return URLDecoder.decode(name, StringUtils.UTF8);
 		} catch (UnsupportedEncodingException ex) {
 			throw new IllegalArgumentException(ex);
 		}
@@ -82,7 +83,7 @@ public abstract class StreamingServlet extends HttpServlet {
 
 	public static String encode(String name) {
 		try {
-			return URLEncoder.encode(name, StreamingServlet.UTF8);
+			return URLEncoder.encode(name, StringUtils.UTF8);
 		} catch (UnsupportedEncodingException ex) {
 			throw new IllegalArgumentException(ex);
 		}
@@ -91,8 +92,10 @@ public abstract class StreamingServlet extends HttpServlet {
 	/**
 	 * Returns true if the given accept header accepts the given value.
 	 *
-	 * @param acceptHeader The accept header.
-	 * @param toAccept The value to be accepted.
+	 * @param acceptHeader
+	 *            The accept header.
+	 * @param toAccept
+	 *            The value to be accepted.
 	 * @return True if the given accept header accepts the given value.
 	 */
 	protected boolean accepts(String acceptHeader, String toAccept) {
@@ -107,7 +110,8 @@ public abstract class StreamingServlet extends HttpServlet {
 	/**
 	 * Close the given resource.
 	 *
-	 * @param resource The resource to be closed.
+	 * @param resource
+	 *            The resource to be closed.
 	 */
 	protected void close(Closeable resource) {
 		if (resource != null) {
@@ -123,11 +127,16 @@ public abstract class StreamingServlet extends HttpServlet {
 	/**
 	 * Copy the given byte range of the given input to the given output.
 	 *
-	 * @param input The input to copy the given range to the given output for.
-	 * @param output The output to copy the given range from the given input for.
-	 * @param start Start of the byte range.
-	 * @param length Length of the byte range.
-	 * @throws IOException If something fails at I/O level.
+	 * @param input
+	 *            The input to copy the given range to the given output for.
+	 * @param output
+	 *            The output to copy the given range from the given input for.
+	 * @param start
+	 *            Start of the byte range.
+	 * @param length
+	 *            Length of the byte range.
+	 * @throws IOException
+	 *             If something fails at I/O level.
 	 */
 	protected void copy(SeekableByteChannel input, OutputStream output, long start, long length) throws IOException {
 		// http://andreinc.net/2013/12/09/java-7-nio-2-how-to-use-seekablebytechannel-interface-for-random-access-to-files-raf/
@@ -208,8 +217,10 @@ public abstract class StreamingServlet extends HttpServlet {
 	/**
 	 * Returns true if the given match header matches the given value.
 	 *
-	 * @param matchHeader The match header.
-	 * @param toMatch The value to be matched.
+	 * @param matchHeader
+	 *            The match header.
+	 * @param toMatch
+	 *            The value to be matched.
 	 * @return True if the given match header matches the given value.
 	 */
 	protected boolean matches(String matchHeader, String toMatch) {
@@ -221,10 +232,14 @@ public abstract class StreamingServlet extends HttpServlet {
 	/**
 	 * Process the actual request.
 	 *
-	 * @param request The request to be processed.
-	 * @param response The response to be created.
-	 * @param content Whether the request body should be written (GET) or not (HEAD).
-	 * @throws IOException If something fails at I/O level.
+	 * @param request
+	 *            The request to be processed.
+	 * @param response
+	 *            The response to be created.
+	 * @param content
+	 *            Whether the request body should be written (GET) or not (HEAD).
+	 * @throws IOException
+	 *             If something fails at I/O level.
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException {
 		// Get requested file by path info.
@@ -384,7 +399,7 @@ public abstract class StreamingServlet extends HttpServlet {
 		if (contentType.startsWith("text")) {
 			String acceptEncoding = request.getHeader("Accept-Encoding");
 			acceptsGzip = acceptEncoding != null && accepts(acceptEncoding, "gzip");
-			contentType += ";charset=" + StreamingServlet.UTF8;
+			contentType += ";charset=" + StringUtils.UTF8;
 		}
 
 		// Else, expect for images, determine content disposition. If content type is supported by
@@ -489,9 +504,12 @@ public abstract class StreamingServlet extends HttpServlet {
 	/**
 	 * Returns a substring of the given string value from the given begin index to the given end index as a long. If the substring is empty, then -1 will be returned
 	 *
-	 * @param value The string value to return a substring as long for.
-	 * @param beginIndex The begin index of the substring to be returned as long.
-	 * @param endIndex The end index of the substring to be returned as long.
+	 * @param value
+	 *            The string value to return a substring as long for.
+	 * @param beginIndex
+	 *            The begin index of the substring to be returned as long.
+	 * @param endIndex
+	 *            The end index of the substring to be returned as long.
 	 * @return A substring of the given string value as long or -1 if substring is empty.
 	 */
 	protected long sublong(String value, int beginIndex, int endIndex) {
