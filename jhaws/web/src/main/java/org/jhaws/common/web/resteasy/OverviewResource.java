@@ -40,7 +40,6 @@ public class OverviewResource {
 			this.produces = produces;
 			this.consumes = consumes;
 		}
-
 	}
 
 	private static final class ResourceDescription {
@@ -101,6 +100,13 @@ public class OverviewResource {
 
 	public OverviewResource() {
 		super();
+	}
+
+	@GET
+	@Path("/ping/")
+	@Produces("text/plain")
+	public String ping() {
+		return String.valueOf(System.currentTimeMillis());
 	}
 
 	@GET
