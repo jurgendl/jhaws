@@ -58,7 +58,6 @@ public class OverviewResource implements RestResource {
 
 				for (ResourceInvoker invoker : entry.getValue()) {
 					ResourceMethodInvoker method = (ResourceMethodInvoker) invoker;
-
 					String subPath = null;
 					for (Annotation annotation : method.getMethodAnnotations()) {
 						if (annotation.annotationType().equals(Path.class)) {
@@ -136,18 +135,13 @@ public class OverviewResource implements RestResource {
 			for (MethodDescription method : resource.calls) {
 				sb.append("<li> ").append(method.method).append(" ");
 				sb.append("<strong>").append(method.fullPath).append("</strong>");
-
-				sb.append("<ul>");
-
+				sb.append(" : ");
 				if (method.consumes != null) {
-					sb.append("<li>").append("Consumes: ").append(method.consumes).append("</li>");
+					sb.append(method.consumes).append(" << ");
 				}
-
 				if (method.produces != null) {
-					sb.append("<li>").append("Produces: ").append(method.produces).append("</li>");
+					sb.append(" >> ").append(method.produces);
 				}
-
-				sb.append("</ul>");
 			}
 
 			sb.append("</ul>");
