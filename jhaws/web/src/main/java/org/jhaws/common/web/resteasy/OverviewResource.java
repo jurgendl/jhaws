@@ -66,7 +66,7 @@ public class OverviewResource implements RestResource {
 						}
 					}
 
-					descriptions.get(basePath).addMethod(basePath + subPath, method);
+					descriptions.get(basePath).addMethod(basePath + (subPath == null ? "" : subPath), method);
 				}
 			}
 
