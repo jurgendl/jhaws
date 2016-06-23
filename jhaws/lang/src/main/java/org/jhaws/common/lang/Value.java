@@ -3,6 +3,9 @@ package org.jhaws.common.lang;
 import java.io.Serializable;
 import java.util.function.Consumer;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Value<T> implements Serializable {
 	private static final long serialVersionUID = -5341543889953418944L;
 

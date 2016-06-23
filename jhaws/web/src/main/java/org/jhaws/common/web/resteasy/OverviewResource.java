@@ -47,7 +47,8 @@ public class OverviewResource implements RestResource {
 	}
 
 	private static final class ResourceDescription {
-		public static List<ResourceDescription> fromBoundResourceInvokers(Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
+		public static List<ResourceDescription> fromBoundResourceInvokers(
+				Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
 			Map<String, ResourceDescription> descriptions = new LinkedHashMap<>();
 
 			for (Map.Entry<String, List<ResourceInvoker>> entry : bound) {
@@ -106,7 +107,7 @@ public class OverviewResource implements RestResource {
 	}
 
 	@GET
-	@Path("/ping/")
+	@Path("/ping.txt")
 	@Produces(TEXT)
 	public String ping() {
 		return String.valueOf(System.currentTimeMillis());
@@ -126,7 +127,8 @@ public class OverviewResource implements RestResource {
 	public Response getAvailableEndpointsHtml(@Context Dispatcher dispatcher) {
 		StringBuilder sb = new StringBuilder();
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
-		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
+		List<ResourceDescription> descriptions = ResourceDescription
+				.fromBoundResourceInvokers(registry.getBounded().entrySet());
 
 		sb.append("<h1>").append("REST interface overview").append("</h1>");
 
@@ -136,10 +138,9 @@ public class OverviewResource implements RestResource {
 
 			for (MethodDescription method : resource.calls) {
 				sb.append("<li> ").append(method.method).append(" ");
-				sb.append("<a href='..");
-				if (!method.fullPath.startsWith("/"))
-					sb.append("/");
-				sb.append(method.fullPath).append("'>").append(method.fullPath).append("</a>");
+				sb.append("<a href='");
+				sb.append(method.fullPath.startsWith("/") ? method.fullPath.substring(1) : method.fullPath).append("'>")
+						.append(method.fullPath).append("</a>");
 				sb.append(" : ");
 				if (method.consumes != null) {
 					sb.append(method.consumes).append(" << ");
@@ -160,7 +161,8 @@ public class OverviewResource implements RestResource {
 	@Produces(TEXT)
 	public Long getAvailableEndpointsCount(@Context Dispatcher dispatcher) {
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
-		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
+		List<ResourceDescription> descriptions = ResourceDescription
+				.fromBoundResourceInvokers(registry.getBounded().entrySet());
 		return (long) descriptions.size();
 	}
 }

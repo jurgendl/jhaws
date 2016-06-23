@@ -1,5 +1,8 @@
 package org.jhaws.common.lang;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class FloatValue extends Value<Float> {
 	private static final long serialVersionUID = -1530814975734843133L;
 

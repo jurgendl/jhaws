@@ -2,8 +2,11 @@ package org.jhaws.common.lang;
 
 import java.util.function.Function;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+@XmlRootElement
 public class KeyValue<K, V> extends Value<V> {
 	private static final long serialVersionUID = 5148190064982535265L;
 

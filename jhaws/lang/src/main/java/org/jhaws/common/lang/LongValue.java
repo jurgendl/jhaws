@@ -1,5 +1,8 @@
 package org.jhaws.common.lang;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class LongValue extends Value<Long> {
 	private static final long serialVersionUID = -1530814975734843133L;
 
