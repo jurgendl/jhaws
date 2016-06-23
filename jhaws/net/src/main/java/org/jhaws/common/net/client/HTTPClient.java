@@ -63,18 +63,23 @@ import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.io.security.Security;
 
 /**
- * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/apache/http/examples/client/
- * @see http://stackoverflow.com/questions/10146692/how-do-i-write-to-an-outputstream-using-defaulthttpclient
+ * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/
+ *      apache/http/examples/client/
+ * @see http://stackoverflow.com/questions/10146692/how-do-i-write-to-an-
+ *      outputstream-using-defaulthttpclient
  * @see https://hc.apache.org/
- * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-tutorial.pdf
- * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced.html
+ * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-
+ *      tutorial.pdf
+ * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced
+ *      .html
  */
 public class HTTPClient implements Closeable {
 	protected String charSet = HTTPClientDefaults.CHARSET;
 
 	protected transient CloseableHttpClient httpClient;
 
-	// protected transient org.apache.http.impl.nio.client.CloseableHttpAsyncClient asyncHttpclient;
+	// protected transient
+	// org.apache.http.impl.nio.client.CloseableHttpAsyncClient asyncHttpclient;
 
 	protected transient RequestConfig requestConfig;
 
@@ -120,14 +125,16 @@ public class HTTPClient implements Closeable {
 		if (redirectStrategy == null) {
 			redirectStrategy = new LaxRedirectStrategy() {
 				@Override
-				public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+				public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context)
+						throws ProtocolException {
 					HttpUriRequest redirect = super.getRedirect(request, response, context);
 					chain.get().add(redirect.getURI());
 					return redirect;
 				}
 
 				@Override
-				public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+				public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context)
+						throws ProtocolException {
 					if (response == null) {
 						throw new IllegalArgumentException("HTTP response may not be null");
 					}
@@ -137,16 +144,19 @@ public class HTTPClient implements Closeable {
 					Header locationHeader = response.getFirstHeader("location");
 
 					switch (statusCode) {
-						case HttpStatus.SC_MOVED_TEMPORARILY:
-							return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method.equalsIgnoreCase(HttpHead.METHOD_NAME))
-									&& (locationHeader != null);
-						case HttpStatus.SC_MOVED_PERMANENTLY:
-						case HttpStatus.SC_TEMPORARY_REDIRECT:
-							return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
-						case HttpStatus.SC_SEE_OTHER:
-							return true;
-						default:
-							return false;
+					case HttpStatus.SC_MOVED_TEMPORARILY:
+						return (method.equalsIgnoreCase(HttpGet.METHOD_NAME)
+								|| method.equalsIgnoreCase(HttpPost.METHOD_NAME)
+								|| method.equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
+					case HttpStatus.SC_MOVED_PERMANENTLY:
+					case HttpStatus.SC_TEMPORARY_REDIRECT:
+						return method.equalsIgnoreCase(HttpGet.METHOD_NAME)
+								|| method.equalsIgnoreCase(HttpPost.METHOD_NAME)
+								|| method.equalsIgnoreCase(HttpHead.METHOD_NAME);
+					case HttpStatus.SC_SEE_OTHER:
+						return true;
+					default:
+						return false;
 					} // end of switch
 				}
 			};
@@ -166,9 +176,11 @@ public class HTTPClient implements Closeable {
 		return httpClient;
 	}
 
-	// protected org.apache.http.impl.nio.client.CloseableHttpAsyncClient getAsyncHttpclient() {
+	// protected org.apache.http.impl.nio.client.CloseableHttpAsyncClient
+	// getAsyncHttpclient() {
 	// if (asyncHttpclient == null) {
-	// asyncHttpclient = org.apache.http.impl.nio.client.HttpAsyncClients.custom()//
+	// asyncHttpclient =
+	// org.apache.http.impl.nio.client.HttpAsyncClients.custom()//
 	// .setUserAgent(getUserAgent())//
 	// .setRedirectStrategy(getRedirectStrategy())//
 	// .setDefaultRequestConfig(getRequestConfig())//
@@ -180,7 +192,8 @@ public class HTTPClient implements Closeable {
 
 	protected URI toFullUri(AbstractGetRequest<? extends AbstractGetRequest<?>> get) {
 		URIBuilder uriBuilder = new URIBuilder(get.getUri());
-		stream(get.getFormValues().entrySet().spliterator(), false).forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
+		stream(get.getFormValues().entrySet().spliterator(), false)
+				.forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
 		try {
 			return uriBuilder.build();
 		} catch (URISyntaxException e1) {
@@ -192,7 +205,8 @@ public class HTTPClient implements Closeable {
 		return execute(params, req, null);
 	}
 
-	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out) {
+	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req,
+			OutputStream out) {
 		if (params != null)
 			prepareRequest(params, req);
 
@@ -209,7 +223,8 @@ public class HTTPClient implements Closeable {
 
 		if (user != null && pass != null) {
 			CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-			credentialsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()), new UsernamePasswordCredentials(user, getPass()));
+			credentialsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+					new UsernamePasswordCredentials(user, getPass()));
 			context.setCredentialsProvider(credentialsProvider);
 		} else {
 			CredentialsProvider credentialsProvider = new SystemDefaultCredentialsProvider();
@@ -229,7 +244,8 @@ public class HTTPClient implements Closeable {
 			throw new UncheckedIOException(ioex);
 		}
 		// if (response == null) {
-		// try (CloseableHttpResponse httpResponse = getHttpClient().execute(req, context)) {
+		// try (CloseableHttpResponse httpResponse =
+		// getHttpClient().execute(req, context)) {
 		// response = buildResponse(req, httpResponse, out);
 		// consumeQuietly(httpResponse.getEntity());
 		// } catch (IOException ioex) {
@@ -239,7 +255,8 @@ public class HTTPClient implements Closeable {
 		return response;
 	}
 
-	protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse, OutputStream out) throws IOException {
+	protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse, OutputStream out)
+			throws IOException {
 		Response response = new Response();
 		List<URI> uris = chain.get();
 		uris.add(0, req.getURI());
@@ -269,7 +286,8 @@ public class HTTPClient implements Closeable {
 				response.setContent(toByteArray(entity));
 			}
 			response.setContentLength(entity.getContentLength());
-			response.setContentEncoding(entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
+			response.setContentEncoding(
+					entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
 			response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
 		}
 		return response;
@@ -331,14 +349,17 @@ public class HTTPClient implements Closeable {
 		} else if (post.getAttachments().size() > 0) {
 			MultipartEntityBuilder mb = MultipartEntityBuilder.create();
 			mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-			post.getAttachments().entrySet().forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
-			post.getFormValues().entrySet().forEach(entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
+			post.getAttachments().entrySet()
+					.forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
+			post.getFormValues().entrySet().forEach(
+					entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
 			req = new HttpPost(post.getUri());
 			HttpEntity body = mb.build();
 			HttpPost.class.cast(req).setEntity(body);
 		} else {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-			post.getFormValues().entrySet().forEach(entry -> entry.getValue().forEach(element -> builder.addParameter(entry.getKey(), element)));
+			post.getFormValues().entrySet().forEach(
+					entry -> entry.getValue().forEach(element -> builder.addParameter(entry.getKey(), element)));
 			req = builder.build();
 		}
 		return req;
@@ -414,9 +435,11 @@ public class HTTPClient implements Closeable {
 	public PostRequest createPost(Form form) {
 		URI uri = isBlank(form.getAction()) ? form.getUrl() : resolve(form.getUrl(), form.getAction());
 		PostRequest post = new PostRequest(uri);
-		form.getInputElements().stream().filter(e -> !(e instanceof FileInput)).forEach(e -> post.addFormValue(e.getName(), e.getValue()));
-		form.getInputElements().stream().filter(e -> isNotBlank(e.getName())).filter(e -> isNotBlank(e.getValue())).filter(e -> e instanceof FileInput)
-				.map(e -> FileInput.class.cast(e)).forEach(e -> post.getAttachments().put(e.getName(), new FilePath(e.getFile())));
+		form.getInputElements().stream().filter(e -> !(e instanceof FileInput))
+				.forEach(e -> post.addFormValue(e.getName(), e.getValue()));
+		form.getInputElements().stream().filter(e -> isNotBlank(e.getName())).filter(e -> isNotBlank(e.getValue()))
+				.filter(e -> e instanceof FileInput).map(e -> FileInput.class.cast(e))
+				.forEach(e -> post.getAttachments().put(e.getName(), new FilePath(e.getFile())));
 		post.setName(form.getId());
 		return post;
 	}
@@ -472,10 +495,12 @@ public class HTTPClient implements Closeable {
 		resetAuthentication();
 	}
 
-	// public void execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out) {
+	// public void execute(AbstractRequest<? extends AbstractRequest<?>> params,
+	// HttpUriRequest req, OutputStream out) {
 	// prepareRequest(params, req);
 	// HttpAsyncRequestProducer areq = HttpAsyncMethods.create(req);
-	// Future<OutputStream> future = getAsyncHttpclient().execute(areq, new AsyncConsumer(out), null);
+	// Future<OutputStream> future = getAsyncHttpclient().execute(areq, new
+	// AsyncConsumer(out), null);
 	// try {
 	// future.get();
 	// } catch (ExecutionException e) {
@@ -502,14 +527,17 @@ public class HTTPClient implements Closeable {
 		prepareRequest_additionalHeaders(params, req);
 	}
 
-	protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+	protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params,
+			HttpUriRequest req) {
 		if (user != null && pass != null) {
 			req.setHeader(HTTPClientDefaults.PARAM_PREEMPTIVE_AUTHENTICATION, String.valueOf(Boolean.TRUE));
 		}
 	}
 
-	protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-		req.setHeader(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER, String.valueOf(HTTPClientDefaults.SINGLE_COOKIE_HEADER));
+	protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params,
+			HttpUriRequest req) {
+		req.setHeader(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER,
+				String.valueOf(HTTPClientDefaults.SINGLE_COOKIE_HEADER));
 	}
 
 	protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
@@ -518,9 +546,11 @@ public class HTTPClient implements Closeable {
 		}
 	}
 
-	protected void prepareRequest_additionalHeaders(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+	protected void prepareRequest_additionalHeaders(AbstractRequest<? extends AbstractRequest<?>> params,
+			HttpUriRequest req) {
 		if (params != null) {
-			params.getHeaders().entrySet().stream().filter(h -> h.getValue() != null).forEach(h -> req.setHeader(h.getKey(), String.valueOf(h.getValue())));
+			params.getHeaders().entrySet().stream().filter(h -> h.getValue() != null)
+					.forEach(h -> req.setHeader(h.getKey(), String.valueOf(h.getValue())));
 		}
 	}
 
@@ -536,5 +566,10 @@ public class HTTPClient implements Closeable {
 
 	public void setCookieStore(org.apache.http.client.CookieStore cookieStore) {
 		this.cookieStore = cookieStore;
+	}
+
+	public Long getDownloaded() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

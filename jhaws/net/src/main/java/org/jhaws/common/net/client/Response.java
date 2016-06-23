@@ -145,4 +145,9 @@ public class Response implements Serializable {
 	public void setChain(List<URI> chain) {
 		this.chain = chain;
 	}
+
+	public String getFilename() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

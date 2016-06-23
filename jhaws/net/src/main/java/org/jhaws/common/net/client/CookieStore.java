@@ -25,49 +25,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CookieStore implements org.apache.http.client.CookieStore, Externalizable {
-	/**
-	 * SerializableCookie
-	 */
 	public static class SerializableCookie implements SetCookie, Serializable {
-
 		private static final long serialVersionUID = -2874315698582406980L;
 
-		/** data */
 		private Date expiryDate;
 
-		/** data */
 		private String comment;
 
-		/** data */
 		private String domain;
 
-		/** data */
 		private String name;
 
-		/** data */
 		private String path;
 
-		/** data */
 		private String value;
 
-		/** data */
 		private boolean isSecure;
 
-		/** data */
 		private int version;
 
-		/**
-		 * Creates a new SerializableCookie object.
-		 */
 		public SerializableCookie() {
 			super();
 		}
 
-		/**
-		 * Creates a new SerializableCookie object.
-		 *
-		 * @param cookie
-		 */
 		public SerializableCookie(Cookie cookie) {
 			this.setComment(cookie.getComment());
 			this.setDomain(cookie.getDomain());
@@ -280,9 +260,10 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		 */
 		@Override
 		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).appendSuper(super.toString()).append("expiryDate", this.expiryDate).append("comment", this.comment)
-					.append("domain", this.domain).append("name", this.name).append("path", this.path).append("value", this.value).append("isSecure", this.isSecure)
-					.append("version", this.version).toString();
+			return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).appendSuper(super.toString())
+					.append("expiryDate", this.expiryDate).append("comment", this.comment).append("domain", this.domain)
+					.append("name", this.name).append("path", this.path).append("value", this.value)
+					.append("isSecure", this.isSecure).append("version", this.version).toString();
 		}
 	}
 

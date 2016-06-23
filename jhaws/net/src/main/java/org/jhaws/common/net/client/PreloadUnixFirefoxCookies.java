@@ -1,15 +1,14 @@
-package org.jhaws.common.net.client.obsolete;
+package org.jhaws.common.net.client;
 
 import java.util.Date;
 import java.util.HashSet;
 
-import org.jhaws.common.net.client.CookieStore;
-import org.jhaws.common.net.client.CookieStoreInterceptor;
 
 @Deprecated
 public class PreloadUnixFirefoxCookies implements CookieStoreInterceptor {
 	/** field */
-	protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
+	protected static final boolean windows = (System.getProperty("os.name") != null)
+			&& System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-2$
 
 	private static final boolean driver;
 
@@ -68,7 +67,8 @@ public class PreloadUnixFirefoxCookies implements CookieStoreInterceptor {
 
 	/**
 	 * 
-	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+	 *      java.util.Date)
 	 */
 	@Override
 	public void beforeClearExpired(CookieStore store, Date date) {

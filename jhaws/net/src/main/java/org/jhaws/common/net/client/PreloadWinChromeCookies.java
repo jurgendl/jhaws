@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.obsolete;
+package org.jhaws.common.net.client;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,12 +13,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
-import org.jhaws.common.net.client.CookieStore;
-import org.jhaws.common.net.client.CookieStoreInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("deprecation")
+
 @Deprecated
 public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(PreloadWinChromeCookies.class);

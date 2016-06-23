@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client.obsolete;
+package org.jhaws.common.net.client;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -17,12 +17,10 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.jhaws.common.io.IODirectory;
 import org.jhaws.common.io.IOFile;
-import org.jhaws.common.net.client.CookieStore;
-import org.jhaws.common.net.client.CookieStoreInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("deprecation")
+
 @Deprecated
 public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(PreloadWinFirefoxCookies.class);
