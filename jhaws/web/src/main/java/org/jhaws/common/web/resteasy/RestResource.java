@@ -3,6 +3,8 @@ package org.jhaws.common.web.resteasy;
 import javax.ws.rs.core.MediaType;
 
 public interface RestResource {
+	public static final String INTERNET_SHORTCUT_URL = "[InternetShortcut]\nURL=";
+
 	public static final String FORM_MULTIPART_DATA = MediaType.MULTIPART_FORM_DATA;
 
 	public static final String FORM_URLENCODED = MediaType.APPLICATION_FORM_URLENCODED;
