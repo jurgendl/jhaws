@@ -14,12 +14,14 @@ import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PreDestroy;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -94,6 +96,8 @@ public class HTTPClient implements Closeable {
 	protected String userAgent = HTTPClientDefaults.CHROME;
 
 	protected org.apache.http.client.CookieStore cookieStore;
+
+	protected transient long downloaded;
 
 	public String getUserAgent() {
 		return userAgent;
@@ -266,31 +270,38 @@ public class HTTPClient implements Closeable {
 			response.addHeader(header.getName(), header.getValue());
 		}
 		response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
+		response.setStatusText(httpResponse.getStatusLine().getReasonPhrase());
 		response.setLocale(httpResponse.getLocale());
-		// switch (httpResponse.getStatusLine().getStatusCode()) {
-		// case HttpStatus.SC_OK:// 200
-		// break;
-		// case HttpStatus.SC_ACCEPTED:// 202
-		// break;
-		// case HttpStatus.SC_NOT_FOUND: // 404
-		// break;
-		// case HttpStatus.SC_UNAUTHORIZED: // 401
-		// break;
-		// }
 		HttpEntity entity = httpResponse.getEntity();
 		if (entity != null) {
 			if (out != null) {
-				IOUtils.copy(entity.getContent(), out);
+				IOUtils.copyLarge(entity.getContent(), out);
+				// FIXME wrap to get downloaded
 				out.flush();
 			} else {
-				response.setContent(toByteArray(entity));
+				byte[] byteArray = toByteArray(entity);
+				downloaded += byteArray.length;
+				response.setContent(byteArray);
 			}
 			response.setContentLength(entity.getContentLength());
 			response.setContentEncoding(
 					entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
 			response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
+			response.setFilename(getName(uris.get(uris.size() - 1)));
+			response.setMime(httpResponse.getFirstHeader(HTTPClientDefaults.CONTENT_TYPE).getValue());
+		}
+		response.setCharset(charSet);
+		try {
+			response.setDate(DateUtils.parseDate(httpResponse.getFirstHeader(HTTPClientDefaults.DATE).getValue()));
+		} catch (ParseException ex) {
+			//
 		}
 		return response;
+	}
+
+	public static String getName(URI url) {
+		String tmp = url.toString();
+		return tmp.substring(tmp.lastIndexOf("/") + 1);
 	}
 
 	public Response get(GetRequest get) {
@@ -326,8 +337,7 @@ public class HTTPClient implements Closeable {
 			if (body != null) {
 				throw new IllegalArgumentException("multiple bodies");
 			}
-
-			// TODO
+			// FIXME
 		}
 
 		if (body != null) {
@@ -568,8 +578,7 @@ public class HTTPClient implements Closeable {
 		this.cookieStore = cookieStore;
 	}
 
-	public Long getDownloaded() {
-		// TODO Auto-generated method stub
-		return null;
+	public long getDownloaded() {
+		return downloaded;
 	}
 }
