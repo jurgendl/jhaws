@@ -25,7 +25,7 @@ import org.springframework.stereotype.Controller;
 @Component
 @Path("/overview")
 @Controller
-public class OverviewResource {
+public class OverviewResource implements RestResource {
 	private static final class MethodDescription {
 		private String method;
 
@@ -106,14 +106,14 @@ public class OverviewResource {
 
 	@GET
 	@Path("/ping/")
-	@Produces("text/plain")
+	@Produces(TEXT)
 	public String ping() {
 		return String.valueOf(System.currentTimeMillis());
 	}
 
 	@GET
 	@Path("/")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(JSON)
 	public List<ResourceDescription> getAvailableEndpoints(@Context Dispatcher dispatcher) {
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
 		return ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
@@ -121,9 +121,8 @@ public class OverviewResource {
 
 	@GET
 	@Path("/")
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(HTML)
 	public Response getAvailableEndpointsHtml(@Context Dispatcher dispatcher) {
-
 		StringBuilder sb = new StringBuilder();
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
 		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
@@ -155,6 +154,14 @@ public class OverviewResource {
 		}
 
 		return Response.ok(sb.toString()).build();
+	}
 
+	@GET
+	@Path("/count")
+	@Produces(TEXT)
+	public Long getAvailableEndpointsCount(@Context Dispatcher dispatcher) {
+		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
+		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
+		return (long) descriptions.size();
 	}
 }
