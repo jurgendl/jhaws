@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.core.ResourceInvoker;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Controller;
 @Component
 @Path("/overview")
 @Controller
+@GZIP
 public class OverviewResource implements RestResource {
 	private static final class MethodDescription {
 		private String method;
@@ -134,7 +136,10 @@ public class OverviewResource implements RestResource {
 
 			for (MethodDescription method : resource.calls) {
 				sb.append("<li> ").append(method.method).append(" ");
-				sb.append("<strong>").append(method.fullPath).append("</strong>");
+				sb.append("<a href='..");
+				if (!method.fullPath.startsWith("/"))
+					sb.append("/");
+				sb.append(method.fullPath).append("'>").append(method.fullPath).append("</a>");
 				sb.append(" : ");
 				if (method.consumes != null) {
 					sb.append(method.consumes).append(" << ");
