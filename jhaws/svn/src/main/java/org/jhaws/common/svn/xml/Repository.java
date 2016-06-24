@@ -23,6 +23,6 @@ public class Repository {
 
     @Override
     public String toString() {
-        return "Repository [" + (this.root != null ? "root=" + this.root + ", " : "") + (this.uuid != null ? "uuid=" + this.uuid : "") + "]";
+        return "Repository [" + (root != null ? "root=" + root + ", " : "") + (uuid != null ? "uuid=" + uuid : "") + "]";
     }
 }

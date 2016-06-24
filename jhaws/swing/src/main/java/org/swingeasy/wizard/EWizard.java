@@ -8,8 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,18 +49,18 @@ public class EWizard extends JPanel implements EComponentI {
 		protected Font selectedFont;
 
 		public WizardListCellRenderer() {
-			this.font = this.getFont();
-			this.selectedFont = this.font.deriveFont(Font.BOLD);
+			font = getFont();
+			selectedFont = font.deriveFont(Font.BOLD);
 		}
 
 		@Override
 		public Component getListCellRendererComponent(JList<? extends WizardPage> list, WizardPage page, int index, boolean isSelected, boolean cellHasFocus) {
-			this.setFont(EWizard.this.wizardPages.get(EWizard.this.wizardPage) == page ? this.selectedFont : this.font);
+			setFont(wizardPages.get(wizardPage) == page ? selectedFont : font);
 			String stringValue = null;
 			if (page != null) {
-				stringValue = (EWizard.this.wizardPages.indexOf(page) + 1) + ". " + page.getTitle();
+				stringValue = wizardPages.indexOf(page) + 1 + ". " + page.getTitle();
 			}
-			this.setText(stringValue);
+			setText(stringValue);
 			return this;
 		}
 	}
@@ -77,7 +75,7 @@ public class EWizard extends JPanel implements EComponentI {
 
 	protected int wizardPage = 0;
 
-	protected final List<WizardPage> wizardPages = new ArrayList<WizardPage>();
+	protected final List<WizardPage> wizardPages = new ArrayList<>();
 
 	protected JSeparator separatorTop;
 
@@ -112,49 +110,49 @@ public class EWizard extends JPanel implements EComponentI {
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0 };
 		gridBagLayout.columnWeights = new double[] { 1.0 };
-		this.setLayout(gridBagLayout);
+		setLayout(gridBagLayout);
 
-		this.topPanel = new GradientPanel();
-		this.topPanel.getGradientRenderer().setOrientation(GradientOrientation.HORIZONTAL);
+		topPanel = new GradientPanel();
+		topPanel.getGradientRenderer().setOrientation(GradientOrientation.HORIZONTAL);
 		GridBagConstraints gbc_topPanel = new GridBagConstraints();
 		gbc_topPanel.anchor = GridBagConstraints.NORTH;
 		gbc_topPanel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_topPanel.gridx = 0;
 		gbc_topPanel.gridy = 0;
-		this.add(this.topPanel, gbc_topPanel);
-		this.topPanel.setLayout(new BorderLayout(10, 10));
+		this.add(topPanel, gbc_topPanel);
+		topPanel.setLayout(new BorderLayout(10, 10));
 
-		this.lblIcon = new ELabel("");
-		this.lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
-		this.lblIcon.setRequestFocusEnabled(false);
-		this.lblIcon.setPreferredSize(new Dimension(80, 80));
-		this.lblIcon.setMinimumSize(new Dimension(80, 80));
-		this.lblIcon.setMaximumSize(new Dimension(80, 80));
-		this.topPanel.add(this.lblIcon, BorderLayout.EAST);
+		lblIcon = new ELabel("");
+		lblIcon.setHorizontalAlignment(SwingConstants.CENTER);
+		lblIcon.setRequestFocusEnabled(false);
+		lblIcon.setPreferredSize(new Dimension(80, 80));
+		lblIcon.setMinimumSize(new Dimension(80, 80));
+		lblIcon.setMaximumSize(new Dimension(80, 80));
+		topPanel.add(lblIcon, BorderLayout.EAST);
 
-		this.topSubPanel = new JPanel();
-		this.topSubPanel.setOpaque(false);
-		this.topPanel.add(this.topSubPanel, BorderLayout.CENTER);
-		this.topSubPanel.setLayout(new BorderLayout(0, 0));
+		topSubPanel = new JPanel();
+		topSubPanel.setOpaque(false);
+		topPanel.add(topSubPanel, BorderLayout.CENTER);
+		topSubPanel.setLayout(new BorderLayout(0, 0));
 
-		this.lblTitle = new ELabel("");
-		this.lblTitle.setRequestFocusEnabled(false);
-		this.lblTitle.setBorder(new EmptyBorder(8, 14, 0, 0));
-		this.lblTitle.setFont(this.lblTitle.getFont().deriveFont(this.lblTitle.getFont().getStyle() | Font.BOLD));
-		this.topSubPanel.add(this.lblTitle, BorderLayout.NORTH);
+		lblTitle = new ELabel("");
+		lblTitle.setRequestFocusEnabled(false);
+		lblTitle.setBorder(new EmptyBorder(8, 14, 0, 0));
+		lblTitle.setFont(lblTitle.getFont().deriveFont(lblTitle.getFont().getStyle() | Font.BOLD));
+		topSubPanel.add(lblTitle, BorderLayout.NORTH);
 
-		this.lblDescription = new ELabel("");
-		this.lblDescription.setRequestFocusEnabled(false);
-		this.lblDescription.setVerticalAlignment(SwingConstants.TOP);
-		this.lblDescription.setBorder(new EmptyBorder(6, 28, 0, 4));
-		this.topSubPanel.add(this.lblDescription, BorderLayout.CENTER);
+		lblDescription = new ELabel("");
+		lblDescription.setRequestFocusEnabled(false);
+		lblDescription.setVerticalAlignment(SwingConstants.TOP);
+		lblDescription.setBorder(new EmptyBorder(6, 28, 0, 4));
+		topSubPanel.add(lblDescription, BorderLayout.CENTER);
 
-		this.separatorTop = new JSeparator();
+		separatorTop = new JSeparator();
 		GridBagConstraints gbc_separatorTop = new GridBagConstraints();
 		gbc_separatorTop.fill = GridBagConstraints.HORIZONTAL;
 		gbc_separatorTop.gridx = 0;
 		gbc_separatorTop.gridy = 1;
-		this.add(this.separatorTop, gbc_separatorTop);
+		this.add(separatorTop, gbc_separatorTop);
 
 		JPanel centerPanel = new JPanel();
 		GridBagConstraints gbc_centerPanel = new GridBagConstraints();
@@ -167,39 +165,37 @@ public class EWizard extends JPanel implements EComponentI {
 		gbl_centerPanel.rowWeights = new double[] { 1.0 };
 		centerPanel.setLayout(gbl_centerPanel);
 
-		this.leftPanel = new GradientPanel();
-		this.leftPanel.setPreferredSize(new Dimension(240, 0));
-		this.leftPanel.setMinimumSize(new Dimension(240, 0));
+		leftPanel = new GradientPanel();
+		leftPanel.setPreferredSize(new Dimension(240, 0));
+		leftPanel.setMinimumSize(new Dimension(240, 0));
 		GridBagConstraints gbc_leftPanel = new GridBagConstraints();
 		gbc_leftPanel.fill = GridBagConstraints.VERTICAL;
 		gbc_leftPanel.gridx = 0;
 		gbc_leftPanel.gridy = 0;
-		centerPanel.add(this.leftPanel, gbc_leftPanel);
+		centerPanel.add(leftPanel, gbc_leftPanel);
 
-		this.lblPages = new ELabel("Steps" + EWizard.PAGES_SUFFIX);
-		Font original = this.lblPages.getFont();
+		lblPages = new ELabel("Steps" + EWizard.PAGES_SUFFIX);
+		Font original = lblPages.getFont();
 		@SuppressWarnings("unchecked")
 		Map<TextAttribute, Object> attributes = (Map<TextAttribute, Object>) original.getAttributes();
 		attributes.put(java.awt.font.TextAttribute.UNDERLINE, java.awt.font.TextAttribute.UNDERLINE_ON);
 		attributes.put(java.awt.font.TextAttribute.WEIGHT, java.awt.font.TextAttribute.WEIGHT_BOLD);
-		this.lblPages.setFont(original.deriveFont(attributes));
-		this.lblPages.setRequestFocusEnabled(false);
+		lblPages.setFont(original.deriveFont(attributes));
+		lblPages.setRequestFocusEnabled(false);
 
-		this.pageList = new JList<>();
-		this.pageList.setRequestFocusEnabled(false);
-		this.pageList.setBorder(new EmptyBorder(4, 14, 10, 10));
-		this.pageList.setOpaque(false);
-		GroupLayout gl_leftPanel = new GroupLayout(this.leftPanel);
-		gl_leftPanel
-				.setHorizontalGroup(gl_leftPanel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
-						gl_leftPanel.createSequentialGroup().addContainerGap()
-								.addGroup(gl_leftPanel.createParallelGroup(Alignment.TRAILING)
-										.addComponent(this.lblPages, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-										.addComponent(this.pageList, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
-								.addContainerGap()));
-		gl_leftPanel.setVerticalGroup(gl_leftPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_leftPanel.createSequentialGroup().addGap(8).addComponent(this.lblPages)
-				.addPreferredGap(ComponentPlacement.RELATED).addComponent(this.pageList, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE).addContainerGap()));
-		this.leftPanel.setLayout(gl_leftPanel);
+		pageList = new JList<>();
+		pageList.setRequestFocusEnabled(false);
+		pageList.setBorder(new EmptyBorder(4, 14, 10, 10));
+		pageList.setOpaque(false);
+		GroupLayout gl_leftPanel = new GroupLayout(leftPanel);
+		gl_leftPanel.setHorizontalGroup(gl_leftPanel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
+				gl_leftPanel.createSequentialGroup().addContainerGap()
+						.addGroup(gl_leftPanel.createParallelGroup(Alignment.TRAILING).addComponent(lblPages, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
+								.addComponent(pageList, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
+						.addContainerGap()));
+		gl_leftPanel.setVerticalGroup(gl_leftPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_leftPanel.createSequentialGroup().addGap(8).addComponent(lblPages)
+				.addPreferredGap(ComponentPlacement.RELATED).addComponent(pageList, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE).addContainerGap()));
+		leftPanel.setLayout(gl_leftPanel);
 
 		JSeparator separator = new JSeparator();
 		separator.setOrientation(SwingConstants.VERTICAL);
@@ -209,13 +205,13 @@ public class EWizard extends JPanel implements EComponentI {
 		gbc_separator.gridy = 0;
 		centerPanel.add(separator, gbc_separator);
 
-		this.mainPanel = new JPanel();
+		mainPanel = new JPanel();
 		GridBagConstraints gbc_mainPanel = new GridBagConstraints();
 		gbc_mainPanel.fill = GridBagConstraints.BOTH;
 		gbc_mainPanel.gridx = 2;
 		gbc_mainPanel.gridy = 0;
-		centerPanel.add(this.mainPanel, gbc_mainPanel);
-		this.mainPanel.setLayout(new CardLayout(0, 0));
+		centerPanel.add(mainPanel, gbc_mainPanel);
+		mainPanel.setLayout(new CardLayout(0, 0));
 
 		JSeparator separatorBottom = new JSeparator();
 		GridBagConstraints gbc_separatorBottom = new GridBagConstraints();
@@ -233,82 +229,67 @@ public class EWizard extends JPanel implements EComponentI {
 		gbc_bottomPanel.gridy = 4;
 		this.add(bottomPanel, gbc_bottomPanel);
 
-		this.btnHelp = new EButton(new EButtonConfig("Help"));
-		this.btnHelp.setPreferredSize(this.getButtonSize());
-		bottomPanel.add(this.btnHelp);
+		btnHelp = new EButton(new EButtonConfig("Help"));
+		btnHelp.setPreferredSize(getButtonSize());
+		bottomPanel.add(btnHelp);
 
-		this.btnCancel = new EButton(new EButtonConfig("Cancel"));
-		this.btnCancel.setPreferredSize(this.getButtonSize());
-		bottomPanel.add(this.btnCancel);
+		btnCancel = new EButton(new EButtonConfig("Cancel"));
+		btnCancel.setPreferredSize(getButtonSize());
+		bottomPanel.add(btnCancel);
 
-		this.btnBack = new EButton(new EButtonConfig("< Back"));
-		this.btnBack.setPreferredSize(this.getButtonSize());
-		this.btnBack.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EWizard.this.back();
-			}
-		});
-		bottomPanel.add(this.btnBack);
+		btnBack = new EButton(new EButtonConfig("< Back"));
+		btnBack.setPreferredSize(getButtonSize());
+		btnBack.addActionListener(e -> EWizard.this.back());
+		bottomPanel.add(btnBack);
 
-		this.btnNext = new EButton(new EButtonConfig("Next >"));
-		this.btnNext.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EWizard.this.next();
-			}
-		});
-		this.btnNext.setPreferredSize(this.getButtonSize());
-		bottomPanel.add(this.btnNext);
+		btnNext = new EButton(new EButtonConfig("Next >"));
+		btnNext.addActionListener(e -> EWizard.this.next());
+		btnNext.setPreferredSize(getButtonSize());
+		bottomPanel.add(btnNext);
 
-		this.btnFinish = new EButton(new EButtonConfig("Finish"));
-		this.btnFinish.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EWizard.this.finish();
-			}
-		});
-		this.btnFinish.setPreferredSize(this.getButtonSize());
-		bottomPanel.add(this.btnFinish);
+		btnFinish = new EButton(new EButtonConfig("Finish"));
+		btnFinish.addActionListener(e -> EWizard.this.finish());
+		btnFinish.setPreferredSize(getButtonSize());
+		bottomPanel.add(btnFinish);
 
 		// leave at bottom
 		UIUtils.registerLocaleChangeListener((EComponentI) this);
 	}
 
 	public void addWizardPage(WizardPage page) {
-		this.wizardPages.add(page);
+		wizardPages.add(page);
 	}
 
 	protected void back() {
-		if (0 < this.wizardPage) {
-			this.wizardPage--;
-			this.updatePage();
+		if (0 < wizardPage) {
+			wizardPage--;
+			updatePage();
 		}
 	}
 
 	protected void finish() {
-		this.wizardPage = this.wizardPages.size() - 1;
-		this.updatePage();
+		wizardPage = wizardPages.size() - 1;
+		updatePage();
 	}
 
 	protected EButton getBtnBack() {
-		return this.btnBack;
+		return btnBack;
 	}
 
 	protected EButton getBtnCancel() {
-		return this.btnCancel;
+		return btnCancel;
 	}
 
 	protected EButton getBtnFinish() {
-		return this.btnFinish;
+		return btnFinish;
 	}
 
 	protected EButton getBtnHelp() {
-		return this.btnHelp;
+		return btnHelp;
 	}
 
 	protected EButton getBtnNext() {
-		return this.btnNext;
+		return btnNext;
 	}
 
 	protected Dimension getButtonSize() {
@@ -316,42 +297,42 @@ public class EWizard extends JPanel implements EComponentI {
 	}
 
 	protected ELabel getLblDescription() {
-		return this.lblDescription;
+		return lblDescription;
 	}
 
 	protected ELabel getLblIcon() {
-		return this.lblIcon;
+		return lblIcon;
 	}
 
 	protected ELabel getLblPages() {
-		return this.lblPages;
+		return lblPages;
 	}
 
 	protected ELabel getLblTitle() {
-		return this.lblTitle;
+		return lblTitle;
 	}
 
 	protected GradientPanel getLeftPanel() {
-		return this.leftPanel;
+		return leftPanel;
 	}
 
 	protected JPanel getMainPanel() {
-		return this.mainPanel;
+		return mainPanel;
 	}
 
 	protected JList<WizardPage> getPageList() {
-		return this.pageList;
+		return pageList;
 	}
 
 	protected GradientPanel getTopPanel() {
-		return this.topPanel;
+		return topPanel;
 	}
 
 	public void init() {
 		int i = 0;
-		DefaultListModel<WizardPage> pageListModel = new DefaultListModel<WizardPage>();
-		this.getPageList().setModel(pageListModel);
-		this.getPageList().setCellRenderer(new WizardListCellRenderer());
+		DefaultListModel<WizardPage> pageListModel = new DefaultListModel<>();
+		getPageList().setModel(pageListModel);
+		getPageList().setCellRenderer(new WizardListCellRenderer());
 		DefaultListSelectionModel selectionModel = new DefaultListSelectionModel() {
 			private static final long serialVersionUID = 6618282932208651223L;
 
@@ -360,99 +341,99 @@ public class EWizard extends JPanel implements EComponentI {
 				//
 			}
 		};
-		this.getPageList().setSelectionModel(selectionModel);
-		for (WizardPage page : this.wizardPages) {
+		getPageList().setSelectionModel(selectionModel);
+		for (WizardPage page : wizardPages) {
 			pageListModel.add(i, page);
-			this.getMainPanel().add(page.createComponent(), String.valueOf(i++));
+			getMainPanel().add(page.createComponent(), String.valueOf(i++));
 		}
 
-		if (this.getBtnCancel().getAction() == null) {
-			this.getBtnCancel().setVisible(false);
+		if (getBtnCancel().getAction() == null) {
+			getBtnCancel().setVisible(false);
 		}
-		if (this.getBtnHelp().getAction() == null) {
-			this.getBtnHelp().setVisible(false);
+		if (getBtnHelp().getAction() == null) {
+			getBtnHelp().setVisible(false);
 		}
 
-		this.getLblDescription().setPreferredSize(new Dimension(0, 0));
+		getLblDescription().setPreferredSize(new Dimension(0, 0));
 
-		this.updatePage();
+		updatePage();
 	}
 
 	protected void next() {
-		if (this.wizardPage < (this.wizardPages.size() - 1)) {
-			this.wizardPage++;
-			this.updatePage();
+		if (wizardPage < wizardPages.size() - 1) {
+			wizardPage++;
+			updatePage();
 		}
 	}
 
 	public void setCancelAction(Action cancelAction) {
-		String text = this.getBtnCancel().getText();
-		this.getBtnCancel().setHideActionText(true);
-		this.getBtnCancel().setAction(cancelAction);
-		this.getBtnCancel().setText(text);
+		String text = getBtnCancel().getText();
+		getBtnCancel().setHideActionText(true);
+		getBtnCancel().setAction(cancelAction);
+		getBtnCancel().setText(text);
 	}
 
 	public void setHelpAction(Action helpAction) {
-		String text = this.getBtnHelp().getText();
-		this.getBtnHelp().setHideActionText(true);
-		this.getBtnHelp().setAction(helpAction);
-		this.getBtnHelp().setText(text);
+		String text = getBtnHelp().getText();
+		getBtnHelp().setHideActionText(true);
+		getBtnHelp().setAction(helpAction);
+		getBtnHelp().setText(text);
 	}
 
 	public void setIcon(Icon icon) {
-		this.getLblIcon().setIcon(icon);
+		getLblIcon().setIcon(icon);
 	}
 
 	public void setLeftPanelVisible(boolean b) {
 		if (b) {
-			this.getLeftPanel().setPreferredSize(new Dimension(240, 0));
-			this.getLeftPanel().setMinimumSize(new Dimension(240, 0));
+			getLeftPanel().setPreferredSize(new Dimension(240, 0));
+			getLeftPanel().setMinimumSize(new Dimension(240, 0));
 		} else {
-			this.getLeftPanel().setPreferredSize(new Dimension(0, 0));
-			this.getLeftPanel().setMinimumSize(new Dimension(0, 0));
+			getLeftPanel().setPreferredSize(new Dimension(0, 0));
+			getLeftPanel().setMinimumSize(new Dimension(0, 0));
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.awt.Component#setLocale(java.util.Locale)
 	 */
 	@Override
 	public void setLocale(Locale l) {
 		super.setLocale(l);
-		this.getLblPages().setText(Messages.getString(l, "EWizard.steps") + EWizard.PAGES_SUFFIX);
-		this.getBtnBack().setText(Messages.getString(l, "EWizard.back"));
-		this.getBtnCancel().setText(Messages.getString(l, "EWizard.cancel"));
-		this.getBtnFinish().setText(Messages.getString(l, "EWizard.finish"));
-		this.getBtnHelp().setText(Messages.getString(l, "EWizard.help"));
-		this.getBtnNext().setText(Messages.getString(l, "EWizard.next"));
+		getLblPages().setText(Messages.getString(l, "EWizard.steps") + EWizard.PAGES_SUFFIX);
+		getBtnBack().setText(Messages.getString(l, "EWizard.back"));
+		getBtnCancel().setText(Messages.getString(l, "EWizard.cancel"));
+		getBtnFinish().setText(Messages.getString(l, "EWizard.finish"));
+		getBtnHelp().setText(Messages.getString(l, "EWizard.help"));
+		getBtnNext().setText(Messages.getString(l, "EWizard.next"));
 		this.repaint();
 	}
 
 	public void setTopPanelVisible(boolean b) {
-		this.getTopPanel().setVisible(b);
+		getTopPanel().setVisible(b);
 	}
 
 	protected void updatePage() {
-		CardLayout cl = (CardLayout) this.getMainPanel().getLayout();
-		cl.show(this.getMainPanel(), String.valueOf(this.wizardPage));
+		CardLayout cl = (CardLayout) getMainPanel().getLayout();
+		cl.show(getMainPanel(), String.valueOf(wizardPage));
 
-		WizardPage page = this.wizardPages.get(this.wizardPage);
-		this.getLblTitle().setText(page.getTitle());
-		this.getLblDescription().setText("<html><p>" + page.getDescription().replaceAll("\r\n", "<br>").replaceAll("\n", "<br>").replaceAll("\r", "<br>") + "</p></html>");
+		WizardPage page = wizardPages.get(wizardPage);
+		getLblTitle().setText(page.getTitle());
+		getLblDescription().setText("<html><p>" + page.getDescription().replaceAll("\r\n", "<br>").replaceAll("\n", "<br>").replaceAll("\r", "<br>") + "</p></html>");
 
-		this.getBtnBack().setEnabled(0 < this.wizardPage);
-		this.getBtnNext().setEnabled((this.wizardPage < (this.wizardPages.size() - 1)) && this.wizardPages.get(this.wizardPage + 1).validate());
+		getBtnBack().setEnabled(0 < wizardPage);
+		getBtnNext().setEnabled(wizardPage < wizardPages.size() - 1 && wizardPages.get(wizardPage + 1).validate());
 		boolean valid = true;
-		for (int pi = this.wizardPage + 1; pi < this.wizardPages.size(); pi++) {
-			if (!this.wizardPages.get(pi).validate()) {
+		for (int pi = wizardPage + 1; pi < wizardPages.size(); pi++) {
+			if (!wizardPages.get(pi).validate()) {
 				valid = false;
 				break;
 			}
 		}
-		this.getBtnFinish().setEnabled(valid && (this.wizardPage < (this.wizardPages.size() - 2)));
+		getBtnFinish().setEnabled(valid && wizardPage < wizardPages.size() - 2);
 
-		this.getPageList().setSelectedIndex(this.wizardPage);
-		this.getPageList().repaint();
+		getPageList().setSelectedIndex(wizardPage);
+		getPageList().repaint();
 	}
 }

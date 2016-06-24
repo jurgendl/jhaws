@@ -14,69 +14,69 @@ import org.swingeasy.EComponentI;
  * @author Jurgen
  */
 public class NumberTableCellEditor extends DefaultCellEditor implements EComponentI {
-    private static final long serialVersionUID = 5169127745067354714L;
+	private static final long serialVersionUID = 5169127745067354714L;
 
-    protected NumberFormat formatter;
+	protected NumberFormat formatter;
 
-    public NumberTableCellEditor() {
-        super(new JTextField());
+	public NumberTableCellEditor() {
+		super(new JTextField());
 
-        final JTextField jtf = JTextField.class.cast(this.getComponent());
-        jtf.setBorder(null);
-        jtf.removeActionListener(this.delegate);
-        this.delegate = new EditorDelegate() {
-            private static final long serialVersionUID = 6553117639786915624L;
+		final JTextField jtf = JTextField.class.cast(getComponent());
+		jtf.setBorder(null);
+		jtf.removeActionListener(delegate);
+		delegate = new EditorDelegate() {
+			private static final long serialVersionUID = 6553117639786915624L;
 
-            @Override
-            public Object getCellEditorValue() {
-                if (jtf.getText().equals("")) { //$NON-NLS-1$
-                    return null;
-                }
-                try {
-                    return NumberTableCellEditor.this.formatter.parseObject(jtf.getText());
-                } catch (ParseException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
+			@Override
+			public Object getCellEditorValue() {
+				if (jtf.getText().equals("")) { //$NON-NLS-1$
+					return null;
+				}
+				try {
+					return formatter.parseObject(jtf.getText());
+				} catch (ParseException ex) {
+					throw new RuntimeException(ex);
+				}
+			}
 
-            /**
-             * 
-             * @see javax.swing.DefaultCellEditor.EditorDelegate#setValue(java.lang.Object)
-             */
-            @Override
-            public void setValue(Object value) {
-                jtf.setText((value != null) ? NumberTableCellEditor.this.formatter.format(value) : ""); //$NON-NLS-1$
-            }
-        };
-        jtf.addActionListener(this.delegate);
+			/**
+			 * 
+			 * @see javax.swing.DefaultCellEditor.EditorDelegate#setValue(java.lang.Object)
+			 */
+			@Override
+			public void setValue(Object value) {
+				jtf.setText(value != null ? formatter.format(value) : ""); //$NON-NLS-1$
+			}
+		};
+		jtf.addActionListener(delegate);
 
-        this.newFormatter();
-    }
+		newFormatter();
+	}
 
-    public Locale getLocale() {
-        return this.getComponent().getLocale();
-    }
+	public Locale getLocale() {
+		return getComponent().getLocale();
+	}
 
-    protected void newFormatter() {
-        this.formatter = NumberFormat.getInstance(this.getLocale());
-    }
+	protected void newFormatter() {
+		formatter = NumberFormat.getInstance(getLocale());
+	}
 
-    /**
-     * 
-     * @see org.swingeasy.EComponentI#setEnabled(boolean)
-     */
-    @Override
-    public void setEnabled(boolean b) {
-        //
-    }
+	/**
+	 * 
+	 * @see org.swingeasy.EComponentI#setEnabled(boolean)
+	 */
+	@Override
+	public void setEnabled(boolean b) {
+		//
+	}
 
-    /**
-     * 
-     * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
-     */
-    @Override
-    public void setLocale(Locale l) {
-        this.getComponent().setLocale(l);
-        this.newFormatter();
-    }
+	/**
+	 * 
+	 * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
+	 */
+	@Override
+	public void setLocale(Locale l) {
+		getComponent().setLocale(l);
+		newFormatter();
+	}
 }

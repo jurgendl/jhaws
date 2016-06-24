@@ -31,7 +31,7 @@ public final class MethodInvoker {
 
 		do {
 			for (Method method : clazz.getDeclaredMethods()) {
-				if (method.getName().equals(methodName) && (types.length == method.getParameterTypes().length)) {
+				if (method.getName().equals(methodName) && types.length == method.getParameterTypes().length) {
 					for (int i = 0; i < types.length; i++) {
 						if (method.getParameterTypes()[i].isAssignableFrom(types[i])) {
 							return method;
@@ -83,7 +83,7 @@ public final class MethodInvoker {
 				} catch (Exception ex2) {
 					clazz = clazz.getSuperclass();
 				}
-			} while ((method == null) && (clazz != null));
+			} while (method == null && clazz != null);
 		}
 
 		if (method == null) {
@@ -188,7 +188,7 @@ public final class MethodInvoker {
 		Class<?>[] cl = new Class[params.length];
 
 		for (int i = 0; i < params.length; i++) {
-			cl[i] = (params[i] == null) ? Object.class : params[i].getClass();
+			cl[i] = params[i] == null ? Object.class : params[i].getClass();
 		}
 
 		return cl;
@@ -244,7 +244,7 @@ public final class MethodInvoker {
 
 		MethodInvoker castOther = (MethodInvoker) other;
 
-		return new EqualsBuilder().append(this.invoker, castOther.invoker).append(this.methodName, castOther.methodName).append(this.types, castOther.types).isEquals();
+		return new EqualsBuilder().append(invoker, castOther.invoker).append(methodName, castOther.methodName).append(types, castOther.types).isEquals();
 	}
 
 	/**
@@ -253,7 +253,7 @@ public final class MethodInvoker {
 	 * @return Returns the invoker.
 	 */
 	public final Object getInvoker() {
-		return this.invoker;
+		return invoker;
 	}
 
 	/**
@@ -264,12 +264,12 @@ public final class MethodInvoker {
 	 * @throws InvocationException
 	 */
 	public final Method getMethod() throws InvocationException {
-		if (this.method == null) {
-			this.method = MethodInvoker.getMethod(this.invoker, this.methodName, this.types);
-			this.types = this.method.getParameterTypes();
+		if (method == null) {
+			method = MethodInvoker.getMethod(invoker, methodName, types);
+			types = method.getParameterTypes();
 		}
 
-		return this.method;
+		return method;
 	}
 
 	/**
@@ -278,7 +278,7 @@ public final class MethodInvoker {
 	 * @return Returns the methodName.
 	 */
 	public final String getMethodName() {
-		return this.methodName;
+		return methodName;
 	}
 
 	/**
@@ -287,7 +287,7 @@ public final class MethodInvoker {
 	 * @return Returns the parameters.
 	 */
 	public final Object[] getParameters() {
-		return this.parameters;
+		return parameters;
 	}
 
 	/**
@@ -296,7 +296,7 @@ public final class MethodInvoker {
 	 * @return Returns the returns.
 	 */
 	public final Object getReturns() {
-		return this.returns;
+		return returns;
 	}
 
 	/**
@@ -305,7 +305,7 @@ public final class MethodInvoker {
 	 * @return Returns the types.
 	 */
 	public final Class<?>[] getTypes() {
-		return this.types;
+		return types;
 	}
 
 	/**
@@ -314,7 +314,7 @@ public final class MethodInvoker {
 	 */
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(1859497571, 1345127631).append(this.invoker).append(this.methodName).append(this.types).toHashCode();
+		return new HashCodeBuilder(1859497571, 1345127631).append(invoker).append(methodName).append(types).toHashCode();
 	}
 
 	/**
@@ -327,24 +327,24 @@ public final class MethodInvoker {
 	public final Object invoke(Object... p) throws InvocationException {
 		Method method2 = this.getMethod();
 
-		if ((p == null) || ((p.length == 0) && (this.types.length != 0))) {
+		if (p == null || p.length == 0 && types.length != 0) {
 			throw new InvocationException("incorrect number or types of parameters");
 		}
 
-		if (p.length != this.types.length) {
+		if (p.length != types.length) {
 			throw new InvocationException("incorrect number of parameters");
 		}
 
 		for (int i = 0; i < p.length; i++) {
-			if (!((p[i] == null) || this.types[i].isAssignableFrom(p[i].getClass()))) {
+			if (!(p[i] == null || types[i].isAssignableFrom(p[i].getClass()))) {
 				throw new InvocationException("incorrect types of parameters");
 			}
 		}
 
-		this.parameters = p;
-		this.returns = MethodInvoker.invoke0(method2, this.invoker, p);
+		parameters = p;
+		returns = MethodInvoker.invoke0(method2, invoker, p);
 
-		return this.returns;
+		return returns;
 	}
 
 	@SuppressWarnings("unused")
@@ -373,7 +373,7 @@ public final class MethodInvoker {
 	 */
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).appendSuper(super.toString()).append("invoker", this.invoker).append("methodName", this.methodName)
-				.append("types", this.types).append("method", this.method).append("parameters", this.parameters).append("returns", this.returns).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).appendSuper(super.toString()).append("invoker", invoker).append("methodName", methodName)
+				.append("types", types).append("method", method).append("parameters", parameters).append("returns", returns).toString();
 	}
 }

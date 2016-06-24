@@ -90,7 +90,7 @@ public class EListTransferHandler<T> extends TransferHandler {
 	// was a Copy operation and the original list is left
 	// intact.
 	protected void cleanup(JComponent c, boolean remove) {
-		if (remove && (this.indices != null)) {
+		if (remove && this.indices != null) {
 			EList<T> source = this.castEList(c);
 			@SuppressWarnings("unchecked")
 			DefaultListModel<T> model = (DefaultListModel<T>) source.getModel();
@@ -220,7 +220,7 @@ public class EListTransferHandler<T> extends TransferHandler {
 		for (int i = 0; i < values.length; i++) {
 			Object val = values[i];
 			buff.append(val == null ? "" : val.toString());
-			if (i != (values.length - 1)) {
+			if (i != values.length - 1) {
 				buff.append("\n");
 			}
 		}
@@ -311,7 +311,7 @@ public class EListTransferHandler<T> extends TransferHandler {
 			InputStream is = InputStream.class.cast(t.getTransferData(this.getRemoteDataFlavor()));
 			ObjectInputStream ois = new ObjectInputStream(is);
 			Object transferData = ois.readObject();
-			records = new ArrayList<EListRecord<T>>();
+			records = new ArrayList<>();
 			for (T data : this.castData(transferData)) {
 				records.add(this.newEListRecord(data));
 			}
@@ -328,6 +328,6 @@ public class EListTransferHandler<T> extends TransferHandler {
 	}
 
 	protected EListRecord<T> newEListRecord(T data) {
-		return new EListRecord<T>(data);
+		return new EListRecord<>(data);
 	}
 }

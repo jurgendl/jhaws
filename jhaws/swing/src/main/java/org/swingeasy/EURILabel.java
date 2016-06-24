@@ -11,28 +11,28 @@ import javax.swing.JLabel;
 
 /**
  * label for url
- * 
+ *
  * @author Jurgen
  */
 public class EURILabel extends JLabel {
-    private static final long serialVersionUID = -4664937991392128340L;
+	private static final long serialVersionUID = -4664937991392128340L;
 
-    public EURILabel(URI uri) {
-        this(uri, uri.toString());
-    }
+	public EURILabel(URI uri) {
+		this(uri, uri.toString());
+	}
 
-    public EURILabel(final URI uri, String text) {
-        super("<html><a href=\"" + uri + "\">" + text + "</a></html>");
-        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().browse(uri);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
+	public EURILabel(final URI uri, String text) {
+		super("<html><a href=\"" + uri + "\">" + text + "</a></html>");
+		setCursor(new Cursor(Cursor.HAND_CURSOR));
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					Desktop.getDesktop().browse(uri);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+	}
 }

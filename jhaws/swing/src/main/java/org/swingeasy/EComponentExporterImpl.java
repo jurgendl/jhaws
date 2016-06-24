@@ -67,7 +67,7 @@ public abstract class EComponentExporterImpl<T extends JComponent & EComponentI>
 	protected volatile byte[] style;
 
 	public EComponentExporterImpl() {
-		this.customizer = new EComponentExporterFileChooserCustomizer<T>(this);
+		this.customizer = new EComponentExporterFileChooserCustomizer<>(this);
 	}
 
 	protected boolean canOverwrite(T component) {

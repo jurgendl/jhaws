@@ -28,7 +28,7 @@ public class ListenerDemo {
 		private Class<T> listenerClass = (Class<T>) PropertyChangeListener.class;
 
 		public WeakPropertyChangeListener(T delegate) {
-			this.delegate = new WeakReference<T>(delegate);
+			this.delegate = new WeakReference<>(delegate);
 		}
 
 		protected void detach(Object source) {
@@ -80,7 +80,7 @@ public class ListenerDemo {
 
 	public static void main(String[] args) {
 		PropertyChangeListener l1 = new PropertyChangeListenerAdapter();
-		PropertyChangeListener l2 = new WeakPropertyChangeListener<PropertyChangeListenerAdapter>(new PropertyChangeListenerAdapter());
+		PropertyChangeListener l2 = new WeakPropertyChangeListener<>(new PropertyChangeListenerAdapter());
 		PropertyChangeListener weakproxy = WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerAdapter());
 		ListenerDemo listenerTest = new ListenerDemo();
 		listenerTest.addPropertyChangeListener(l1);
@@ -97,16 +97,16 @@ public class ListenerDemo {
 	protected EventListenerList listenerList = new EventListenerList();
 
 	public void addPropertyChangeListener(PropertyChangeListener testListener) {
-		this.listenerList.add(PropertyChangeListener.class, testListener);
+		listenerList.add(PropertyChangeListener.class, testListener);
 	}
 
 	public void firePropertyChangeEvent(PropertyChangeEvent event) {
-		for (PropertyChangeListener listener : this.listenerList.getListeners(PropertyChangeListener.class)) {
+		for (PropertyChangeListener listener : listenerList.getListeners(PropertyChangeListener.class)) {
 			listener.propertyChange(event);
 		}
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener testListener) {
-		this.listenerList.remove(PropertyChangeListener.class, testListener);
+		listenerList.remove(PropertyChangeListener.class, testListener);
 	}
 }

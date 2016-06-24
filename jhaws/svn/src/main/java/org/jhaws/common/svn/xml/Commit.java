@@ -40,7 +40,7 @@ public class Commit {
 
     @Override
     public String toString() {
-        return "Commit [revision=" + this.revision + ", " + (this.author != null ? "author=" + this.author + ", " : "")
-                + (this.date != null ? "date=" + this.date : "") + "]";
+        return "Commit [revision=" + revision + ", " + (author != null ? "author=" + author + ", " : "")
+                + (date != null ? "date=" + date : "") + "]";
     }
 }

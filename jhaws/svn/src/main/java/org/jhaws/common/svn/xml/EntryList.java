@@ -34,7 +34,7 @@ public class EntryList implements Iterable<Entry> {
 
 	@Override
 	public String toString() {
-		return "List [" + (this.path != null ? "path=" + this.path : "") + "]";
+		return "List [" + (path != null ? "path=" + path : "") + "]";
 	}
 
 	@Override

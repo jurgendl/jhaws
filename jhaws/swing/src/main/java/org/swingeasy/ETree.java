@@ -78,8 +78,8 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 	 * collapse all nodes
 	 */
 	public void collapseAll() {
-		for (int i = this.getRowCount() - 1; i >= 0; i--) {
-			this.collapseRow(i);
+		for (int i = getRowCount() - 1; i >= 0; i--) {
+			collapseRow(i);
 		}
 	}
 
@@ -96,8 +96,8 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 	 * expand all nodes
 	 */
 	public void expandAll() {
-		for (int i = this.getRowCount() - 1; i >= 0; i--) {
-			this.expandRow(i);
+		for (int i = getRowCount() - 1; i >= 0; i--) {
+			expandRow(i);
 		}
 	}
 
@@ -114,14 +114,14 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 	 */
 	@Override
 	public TreePath getNextMatch(TreePath current, Matcher<T> matcher) {
-		int startingRow = this.getRowForPath(current) + 1;
-		int max = this.getRowCount();
-		if ((startingRow < 0) || (startingRow >= max)) {
+		int startingRow = getRowForPath(current) + 1;
+		int max = getRowCount();
+		if (startingRow < 0 || startingRow >= max) {
 			throw new IllegalArgumentException();
 		}
 		int row = startingRow;
 		do {
-			TreePath path = this.getPathForRow(row);
+			TreePath path = getPathForRow(row);
 			@SuppressWarnings("unchecked")
 			ETreeNode<T> treeNode = (ETreeNode<T>) path.getLastPathComponent();
 			@SuppressWarnings("unchecked")
@@ -151,8 +151,8 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 	 */
 	public ETreeSearchComponent<T> getSearchComponent() {
 		if (this.searchComponent == null) {
-			this.searchComponent = new ETreeSearchComponent<T>(this);
-			this.searchComponent.setLocale(this.getLocale());
+			this.searchComponent = new ETreeSearchComponent<>(this);
+			this.searchComponent.setLocale(getLocale());
 		}
 		return this.searchComponent;
 	}
@@ -163,7 +163,7 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 	@Override
 	public TreePath getSelectedOrTopNodePath() {
 		try {
-			return this.getSelectionPath();
+			return getSelectionPath();
 		} catch (Exception ex) {
 			return this.getTopNodePath();
 		}
@@ -171,7 +171,7 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 
 	/**
 	 * JDOC
-	 * 
+	 *
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -191,12 +191,12 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 	 */
 	@Override
 	public TreePath getTopNodePath() {
-		return new TreePath(this.getModel().getRoot());
+		return new TreePath(getModel().getRoot());
 	}
 
 	protected void init(ETreeConfig config) {
-		this.setShowsRootHandles(true);
-		this.setRootVisible(true);
+		setShowsRootHandles(true);
+		setRootVisible(true);
 
 		ETreeNodeRenderer renderer = new ETreeNodeRenderer();
 		this.setCellRenderer(renderer);
@@ -206,8 +206,8 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 		}
 
 		if (config.isEditable()) {
-			this.setEditable(true);
-			this.setCellEditor(new ETreeNodeEditor());
+			setEditable(true);
+			setCellEditor(new ETreeNodeEditor());
 		}
 
 		if (config.isLocalized()) {
@@ -220,7 +220,7 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 
 		if (config.getFocusColor() != null) {
 			renderer.setFocusColor(config.getFocusColor());
-			this.addMouseMotionListener(new TreeFocusScanner());
+			addMouseMotionListener(new TreeFocusScanner());
 		}
 	}
 
@@ -237,7 +237,7 @@ public class ETree<T> extends JTree implements ETreeI<T>, ReadableComponent {
 	@Override
 	public void setCellRenderer(TreeCellRenderer x) {
 		super.setCellRenderer(x);
-		if ((this.cfg != null) && (this.cfg.getFocusColor() != null) && (x instanceof ETreeNodeRenderer)) {
+		if (this.cfg != null && this.cfg.getFocusColor() != null && x instanceof ETreeNodeRenderer) {
 			((ETreeNodeRenderer) x).setFocusColor(this.cfg.getFocusColor());
 		}
 	}

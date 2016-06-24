@@ -56,7 +56,7 @@ public class Splash extends JComponent {
 	}
 
 	public Color getColor() {
-		return this.color;
+		return color;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class Splash extends JComponent {
 	 */
 	@Override
 	public Dimension getMaximumSize() {
-		return this.getPreferredSize();
+		return getPreferredSize();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class Splash extends JComponent {
 	 */
 	@Override
 	public Dimension getMinimumSize() {
-		return this.getPreferredSize();
+		return getPreferredSize();
 	}
 
 	/**
@@ -80,11 +80,11 @@ public class Splash extends JComponent {
 	 */
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(this.logo.getWidth(), this.logo.getHeight());
+		return new Dimension(logo.getWidth(), logo.getHeight());
 	}
 
 	public Rectangle getProgressBarLocation() {
-		return this.progressBarLocation;
+		return progressBarLocation;
 	}
 
 	/**
@@ -92,11 +92,11 @@ public class Splash extends JComponent {
 	 */
 	@Override
 	public Dimension getSize() {
-		return this.getPreferredSize();
+		return getPreferredSize();
 	}
 
 	public Point getTextLocation() {
-		return this.textLocation;
+		return textLocation;
 	}
 
 	/**
@@ -107,62 +107,69 @@ public class Splash extends JComponent {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2.drawImage(this.logo, 0, 0, this);
+		g2.drawImage(logo, 0, 0, this);
 
-		if (this.progressBarLocation == null) {
-			this.progressBarLocation = new Rectangle(this.INS, this.getHeight() - (this.INS / 2) - this.H, this.getWidth() - (2 * this.INS), this.H);
+		if (progressBarLocation == null) {
+			progressBarLocation = new Rectangle(INS, getHeight() - INS / 2 - H, getWidth() - 2 * INS, H);
 		}
 
-		g2.setColor(this.color);
-		g2.fillRect(this.progressBarLocation.x, this.progressBarLocation.y, this.progressBarLocation.width, this.progressBarLocation.height);
-		g2.fillOval(this.progressBarLocation.x - (this.progressBarLocation.height / 2), this.progressBarLocation.y, this.progressBarLocation.height, this.progressBarLocation.height);
-		g2.fillOval((this.progressBarLocation.x + this.progressBarLocation.width) - (this.progressBarLocation.height / 2), this.progressBarLocation.y, this.progressBarLocation.height, this.progressBarLocation.height);
-		g2.setColor(this.colorInv);
-		int rx = this.progressBarLocation.x + this.INSINT;
-		int ry = this.progressBarLocation.y + this.INSINT;
-		int rw = this.progressBarLocation.width - (this.INSINT * 2);
-		int rh = this.progressBarLocation.height - (this.INSINT * 2);
-		g2.fillRect(rx, ry, (int) (rw * this.progress), rh);
-		int or = this.progressBarLocation.height - (this.INSINT * 2);
-		int oy = this.progressBarLocation.y + this.INSINT;
-		int ox1 = (this.progressBarLocation.x - (this.progressBarLocation.height / 2)) + this.INSINT;
+		g2.setColor(color);
+		g2.fillRect(progressBarLocation.x, progressBarLocation.y, progressBarLocation.width, progressBarLocation.height);
+		g2.fillOval(progressBarLocation.x - progressBarLocation.height / 2, progressBarLocation.y, progressBarLocation.height, progressBarLocation.height);
+		g2.fillOval(progressBarLocation.x + progressBarLocation.width - progressBarLocation.height / 2, progressBarLocation.y, progressBarLocation.height,
+				progressBarLocation.height);
+		g2.setColor(colorInv);
+		int rx = progressBarLocation.x + INSINT;
+		int ry = progressBarLocation.y + INSINT;
+		int rw = progressBarLocation.width - INSINT * 2;
+		int rh = progressBarLocation.height - INSINT * 2;
+		g2.fillRect(rx, ry, (int) (rw * progress), rh);
+		int or = progressBarLocation.height - INSINT * 2;
+		int oy = progressBarLocation.y + INSINT;
+		int ox1 = progressBarLocation.x - progressBarLocation.height / 2 + INSINT;
 		g2.fillOval(ox1, oy, or, or);
-		int ox2 = ((this.progressBarLocation.x + this.progressBarLocation.width) - (this.progressBarLocation.height / 2)) + this.INSINT;
-		int ox = ox1 + (int) ((ox2 - ox1) * this.progress);
+		int ox2 = progressBarLocation.x + progressBarLocation.width - progressBarLocation.height / 2 + INSINT;
+		int ox = ox1 + (int) ((ox2 - ox1) * progress);
 		g2.fillOval(ox, oy, or, or);
 
-		if (this.progressBarLocation.height >= 10) {
-			g2.setColor(this.color);
-			g2.fillOval(ox + (this.INSINT * 1), oy + (this.INSINT * 1), or - (this.INSINT * 2), or - (this.INSINT * 2));
-			g2.setColor(this.colorInv);
-			g2.fillOval(ox + (this.INSINT * 2), oy + (this.INSINT * 2), or - (this.INSINT * 4), or - (this.INSINT * 4));
+		if (progressBarLocation.height >= 10) {
+			g2.setColor(color);
+			g2.fillOval(ox + INSINT * 1, oy + INSINT * 1, or - INSINT * 2, or - INSINT * 2);
+			g2.setColor(colorInv);
+			g2.fillOval(ox + INSINT * 2, oy + INSINT * 2, or - INSINT * 4, or - INSINT * 4);
 		}
 
-		if (this.text != null) {
-			if (this.textLocation == null) this.textLocation = new Point(this.progressBarLocation.x, this.progressBarLocation.y - (this.getFont().getSize() / 2));
-			g2.setColor(this.color);
-			g2.drawString(this.text, this.textLocation.x, this.textLocation.y + 1);
-			g2.drawString(this.text, this.textLocation.x + 1, this.textLocation.y);
-			g2.drawString(this.text, this.textLocation.x + 1, this.textLocation.y + 1);
-			g2.setColor(this.colorInv);
-			g2.drawString(this.text, this.textLocation.x, this.textLocation.y);
+		if (text != null) {
+			if (textLocation == null) {
+				textLocation = new Point(progressBarLocation.x, progressBarLocation.y - getFont().getSize() / 2);
+			}
+			g2.setColor(color);
+			g2.drawString(text, textLocation.x, textLocation.y + 1);
+			g2.drawString(text, textLocation.x + 1, textLocation.y);
+			g2.drawString(text, textLocation.x + 1, textLocation.y + 1);
+			g2.setColor(colorInv);
+			g2.drawString(text, textLocation.x, textLocation.y);
 		}
 
-		if (this.version != null) {
-			if (this.versionLocation == null) this.versionLocation = new Point(getWidth() - 50, 10);
-			if (versionFont != null) g2.setFont(this.versionFont);
-			g2.setColor(this.versionColor);
-			g2.drawString(this.version, this.versionLocation.x, this.versionLocation.y + 1);
-			g2.drawString(this.version, this.versionLocation.x + 1, this.versionLocation.y);
-			g2.drawString(this.version, this.versionLocation.x + 1, this.versionLocation.y + 1);
-			g2.setColor(this.versionColorInv);
-			g2.drawString(this.version, this.versionLocation.x, this.versionLocation.y);
+		if (version != null) {
+			if (versionLocation == null) {
+				versionLocation = new Point(getWidth() - 50, 10);
+			}
+			if (versionFont != null) {
+				g2.setFont(versionFont);
+			}
+			g2.setColor(versionColor);
+			g2.drawString(version, versionLocation.x, versionLocation.y + 1);
+			g2.drawString(version, versionLocation.x + 1, versionLocation.y);
+			g2.drawString(version, versionLocation.x + 1, versionLocation.y + 1);
+			g2.setColor(versionColorInv);
+			g2.drawString(version, versionLocation.x, versionLocation.y);
 		}
 	}
 
 	public void setColor(Color color) {
 		this.color = color;
-		this.colorInv = new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
+		colorInv = new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue());
 	}
 
 	public void setProgress(float f) {
@@ -172,7 +179,7 @@ public class Splash extends JComponent {
 		if (f > 1.0) {
 			throw new IllegalArgumentException();
 		}
-		this.progress = f;
+		progress = f;
 		this.repaint();
 	}
 
@@ -181,7 +188,7 @@ public class Splash extends JComponent {
 	}
 
 	public void setText(String string) {
-		this.text = string;
+		text = string;
 		this.repaint();
 	}
 
@@ -191,7 +198,7 @@ public class Splash extends JComponent {
 
 	public Window showSplash() {
 		Window f;
-		if (this.frame) {
+		if (frame) {
 			f = new JFrame();
 			JFrame jf = (JFrame) f;
 			jf.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -208,7 +215,7 @@ public class Splash extends JComponent {
 	}
 
 	public String getVersion() {
-		return this.version;
+		return version;
 	}
 
 	public void setVersion(String version) {
@@ -216,7 +223,7 @@ public class Splash extends JComponent {
 	}
 
 	public Point getVersionLocation() {
-		return this.versionLocation;
+		return versionLocation;
 	}
 
 	public void setVersionLocation(Point versionLocation) {
@@ -224,15 +231,15 @@ public class Splash extends JComponent {
 	}
 
 	public String getText() {
-		return this.text;
+		return text;
 	}
 
 	public float getProgress() {
-		return this.progress;
+		return progress;
 	}
 
 	public Font getVersionFont() {
-		return this.versionFont;
+		return versionFont;
 	}
 
 	public void setVersionFont(Font versionFont) {
@@ -240,16 +247,16 @@ public class Splash extends JComponent {
 	}
 
 	public Color getVersionColor() {
-		return this.versionColor;
+		return versionColor;
 	}
 
 	public void setVersionColor(Color versionColor) {
 		this.versionColor = versionColor;
-		this.versionColorInv = new Color(255 - versionColor.getRed(), 255 - versionColor.getGreen(), 255 - versionColor.getBlue());
+		versionColorInv = new Color(255 - versionColor.getRed(), 255 - versionColor.getGreen(), 255 - versionColor.getBlue());
 	}
 
 	public Color getVersionColorInv() {
-		return this.versionColorInv;
+		return versionColorInv;
 	}
 
 	public void setVersionColorInv(Color versionColorInv) {

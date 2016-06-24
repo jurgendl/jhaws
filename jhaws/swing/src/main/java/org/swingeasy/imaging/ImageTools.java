@@ -102,7 +102,7 @@ public class ImageTools {
 
 		for (int i = 0; i < strength; i++) {
 			for (int j = 0; j < strength; j++) {
-				kernel[(i * strength) + j] = v;
+				kernel[i * strength + j] = v;
 			}
 		}
 
@@ -206,7 +206,7 @@ public class ImageTools {
 		float ninth = 1.0f / 9.0f;
 		float[] blurKernel = { ninth, ninth, ninth, ninth, ninth, ninth, ninth, ninth, ninth };
 
-		Map<RenderingHints.Key, Object> map = new HashMap<RenderingHints.Key, Object>();
+		Map<RenderingHints.Key, Object> map = new HashMap<>();
 		map.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		map.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		map.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -228,7 +228,7 @@ public class ImageTools {
 	 * @return : BufferedImage : brightened image
 	 */
 	public static BufferedImage brighten(final Image image, final int percentage) {
-		float s = 1.0f + (percentage / 100.0f);
+		float s = 1.0f + percentage / 100.0f;
 
 		return ImageTools.rescale(image, s);
 	}
@@ -260,7 +260,7 @@ public class ImageTools {
 				red = Math.min((int) (Math.max(red, FI) / factor), 255);
 				green = Math.min((int) (Math.max(green, FI) / factor), 255);
 				blue = Math.min((int) (Math.max(blue, FI) / factor), 255);
-				brightened.setRGB(k, j, (alpha << 24) | (red << 16) | (green << 8) | blue);
+				brightened.setRGB(k, j, alpha << 24 | red << 16 | green << 8 | blue);
 			}
 		}
 
@@ -656,9 +656,9 @@ public class ImageTools {
 		int width = image.getWidth();
 		int height = image.getHeight();
 
-		if ((newWidth >= width) || (newHeight >= height)) {
+		if (newWidth >= width || newHeight >= height) {
 			throw new IllegalArgumentException("newWidth and newHeight cannot" + " be greater than the image" + " dimensions");
-		} else if ((newWidth <= 0) || (newHeight <= 0)) {
+		} else if (newWidth <= 0 || newHeight <= 0) {
 			throw new IllegalArgumentException("newWidth and newHeight must" + " be greater than 0");
 		}
 
@@ -686,7 +686,7 @@ public class ImageTools {
 			g2.dispose();
 
 			thumb = temp;
-		} while ((width != newWidth) || (height != newHeight));
+		} while (width != newWidth || height != newHeight);
 
 		return thumb;
 	}
@@ -772,9 +772,9 @@ public class ImageTools {
 	 *             the dimensions is &lt;= 0
 	 */
 	public static BufferedImage createThumbnailFast(BufferedImage image, int newWidth, int newHeight) {
-		if ((newWidth >= image.getWidth()) || (newHeight >= image.getHeight())) {
+		if (newWidth >= image.getWidth() || newHeight >= image.getHeight()) {
 			throw new IllegalArgumentException("newWidth and newHeight cannot" + " be greater than the image" + " dimensions");
-		} else if ((newWidth <= 0) || (newHeight <= 0)) {
+		} else if (newWidth <= 0 || newHeight <= 0) {
 			throw new IllegalArgumentException("newWidth and newHeight must" + " be greater than 0");
 		}
 
@@ -830,7 +830,7 @@ public class ImageTools {
 	 * @return : BufferedImage : darkened image
 	 */
 	public static BufferedImage darken(final Image image, final int percentage) {
-		float s = 1.0f - ((float) percentage / 100);
+		float s = 1.0f - (float) percentage / 100;
 
 		return ImageTools.rescale(image, s);
 	}
@@ -962,7 +962,7 @@ public class ImageTools {
 				// if (x == -1) {
 				// The pixel value is from the image's color table rather than the image itself
 				// }
-				return (rgb & 0xff0000ff);
+				return rgb & 0xff0000ff;
 			}
 		})));
 	}
@@ -1038,7 +1038,7 @@ public class ImageTools {
 	 *             exception
 	 */
 	public static BufferedImage getImage(final int[] pixels, final int w, final int h) {
-		if (pixels.length != (w * h)) {
+		if (pixels.length != w * h) {
 			throw new RuntimeException("pixels.length <> w*h");
 		}
 
@@ -1063,7 +1063,7 @@ public class ImageTools {
 		// convert to RGB
 		for (int x = w; x-- > 0;) {
 			for (int y = h; y-- > 0;) {
-				pix[(y * w) + x] = palette[pixels[x][y]];
+				pix[y * w + x] = palette[pixels[x][y]];
 			}
 		}
 
@@ -1086,7 +1086,7 @@ public class ImageTools {
 		// convert to RGB
 		for (int x = w; x-- > 0;) {
 			for (int y = h; y-- > 0;) {
-				pix[(y * w) + x] = pixels[x][y];
+				pix[y * w + x] = pixels[x][y];
 			}
 		}
 
@@ -1116,18 +1116,18 @@ public class ImageTools {
 	 *             is <code>pixels</code> is non-null and of length &lt; w*h
 	 */
 	public static int[] getPixels(BufferedImage img, int x, int y, int w, int h, int[] pixels) {
-		if ((w == 0) || (h == 0)) {
+		if (w == 0 || h == 0) {
 			return new int[0];
 		}
 
 		if (pixels == null) {
 			pixels = new int[w * h];
-		} else if (pixels.length < (w * h)) {
+		} else if (pixels.length < w * h) {
 			throw new IllegalArgumentException("pixels array must have a length" + " >= w*h");
 		}
 
 		int imageType = img.getType();
-		if ((imageType == BufferedImage.TYPE_INT_ARGB) || (imageType == BufferedImage.TYPE_INT_RGB)) {
+		if (imageType == BufferedImage.TYPE_INT_ARGB || imageType == BufferedImage.TYPE_INT_RGB) {
 			Raster raster = img.getRaster();
 			return (int[]) raster.getDataElements(x, y, w, h, pixels);
 		}
@@ -1165,7 +1165,7 @@ public class ImageTools {
 
 		for (int x = w; x-- > 0;) {
 			for (int y = h; y-- > 0;) {
-				pixels[x][y] = pix[(y * w) + x];
+				pixels[x][y] = pix[y * w + x];
 			}
 		}
 
@@ -1222,7 +1222,7 @@ public class ImageTools {
 	public static int getRGB(BufferedImage image, int x, int y) {
 		int type = image.getType();
 
-		if ((type == BufferedImage.TYPE_INT_ARGB) || (type == BufferedImage.TYPE_INT_RGB)) {
+		if (type == BufferedImage.TYPE_INT_ARGB || type == BufferedImage.TYPE_INT_RGB) {
 			return ((int[]) image.getRaster().getDataElements(x, y, 1, 1, null))[0];
 		}
 
@@ -1249,7 +1249,7 @@ public class ImageTools {
 	public static int[] getRGB(BufferedImage image, int x, int y, int width, int height) {
 		int type = image.getType();
 
-		if ((type == BufferedImage.TYPE_INT_ARGB) || (type == BufferedImage.TYPE_INT_RGB)) {
+		if (type == BufferedImage.TYPE_INT_ARGB || type == BufferedImage.TYPE_INT_RGB) {
 			return (int[]) image.getRaster().getDataElements(x, y, width, height, null);
 		}
 
@@ -1470,7 +1470,7 @@ public class ImageTools {
 
 				int alpha = (original.getRGB(x, y) & 0xff000000) >> 24;
 
-				return (alpha << 24) | (red << 16) | (green << 8) | blue;
+				return alpha << 24 | red << 16 | green << 8 | blue;
 			}
 		});
 	}
@@ -1750,7 +1750,7 @@ public class ImageTools {
 	 * resize, vergroten gebeurt niet
 	 */
 	public static BufferedImage resize(BufferedImage image, int width, int height) {
-		int type = (image.getType() == 0) ? BufferedImage.TYPE_INT_ARGB : image.getType();
+		int type = image.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : image.getType();
 		BufferedImage resizedImage = new BufferedImage(width, height, type);
 		Graphics2D g = resizedImage.createGraphics();
 		g.setComposite(AlphaComposite.Src);
@@ -1770,7 +1770,7 @@ public class ImageTools {
 		int iw = img.getWidth();
 		int ih = img.getHeight();
 
-		if ((iw > width) || (ih > height)) {
+		if (iw > width || ih > height) {
 			double r = ImageTools.getRatio(width, height, iw, ih);
 			iw = (int) (iw / r); // 200/2=100
 			ih = (int) (ih / r); // 150/2=75
@@ -1799,7 +1799,7 @@ public class ImageTools {
 		int iw = img.getWidth();
 		int ih = img.getHeight();
 
-		if ((iw > width) || (ih > height)) {
+		if (iw > width || ih > height) {
 			double r = ImageTools.getRatio(width, height, iw, ih);
 			iw = (int) (iw / r); // 200/2=100
 			ih = (int) (ih / r); // 150/2=75
@@ -1832,14 +1832,14 @@ public class ImageTools {
 	 *             is <code>pixels</code> is non-null and of length &lt; w*h
 	 */
 	public static void setPixels(BufferedImage img, int x, int y, int w, int h, int[] pixels) {
-		if ((pixels == null) || (w == 0) || (h == 0)) {
+		if (pixels == null || w == 0 || h == 0) {
 			return;
-		} else if (pixels.length < (w * h)) {
+		} else if (pixels.length < w * h) {
 			throw new IllegalArgumentException("pixels array must have a length" + " >= w*h");
 		}
 
 		int imageType = img.getType();
-		if ((imageType == BufferedImage.TYPE_INT_ARGB) || (imageType == BufferedImage.TYPE_INT_RGB)) {
+		if (imageType == BufferedImage.TYPE_INT_ARGB || imageType == BufferedImage.TYPE_INT_RGB) {
 			WritableRaster raster = img.getRaster();
 			raster.setDataElements(x, y, w, h, pixels);
 		} else {
@@ -1890,13 +1890,13 @@ public class ImageTools {
 	 *             IllegalArgumentException
 	 */
 	public static BufferedImage setRGB(BufferedImage image, int x, int y, int width, int height, int[] pixels) {
-		if ((width * height) != pixels.length) {
+		if (width * height != pixels.length) {
 			throw new IllegalArgumentException("width multiplied by height should equal pixels.length");
 		}
 
 		int type = image.getType();
 
-		if ((type == BufferedImage.TYPE_INT_ARGB) || (type == BufferedImage.TYPE_INT_RGB)) {
+		if (type == BufferedImage.TYPE_INT_ARGB || type == BufferedImage.TYPE_INT_RGB) {
 			image.getRaster().setDataElements(x, y, width, height, pixels);
 		} else {
 			image.setRGB(x, y, width, height, pixels, 0, width);
@@ -1926,7 +1926,7 @@ public class ImageTools {
 	 *             IllegalArgumentException
 	 */
 	public static BufferedImage setRGB(BufferedImage image, int x, int y, int width, int[] pixels) {
-		if ((pixels.length % width) != 0) {
+		if (pixels.length % width != 0) {
 			throw new IllegalArgumentException("pixels.length divided by width should be a natural number");
 		}
 

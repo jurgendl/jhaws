@@ -22,7 +22,7 @@ public class EListCsvExporter<T> extends EListExporterImpl<T> {
 	private String text = "\"";
 
 	/**
-	 * 
+	 *
 	 * @see org.swingeasy.EListExporterImpl#exportStream(org.swingeasy.EList, java.io.OutputStream)
 	 */
 	@Override
@@ -47,7 +47,7 @@ public class EListCsvExporter<T> extends EListExporterImpl<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.swingeasy.EListExporter#getAction()
 	 */
 	@Override
@@ -56,7 +56,7 @@ public class EListCsvExporter<T> extends EListExporterImpl<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.swingeasy.EListExporter#getFileExtension()
 	 */
 	@Override

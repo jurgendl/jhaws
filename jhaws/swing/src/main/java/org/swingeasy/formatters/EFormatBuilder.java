@@ -7,5 +7,5 @@ import java.util.Locale;
  * @author Jurgen
  */
 public interface EFormatBuilder {
-    public Format build(Locale locale);
+	public Format build(Locale locale);
 }

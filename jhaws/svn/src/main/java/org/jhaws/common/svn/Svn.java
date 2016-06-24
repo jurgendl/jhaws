@@ -68,7 +68,7 @@ public class Svn {
 			ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
 			provider.addIncludeFilter(new AnnotationTypeFilter(XmlRootElement.class));
 			Set<BeanDefinition> beans = provider.findCandidateComponents(ObjectFactory.class.getPackage().getName());
-			ArrayList<Class<? extends SvnRootBean>> c = new ArrayList<Class<? extends SvnRootBean>>();
+			ArrayList<Class<? extends SvnRootBean>> c = new ArrayList<>();
 			for (BeanDefinition bd : beans) {
 				try {
 					c.add((Class<? extends SvnRootBean>) Class.forName(bd.getBeanClassName()));

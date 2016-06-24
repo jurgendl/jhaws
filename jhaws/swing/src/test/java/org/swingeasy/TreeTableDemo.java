@@ -27,11 +27,11 @@ public class TreeTableDemo {
 
 			String[] h = { "key", "value" };
 
-			Collection<ETreeTableRecord<Entry<String, String>>> col = new ArrayList<ETreeTableRecord<Entry<String, String>>>();
+			Collection<ETreeTableRecord<Entry<String, String>>> col = new ArrayList<>();
 
 			Properties p = new Properties();
 
-			if ((args != null) && (args.length > 0)) {
+			if (args != null && args.length > 0) {
 				for (String arg : args) {
 					Properties pp = new Properties();
 					try (FileInputStream in = new FileInputStream(arg)) {
@@ -54,10 +54,10 @@ public class TreeTableDemo {
 				}
 			}
 
-			Map<String, ETreeTableRecordBean<Entry<String, String>>> parents = new HashMap<String, ETreeTableRecordBean<Entry<String, String>>>();
+			Map<String, ETreeTableRecordBean<Entry<String, String>>> parents = new HashMap<>();
 
 			for (Entry<?, ?> entry : p.entrySet()) {
-				ETreeTableRecordBean<Entry<String, String>> rec = new ETreeTableRecordBean<Entry<String, String>>(null, (Entry<String, String>) entry, h);
+				ETreeTableRecordBean<Entry<String, String>> rec = new ETreeTableRecordBean<>(null, (Entry<String, String>) entry, h);
 				String k = entry.getKey().toString();
 				String kpc = null;
 				ETreeTableRecordBean<Entry<String, String>> prevparent = null;
@@ -67,12 +67,12 @@ public class TreeTableDemo {
 					} else {
 						kpc += "." + kp;
 					}
-					if ((kpc == null) || kpc.equals(k)) {
+					if (kpc == null || kpc.equals(k)) {
 						continue;
 					}
 					ETreeTableRecordBean<Entry<String, String>> parent = parents.get(kpc);
 					if (parent == null) {
-						parent = new ETreeTableRecordBean<Entry<String, String>>(prevparent, new SimpleEntry<String, String>(kp, null), h);
+						parent = new ETreeTableRecordBean<>(prevparent, new SimpleEntry<String, String>(kp, null), h);
 						parents.put(kpc, parent);
 					}
 					prevparent = parent;
@@ -82,8 +82,8 @@ public class TreeTableDemo {
 				col.add(rec);
 			}
 
-			ETreeTableHeaders<Map.Entry<String, String>> headers = new ETreeTableHeaders<Map.Entry<String, String>>(h);
-			ETreeTable<Map.Entry<String, String>> t = new ETreeTable<Map.Entry<String, String>>(new ETreeTableConfig().setEditable(true), headers);
+			ETreeTableHeaders<Map.Entry<String, String>> headers = new ETreeTableHeaders<>(h);
+			ETreeTable<Map.Entry<String, String>> t = new ETreeTable<>(new ETreeTableConfig().setEditable(true), headers);
 			t.stsi().addRecords(col);
 
 			f.getContentPane().add(new JScrollPane(t));

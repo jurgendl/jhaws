@@ -19,47 +19,47 @@ import javax.swing.SwingUtilities;
  * @see http://java-swing-tips.blogspot.com/2010/02/tabtransferhandler.html
  */
 public class GhostGlassPane extends JPanel {
-    
-    private static final long serialVersionUID = 7483905354859468870L;
 
-    private DnDTabbedPane tabbedPane;
+	private static final long serialVersionUID = 7483905354859468870L;
 
-    private BufferedImage draggingGhost = null;
+	private DnDTabbedPane tabbedPane;
 
-    public GhostGlassPane(DnDTabbedPane tabbedPane) {
-        this.tabbedPane = tabbedPane;
-        // System.out.println("new GhostGlassPane");
-        this.setOpaque(false);
-        // http://bugs.sun.com/view_bug.do?bug_id=6700748
-        // setCursor(null); //XXX
-    }
+	private BufferedImage draggingGhost = null;
 
-    @Override
-    public void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        DnDTabbedPane.DropLocation dl = this.tabbedPane.getDropLocation();
-        Point p = this.getMousePosition(true); // dl.getDropPoint();
-        if ((this.draggingGhost != null) && (dl != null) && (p != null)) {
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-            Rectangle rect = this.tabbedPane.getDropLineRect();
-            if ((rect != null) && dl.isDropable()) {
-                Rectangle r = SwingUtilities.convertRectangle(this.tabbedPane, rect, this);
-                g2.setColor(Color.RED);
-                g2.fill(r);
-                // tabbedPane.paintDropLine(g2);
-            }
-            // Point p = SwingUtilities.convertPoint(tabbedPane, dl.getDropPoint(), this);
-            double xx = p.getX() - (this.draggingGhost.getWidth(this) / 2d);
-            double yy = p.getY() - (this.draggingGhost.getHeight(this) / 2d);
-            g2.drawImage(this.draggingGhost, (int) xx, (int) yy, this);
-        }
-    }
+	public GhostGlassPane(DnDTabbedPane tabbedPane) {
+		this.tabbedPane = tabbedPane;
+		// System.out.println("new GhostGlassPane");
+		setOpaque(false);
+		// http://bugs.sun.com/view_bug.do?bug_id=6700748
+		// setCursor(null); //XXX
+	}
 
-    public void setImage(BufferedImage draggingGhost) {
-        this.draggingGhost = draggingGhost;
-    }
+	@Override
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D) g;
+		DnDTabbedPane.DropLocation dl = tabbedPane.getDropLocation();
+		Point p = this.getMousePosition(true); // dl.getDropPoint();
+		if (draggingGhost != null && dl != null && p != null) {
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+			Rectangle rect = tabbedPane.getDropLineRect();
+			if (rect != null && dl.isDropable()) {
+				Rectangle r = SwingUtilities.convertRectangle(tabbedPane, rect, this);
+				g2.setColor(Color.RED);
+				g2.fill(r);
+				// tabbedPane.paintDropLine(g2);
+			}
+			// Point p = SwingUtilities.convertPoint(tabbedPane, dl.getDropPoint(), this);
+			double xx = p.getX() - draggingGhost.getWidth(this) / 2d;
+			double yy = p.getY() - draggingGhost.getHeight(this) / 2d;
+			g2.drawImage(draggingGhost, (int) xx, (int) yy, this);
+		}
+	}
 
-    public void setTargetTabbedPane(DnDTabbedPane tab) {
-        this.tabbedPane = tab;
-    }
+	public void setImage(BufferedImage draggingGhost) {
+		this.draggingGhost = draggingGhost;
+	}
+
+	public void setTargetTabbedPane(DnDTabbedPane tab) {
+		tabbedPane = tab;
+	}
 }

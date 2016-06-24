@@ -36,7 +36,7 @@ public class LogEntry extends Commit implements Iterable<Path> {
 
 	@Override
 	public String toString() {
-		return "LogEntry [" + (this.msg != null ? "msg=" + this.msg : "") + "]";
+		return "LogEntry [" + (msg != null ? "msg=" + msg : "") + "]";
 	}
 
 	@Override

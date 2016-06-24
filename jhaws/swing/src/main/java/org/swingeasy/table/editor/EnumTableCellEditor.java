@@ -13,43 +13,43 @@ import org.swingeasy.EComponentI;
  * @author Jurgen
  */
 public class EnumTableCellEditor<T extends Enum<T>> extends DefaultCellEditor implements EComponentI {
-    private static <T extends Enum<T>> Vector<T> options(Class<T> enumType) {
-        Vector<T> options = new Vector<T>();
-        for (T option : EnumSet.allOf(enumType)) {
-            options.add(option);
-        }
-        return options;
-    }
+	private static <T extends Enum<T>> Vector<T> options(Class<T> enumType) {
+		Vector<T> options = new Vector<>();
+		for (T option : EnumSet.allOf(enumType)) {
+			options.add(option);
+		}
+		return options;
+	}
 
-    private static final long serialVersionUID = 5169127745067354714L;
+	private static final long serialVersionUID = 5169127745067354714L;
 
-    protected Class<T> enumType;
+	protected Class<T> enumType;
 
-    public EnumTableCellEditor(Class<T> enumType) {
-        super(new JComboBox<T>(EnumTableCellEditor.options(enumType)));
-        this.enumType = enumType;
-    }
+	public EnumTableCellEditor(Class<T> enumType) {
+		super(new JComboBox<>(EnumTableCellEditor.options(enumType)));
+		this.enumType = enumType;
+	}
 
-    public Locale getLocale() {
-        return this.getComponent().getLocale();
-    }
+	public Locale getLocale() {
+		return getComponent().getLocale();
+	}
 
-    /**
-     *
-     * @see org.swingeasy.EComponentI#setEnabled(boolean)
-     */
-    @Override
-    public void setEnabled(boolean b) {
-        //
-    }
+	/**
+	 *
+	 * @see org.swingeasy.EComponentI#setEnabled(boolean)
+	 */
+	@Override
+	public void setEnabled(boolean b) {
+		//
+	}
 
-    /**
-     *
-     * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
-     */
-    @Override
-    public void setLocale(Locale l) {
-        this.getComponent().setLocale(l);
-    }
+	/**
+	 *
+	 * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
+	 */
+	@Override
+	public void setLocale(Locale l) {
+		getComponent().setLocale(l);
+	}
 
 }

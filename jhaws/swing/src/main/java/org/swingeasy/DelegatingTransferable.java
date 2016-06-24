@@ -12,40 +12,40 @@ import java.util.List;
  * @author Jurgen
  */
 public class DelegatingTransferable implements Transferable {
-    List<Transferable> sources = new ArrayList<Transferable>();
+	List<Transferable> sources = new ArrayList<>();
 
-    public DelegatingTransferable(Transferable... sources) {
-        this.sources.addAll(Arrays.asList(sources));
-    }
+	public DelegatingTransferable(Transferable... sources) {
+		this.sources.addAll(Arrays.asList(sources));
+	}
 
-    @Override
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-        for (Transferable t : this.sources) {
-            if (t.isDataFlavorSupported(flavor)) {
-                return t.getTransferData(flavor);
-            }
-        }
-        return null;
-    }
+	@Override
+	public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+		for (Transferable t : sources) {
+			if (t.isDataFlavorSupported(flavor)) {
+				return t.getTransferData(flavor);
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public DataFlavor[] getTransferDataFlavors() {
-        List<DataFlavor> l = new ArrayList<DataFlavor>();
-        for (Transferable t : this.sources) {
-            for (DataFlavor f : t.getTransferDataFlavors()) {
-                l.add(f);
-            }
-        }
-        return l.toArray(new DataFlavor[0]);
-    }
+	@Override
+	public DataFlavor[] getTransferDataFlavors() {
+		List<DataFlavor> l = new ArrayList<>();
+		for (Transferable t : sources) {
+			for (DataFlavor f : t.getTransferDataFlavors()) {
+				l.add(f);
+			}
+		}
+		return l.toArray(new DataFlavor[0]);
+	}
 
-    @Override
-    public boolean isDataFlavorSupported(DataFlavor flavor) {
-        for (Transferable t : this.sources) {
-            if (t.isDataFlavorSupported(flavor)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean isDataFlavorSupported(DataFlavor flavor) {
+		for (Transferable t : sources) {
+			if (t.isDataFlavorSupported(flavor)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

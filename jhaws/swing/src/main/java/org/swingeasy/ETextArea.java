@@ -59,7 +59,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 
 		public OpenAction(ETextArea component) {
 			super(component, "open", Resources.getImageResource("folder_page_white.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, Event.CTRL_MASK));
 		}
 
 		/**
@@ -68,7 +68,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File file = CustomizableOptionPane.showFileChooserDialog(this.getParentComponent(), FileChooserType.OPEN, new FileChooserCustomizer() {
+			File file = CustomizableOptionPane.showFileChooserDialog(getParentComponent(), FileChooserType.OPEN, new FileChooserCustomizer() {
 				@Override
 				public void customize(Component parentComponent, JDialog dialog) {
 					// dialog.setLocationRelativeTo(null);
@@ -90,7 +90,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 				byte[] buffer = new byte[in.available()];
 				in.read(buffer);
 				in.close();
-				this.delegate.setText(new String(buffer));
+				delegate.setText(new String(buffer));
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}
@@ -102,8 +102,8 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			boolean e = this.delegate.isEditable() && this.delegate.isEnabled();
-			this.setEnabled(e);
+			boolean e = delegate.isEditable() && delegate.isEnabled();
+			setEnabled(e);
 			return e;
 		}
 	}
@@ -113,7 +113,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 
 		public PrintAction(ETextArea component) {
 			super(component, "print", Resources.getImageResource("printer.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
 		}
 
 		/**
@@ -123,7 +123,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			PrinterJob printJob = PrinterJob.getPrinterJob();
-			Printable printable = this.delegate.getPrintable(null, null);
+			Printable printable = delegate.getPrintable(null, null);
 			printJob.setPrintable(printable);
 			if (printJob.printDialog()) {
 				try {
@@ -140,7 +140,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasText);
+			setEnabled(cfg.hasText);
 			return cfg.hasText;
 		}
 	}
@@ -150,7 +150,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 
 		public SaveAction(ETextArea component) {
 			super(component, "save", Resources.getImageResource("bullet_disk.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, Event.CTRL_MASK));
 		}
 
 		/**
@@ -160,7 +160,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			final String fileExt = SaveAction.this.delegate.getFileExt();
-			File file = CustomizableOptionPane.showFileChooserDialog(this.getParentComponent(), FileChooserType.SAVE, new FileChooserCustomizer() {
+			File file = CustomizableOptionPane.showFileChooserDialog(getParentComponent(), FileChooserType.SAVE, new FileChooserCustomizer() {
 				@Override
 				public void customize(Component parentComponent, JDialog dialog) {
 					// dialog.setLocationRelativeTo(null);
@@ -179,14 +179,14 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 				file = new File(file.getParentFile(), file.getName() + "." + fileExt);
 			}
 			if (file.exists()) {
-				if (ResultType.YES != CustomizableOptionPane.showCustomDialog(this.getParentComponent(),
+				if (ResultType.YES != CustomizableOptionPane.showCustomDialog(getParentComponent(),
 						new JLabel(Messages.getString((Locale) null, "SaveAction.overwrite.warning.message")),
 						Messages.getString((Locale) null, "SaveAction.overwrite.warning.title"), MessageType.WARNING, OptionType.YES_NO, null, null)) {
 					return;
 				}
 			}
 			try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
-				Document doc = this.delegate.getDocument();
+				Document doc = delegate.getDocument();
 				out.write(doc.getText(0, doc.getLength()).getBytes());
 				out.close();
 			} catch (IOException ex) {
@@ -202,7 +202,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasText);
+			setEnabled(cfg.hasText);
 			return cfg.hasText;
 		}
 	}
@@ -215,7 +215,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 
 	private static final long serialVersionUID = -854993140855661563L;
 
-	protected final List<ValueChangeListener<String>> valueChangeListeners = new ArrayList<ValueChangeListener<String>>();
+	protected final List<ValueChangeListener<String>> valueChangeListeners = new ArrayList<>();
 
 	protected ETextAreaHighlightPainter highlightPainter;
 
@@ -226,26 +226,26 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	protected Action[] actions;
 
 	protected ETextArea() {
-		this.cfg = null;
+		cfg = null;
 	}
 
 	public ETextArea(ETextAreaConfig cfg) {
 		super(cfg.lock().getRows(), cfg.getColumns());
-		this.init(this.cfg = cfg);
+		init(this.cfg = cfg);
 	}
 
 	public ETextArea(ETextAreaConfig cfg, String text) {
 		super(text, cfg.lock().getRows(), cfg.getColumns());
-		this.init(this.cfg = cfg);
+		init(this.cfg = cfg);
 	}
 
 	public void addDocumentKeyListener(DocumentKeyListener listener) {
-		this.getDocument().addDocumentListener(listener);
-		this.addKeyListener(listener);
+		getDocument().addDocumentListener(listener);
+		addKeyListener(listener);
 	}
 
 	public Highlighter.Highlight addHighlight(int from, int to, ETextAreaHighlightPainter painter) throws BadLocationException {
-		return (Highlighter.Highlight) this.getHighlighter().addHighlight(from, to, painter);
+		return (Highlighter.Highlight) getHighlighter().addHighlight(from, to, painter);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	 */
 	@Override
 	public void addValueChangeListener(ValueChangeListener<String> listener) {
-		this.valueChangeListeners.add(listener);
+		valueChangeListeners.add(listener);
 	}
 
 	/**
@@ -263,7 +263,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	 */
 	@Override
 	public void clearValueChangeListeners() {
-		this.valueChangeListeners.clear();
+		valueChangeListeners.clear();
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	}
 
 	public void find(String find) {
-		int start = this.getSelectionStart();
+		int start = getSelectionStart();
 		Pattern pattern = Pattern.compile(find, Pattern.CASE_INSENSITIVE);
 		String text = this.getText();
 		Matcher matcher = pattern.matcher(text);
@@ -303,8 +303,8 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 			if (selectionStart != -1) {
 				// result found
 				int selectionEnd = matcher.end();
-				this.select(selectionStart, selectionEnd);
-				this.lastSearch = find;
+				select(selectionStart, selectionEnd);
+				lastSearch = find;
 			} else {
 				// no result found: search from begin
 				if (matcher.find(0)) {
@@ -312,8 +312,8 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 					if (selectionStart != start) {
 						// result found
 						int selectionEnd = matcher.end();
-						this.select(selectionStart, selectionEnd);
-						this.lastSearch = find;
+						select(selectionStart, selectionEnd);
+						lastSearch = find;
 					}
 				}
 			}
@@ -321,8 +321,8 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	}
 
 	public void findNext() {
-		if (this.lastSearch != null) {
-			this.find(this.lastSearch);
+		if (lastSearch != null) {
+			this.find(lastSearch);
 		}
 	}
 
@@ -343,10 +343,10 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	}
 
 	public ETextAreaHighlightPainter getHighlightPainter() {
-		if (this.highlightPainter == null) {
-			this.highlightPainter = new SearchHighlightPainter();
+		if (highlightPainter == null) {
+			highlightPainter = new SearchHighlightPainter();
 		}
-		return this.highlightPainter;
+		return highlightPainter;
 	}
 
 	/**
@@ -358,7 +358,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	}
 
 	public JToolBar getToolbar() {
-		return new EToolBar(this.getComponentPopupMenu());
+		return new EToolBar(getComponentPopupMenu());
 	}
 
 	/**
@@ -366,9 +366,9 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	 */
 	@Override
 	public String getToolTipText(MouseEvent event) {
-		if (this.cfg.isTooltips()) {
+		if (cfg.isTooltips()) {
 			try {
-				int offs = this.viewToModel(event.getPoint());
+				int offs = viewToModel(event.getPoint());
 				int startIndex = Utilities.getWordStart(this, offs);
 				int endIndex = Utilities.getWordEnd(this, offs);
 				String substring = this.getText().substring(startIndex, endIndex);
@@ -403,8 +403,8 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 			while (matcher.find()) {
 				// System.out.println("highlighting: " + matcher.start() + " -> " + matcher.end());
 				// Create highlighter using private painter and apply around pattern
-				this.addHighlight(matcher.start(), matcher.end(), this.getHighlightPainter());
-				this.lastSearch = patternText;
+				addHighlight(matcher.start(), matcher.end(), getHighlightPainter());
+				lastSearch = patternText;
 			}
 		} catch (BadLocationException e) {
 			//
@@ -412,30 +412,30 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	}
 
 	protected void init(ETextAreaConfig config) {
-		this.setEditable(config.isEnabled());
+		setEditable(config.isEnabled());
 
-		this.setAutoScroll(config.isAutoScroll());
+		setAutoScroll(config.isAutoScroll());
 
 		if (config.isDefaultPopupMenu()) {
-			this.installPopupMenuAction(EComponentPopupMenu.installTextComponentPopupMenu(this));
+			installPopupMenuAction(EComponentPopupMenu.installTextComponentPopupMenu(this));
 		}
 
 		if (config.isLocalized()) {
 			UIUtils.registerLocaleChangeListener((EComponentI) this);
 		}
 
-		this.addDocumentKeyListener(new DocumentKeyListener() {
+		addDocumentKeyListener(new DocumentKeyListener() {
 			@Override
 			public void update(Type type, DocumentEvent e) {
 				String value = ETextArea.this.getValue();
-				for (ValueChangeListener<String> valueChangeListener : ETextArea.this.valueChangeListeners) {
+				for (ValueChangeListener<String> valueChangeListener : valueChangeListeners) {
 					valueChangeListener.valueChanged(value);
 				}
 			}
 		});
 
 		if (config.getText() != null) {
-			this.setText(config.getText());
+			setText(config.getText());
 		}
 
 		if (config.isTooltips()) {
@@ -449,13 +449,13 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 
 	protected void installPopupMenuAction(EComponentPopupMenu popupMenu) {
 		popupMenu.addSeparator();
-		this.actions = new Action[] { //
+		actions = new Action[] { //
 				//
 				new OpenAction(this), //
 				new SaveAction(this), //
 				new PrintAction(this) //
 		};
-		for (Action action : this.actions) {
+		for (Action action : actions) {
 			if (action == null) {
 				popupMenu.addSeparator();
 			} else {
@@ -470,7 +470,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 		while (iterator.hasNext()) {
 			try {
 				ETextAreaExporter exporter = iterator.next();
-				EComponentExporterAction<ETextArea> action = new EComponentExporterAction<ETextArea>(exporter, this);
+				EComponentExporterAction<ETextArea> action = new EComponentExporterAction<>(exporter, this);
 				popupMenu.add(action);
 			} catch (ServiceConfigurationError ex) {
 				ex.printStackTrace(System.err);
@@ -479,17 +479,17 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	}
 
 	public void removeDocumentKeyListener(DocumentKeyListener listener) {
-		this.getDocument().removeDocumentListener(listener);
-		this.removeKeyListener(listener);
+		getDocument().removeDocumentListener(listener);
+		removeKeyListener(listener);
 	}
 
 	/** Removes only our private highlights */
 	public void removeHighlights() {
-		this.removeHighlights(this.getHighlightPainter());
+		this.removeHighlights(getHighlightPainter());
 	}
 
 	public void removeHighlights(ETextAreaHighlightPainter painter) {
-		Highlighter hilite = this.getHighlighter();
+		Highlighter hilite = getHighlighter();
 		for (Highlight hi : hilite.getHighlights()) {
 			if (hi.getPainter().equals(painter)) {
 				hilite.removeHighlight(hi);
@@ -503,22 +503,22 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	 */
 	@Override
 	public void removeValueChangeListener(ValueChangeListener<String> listener) {
-		this.valueChangeListeners.remove(listener);
+		valueChangeListeners.remove(listener);
 	}
 
 	public void replace(String find, String replace) {
-		this.setText(this.getText().replace(find, replace));
+		setText(this.getText().replace(find, replace));
 	}
 
 	public void replaceAll(String find, String replace) {
-		this.setText(this.getText().replaceAll(find, replace));
+		setText(this.getText().replaceAll(find, replace));
 	}
 
 	/**
 	 * enable/disable automatic scrolling to bottom when a line is added
 	 */
 	public boolean setAutoScroll(boolean enable) {
-		Caret caret = this.getCaret();
+		Caret caret = getCaret();
 		if (!(caret instanceof DefaultCaret)) {
 			return false;
 		}
@@ -532,7 +532,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	 */
 	@Override
 	public void setCaret(int pos) {
-		this.setCaretPosition(pos);
+		setCaretPosition(pos);
 		this.fireCaretUpdate();
 	}
 
@@ -542,8 +542,8 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 	 */
 	@Override
 	public void setCaret(int from, int to) {
-		this.setCaretPosition(from);
-		this.moveCaretPosition(to);
+		setCaretPosition(from);
+		moveCaretPosition(to);
 		this.fireCaretUpdate();
 	}
 

@@ -75,10 +75,10 @@ public class SystemSettings extends PropertyChangeParent {
 	public static final File NIX_LIB;
 
 	/** default open file commands for windows */
-	public static final Map<String, String> WIN_FILE_OPEN_CMDS = new HashMap<String, String>();
+	public static final Map<String, String> WIN_FILE_OPEN_CMDS = new HashMap<>();
 
 	/** file extension map for windows */
-	public static final Map<String, String> WIN_FILE_EXTS = new HashMap<String, String>();
+	public static final Map<String, String> WIN_FILE_EXTS = new HashMap<>();
 
 	/** windows specific dir */
 	public static final String WINDIR_PROGRAM_FILES;
@@ -375,7 +375,7 @@ public class SystemSettings extends PropertyChangeParent {
 			dllfile = SystemSettings.createTempFile(libname + "_", ext); // wordt verwijderd bij afsluiten
 		}
 
-		if (!dllfile.exists() || (dllfile.length() == 0)) {
+		if (!dllfile.exists() || dllfile.length() == 0) {
 			SystemSettings.copyResource(libname + "." + ext, new FileOutputStream(dllfile));
 		}
 
@@ -384,7 +384,7 @@ public class SystemSettings extends PropertyChangeParent {
 
 	/**
 	 * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
-	 * 
+	 *
 	 * @param libname
 	 *            libname
 	 * @param ext
@@ -395,7 +395,7 @@ public class SystemSettings extends PropertyChangeParent {
 	 *            enkel van belang wanneer temp=true; bv versie library als die niet in libname zelf zit, wanneer null wordt dat niet in de temp filename gestoken; als deze waarde
 	 *            niet null is wordt een tmp file met een vaste naam gegenereerd zodat deze bij volgende keer kan worden hergebruikt in tegenstelling tot volledig random naam
 	 *            wanneer deze parameter null is
-	 * 
+	 *
 	 * @throws IOException
 	 * @throws NullPointerException
 	 * @throws UnsatisfiedLinkError
@@ -443,7 +443,7 @@ public class SystemSettings extends PropertyChangeParent {
 	}
 
 	public static List<String> execute(String... command) throws IOException {
-		List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<>();
 		ProcessBuilder pb = new ProcessBuilder(Arrays.asList(command));
 		pb.redirectErrorStream(true);
 		Process p = pb.start();
@@ -513,7 +513,7 @@ public class SystemSettings extends PropertyChangeParent {
 	 */
 	public static boolean open(File file, String... cmdparameters) throws IOException {
 		String absolutePath = file.getAbsolutePath();
-		if (!file.exists() || (file.length() == 0)) {
+		if (!file.exists() || file.length() == 0) {
 			throw new FileNotFoundException(absolutePath);
 		}
 
@@ -537,7 +537,7 @@ public class SystemSettings extends PropertyChangeParent {
 			throw new IOException("file association not found: " + ext + "=" + extname);
 		}
 
-		List<String> opencommand = new ArrayList<String>();
+		List<String> opencommand = new ArrayList<>();
 		boolean fileAdded = false;
 		for (String sysexecpart : SystemSettings.split(sysexec)) {
 			// %0 or %1 are replaced with the file name that you want to open.
@@ -604,7 +604,7 @@ public class SystemSettings extends PropertyChangeParent {
 	 * internal use
 	 */
 	private static List<String> split(String sysexec) {
-		List<String> parts = new ArrayList<String>();
+		List<String> parts = new ArrayList<>();
 		Matcher m = Pattern.compile("\"[^\"]++\"").matcher(sysexec);
 		int pos = 0;
 		boolean found = false;
@@ -622,7 +622,7 @@ public class SystemSettings extends PropertyChangeParent {
 			pos = m.end();
 		}
 		if (found) {
-			if (pos != (sysexec.length() - 1)) {
+			if (pos != sysexec.length() - 1) {
 				String trimmed = sysexec.substring(pos).trim();
 				if (trimmed.length() > 0) {
 					for (String p : trimmed.split(" ")) {

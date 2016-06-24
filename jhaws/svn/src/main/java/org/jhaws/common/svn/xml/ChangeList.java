@@ -34,7 +34,7 @@ public class ChangeList implements Iterable<Entry> {
 
 	@Override
 	public String toString() {
-		return "ChangeList [" + (this.name != null ? "name=" + this.name : "") + "]";
+		return "ChangeList [" + (name != null ? "name=" + name : "") + "]";
 	}
 
 	@Override

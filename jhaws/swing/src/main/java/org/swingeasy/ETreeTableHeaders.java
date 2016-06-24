@@ -13,12 +13,12 @@ import ca.odell.glazedlists.gui.WritableTableFormat;
  * @author Jurgen
  */
 public class ETreeTableHeaders<T> implements AdvancedTableFormat<ETableRecord<T>>, WritableTableFormat<ETableRecord<T>> {
-	protected final List<String> columnNames = new Vector<String>();
+	protected final List<String> columnNames = new Vector<>();
 
 	@SuppressWarnings("rawtypes")
-	protected final List<Class> columnClasses = new Vector<Class>();
+	protected final List<Class> columnClasses = new Vector<>();
 
-	protected final List<Boolean> editable = new Vector<Boolean>();
+	protected final List<Boolean> editable = new Vector<>();
 
 	public ETreeTableHeaders() {
 		super();
@@ -79,14 +79,11 @@ public class ETreeTableHeaders<T> implements AdvancedTableFormat<ETableRecord<T>
 	 */
 	@Override
 	public Comparator<?> getColumnComparator(int column) {
-		return new Comparator<Object>() {
-			@Override
-			public int compare(Object o1, Object o2) {
-				if (((o1 == null) || (o1 instanceof Comparable)) && ((o2 == null) || (o2 instanceof Comparable))) {
-					return new CompareToBuilder().append(o1, o2).toComparison();
-				}
-				return new CompareToBuilder().append(String.valueOf(o1), String.valueOf(o2)).toComparison();
+		return (o1, o2) -> {
+			if ((o1 == null || o1 instanceof Comparable) && (o2 == null || o2 instanceof Comparable)) {
+				return new CompareToBuilder().append(o1, o2).toComparison();
 			}
+			return new CompareToBuilder().append(String.valueOf(o1), String.valueOf(o2)).toComparison();
 		};
 	}
 
@@ -123,7 +120,7 @@ public class ETreeTableHeaders<T> implements AdvancedTableFormat<ETableRecord<T>
 	 */
 	@Override
 	public boolean isEditable(ETableRecord<T> baseObject, int column) {
-		return (column != ETreeTable.TREE_COL_INDEX) && Boolean.TRUE.equals(this.editable.get(column));
+		return column != ETreeTable.TREE_COL_INDEX && Boolean.TRUE.equals(this.editable.get(column));
 	}
 
 	/**

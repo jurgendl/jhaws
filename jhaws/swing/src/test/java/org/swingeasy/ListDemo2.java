@@ -3,8 +3,6 @@ package org.swingeasy;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.Locale;
 
@@ -47,54 +45,39 @@ public class ListDemo2 {
 				{
 					JRadioButton jrben = new JRadioButton("en");
 					bg.add(jrben);
-					jrben.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							SystemSettings.setCurrentLocale(Locale.ENGLISH);
-						}
-					});
+					jrben.addActionListener(e -> SystemSettings.setCurrentLocale(Locale.ENGLISH));
 					jp.add(jrben);
 					jrben.setSelected(true);
 				}
 				{
 					JRadioButton jrbnl = new JRadioButton("nl");
 					bg.add(jrbnl);
-					jrbnl.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							SystemSettings.setCurrentLocale(new Locale("nl"));
-						}
-					});
+					jrbnl.addActionListener(e -> SystemSettings.setCurrentLocale(new Locale("nl")));
 					jp.add(jrbnl);
 				}
 				f.getContentPane().add(jp, BorderLayout.NORTH);
 			}
 			{
 				JButton btn = new JButton("non localized - dialog");
-				btn.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						CustomizableOptionPane.showCustomDialog(null, new JLabel("non localized - dialogcomponent"), "non localized - title", MessageType.QUESTION,
-								OptionType.YES_NO_CANCEL, null, null);
-					}
-				});
+				btn.addActionListener(e -> CustomizableOptionPane.showCustomDialog(null, new JLabel("non localized - dialogcomponent"), "non localized - title",
+						MessageType.QUESTION, OptionType.YES_NO_CANCEL, null, null));
 				f.getContentPane().add(btn, BorderLayout.SOUTH);
 			}
 			f.setVisible(true);
 			f.setLocationRelativeTo(null);
 		}
 
-		cc.addRecord(new EListRecord<Date>(new Date()));
-		cc.addRecord(new EListRecord<Color>(Color.red));
-		cc.addRecord(new EListRecord<Long>(1000l));
-		cc.addRecord(new EListRecord<Integer>(100));
-		cc.addRecord(new EListRecord<Float>(100.01f));
-		cc.addRecord(new EListRecord<Double>(1000.001d));
-		cc.addRecord(new EListRecord<Boolean>(true));
-		cc.addRecord(new EListRecord<byte[]>("bytes".getBytes()));
+		cc.addRecord(new EListRecord<>(new Date()));
+		cc.addRecord(new EListRecord<>(Color.red));
+		cc.addRecord(new EListRecord<>(1000l));
+		cc.addRecord(new EListRecord<>(100));
+		cc.addRecord(new EListRecord<>(100.01f));
+		cc.addRecord(new EListRecord<>(1000.001d));
+		cc.addRecord(new EListRecord<>(true));
+		cc.addRecord(new EListRecord<>("bytes".getBytes()));
 
 		for (int i = 0; i < 1000; i++) {
-			cc.addRecord(new EListRecord<Integer>(i));
+			cc.addRecord(new EListRecord<>(i));
 		}
 	}
 }

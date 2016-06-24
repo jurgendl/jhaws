@@ -31,11 +31,11 @@ public class EComponentHelper {
 	protected static <T> void copySelectionToClipboard(String seperator, JTable table, List<? extends ETableRecord<T>> selectedRecords) {
 		StringBuilder sb = new StringBuilder();
 		int[] selectedColumns = table.getSelectedColumns();
-		if ((selectedColumns == null) || (selectedColumns.length == 0)) {
+		if (selectedColumns == null || selectedColumns.length == 0) {
 			for (ETableRecord<T> record : selectedRecords) {
 				for (int i = 0; i < record.size(); i++) {
 					sb.append(record.getStringValue(i));
-					if ((i + 1) < record.size()) {
+					if (i + 1 < record.size()) {
 						sb.append(seperator);
 					}
 				}
@@ -45,7 +45,7 @@ public class EComponentHelper {
 			for (ETableRecord<T> record : selectedRecords) {
 				for (int i : selectedColumns) {
 					sb.append(record.getStringValue(i));
-					if ((i + 1) < record.size()) {
+					if (i + 1 < record.size()) {
 						sb.append(seperator);
 					}
 				}
@@ -79,7 +79,7 @@ public class EComponentHelper {
 	/**
 	 * Sets the preferred width of the visible column specified by vColIndex. The column will be just wide enough to show the column head and the widest cell in the column. margin
 	 * pixels are added to the left and right (resulting in an additional width of 2*margin pixels).
-	 * 
+	 *
 	 * @param table
 	 * @param vColIndex
 	 * @param margin
@@ -114,6 +114,7 @@ public class EComponentHelper {
 	}
 
 	public static String removeHtml(String s) {
-		return s.replaceAll("&nbsp;", " ").replaceAll("<br>", "\n").replaceAll("<br/>", "\n").replaceAll("<html>", "").replaceAll("</html>", "").replaceAll("<body>", "").replaceAll("</body>", "");
+		return s.replaceAll("&nbsp;", " ").replaceAll("<br>", "\n").replaceAll("<br/>", "\n").replaceAll("<html>", "").replaceAll("</html>", "").replaceAll("<body>", "")
+				.replaceAll("</body>", "");
 	}
 }

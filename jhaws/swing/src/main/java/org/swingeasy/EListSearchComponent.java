@@ -34,7 +34,7 @@ public class EListSearchComponent<T> extends ELabeledTextFieldButtonComponent im
 	 */
 	@Override
 	protected void doAction() {
-		String text = JTextField.class.cast(this.getInput()).getText();
+		String text = JTextField.class.cast(getInput()).getText();
 		if (text.length() == 0) {
 			return;
 		}
@@ -111,8 +111,8 @@ public class EListSearchComponent<T> extends ELabeledTextFieldButtonComponent im
 	}
 
 	protected void onNoMatch() {
-		String message = Messages.getString(this.getLocale(), "EList.SearchComponent.nomatch");//$NON-NLS-1$
-		String title = Messages.getString(this.getLocale(), "EList.SearchComponent.searchmatch");//$NON-NLS-1$
+		String message = Messages.getString(getLocale(), "EList.SearchComponent.nomatch");//$NON-NLS-1$
+		String title = Messages.getString(getLocale(), "EList.SearchComponent.searchmatch");//$NON-NLS-1$
 		JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -122,8 +122,8 @@ public class EListSearchComponent<T> extends ELabeledTextFieldButtonComponent im
 	@Override
 	public void setLocale(Locale l) {
 		super.setLocale(l);
-		this.getButton().setToolTipText(Messages.getString(l, "EList.SearchComponent.search"));//$NON-NLS-1$
-		this.getLabel().setText(Messages.getString(l, "EList.SearchComponent.search") + ": ");//$NON-NLS-1$ //$NON-NLS-2$
+		getButton().setToolTipText(Messages.getString(l, "EList.SearchComponent.search"));//$NON-NLS-1$
+		getLabel().setText(Messages.getString(l, "EList.SearchComponent.search") + ": ");//$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

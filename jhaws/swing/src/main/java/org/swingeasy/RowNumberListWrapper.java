@@ -11,6 +11,6 @@ public class RowNumberListWrapper extends JScrollPane {
 	public RowNumberListWrapper(JList<T> wrapped) {
 		super(wrapped);
 		RowNumberList rowList = new RowNumberList(wrapped);
-		this.setRowHeaderView(rowList);
+		setRowHeaderView(rowList);
 	}
 }

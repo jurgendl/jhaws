@@ -7,11 +7,11 @@ import javax.swing.JComponent;
  * @author Jurgen
  */
 public interface EComponentExporter<T extends JComponent & EComponentI> {
-    public void export(T component);
+	public void export(T component);
 
-    public String getAction();
+	public String getAction();
 
-    public String getFileExtension();
+	public String getFileExtension();
 
-    public Icon getIcon();
+	public Icon getIcon();
 }

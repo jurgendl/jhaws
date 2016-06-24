@@ -14,63 +14,63 @@ import org.swingeasy.EComponentPopupMenu.ReadableComponent;
 /**
  * @author Jurgen
  */
-public abstract class AbstractELabeledTextFieldButtonComponent<LABEL extends JComponent, INPUT extends JComponent, BUTTON extends JComponent> extends
-        JComponent implements EComponentI, ReadableComponent {
-    private static final long serialVersionUID = 3916693177023150847L;
+public abstract class AbstractELabeledTextFieldButtonComponent<LABEL extends JComponent, INPUT extends JComponent, BUTTON extends JComponent> extends JComponent
+		implements EComponentI, ReadableComponent {
+	private static final long serialVersionUID = 3916693177023150847L;
 
-    protected INPUT input;
+	protected INPUT input;
 
-    protected BUTTON button;
+	protected BUTTON button;
 
-    protected LABEL label;
+	protected LABEL label;
 
-    protected Border defaultBorder = new JTextField().getBorder();
+	protected Border defaultBorder = new JTextField().getBorder();
 
-    public AbstractELabeledTextFieldButtonComponent() {
-        this.createComponent();
-        UIUtils.registerLocaleChangeListener((EComponentI) this);
-    }
+	public AbstractELabeledTextFieldButtonComponent() {
+		this.createComponent();
+		UIUtils.registerLocaleChangeListener((EComponentI) this);
+	}
 
-    protected void createComponent() {
-        this.setLayout(new BorderLayout());
-        this.setLocale(null);
+	protected void createComponent() {
+		setLayout(new BorderLayout());
+		setLocale(null);
 
-        JPanel internal = new JPanel(new BorderLayout());
-        this.add(this.getLabel(), BorderLayout.WEST);
-        this.add(internal, BorderLayout.CENTER);
-        internal.add(this.getInput(), BorderLayout.CENTER);
-        internal.add(this.getButton(), BorderLayout.EAST);
+		JPanel internal = new JPanel(new BorderLayout());
+		this.add(this.getLabel(), BorderLayout.WEST);
+		this.add(internal, BorderLayout.CENTER);
+		internal.add(this.getInput(), BorderLayout.CENTER);
+		internal.add(this.getButton(), BorderLayout.EAST);
 
-        internal.setBorder(this.defaultBorder);
-        this.setBackground(Color.WHITE);
-        internal.setBackground(Color.WHITE);
-    }
+		internal.setBorder(this.defaultBorder);
+		setBackground(Color.WHITE);
+		internal.setBackground(Color.WHITE);
+	}
 
-    protected abstract void doAction();
+	protected abstract void doAction();
 
-    protected abstract String getAction();
+	protected abstract String getAction();
 
-    public abstract BUTTON getButton();
+	public abstract BUTTON getButton();
 
-    protected abstract Icon getIcon();
+	protected abstract Icon getIcon();
 
-    public abstract INPUT getInput();
+	public abstract INPUT getInput();
 
-    public abstract LABEL getLabel();
+	public abstract LABEL getLabel();
 
-    public void setButton(BUTTON button) {
-        this.button = button;
-    }
+	public void setButton(BUTTON button) {
+		this.button = button;
+	}
 
-    public void setInput(INPUT input) {
-        this.input = input;
-    }
+	public void setInput(INPUT input) {
+		this.input = input;
+	}
 
-    public void setLabel(LABEL label) {
-        this.label = label;
-    }
+	public void setLabel(LABEL label) {
+		this.label = label;
+	}
 
-    public void setShowLabel(boolean showLabel) {
-        this.getLabel().setVisible(showLabel);
-    }
+	public void setShowLabel(boolean showLabel) {
+		this.getLabel().setVisible(showLabel);
+	}
 }

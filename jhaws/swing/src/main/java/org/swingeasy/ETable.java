@@ -105,7 +105,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			 * J_DOC
 			 */
 			protected class RecordMatcher implements Matcher<ETableRecord<T>> {
-				protected final Map<Integer, Pattern> filters = new HashMap<Integer, Pattern>();
+				protected final Map<Integer, Pattern> filters = new HashMap<>();
 
 				protected RecordMatcher(int column, String text) {
 					if (text != null) {
@@ -128,7 +128,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 				public boolean matches(ETableRecord<T> item) {
 					for (Map.Entry<Integer, Pattern> entry : this.filters.entrySet()) {
 						String value = item.getStringValue(entry.getKey());
-						if ((value == null) || !entry.getValue().matcher(value).find()) {
+						if (value == null || !entry.getValue().matcher(value).find()) {
 							return false;
 						}
 					}
@@ -142,7 +142,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 
 			protected int popupForColumn = -1;
 
-			protected Map<Integer, String> popupFilters = new HashMap<Integer, String>();
+			protected Map<Integer, String> popupFilters = new HashMap<>();
 
 			protected Color popupBackgroundColor = new Color(246, 243, 149);
 
@@ -150,7 +150,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 				super(frame);
 
 				this.popupTextfield.setBackground(this.popupBackgroundColor);
-				this.getContentPane().add(this.popupTextfield, BorderLayout.CENTER);
+				getContentPane().add(this.popupTextfield, BorderLayout.CENTER);
 				this.popupTextfield.setFocusTraversalKeysEnabled(false);
 				this.popupTextfield.addFocusListener(new FocusAdapter() {
 					@Override
@@ -191,16 +191,16 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			 * @param p
 			 */
 			protected void activate(Point p) {
-				this.popupForColumn = ETable.this.getTableHeader().columnAtPoint(p);
+				this.popupForColumn = getTableHeader().columnAtPoint(p);
 				String filter = this.popupFilters.get(this.popupForColumn);
 				this.popupTextfield.setText(filter);
-				Rectangle headerRect = ETable.this.getTableHeader().getHeaderRect(this.popupForColumn);
+				Rectangle headerRect = getTableHeader().getHeaderRect(this.popupForColumn);
 				Point pt = ETable.this.getLocationOnScreen();
 				pt.translate(headerRect.x - 1, -headerRect.height - 1);
 				this.setLocation(pt);
 				this.setSize(headerRect.width, headerRect.height);
-				this.toFront();
-				this.setVisible(true);
+				toFront();
+				setVisible(true);
 				this.requestFocusInWindow();
 				this.popupTextfield.requestFocusInWindow();
 			}
@@ -274,15 +274,15 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			this.source = source;
 			if (matcher != null) {
 				// we do matching ourselves
-				this.filteredRecords = new FilterList<ETableRecord<T>>(source, matcher);
+				this.filteredRecords = new FilterList<>(source, matcher);
 				return;
 			}
 			if (!ETable.this.cfg.isFilterable()) {
 				return;
 			}
 			// default matching
-			this.matcherEditor = new RecordMatcherEditor<T>();
-			this.filteredRecords = new FilterList<ETableRecord<T>>(source, this.matcherEditor);
+			this.matcherEditor = new RecordMatcherEditor<>();
+			this.filteredRecords = new FilterList<>(source, this.matcherEditor);
 		}
 
 		protected void clear() {
@@ -313,14 +313,14 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			if (!ETable.this.cfg.isFilterable()) {
 				return;
 			}
-			ETable.this.getTableHeader().addMouseListener(new FilterPopupActivate());
+			getTableHeader().addMouseListener(new FilterPopupActivate());
 		}
 
 		protected void mouseClicked(MouseEvent e) {
 			if (!ETable.this.cfg.isFilterable()) {
 				return;
 			}
-			if ((e.getClickCount() == 1) && (e.getButton() == MouseEvent.BUTTON3)) {
+			if (e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3) {
 				this.getFilterPopup().activate(e.getPoint());
 			}
 		}
@@ -347,7 +347,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			if (!ETable.this.cfg.isSortable()) {
 				return;
 			}
-			this.sortedRecords = new SortedList<ETableRecord<T>>(source, null);
+			this.sortedRecords = new SortedList<>(source, null);
 		}
 
 		protected void dispose() {
@@ -368,7 +368,8 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			if (!ETable.this.cfg.isSortable()) {
 				return;
 			}
-			this.tableSorter = TableComparatorChooser.install(ETable.this, this.sortedRecords, AbstractTableComparatorChooser.MULTIPLE_COLUMN_MOUSE_WITH_UNDO, ETable.this.tableFormat);
+			this.tableSorter = TableComparatorChooser.install(ETable.this, this.sortedRecords, AbstractTableComparatorChooser.MULTIPLE_COLUMN_MOUSE_WITH_UNDO,
+					ETable.this.tableFormat);
 		}
 
 		protected void sort(int col) {
@@ -412,7 +413,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 		}
 	}
 
-	public static abstract class Filter<T> extends RecordMatcherEditor<T>implements Matcher<ETableRecord<T>> {
+	public static abstract class Filter<T> extends RecordMatcherEditor<T> implements Matcher<ETableRecord<T>> {
 		public void fire() {
 			this.fire(this);
 		}
@@ -423,7 +424,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 
 		public PrintAction(ETable<T> component) {
 			super(component, "print", Resources.getImageResource("printer.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, Event.CTRL_MASK));
 		}
 
 		/**
@@ -432,7 +433,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				this.delegate.print(PrintMode.NORMAL);
+				delegate.print(PrintMode.NORMAL);
 			} catch (PrinterException pe) {
 				System.out.println("Error printing: " + pe);
 			}
@@ -443,7 +444,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled config) {
-			this.setEnabled(config.hasText);
+			setEnabled(config.hasText);
 			return config.hasText;
 		}
 	}
@@ -453,7 +454,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	 */
 	protected static class RecordMatcherEditor<T> extends AbstractMatcherEditor<ETableRecord<T>> {
 		protected void fire(Matcher<ETableRecord<T>> matcher) {
-			this.fireChanged(matcher);
+			fireChanged(matcher);
 		}
 	}
 
@@ -465,29 +466,32 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 
 		protected Icon sortIcon = null;
 
-		protected final static double DEGREE_90 = (90.0 * Math.PI) / 180.0;
+		protected final static double DEGREE_90 = 90.0 * Math.PI / 180.0;
 
-		protected Map<Icon, Icon> rotatedIconsCache = new HashMap<Icon, Icon>();
+		protected Map<Icon, Icon> rotatedIconsCache = new HashMap<>();
 
 		/**
 		 * Creates a rotated version of the input image.
 		 *
-		 * @param c The component to get properties useful for painting, e.g. the foreground or background color.
-		 * @param icon the image to be rotated.
-		 * @param rotatedAngle the rotated angle, in degree, clockwise. It could be any double but we will mod it with 360 before using it.
+		 * @param c
+		 *            The component to get properties useful for painting, e.g. the foreground or background color.
+		 * @param icon
+		 *            the image to be rotated.
+		 * @param rotatedAngle
+		 *            the rotated angle, in degree, clockwise. It could be any double but we will mod it with 360 before using it.
 		 * @return the image after rotating.
 		 * @see http://www.jidesoft.com/blog/2008/02/29/rotate-an-icon-in-java/
 		 */
 		protected ImageIcon createRotatedImage(Component c, Icon icon, double rotatedAngle) {
 			// convert rotatedAngle to a value from 0 to 360
 			double originalAngle = rotatedAngle % 360;
-			if ((rotatedAngle != 0) && (originalAngle == 0)) {
+			if (rotatedAngle != 0 && originalAngle == 0) {
 				originalAngle = 360.0;
 			}
 
 			// convert originalAngle to a value from 0 to 90
 			double angle = originalAngle % 90;
-			if ((originalAngle != 0.0) && (angle == 0.0)) {
+			if (originalAngle != 0.0 && angle == 0.0) {
 				angle = 90.0;
 			}
 
@@ -498,12 +502,12 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			int w;
 			int h;
 
-			if (((originalAngle >= 0) && (originalAngle <= 90)) || ((originalAngle > 180) && (originalAngle <= 270))) {
-				w = (int) ((iw * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian)) + (ih * Math.sin(radian)));
-				h = (int) ((iw * Math.sin(radian)) + (ih * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian)));
+			if (originalAngle >= 0 && originalAngle <= 90 || originalAngle > 180 && originalAngle <= 270) {
+				w = (int) (iw * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian) + ih * Math.sin(radian));
+				h = (int) (iw * Math.sin(radian) + ih * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian));
 			} else {
-				w = (int) ((ih * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian)) + (iw * Math.sin(radian)));
-				h = (int) ((ih * Math.sin(radian)) + (iw * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian)));
+				w = (int) (ih * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian) + iw * Math.sin(radian));
+				h = (int) (ih * Math.sin(radian) + iw * Math.sin(VerticalHeaderRenderer.DEGREE_90 - radian));
 			}
 			BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 			Graphics g = image.getGraphics();
@@ -656,12 +660,12 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	@Override
 	protected void createDefaultEditors() {
 		super.createDefaultEditors();
-		this.defaultEditorsByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(java.sql.Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(java.sql.Time.class, new javax.swing.UIDefaults.ProxyLazyValue(TimeTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(java.sql.Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(java.sql.Time.class, new javax.swing.UIDefaults.ProxyLazyValue(TimeTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellEditor.class.getName()));
 	}
 
 	/**
@@ -671,19 +675,19 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	@Override
 	protected void createDefaultRenderers() {
 		super.createDefaultRenderers();
-		this.defaultRenderersByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(java.sql.Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(java.sql.Time.class, new javax.swing.UIDefaults.ProxyLazyValue(TimeTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Float.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Double.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(URL.class, new javax.swing.UIDefaults.ProxyLazyValue(URLTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(URI.class, new javax.swing.UIDefaults.ProxyLazyValue(URITableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Object.class, new javax.swing.UIDefaults.ProxyLazyValue(ETableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(java.sql.Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(java.sql.Time.class, new javax.swing.UIDefaults.ProxyLazyValue(TimeTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Float.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Double.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(URL.class, new javax.swing.UIDefaults.ProxyLazyValue(URLTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(URI.class, new javax.swing.UIDefaults.ProxyLazyValue(URITableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Object.class, new javax.swing.UIDefaults.ProxyLazyValue(ETableCellRenderer.class.getName()));
 	}
 
 	/**
@@ -691,7 +695,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	 */
 	@Override
 	protected JTableHeader createDefaultTableHeader() {
-		JTableHeader jTableHeader = new JTableHeader(this.columnModel) {
+		JTableHeader jTableHeader = new JTableHeader(columnModel) {
 			private static final long serialVersionUID = -378778832166135907L;
 
 			/**
@@ -700,7 +704,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			@Override
 			public String getToolTipText(MouseEvent e) {
 				Point p = e.getPoint();
-				int index = this.columnModel.getColumnIndexAtX(p.x);
+				int index = columnModel.getColumnIndexAtX(p.x);
 				if (index == -1) {
 					return null;
 				}
@@ -710,7 +714,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 					EFiltering filtering0 = ETable.this.filtering;
 					String filter = filtering0.getFilterPopup().popupFilters.get(index);
 
-					if ((filter != null) && (filter.trim().length() > 0)) {
+					if (filter != null && filter.trim().length() > 0) {
 						headerValue += "<br/>" + "filter: '" + filter + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					} else {
 						headerValue += "<br/>" + "no filter"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -730,7 +734,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	 */
 	@Override
 	public Object getColumnValueAtVisualColumn(int i) {
-		return this.getColumnModel().getColumn(i).getHeaderValue();
+		return getColumnModel().getColumn(i).getHeaderValue();
 	}
 
 	/**
@@ -760,7 +764,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 			// UIUtils.registerLocaleChangeListener(Component.class.cast(dr));
 		}
 
-		if ((dr instanceof ETableCellRenderer<?>) && (this.cfg != null)) {
+		if (dr instanceof ETableCellRenderer<?> && this.cfg != null) {
 			ETableCellRenderer.class.cast(dr).setBackgroundRenderer(this.cfg.getBackgroundRenderer());
 		}
 
@@ -850,7 +854,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 		if (record == null) {
 			return null;
 		}
-		return record.get(this.getSelectedColumn());
+		return record.get(getSelectedColumn());
 	}
 
 	/**
@@ -858,9 +862,9 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	 */
 	@Override
 	public List<Object> getSelectedCells() {
-		List<Object> cells = new ArrayList<Object>();
+		List<Object> cells = new ArrayList<>();
 		for (ETableRecord<T> record : this.getSelectedRecords()) {
-			int selectedColumn = this.getSelectedColumn();
+			int selectedColumn = getSelectedColumn();
 			if (selectedColumn != -1) {
 				cells.add(record.get(selectedColumn));
 			} else {
@@ -907,7 +911,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	}
 
 	protected void init(ETableConfig configuration, Filter<T> matcher) {
-		this.addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3) {
@@ -917,29 +921,29 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 		});
 
 		if (configuration.isVertical()) {
-			this.getTableHeader().setDefaultRenderer(new VerticalHeaderRenderer());
+			getTableHeader().setDefaultRenderer(new VerticalHeaderRenderer());
 		}
 		if (configuration.isDraggable()) {
-			this.setDragEnabled(true);
-			this.setDropMode(DropMode.INSERT_ROWS);
-			this.setTransferHandler(new TableRowTransferHandler(this));
+			setDragEnabled(true);
+			setDropMode(DropMode.INSERT_ROWS);
+			setTransferHandler(new TableRowTransferHandler(this));
 		}
-		this.setColumnModel(new EventTableColumnModel<TableColumn>(new BasicEventList<TableColumn>()));
-		this.records = (configuration.isThreadSafe() ? GlazedLists.threadSafeList(new BasicEventList<ETableRecord<T>>()) : new BasicEventList<ETableRecord<T>>());
+		setColumnModel(new EventTableColumnModel<>(new BasicEventList<TableColumn>()));
+		this.records = configuration.isThreadSafe() ? GlazedLists.threadSafeList(new BasicEventList<ETableRecord<T>>()) : new BasicEventList<>();
 		this.sorting = new ESorting(this.records);
-		this.tableFormat = new ETableHeaders<T>();
+		this.tableFormat = new ETableHeaders<>();
 		this.filtering = new EFiltering(this.sorting.getRecords(), matcher);
 		this.tableModel = new ETableModel(this.filtering.getRecords(), this.tableFormat);
-		this.setModel(this.tableModel);
-		this.tableSelectionModel = new DefaultEventSelectionModel<ETableRecord<T>>(this.filtering.getRecords());
+		setModel(this.tableModel);
+		this.tableSelectionModel = new DefaultEventSelectionModel<>(this.filtering.getRecords());
 		this.tableSelectionModel.setSelectionMode(ListSelection.MULTIPLE_INTERVAL_SELECTION_DEFENSIVE);
-		this.setColumnSelectionAllowed(true);
-		this.setRowSelectionAllowed(true);
-		this.setSelectionModel(this.tableSelectionModel);
+		setColumnSelectionAllowed(true);
+		setRowSelectionAllowed(true);
+		setSelectionModel(this.tableSelectionModel);
 		this.sorting.install();
 		this.filtering.install();
-		this.getTableHeader().setReorderingAllowed(configuration.isReorderable());
-		this.getTableHeader().setResizingAllowed(configuration.isResizable());
+		getTableHeader().setReorderingAllowed(configuration.isReorderable());
+		getTableHeader().setResizingAllowed(configuration.isResizable());
 
 		if (configuration.isLocalized()) {
 			UIUtils.registerLocaleChangeListener((EComponentI) this);
@@ -971,7 +975,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 		while (iterator.hasNext()) {
 			try {
 				ETableExporter<T> exporter = iterator.next();
-				EComponentExporterAction<ETable<T>> action = new EComponentExporterAction<ETable<T>>(exporter, this);
+				EComponentExporterAction<ETable<T>> action = new EComponentExporterAction<>(exporter, this);
 				menu.add(action);
 			} catch (ServiceConfigurationError ex) {
 				ex.printStackTrace(System.err);
@@ -1077,12 +1081,12 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	 */
 	@Override
 	public void scrollToVisibleRecord(ETableRecord<T> record) {
-		if (!this.isDisplayable()) {
+		if (!isDisplayable()) {
 			throw new IllegalArgumentException("can only be used when table is displayable (visible)"); //$NON-NLS-1$
 		}
 		int index = this.filtering.getRecords().indexOf(record);
-		Rectangle cellbounds = this.getCellRect(index, index, true);
-		this.scrollRectToVisible(cellbounds);
+		Rectangle cellbounds = getCellRect(index, index, true);
+		scrollRectToVisible(cellbounds);
 	}
 
 	/**
@@ -1090,26 +1094,26 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
 	 */
 	@Override
 	public void selectCell(Point p) {
-		int r = this.rowAtPoint(p);
+		int r = rowAtPoint(p);
 		if (r == -1) {
 			return;
 		}
-		int c = this.columnAtPoint(p);
+		int c = columnAtPoint(p);
 		if (c == -1) {
 			return;
 		}
 		// if already selected: do nothing (this keeps multiple selection when current cell is part of it
-		for (int sr : this.getSelectedRows()) {
+		for (int sr : getSelectedRows()) {
 			if (sr == r) {
-				for (int sc : this.getSelectedColumns()) {
+				for (int sc : getSelectedColumns()) {
 					if (sc == c) {
 						return;
 					}
 				}
 			}
 		}
-		this.setColumnSelectionInterval(c, c);
-		this.setRowSelectionInterval(r, r);
+		setColumnSelectionInterval(c, c);
+		setRowSelectionInterval(r, r);
 	}
 
 	/**

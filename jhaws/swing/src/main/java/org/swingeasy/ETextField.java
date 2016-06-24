@@ -15,21 +15,21 @@ import org.apache.commons.lang3.StringUtils;
 public class ETextField extends JTextField implements EComponentI, HasValue<String> {
 	private static final long serialVersionUID = -7074333880526075392L;
 
-	protected final List<ValueChangeListener<String>> valueChangeListeners = new ArrayList<ValueChangeListener<String>>();
+	protected final List<ValueChangeListener<String>> valueChangeListeners = new ArrayList<>();
 
 	protected final ETextFieldConfig cfg;
 
 	protected ETextField() {
-		this.cfg = null;
+		cfg = null;
 	}
 
 	public ETextField(ETextFieldConfig cfg) {
-		this.init(this.cfg = cfg.lock());
+		init(this.cfg = cfg.lock());
 	}
 
 	public void addDocumentKeyListener(DocumentKeyListener listener) {
-		this.getDocument().addDocumentListener(listener);
-		this.addKeyListener(listener);
+		getDocument().addDocumentListener(listener);
+		addKeyListener(listener);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
 	 */
 	@Override
 	public void addValueChangeListener(ValueChangeListener<String> listener) {
-		this.valueChangeListeners.add(listener);
+		valueChangeListeners.add(listener);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
 	 */
 	@Override
 	public void clearValueChangeListeners() {
-		this.valueChangeListeners.clear();
+		valueChangeListeners.clear();
 	}
 
 	/**
@@ -74,12 +74,12 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
 	}
 
 	protected void init(ETextFieldConfig config) {
-		this.setColumns(this.cfg.getColumns());
+		setColumns(cfg.getColumns());
 
-		this.setEditable(config.isEnabled());
+		setEditable(config.isEnabled());
 
 		if (config.isSelectAllOnFocus()) {
-			this.addFocusListener(new ETextComponentSelectAllOnFocus());
+			addFocusListener(new ETextComponentSelectAllOnFocus());
 		}
 
 		if (config.isTooltips()) {
@@ -87,25 +87,25 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
 		}
 
 		if (config.isDefaultPopupMenu()) {
-			this.installPopupMenuAction(EComponentPopupMenu.installTextComponentPopupMenu(this));
+			installPopupMenuAction(EComponentPopupMenu.installTextComponentPopupMenu(this));
 		}
 
 		if (config.isLocalized()) {
 			UIUtils.registerLocaleChangeListener((EComponentI) this);
 		}
 
-		this.addDocumentKeyListener(new DocumentKeyListener() {
+		addDocumentKeyListener(new DocumentKeyListener() {
 			@Override
 			public void update(Type type, DocumentEvent e) {
 				String value = ETextField.this.getValue();
-				for (ValueChangeListener<String> valueChangeListener : ETextField.this.valueChangeListeners) {
+				for (ValueChangeListener<String> valueChangeListener : valueChangeListeners) {
 					valueChangeListener.valueChanged(value);
 				}
 			}
 		});
 
 		if (config.getText() != null) {
-			this.setText(config.getText());
+			setText(config.getText());
 		}
 	}
 
@@ -120,8 +120,8 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
 	 * JDOC
 	 */
 	public void removeDocumentKeyListener(DocumentKeyListener listener) {
-		this.getDocument().removeDocumentListener(listener);
-		this.removeKeyListener(listener);
+		getDocument().removeDocumentListener(listener);
+		removeKeyListener(listener);
 	}
 
 	/**
@@ -129,6 +129,6 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
 	 */
 	@Override
 	public void removeValueChangeListener(ValueChangeListener<String> listener) {
-		this.valueChangeListeners.remove(listener);
+		valueChangeListeners.remove(listener);
 	}
 }

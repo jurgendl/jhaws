@@ -16,6 +16,6 @@ public class Against {
 
     @Override
     public String toString() {
-        return "Against [revision=" + this.revision + "]";
+        return "Against [revision=" + revision + "]";
     }
 }

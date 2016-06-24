@@ -13,66 +13,66 @@ import org.swingeasy.EComponentPopupMenu.ReadableComponent;
  * @author Jurgen
  */
 public class EButton extends JButton implements EComponentI, ReadableComponent {
-    private static final long serialVersionUID = -6193067407274776197L;
+	private static final long serialVersionUID = -6193067407274776197L;
 
-    protected EButtonConfig cfg;
+	protected EButtonConfig cfg;
 
-    protected EButton() {
-        this.cfg = null;
-    }
+	protected EButton() {
+		cfg = null;
+	}
 
-    public EButton(EButtonConfig cfg) {
-        this.init(cfg = cfg.lock());
-    }
+	public EButton(EButtonConfig cfg) {
+		this.init(cfg = cfg.lock());
+	}
 
-    /**
-     * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
-     */
-    @Override
-    public void copy(ActionEvent e) {
-        EComponentPopupMenu.copyToClipboard(this.getText());
-    }
+	/**
+	 * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void copy(ActionEvent e) {
+		EComponentPopupMenu.copyToClipboard(getText());
+	}
 
-    /**
-     * @see org.swingeasy.HasParentComponent#getParentComponent()
-     */
-    @Override
-    public JComponent getParentComponent() {
-        return this;
-    }
+	/**
+	 * @see org.swingeasy.HasParentComponent#getParentComponent()
+	 */
+	@Override
+	public JComponent getParentComponent() {
+		return this;
+	}
 
-    protected void init(EButtonConfig config) {
-        if (config.getAction() != null) {
-            this.setAction(config.getAction());
-            this.setName(String.valueOf(config.getAction().getValue(Action.NAME)));
-        }
+	protected void init(EButtonConfig config) {
+		if (config.getAction() != null) {
+			setAction(config.getAction());
+			setName(String.valueOf(config.getAction().getValue(Action.NAME)));
+		}
 
-        if (config.getText() != null) {
-            this.setText(config.getText());
-        }
+		if (config.getText() != null) {
+			setText(config.getText());
+		}
 
-        if (config.getIcon() != null) {
-            this.setIcon(config.getIcon());
-        }
+		if (config.getIcon() != null) {
+			setIcon(config.getIcon());
+		}
 
-        if (config.getButtonCustomizer() != null) {
-            config.getButtonCustomizer().customize(this);
-        }
+		if (config.getButtonCustomizer() != null) {
+			config.getButtonCustomizer().customize(this);
+		}
 
-        if (config.isDefaultPopupMenu()) {
-            this.installPopupMenuAction(EComponentPopupMenu.installPopupMenu(this));
-        }
+		if (config.isDefaultPopupMenu()) {
+			installPopupMenuAction(EComponentPopupMenu.installPopupMenu(this));
+		}
 
-        if (config.isLocalized()) {
-            UIUtils.registerLocaleChangeListener((EComponentI) this);
-        }
+		if (config.isLocalized()) {
+			UIUtils.registerLocaleChangeListener((EComponentI) this);
+		}
 
-        if (config.isTooltips()) {
-            ToolTipManager.sharedInstance().registerComponent(this);
-        }
-    }
+		if (config.isTooltips()) {
+			ToolTipManager.sharedInstance().registerComponent(this);
+		}
+	}
 
-    protected void installPopupMenuAction( EComponentPopupMenu menu) {
-        //
-    }
+	protected void installPopupMenuAction(EComponentPopupMenu menu) {
+		//
+	}
 }

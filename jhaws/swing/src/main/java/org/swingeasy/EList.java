@@ -33,8 +33,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.ToolTipManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import org.swingeasy.EComponentPopupMenu.CheckEnabled;
 import org.swingeasy.EComponentPopupMenu.EComponentPopupMenuAction;
@@ -60,7 +58,7 @@ import ca.odell.glazedlists.swing.DefaultEventSelectionModel;
 /**
  * @author Jurgen
  */
-public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterable<EListRecord<T>>, ReadableComponent, HasValue<T> {
+public class EList<T> extends JList<EListRecord<T>> implements EListI<T>, Iterable<EListRecord<T>>, ReadableComponent, HasValue<T> {
 	private class DelegatingListCellRenderer implements ListCellRenderer<Object> {
 		protected transient Hashtable<Class<?>, ListCellRenderer<?>> defaultRenderersByClass = new Hashtable<>();
 
@@ -77,7 +75,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 			defaultRenderer(byte[].class, new ByteArrayListCellRenderer().setBackgroundRenderer(backgroundRenderer));
 			defaultRenderer(URL.class, new URLListCellRenderer().setBackgroundRenderer(backgroundRenderer));
 			defaultRenderer(URI.class, new URIListCellRenderer().setBackgroundRenderer(backgroundRenderer));
-			defaultRenderer(Object.class, new EListCellRenderer<Object>().setBackgroundRenderer(backgroundRenderer));
+			defaultRenderer(Object.class, new EListCellRenderer<>().setBackgroundRenderer(backgroundRenderer));
 		}
 
 		@SuppressWarnings("unchecked")
@@ -145,7 +143,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 
 		public SelectAllAction(EList<T> component) {
 			super(component, EComponentPopupMenu.SELECT_ALL, Resources.getImageResource("page_white_text_width.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK));
 		}
 
 		/**
@@ -153,12 +151,12 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int size = this.delegate.getRecords().size();
+			int size = delegate.getRecords().size();
 			int[] indices = new int[size];
 			for (int i = 0; i < size; i++) {
 				indices[i] = i;
 			}
-			this.delegate.setSelectedIndices(indices);
+			delegate.setSelectedIndices(indices);
 		}
 
 		/**
@@ -178,7 +176,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 
 		public UnselectAction(EList<T> component) {
 			super(component, EComponentPopupMenu.UNSELECT, Resources.getImageResource("page_white_width.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
 		}
 
 		/**
@@ -186,7 +184,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.setSelectedIndices(new int[0]);
+			delegate.setSelectedIndices(new int[0]);
 		}
 
 		/**
@@ -202,9 +200,9 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 * convert
 	 */
 	public static <T> List<EListRecord<T>> convert(Collection<T> records) {
-		List<EListRecord<T>> list = new ArrayList<EListRecord<T>>();
+		List<EListRecord<T>> list = new ArrayList<>();
 		for (T r : records) {
-			list.add(new EListRecord<T>(r));
+			list.add(new EListRecord<>(r));
 		}
 		return list;
 	}
@@ -221,7 +219,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 * convert
 	 */
 	public static <T> List<T> convertRecords(Collection<EListRecord<T>> records) {
-		List<T> list = new ArrayList<T>();
+		List<T> list = new ArrayList<>();
 		for (EListRecord<T> r : records) {
 			list.add(r.get());
 		}
@@ -236,19 +234,19 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	}
 
 	private static <T> EListModel<T> createModel(EListConfig cfg) {
-		EventList<EListRecord<T>> records = new BasicEventList<EListRecord<T>>();
+		EventList<EListRecord<T>> records = new BasicEventList<>();
 		if (cfg.isSortable()) {
-			records = new SortedList<EListRecord<T>>(records);
+			records = new SortedList<>(records);
 		}
 		EListFilterComponent<T> filtercomponent = null;
 		if (cfg.isFilterable()) {
-			filtercomponent = new EListFilterComponent<T>(records);
+			filtercomponent = new EListFilterComponent<>(records);
 			records = filtercomponent.grabRecords();
 		}
 		if (cfg.isThreadSafe()) {
 			records = GlazedLists.threadSafeList(records);
 		}
-		EListModel<T> model = new EListModel<T>(records);
+		EListModel<T> model = new EListModel<>(records);
 		model.filtercomponent = filtercomponent;
 		return model;
 	}
@@ -265,7 +263,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 
 	protected EListFilterComponent<T> filtercomponent = null;
 
-	protected final List<ValueChangeListener<T>> valueChangeListeners = new ArrayList<ValueChangeListener<T>>();
+	protected final List<ValueChangeListener<T>> valueChangeListeners = new ArrayList<>();
 
 	protected EList<T> stsi;
 
@@ -290,14 +288,14 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 */
 	@Override
 	public void addCellSelection(Point point) {
-		int idx = this.locationToIndex(point);
+		int idx = locationToIndex(point);
 		if (idx != -1) {
-			for (int sel : this.getSelectedIndices()) {
+			for (int sel : getSelectedIndices()) {
 				if (sel == idx) {
 					return;
 				}
 			}
-			this.setSelectedIndex(idx);
+			setSelectedIndex(idx);
 		}
 	}
 
@@ -375,7 +373,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	@Override
 	@SuppressWarnings("unchecked")
 	protected ListSelectionModel createSelectionModel() {
-		ListModel<EListRecord<T>> _model = this.getModel();
+		ListModel<EListRecord<T>> _model = getModel();
 		if (_model instanceof EListModel) {
 			return new DefaultEventSelectionModel<EListRecord<T>>(EListModel.class.cast(_model).sourceList);
 		}
@@ -422,8 +420,8 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 */
 	public EListSearchComponent<T> getSearchComponent() {
 		if (this.searchComponent == null) {
-			this.searchComponent = new EListSearchComponent<T>(this);
-			this.searchComponent.setLocale(this.getLocale());
+			this.searchComponent = new EListSearchComponent<>(this);
+			this.searchComponent.setLocale(getLocale());
 		}
 		return this.searchComponent;
 	}
@@ -433,7 +431,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 */
 	@Override
 	public EListRecord<T> getSelectedRecord() {
-		return this.getSelectedValue();
+		return getSelectedValue();
 	}
 
 	/**
@@ -442,8 +440,8 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<EListRecord<T>> getSelectedRecords() {
-		List<EListRecord<T>> list = new ArrayList<EListRecord<T>>();
-		for (Object o : this.getSelectedValuesList()) {
+		List<EListRecord<T>> list = new ArrayList<>();
+		for (Object o : getSelectedValuesList()) {
 			list.add(EListRecord.class.cast(o));
 		}
 		return list;
@@ -477,13 +475,13 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 			return toolTipText;
 		}
 
-		int index = this.locationToIndex(evt.getPoint());
+		int index = locationToIndex(evt.getPoint());
 
 		if (index == -1) {
 			return null;
 		}
 
-		EListRecord<T> item = this.getModel().getElementAt(index);
+		EListRecord<T> item = getModel().getElementAt(index);
 
 		return item.getTooltip();
 	}
@@ -499,7 +497,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void init(EListConfig config) {
-		this.addMouseListener(new MouseAdapter() {
+		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON3) {
@@ -508,19 +506,19 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 			}
 		});
 
-		EListModel elistModel = EListModel.class.cast(this.getModel());
+		EListModel elistModel = EListModel.class.cast(getModel());
 		this.records = elistModel.sourceList;
 		this.filtercomponent = elistModel.filtercomponent;
 		if (this.filtercomponent != null) {
 			this.filtercomponent.setList(this);
 		}
 		elistModel.filtercomponent = null;
-		this.delegatingListCellRenderer = new DelegatingListCellRenderer(this.getCellRenderer(), config.getBackgroundRenderer());
-		this.setCellRenderer(this.delegatingListCellRenderer);
+		this.delegatingListCellRenderer = new DelegatingListCellRenderer(getCellRenderer(), config.getBackgroundRenderer());
+		setCellRenderer(this.delegatingListCellRenderer);
 
 		// drag and drop test jvm internally, intra jvm, tostring
-		this.setDragEnabled(true);
-		this.setTransferHandler(new EListTransferHandler<T>());
+		setDragEnabled(true);
+		setTransferHandler(new EListTransferHandler<T>());
 
 		if (config.isLocalized()) {
 			UIUtils.registerLocaleChangeListener((EComponentI) this);
@@ -534,14 +532,11 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 			ToolTipManager.sharedInstance().registerComponent(this);
 		}
 
-		this.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					T value = EList.this.getValue();
-					for (ValueChangeListener<T> valueChangeListener : EList.this.valueChangeListeners) {
-						valueChangeListener.valueChanged(value);
-					}
+		addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting()) {
+				T value = EList.this.getValue();
+				for (ValueChangeListener<T> valueChangeListener : EList.this.valueChangeListeners) {
+					valueChangeListener.valueChanged(value);
 				}
 			}
 		});
@@ -579,7 +574,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 		while (iterator.hasNext()) {
 			try {
 				EListExporter<T> exporter = iterator.next();
-				EComponentExporterAction<EList<T>> action = new EComponentExporterAction<EList<T>>(exporter, this);
+				EComponentExporterAction<EList<T>> action = new EComponentExporterAction<>(exporter, this);
 				menu.add(action);
 			} catch (ServiceConfigurationError ex) {
 				ex.printStackTrace(System.err);
@@ -602,7 +597,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 */
 	@Override
 	public void moveSelectedDown() {
-		int selectedIndex = this.getSelectedIndex();
+		int selectedIndex = getSelectedIndex();
 
 		// none selected
 		if (selectedIndex == -1) {
@@ -610,14 +605,14 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 		}
 
 		// last selected
-		if (this.records.size() == (selectedIndex + 1)) {
+		if (this.records.size() == selectedIndex + 1) {
 			return;
 		}
 
 		EListRecord<T> rec = this.records.get(selectedIndex);
 		this.records.remove(rec);
 		this.records.add(selectedIndex + 1, rec);
-		this.setSelectedIndex(selectedIndex + 1);
+		setSelectedIndex(selectedIndex + 1);
 	}
 
 	/**
@@ -625,7 +620,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 */
 	@Override
 	public void moveSelectedUp() {
-		int selectedIndex = this.getSelectedIndex();
+		int selectedIndex = getSelectedIndex();
 
 		// none selected
 		if (selectedIndex == -1) {
@@ -640,7 +635,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 		EListRecord<T> rec = this.records.get(selectedIndex);
 		this.records.remove(rec);
 		this.records.add(selectedIndex - 1, rec);
-		this.setSelectedIndex(selectedIndex - 1);
+		setSelectedIndex(selectedIndex - 1);
 	}
 
 	/**
@@ -689,12 +684,12 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 */
 	@Override
 	public void scrollToVisibleRecord(EListRecord<T> record) {
-		if (!this.isDisplayable()) {
+		if (!isDisplayable()) {
 			throw new IllegalArgumentException("can only be used when list is displayable (visible)"); //$NON-NLS-1$
 		}
 		int index = this.records.indexOf(record);
-		Rectangle cellbounds = this.getCellBounds(index, index);
-		this.scrollRectToVisible(cellbounds);
+		Rectangle cellbounds = getCellBounds(index, index);
+		scrollRectToVisible(cellbounds);
 	}
 
 	/**
@@ -702,9 +697,9 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 	 */
 	@Override
 	public void selectCell(Point point) {
-		int idx = this.locationToIndex(point);
+		int idx = locationToIndex(point);
 		if (idx != -1) {
-			this.setSelectedIndex(idx);
+			setSelectedIndex(idx);
 		}
 	}
 
@@ -733,7 +728,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 		if (!this.records.contains(record)) {
 			throw new IllegalArgumentException();
 		}
-		this.setSelectedValue(record, true);
+		setSelectedValue(record, true);
 	}
 
 	/**
@@ -750,7 +745,7 @@ public class EList<T> extends JList<EListRecord<T>>implements EListI<T>, Iterabl
 			}
 			indices[i++] = index;
 		}
-		this.setSelectedIndices(indices);
+		setSelectedIndices(indices);
 	}
 
 	/**

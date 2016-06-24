@@ -132,10 +132,10 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	@Override
 	protected void createDefaultEditors() {
 		super.createDefaultEditors();
-		this.defaultEditorsByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellEditor.class.getName()));
-		this.defaultEditorsByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellEditor.class.getName()));
+		defaultEditorsByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellEditor.class.getName()));
 	}
 
 	/**
@@ -145,17 +145,17 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	@Override
 	protected void createDefaultRenderers() {
 		super.createDefaultRenderers();
-		this.defaultRenderersByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Float.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Double.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(URL.class, new javax.swing.UIDefaults.ProxyLazyValue(URLTableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(URI.class, new javax.swing.UIDefaults.ProxyLazyValue(URITableCellRenderer.class.getName()));
-		this.defaultRenderersByColumnClass.put(Object.class, new javax.swing.UIDefaults.ProxyLazyValue(ETableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Boolean.class, new javax.swing.UIDefaults.ProxyLazyValue(BooleanTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Date.class, new javax.swing.UIDefaults.ProxyLazyValue(DateTimeTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Color.class, new javax.swing.UIDefaults.ProxyLazyValue(ColorTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Number.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Float.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Double.class, new javax.swing.UIDefaults.ProxyLazyValue(NumberTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Byte[].class, new javax.swing.UIDefaults.ProxyLazyValue(ByteArrayTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(URL.class, new javax.swing.UIDefaults.ProxyLazyValue(URLTableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(URI.class, new javax.swing.UIDefaults.ProxyLazyValue(URITableCellRenderer.class.getName()));
+		defaultRenderersByColumnClass.put(Object.class, new javax.swing.UIDefaults.ProxyLazyValue(ETableCellRenderer.class.getName()));
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	 */
 	@Override
 	public Object getColumnValueAtVisualColumn(int i) {
-		return this.getColumnModel().getColumn(i).getHeaderValue();
+		return getColumnModel().getColumn(i).getHeaderValue();
 	}
 
 	/**
@@ -269,7 +269,7 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 		if (record == null) {
 			return null;
 		}
-		return record.get(this.getSelectedColumn());
+		return record.get(getSelectedColumn());
 	}
 
 	/**
@@ -277,9 +277,9 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	 */
 	@Override
 	public List<Object> getSelectedCells() {
-		List<Object> cells = new ArrayList<Object>();
+		List<Object> cells = new ArrayList<>();
 		for (ETreeTableRecord<T> record : this.getSelectedRecords()) {
-			int selectedColumn = this.getSelectedColumn();
+			int selectedColumn = getSelectedColumn();
 			if (selectedColumn != -1) {
 				cells.add(record.get(selectedColumn));
 			} else {
@@ -328,7 +328,7 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	protected void init(ETreeTableConfig config, ETreeTableHeaders<T> headers) {
 		this.tableFormat = headers;
 
-		Collection<ETreeTableRecord<T>> coll = new ArrayList<ETreeTableRecord<T>>();
+		Collection<ETreeTableRecord<T>> coll = new ArrayList<>();
 		this.records = GlazedLists.threadSafeList(GlazedLists.eventList(coll));
 
 		this.format = new Format<ETreeTableRecord<T>>() {
@@ -340,17 +340,12 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 			@Override
 			public Comparator<ETreeTableRecord<T>> getComparator(int depth) {
 				// return (Comparator) GlazedLists.beanPropertyComparator(ETreeTableRecord/* <Rec> */.class, "key", "value");
-				return new Comparator<ETreeTableRecord<T>>() {
-					@Override
-					public int compare(ETreeTableRecord<T> o1, ETreeTableRecord<T> o2) {
-						return o1.compareTo(o2);
-					}
-				};
+				return (o1, o2) -> o1.compareTo(o2);
 			}
 
 			@Override
 			public void getPath(List<ETreeTableRecord<T>> path, ETreeTableRecord<T> element) {
-				ArrayList<ETreeTableRecord<T>> stack = new ArrayList<ETreeTableRecord<T>>();
+				ArrayList<ETreeTableRecord<T>> stack = new ArrayList<>();
 				ETreeTableRecord<T> current = element;
 				while (current != null) {
 					stack.add(current);
@@ -362,7 +357,7 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 			}
 		};
 
-		DefaultExternalExpansionModel<ETreeTableRecord<T>> expansionModel = new DefaultExternalExpansionModel<ETreeTableRecord<T>>(new ExpansionModel<ETreeTableRecord<T>>() {
+		DefaultExternalExpansionModel<ETreeTableRecord<T>> expansionModel = new DefaultExternalExpansionModel<>(new ExpansionModel<ETreeTableRecord<T>>() {
 			@Override
 			public boolean isExpanded(ETreeTableRecord<T> element, List<ETreeTableRecord<T>> path) {
 				return false; // all start of collapsed
@@ -373,27 +368,24 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 				//
 			}
 		});
-		this.treeList = new TreeList<ETreeTableRecord<T>>(this.records, this.format, expansionModel);
+		this.treeList = new TreeList<>(this.records, this.format, expansionModel);
 
-		this.tableModel = new DefaultEventTableModel<ETreeTableRecord<T>>(this.treeList, this.tableFormat);
-		this.setModel(this.tableModel);
+		this.tableModel = new DefaultEventTableModel<>(this.treeList, this.tableFormat);
+		setModel(this.tableModel);
 
-		this.tableSelectionModel = new DefaultEventSelectionModel<ETreeTableRecord<T>>(this.records);
+		this.tableSelectionModel = new DefaultEventSelectionModel<>(this.records);
 		this.tableSelectionModel.setSelectionMode(ListSelection.MULTIPLE_INTERVAL_SELECTION_DEFENSIVE);
-		this.setSelectionModel(this.tableSelectionModel);
+		setSelectionModel(this.tableSelectionModel);
 
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						TreeTableSupport support = TreeTableSupport.install(ETreeTable.this, ETreeTable.this.treeList, ETreeTable.TREE_COL_INDEX);
-						support.setArrowKeyExpansionEnabled(true);
-						support.setShowExpanderForEmptyParent(false);
-						support.setSpaceKeyExpansionEnabled(true);
-					} catch (Exception ex) {
-						throw new RuntimeException(ex);
-					}
+			SwingUtilities.invokeAndWait(() -> {
+				try {
+					TreeTableSupport support = TreeTableSupport.install(ETreeTable.this, ETreeTable.this.treeList, ETreeTable.TREE_COL_INDEX);
+					support.setArrowKeyExpansionEnabled(true);
+					support.setShowExpanderForEmptyParent(false);
+					support.setSpaceKeyExpansionEnabled(true);
+				} catch (Exception ex) {
+					throw new RuntimeException(ex);
 				}
 			});
 		} catch (InterruptedException ex) {
@@ -430,7 +422,7 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 		while (iterator.hasNext()) {
 			try {
 				ETreeTableExporter<T> exporter = iterator.next();
-				EComponentExporterAction<ETreeTable<T>> action = new EComponentExporterAction<ETreeTable<T>>(exporter, this);
+				EComponentExporterAction<ETreeTable<T>> action = new EComponentExporterAction<>(exporter, this);
 				menu.add(action);
 			} catch (ServiceConfigurationError ex) {
 				ex.printStackTrace(System.err);
@@ -443,7 +435,7 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	 */
 	@Override
 	public boolean isCellEditable(int row, int column) {
-		return this.cfg.isEditable() && (column != ETreeTable.TREE_COL_INDEX) && super.isCellEditable(row, column);
+		return this.cfg.isEditable() && column != ETreeTable.TREE_COL_INDEX && super.isCellEditable(row, column);
 	}
 
 	/**
@@ -526,12 +518,12 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	 */
 	@Override
 	public void scrollToVisibleRecord(ETableRecord<T> record) {
-		if (!this.isDisplayable()) {
+		if (!isDisplayable()) {
 			throw new IllegalArgumentException("can only be used when table is displayable (visible)"); //$NON-NLS-1$
 		}
 		int index = this.getRecords().indexOf(record);
-		Rectangle cellbounds = this.getCellRect(index, index, true);
-		this.scrollRectToVisible(cellbounds);
+		Rectangle cellbounds = getCellRect(index, index, true);
+		scrollRectToVisible(cellbounds);
 	}
 
 	/**
@@ -539,26 +531,26 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
 	 */
 	@Override
 	public void selectCell(Point p) {
-		int r = this.rowAtPoint(p);
+		int r = rowAtPoint(p);
 		if (r == -1) {
 			return;
 		}
-		int c = this.columnAtPoint(p);
+		int c = columnAtPoint(p);
 		if (c == -1) {
 			return;
 		}
 		// if already selected: do nothing (this keeps multiple selection when current cell is part of it
-		for (int sr : this.getSelectedRows()) {
+		for (int sr : getSelectedRows()) {
 			if (sr == r) {
-				for (int sc : this.getSelectedColumns()) {
+				for (int sc : getSelectedColumns()) {
 					if (sc == c) {
 						return;
 					}
 				}
 			}
 		}
-		this.setColumnSelectionInterval(c, c);
-		this.setRowSelectionInterval(r, r);
+		setColumnSelectionInterval(c, c);
+		setRowSelectionInterval(r, r);
 	}
 
 	/**

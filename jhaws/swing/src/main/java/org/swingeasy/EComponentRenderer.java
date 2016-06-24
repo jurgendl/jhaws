@@ -8,5 +8,5 @@ import javax.swing.JComponent;
  * @author Jurgen
  */
 public interface EComponentRenderer {
-    public void render(JComponent c, Graphics g);
+	public void render(JComponent c, Graphics g);
 }

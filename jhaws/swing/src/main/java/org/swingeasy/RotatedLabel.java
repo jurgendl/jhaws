@@ -15,139 +15,139 @@ import javax.swing.JPanel;
  * @author Jurgen
  */
 public class RotatedLabel extends JPanel implements Icon {
-    
-    private static final long serialVersionUID = 8025460362121403426L;
 
-    private static final double NINETY_DEGREES = Math.toRadians(90.0);
+	private static final long serialVersionUID = 8025460362121403426L;
 
-    private JLabel label = new JLabel() {
-        private static final long serialVersionUID = -2386180924411172809L;
+	private static final double NINETY_DEGREES = Math.toRadians(90.0);
 
-        @Override
-        public void setIcon(Icon icon) {
-            super.setIcon(icon);
-            super.setDisabledIcon(icon);
-        };
-    };
+	private JLabel label = new JLabel() {
+		private static final long serialVersionUID = -2386180924411172809L;
 
-    private boolean clockwise = false;
+		@Override
+		public void setIcon(Icon icon) {
+			super.setIcon(icon);
+			super.setDisabledIcon(icon);
+		};
+	};
 
-    public RotatedLabel(String value, Icon icon, boolean clockwise) {
-        this.label.setText(value);
-        this.label.setIcon(icon);
-        this.clockwise = clockwise;
-    }
+	private boolean clockwise = false;
 
-    public Icon getIcon() {
-        return this.label.getIcon();
-    }
+	public RotatedLabel(String value, Icon icon, boolean clockwise) {
+		label.setText(value);
+		label.setIcon(icon);
+		this.clockwise = clockwise;
+	}
 
-    /**
-     * Implementation of Icon interface (especially useful with side tabs on a JTabbedPane)
-     * 
-     * @return
-     */
-    @Override
-    public int getIconHeight() {
-        return this.getPreferredSize().height;
-    }
+	public Icon getIcon() {
+		return label.getIcon();
+	}
 
-    /**
-     * 
-     * @see javax.swing.Icon#getIconWidth()
-     */
-    @Override
-    public int getIconWidth() {
-        return this.getPreferredSize().width;
-    }
+	/**
+	 * Implementation of Icon interface (especially useful with side tabs on a JTabbedPane)
+	 * 
+	 * @return
+	 */
+	@Override
+	public int getIconHeight() {
+		return getPreferredSize().height;
+	}
 
-    /**
-     * 
-     * @see javax.swing.JComponent#getPreferredSize()
-     */
-    @Override
-    public Dimension getPreferredSize() {
-        Dimension d = this.label.getPreferredSize();
+	/**
+	 * 
+	 * @see javax.swing.Icon#getIconWidth()
+	 */
+	@Override
+	public int getIconWidth() {
+		return getPreferredSize().width;
+	}
 
-        return new Dimension(d.height, d.width);
-    }
+	/**
+	 * 
+	 * @see javax.swing.JComponent#getPreferredSize()
+	 */
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension d = label.getPreferredSize();
 
-    public String getText() {
-        return this.label.getText();
-    }
+		return new Dimension(d.height, d.width);
+	}
 
-    public boolean isClockwise() {
-        return this.clockwise;
-    }
+	public String getText() {
+		return label.getText();
+	}
 
-    /**
-     * 
-     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-     */
-    @Override
-    public void paintComponent(Graphics g) {
-        Dimension d = this.getSize();
-        this.paintHere(this, g, 0, 0, d.width, d.height);
-    }
+	public boolean isClockwise() {
+		return clockwise;
+	}
 
-    /**
-     * doet effectieve rendering (painting)
-     * 
-     * @param c
-     * @param g
-     * @param x
-     * @param y
-     * @param width
-     * @param height
-     */
-    public void paintHere( Component c, Graphics g, int x, int y, int width, int height) {
-        if ((height <= 0) || (width <= 0)) {
-            return;
-        }
+	/**
+	 * 
+	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+	 */
+	@Override
+	public void paintComponent(Graphics g) {
+		Dimension d = this.getSize();
+		paintHere(this, g, 0, 0, d.width, d.height);
+	}
 
-        this.label.updateUI();
+	/**
+	 * doet effectieve rendering (painting)
+	 * 
+	 * @param c
+	 * @param g
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 */
+	public void paintHere(Component c, Graphics g, int x, int y, int width, int height) {
+		if (height <= 0 || width <= 0) {
+			return;
+		}
 
-        // Paint the JLabel into an image buffer...
-        BufferedImage buffer = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB_PRE);
-        Graphics2D g2 = buffer.createGraphics();
-        this.label.setSize(new Dimension(height, width));
-        this.label.paint(g2);
+		label.updateUI();
 
-        // ...then apply a transform while painting the buffer into the component
-        AffineTransform af = AffineTransform.getTranslateInstance(this.clockwise ? x + width : x, this.clockwise ? y : y + height);
-        AffineTransform af2 = AffineTransform.getRotateInstance(this.clockwise ? RotatedLabel.NINETY_DEGREES : -RotatedLabel.NINETY_DEGREES);
-        af.concatenate(af2);
+		// Paint the JLabel into an image buffer...
+		BufferedImage buffer = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB_PRE);
+		Graphics2D g2 = buffer.createGraphics();
+		label.setSize(new Dimension(height, width));
+		label.paint(g2);
 
-        ((Graphics2D) g).drawImage(buffer, af, this);
-    }
+		// ...then apply a transform while painting the buffer into the component
+		AffineTransform af = AffineTransform.getTranslateInstance(clockwise ? x + width : x, clockwise ? y : y + height);
+		AffineTransform af2 = AffineTransform.getRotateInstance(clockwise ? RotatedLabel.NINETY_DEGREES : -RotatedLabel.NINETY_DEGREES);
+		af.concatenate(af2);
 
-    /**
-     * 
-     * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
-     */
-    @Override
-    public void paintIcon(Component c, Graphics g, int x, int y) {
-        Dimension d = this.getPreferredSize();
-        this.paintHere(c, g, x, y, d.width, d.height);
-    }
+		((Graphics2D) g).drawImage(buffer, af, this);
+	}
 
-    public void setClockwise(boolean clockwise) {
-        this.clockwise = clockwise;
-    }
+	/**
+	 * 
+	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
+	 */
+	@Override
+	public void paintIcon(Component c, Graphics g, int x, int y) {
+		Dimension d = getPreferredSize();
+		paintHere(c, g, x, y, d.width, d.height);
+	}
 
-    public void setHorizontalAlignment(int alignment) {
-        this.label.setHorizontalAlignment(alignment);
-    }
+	public void setClockwise(boolean clockwise) {
+		this.clockwise = clockwise;
+	}
 
-    public void setIcon(Icon icon) {
-        this.label.setIcon(icon);
-    }
+	public void setHorizontalAlignment(int alignment) {
+		label.setHorizontalAlignment(alignment);
+	}
 
-    public void setText(String value) {
-        this.label.setText(value);
-    }
+	public void setIcon(Icon icon) {
+		label.setIcon(icon);
+	}
 
-    public void setVerticalAlignment(int alignment) {
-        this.label.setVerticalAlignment(alignment);
-    }
+	public void setText(String value) {
+		label.setText(value);
+	}
+
+	public void setVerticalAlignment(int alignment) {
+		label.setVerticalAlignment(alignment);
+	}
 }

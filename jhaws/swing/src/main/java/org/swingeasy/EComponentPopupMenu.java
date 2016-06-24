@@ -26,8 +26,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
@@ -96,19 +94,19 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		}
 
 		public boolean isCanRedo() {
-			return this.canRedo;
+			return canRedo;
 		}
 
 		public boolean isCanUndo() {
-			return this.canUndo;
+			return canUndo;
 		}
 
 		public boolean isHasSelection() {
-			return this.hasSelection;
+			return hasSelection;
 		}
 
 		public boolean isHasText() {
-			return this.hasText;
+			return hasText;
 		}
 
 		/**
@@ -117,11 +115,11 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public String toString() {
-			if (this.toString == null) {
-				this.toString = new ToStringBuilder(this).append("hasSelection", this.hasSelection).append("hasText", this.hasText).append("canUndo", this.canUndo)
-						.append("canRedo", this.canRedo).toString();
+			if (toString == null) {
+				toString = new ToStringBuilder(this).append("hasSelection", hasSelection).append("hasText", hasText).append("canUndo", canUndo).append("canRedo", canRedo)
+						.toString();
 			}
-			return this.toString;
+			return toString;
 		}
 	}
 
@@ -143,7 +141,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public CopyAction(ReadableComponent component) {
 			super(component, EComponentPopupMenu.COPY, Resources.getImageResource("page_copy.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, Event.CTRL_MASK));
 		}
 
 		/**
@@ -152,7 +150,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.copy(e);
+			delegate.copy(e);
 		}
 
 		/**
@@ -161,7 +159,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(true);
+			setEnabled(true);
 			return true;
 		}
 	}
@@ -174,7 +172,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public CutAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.CUT, Resources.getImageResource("cut.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_X, Event.CTRL_MASK));
 		}
 
 		/**
@@ -183,7 +181,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.cut(e);
+			delegate.cut(e);
 		}
 
 		/**
@@ -192,7 +190,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasSelection);
+			setEnabled(cfg.hasSelection);
 			return cfg.hasSelection;
 		}
 	}
@@ -205,7 +203,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public DeleteAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.DELETE, Resources.getImageResource("bin_closed.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		}
 
 		/**
@@ -214,7 +212,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.delete(e);
+			delegate.delete(e);
 		}
 
 		/**
@@ -223,7 +221,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasSelection);
+			setEnabled(cfg.hasSelection);
 			return cfg.hasSelection;
 		}
 	}
@@ -236,7 +234,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public DeleteAllAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.DELETE_ALL, Resources.getImageResource("bin_closed.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Event.CTRL_MASK));
 		}
 
 		/**
@@ -245,8 +243,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.selectAll(e);
-			this.delegate.delete(e);
+			delegate.selectAll(e);
+			delegate.delete(e);
 		}
 
 		/**
@@ -255,7 +253,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasText);
+			setEnabled(cfg.hasText);
 			return cfg.hasText;
 		}
 	}
@@ -323,7 +321,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public FindAction(ReadableTextComponent component) {
 			super(component, EComponentPopupMenu.FIND, Resources.getImageResource("find.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, Event.CTRL_MASK));
 		}
 
 		/**
@@ -332,7 +330,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.find(e);
+			delegate.find(e);
 		}
 
 		/**
@@ -343,7 +341,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		public boolean checkEnabled(CheckEnabled cfg) {
 			// this.setEnabled(cfg.hasText);
 			// return cfg.hasText;
-			this.setEnabled(true);
+			setEnabled(true);
 			return true;
 		}
 	}
@@ -356,7 +354,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public FindNextAction(ReadableTextComponent component) {
 			super(component, EComponentPopupMenu.FIND_NEXT, Resources.getImageResource("find.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0));
 		}
 
 		/**
@@ -365,7 +363,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.findNext(e);
+			delegate.findNext(e);
 		}
 
 		/**
@@ -376,7 +374,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		public boolean checkEnabled(CheckEnabled cfg) {
 			// this.setEnabled(cfg.hasText);
 			// return cfg.hasText;
-			this.setEnabled(true);
+			setEnabled(true);
 			return true;
 		}
 	}
@@ -389,7 +387,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public GotoBeginAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.GOTO_BEGIN, Resources.getImageResource("arrow_up.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_HOME, Event.CTRL_MASK));
 		}
 
 		/**
@@ -398,7 +396,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.gotoBegin(e);
+			delegate.gotoBegin(e);
 		}
 
 		/**
@@ -407,7 +405,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasText);
+			setEnabled(cfg.hasText);
 			return cfg.hasText;
 		}
 	}
@@ -420,7 +418,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public GotoEndAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.GOTO_END, Resources.getImageResource("arrow_down.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_END, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_END, Event.CTRL_MASK));
 		}
 
 		/**
@@ -429,7 +427,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.gotoEnd(e);
+			delegate.gotoEnd(e);
 		}
 
 		/**
@@ -438,7 +436,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasText);
+			setEnabled(cfg.hasText);
 			return cfg.hasText;
 		}
 
@@ -452,7 +450,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public PasteAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.PASTE, Resources.getImageResource("page_paste.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V, Event.CTRL_MASK));
 		}
 
 		/**
@@ -461,7 +459,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.paste(e);
+			delegate.paste(e);
 		}
 
 		/**
@@ -470,7 +468,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(true);
+			setEnabled(true);
 			return true;
 		}
 	}
@@ -530,8 +528,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public RedoAction(WritableComponent component, UndoManager manager) {
 			super(component, EComponentPopupMenu.REDO, Resources.getImageResource("arrow_redo.png"));
-			this.undoManager = manager;
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK));
+			undoManager = manager;
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Y, Event.CTRL_MASK));
 		}
 
 		/**
@@ -541,7 +539,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				this.undoManager.redo();
+				undoManager.redo();
 			} catch (CannotRedoException cre) {
 				//
 			}
@@ -553,8 +551,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			boolean canRedo = this.undoManager.canRedo();
-			this.setEnabled(canRedo);
+			boolean canRedo = undoManager.canRedo();
+			setEnabled(canRedo);
 			return canRedo;
 		}
 	}
@@ -567,7 +565,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public ReplaceAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.REPLACE, Resources.getImageResource("text_replace.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, Event.CTRL_MASK));
 		}
 
 		/**
@@ -576,7 +574,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.replace(e);
+			delegate.replace(e);
 		}
 
 		/**
@@ -585,7 +583,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasText);
+			setEnabled(cfg.hasText);
 			return cfg.hasText;
 		}
 	}
@@ -598,7 +596,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public SelectAllAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.SELECT_ALL, Resources.getImageResource("page_white_text_width.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, Event.CTRL_MASK));
 		}
 
 		/**
@@ -607,7 +605,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.selectAll(e);
+			delegate.selectAll(e);
 		}
 
 		/**
@@ -616,7 +614,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasText);
+			setEnabled(cfg.hasText);
 			return cfg.hasText;
 		}
 	}
@@ -637,7 +635,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void addUndoableEditListener(UndoManager manager) {
-			this.parentComponent.getDocument().addUndoableEditListener(manager);
+			parentComponent.getDocument().addUndoableEditListener(manager);
 		}
 
 		/**
@@ -646,14 +644,14 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void copy(ActionEvent e) {
-			if (this.hasSelection()) {
-				this.parentComponent.copy();
+			if (hasSelection()) {
+				parentComponent.copy();
 			} else {
-				int caretPosition = this.parentComponent.getCaretPosition();
-				this.selectAll(e);
-				this.parentComponent.copy();
-				this.unselect(e);
-				this.parentComponent.setCaretPosition(caretPosition);
+				int caretPosition = parentComponent.getCaretPosition();
+				selectAll(e);
+				parentComponent.copy();
+				unselect(e);
+				parentComponent.setCaretPosition(caretPosition);
 			}
 		}
 
@@ -663,7 +661,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void cut(ActionEvent e) {
-			this.parentComponent.cut();
+			parentComponent.cut();
 		}
 
 		/**
@@ -672,7 +670,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void delete(ActionEvent e) {
-			this.parentComponent.replaceSelection(null);
+			parentComponent.replaceSelection(null);
 		}
 
 		/**
@@ -681,8 +679,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void find(ActionEvent e) {
-			if (this.parentComponent instanceof ETextArea) {
-				SearchDialog searchDialog = new SearchDialog(false, ETextArea.class.cast(this.parentComponent));
+			if (parentComponent instanceof ETextArea) {
+				SearchDialog searchDialog = new SearchDialog(false, ETextArea.class.cast(parentComponent));
 				searchDialog.setVisible(true);
 				searchDialog.updateFocus();
 			}
@@ -694,8 +692,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void findNext(ActionEvent e) {
-			if (this.parentComponent instanceof ETextArea) {
-				ETextArea.class.cast(this.parentComponent).findNext();
+			if (parentComponent instanceof ETextArea) {
+				ETextArea.class.cast(parentComponent).findNext();
 			}
 		}
 
@@ -705,7 +703,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public JComponent getParentComponent() {
-			return this.parentComponent;
+			return parentComponent;
 		}
 
 		/**
@@ -714,7 +712,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void gotoBegin(ActionEvent e) {
-			this.setCaret(0, null);
+			setCaret(0, null);
 		}
 
 		/**
@@ -723,7 +721,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void gotoEnd(ActionEvent e) {
-			this.setCaret(this.parentComponent.getDocument().getLength(), null);
+			setCaret(parentComponent.getDocument().getLength(), null);
 		}
 
 		/**
@@ -733,7 +731,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		@Override
 		public boolean hasSelection() {
 			try {
-				return this.parentComponent.getSelectedText() != null;
+				return parentComponent.getSelectedText() != null;
 			} catch (IllegalArgumentException ex) {
 				return false;
 			}
@@ -745,7 +743,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean hasText() {
-			return this.parentComponent.getDocument().getLength() > 0;
+			return parentComponent.getDocument().getLength() > 0;
 		}
 
 		/**
@@ -754,7 +752,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean isEditable() {
-			return this.parentComponent.isEditable();
+			return parentComponent.isEditable();
 		}
 
 		/**
@@ -763,7 +761,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void paste(ActionEvent e) {
-			this.parentComponent.paste();
+			parentComponent.paste();
 		}
 
 		/**
@@ -772,8 +770,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void replace(ActionEvent e) {
-			if (this.parentComponent instanceof ETextArea) {
-				SearchDialog searchDialog = new SearchDialog(true, ETextArea.class.cast(this.parentComponent));
+			if (parentComponent instanceof ETextArea) {
+				SearchDialog searchDialog = new SearchDialog(true, ETextArea.class.cast(parentComponent));
 				searchDialog.setVisible(true);
 				searchDialog.updateFocus();
 			}
@@ -785,20 +783,20 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void selectAll(ActionEvent e) {
-			this.setCaret(0, this.parentComponent.getDocument().getLength());
+			setCaret(0, parentComponent.getDocument().getLength());
 		}
 
 		protected void setCaret(int pos, Integer to) {
-			if (this.parentComponent instanceof ETextComponentI) {
+			if (parentComponent instanceof ETextComponentI) {
 				if (to == null) {
-					ETextComponentI.class.cast(this.parentComponent).setCaret(pos);
+					ETextComponentI.class.cast(parentComponent).setCaret(pos);
 				} else {
-					ETextComponentI.class.cast(this.parentComponent).setCaret(pos, to);
+					ETextComponentI.class.cast(parentComponent).setCaret(pos, to);
 				}
 			} else {
-				this.parentComponent.setCaretPosition(pos);
+				parentComponent.setCaretPosition(pos);
 				if (to != null) {
-					this.parentComponent.moveCaretPosition(to);
+					parentComponent.moveCaretPosition(to);
 				}
 			}
 		}
@@ -809,7 +807,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void unselect(ActionEvent e) {
-			this.setCaret(this.parentComponent.getCaretPosition(), null);
+			setCaret(parentComponent.getCaretPosition(), null);
 		}
 	}
 
@@ -823,8 +821,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public UndoAction(WritableComponent component, UndoManager manager) {
 			super(component, EComponentPopupMenu.UNDO, Resources.getImageResource("arrow_undo.png"));
-			this.undoManager = manager;
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK));
+			undoManager = manager;
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z, Event.CTRL_MASK));
 		}
 
 		/**
@@ -834,7 +832,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				this.undoManager.undo();
+				undoManager.undo();
 			} catch (CannotUndoException cue) {
 				//
 			}
@@ -846,8 +844,8 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			boolean canUndo = this.undoManager.canUndo();
-			this.setEnabled(canUndo);
+			boolean canUndo = undoManager.canUndo();
+			setEnabled(canUndo);
 			return canUndo;
 		}
 	}
@@ -860,7 +858,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 		public UnselectAction(WritableComponent component) {
 			super(component, EComponentPopupMenu.UNSELECT, Resources.getImageResource("page_white_width.png"));
-			this.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
 		}
 
 		/**
@@ -869,7 +867,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			this.delegate.unselect(e);
+			delegate.unselect(e);
 		}
 
 		/**
@@ -878,7 +876,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		 */
 		@Override
 		public boolean checkEnabled(CheckEnabled cfg) {
-			this.setEnabled(cfg.hasSelection);
+			setEnabled(cfg.hasSelection);
 			return cfg.hasSelection;
 		}
 	}
@@ -1104,12 +1102,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 					popup.checkEnabled();
 				}
 			});
-			textcomponent.addCaretListener(new CaretListener() {
-				@Override
-				public void caretUpdate(CaretEvent e) {
-					popup.checkEnabled();
-				}
-			});
+			textcomponent.addCaretListener(e -> popup.checkEnabled());
 		}
 
 		parentComponent.setComponentPopupMenu(popup);
@@ -1172,11 +1165,12 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 		String result = "";
 		// odd: the Object param of getContents is not currently used
 		Transferable contents = SystemSettings.getClipboard().getContents(null);
-		boolean hasTransferableText = (contents != null) && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+		boolean hasTransferableText = contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
 		if (hasTransferableText) {
 			try {
-				if (contents != null)
+				if (contents != null) {
 					result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+				}
 			} catch (UnsupportedFlavorException ex) {
 				// highly unlikely since we are using a standard DataFlavor
 				System.out.println(ex);
@@ -1269,12 +1263,12 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 	}
 
 	public void checkEnabled() {
-		if (this.component instanceof WritableComponent) {
-			WritableComponent writableComponent = WritableComponent.class.cast(this.component);
-			CheckEnabled cfg = new CheckEnabled(writableComponent.hasSelection(), writableComponent.hasText(),
-					this.undoRedoManager == null ? false : this.undoRedoManager.canUndo(), this.undoRedoManager == null ? false : this.undoRedoManager.canRedo());
+		if (component instanceof WritableComponent) {
+			WritableComponent writableComponent = WritableComponent.class.cast(component);
+			CheckEnabled cfg = new CheckEnabled(writableComponent.hasSelection(), writableComponent.hasText(), undoRedoManager == null ? false : undoRedoManager.canUndo(),
+					undoRedoManager == null ? false : undoRedoManager.canRedo());
 			// System.out.println(cfg);
-			for (int i = 0; i < this.getComponentCount(); i++) {
+			for (int i = 0; i < getComponentCount(); i++) {
 				Component menuItem = this.getComponent(i);
 				if (menuItem instanceof JMenuItem) {
 					Action action = JMenuItem.class.cast(menuItem).getAction();
@@ -1289,7 +1283,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 
 	protected void setLocale(Action action) {
 		if (action instanceof EComponentI) {
-			EComponentI.class.cast(action).setLocale(this.getLocale());
+			EComponentI.class.cast(action).setLocale(getLocale());
 		}
 	}
 
@@ -1299,7 +1293,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 	@Override
 	public void setLocale(Locale l) {
 		super.setLocale(l);
-		for (int i = 0; i < this.getComponentCount(); i++) {
+		for (int i = 0; i < getComponentCount(); i++) {
 			Component component1 = this.getComponent(i);
 			if (component1 instanceof JMenuItem) {
 				Action action = JMenuItem.class.cast(component1).getAction();
@@ -1317,7 +1311,7 @@ public class EComponentPopupMenu extends JPopupMenu implements EComponentI {
 	@Override
 	public void setLocation(int x, int y) {
 		super.setLocation(x, y);
-		this.cpx = x;
-		this.cpy = y;
+		cpx = x;
+		cpy = y;
 	}
 }

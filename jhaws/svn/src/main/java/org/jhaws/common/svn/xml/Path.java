@@ -16,6 +16,6 @@ public class Path {
 
     @Override
     public String toString() {
-        return "Path [" + (this.copyFromRev != null ? "copyFromRev=" + this.copyFromRev : "") + "]";
+        return "Path [" + (copyFromRev != null ? "copyFromRev=" + copyFromRev : "") + "]";
     }
 }

@@ -49,6 +49,6 @@ public class Target implements Iterable<Entry> {
 
 	@Override
 	public String toString() {
-		return "Target [" + (this.path != null ? "path=" + this.path + ", " : "") + (this.against != null ? "against=" + this.against : "") + "]";
+		return "Target [" + (path != null ? "path=" + path + ", " : "") + (against != null ? "against=" + against : "") + "]";
 	}
 }

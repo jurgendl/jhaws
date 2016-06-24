@@ -88,12 +88,12 @@ public class UIUtils {
 			if (container instanceof Window) {
 				return (Window) container;
 			}
-			return this.getFrame(container.getParent());
+			return getFrame(container.getParent());
 		}
 
 		Point getScreenLocation(MouseEvent e) {
 			Point cursor = e.getPoint();
-			Point target_location = this.target.getLocationOnScreen();
+			Point target_location = target.getLocationOnScreen();
 			return new Point((int) (target_location.getX() + cursor.getX()), (int) (target_location.getY() + cursor.getY()));
 		}
 
@@ -104,10 +104,10 @@ public class UIUtils {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			Point current = this.getScreenLocation(e);
-			Point offset = new Point((int) current.getX() - (int) this.start_drag.getX(), (int) current.getY() - (int) this.start_drag.getY());
-			Window frame = this.getFrame(this.target);
-			Point new_location = new Point((int) (this.start_loc.getX() + offset.getX()), (int) (this.start_loc.getY() + offset.getY()));
+			Point current = getScreenLocation(e);
+			Point offset = new Point((int) current.getX() - (int) start_drag.getX(), (int) current.getY() - (int) start_drag.getY());
+			Window frame = getFrame(target);
+			Point new_location = new Point((int) (start_loc.getX() + offset.getX()), (int) (start_loc.getY() + offset.getY()));
 			frame.setLocation(new_location);
 		}
 
@@ -128,12 +128,12 @@ public class UIUtils {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			this.start_drag = this.getScreenLocation(e);
-			Window frame = this.getFrame(this.target);
+			start_drag = getScreenLocation(e);
+			Window frame = getFrame(target);
 			if (frame == null) {
 				return;
 			}
-			this.start_loc = frame.getLocation();
+			start_loc = frame.getLocation();
 		}
 
 		@Override
@@ -148,18 +148,18 @@ public class UIUtils {
 		protected EComponentI weakReferencedEComponentI;
 
 		public PropertyChangeListenerDelegate(Component component) {
-			this.weakReferencedComponent = component;
+			weakReferencedComponent = component;
 		}
 
 		public PropertyChangeListenerDelegate(EComponentI component) {
-			this.weakReferencedEComponentI = component;
+			weakReferencedEComponentI = component;
 		}
 
 		public Object getDelageting() {
-			if (this.weakReferencedComponent != null) {
-				return this.weakReferencedComponent;
-			} else if (this.weakReferencedEComponentI != null) {
-				return this.weakReferencedEComponentI;
+			if (weakReferencedComponent != null) {
+				return weakReferencedComponent;
+			} else if (weakReferencedEComponentI != null) {
+				return weakReferencedEComponentI;
 			} else {
 				return null;
 			}
@@ -171,14 +171,14 @@ public class UIUtils {
 		 */
 		@Override
 		public void propertyChange(PropertyChangeEvent evt) {
-			if (this.weakReferencedComponent != null) {
-				Component component = this.weakReferencedComponent;
+			if (weakReferencedComponent != null) {
+				Component component = weakReferencedComponent;
 				if (component != null) {
 					component.setLocale(Locale.class.cast(evt.getNewValue()));
 				}
 			}
-			if (this.weakReferencedEComponentI != null) {
-				EComponentI component = this.weakReferencedEComponentI;
+			if (weakReferencedEComponentI != null) {
+				EComponentI component = weakReferencedEComponentI;
 				if (component != null) {
 					component.setLocale(Locale.class.cast(evt.getNewValue()));
 				}
@@ -191,7 +191,7 @@ public class UIUtils {
 		 */
 		@Override
 		public String toString() {
-			return "PropertyChangeListener[" + SystemSettings.LOCALE + "]@" + Integer.toHexString(this.hashCode());
+			return "PropertyChangeListener[" + SystemSettings.LOCALE + "]@" + Integer.toHexString(hashCode());
 		}
 
 	}
@@ -223,27 +223,27 @@ public class UIUtils {
 		private boolean showToggle = true;
 
 		public AbstractAction getExitAction() {
-			return this.exitAction;
+			return exitAction;
 		}
 
 		public PopupMenu getPopupmenu() {
-			return this.popupmenu;
+			return popupmenu;
 		}
 
 		public Image getTrayIcon() {
-			return this.trayIcon;
+			return trayIcon;
 		}
 
 		public TrayIcon getTrayItem() {
-			return this.trayItem;
+			return trayItem;
 		}
 
 		public String getTrayTitle() {
-			return this.trayTitle;
+			return trayTitle;
 		}
 
 		public boolean isShowToggle() {
-			return this.showToggle;
+			return showToggle;
 		}
 
 		public SystemTrayConfig setExitAction(AbstractAction exitAction) {
@@ -365,11 +365,11 @@ public class UIUtils {
 		cfg.popupmenu = new PopupMenu(cfg.getTrayTitle());
 		cfg.trayItem = new TrayIcon(cfg.getTrayIcon(), cfg.getTrayTitle(), cfg.popupmenu);
 		cfg.trayItem.setImageAutoSize(true);
-		if ((frame != null) && cfg.isShowToggle()) {
+		if (frame != null && cfg.isShowToggle()) {
 			cfg.trayItem.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if ((e.getClickCount() == 2) && (e.getButton() == MouseEvent.BUTTON1)) {
+					if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
 						UIUtils.toggleVisibility(frame);
 					}
 				}
@@ -433,7 +433,7 @@ public class UIUtils {
 		do {
 			out.println(current);
 			current = ft.getComponentAfter(window, current);
-		} while ((current != null) && !first.equals(current));
+		} while (current != null && !first.equals(current));
 	}
 
 	/**
@@ -459,7 +459,7 @@ public class UIUtils {
 	 */
 	public static JFrame getCurrentFrame() {
 		for (Frame frame : Frame.getFrames()) {
-			if ((frame instanceof JFrame) && frame.isDisplayable()) {
+			if (frame instanceof JFrame && frame.isDisplayable()) {
 				return JFrame.class.cast(frame);
 			}
 		}
@@ -578,19 +578,16 @@ public class UIUtils {
 	 * register default uncaught exception handler thats logs exceptions to system error outputstream and quits only if Error
 	 */
 	public static void registerDefaultUncaughtExceptionHandler() {
-		UIUtils.registerUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException(Thread t, Throwable e) {
-				try {
-					System.out.println(t);
-					UIUtils.log(e);
-					// insert your exception handling code here
-					// or do nothing to make it go away
-				} catch (Exception tt) {
-					// don't let the exception get thrown out, will cause infinite looping!
-				} catch (Throwable tt) {
-					System.exit(-1);
-				}
+		UIUtils.registerUncaughtExceptionHandler((t, e) -> {
+			try {
+				System.out.println(t);
+				UIUtils.log(e);
+				// insert your exception handling code here
+				// or do nothing to make it go away
+			} catch (Exception tt1) {
+				// don't let the exception get thrown out, will cause infinite looping!
+			} catch (Throwable tt2) {
+				System.exit(-1);
 			}
 		});
 	}
@@ -763,7 +760,7 @@ public class UIUtils {
 			props.load(in);
 			in.close();
 
-			Set<String> missing = new HashSet<String>();
+			Set<String> missing = new HashSet<>();
 
 			for (Object k : props.keySet()) {
 				String key = (String) k;
@@ -848,7 +845,7 @@ public class UIUtils {
 
 	public static void toHex(char[] hexChars, int v, int j) {
 		hexChars[j * 2] = UIUtils.hexArray[v >>> 4];
-		hexChars[(j * 2) + 1] = UIUtils.hexArray[v & 0x0F];
+		hexChars[j * 2 + 1] = UIUtils.hexArray[v & 0x0F];
 	}
 
 	/**
@@ -898,9 +895,9 @@ public class UIUtils {
 
 	protected static final UIUtils singleton = new UIUtils();
 
-	protected static Map<String, Icon> cachedIcons = new HashMap<String, Icon>();
+	protected static Map<String, Icon> cachedIcons = new HashMap<>();
 
-	protected static Map<String, String> cachedDescriptions = new HashMap<String, String>();
+	protected static Map<String, String> cachedDescriptions = new HashMap<>();
 
 	public static final char[] hexArray = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 

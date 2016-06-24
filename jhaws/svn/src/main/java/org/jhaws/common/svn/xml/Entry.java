@@ -123,12 +123,12 @@ public class Entry {
 
     @Override
     public String toString() {
-        return "Entry [" + (this.path != null ? "path=" + this.path + ", " : "") + "revision=" + this.revision + ", "
-                + (this.kind != null ? "kind=" + this.kind + ", " : "") + (this.url != null ? "url=" + this.url + ", " : "")
-                + (this.relativeUrl != null ? "relativeUrl=" + this.relativeUrl + ", " : "")
-                + (this.repository != null ? "repository=" + this.repository + ", " : "") + (this.name != null ? "name=" + this.name + ", " : "")
-                + (this.wcInfo != null ? "wcInfo=" + this.wcInfo + ", " : "") + (this.wcStatus != null ? "wcStatus=" + this.wcStatus + ", " : "")
-                + (this.reposStatus != null ? "reposStatus=" + this.reposStatus + ", " : "") + (this.commit != null ? "commit=" + this.commit : "")
+        return "Entry [" + (path != null ? "path=" + path + ", " : "") + "revision=" + revision + ", "
+                + (kind != null ? "kind=" + kind + ", " : "") + (url != null ? "url=" + url + ", " : "")
+                + (relativeUrl != null ? "relativeUrl=" + relativeUrl + ", " : "")
+                + (repository != null ? "repository=" + repository + ", " : "") + (name != null ? "name=" + name + ", " : "")
+                + (wcInfo != null ? "wcInfo=" + wcInfo + ", " : "") + (wcStatus != null ? "wcStatus=" + wcStatus + ", " : "")
+                + (reposStatus != null ? "reposStatus=" + reposStatus + ", " : "") + (commit != null ? "commit=" + commit : "")
                 + "]";
     }
 }

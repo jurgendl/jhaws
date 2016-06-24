@@ -12,7 +12,7 @@ import org.swingeasy.ETextAreaExporter;
 /**
  * @author Jurgen
  */
-public class ETextAreaHtmlExporter extends EComponentExporterImpl<ETextArea>implements ETextAreaExporter {
+public class ETextAreaHtmlExporter extends EComponentExporterImpl<ETextArea> implements ETextAreaExporter {
 	/**
 	 * @see org.swingeasy.EComponentExporterImpl#exportStream(javax.swing.JComponent, java.io.OutputStream)
 	 */
@@ -20,7 +20,7 @@ public class ETextAreaHtmlExporter extends EComponentExporterImpl<ETextArea>impl
 	public void exportStream(ETextArea component, OutputStream out) throws IOException {
 		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
 			writer.write("<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><title></title>");
-			this.postHeaderCreate(component, writer);
+			postHeaderCreate(component, writer);
 			writer.write("</head><body>");
 			writer.write(component.getText());
 			writer.write("</body></html>");

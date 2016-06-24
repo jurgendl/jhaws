@@ -14,7 +14,7 @@ import org.swingeasy.EListRecord;
  */
 public class EListHtmlExporter<T> extends EListExporterImpl<T> {
 	/**
-	 * 
+	 *
 	 * @see org.swingeasy.EListExporterImpl#exportStream(org.swingeasy.EList, java.io.OutputStream)
 	 */
 	@Override
@@ -41,7 +41,7 @@ public class EListHtmlExporter<T> extends EListExporterImpl<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.swingeasy.EListExporter#getAction()
 	 */
 	@Override
@@ -50,7 +50,7 @@ public class EListHtmlExporter<T> extends EListExporterImpl<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.swingeasy.EListExporter#getFileExtension()
 	 */
 	@Override

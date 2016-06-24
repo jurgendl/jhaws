@@ -16,7 +16,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
 
-public class RowNumberList extends JList<Object>implements ChangeListener, PropertyChangeListener {
+public class RowNumberList extends JList<Object> implements ChangeListener, PropertyChangeListener {
 	public class RowNumberListModel implements ListModel<Object> {
 		protected final ListModel<?> parentModel;
 
@@ -26,7 +26,7 @@ public class RowNumberList extends JList<Object>implements ChangeListener, Prope
 
 		@Override
 		public void addListDataListener(ListDataListener l) {
-			this.parentModel.addListDataListener(l);
+			parentModel.addListDataListener(l);
 		}
 
 		@Override
@@ -36,12 +36,12 @@ public class RowNumberList extends JList<Object>implements ChangeListener, Prope
 
 		@Override
 		public int getSize() {
-			return this.parentModel.getSize();
+			return parentModel.getSize();
 		}
 
 		@Override
 		public void removeListDataListener(ListDataListener l) {
-			this.parentModel.removeListDataListener(l);
+			parentModel.removeListDataListener(l);
 		}
 	}
 
@@ -54,12 +54,12 @@ public class RowNumberList extends JList<Object>implements ChangeListener, Prope
 	}
 
 	protected RowNumberList(JList<?> list, double cw) {
-		this.main = list;
-		this.main.addPropertyChangeListener(this);
+		main = list;
+		main.addPropertyChangeListener(this);
 
-		this.setFocusable(false);
-		this.setModel(new RowNumberListModel(this.main.getModel()));
-		this.setSelectionModel(this.main.getSelectionModel());
+		setFocusable(false);
+		setModel(new RowNumberListModel(main.getModel()));
+		setSelectionModel(main.getSelectionModel());
 
 		@SuppressWarnings("unchecked")
 		ListCellRenderer<Object> renderer = ListCellRenderer.class.cast(list.getCellRenderer());
@@ -67,10 +67,10 @@ public class RowNumberList extends JList<Object>implements ChangeListener, Prope
 			JLabel labelRenderer = JLabel.class.cast(renderer);
 			labelRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
 		}
-		this.setCellRenderer(renderer);
+		setCellRenderer(renderer);
 
-		this.setFixedCellWidth((int) cw);
-		this.setFixedCellHeight(list.getFixedCellHeight());
+		setFixedCellWidth((int) cw);
+		setFixedCellHeight(list.getFixedCellHeight());
 	}
 
 	public RowNumberList(JList<?> list, int chars) {
@@ -81,7 +81,7 @@ public class RowNumberList extends JList<Object>implements ChangeListener, Prope
 	public void addNotify() {
 		super.addNotify();
 
-		Component c = this.getParent();
+		Component c = getParent();
 		if (c instanceof JViewport) {
 			JViewport viewport = (JViewport) c;
 			viewport.addChangeListener(this);
@@ -91,10 +91,10 @@ public class RowNumberList extends JList<Object>implements ChangeListener, Prope
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		if ("selectionModel".equals(e.getPropertyName())) {
-			this.setSelectionModel(this.main.getSelectionModel());
+			setSelectionModel(main.getSelectionModel());
 		}
 		if ("model".equals(e.getPropertyName())) {
-			this.setModel(new RowNumberListModel(this.main.getModel()));
+			setModel(new RowNumberListModel(main.getModel()));
 		}
 	}
 

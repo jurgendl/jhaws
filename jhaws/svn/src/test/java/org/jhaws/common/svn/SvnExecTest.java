@@ -24,22 +24,28 @@ public class SvnExecTest {
 			System.out.println(svn_info);
 			System.out.println("=========================");
 			SvnLog svn_log = SvnExec.log(projectdir, "10000", 20);
-			for (LogEntry le : svn_log)
+			for (LogEntry le : svn_log) {
 				System.out.println(le);
+			}
 			System.out.println("=========================");
 			SvnStatus svn_status = SvnExec.status(projectdir, false);
-			for (ChangeList cl : svn_status)
+			for (ChangeList cl : svn_status) {
 				System.out.println(cl);
+			}
 			System.out.println("=========================");
 			SvnList svn_ls = SvnExec.list(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
-			for (EntryList el : svn_ls)
-				for (Entry e : el)
+			for (EntryList el : svn_ls) {
+				for (Entry e : el) {
 					System.out.println(e);
+				}
+			}
 			System.out.println("=========================");
 			SvnList svn_ls_tag = SvnExec.list(projectdir, svn_info.getEntry().getUrl().replaceAll("trunk", "tags"));
-			for (EntryList el : svn_ls_tag)
-				for (Entry e : el)
+			for (EntryList el : svn_ls_tag) {
+				for (Entry e : el) {
 					System.out.println(e);
+				}
+			}
 			System.out.println("=========================");
 		} catch (Exception ex) {
 			logger.error("{}", ex);
