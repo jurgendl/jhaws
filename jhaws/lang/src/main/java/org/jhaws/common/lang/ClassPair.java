@@ -1,8 +1,5 @@
 package org.jhaws.common.lang;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
 public class ClassPair<S, T> extends KeyValue<Class<S>, Class<T>> {
 	private static final long serialVersionUID = -5930427872429137357L;
 

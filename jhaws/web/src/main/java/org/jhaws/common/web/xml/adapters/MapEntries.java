@@ -1,4 +1,4 @@
-package org.jhaws.common.web.xml.adapaters;
+package org.jhaws.common.web.xml.adapters;
 
 import java.util.HashMap;
 import java.util.Map;
