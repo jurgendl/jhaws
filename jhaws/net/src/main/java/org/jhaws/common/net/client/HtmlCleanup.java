@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import org.jhaws.common.lang.StringUtils;
 import org.w3c.tidy.Tidy;
 
 /**
@@ -16,7 +17,7 @@ public class HtmlCleanup {
 			tidy.setMakeClean(true);
 			tidy.setWraplen(1000);
 			tidy.setXmlOut(true);
-			tidy.setInputEncoding(HTTPClientDefaults.CHARSET);
+			tidy.setInputEncoding(StringUtils.UTF8);
 			tidy.setFixBackslash(true);
 			tidy.setFixComments(true);
 			tidy.setDropEmptyParas(true);

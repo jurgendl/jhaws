@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,12 +18,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.PrettyXmlSerializer;
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XmlSerializer;
+import org.jhaws.common.lang.IntegerValue;
+import org.jhaws.common.lang.StringUtils;
 
 public class Response implements Serializable {
 	private static final long serialVersionUID = 1806430557697629499L;
@@ -76,8 +80,6 @@ public class Response implements Serializable {
 
 	private String filename;
 
-	private String mime;
-
 	private String charset;
 
 	public Response() {
@@ -110,7 +112,11 @@ public class Response implements Serializable {
 	}
 
 	public String getContentString() {
-		return content == null ? null : new String(content);
+		try {
+			return content == null ? null : new String(content, StringUtils.UTF8);
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	public void setContent(byte[] content) {
@@ -118,14 +124,13 @@ public class Response implements Serializable {
 	}
 
 	public List<Form> getForms() {
-		HtmlCleaner cleaner = new HtmlCleaner();
-		TagNode node;
+		TagNode n;
 		try {
-			node = cleaner.clean(new ByteArrayInputStream(getContent()));
+			n = cleaner.clean(new ByteArrayInputStream(getContent()));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
-		List<? extends TagNode> formlist = node.getElementListByName("form", true);
+		List<? extends TagNode> formlist = n.getElementListByName("form", true);
 		List<Form> forms = new ArrayList<Form>();
 		for (TagNode formnode : formlist) {
 			forms.add(new Form(getLastUri(), formnode));
@@ -138,12 +143,43 @@ public class Response implements Serializable {
 	}
 
 	public Form getForm(String id) {
-		return getForms().stream().filter(f -> f.getId().equals(id)).findFirst().orElse(null);
+		return getOptionalForm(id).orElse(null);
+	}
+
+	public Optional<Form> getOptionalForm(String id) {
+		return getForms().stream().filter(f -> f.getId().equals(id)).findFirst();
 	}
 
 	@Override
 	public String toString() {
-		return "statusCode=" + statusCode + ";content=" + (content != null);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Response[").append("\n");
+		builder.append("statusCode=").append(this.statusCode).append("\n");
+		if (this.statusText != null)
+			builder.append("statusText=").append(this.statusText).append("\n");
+		if (this.uri != null)
+			builder.append("uri=").append(this.uri).append("\n");
+		if (this.chain != null) {
+			IntegerValue i = new IntegerValue(-1);
+			chain.stream().forEach(c -> builder.append("chain:").append(i.add()).append("=").append(c).append("\n"));
+		}
+		if (this.headers != null)
+			headers.entrySet().stream().forEach(e -> builder.append("header:").append(e.getKey()).append("=").append(e.getValue()).append("\n"));
+		if (this.locale != null)
+			builder.append("locale=").append(this.locale).append("\n");
+		builder.append("contentLength=").append(this.contentLength).append("\n");
+		if (this.contentEncoding != null)
+			builder.append("contentEncoding=").append(this.contentEncoding).append("\n");
+		if (this.contentType != null)
+			builder.append("contentType=").append(this.contentType).append("\n");
+		if (this.date != null)
+			builder.append("date=").append(this.date).append("\n");
+		if (this.filename != null)
+			builder.append("filename=").append(this.filename).append("\n");
+		if (this.charset != null)
+			builder.append("charset=").append(this.charset).append("\n");
+		builder.append("]");
+		return builder.toString();
 	}
 
 	public URI getUri() {
@@ -195,7 +231,7 @@ public class Response implements Serializable {
 	}
 
 	public String getTitle() throws IOException {
-		List<? extends TagNode> res = this.getNode().getElementListByName("title", false);
+		List<? extends TagNode> res = getNode().getElementListByName("title", false);
 		return res.isEmpty() ? null : res.get(0).getText().toString();
 	}
 
@@ -207,11 +243,10 @@ public class Response implements Serializable {
 	}
 
 	public String getMetaRedirect() throws IOException {
-		List<? extends TagNode> metas = this.getNode().getElementListByName("meta", true);
+		List<? extends TagNode> metas = getNode().getElementListByName("meta", true);
 		for (TagNode meta : metas) {
 			if ("refresh".equals(meta.getAttributeByName("http-equiv"))) {
 				String url = meta.getAttributeByName("content").split("url=")[1];
-
 				return url;
 			}
 		}
@@ -219,7 +254,7 @@ public class Response implements Serializable {
 	}
 
 	public Response cleanup() throws IOException {
-		TagNode rootnode = this.getNode();
+		TagNode rootnode = getNode();
 		CleanerProperties properties = this.cleaner.getProperties();
 		XmlSerializer xmlSerializer = new PrettyXmlSerializer(properties);
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -247,14 +282,6 @@ public class Response implements Serializable {
 
 	public void setDate(Date date) {
 		this.date = date;
-	}
-
-	public String getMime() {
-		return this.mime;
-	}
-
-	public void setMime(String mime) {
-		this.mime = mime;
 	}
 
 	public String getCharset() {

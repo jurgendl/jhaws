@@ -31,7 +31,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 public class HTTPClientUtils {
-	/** mimeTypes */
 	protected static MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
 
 	/**
@@ -104,23 +103,26 @@ public class HTTPClientUtils {
 	}
 
 	public static URI encode(String url, boolean hasParameters) {
-		String regex = hasParameters
-				? "^((?<scheme>[^:]+)://)?(?<host>[^/]+/){1}(?<paths>([^/]+/)*)(?<file>[^\\?]+)(?<paramsstart>\\??)(?<params>([^=]+=[^&]+&){0,}([^=]+=.+){0,1})$"
-				: "^((?<scheme>[^:]+)://)?(?<host>[^/]+/){1}(?<paths>([^/]+/)*)(?<file>.+)$";
+		String hostGr = "host";
+		String schemeGr = "scheme";
+		String pathsGr = "paths";
+		String fileGr = "file";
+		String paramsstartGr = "paramsstart";
+		String paramsGr = "params";
+		String regexCommon = "^((?<" + schemeGr + ">[^:]+)://)?(?<" + hostGr + ">[^/]+/){1}(?<" + pathsGr + ">([^/]+/)*)(?<" + fileGr + ">";
+		String regex = !hasParameters ? (regexCommon + ".+)$") : (regexCommon + "[^\\?]+)(?<" + paramsstartGr + ">\\??)(?<" + paramsGr + ">([^=]+=[^&]+&){0,}([^=]+=.+){0,1})$");
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(url);
 		if (m.find() && url.equals(m.group())) {
-			URIBuilder urib = new URIBuilder().setHost(m.group("host"));
-			if (StringUtils.isNotBlank(m.group("scheme"))) {
-				urib.setScheme(m.group("scheme"));
+			URIBuilder urib = new URIBuilder().setHost(m.group(hostGr));
+			if (StringUtils.isNotBlank(m.group(schemeGr))) {
+				urib.setScheme(m.group(schemeGr));
 			}
-			String path = Arrays.stream(m.group("paths").split("/")).map(t -> t + "/").collect(Collectors.joining());
-			String file = Optional.of(m.group("file")).orElse("").replaceAll("&amp;", "&");
+			String path = Arrays.stream(m.group(pathsGr).split("/")).map(t -> t + "/").collect(Collectors.joining());
+			String file = Optional.of(m.group(fileGr)).orElse("").replaceAll("&amp;", "&");
 			urib.setPath(path + file);
-			if (hasParameters && StringUtils.isNotBlank(m.group("paramsstart"))) {
-				Arrays.stream(m.group("params").split("&")).map(kv -> kv.split("=")).forEach((String[] kva) -> {
-					urib.addParameter(kva[0], kva[1]);
-				});
+			if (hasParameters && StringUtils.isNotBlank(m.group(paramsstartGr))) {
+				Arrays.stream(m.group(paramsGr).split("&")).map(kv -> kv.split("=")).forEach((String[] kva) -> urib.addParameter(kva[0], kva[1]));
 			}
 			try {
 				return urib.build();

@@ -4,8 +4,8 @@ public interface HTTPClientDefaults {
 	/** "http.authentication.preemptive" */
 	public static final String PARAM_PREEMPTIVE_AUTHENTICATION = "http.authentication.preemptive";
 
-	/** 8kb */
-	public static final int BUFF_LEN = 1024 * 8;
+	/** 16kb */
+	public static final int BUFF_LEN = 1024 * 16;
 
 	/** Location */
 	public static final String LOCATION = "Location";
@@ -42,10 +42,6 @@ public interface HTTPClientDefaults {
 
 	/** false */
 	public static final boolean EXPECT_CONTINUE = true;
-
-	/** UTF-8 */
-	@SuppressWarnings("deprecation")
-	public static final String CHARSET = org.apache.http.protocol.HTTP.UTF_8;
 
 	/** true */
 	public static final boolean SINGLE_COOKIE_HEADER = true;

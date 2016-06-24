@@ -3,8 +3,6 @@ package org.jhaws.common.net.client;
 import java.util.Arrays;
 
 import org.jhaws.common.io.security.SecureMe;
-import org.jhaws.common.net.client.HTTPClient;
-import org.jhaws.common.net.client.Password;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +10,10 @@ public class HttpClientOtherTest {
 	@Test
 	public void test() {
 		try (HTTPClient hc = new HTTPClient()) {
-			System.out.println(hc.get("http://www.google.com").getContentString().length());
+			Response response = hc.get("http://www.google.com");
+			System.out.println(response);
+			System.out.println(response.getContentString().length());
+			System.out.println(hc.getDownloaded());
 		} catch (Exception e) {
 			Assert.fail(String.valueOf(e));
 		}
