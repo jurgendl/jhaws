@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -47,7 +48,7 @@ public class OverviewResource implements RestResource {
 	}
 
 	private static final class ResourceDescription {
-		public static List<ResourceDescription> fromBoundResourceInvokers(Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
+		public static List<ResourceDescription> fromBoundResourceInvokers(ServletContext servletContext, Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
 			Map<String, ResourceDescription> descriptions = new LinkedHashMap<>();
 
 			for (Map.Entry<String, List<ResourceInvoker>> entry : bound) {
@@ -113,18 +114,19 @@ public class OverviewResource implements RestResource {
 	@GET
 	@Path("/")
 	@Produces(JSON)
-	public List<ResourceDescription> getAvailableEndpoints(@Context Dispatcher dispatcher) {
+	public List<ResourceDescription> getAvailableEndpoints(@Context ServletContext servletContext, @Context Dispatcher dispatcher) {
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
-		return ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
+		return ResourceDescription.fromBoundResourceInvokers(servletContext, registry.getBounded().entrySet());
 	}
 
+	// With @Context you can inject HttpHeaders, UriInfo, Request, HttpServletRequest, HttpServletResponse, ServletConvig, ServletContext, SecurityContext
 	@GET
 	@Path("/")
 	@Produces(HTML)
-	public Response getAvailableEndpointsHtml(@Context Dispatcher dispatcher) {
+	public Response getAvailableEndpointsHtml(@Context ServletContext servletContext, @Context Dispatcher dispatcher) {
 		StringBuilder sb = new StringBuilder();
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
-		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
+		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(servletContext, registry.getBounded().entrySet());
 
 		sb.append("<h1>").append("REST interface overview").append("</h1>");
 
@@ -135,7 +137,8 @@ public class OverviewResource implements RestResource {
 			for (MethodDescription method : resource.calls) {
 				sb.append("<li> ").append(method.method).append(" ");
 				sb.append("<a href='");
-				sb.append(method.fullPath.startsWith("/") ? method.fullPath.substring(1) : method.fullPath).append("'>").append(method.fullPath).append("</a>");
+				String url = servletContext.getContextPath() + "/rest" + (method.fullPath.startsWith("/") ? method.fullPath : "/" + method.fullPath);
+				sb.append(url).append("'>").append(method.fullPath).append("</a>");
 				sb.append(" : ");
 				if (method.consumes != null) {
 					sb.append(method.consumes).append(" << ");
@@ -149,14 +152,5 @@ public class OverviewResource implements RestResource {
 		}
 
 		return Response.ok(sb.toString()).build();
-	}
-
-	@GET
-	@Path("/count")
-	@Produces(TEXT)
-	public Long getAvailableEndpointsCount(@Context Dispatcher dispatcher) {
-		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
-		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(registry.getBounded().entrySet());
-		return (long) descriptions.size();
 	}
 }
