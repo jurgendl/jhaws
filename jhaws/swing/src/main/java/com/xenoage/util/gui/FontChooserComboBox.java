@@ -40,7 +40,7 @@ import javax.swing.text.PlainDocument;
  * @author Andreas Wenger
  * @see http://zongmusic.wordpress.com/2010/12/02/fontchoosercombobo/
  */
-@SuppressWarnings({ "serial", "rawtypes", "unchecked" })
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class FontChooserComboBox extends JComboBox implements ItemListener {
 
 	/** serialVersionUID */

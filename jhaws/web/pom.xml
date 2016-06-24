@@ -11,10 +11,63 @@
     <description>web</description>
     <properties>
         <version.resteasy>3.0.17.Final</version.resteasy>
-        <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs>
+        <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs><!-- version 3.0.17.Final does not exists -->
         <version.spring>4.3.0.RELEASE</version.spring>
+        <version.jackson>2.6.7</version.jackson><!-- 2.7 gives problemns -->
+        <version.jackson.codehaus>1.9.13</version.jackson.codehaus>
+        <version.jackson.codehaus.xc>1.9.12</version.jackson.codehaus.xc><!-- jar 1.9.13 invalid -->
     </properties>
     <dependencies>
+    	<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-core</artifactId>
+    		<version>${version.jackson}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-databind</artifactId>
+    		<version>${version.jackson}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+    		<artifactId>jackson-annotations</artifactId>
+    		<version>${version.jackson}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.fasterxml.jackson.module</groupId>
+    		<artifactId>jackson-module-jaxb-annotations</artifactId>
+    		<version>${version.jackson}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.fasterxml.jackson.jaxrs</groupId>
+    		<artifactId>jackson-jaxrs-base</artifactId>
+    		<version>${version.jackson}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>com.fasterxml.jackson.jaxrs</groupId>
+    		<artifactId>jackson-jaxrs-json-provider</artifactId>
+    		<version>${version.jackson}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.codehaus.jackson</groupId>
+    		<artifactId>jackson-core-asl</artifactId>
+    		<version>${version.jackson.codehaus}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.codehaus.jackson</groupId>
+    		<artifactId>jackson-mapper-asl</artifactId>
+    		<version>${version.jackson.codehaus}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.codehaus.jackson</groupId>
+    		<artifactId>jackson-jaxrs</artifactId>
+    		<version>${version.jackson.codehaus}</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.codehaus.jackson</groupId>
+    		<artifactId>jackson-xc</artifactId>
+    		<version>${version.jackson.codehaus.xc}</version>
+    	</dependency>
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
