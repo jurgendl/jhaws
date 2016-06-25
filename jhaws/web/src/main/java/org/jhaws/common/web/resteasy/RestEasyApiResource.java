@@ -172,14 +172,14 @@ public class RestEasyApiResource implements RestResource {
 	}
 
 	@GET
-	@Path("/ping" + "." + EXTENSION_TEXT)
+	@Path("/ping" + "." + TEXT_EXTENSION)
 	@Produces(TEXT)
 	public String ping() {
 		return String.valueOf(System.currentTimeMillis());
 	}
 
 	@GET
-	@Path("/" + EXTENSION_JSON)
+	@Path("/" + JSON_EXTENSION)
 	@Produces({ JSON })
 	public List<ResourceDescription> getAvailableEndpointsJson(@Context ServletContext servletContext,
 			@Context Dispatcher dispatcher) {
@@ -192,7 +192,7 @@ public class RestEasyApiResource implements RestResource {
 	}
 
 	@GET
-	@Path("/" + EXTENSION_XML)
+	@Path("/" + XML_EXTENSION)
 	@Produces({ XML })
 	public List<ResourceDescription> getAvailableEndpointsXml(@Context ServletContext servletContext,
 			@Context Dispatcher dispatcher) {
