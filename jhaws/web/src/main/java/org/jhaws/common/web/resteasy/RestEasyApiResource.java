@@ -25,11 +25,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 @Component
-@Path("/overview")
+@Path("/api")
 @Controller
 @GZIP
-public class OverviewResource implements RestResource {
-	private static final class MethodDescription {
+public class RestEasyApiResource implements RestResource {
+	public static final class MethodDescription {
 		private String method;
 
 		private String fullPath;
@@ -38,17 +38,53 @@ public class OverviewResource implements RestResource {
 
 		private String consumes;
 
-		public MethodDescription(String method, String fullPath, String produces, String consumes) {
+		public MethodDescription() {
 			super();
+		}
+
+		public MethodDescription(String method, String fullPath, String produces, String consumes) {
 			this.method = method;
 			this.fullPath = fullPath;
 			this.produces = produces;
 			this.consumes = consumes;
 		}
+
+		public String getMethod() {
+			return this.method;
+		}
+
+		public void setMethod(String method) {
+			this.method = method;
+		}
+
+		public String getFullPath() {
+			return this.fullPath;
+		}
+
+		public void setFullPath(String fullPath) {
+			this.fullPath = fullPath;
+		}
+
+		public String getProduces() {
+			return this.produces;
+		}
+
+		public void setProduces(String produces) {
+			this.produces = produces;
+		}
+
+		public String getConsumes() {
+			return this.consumes;
+		}
+
+		public void setConsumes(String consumes) {
+			this.consumes = consumes;
+		}
 	}
 
-	private static final class ResourceDescription {
-		public static List<ResourceDescription> fromBoundResourceInvokers(ServletContext servletContext, Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
+	public static final class ResourceDescription {
+		public static List<ResourceDescription> fromBoundResourceInvokers(ServletContext servletContext,
+				Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
 			Map<String, ResourceDescription> descriptions = new LinkedHashMap<>();
 
 			for (Map.Entry<String, List<ResourceInvoker>> entry : bound) {
@@ -72,7 +108,8 @@ public class OverviewResource implements RestResource {
 				}
 			}
 
-			return new LinkedList<>(descriptions.values());
+			LinkedList<ResourceDescription> ll = new LinkedList<>(descriptions.values());
+			return ll;
 		}
 
 		private static String mostPreferredOrNull(MediaType[] mediaTypes) {
@@ -86,6 +123,10 @@ public class OverviewResource implements RestResource {
 
 		private List<MethodDescription> calls;
 
+		public ResourceDescription() {
+			super();
+		}
+
 		public ResourceDescription(String basePath) {
 			this.basePath = basePath;
 			this.calls = new LinkedList<>();
@@ -98,35 +139,55 @@ public class OverviewResource implements RestResource {
 				this.calls.add(new MethodDescription(verb, path, produces, consumes));
 			}
 		}
+
+		public String getBasePath() {
+			return this.basePath;
+		}
+
+		public void setBasePath(String basePath) {
+			this.basePath = basePath;
+		}
+
+		public List<MethodDescription> getCalls() {
+			return this.calls;
+		}
+
+		public void setCalls(List<MethodDescription> calls) {
+			this.calls = calls;
+		}
 	}
 
-	public OverviewResource() {
+	public RestEasyApiResource() {
 		super();
 	}
 
 	@GET
-	@Path("/ping.txt")
+	@Path("/ping" + "." + EXTENSION_TEXT)
 	@Produces(TEXT)
 	public String ping() {
 		return String.valueOf(System.currentTimeMillis());
 	}
 
 	@GET
-	@Path("/")
-	@Produces(JSON)
-	public List<ResourceDescription> getAvailableEndpoints(@Context ServletContext servletContext, @Context Dispatcher dispatcher) {
+	@Path("/json")
+	@Produces({ JSON })
+	public List<ResourceDescription> getAvailableEndpoints(@Context ServletContext servletContext,
+			@Context Dispatcher dispatcher) {
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
 		return ResourceDescription.fromBoundResourceInvokers(servletContext, registry.getBounded().entrySet());
 	}
 
-	// With @Context you can inject HttpHeaders, UriInfo, Request, HttpServletRequest, HttpServletResponse, ServletConvig, ServletContext, SecurityContext
+	// With @Context you can inject HttpHeaders, UriInfo, Request,
+	// HttpServletRequest, HttpServletResponse, ServletConvig, ServletContext,
+	// SecurityContext
 	@GET
 	@Path("/")
 	@Produces(HTML)
 	public Response getAvailableEndpointsHtml(@Context ServletContext servletContext, @Context Dispatcher dispatcher) {
 		StringBuilder sb = new StringBuilder();
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
-		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(servletContext, registry.getBounded().entrySet());
+		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(servletContext,
+				registry.getBounded().entrySet());
 
 		sb.append("<h1>").append("REST interface overview").append("</h1>");
 
@@ -137,7 +198,8 @@ public class OverviewResource implements RestResource {
 			for (MethodDescription method : resource.calls) {
 				sb.append("<li> ").append(method.method).append(" ");
 				sb.append("<a href='");
-				String url = servletContext.getContextPath() + "/rest" + (method.fullPath.startsWith("/") ? method.fullPath : "/" + method.fullPath);
+				String url = servletContext.getContextPath() + "/rest"
+						+ (method.fullPath.startsWith("/") ? method.fullPath : "/" + method.fullPath);
 				sb.append(url).append("'>").append(method.fullPath).append("</a>");
 				sb.append(" : ");
 				if (method.consumes != null) {
