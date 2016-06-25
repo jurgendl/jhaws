@@ -13,9 +13,8 @@
         <version.resteasy>3.0.17.Final</version.resteasy>
         <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs><!-- version 3.0.17.Final does not exists -->
         <version.spring>4.3.0.RELEASE</version.spring>
-        <version.jackson>2.6.7</version.jackson><!-- 2.7 gives problemns -->
-        <version.jackson.codehaus>1.9.13</version.jackson.codehaus>
-        <version.jackson.codehaus.xc>1.9.12</version.jackson.codehaus.xc><!-- jar 1.9.13 invalid -->
+        <version.jackson>2.4.1</version.jackson><!-- 2.6.3 // 2.7.x gives problemns -->
+        <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problemns -->
     </properties>
     <dependencies>
     	<dependency>
@@ -66,7 +65,7 @@
     	<dependency>
     		<groupId>org.codehaus.jackson</groupId>
     		<artifactId>jackson-xc</artifactId>
-    		<version>${version.jackson.codehaus.xc}</version>
+    		<version>${version.jackson.codehaus}</version>
     	</dependency>
         <dependency>
             <groupId>javax.inject</groupId>
@@ -173,11 +172,11 @@
             <artifactId>resteasy-jackson-provider</artifactId>
             <version>${version.resteasy}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jackson2-provider</artifactId>
             <version>${version.resteasy}</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jettison-provider</artifactId>
