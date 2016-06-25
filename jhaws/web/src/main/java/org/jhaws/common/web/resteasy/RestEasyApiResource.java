@@ -15,6 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.core.Dispatcher;
@@ -24,18 +26,24 @@ import org.jboss.resteasy.core.ResourceMethodRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
+@Pretty
 @Component
 @Path("/api")
 @Controller
 @GZIP
 public class RestEasyApiResource implements RestResource {
+	@XmlRootElement
 	public static final class MethodDescription {
+		@XmlAttribute
 		private String method;
 
+		@XmlAttribute
 		private String fullPath;
 
+		@XmlAttribute
 		private String produces;
 
+		@XmlAttribute
 		private String consumes;
 
 		public MethodDescription() {
@@ -82,6 +90,7 @@ public class RestEasyApiResource implements RestResource {
 		}
 	}
 
+	@XmlRootElement
 	public static final class ResourceDescription {
 		public static List<ResourceDescription> fromBoundResourceInvokers(ServletContext servletContext,
 				Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
@@ -119,6 +128,7 @@ public class RestEasyApiResource implements RestResource {
 			return mediaTypes[0].toString();
 		}
 
+		@XmlAttribute
 		private String basePath;
 
 		private List<MethodDescription> calls;
@@ -169,12 +179,24 @@ public class RestEasyApiResource implements RestResource {
 	}
 
 	@GET
-	@Path("/json")
+	@Path("/" + EXTENSION_JSON)
 	@Produces({ JSON })
-	public List<ResourceDescription> getAvailableEndpoints(@Context ServletContext servletContext,
+	public List<ResourceDescription> getAvailableEndpointsJson(@Context ServletContext servletContext,
 			@Context Dispatcher dispatcher) {
+		return getAvailableEndpoints(servletContext, dispatcher);
+	}
+
+	protected List<ResourceDescription> getAvailableEndpoints(ServletContext servletContext, Dispatcher dispatcher) {
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
 		return ResourceDescription.fromBoundResourceInvokers(servletContext, registry.getBounded().entrySet());
+	}
+
+	@GET
+	@Path("/" + EXTENSION_XML)
+	@Produces({ XML })
+	public List<ResourceDescription> getAvailableEndpointsXml(@Context ServletContext servletContext,
+			@Context Dispatcher dispatcher) {
+		return getAvailableEndpoints(servletContext, dispatcher);
 	}
 
 	// With @Context you can inject HttpHeaders, UriInfo, Request,
