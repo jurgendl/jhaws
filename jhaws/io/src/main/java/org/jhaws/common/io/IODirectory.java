@@ -28,7 +28,6 @@ import org.jhaws.common.io.filter.OnlyFilesFilter;
  * @see IODirectory
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class IODirectory extends IOGeneralFile<IODirectory> {
 	private static final long serialVersionUID = 100001010000000001L;
 
@@ -62,7 +61,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	/** user home dir */
 	public static final IODirectory USERDIR = new IODirectory(System.getProperty("user.home"));
 
-	private static void _listIODirectoriesRecursive(final IODirectory d, final Vector<IODirectory> v, final FileFilter ff) {
+	private static void _listIODirectoriesRecursive(final IODirectory d, final Vector<IODirectory> v,
+			final FileFilter ff) {
 		IODirectory[] f = d.listIODirectories();
 
 		for (IODirectory element : f) {
@@ -129,7 +129,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 
 			for (File f : parentSystemDrive.listFiles()) {
 				try {
-					if (fsv.isFileSystem(f) && fsv.isDrive(f) && fsv.isTraversable(f) && !fsv.isFloppyDrive(f) && (f.listFiles().length > 0)) {
+					if (fsv.isFileSystem(f) && fsv.isDrive(f) && fsv.isTraversable(f) && !fsv.isFloppyDrive(f)
+							&& (f.listFiles().length > 0)) {
 						if (new IODirectory(f).getParent() == null) {
 							drives.add(new IODirectory(f));
 						}
@@ -257,7 +258,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	 * Creates a new IODirectory object.
 	 * 
 	 * @param pathname
-	 *            : String : full path name of directory; when only a name is given, the directory will be in the current working directory
+	 *            : String : full path name of directory; when only a name is
+	 *            given, the directory will be in the current working directory
 	 */
 	public IODirectory(final String pathname) {
 		super(pathname);
@@ -304,16 +306,19 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * compares a directory and all it's subdirectories with their files with this directory, sends output to System.out
+	 * compares a directory and all it's subdirectories with their files with
+	 * this directory, sends output to System.out
 	 * 
 	 * @param dir
 	 *            : IODirectory : directory to compare with
 	 * @param listener
-	 *            : IODirectoryCompareListener : results of comparing are passed to an implementation of this inteface
+	 *            : IODirectoryCompareListener : results of comparing are passed
+	 *            to an implementation of this inteface
 	 * 
 	 * @return this
 	 */
-	public IODirectory compare(final IODirectory dir, final IODirectoryCompareListener listener) throws FileNotFoundException {
+	public IODirectory compare(final IODirectory dir, final IODirectoryCompareListener listener)
+			throws FileNotFoundException {
 		this.checkExistence();
 
 		File[] myChildren = this.listFiles();
@@ -438,7 +443,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * copies a complete directory to another directory (binary copy), does not overwrite, does not delete source, always recursive
+	 * copies a complete directory to another directory (binary copy), does not
+	 * overwrite, does not delete source, always recursive
 	 * 
 	 * @param destinationDir
 	 *            : File : target directory
@@ -453,12 +459,15 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * copies a complete directory to another directory (binary copy), does not delete source, always recursive, use parameters to define when to overwrite
+	 * copies a complete directory to another directory (binary copy), does not
+	 * delete source, always recursive, use parameters to define when to
+	 * overwrite
 	 * 
 	 * @param destination
 	 *            : IODirectory : destinationDir directory
 	 * @param parameter
-	 *            : int : OVERWRITE_ALWAYS, OVERWRITE_WHEN_NEWER, OVERWRITE_WHEN_LARGER, RENAME_EXISTING
+	 *            : int : OVERWRITE_ALWAYS, OVERWRITE_WHEN_NEWER,
+	 *            OVERWRITE_WHEN_LARGER, RENAME_EXISTING
 	 * 
 	 * @return : IODirectory : destination directory
 	 * 
@@ -496,8 +505,9 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
-	 * (bounded by 16MB) (optimized for speed)
+	 * removes all doubles from directory checking the size, then the the first
+	 * bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
+	 * equal, the complete file (bounded by 16MB) (optimized for speed)
 	 * 
 	 * @return : Vector : vector of deleted files
 	 */
@@ -506,11 +516,13 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
-	 * (bounded by superSize) (optimized for speed)
+	 * removes all doubles from directory checking the size, then the the first
+	 * bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
+	 * equal, the complete file (bounded by superSize) (optimized for speed)
 	 * 
 	 * @param superSize
-	 *            : int : compare size when file match first block (can be set to zero to suppress second check)
+	 *            : int : compare size when file match first block (can be set
+	 *            to zero to suppress second check)
 	 * 
 	 * @return : Vector : vector of deleted files
 	 */
@@ -519,13 +531,17 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
-	 * (bounded by superSize) (optimized for speed)
+	 * removes all doubles from directory checking the size, then the the first
+	 * bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
+	 * equal, the complete file (bounded by superSize) (optimized for speed)
 	 * 
 	 * @param superSize
-	 *            : int : compare size when file match first block (can be set to zero to suppress second check)
+	 *            : int : compare size when file match first block (can be set
+	 *            to zero to suppress second check)
 	 * @param trashCanDir
-	 *            : IODirectory : directory to put trash to (null permanently removes files) (see function checkFileIndex for naming of moved files)
+	 *            : IODirectory : directory to put trash to (null permanently
+	 *            removes files) (see function checkFileIndex for naming of
+	 *            moved files)
 	 * 
 	 * @return : Vector : vector of deleted files
 	 */
@@ -597,11 +613,13 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
-	 * (bounded by 16MB) (optimized for speed)
+	 * removes all doubles from directory checking the size, then the the first
+	 * bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
+	 * equal, the complete file (bounded by 16MB) (optimized for speed)
 	 * 
 	 * @param trashCanDir
-	 *            : IODirectory : directory to put trash to (null permanently removes files)
+	 *            : IODirectory : directory to put trash to (null permanently
+	 *            removes files)
 	 * 
 	 * @return : Vector : vector of deleted files
 	 */
@@ -655,8 +673,9 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * flattens this directory, copies all files in all subdirectories to this directory, do not copy doubles, rename if file already exists and isn't the same, delete all
-	 * subdirectories afterwards
+	 * flattens this directory, copies all files in all subdirectories to this
+	 * directory, do not copy doubles, rename if file already exists and isn't
+	 * the same, delete all subdirectories afterwards
 	 * 
 	 * @return this
 	 * 
@@ -667,7 +686,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 		IODirectory[] iod = this.listIODirectories();
 
 		for (IODirectory element : iod) {
-			this.join(element, IODirectory.DEFAULTS | IODirectory.DELETE_SOURCE | IODirectory.FLATTEN | IODirectory.RENAME_EXISTING | IODirectory.RECURSIVE, 9999999);
+			this.join(element, IODirectory.DEFAULTS | IODirectory.DELETE_SOURCE | IODirectory.FLATTEN
+					| IODirectory.RENAME_EXISTING | IODirectory.RECURSIVE, 9999999);
 		}
 
 		return this;
@@ -711,7 +731,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * returns the total siza of all files in this directory and it's subdirectories
+	 * returns the total siza of all files in this directory and it's
+	 * subdirectories
 	 * 
 	 * @return : long : total files size
 	 */
@@ -737,12 +758,16 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * used by copy, move, etc. functions or atomic use, don't forget that the current directory is the TARGET unlike other functions where the GIVEN dir is the target
+	 * used by copy, move, etc. functions or atomic use, don't forget that the
+	 * current directory is the TARGET unlike other functions where the GIVEN
+	 * dir is the target
 	 * 
 	 * @param source
 	 *            : IODirectory : target directory
 	 * @param modifier
-	 *            : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or OVERWRITE_WHEN_LARGER in this order of importance ),
+	 *            : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or
+	 *            ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or
+	 *            OVERWRITE_WHEN_LARGER in this order of importance ),
 	 *            DELETE_SOURCE
 	 * 
 	 * @return : IODirectory : this object
@@ -755,12 +780,16 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * used by copy, move, etc. functions or atomic use, don't forget that the current directory is the TARGET unlike other functions where the GIVEN dir is the target
+	 * used by copy, move, etc. functions or atomic use, don't forget that the
+	 * current directory is the TARGET unlike other functions where the GIVEN
+	 * dir is the target
 	 * 
 	 * @param source
 	 *            : IODirectory : target directory
 	 * @param modifier
-	 *            : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or OVERWRITE_WHEN_LARGER in this order of importance ),
+	 *            : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or
+	 *            ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or
+	 *            OVERWRITE_WHEN_LARGER in this order of importance ),
 	 *            DELETE_SOURCE
 	 * @param maxcomparesize
 	 *            : int : maximum size to compare
@@ -800,7 +829,9 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	 * @param source
 	 *            : IODirectory : target directory
 	 * @param modifier
-	 *            : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or in this order of importance ), DELETE_SOURCE
+	 *            : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or
+	 *            ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or in this order of
+	 *            importance ), DELETE_SOURCE
 	 * @param maxcomparesize
 	 *            : int : maximum size to compare
 	 * 
@@ -808,7 +839,9 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	 *             : when something fails
 	 */
 	protected void join0(final IODirectory source, final int modifier, final int maxcomparesize) throws IOException {
-		// System.out.println("copying/moving everything from " + source + " to " + this + ", modifier=" + modifier + ", maxcomparesize=" + maxcomparesize); //$NON-NLS-1$
+		// System.out.println("copying/moving everything from " + source + " to
+		// " + this + ", modifier=" + modifier + ", maxcomparesize=" +
+		// maxcomparesize); //$NON-NLS-1$
 		// //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 		boolean recursive = (modifier & IODirectory.RECURSIVE) == IODirectory.RECURSIVE;
@@ -824,13 +857,17 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 			overwritealways = (modifier & IODirectory.OVERWRITE_ALWAYS) == IODirectory.OVERWRITE_ALWAYS;
 		}
 
-		// System.out.println("recursive=" + recursive + ", rename=" + rename + ", overwritenewer=" + overwritenewer + ", overwritealways=" + overwritealways + ", delete=" +
-		// delete); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		// System.out.println("recursive=" + recursive + ", rename=" + rename +
+		// ", overwritenewer=" + overwritenewer + ", overwritealways=" +
+		// overwritealways + ", delete=" +
+		// delete); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		// //$NON-NLS-5$
 
 		this.create();
 
 		for (IOFile subfile : source.listIOFiles()) {
-			// System.out.println("join0(IODirectory, int, int) - subfile=" + subfile); //$NON-NLS-1$
+			// System.out.println("join0(IODirectory, int, int) - subfile=" +
+			// subfile); //$NON-NLS-1$
 
 			IOFile target = new IOFile(this, subfile.getName());
 
@@ -849,7 +886,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 
 		if (recursive) {
 			for (IODirectory subdir : source.listIODirectories()) {
-				// System.out.println("join0(IODirectory, int, int) - subdir=" + subdir); //$NON-NLS-1$
+				// System.out.println("join0(IODirectory, int, int) - subdir=" +
+				// subdir); //$NON-NLS-1$
 
 				if (flatten) {
 					this.join0(subdir, modifier, maxcomparesize);
@@ -863,7 +901,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 
 		if (delete && ((tmp == null) || (tmp.length == 0))) {
 			/* boolean erased = */source.erase();
-			// System.out.println("erasing " + source + " => " + erased); //$NON-NLS-1$ //$NON-NLS-2$
+			// System.out.println("erasing " + source + " => " + erased);
+			// //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -1042,7 +1081,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * moves (copy & delete) a complete directory to another directory (binary copy), does never overwrite, always recursive
+	 * moves (copy & delete) a complete directory to another directory (binary
+	 * copy), does never overwrite, always recursive
 	 * 
 	 * @param destinationDir
 	 *            : IODirectory : destinationDir directory
@@ -1057,12 +1097,14 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * moves (copy & delete) a complete directory to another directory (binary copy), use parameters to define when to overwrite, always recursive
+	 * moves (copy & delete) a complete directory to another directory (binary
+	 * copy), use parameters to define when to overwrite, always recursive
 	 * 
 	 * @param destinationDir
 	 *            : IODirectory : destinationDir directory
 	 * @param parameter
-	 *            : int : OVERWRITE_ALWAYS, OVERWRITE_WHEN_NEWER, OVERWRITE_WHEN_LARGER, RENAME_EXISTING
+	 *            : int : OVERWRITE_ALWAYS, OVERWRITE_WHEN_NEWER,
+	 *            OVERWRITE_WHEN_LARGER, RENAME_EXISTING
 	 * 
 	 * @return : IODirectory : destinationDir directory
 	 * 
@@ -1070,7 +1112,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	 *             : IOException
 	 */
 	public IODirectory move2(final IODirectory destinationDir, final int parameter) throws IOException {
-		return destinationDir.join(this, (parameter | IODirectory.RECURSIVE | IODirectory.DELETE_SOURCE), IOFile.MAX_COMPARE_SIZE);
+		return destinationDir.join(this, (parameter | IODirectory.RECURSIVE | IODirectory.DELETE_SOURCE),
+				IOFile.MAX_COMPARE_SIZE);
 	}
 
 	/**
@@ -1082,7 +1125,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * recycle doubles in directory using the default trash directory or OS dependant recycling (if available)
+	 * recycle doubles in directory using the default trash directory or OS
+	 * dependant recycling (if available)
 	 * 
 	 * @return : Vector : vector of recycled files
 	 */
@@ -1091,10 +1135,12 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
 	}
 
 	/**
-	 * recycle doubles in directory using the default trash directory or OS dependant recycling (if available)
+	 * recycle doubles in directory using the default trash directory or OS
+	 * dependant recycling (if available)
 	 * 
 	 * @param superSize
-	 *            : int : compare size when file match first block (can be set to zero to suppress second check)
+	 *            : int : compare size when file match first block (can be set
+	 *            to zero to suppress second check)
 	 * 
 	 * @return : Vector : vector of recycled files
 	 */

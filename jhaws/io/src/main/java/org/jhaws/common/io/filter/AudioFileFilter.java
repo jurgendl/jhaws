@@ -9,7 +9,6 @@ package org.jhaws.common.io.filter;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class AudioFileFilter extends FileExtensionFilter {
 	/**
 	 * Creates a new AudioFileFilter object.
@@ -28,7 +27,7 @@ public class AudioFileFilter extends FileExtensionFilter {
 						"mp1", //$NON-NLS-1$
 						"mp2", //$NON-NLS-1$
 						"ram" //$NON-NLS-1$
-		});
+				});
 	}
 
 	/**

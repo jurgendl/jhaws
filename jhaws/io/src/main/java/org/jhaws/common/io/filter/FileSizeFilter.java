@@ -11,7 +11,6 @@ import org.jhaws.common.io.IOFile;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class FileSizeFilter extends FileFilter {
 	/** Modifier */
 	private Modifier mod;

@@ -9,7 +9,6 @@ package org.jhaws.common.io.filter;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class VideoFileFilter extends FileExtensionFilter {
 	/**
 	 * Creates a new VideoFileFilter object.
@@ -35,7 +34,7 @@ public class VideoFileFilter extends FileExtensionFilter {
 						"ogm", //$NON-NLS-1$
 						"asx", //$NON-NLS-1$
 						"xvid" //$NON-NLS-1$
-		});
+				});
 	}
 
 	/**

@@ -91,6 +91,7 @@ import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.IOUtils;
+//import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.jhaws.common.io.FilePath.Filters.DirectoryFilter;
@@ -203,6 +204,14 @@ public class FilePath implements Path, Externalizable {
 
 			public Html5VideoFilter() {
 				super("flv", "webm", "mp4");
+			}
+		}
+
+		public static class QuickTimeVideoFilter extends Filters.ExtensionFilter {
+			private static final long serialVersionUID = -2262172528663217508L;
+
+			public QuickTimeVideoFilter() {
+				super("mov", "3gp", "3g2", "m2v");
 			}
 		}
 
@@ -991,7 +1000,7 @@ public class FilePath implements Path, Externalizable {
 		URI fileURI = URI.create(s.substring(0, separator));
 		FileSystem fs;
 		try {
-			fs = FileSystems.newFileSystem(fileURI, Collections.<String, Object> emptyMap());
+			fs = FileSystems.newFileSystem(fileURI, Collections.<String, Object>emptyMap());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -1087,6 +1096,10 @@ public class FilePath implements Path, Externalizable {
 
 	public long adler32() {
 		return this.checksum(new Adler32());
+	}
+
+	public long getAdler32() {
+		return adler32();
 	}
 
 	public Iterators.FileByteIterator bytes() {
@@ -1225,6 +1238,10 @@ public class FilePath implements Path, Externalizable {
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
+	}
+
+	public long getCrc32() {
+		return crc32();
 	}
 
 	public long crc32() {
@@ -2460,12 +2477,20 @@ public class FilePath implements Path, Externalizable {
 		return this.getPath().toUri();
 	}
 
+	public URI toURI() {
+		return toUri();
+	}
+
 	public URL toUrl() {
 		try {
 			return this.toUri().toURL();
 		} catch (MalformedURLException ex) {
 			throw new RuntimeException(ex);
 		}
+	}
+
+	public URL toURL() {
+		return toUrl();
 	}
 
 	public FilePath walkDirectories(final FileVisit visitor) {
@@ -2740,7 +2765,7 @@ public class FilePath implements Path, Externalizable {
 	public void write(InputStream binaryStream) {
 		try (BufferedInputStream in = new BufferedInputStream(binaryStream);
 				BufferedOutputStream out = newBufferedOutputStream()) {
-			IOUtils.copy(in, out);
+			IOUtils.copyLarge(in, out);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -2749,7 +2774,7 @@ public class FilePath implements Path, Externalizable {
 	public void read(OutputStream binaryStream) {
 		try (BufferedOutputStream out = new BufferedOutputStream(binaryStream);
 				BufferedInputStream in = newBufferedInputStream()) {
-			IOUtils.copy(in, out);
+			IOUtils.copyLarge(in, out);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

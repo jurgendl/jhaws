@@ -1,6 +1,5 @@
 package org.jhaws.common.io;
 
-@SuppressWarnings("deprecation")
 @Deprecated
 public class RecyclerFactory {
 	private static IODirectory oldTrashCan;
