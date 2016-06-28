@@ -1339,12 +1339,31 @@ public interface CollectionUtils8 {
 		return streamArray(string.split(delimiter));
 	}
 
-	public static <T, A> List<T> sortBy(Collection<T> collection, Function<T, A> map) {
-		return collection.stream().sorted(comparator(map)).collect(collectList());
+	@SafeVarargs
+	public static <T> List<T> sortBy(Collection<T> collection, Function<T, ?> map, Function<T, ?>... mapAdditional) {
+		return collection.stream().sorted(comparator(map, mapAdditional)).collect(collectList());
 	}
 
-	public static <T> Comparator<T> comparator(Function<T, ?> compareThis) {
-		return (t1, t2) -> new CompareToBuilder().append(compareThis.apply(t1), compareThis.apply(t2)).toComparison();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static <T extends Comparable<? super T>> List<T> sortInPlace(List<T> list) {
+		Collections.sort((List<? extends Comparable>) list);
+		return list;
+	}
+
+	@SafeVarargs
+	public static <T> List<T> sortInPlace(List<T> list, Function<T, ?> map, Function<T, ?>... mapAdditional) {
+		list.sort(comparator(map, mapAdditional));
+		return list;
+	}
+
+	@SafeVarargs
+	public static <T> Comparator<T> comparator(Function<T, ?> compare, Function<T, ?>... compareAdditional) {
+		return (t1, t2) -> {
+			CompareToBuilder cb = new CompareToBuilder();
+			cb.append(compare.apply(t1), compare.apply(t2));
+			streamArray(compareAdditional).forEach(compareThisEl -> cb.append(compareThisEl.apply(t1), compareThisEl.apply(t2)));
+			return cb.toComparison();
+		};
 	}
 
 	public static <T, U> Stream<U> filterClass(Stream<T> stream, Class<U> type) {
