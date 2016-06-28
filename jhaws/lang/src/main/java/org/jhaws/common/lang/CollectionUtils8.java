@@ -1070,6 +1070,10 @@ public interface CollectionUtils8 {
 		return Stream.of(maps).map(Map::entrySet).flatMap(Collection::stream);
 	}
 
+	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
+		return collectMap(keyMapper, valueMapper, keepFirst());
+	}
+
 	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
 		return Collectors.toMap(keyMapper, valueMapper, duplicateValues);
 	}
@@ -1143,16 +1147,20 @@ public interface CollectionUtils8 {
 		return (T[]) collection.toArray();
 	}
 
-	public static <T> Stream<T> concatenate(Stream<Collection<T>> streams) {
-		return concatenateStreams(streams.map(Collection::stream));
+	public static <T> Stream<T> flatMapCollections(Collection<Collection<T>> collectionOfCollections) {
+		return flatMapStreams(collectionOfCollections.stream().map(Collection::stream));
 	}
 
-	public static <T> Stream<T> concatenate(Collection<Stream<T>> collentionStreams) {
-		return concatenateStreams(collentionStreams.stream());
+	public static <T> Stream<T> flatMap(Stream<Collection<T>> streamOfCollections) {
+		return flatMapStreams(streamOfCollections.map(Collection::stream));
 	}
 
-	public static <T> Stream<T> concatenateStreams(Stream<Stream<T>> streamStreams) {
-		return streamStreams.flatMap(id());
+	public static <T> Stream<T> flatMap(Collection<Stream<T>> collentionOfStreams) {
+		return flatMapStreams(collentionOfStreams.stream());
+	}
+
+	public static <T> Stream<T> flatMapStreams(Stream<Stream<T>> streamOfStreams) {
+		return streamOfStreams.flatMap(id());
 	}
 
 	public static <T> Opt<T> eager(T value) {
@@ -1345,5 +1353,17 @@ public interface CollectionUtils8 {
 
 	public static Stream<Pair<String>> stream(Properties properties) {
 		return stream(false, properties).map(entry -> new Pair<>(String.valueOf(entry.getKey()), String.valueOf(entry.getValue())));
+	}
+
+	public static <K, V> Function<Entry<K, V>, K> mapKey() {
+		return Entry::getKey;
+	}
+
+	public static <K, V> Function<Entry<K, V>, V> mapValue() {
+		return Entry::getValue;
+	}
+
+	public static <K, V, T> Map<K, T> map(Map<K, V> map, Function<V, T> valueMapper) {
+		return stream(map).collect(collectMap(mapKey(), e -> valueMapper.apply(e.getValue())));
 	}
 }
