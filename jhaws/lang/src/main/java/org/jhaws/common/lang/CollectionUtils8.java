@@ -75,6 +75,15 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
  * @see https://technology.amis.nl/2013/10/05/java-8-collection-enhancements- leveraging-lambda-expressions-or-how-java-emulates-sql/
  */
 public interface CollectionUtils8 {
+	public static class Comparators {
+		public static class CaseInsensitiveComparator implements Comparator<String> {
+			@Override
+			public int compare(String o1, String o2) {
+				return (o1 == null ? "" : o1).compareToIgnoreCase((o2 == null ? "" : o2));
+			}
+		}
+	}
+
 	public static class RegexIterator implements Iterator<String> {
 		protected Pattern pattern;
 
@@ -1384,5 +1393,12 @@ public interface CollectionUtils8 {
 
 	public static <K, V, T> Map<K, T> map(Map<K, V> map, Function<V, T> valueMapper) {
 		return stream(map).collect(collectMap(mapKey(), e -> valueMapper.apply(e.getValue())));
+	}
+
+	public static <T> Comparator<T> comparatorCaseInsensitive(Function<T, String> compare) {
+		Comparators.CaseInsensitiveComparator comparator = new Comparators.CaseInsensitiveComparator();
+		return (t1, t2) -> {
+			return comparator.compare(compare.apply(t1), compare.apply(t2));
+		};
 	}
 }
