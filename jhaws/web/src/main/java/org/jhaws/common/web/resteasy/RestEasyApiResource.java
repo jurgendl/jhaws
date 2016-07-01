@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jboss.resteasy.annotations.GZIP;
+import org.jboss.resteasy.annotations.providers.jaxb.Formatted;
 import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.core.ResourceInvoker;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
@@ -26,7 +27,7 @@ import org.jboss.resteasy.core.ResourceMethodRegistry;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
-@Pretty
+@Formatted
 @Component
 @Path("/api")
 @Controller
@@ -92,8 +93,7 @@ public class RestEasyApiResource implements RestResource {
 
 	@XmlRootElement
 	public static final class ResourceDescription {
-		public static List<ResourceDescription> fromBoundResourceInvokers(ServletContext servletContext,
-				Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
+		public static List<ResourceDescription> fromBoundResourceInvokers(ServletContext servletContext, Set<Map.Entry<String, List<ResourceInvoker>>> bound) {
 			Map<String, ResourceDescription> descriptions = new LinkedHashMap<>();
 
 			for (Map.Entry<String, List<ResourceInvoker>> entry : bound) {
@@ -181,8 +181,7 @@ public class RestEasyApiResource implements RestResource {
 	@GET
 	@Path("/" + JSON_EXTENSION)
 	@Produces({ JSON })
-	public List<ResourceDescription> getAvailableEndpointsJson(@Context ServletContext servletContext,
-			@Context Dispatcher dispatcher) {
+	public List<ResourceDescription> getAvailableEndpointsJson(@Context ServletContext servletContext, @Context Dispatcher dispatcher) {
 		return getAvailableEndpoints(servletContext, dispatcher);
 	}
 
@@ -194,8 +193,7 @@ public class RestEasyApiResource implements RestResource {
 	@GET
 	@Path("/" + XML_EXTENSION)
 	@Produces({ XML })
-	public List<ResourceDescription> getAvailableEndpointsXml(@Context ServletContext servletContext,
-			@Context Dispatcher dispatcher) {
+	public List<ResourceDescription> getAvailableEndpointsXml(@Context ServletContext servletContext, @Context Dispatcher dispatcher) {
 		return getAvailableEndpoints(servletContext, dispatcher);
 	}
 
@@ -208,8 +206,7 @@ public class RestEasyApiResource implements RestResource {
 	public Response getAvailableEndpointsHtml(@Context ServletContext servletContext, @Context Dispatcher dispatcher) {
 		StringBuilder sb = new StringBuilder();
 		ResourceMethodRegistry registry = (ResourceMethodRegistry) dispatcher.getRegistry();
-		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(servletContext,
-				registry.getBounded().entrySet());
+		List<ResourceDescription> descriptions = ResourceDescription.fromBoundResourceInvokers(servletContext, registry.getBounded().entrySet());
 
 		sb.append("<h1>").append("REST interface overview").append("</h1>");
 
@@ -220,8 +217,7 @@ public class RestEasyApiResource implements RestResource {
 			for (MethodDescription method : resource.calls) {
 				sb.append("<li> ").append(method.method).append(" ");
 				sb.append("<a href='");
-				String url = servletContext.getContextPath() + "/rest"
-						+ (method.fullPath.startsWith("/") ? method.fullPath : "/" + method.fullPath);
+				String url = servletContext.getContextPath() + "/rest" + (method.fullPath.startsWith("/") ? method.fullPath : "/" + method.fullPath);
 				sb.append(url).append("'>").append(method.fullPath).append("</a>");
 				sb.append(" : ");
 				if (method.consumes != null) {
