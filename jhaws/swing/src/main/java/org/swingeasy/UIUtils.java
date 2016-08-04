@@ -3,6 +3,7 @@ package org.swingeasy;
 import java.awt.AWTException;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.EventQueue;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
@@ -918,5 +919,13 @@ public class UIUtils {
                 w.repaint();
             }
         });
+    }
+
+    public static void runOnEDT(Runnable run) {
+        if (EventQueue.isDispatchThread()) {
+            run.run();
+        } else {
+            SwingUtilities.invokeLater(run);
+        }
     }
 }
