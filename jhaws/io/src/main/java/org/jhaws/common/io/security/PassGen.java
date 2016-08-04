@@ -16,7 +16,7 @@ public class PassGen {
 
 	private static final String STRING_UC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-	private static final String STRING_SP = "~#$%^_-";
+	private static final String STRING_SP = "~$^_-";
 
 	private static final SecureRandom random = new SecureRandom();
 
