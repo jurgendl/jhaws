@@ -49,6 +49,7 @@ import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchEvent.Modifier;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.FileAttributeView;
@@ -2351,6 +2352,28 @@ public class FilePath implements Path, Externalizable {
 			throw new UncheckedIOException(ex);
 		}
 		return true;
+	}
+
+	public FilePath setLastAccessTime(FileTime lastAccessTime) {
+		BasicFileAttributeView attributes = Files.getFileAttributeView(getPath(), BasicFileAttributeView.class);
+		// lastModifiedTime, lastAccessTime, createTime
+		try {
+			attributes.setTimes(null, lastAccessTime, null);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		return this;
+	}
+
+	public FilePath setCreationTime(FileTime creationTime) {
+		BasicFileAttributeView attributes = Files.getFileAttributeView(getPath(), BasicFileAttributeView.class);
+		// lastModifiedTime, lastAccessTime, createTime
+		try {
+			attributes.setTimes(creationTime, null, null);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		return this;
 	}
 
 	public FilePath setLastModifiedTime(FileTime time) {
