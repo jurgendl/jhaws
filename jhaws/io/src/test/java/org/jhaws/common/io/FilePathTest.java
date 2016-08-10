@@ -182,10 +182,10 @@ public class FilePathTest {
 			Assert.assertNull(new FilePath("dir/test").getExtension());
 			Assert.assertEquals("txt", new FilePath("dir", "test.txt").getExtension());
 			Assert.assertEquals("TXT", new FilePath("dir", "test.TXT").getExtension());
-			Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.doc", new FilePath("dir", "test.TXT").changeExtension("doc").getFullPathName());
-			Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.DOC", new FilePath("dir", "test.TXT").changeExtension("DOC").getFullPathName());
-			Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.TXT.doc", new FilePath("dir", "test.TXT").addExtension("doc").getFullPathName());
-			Assert.assertEquals("dir" + FilePath.getPathSeperator() + "test.TXT.DOC", new FilePath("dir", "test.TXT").addExtension("DOC").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.doc", new FilePath("dir", "test.TXT").changeExtension("doc").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.DOC", new FilePath("dir", "test.TXT").changeExtension("DOC").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.TXT.doc", new FilePath("dir", "test.TXT").addExtension("doc").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.TXT.DOC", new FilePath("dir", "test.TXT").addExtension("DOC").getFullPathName());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Assert.fail(String.valueOf(ex));
@@ -394,11 +394,11 @@ public class FilePathTest {
 	@Test
 	public void seperators() {
 		try {
-			Assert.assertEquals("\\", FilePath.getPathSeperator());
+			Assert.assertEquals("\\", FilePath.getPreferedPathSeperator());
 		} catch (Exception ex) {
-			Assert.assertEquals("/", FilePath.getPathSeperator());
+			Assert.assertEquals("/", FilePath.getPreferedPathSeperator());
 		}
-		Assert.assertEquals(".", FilePath.getFileSeperator());
+		Assert.assertEquals(".", FilePath.getFileExtensionSeperator());
 	}
 
 	@Test
