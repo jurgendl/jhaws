@@ -19,6 +19,7 @@ import java.io.ObjectOutput;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -45,6 +46,8 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchEvent.Modifier;
 import java.nio.file.WatchKey;
@@ -79,6 +82,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -93,7 +97,6 @@ import javax.swing.Icon;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.IOUtils;
-// import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.jhaws.common.io.FilePath.Filters.DirectoryFilter;
@@ -163,6 +166,83 @@ public class FilePath implements Path, Externalizable {
 
 	public static void setFileExtensionSeperatorChar(char c) {
 		EXTENSION_SEPERATOR = c;
+	}
+
+	public static String getCurrentUser() {
+		// http://stackoverflow.com/questions/797549/get-login-username-in-java
+		String osName = System.getProperty("os.name").toLowerCase();
+		String className = null;
+		if (osName.contains("windows")) {
+			className = "com.sun.security.auth.module.NTSystem";
+		} else if (osName.contains("linux")) {
+			className = "com.sun.security.auth.module.UnixSystem";
+		} else if (osName.contains("solaris") || osName.contains("sunos")) {
+			className = "com.sun.security.auth.module.SolarisSystem";
+		}
+		try {
+			if (className != null) {
+				Class<?> c = Class.forName(className);
+				Method method = c.getDeclaredMethod("getUsername");
+				Object o = c.newInstance();
+				return (String) method.invoke(o);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	public static class FilePathWatcher {
+		protected boolean enabled = true;
+
+		protected final FilePath directory;
+
+		protected WatchKey key;
+
+		protected final Thread thread;
+
+		protected final Consumer<Path> whenAlteredAction;
+
+		public FilePathWatcher(FilePath directory, Consumer<Path> whenAlteredAction) {
+			this.whenAlteredAction = whenAlteredAction;
+			try {
+				this.directory = directory.checkDirectory();
+			} catch (AccessDeniedException ex) {
+				throw new UncheckedIOException(ex);
+			}
+			WatchService watcher;
+			try {
+				watcher = FileSystems.getDefault().newWatchService();
+			} catch (IOException ex) {
+				throw new UncheckedIOException(ex);
+			}
+			key = directory.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+			thread = new Thread(() -> {
+				System.out.println("FilePathWatcher[" + Thread.currentThread() + ":started]");
+				while (enabled) {
+					try {
+						key = watcher.take();
+					} catch (InterruptedException ex) {
+						//
+					}
+					for (WatchEvent<?> event : key.pollEvents()) {
+						Object o = event.context();
+						if (o instanceof Path) {
+							FilePathWatcher.this.whenAlteredAction.accept(Path.class.cast(o));
+						}
+					}
+					key.reset();
+				}
+				System.out.println("FilePathWatcher[" + Thread.currentThread() + ":stopped]");
+			});
+			thread.setDaemon(true);
+			thread.start();
+		}
+
+		public void stop() {
+			enabled = false;
+			thread.interrupt();
+		}
 	}
 
 	public abstract static class Comparators implements Comparator<FilePath>, Serializable {
@@ -2301,6 +2381,10 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
+	public FilePathWatcher watch(Consumer<Path> whenAlteredAction) {
+		return new FilePathWatcher(this, whenAlteredAction);
+	}
+
 	/**
 	 * @see java.nio.file.Path#relativize(java.nio.file.Path)
 	 */
@@ -2423,8 +2507,8 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public FilePath setOwner() {
-		return setOwner(System.getProperty("user.name"));
+	public FilePath setOwnerCurrentUser() {
+		return setOwner(getCurrentUser());
 	}
 
 	public FilePath setPosixFilePermissions(Set<PosixFilePermission> perms) {
