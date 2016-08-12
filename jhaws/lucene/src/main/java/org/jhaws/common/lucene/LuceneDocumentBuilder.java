@@ -16,7 +16,7 @@ import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexableField;
 import org.jhaws.common.lang.DateTime8;
-import org.jhaws.common.lang.JGenerics;
+import org.jhaws.common.lang.ClassUtils;
 
 public abstract class LuceneDocumentBuilder<T> {
 	protected Class<T> type;
@@ -158,7 +158,7 @@ public abstract class LuceneDocumentBuilder<T> {
 	@SuppressWarnings("unchecked")
 	public Class<T> getType() {
 		if (type == null)
-			type = (Class<T>) JGenerics.findImplementation(this);
+			type = (Class<T>) ClassUtils.findImplementation(this);
 		return type;
 	}
 
