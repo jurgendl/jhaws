@@ -11,11 +11,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * @see https://docs.oracle.com/javase/tutorial/i18n/format/numberFormat.html
+ * @see https://docs.oracle.com/javase/tutorial/i18n/format/dateFormat.html
+ */
 public class G11n {
 	static {
 		Locale defaultLocale;
 		try {
-			// (1) Java 1.7 compilable in Java 1.6 but gives Exception at runtimee so we can fall back to (2)
+			// (1) Java 1.7 compilable in Java 1.6 but gives Exception at runtime so we can fall back to (2)
 			@SuppressWarnings("rawtypes")
 			Class type = Class.forName("java.util.Locale$Category");
 			@SuppressWarnings("unchecked")
