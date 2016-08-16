@@ -18,6 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.Random;
 
 import org.jhaws.common.io.FilePath.Iterators.FileLineIterator;
+import org.jhaws.common.lang.DecimalSystem;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -472,7 +473,7 @@ public class FilePathTest {
 			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
 				out.write(bytes);
 			}
-			Assert.assertEquals("1,5 KiB", tmp.getHumanReadableByteCount());
+			Assert.assertEquals("1" + DecimalSystem.getDecimalFormatSymbols().getDecimalSeparator() + "5 KiB", tmp.getHumanReadableByteCount());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Assert.fail(String.valueOf(ex));
@@ -483,11 +484,11 @@ public class FilePathTest {
 	public void testSizeText4() {
 		try {
 			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
-			byte[] bytes = new byte[1024 + 128];
+			byte[] bytes = new byte[1024 + 256];
 			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
 				out.write(bytes);
 			}
-			Assert.assertEquals("1,125 KiB", tmp.getHumanReadableByteCount());
+			Assert.assertEquals("1" + DecimalSystem.getDecimalFormatSymbols().getDecimalSeparator() + "25 KiB", tmp.getHumanReadableByteCount());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Assert.fail(String.valueOf(ex));
@@ -498,11 +499,26 @@ public class FilePathTest {
 	public void testSizeText5() {
 		try {
 			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
+			byte[] bytes = new byte[1024 + 128];
+			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
+				out.write(bytes);
+			}
+			Assert.assertEquals("1" + DecimalSystem.getDecimalFormatSymbols().getDecimalSeparator() + "125 KiB", tmp.getHumanReadableByteCount());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail(String.valueOf(ex));
+		}
+	}
+
+	@Test
+	public void testSizeText6() {
+		try {
+			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
 			byte[] bytes = new byte[1024 + 64];
 			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
 				out.write(bytes);
 			}
-			Assert.assertEquals("1,062 KiB", tmp.getHumanReadableByteCount());
+			Assert.assertEquals("1" + DecimalSystem.getDecimalFormatSymbols().getDecimalSeparator() + "062 KiB", tmp.getHumanReadableByteCount());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Assert.fail(String.valueOf(ex));
