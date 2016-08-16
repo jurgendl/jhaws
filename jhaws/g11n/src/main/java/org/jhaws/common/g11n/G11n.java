@@ -14,6 +14,8 @@ import java.util.Locale;
 /**
  * @see https://docs.oracle.com/javase/tutorial/i18n/format/numberFormat.html
  * @see https://docs.oracle.com/javase/tutorial/i18n/format/dateFormat.html
+ * @see http://www.ip2location.com/free/iso3166-2
+ * @see http://www.unece.org/cefact/locode/subdivisions.html
  */
 public class G11n {
 	static {
