@@ -134,12 +134,6 @@ public class FilePath implements Path, Externalizable {
 
 	public static final char PATH_SEPERATOR_SYSTEM = File.separatorChar;
 
-	public static char PATH_SEPERATOR_PREFERED = '/';
-
-	public static String getPreferedPathSeperator() {
-		return String.valueOf(getPreferedPathSeperatorChar());
-	}
-
 	public static String getSystemPathSeperator() {
 		return String.valueOf(getSystemPathSeperatorChar());
 	}
@@ -152,16 +146,8 @@ public class FilePath implements Path, Externalizable {
 		return PATH_SEPERATOR_SYSTEM;
 	}
 
-	public static char getPreferedPathSeperatorChar() {
-		return PATH_SEPERATOR_PREFERED;
-	}
-
 	public static char getFileExtensionSeperatorChar() {
 		return EXTENSION_SEPERATOR;
-	}
-
-	public static void setPreferedPathSeperatorChar(char c) {
-		PATH_SEPERATOR_PREFERED = c;
 	}
 
 	public static void setFileExtensionSeperatorChar(char c) {
@@ -913,8 +899,8 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public static String getShortFileName(String fileName) {
-		if (fileName.contains(getPreferedPathSeperator())) {
-			fileName = fileName.substring(fileName.lastIndexOf(getPreferedPathSeperator()) + 1);
+		if (fileName.contains(getSystemPathSeperator())) {
+			fileName = fileName.substring(fileName.lastIndexOf(getSystemPathSeperator()) + 1);
 		}
 		int p = fileName.lastIndexOf(getFileExtensionSeperator());
 		if (p == -1) {
@@ -1114,6 +1100,12 @@ public class FilePath implements Path, Externalizable {
 		return fs.getPath(entryName);
 	}
 
+	protected static <T> T notNull(T o) {
+		if (o == null)
+			throw new UncheckedIOException(new IOException(new NullPointerException()));
+		return o;
+	}
+
 	protected transient Path path;
 
 	public FilePath() {
@@ -1121,58 +1113,41 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath(Class<?> root, String relativePath) throws UncheckedIOException {
-		this(root.getClassLoader()
-				.getResource((root.getPackage() == null ? ""
-						: root.getPackage().getName().replace(getFileExtensionSeperatorChar(), getPreferedPathSeperatorChar())
-								+ (relativePath.startsWith(getPreferedPathSeperator()) ? "" : getPreferedPathSeperator()))
+		this(root.getClassLoader().getResource(
+				(root.getPackage() == null ? "" : root.getPackage().getName().replace(getFileExtensionSeperatorChar(), '/') + (relativePath.startsWith("/") ? "" : '/'))
 						+ relativePath));
 	}
 
 	public FilePath(File file) {
-		checkNN(file);
-		this.path = Paths.get(file.toURI());
+		this.path = Paths.get(notNull(file).toURI());
 	}
 
 	public FilePath(File dir, String file) {
-		checkNN(dir);
-		checkNN(file);
-		this.path = Paths.get(dir.toURI()).resolve(file);
+		this.path = Paths.get(notNull(dir).toURI()).resolve(notNull(file));
 	}
 
 	public FilePath(Path path) {
-		checkNN(path);
-		this.path = getPath(path);
+		this.path = getPath(notNull(path));
 	}
 
 	public FilePath(Path dir, String file) {
-		checkNN(dir);
-		checkNN(file);
-		this.path = dir.resolve(file);
+		this.path = notNull(dir).resolve(notNull(file));
 	}
 
 	public FilePath(String dir, String... file) {
-		checkNN(dir);
-		checkNN(file);
-		this.path = Paths.get(dir, file);
+		this.path = Paths.get(notNull(dir), notNull(file));
 	}
 
 	public FilePath(URI uri) {
-		checkNN(uri);
-		this.path = path(uri);
+		this.path = path(notNull(uri));
 	}
 
 	public FilePath(URL url) {
-		checkNN(url);
 		try {
-			this.path = path(url.toURI());
+			this.path = path(notNull(url).toURI());
 		} catch (URISyntaxException ex) {
 			throw new UncheckedIOException(new IOException(ex));
 		}
-	}
-
-	protected void checkNN(Object o) {
-		if (o == null)
-			throw new UncheckedIOException(new IOException(new NullPointerException()));
 	}
 
 	public FilePath addExtension(String extension) {

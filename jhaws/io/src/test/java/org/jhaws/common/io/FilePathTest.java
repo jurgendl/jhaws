@@ -393,12 +393,6 @@ public class FilePathTest {
 	}
 
 	@Test
-	public void seperators() {
-		Assert.assertEquals("/", FilePath.getPreferedPathSeperator());
-		Assert.assertEquals(".", FilePath.getFileExtensionSeperator());
-	}
-
-	@Test
 	public void size() {
 		try {
 			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
