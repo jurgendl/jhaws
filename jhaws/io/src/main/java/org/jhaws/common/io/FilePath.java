@@ -128,7 +128,7 @@ public class FilePath implements Path, Externalizable {
 	/** user home dir */
 	public static final String USERDIR = System.getProperty("user.home");
 
-	public static final String[] UNITS = new String[] { "bytes", "kB", "MB", "GB", "TB" };
+	public static final String SIZE_UNIT = "B";
 
 	public static char EXTENSION_SEPERATOR = '.';
 
@@ -216,8 +216,7 @@ public class FilePath implements Path, Externalizable {
 			} catch (IOException ex) {
 				throw new UncheckedIOException(ex);
 			}
-			key = directory.register(watcher, StandardWatchEventKinds.ENTRY_CREATE,
-					StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
+			key = directory.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY, StandardWatchEventKinds.ENTRY_DELETE);
 			thread = new Thread(() -> {
 				System.out.println("FilePathWatcher[" + Thread.currentThread() + ":started]");
 				while (enabled) {
@@ -336,8 +335,7 @@ public class FilePath implements Path, Externalizable {
 			private static final long serialVersionUID = -7739502555496394554L;
 
 			public VideoFilter() {
-				super("flv", "webm", "mp4", "m4v", "mpg", "mpeg", "mpe", "mpv", "wmv", "avi", "mov", "qt", "asf", "rm",
-						"divx", "mkv");
+				super("flv", "webm", "mp4", "m4v", "mpg", "mpeg", "mpe", "mpv", "wmv", "avi", "mov", "qt", "asf", "rm", "divx", "mkv");
 			}
 		}
 
@@ -840,23 +838,21 @@ public class FilePath implements Path, Externalizable {
 
 	public static FilePath createDefaultTempFile(String prefix, String extension, FileAttribute<?>... attrs) {
 		try {
-			return new FilePath(Files.createTempFile(prefix == null ? null : prefix + "-",
-					extension == null ? "" : getFileExtensionSeperator() + extension, attrs));
+			return new FilePath(Files.createTempFile(prefix == null ? null : prefix + "-", extension == null ? "" : getFileExtensionSeperator() + extension, attrs));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 	}
 
-	public static String getConvertedSize(Long size) {
-		if (size == null || size == 0l) {
-			return 0 + UNITS[0];
-		}
-		int scale = (int) (Math.log10(size) / 3);
-		NumberFormat nf = NumberFormat.getNumberInstance();
-		DecimalFormat df = (DecimalFormat) nf;
+	public static String getHumanReadableByteCount(long bytes, int maxDigits) {
+		int unit = 1024;
+		if (bytes < unit)
+			return bytes + " " + SIZE_UNIT;
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		DecimalFormat df = DecimalFormat.class.cast(NumberFormat.getNumberInstance());
 		df.setMinimumFractionDigits(0);
-		df.setMaximumFractionDigits(2);
-		return "" + df.format((double) size / (1 << (scale * 10))) + "" + UNITS[scale];
+		df.setMaximumFractionDigits(maxDigits);
+		return df.format(bytes / Math.pow(unit, exp)) + " " + "KMGTPE".charAt(exp - 1) + "i" + SIZE_UNIT;
 	}
 
 	public static FilePath getDesktopDirectory() {
@@ -877,8 +873,7 @@ public class FilePath implements Path, Externalizable {
 			File parentSystemDrive = fsv.getParentDirectory(systemDriveFile);
 			for (File f : parentSystemDrive.listFiles()) {
 				try {
-					if (fsv.isFileSystem(f) && fsv.isDrive(f) && fsv.isTraversable(f) && !fsv.isFloppyDrive(f)
-							&& (f.listFiles().length > 0)) {
+					if (fsv.isFileSystem(f) && fsv.isDrive(f) && fsv.isTraversable(f) && !fsv.isFloppyDrive(f) && (f.listFiles().length > 0)) {
 						if (new FilePath(f).getParent() == null) {
 							drives.add(new FilePath(f));
 						}
@@ -937,9 +932,8 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * convers a filename to a legal filename for given operating system, too
-	 * long parts are chopped, illegal characters are replaced by the character
-	 * <i>_</i> , a missing extensions is adapted to extension <i>ext</i>
+	 * convers a filename to a legal filename for given operating system, too long parts are chopped, illegal characters are replaced by the character <i>_</i> , a missing
+	 * extensions is adapted to extension <i>ext</i>
 	 *
 	 * @param filename
 	 *            : String : current name
@@ -957,8 +951,7 @@ public class FilePath implements Path, Externalizable {
 		if (os == OSGroup.Dos) {
 			String[] parts = filename.split("\\" + getFileExtensionSeperator());
 			if (parts.length == 1) {
-				if (filename.substring(filename.length() - 1, filename.length())
-						.compareTo(getFileExtensionSeperator()) != 0) {
+				if (filename.substring(filename.length() - 1, filename.length()).compareTo(getFileExtensionSeperator()) != 0) {
 					filename = filename + getFileExtensionSeperator();
 				}
 
@@ -1007,38 +1000,30 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * if file does not exists, return it<br>
-	 * if file exists and does not end on _9999 (any number), adds _0000 and
-	 * does index checking<br>
-	 * if file exists and does end on _9999 (any number), and does index
-	 * checking<br>
+	 * if file exists and does not end on _9999 (any number), adds _0000 and does index checking<br>
+	 * if file exists and does end on _9999 (any number), and does index checking<br>
 	 * <br>
 	 * index checking:<br>
 	 * if file exists, return it<br>
-	 * if file does not exists, adds 1 to the index (_0000 goes to _0001) and
-	 * does further index again
+	 * if file does not exists, adds 1 to the index (_0000 goes to _0001) and does further index again
 	 *
 	 * @param parent
 	 *            : String : the location (path only) of the target file
 	 * @param outFileName
-	 *            : String : the name of the target file (without extension and
-	 *            . before extension)
+	 *            : String : the name of the target file (without extension and . before extension)
 	 * @param sep
-	 *            : String : characters sperating filename from index (example:
-	 *            _ )
+	 *            : String : characters sperating filename from index (example: _ )
 	 * @param format
 	 *            : String : number of positions character 0 (example: 0000 )
 	 * @param extension
-	 *            : String : the extension of the target file (without . before
-	 *            extension), see class constants FORMAT... for possibilities
+	 *            : String : the extension of the target file (without . before extension), see class constants FORMAT... for possibilities
 	 *
 	 * @return : IOFile : new indexed File
 	 */
-	protected static FilePath newFileIndex(Path parent, String outFileName, String sep, String format,
-			String extension) {
+	protected static FilePath newFileIndex(Path parent, String outFileName, String sep, String format, String extension) {
 		String SEPARATOR = sep;
 		String FORMAT = sep + format;
-		FilePath file = StringUtils.isBlank(extension) ? new FilePath(parent, outFileName)
-				: new FilePath(parent, outFileName + getFileExtensionSeperator() + extension);
+		FilePath file = StringUtils.isBlank(extension) ? new FilePath(parent, outFileName) : new FilePath(parent, outFileName + getFileExtensionSeperator() + extension);
 		if (file.exists()) {
 			if (outFileName.length() <= FORMAT.length()) {
 				outFileName = outFileName + FORMAT;
@@ -1048,10 +1033,8 @@ public class FilePath implements Path, Externalizable {
 					file = new FilePath(parent, outFileName + getFileExtensionSeperator() + extension);
 				}
 			} else {
-				String ch = outFileName.substring(outFileName.length() - FORMAT.length(),
-						(outFileName.length() - FORMAT.length()) + SEPARATOR.length());
-				String nr = outFileName.substring((outFileName.length() - FORMAT.length()) + SEPARATOR.length(),
-						outFileName.length());
+				String ch = outFileName.substring(outFileName.length() - FORMAT.length(), (outFileName.length() - FORMAT.length()) + SEPARATOR.length());
+				String nr = outFileName.substring((outFileName.length() - FORMAT.length()) + SEPARATOR.length(), outFileName.length());
 				boolean isNumber = true;
 				try {
 					Integer.parseInt(nr);
@@ -1077,11 +1060,10 @@ public class FilePath implements Path, Externalizable {
 			}
 			indStringSB.append(String.valueOf(ind));
 			if (extension.equals("")) {
-				file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR
-						+ indStringSB.toString());
+				file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR + indStringSB.toString());
 			} else {
-				file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR
-						+ indStringSB.toString() + getFileExtensionSeperator() + extension);
+				file = new FilePath(parent,
+						outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR + indStringSB.toString() + getFileExtensionSeperator() + extension);
 			}
 			ind++;
 		}
@@ -1109,8 +1091,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a
-	 *      -classpath-resource
+	 * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a -classpath-resource
 	 */
 	public static Path path(URI uri) {
 		String scheme = uri.getScheme();
@@ -1140,10 +1121,11 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath(Class<?> root, String relativePath) throws UncheckedIOException {
-		this(root.getClassLoader().getResource((root.getPackage() == null ? ""
-				: root.getPackage().getName().replace(getFileExtensionSeperatorChar(), getPreferedPathSeperatorChar())
-						+ (relativePath.startsWith(getPreferedPathSeperator()) ? "" : getPreferedPathSeperator()))
-				+ relativePath));
+		this(root.getClassLoader()
+				.getResource((root.getPackage() == null ? ""
+						: root.getPackage().getName().replace(getFileExtensionSeperatorChar(), getPreferedPathSeperatorChar())
+								+ (relativePath.startsWith(getPreferedPathSeperator()) ? "" : getPreferedPathSeperator()))
+						+ relativePath));
 	}
 
 	public FilePath(File file) {
@@ -1211,14 +1193,12 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath changeExtension(String extension) {
-		return this.getParent() == null
-				? new FilePath(this.getShortFileName() + getFileExtensionSeperator() + extension)
+		return this.getParent() == null ? new FilePath(this.getShortFileName() + getFileExtensionSeperator() + extension)
 				: new FilePath(this.getParent(), this.getShortFileName() + getFileExtensionSeperator() + extension);
 	}
 
 	public FilePath appendExtension(String extension) {
-		return this.getParent() == null
-				? new FilePath(this.getFileNameString() + getFileExtensionSeperator() + extension)
+		return this.getParent() == null ? new FilePath(this.getFileNameString() + getFileExtensionSeperator() + extension)
 				: new FilePath(this.getParent(), this.getFileNameString() + getFileExtensionSeperator() + extension);
 	}
 
@@ -1441,8 +1421,7 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath createTempFile(String prefix, String extension, FileAttribute<?>... attrs) {
 		try {
-			return new FilePath(Files.createTempFile(this.getPath(), prefix + "-",
-					extension == null ? "" : getFileExtensionSeperator() + extension, attrs));
+			return new FilePath(Files.createTempFile(this.getPath(), prefix + "-", extension == null ? "" : getFileExtensionSeperator() + extension, attrs));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -1599,8 +1578,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * downloads a file from the web to a local file when it does not exists or
-	 * is older, binary copy
+	 * downloads a file from the web to a local file when it does not exists or is older, binary copy
 	 *
 	 * @param urlSourceFile
 	 *            : URL : file on the web
@@ -1625,8 +1603,7 @@ public class FilePath implements Path, Externalizable {
 				return false;
 			}
 		}
-		try (InputStream in = new BufferedInputStream(urlSourceFile.openStream());
-				OutputStream out = this.newBufferedOutputStream()) {
+		try (InputStream in = new BufferedInputStream(urlSourceFile.openStream()); OutputStream out = this.newBufferedOutputStream()) {
 			Utils.copy(in, out);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -1677,8 +1654,7 @@ public class FilePath implements Path, Externalizable {
 		}
 		long compareSize = Math.min(limit, size);
 		long comparedSize = 0l;
-		try (Iterators.FileByteIterator buffer = this.bytes();
-				Iterators.FileByteIterator otherBuffer = otherPath.bytes()) {
+		try (Iterators.FileByteIterator buffer = this.bytes(); Iterators.FileByteIterator otherBuffer = otherPath.bytes()) {
 			while (buffer.hasNext() || otherBuffer.hasNext()) {
 				if (!buffer.hasNext() || !otherBuffer.hasNext()) {
 					return false;
@@ -1714,9 +1690,8 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * flattens this directory, copies all files in all subdirectories to this
-	 * directory, deletes doubles, rename if file already exists and isn't the
-	 * same, delete all subdirectories afterwards
+	 * flattens this directory, copies all files in all subdirectories to this directory, deletes doubles, rename if file already exists and isn't the same, delete all
+	 * subdirectories afterwards
 	 */
 	public FilePath flatten() {
 		final FilePath root = this;
@@ -1768,8 +1743,8 @@ public class FilePath implements Path, Externalizable {
 		return streamChildren().map(c -> new FilePath(c)).collect(Collectors.toList());
 	}
 
-	public String getConvertedFileSize() {
-		return getConvertedSize(this.getFileSize());
+	public String getHumanReadableByteCount() {
+		return getHumanReadableByteCount(getFileSize(), 3);
 	}
 
 	public Charset getDefaultCharset() {
@@ -2177,8 +2152,7 @@ public class FilePath implements Path, Externalizable {
 
 	public Stream<FilePath> streamChildren() {
 		try {
-			return StreamSupport.stream(Files.newDirectoryStream(this.getPath()).spliterator(), false)
-					.map(FilePath::of);
+			return StreamSupport.stream(Files.newDirectoryStream(this.getPath()).spliterator(), false).map(FilePath::of);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -2186,8 +2160,7 @@ public class FilePath implements Path, Externalizable {
 
 	public Stream<FilePath> streamChildren(DirectoryStream.Filter<? super Path> filter) {
 		try {
-			return StreamSupport.stream(Files.newDirectoryStream(this.getPath(), filter).spliterator(), false)
-					.map(FilePath::of);
+			return StreamSupport.stream(Files.newDirectoryStream(this.getPath(), filter).spliterator(), false).map(FilePath::of);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -2195,17 +2168,14 @@ public class FilePath implements Path, Externalizable {
 
 	public Stream<FilePath> streamChildren(String glob) {
 		try {
-			return StreamSupport.stream(Files.newDirectoryStream(this.getPath(), glob).spliterator(), false)
-					.map(FilePath::of);
+			return StreamSupport.stream(Files.newDirectoryStream(this.getPath(), glob).spliterator(), false).map(FilePath::of);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 	}
 
 	/**
-	 * {@link #newFileIndex(String, String, String, String, String)} but with
-	 * separator set to '_' and format to '0000' and the other parameters
-	 * derived from given File
+	 * {@link #newFileIndex(String, String, String, String, String)} but with separator set to '_' and format to '0000' and the other parameters derived from given File
 	 */
 	public FilePath newFileIndex() {
 		if (this.notExists()) {
@@ -2387,8 +2357,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * @see java.nio.file.Path#register(java.nio.file.WatchService,
-	 *      java.nio.file.WatchEvent.Kind[])
+	 * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[])
 	 */
 	@Override
 	public WatchKey register(WatchService watcher, Kind<?>... events) {
@@ -2400,9 +2369,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * @see java.nio.file.Path#register(java.nio.file.WatchService,
-	 *      java.nio.file.WatchEvent.Kind[],
-	 *      java.nio.file.WatchEvent.Modifier[])
+	 * @see java.nio.file.Path#register(java.nio.file.WatchService, java.nio.file.WatchEvent.Kind[], java.nio.file.WatchEvent.Modifier[])
 	 */
 	@Override
 	public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) {
@@ -2808,8 +2775,7 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath write(String text, Charset charset, OpenOption... options) {
 		try {
-			return new FilePath(Files.write(this.getPath(),
-					text.getBytes(charset == null ? this.getDefaultCharset() : charset), options));
+			return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? this.getDefaultCharset() : charset), options));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -2917,14 +2883,11 @@ public class FilePath implements Path, Externalizable {
 		return (isFile() && getFileSize() == 0) || (isDirectory() && getChildren().size() == 0);
 	}
 
-	public FilePath process(Predicate<String> isGroup, UnaryOperator<String> groupBuilder,
-			Predicate<String> acceptGroup, BiConsumer<String, String> whenAccept) {
-		return _process(isGroup, groupBuilder == null ? t -> t : groupBuilder,
-				acceptGroup == null ? x -> true : acceptGroup, whenAccept);
+	public FilePath process(Predicate<String> isGroup, UnaryOperator<String> groupBuilder, Predicate<String> acceptGroup, BiConsumer<String, String> whenAccept) {
+		return _process(isGroup, groupBuilder == null ? t -> t : groupBuilder, acceptGroup == null ? x -> true : acceptGroup, whenAccept);
 	}
 
-	private FilePath _process(Predicate<String> isGroup, UnaryOperator<String> groupBuilder,
-			Predicate<String> acceptGroup, BiConsumer<String, String> whenAccept) {
+	private FilePath _process(Predicate<String> isGroup, UnaryOperator<String> groupBuilder, Predicate<String> acceptGroup, BiConsumer<String, String> whenAccept) {
 		String[] group = new String[1];
 		readAllLines().stream().filter(StringUtils::isNotBlank).forEach(l -> {
 			if (isGroup.test(l)) {
@@ -2937,8 +2900,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath write(InputStream binaryStream) {
-		try (BufferedInputStream in = new BufferedInputStream(binaryStream);
-				BufferedOutputStream out = newBufferedOutputStream()) {
+		try (BufferedInputStream in = new BufferedInputStream(binaryStream); BufferedOutputStream out = newBufferedOutputStream()) {
 			IOUtils.copyLarge(in, out);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -2947,8 +2909,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath read(OutputStream binaryStream) {
-		try (BufferedOutputStream out = new BufferedOutputStream(binaryStream);
-				BufferedInputStream in = newBufferedInputStream()) {
+		try (BufferedOutputStream out = new BufferedOutputStream(binaryStream); BufferedInputStream in = newBufferedInputStream()) {
 			IOUtils.copyLarge(in, out);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -2961,8 +2922,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath renameShortFilename(String filename) {
-		return renameFileName(
-				filename + (StringUtils.isBlank(getExtension()) ? "" : getFileExtensionSeperator() + getExtension()));
+		return renameFileName(filename + (StringUtils.isBlank(getExtension()) ? "" : getFileExtensionSeperator() + getExtension()));
 	}
 
 	public FilePath moveFileName(String filename) {

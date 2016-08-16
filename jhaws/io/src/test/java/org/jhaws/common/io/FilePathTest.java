@@ -182,10 +182,10 @@ public class FilePathTest {
 			Assert.assertNull(new FilePath("dir/test").getExtension());
 			Assert.assertEquals("txt", new FilePath("dir", "test.txt").getExtension());
 			Assert.assertEquals("TXT", new FilePath("dir", "test.TXT").getExtension());
-			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.doc", new FilePath("dir", "test.TXT").changeExtension("doc").getFullPathName());
-			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.DOC", new FilePath("dir", "test.TXT").changeExtension("DOC").getFullPathName());
-			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.TXT.doc", new FilePath("dir", "test.TXT").addExtension("doc").getFullPathName());
-			Assert.assertEquals("dir" + FilePath.getPreferedPathSeperator() + "test.TXT.DOC", new FilePath("dir", "test.TXT").addExtension("DOC").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getSystemPathSeperator() + "test.doc", new FilePath("dir", "test.TXT").changeExtension("doc").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getSystemPathSeperator() + "test.DOC", new FilePath("dir", "test.TXT").changeExtension("DOC").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getSystemPathSeperator() + "test.TXT.doc", new FilePath("dir", "test.TXT").addExtension("doc").getFullPathName());
+			Assert.assertEquals("dir" + FilePath.getSystemPathSeperator() + "test.TXT.DOC", new FilePath("dir", "test.TXT").addExtension("DOC").getFullPathName());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			Assert.fail(String.valueOf(ex));
@@ -360,7 +360,7 @@ public class FilePathTest {
 			FilePath subsubdirfile = subsubdir.child("subsubdirfile").createFile();
 
 			FilePath tmpDir2 = FilePath.createDefaultTempDirectory("B" + String.valueOf(System.currentTimeMillis()));
-			tmpDir.moveTo(tmpDir2);
+			tmpDir.moveAllTo(tmpDir2);
 
 			FilePath file2 = tmpDir2.child("file");
 			FilePath subdir2 = tmpDir2.child("subdir");
@@ -393,11 +393,7 @@ public class FilePathTest {
 
 	@Test
 	public void seperators() {
-		try {
-			Assert.assertEquals("\\", FilePath.getPreferedPathSeperator());
-		} catch (Exception ex) {
-			Assert.assertEquals("/", FilePath.getPreferedPathSeperator());
-		}
+		Assert.assertEquals("/", FilePath.getPreferedPathSeperator());
 		Assert.assertEquals(".", FilePath.getFileExtensionSeperator());
 	}
 
@@ -435,6 +431,81 @@ public class FilePathTest {
 			l.add(p1);
 			l.remove(p2);
 			Assert.assertEquals(0, l.size());
+		}
+	}
+
+	@Test
+	public void testSizeText1() {
+		try {
+			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
+			byte[] bytes = new byte[5];
+			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
+				out.write(bytes);
+			}
+			Assert.assertEquals("5 B", tmp.getHumanReadableByteCount());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail(String.valueOf(ex));
+		}
+	}
+
+	@Test
+	public void testSizeText2() {
+		try {
+			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
+			byte[] bytes = new byte[1024];
+			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
+				out.write(bytes);
+			}
+			Assert.assertEquals("1 KiB", tmp.getHumanReadableByteCount());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail(String.valueOf(ex));
+		}
+	}
+
+	@Test
+	public void testSizeText3() {
+		try {
+			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
+			byte[] bytes = new byte[1024 + 512];
+			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
+				out.write(bytes);
+			}
+			Assert.assertEquals("1,5 KiB", tmp.getHumanReadableByteCount());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail(String.valueOf(ex));
+		}
+	}
+
+	@Test
+	public void testSizeText4() {
+		try {
+			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
+			byte[] bytes = new byte[1024 + 128];
+			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
+				out.write(bytes);
+			}
+			Assert.assertEquals("1,125 KiB", tmp.getHumanReadableByteCount());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail(String.valueOf(ex));
+		}
+	}
+
+	@Test
+	public void testSizeText5() {
+		try {
+			FilePath tmp = FilePath.createDefaultTempFile("prefix", "txt");
+			byte[] bytes = new byte[1024 + 64];
+			try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
+				out.write(bytes);
+			}
+			Assert.assertEquals("1,062 KiB", tmp.getHumanReadableByteCount());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			Assert.fail(String.valueOf(ex));
 		}
 	}
 }
