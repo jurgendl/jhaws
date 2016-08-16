@@ -1,6 +1,5 @@
 package org.jhaws.common.lang;
 
-import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,7 +12,7 @@ public class DecimalSystem {
 	private static final Map<Locale, List<String>> shortdata;
 	private static final Map<Locale, List<String>> longdata;
 	private static final List<Integer> powers;
-	private static DecimalFormatSymbols DECIMAL_FORMAT_SYMBOLS;
+
 	static {
 		{
 			powers = Arrays.asList(-18, -15, -12, -9, -6, -3, -2, -1, 0, 1, 2, 3, 6, 9, 12, 15, 18);
@@ -81,16 +80,5 @@ public class DecimalSystem {
 			tmp = data.get(null);
 		}
 		return tmp;
-	}
-
-	public static DecimalFormatSymbols getDecimalFormatSymbols() {
-		if (DECIMAL_FORMAT_SYMBOLS == null) {
-			DECIMAL_FORMAT_SYMBOLS = DecimalFormatSymbols.getInstance();
-		}
-		return DECIMAL_FORMAT_SYMBOLS;
-	}
-
-	public static void setDecimalFormatSymbols(Locale locale) {
-		DECIMAL_FORMAT_SYMBOLS = DecimalFormatSymbols.getInstance(locale);
 	}
 }
