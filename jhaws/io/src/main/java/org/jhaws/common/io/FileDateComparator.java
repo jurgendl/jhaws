@@ -13,6 +13,7 @@ import java.util.Comparator;
  * @version 1.1.0 - 6 June 2006
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
 	/**
 	 * 
@@ -32,14 +33,14 @@ public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
 		 */
 		protected int direction() {
 			switch (this) {
-			case OLDEST_FIRST:
-				return 1;
+				case OLDEST_FIRST:
+					return 1;
 
-			case NEWEST_FIRST:
-				return -1;
+				case NEWEST_FIRST:
+					return -1;
 
-			default:
-				return 0;
+				default:
+					return 0;
 			}
 		}
 	}

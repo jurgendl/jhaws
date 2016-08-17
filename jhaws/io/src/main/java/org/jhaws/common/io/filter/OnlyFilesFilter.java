@@ -11,6 +11,7 @@ import org.jhaws.common.io.IOFile;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class OnlyFilesFilter extends FileFilter {
 	/**
 	 * Creates a new OnlyFilesFilter object.

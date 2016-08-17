@@ -9,6 +9,7 @@ package org.jhaws.common.io.filter;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class ArchiveFileFilter extends FileExtensionFilter {
 	private static final String[] ext = new String[0];
 

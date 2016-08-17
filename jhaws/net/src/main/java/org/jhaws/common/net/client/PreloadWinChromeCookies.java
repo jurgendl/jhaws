@@ -16,8 +16,8 @@ import org.jhaws.common.io.IOFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @Deprecated
+@SuppressWarnings("deprecation")
 public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(PreloadWinChromeCookies.class);
 

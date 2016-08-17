@@ -13,6 +13,7 @@ import org.jhaws.common.io.IODirectory;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public abstract class DirectoryFilter extends AbstractFileFilter {
 	/**
 	 * Creates a new DirectoryFilter object.

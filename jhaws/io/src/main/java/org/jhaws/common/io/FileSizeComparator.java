@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
  * @version 6 June 2006
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class FileSizeComparator implements Comparator<IOFile> {
 	/**
 	 *
@@ -30,14 +31,14 @@ public class FileSizeComparator implements Comparator<IOFile> {
 		 */
 		protected int direction() {
 			switch (this) {
-			case SMALLEST_FIRST:
-				return 1;
+				case SMALLEST_FIRST:
+					return 1;
 
-			case LARGEST_FIRST:
-				return -1;
+				case LARGEST_FIRST:
+					return -1;
 
-			default:
-				return 0;
+				default:
+					return 0;
 			}
 		}
 	}

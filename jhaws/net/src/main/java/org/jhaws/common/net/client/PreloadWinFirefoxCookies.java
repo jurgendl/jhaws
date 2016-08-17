@@ -20,8 +20,8 @@ import org.jhaws.common.io.IOFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @Deprecated
+@SuppressWarnings("deprecation")
 public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(PreloadWinFirefoxCookies.class);
 

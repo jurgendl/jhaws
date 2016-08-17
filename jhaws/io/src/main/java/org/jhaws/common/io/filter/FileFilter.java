@@ -13,6 +13,7 @@ import org.jhaws.common.io.IOFile;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public abstract class FileFilter extends AbstractFileFilter {
 	/**
 	 * Creates a new FileFilter object.

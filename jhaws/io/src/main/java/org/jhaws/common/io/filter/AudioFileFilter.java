@@ -9,6 +9,7 @@ package org.jhaws.common.io.filter;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class AudioFileFilter extends FileExtensionFilter {
 	/**
 	 * Creates a new AudioFileFilter object.

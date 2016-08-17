@@ -9,6 +9,7 @@ package org.jhaws.common.io.filter;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class ImageFileFilter extends FileExtensionFilter {
 	/**
 	 * Creates a new ImageFileFilter object.

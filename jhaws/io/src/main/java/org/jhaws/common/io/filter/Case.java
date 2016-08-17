@@ -9,28 +9,30 @@ import java.util.regex.Pattern;
  * 
  * @author Jurgen
  */
+@Deprecated
 public enum Case {
-    /** case sensitive */
-    SENSITIVE,
-    /** case insensitive */
-    INSENSITIVE;
-    /**
-     * na
-     * 
-     * @return
-     * 
-     * @throws IllegalArgumentException na
-     */
-    public int getPattern() {
-        switch (this) {
-            case SENSITIVE:
-                return Pattern.CANON_EQ;
+	/** case sensitive */
+	SENSITIVE,
+	/** case insensitive */
+	INSENSITIVE;
+	/**
+	 * na
+	 * 
+	 * @return
+	 * 
+	 * @throws IllegalArgumentException
+	 *             na
+	 */
+	public int getPattern() {
+		switch (this) {
+			case SENSITIVE:
+				return Pattern.CANON_EQ;
 
-            case INSENSITIVE:
-                return Pattern.CASE_INSENSITIVE;
+			case INSENSITIVE:
+				return Pattern.CASE_INSENSITIVE;
 
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
+			default:
+				throw new IllegalArgumentException();
+		}
+	}
 }

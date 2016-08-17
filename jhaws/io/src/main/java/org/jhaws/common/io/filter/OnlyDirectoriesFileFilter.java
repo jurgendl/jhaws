@@ -11,6 +11,7 @@ import org.jhaws.common.io.IODirectory;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
+@SuppressWarnings("deprecation")
 public class OnlyDirectoriesFileFilter extends DirectoryFilter {
 	/**
 	 * Creates a new OnlyDirectoriesFileFilter object.
