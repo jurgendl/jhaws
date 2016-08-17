@@ -30,6 +30,7 @@ public interface MediaCte {
 
 	public static final String M_TASK_END_TIMESTAMP = "task.endtimestamp";
 
+	/** % */
 	public static final String M_TASK_PROGRESS = "task.progress";
 
 	public static final String M_TASK_LOG = "task.log";
