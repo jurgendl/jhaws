@@ -55,8 +55,11 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${version.slf4j}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>slf4j-ext</artifactId> 
-			<version>${version.slf4j}</version> </dependency> -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-ext</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
 		<!-- commons-logging replacer (http://www.slf4j.org/legacy.html) -->
 		<!-- SLF4JBridgeHandler.install() -->
 		<dependency>
@@ -64,12 +67,21 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${version.slf4j}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>jul-to-slf4j</artifactId> 
-			<version>${version.slf4j}</version> </dependency> -->
-		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>log4j-over-slf4j</artifactId> 
-			<version>${version.slf4j}</version> </dependency> -->
-		<!-- <dependency> <groupId>org.slf4j</groupId> <artifactId>osgi-over-slf4j</artifactId> 
-			<version>${version.slf4j}</version> </dependency> -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>osgi-over-slf4j</artifactId>
+			<version>${version.slf4j}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.logback-extensions</groupId>
 			<artifactId>logback-ext-spring</artifactId>
