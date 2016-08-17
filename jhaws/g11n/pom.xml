@@ -25,7 +25,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
         </dependency>
 	</dependencies>
 </project>

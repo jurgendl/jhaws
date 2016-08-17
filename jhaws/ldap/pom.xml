@@ -47,7 +47,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
         </dependency>
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
