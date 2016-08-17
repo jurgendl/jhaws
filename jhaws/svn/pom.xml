@@ -10,13 +10,17 @@
 	<name>svn</name>
 	<description>svn</description>
     <properties>
-        <version.slf4j>1.7.21</version.slf4j>
-        <version.logback>1.1.7</version.logback>
         <version.spring>4.3.0.RELEASE</version.spring>
         <version.commons.lang3>3.4</version.commons.lang3>
         <version.commons.io>2.5</version.commons.io>
     </properties>
 	<dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jhaws-logging</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
 		<dependency>
 			<groupId>org.jhaws.common</groupId>
 			<artifactId>jhaws-lang</artifactId>
@@ -37,23 +41,6 @@
                     <groupId>commons-logging</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${version.slf4j}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${version.logback}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${version.logback}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

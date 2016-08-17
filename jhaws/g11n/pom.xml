@@ -21,22 +21,11 @@
 			<version>${version.junit}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${version.logback}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${version.logback}</version>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jhaws-logging</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
 	</dependencies>
 </project>

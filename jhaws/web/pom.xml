@@ -17,6 +17,12 @@
         <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problemns -->
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jhaws-logging</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
     	<dependency>
     		<groupId>javax.xml.bind</groupId>
     		<artifactId>jaxb-api</artifactId>
@@ -92,6 +98,12 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${version.spring}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

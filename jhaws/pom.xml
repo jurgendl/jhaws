@@ -44,6 +44,7 @@
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 	</properties>
 	<modules>
+		<module>logging</module>
 		<module>lang</module>
 		<module>g11n</module>
 		<module>io</module>

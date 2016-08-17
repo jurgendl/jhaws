@@ -11,11 +11,15 @@
 	<description>lucene</description>
 	<properties>
 		<version.junit>4.12</version.junit>
-		<version.slf4j>1.7.21</version.slf4j>
-		<version.logback>1.1.7</version.logback>
 		<version.lucene>4.10.4</version.lucene>
 	</properties>
 	<dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jhaws-logging</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-test-framework</artifactId>
@@ -113,23 +117,6 @@
 			<artifactId>junit</artifactId>
 			<version>${version.junit}</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${version.logback}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${version.logback}</version>
-			<optional>true</optional>
 		</dependency>
 	</dependencies>
 </project>

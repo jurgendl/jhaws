@@ -36,13 +36,16 @@
         <version.xhtmlrenderer>9.0.8</version.xhtmlrenderer>
         <version.commons.codec>1.10</version.commons.codec>
         <version.poi>3.10-FINAL</version.poi>
-        <version.slf4j>1.7.21</version.slf4j>
-        <version.logback>1.1.7</version.logback>
-        <version.janino>2.7.8</version.janino>
         <version.junit>4.12</version.junit>
         <version.ostermiller>1.07.00</version.ostermiller>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.jhaws.common</groupId>
+            <artifactId>jhaws-logging</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+        </dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
             <artifactId>jhaws-g11n</artifactId>
@@ -112,34 +115,6 @@
             <groupId>org.ostermiller</groupId>
             <artifactId>utils</artifactId>
             <version>${version.ostermiller}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${version.slf4j}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${version.slf4j}</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${version.logback}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${version.logback}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
-            <version>${version.janino}</version>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

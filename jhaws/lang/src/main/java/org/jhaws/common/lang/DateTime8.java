@@ -43,7 +43,7 @@ public class DateTime8 {
 		DateTime8.decimalSeperator = decimalSeperator;
 	}
 
-	public static String printshort(Duration duration) {
+	public static String printAlt(Duration duration) {
 		long days = duration.toDays();
 		duration = duration.minusDays(days);
 		long hours = duration.toHours();
@@ -119,11 +119,11 @@ public class DateTime8 {
 		return formatted.toString();
 	}
 
-	public static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
+	private static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
 			.appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).appendLiteral(".").appendValue(ChronoField.MILLI_OF_SECOND)
 			.toFormatter();
 
-	public static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
+	private static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
 			.appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).toFormatter();
 
 	public static Pattern TIME_PATTERN = Pattern.compile("^(\\d{1,2}:){0,1}(\\d{1,2}:){0,1}(\\d{1,2}){1}(\\.\\d{1,3}){0,1}$");
