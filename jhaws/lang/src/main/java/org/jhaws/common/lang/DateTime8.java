@@ -119,16 +119,14 @@ public class DateTime8 {
 		return formatted.toString();
 	}
 
-	public static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder()
-			.appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":").appendValue(ChronoField.MINUTE_OF_HOUR, 2)
-			.appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).appendLiteral(".")
-			.appendValue(ChronoField.MILLI_OF_SECOND).toFormatter();
+	public static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
+			.appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).appendLiteral(".").appendValue(ChronoField.MILLI_OF_SECOND)
+			.toFormatter();
 
-	public static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder()
-			.appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":").appendValue(ChronoField.MINUTE_OF_HOUR, 2)
-			.appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).toFormatter();
+	public static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":")
+			.appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2).toFormatter();
 
-	static Pattern TIME_PATTERN = Pattern.compile("^(\\d{1,2}:){0,1}(\\d{1,2}:){0,1}(\\d{1,2}){1}(\\.\\d{1,3}){0,1}$");
+	public static Pattern TIME_PATTERN = Pattern.compile("^(\\d{1,2}:){0,1}(\\d{1,2}:){0,1}(\\d{1,2}){1}(\\.\\d{1,3}){0,1}$");
 
 	public static LocalTime parseTime(String text) {
 		Matcher matcher = TIME_PATTERN.matcher(text);
@@ -239,5 +237,21 @@ public class DateTime8 {
 
 	public static LocalDateTime toLocalDateTime(FileTime time, ZoneId zone) {
 		return toLocalDateTime(time.toInstant(), zone);
+	}
+
+	public static String printShort(LocalTime time) {
+		return TIME_PARSER_SEC.format(time);
+	}
+
+	public static String printLong(LocalTime time) {
+		return TIME_PARSER_MILLIS.format(time);
+	}
+
+	public static String printShort(Duration duration) {
+		return TIME_PARSER_SEC.format(START_OF_DAY.plus(duration));
+	}
+
+	public static String printLong(Duration duration) {
+		return TIME_PARSER_MILLIS.format(START_OF_DAY.plus(duration));
 	}
 }
