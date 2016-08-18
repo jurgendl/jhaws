@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt;
+package org.tools.hqlbuilder.service.filestore;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +10,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.tools.hqlbuilder.model.filestore.FileMeta;
 
-public class FileServiceMock implements FileService {
+public class SimpleMemoryFileService implements FileService {
 	private Map<FileMeta, byte[]> files = new HashMap<>();
 
 	/**

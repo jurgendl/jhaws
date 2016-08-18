@@ -16,13 +16,13 @@ import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jhaws.common.web.resteasy.Pretty;
 import org.jhaws.common.web.resteasy.RestResource;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.DeleteResult;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.UploadResult;
+import org.tools.hqlbuilder.model.filestore.DeleteResult;
+import org.tools.hqlbuilder.model.filestore.UploadResult;
 
-@Path(JQueryFileUploadRestImpl.PATH)
+@Path(FileStoreResourceImpl.PATH)
 @Pretty
 @GZIP
-public interface JQueryFileUploadRest extends RestResource {
+public interface FileStoreResource extends RestResource {
 	public static final String PATH = "/jqupload";
 
 	public static final String PATH_DELETE = "/delete";
@@ -45,22 +45,22 @@ public interface JQueryFileUploadRest extends RestResource {
 		return "unknown";
 	}
 
-	@Path(JQueryFileUploadRestImpl.PATH_DELETE)
+	@Path(FileStoreResourceImpl.PATH_DELETE)
 	@DELETE
 	@Produces(JSON)
-	public abstract DeleteResult deleteUpload(@QueryParam(JQueryFileUploadRestImpl.PARAM_NAME) String name);
+	public abstract DeleteResult deleteUpload(@QueryParam(FileStoreResourceImpl.PARAM_NAME) String name);
 
-	@Path(JQueryFileUploadRestImpl.PATH_GET)
+	@Path(FileStoreResourceImpl.PATH_GET)
 	@GET
 	@Produces(BINARY)
-	public abstract StreamingOutput download(@QueryParam(JQueryFileUploadRestImpl.PARAM_NAME) String name);
+	public abstract StreamingOutput download(@QueryParam(FileStoreResourceImpl.PARAM_NAME) String name);
 
-	@Path(JQueryFileUploadRestImpl.PATH_UPLOAD)
+	@Path(FileStoreResourceImpl.PATH_UPLOAD)
 	@GET
 	@Produces(JSON)
 	public abstract UploadResult getUploads();
 
-	@Path(JQueryFileUploadRestImpl.PATH_UPLOAD)
+	@Path(FileStoreResourceImpl.PATH_UPLOAD)
 	@POST
 	@Consumes(FORM_MULTIPART)
 	@Produces(JSON)

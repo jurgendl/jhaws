@@ -17,12 +17,11 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.DeleteResult;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.FileDownload;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.FileMeta;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.FileService;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.UploadResult;
-import org.tools.hqlbuilder.webservice.resteasy.resources.jquery_file_upload;
+import org.tools.hqlbuilder.model.filestore.DeleteResult;
+import org.tools.hqlbuilder.model.filestore.FileDownload;
+import org.tools.hqlbuilder.model.filestore.FileMeta;
+import org.tools.hqlbuilder.model.filestore.UploadResult;
+import org.tools.hqlbuilder.service.filestore.FileService;
 
 /**
  * @see http://www.mkyong.com/webservices/jax-rs/file-upload-example-in-resteasy/
@@ -31,11 +30,11 @@ import org.tools.hqlbuilder.webservice.resteasy.resources.jquery_file_upload;
  */
 @Component
 @Controller
-public class JQueryFileUploadRestImpl implements JQueryFileUploadRest {
+public class FileStoreResourceImpl implements FileStoreResource {
 	private FileService fileService;
 
 	/**
-	 * @see jquery_file_upload.JQueryFileUploadRest#deleteUpload(java.lang.String)
+	 * @see FileStoreResource.JQueryFileUploadRest#deleteUpload(java.lang.String)
 	 */
 	@Override
 	public DeleteResult deleteUpload(String name) {
@@ -50,7 +49,7 @@ public class JQueryFileUploadRestImpl implements JQueryFileUploadRest {
 	}
 
 	/**
-	 * @see jquery_file_upload.JQueryFileUploadRest#download(java.lang.String)
+	 * @see FileStoreResource.JQueryFileUploadRest#download(java.lang.String)
 	 */
 	@Override
 	public StreamingOutput download(String name) {
@@ -66,7 +65,7 @@ public class JQueryFileUploadRestImpl implements JQueryFileUploadRest {
 	}
 
 	/**
-	 * @see jquery_file_upload.JQueryFileUploadRest#getUploads()
+	 * @see FileStoreResource.JQueryFileUploadRest#getUploads()
 	 */
 	@Override
 	public UploadResult getUploads() {
@@ -78,7 +77,7 @@ public class JQueryFileUploadRestImpl implements JQueryFileUploadRest {
 	}
 
 	/**
-	 * @see jquery_file_upload.JQueryFileUploadRest#upload(javax.servlet.http.HttpServletRequest, org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput)
+	 * @see FileStoreResource.JQueryFileUploadRest#upload(javax.servlet.http.HttpServletRequest, org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput)
 	 */
 	@Override
 	public UploadResult upload(HttpServletRequest request, MultipartFormDataInput input) {
@@ -90,10 +89,10 @@ public class JQueryFileUploadRestImpl implements JQueryFileUploadRest {
 				MultivaluedMap<String, String> header = inputPart.getHeaders();
 				try (InputStream inputStream = inputPart.getBody(InputStream.class, null)) {
 					FileMeta file = new FileMeta();
-					file.name = JQueryFileUploadRest.getFileName(header);
-					file.deleteUrl = cp + JQueryFileUploadRest.PATH_DELETE + "?" + JQueryFileUploadRest.PARAM_NAME + "=" + file.name;
-					file.thumbnailUrl = cp + JQueryFileUploadRest.PATH_GET + "?" + JQueryFileUploadRest.PARAM_NAME + "=" + file.name;
-					file.url = cp + JQueryFileUploadRest.PATH_GET + "?" + JQueryFileUploadRest.PARAM_NAME + "=" + file.name;
+					file.name = FileStoreResource.getFileName(header);
+					file.deleteUrl = cp + FileStoreResource.PATH_DELETE + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
+					file.thumbnailUrl = cp + FileStoreResource.PATH_GET + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
+					file.url = cp + FileStoreResource.PATH_GET + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
 					file.size = fileService.add(file, inputStream);
 					files.add(file);
 				}

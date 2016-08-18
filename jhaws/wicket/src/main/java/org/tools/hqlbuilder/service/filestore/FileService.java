@@ -1,9 +1,11 @@
-package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt;
+package org.tools.hqlbuilder.service.filestore;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+
+import org.tools.hqlbuilder.model.filestore.FileMeta;
 
 public interface FileService {
 	public abstract int add(FileMeta file, InputStream inputStream) throws IOException;

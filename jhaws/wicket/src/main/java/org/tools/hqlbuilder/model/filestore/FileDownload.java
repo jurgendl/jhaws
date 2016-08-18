@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt;
+package org.tools.hqlbuilder.model.filestore;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,6 +9,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.io.output.TeeOutputStream;
+import org.tools.hqlbuilder.service.filestore.FileService;
 
 import com.Ostermiller.util.CircularByteBuffer;
 

@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt;
+package org.tools.hqlbuilder.model.filestore;
 
 public class FileMeta {
 	public String name;
