@@ -26,25 +26,24 @@
 	commit/commit/push
 	-->
 	<properties>
-		<targetJdk>1.8</targetJdk><!-- should be compatible with 1.6 and higher -->
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- fixed encoding -->
-		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-		<maven.javadoc.skip>true</maven.javadoc.skip><!-- skip by default -->
-		<!-- maven-site-plugin -->
-		<maven.site.skip>false</maven.site.skip><!-- do not skip by default -->
-		<!-- maven-compiler-plugin -->
-		<maven.compiler.optimize>true</maven.compiler.optimize>
-		<maven.compiler.fork>true</maven.compiler.fork>
-		<maven.compiler.source>${targetJdk}</maven.compiler.source>
-		<maven.compiler.target>${targetJdk}</maven.compiler.target>
-		<maven.compiler.verbose>true</maven.compiler.verbose>
-		<maven.compiler.debug>true</maven.compiler.debug>
-		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-		<!-- maven-surefire-plugin -->
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+        <targetJdk>1.8</targetJdk>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.site.skip>false</maven.site.skip>
+        <maven.compiler.optimize>true</maven.compiler.optimize>
+        <maven.compiler.fork>true</maven.compiler.fork>
+        <maven.compiler.source>${targetJdk}</maven.compiler.source>
+        <maven.compiler.target>${targetJdk}</maven.compiler.target>
+        <maven.compiler.verbose>true</maven.compiler.verbose>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.test.failure.ignore>true</maven.test.failure.ignore>
 	</properties>
 	<modules>
 		<module>logging</module>
+		<module>spring-bom</module>
 		<module>lang</module>
 		<module>g11n</module>
 		<module>io</module>

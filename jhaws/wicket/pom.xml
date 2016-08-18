@@ -1,85 +1,98 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.jhaws.common</groupId>
-		<artifactId>modules</artifactId>
-		<version>4.0.5-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<artifactId>jhaws-wicket</artifactId>
-	<name>wicket</name>
-	<description>wicket</description>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jhaws.common</groupId>
+        <artifactId>modules</artifactId>
+        <version>4.0.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>jhaws-wicket</artifactId>
+    <name>wicket</name>
+    <description>wicket</description>
     <properties>
-		<deploy.skip.demo>true</deploy.skip.demo>
-		<deploy.skip.web>true</deploy.skip.web>
-		<!-- general properties -->
-		<targetJdk>1.8</targetJdk><!-- should be compatible with 1.6; not ready for 8 - reason library problems -->
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- fixed encoding -->
-		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-		<maven.javadoc.skip>true</maven.javadoc.skip><!-- skip by default -->
-		<!-- maven-site-plugin -->
-		<maven.site.skip>false</maven.site.skip><!-- do not skip by default -->
-		<!-- maven-compiler-plugin -->
-		<maven.compiler.optimize>true</maven.compiler.optimize>
-		<maven.compiler.fork>true</maven.compiler.fork>
-		<maven.compiler.source>${targetJdk}</maven.compiler.source>
-		<maven.compiler.target>${targetJdk}</maven.compiler.target>
-		<maven.compiler.verbose>true</maven.compiler.verbose>
-		<maven.compiler.debug>true</maven.compiler.debug>
-		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-		<!-- maven-surefire-plugin -->
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
+        <targetJdk>1.8</targetJdk>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.site.skip>false</maven.site.skip>
+        <maven.compiler.optimize>true</maven.compiler.optimize>
+        <maven.compiler.fork>true</maven.compiler.fork>
+        <maven.compiler.source>${targetJdk}</maven.compiler.source>
+        <maven.compiler.target>${targetJdk}</maven.compiler.target>
+        <maven.compiler.verbose>true</maven.compiler.verbose>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.test.failure.ignore>true</maven.test.failure.ignore>
+        <!-- other -->
+        <deploy.skip.demo>true</deploy.skip.demo>
+        <deploy.skip.web>true</deploy.skip.web>
         <!-- versions -->
-        <!-- <version.validation.api>1.1.0.Final</version.validation.api> --><!-- for wicket validation, see version used in Hibernate -->
+        <version.validation.api>1.1.0.Final</version.validation.api><!-- for wicket validation, see version used in Hibernate -->
         <version.wicket.core>6.20.0</version.wicket.core><!-- keep up to date 6.x.x -->
-        <version.wicket.jquery.ui>6.20.0</version.wicket.jquery.ui><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
+        <version.wicket.jquery.ui>6.20.0</version.wicket.jquery.ui><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible 
+            with version 6.16.0 -->
         <version.wicket.bootstrap>0.9.2</version.wicket.bootstrap><!-- stale? -->
         <version.commons-collections>3.2.2</version.commons-collections><!-- stale -->
         <version.commons-lang>2.6</version.commons-lang><!-- stale -->
         <version.cglib>3.2.1</version.cglib><!-- dead project, Spring includes fork -->
+        <version.guava>18.0</version.guava>
+        <version.wro4j>1.7.7</version.wro4j>
+        <version.yui>2.4.7</version.yui>
     </properties>
-	<dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jhaws.common</groupId>
+                <artifactId>jhaws-spring-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope><!--http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html -->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>${version.cglib}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>${version.commons-lang}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>${version.commons-collections}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jhaws.common</groupId>
-			<artifactId>jhaws-io</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jhaws.common</groupId>
-			<artifactId>jhaws-web</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-core</artifactId>
-			<version>${version.wicket.core}</version>
-		</dependency>
-        <!-- <dependency>
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>${version.cglib}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${version.commons-lang}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${version.commons-collections}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jhaws.common</groupId>
+            <artifactId>jhaws-io</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jhaws.common</groupId>
+            <artifactId>jhaws-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>${version.wicket.core}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>${version.validation.api}</version>
-        </dependency> -->
-        <!-- <dependency>
+        </dependency>
+        <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-bean-validation</artifactId>
             <version>${version.wicket.core}</version>
@@ -89,7 +102,7 @@
                     <artifactId>validation-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
@@ -115,11 +128,7 @@
             <artifactId>wicket-guice</artifactId>
             <version>${version.wicket.core}</version>
         </dependency>
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-velocity</artifactId>
-            <version>${version.wicket.core}</version>
-        </dependency>
+        <!-- <dependency> <groupId>org.apache.wicket</groupId> <artifactId>wicket-velocity</artifactId> <version>${version.wicket.core}</version> </dependency> -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-devutils</artifactId>
@@ -161,11 +170,8 @@
             <artifactId>wicket-kendo-ui</artifactId>
             <version>${version.wicket.jquery.ui}</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-serializer-kryo2</artifactId>
-            <version>${version.wicket.core}</version>
-        </dependency> -->
+        <!-- <dependency> <groupId>org.wicketstuff</groupId> <artifactId>wicketstuff-serializer-kryo2</artifactId> <version>${version.wicket.core}</version> 
+            </dependency> -->
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-htmlcompressor</artifactId>
@@ -207,5 +213,26 @@
                 </exclusion>
             </exclusions>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${version.guava}</version>
+        </dependency>
+        <dependency>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-extensions</artifactId>
+            <version>${version.wro4j}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-beanutils</groupId>
+                    <artifactId>commons-beanutils</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- <dependency> <groupId>com.yahoo.platform.yui</groupId> <artifactId>yuicompressor</artifactId> <version>${version.yui}</version> </dependency> -->
+    </dependencies>
 </project>

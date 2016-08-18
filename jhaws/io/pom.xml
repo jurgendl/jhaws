@@ -1,23 +1,48 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.jhaws.common</groupId>
-		<artifactId>modules</artifactId>
-		<version>4.0.5-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<artifactId>jhaws-io</artifactId>
-	<name>io</name>
-	<description>io</description>
-	<properties>
-		<version.junit>4.12</version.junit>
-		<version.commons.lang3>3.4</version.commons.lang3>
-		<version.bouncycastle>1.54</version.bouncycastle>
-        <version.spring>4.3.0.RELEASE</version.spring>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jhaws.common</groupId>
+        <artifactId>modules</artifactId>
+        <version>4.0.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>jhaws-io</artifactId>
+    <name>io</name>
+    <description>io</description>
+    <properties>
+        <targetJdk>1.8</targetJdk>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.site.skip>false</maven.site.skip>
+        <maven.compiler.optimize>true</maven.compiler.optimize>
+        <maven.compiler.fork>true</maven.compiler.fork>
+        <maven.compiler.source>${targetJdk}</maven.compiler.source>
+        <maven.compiler.target>${targetJdk}</maven.compiler.target>
+        <maven.compiler.verbose>true</maven.compiler.verbose>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.test.failure.ignore>true</maven.test.failure.ignore>
+        <!-- versions -->
+        <version.junit>4.12</version.junit>
+        <version.commons.lang3>3.4</version.commons.lang3>
+        <version.bouncycastle>1.54</version.bouncycastle>
         <version.jai>1.3.0</version.jai>
         <version.commons.io>2.5</version.commons.io>
-	</properties>
-	<dependencies>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jhaws.common</groupId>
+                <artifactId>jhaws-spring-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope><!--http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html -->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
@@ -38,46 +63,38 @@
             <artifactId>jhaws-g11n</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${version.junit}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${version.commons.lang3}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15on</artifactId>
-			<version>${version.bouncycastle}</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jai-imageio</groupId>
-			<artifactId>jai-imageio-core</artifactId>
-			<version>${version.jai}</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.github.jai-imageio</groupId>
-			<artifactId>jai-imageio-jpeg2000</artifactId>
-			<version>${version.jai}</version>
-			<optional>true</optional>
-		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${version.commons.lang3}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${version.bouncycastle}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-core</artifactId>
+            <version>${version.jai}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.github.jai-imageio</groupId>
+            <artifactId>jai-imageio-jpeg2000</artifactId>
+            <version>${version.jai}</version>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${version.spring}</version>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
-	</dependencies>
+    </dependencies>
 </project>

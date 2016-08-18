@@ -11,13 +11,11 @@
     <name>swing</name>
     <description>Java Swing components</description>
     <properties>
-        <targetJdk>1.8</targetJdk><!-- should be compatible with 1.6 and higher -->
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- fixed encoding -->
+        <targetJdk>1.8</targetJdk>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-        <maven.javadoc.skip>true</maven.javadoc.skip><!-- skip by default -->
-        <!-- maven-site-plugin -->
-        <maven.site.skip>false</maven.site.skip><!-- do not skip by default -->
-        <!-- maven-compiler-plugin -->
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.site.skip>false</maven.site.skip>
         <maven.compiler.optimize>true</maven.compiler.optimize>
         <maven.compiler.fork>true</maven.compiler.fork>
         <maven.compiler.source>${targetJdk}</maven.compiler.source>
@@ -25,7 +23,7 @@
         <maven.compiler.verbose>true</maven.compiler.verbose>
         <maven.compiler.debug>true</maven.compiler.debug>
         <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-        <!-- maven-surefire-plugin -->
+        <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.glazedlists>1.9.1</version.glazedlists>
@@ -39,6 +37,17 @@
         <version.junit>4.12</version.junit>
         <version.ostermiller>1.07.00</version.ostermiller>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jhaws.common</groupId>
+                <artifactId>jhaws-spring-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope><!--http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html -->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.jhaws.common</groupId>

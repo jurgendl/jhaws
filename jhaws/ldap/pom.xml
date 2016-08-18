@@ -1,119 +1,108 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.jhaws.common</groupId>
-		<artifactId>modules</artifactId>
-		<version>4.0.5-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<artifactId>jhaws-ldap</artifactId>
-	<name>ldap classes</name>
-	<description>ldap classes</description>
-	<properties>
-		<targetJdk>1.8</targetJdk><!-- should be compatible with 1.6 and higher -->
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- fixed encoding -->
-		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-		<maven.javadoc.skip>true</maven.javadoc.skip><!-- skip by default -->
-		<!-- maven-compiler-plugin -->
-		<maven.compiler.optimize>true</maven.compiler.optimize>
-		<maven.compiler.fork>true</maven.compiler.fork>
-		<maven.compiler.source>${targetJdk}</maven.compiler.source>
-		<maven.compiler.target>${targetJdk}</maven.compiler.target>
-		<maven.compiler.verbose>true</maven.compiler.verbose>
-		<maven.compiler.debug>true</maven.compiler.debug>
-		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jhaws.common</groupId>
+        <artifactId>modules</artifactId>
+        <version>4.0.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>jhaws-ldap</artifactId>
+    <name>ldap classes</name>
+    <description>ldap classes</description>
+    <properties>
+        <targetJdk>1.8</targetJdk>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-		<!-- versions -->
-		<version.junit>4.12</version.junit>
-		<version.ldapbp>1.0</version.ldapbp>
-		<version.spring>4.3.0.RELEASE</version.spring>
-		<version.spring.ldap>2.0.3.RELEASE</version.spring.ldap>
-		<version.commons.lang3>3.4</version.commons.lang3>
-	</properties>
-	<repositories>
-		<repository>
-			<id>atlassian</id>
-			<url>http://repository.atlassian.com/maven2</url>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${version.junit}</version>
-			<scope>test</scope>
-		</dependency>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.site.skip>false</maven.site.skip>
+        <maven.compiler.optimize>true</maven.compiler.optimize>
+        <maven.compiler.fork>true</maven.compiler.fork>
+        <maven.compiler.source>${targetJdk}</maven.compiler.source>
+        <maven.compiler.target>${targetJdk}</maven.compiler.target>
+        <maven.compiler.verbose>true</maven.compiler.verbose>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.test.failure.ignore>true</maven.test.failure.ignore>
+        <!-- versions -->
+        <version.junit>4.12</version.junit>
+        <version.ldapbp>1.0</version.ldapbp>
+        <version.commons.lang3>3.4</version.commons.lang3>
+    </properties>
+    <repositories>
+        <repository>
+            <id>atlassian</id>
+            <url>http://repository.atlassian.com/maven2</url>
+        </repository>
+    </repositories>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jhaws.common</groupId>
+                <artifactId>jhaws-spring-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope><!--http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html -->
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-core</artifactId>
-			<version>${version.spring.ldap}</version>
-			<optional>true</optional>
-			<scope>compile</scope>
-		</dependency>
-		<!-- you can find this lib here: http://repository.atlassian.com/maven2/ -->
-		<!-- http://repository.atlassian.com/maven2/com/sun/jndi/ldap/ldapbp/1.0/ -->
-		<dependency>
-			<groupId>com.sun</groupId>
-			<artifactId>ldapbp</artifactId>
-			<version>${version.ldapbp}</version>
-		</dependency>
-		<!-- when using spring's ldap template -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${version.spring}</version>
-			<optional>true</optional>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>commons-logging</artifactId>
-					<groupId>commons-logging</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>${version.spring}</version>
-			<optional>true</optional>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-beans</artifactId>
-			<version>${version.spring}</version>
-			<optional>true</optional>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>${version.commons.lang3}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${version.spring}</version>
-			<optional>true</optional>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <!-- you can find this lib here: http://repository.atlassian.com/maven2/ -->
+        <!-- http://repository.atlassian.com/maven2/com/sun/jndi/ldap/ldapbp/1.0/ -->
+        <dependency>
+            <groupId>com.sun</groupId>
+            <artifactId>ldapbp</artifactId>
+            <version>${version.ldapbp}</version>
+        </dependency>
+        <!-- when using spring's ldap template -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${version.commons.lang3}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
                 <configuration>
                     <fork>true</fork>
                     <source>${targetJdk}</source>
@@ -125,16 +114,16 @@
                     <debuglevel>lines,vars,source</debuglevel>
                     <compilerArgument>-parameters</compilerArgument>
                 </configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<argLine>-Xms128m -Xmx128m</argLine>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                    <argLine>-Xms128m -Xmx128m</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

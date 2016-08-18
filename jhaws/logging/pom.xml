@@ -1,96 +1,89 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.jhaws.common</groupId>
-		<artifactId>modules</artifactId>
-		<version>4.0.5-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-	<artifactId>jhaws-logging</artifactId>
-	<name>logging</name>
-	<description>logging</description>
-	<properties>
-		<deploy.skip.demo>true</deploy.skip.demo>
-		<deploy.skip.web>true</deploy.skip.web>
-		<!-- general properties -->
-		<targetJdk>1.8</targetJdk><!-- should be compatible with 1.6; not ready 
-			for 8 - reason library problems -->
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding><!-- 
-			fixed encoding -->
-		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-		<maven.javadoc.skip>true</maven.javadoc.skip><!-- skip by default -->
-		<!-- maven-site-plugin -->
-		<maven.site.skip>false</maven.site.skip><!-- do not skip by default -->
-		<!-- maven-compiler-plugin -->
-		<maven.compiler.optimize>true</maven.compiler.optimize>
-		<maven.compiler.fork>true</maven.compiler.fork>
-		<maven.compiler.source>${targetJdk}</maven.compiler.source>
-		<maven.compiler.target>${targetJdk}</maven.compiler.target>
-		<maven.compiler.verbose>true</maven.compiler.verbose>
-		<maven.compiler.debug>true</maven.compiler.debug>
-		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-		<!-- maven-surefire-plugin -->
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<!-- versions -->
-		<version.slf4j>1.7.21</version.slf4j><!-- recent version, keep up to date -->
-		<version.logback>1.1.7</version.logback><!-- recent version, keep up to 
-			date -->
-		<version.janino>2.7.8</version.janino><!-- recent version, keep up to date -->
-		<version.logback.spring>0.1.2</version.logback.spring>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-core</artifactId>
-			<version>${version.logback}</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${version.logback}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-ext</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<!-- commons-logging replacer (http://www.slf4j.org/legacy.html) -->
-		<!-- SLF4JBridgeHandler.install() -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jul-to-slf4j</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>osgi-over-slf4j</artifactId>
-			<version>${version.slf4j}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.logback-extensions</groupId>
-			<artifactId>logback-ext-spring</artifactId>
-			<version>${version.logback.spring}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.janino</groupId>
-			<artifactId>janino</artifactId>
-			<version>${version.janino}</version>
-		</dependency>
-	</dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jhaws.common</groupId>
+        <artifactId>modules</artifactId>
+        <version>4.0.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>jhaws-logging</artifactId>
+    <name>logging</name>
+    <description>logging</description>
+    <properties>
+        <deploy.skip.demo>true</deploy.skip.demo>
+        <deploy.skip.web>true</deploy.skip.web>
+        <targetJdk>1.8</targetJdk>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.site.skip>false</maven.site.skip>
+        <maven.compiler.optimize>true</maven.compiler.optimize>
+        <maven.compiler.fork>true</maven.compiler.fork>
+        <maven.compiler.source>${targetJdk}</maven.compiler.source>
+        <maven.compiler.target>${targetJdk}</maven.compiler.target>
+        <maven.compiler.verbose>true</maven.compiler.verbose>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <maven.test.failure.ignore>true</maven.test.failure.ignore>
+        <!-- versions -->
+        <version.slf4j>1.7.21</version.slf4j><!-- recent version, keep up to date -->
+        <version.logback>1.1.7</version.logback><!-- recent version, keep up to date -->
+        <version.janino>2.7.8</version.janino><!-- recent version, keep up to date -->
+        <version.logback.spring>0.1.2</version.logback.spring>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${version.logback}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${version.logback}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-ext</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <!-- commons-logging replacer (http://www.slf4j.org/legacy.html) -->
+        <!-- SLF4JBridgeHandler.install() -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>log4j-over-slf4j</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>osgi-over-slf4j</artifactId>
+            <version>${version.slf4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.logback-extensions</groupId>
+            <artifactId>logback-ext-spring</artifactId>
+            <version>${version.logback.spring}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>${version.janino}</version>
+        </dependency>
+    </dependencies>
 </project>
