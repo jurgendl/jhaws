@@ -1,8 +1,6 @@
 package org.jhaws.common.lang;
 
 import java.nio.file.attribute.FileTime;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -26,24 +24,7 @@ import java.util.regex.Pattern;
 public class DateTime8 {
 	public static final LocalTime START_OF_DAY = LocalTime.of(0, 0, 0);
 
-	public static char decimalSeperator;
-
-	static {
-		// http://stackoverflow.com/questions/4713166/decimal-separator-in-numberformat
-		DecimalFormat format = (DecimalFormat) DecimalFormat.getInstance();
-		DecimalFormatSymbols symbols = format.getDecimalFormatSymbols();
-		decimalSeperator = symbols.getDecimalSeparator();
-	}
-
-	public static char getDecimalSeperator() {
-		return decimalSeperator;
-	}
-
-	public static void setDecimalSeperator(char decimalSeperator) {
-		DateTime8.decimalSeperator = decimalSeperator;
-	}
-
-	public static String printAlt(Duration duration) {
+	public static String printAlt(Duration duration, char decimalSeperator) {
 		long days = duration.toDays();
 		duration = duration.minusDays(days);
 		long hours = duration.toHours();
@@ -65,7 +46,7 @@ public class DateTime8 {
 		}
 		if ((seconds != 0) || (formatted.length() > 0)) {
 			if (millis > 0) {
-				formatted.append(seconds).append(getDecimalSeperator()).append(millis).append("s");
+				formatted.append(seconds).append(decimalSeperator).append(millis).append("s");
 			} else {
 				formatted.append(seconds);
 			}
@@ -73,7 +54,7 @@ public class DateTime8 {
 		return formatted.toString();
 	}
 
-	public static String print(Duration duration) {
+	public static String printShort(Duration duration, char decimalSeperator) {
 		long days = duration.toDays();
 		duration = duration.minusDays(days);
 		long hours = duration.toHours();
@@ -105,7 +86,7 @@ public class DateTime8 {
 			}
 			formatted.append(seconds);
 			if (millis > 0) {
-				formatted.append(getDecimalSeperator());
+				formatted.append(decimalSeperator);
 				if (millis < 100) {
 					formatted.append("0");
 				}
@@ -239,19 +220,19 @@ public class DateTime8 {
 		return toLocalDateTime(time.toInstant(), zone);
 	}
 
-	public static String printShort(LocalTime time) {
+	public static String printUpToSeconds(LocalTime time) {
 		return TIME_PARSER_SEC.format(time);
 	}
 
-	public static String printLong(LocalTime time) {
+	public static String printUpToMilliSeconds(LocalTime time) {
 		return TIME_PARSER_MILLIS.format(time);
 	}
 
-	public static String printShort(Duration duration) {
+	public static String printUpToSeconds(Duration duration) {
 		return TIME_PARSER_SEC.format(START_OF_DAY.plus(duration));
 	}
 
-	public static String printLong(Duration duration) {
+	public static String printUpToMilliSeconds(Duration duration) {
 		return TIME_PARSER_MILLIS.format(START_OF_DAY.plus(duration));
 	}
 }
