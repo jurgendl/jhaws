@@ -4,10 +4,10 @@ import java.io.File;
 
 /**
  * creates operator filters (filter linking)
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -15,10 +15,10 @@ import java.io.File;
 public abstract class Operator {
 	/**
 	 * filter1 AND filter2 AND filter3 AND ...
-	 * 
+	 *
 	 * @param description
 	 *            description
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter and(String description, AbstractFileFilter... filters) {
@@ -27,10 +27,10 @@ public abstract class Operator {
 
 	/**
 	 * filter1 OR filter2 OR filter3 OR ...
-	 * 
+	 *
 	 * @param description
 	 *            description
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter or(String description, AbstractFileFilter... filters) {
@@ -39,14 +39,14 @@ public abstract class Operator {
 
 	/**
 	 * filter1 AND filter2
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param filter1
 	 *            AbstractFileFilter
 	 * @param filter2
 	 *            AbstractFileFilter
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter and(String description, AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -55,14 +55,14 @@ public abstract class Operator {
 
 	/**
 	 * filter1 OR filter2
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param filter1
 	 *            AbstractFileFilter
 	 * @param filter2
 	 *            AbstractFileFilter
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter or(String description, AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -71,7 +71,7 @@ public abstract class Operator {
 
 	/**
 	 * filter1 AND filter2 AND filter3 AND ...
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter and(AbstractFileFilter... filters) {
@@ -80,7 +80,7 @@ public abstract class Operator {
 
 	/**
 	 * filter1 OR filter2 OR filter3 OR ...
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter or(AbstractFileFilter... filters) {
@@ -89,12 +89,12 @@ public abstract class Operator {
 
 	/**
 	 * filter1 AND filter2
-	 * 
+	 *
 	 * @param filter1
 	 *            AbstractFileFilter
 	 * @param filter2
 	 *            AbstractFileFilter
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter and(AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -103,12 +103,12 @@ public abstract class Operator {
 
 	/**
 	 * filter1 OR filter2
-	 * 
+	 *
 	 * @param filter1
 	 *            AbstractFileFilter
 	 * @param filter2
 	 *            AbstractFileFilter
-	 * 
+	 *
 	 * @return AbstractFileFilter
 	 */
 	public static final AbstractFileFilter or(AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -117,10 +117,10 @@ public abstract class Operator {
 
 	/**
 	 * returns description of multiple filters with given operator
-	 * 
+	 *
 	 * @param op
 	 *            operator as string
-	 * 
+	 *
 	 * @return description string
 	 */
 	private static String getDescription(String op, AbstractFileFilter... filters) {
@@ -141,7 +141,7 @@ public abstract class Operator {
 
 	/**
 	 * AND operation file filter
-	 * 
+	 *
 	 * @author Jurgen
 	 */
 	public static class AndFileFilter extends AbstractFileFilter {
@@ -150,7 +150,7 @@ public abstract class Operator {
 
 		/**
 		 * Creates a new AndFileFilter object.
-		 * 
+		 *
 		 * @param description
 		 *            description
 		 * @param filters
@@ -161,7 +161,7 @@ public abstract class Operator {
 		}
 
 		/**
-		 * 
+		 *
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -184,7 +184,7 @@ public abstract class Operator {
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
 		 */
 		@Override
@@ -201,7 +201,7 @@ public abstract class Operator {
 
 	/**
 	 * OR operation file filter
-	 * 
+	 *
 	 * @author Jurgen
 	 */
 	public static class OrFileFilter extends AbstractFileFilter {
@@ -210,7 +210,7 @@ public abstract class Operator {
 
 		/**
 		 * Creates a new OrFileFilter object.
-		 * 
+		 *
 		 * @param description
 		 *            description
 		 * @param filters
@@ -221,7 +221,7 @@ public abstract class Operator {
 		}
 
 		/**
-		 * 
+		 *
 		 * @see java.lang.Object#toString()
 		 */
 		@Override
@@ -244,7 +244,7 @@ public abstract class Operator {
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
 		 */
 		@Override

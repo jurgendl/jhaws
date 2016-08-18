@@ -4,7 +4,7 @@ import java.io.File;
 
 /**
  * directory commpare listener
- * 
+ *
  * @author Jurgen
  * @version 1.0.0 - 27 June 2005
  */
@@ -12,7 +12,7 @@ import java.io.File;
 public interface IODirectoryCompareListener {
 	/**
 	 * the two (f1 & f2) are files but are different
-	 * 
+	 *
 	 * @param f2
 	 *            : File : other file
 	 * @param f1
@@ -22,7 +22,7 @@ public interface IODirectoryCompareListener {
 
 	/**
 	 * the original (f2) is a directory and the other (f1) does not exists
-	 * 
+	 *
 	 * @param f2
 	 *            : File : other file
 	 * @param f1
@@ -32,7 +32,7 @@ public interface IODirectoryCompareListener {
 
 	/**
 	 * the original (f2) is a file and the other (f1) does not exists
-	 * 
+	 *
 	 * @param f2
 	 *            : File : other file
 	 * @param f1
@@ -42,7 +42,7 @@ public interface IODirectoryCompareListener {
 
 	/**
 	 * there is no original (f1) for an existing other (f2), being it a file or a directory
-	 * 
+	 *
 	 * @param f2
 	 *            : File : other file
 	 */
@@ -50,7 +50,7 @@ public interface IODirectoryCompareListener {
 
 	/**
 	 * the two (f1 & f2) are files and are the same
-	 * 
+	 *
 	 * @param f2
 	 *            : File : other file
 	 * @param f1
@@ -60,7 +60,7 @@ public interface IODirectoryCompareListener {
 
 	/**
 	 * the original (f1) is a directory, the other (f2) exists but is not a directory
-	 * 
+	 *
 	 * @param f2
 	 *            : File : other file
 	 * @param f1
@@ -70,7 +70,7 @@ public interface IODirectoryCompareListener {
 
 	/**
 	 * the original (f1) is a file, the other (f2) exists but is not a file
-	 * 
+	 *
 	 * @param f2
 	 *            : File : other file
 	 * @param f1

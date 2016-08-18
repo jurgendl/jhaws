@@ -4,10 +4,10 @@ import java.io.File;
 
 /**
  * regular expression filter against simple file name
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -15,7 +15,7 @@ import java.io.File;
 public class FileNameFilter extends RegexFileFilter {
 	/**
 	 * Creates a new FileNameFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param regex
@@ -29,7 +29,7 @@ public class FileNameFilter extends RegexFileFilter {
 
 	/**
 	 * Creates a new FileNameFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param regex
@@ -41,7 +41,7 @@ public class FileNameFilter extends RegexFileFilter {
 
 	/**
 	 * Creates a new FileNameFilter object.
-	 * 
+	 *
 	 * @param regex
 	 *            regular expression
 	 * @param caseSensitive
@@ -53,8 +53,8 @@ public class FileNameFilter extends RegexFileFilter {
 
 	/**
 	 * Creates a new FileNameFilter object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param regex
 	 *            regular expression
 	 */
@@ -63,7 +63,7 @@ public class FileNameFilter extends RegexFileFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
 	 */
 	@Override

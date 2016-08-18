@@ -40,11 +40,11 @@ public class CollectionEntries {
 		Collection<Object> collection;
 
 		if ("SortedSet".equals(collectionType)) {
-			collection = new TreeSet<Object>();
+			collection = new TreeSet<>();
 		} else if ("Set".equals(collectionType)) {
-			collection = new LinkedHashSet<Object>();
+			collection = new LinkedHashSet<>();
 		} else if ("List".equals(collectionType)) {
-			collection = new ArrayList<Object>();
+			collection = new ArrayList<>();
 		} else {
 			throw new IllegalArgumentException("not supported type: " + collectionType);
 		}

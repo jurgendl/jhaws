@@ -8,7 +8,7 @@ package org.jhaws.common.io;
 public interface IOCopyListener {
 	/**
 	 * copyFailed
-	 * 
+	 *
 	 * @param ioFile
 	 * @param target
 	 * @param ex
@@ -17,7 +17,7 @@ public interface IOCopyListener {
 
 	/**
 	 * copyFinished
-	 * 
+	 *
 	 * @param ioFile
 	 * @param target
 	 */
@@ -25,14 +25,14 @@ public interface IOCopyListener {
 
 	/**
 	 * copyProgress
-	 * 
+	 *
 	 * @param total
 	 */
 	public void copyProgress(long total);
 
 	/**
 	 * copyStarted
-	 * 
+	 *
 	 * @param ioFile
 	 * @param target
 	 */

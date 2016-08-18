@@ -42,7 +42,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 	}
 
 	/** domainsLoaded */
-	private HashSet<String> domainsLoaded = new HashSet<String>();
+	private HashSet<String> domainsLoaded = new HashSet<>();
 
 	/** failed */
 	private boolean failed = false;
@@ -107,7 +107,7 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 
 			this.domainsLoaded.add(domain);
 
-			final Set<Cookie> cookies = new HashSet<Cookie>();
+			final Set<Cookie> cookies = new HashSet<>();
 			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(), "Application Data/Mozilla/Firefox");
 			IOFile ini = new IOFile(ffr, "profiles.ini");
 			PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - IOFile ini=" + ini); //$NON-NLS-1$

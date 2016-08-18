@@ -13,76 +13,77 @@ import org.swingeasy.ValueChangeListener;
  * @author Jurgen
  */
 public class ValidationFactory {
-	protected Translator translator = null;
+    protected Translator translator = null;
 
-	public Translator getTranslator() {
-		if (translator == null) {
-			translator = (key, arguments) -> Messages.getInstance().getString(key, arguments);
-		}
-		return translator;
-	}
+    public Translator getTranslator() {
+        if (translator == null) {
+            translator = (key, arguments) -> Messages.getInstance().getString(key, arguments);
+        }
+        return translator;
+    }
 
-	public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final List<Validator<T>> validators) {
-		final EValidationMessageI message = new EValidationMessage(parentPane, JComponent.class.cast(component)).stsi();
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final List<Validator<T>> validators) {
+        final EValidationMessageI message = new EValidationMessage(parentPane, JComponent.class.cast(component)).stsi();
 
-		ValueChangeListener<T> listener = value -> {
-			StringBuilder sb = new StringBuilder();
-			boolean valid = true;
-			for (Validator<T> validator : validators) {
-				if (!validator.isValid(null, value)) {
-					if (!valid) {
-						sb.insert(0, "\u2022 ");
-						sb.append("<br/>\u2022 ");
-					}
-					valid = false;
-					sb.append(ValidationFactory.this.getTranslator().getString(validator.getMessageKey(), validator.getArguments(value)));
-				}
-			}
-			if (!valid) {
-				message.setIsInvalid("<html>" + sb.toString() + "</html>");
-			} else {
-				message.setIsValid();
-			}
-		};
+        ValueChangeListener<T> listener = value -> {
+            StringBuilder sb = new StringBuilder();
+            boolean valid = true;
+            for (Validator<T> validator : validators) {
+                if (!validator.isValid(null, value)) {
+                    if (!valid) {
+                        sb.insert(0, "\u2022 ");
+                        sb.append("<br/>\u2022 ");
+                    }
+                    valid = false;
+                    sb.append(ValidationFactory.this.getTranslator().getString(validator.getMessageKey(), validator.getArguments(value)));
+                }
+            }
+            if (!valid) {
+                message.setIsInvalid("<html>" + sb.toString() + "</html>");
+            } else {
+                message.setIsValid();
+            }
+        };
 
-		component.addValueChangeListener(listener);
+        component.addValueChangeListener(listener);
 
-		return message;
-	}
+        return message;
+    }
 
-	public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1) {
-		List<Validator<T>> validators = new ArrayList<>();
-		validators.add(validator1);
-		return this.install(parentPane, component, validators);
-	}
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1) {
+        List<Validator<T>> validators = new ArrayList<>();
+        validators.add(validator1);
+        return this.install(parentPane, component, validators);
+    }
 
-	public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1, final Validator<T> validator2) {
-		List<Validator<T>> validators = new ArrayList<>();
-		validators.add(validator1);
-		validators.add(validator2);
-		return this.install(parentPane, component, validators);
-	}
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1,
+            final Validator<T> validator2) {
+        List<Validator<T>> validators = new ArrayList<>();
+        validators.add(validator1);
+        validators.add(validator2);
+        return this.install(parentPane, component, validators);
+    }
 
-	public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1, final Validator<T> validator2,
-			final Validator<T> validator3) {
-		List<Validator<T>> validators = new ArrayList<>();
-		validators.add(validator1);
-		validators.add(validator2);
-		validators.add(validator3);
-		return this.install(parentPane, component, validators);
-	}
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1,
+            final Validator<T> validator2, final Validator<T> validator3) {
+        List<Validator<T>> validators = new ArrayList<>();
+        validators.add(validator1);
+        validators.add(validator2);
+        validators.add(validator3);
+        return this.install(parentPane, component, validators);
+    }
 
-	public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1, final Validator<T> validator2,
-			final Validator<T> validator3, final Validator<T> validator4) {
-		List<Validator<T>> validators = new ArrayList<>();
-		validators.add(validator1);
-		validators.add(validator2);
-		validators.add(validator3);
-		validators.add(validator4);
-		return this.install(parentPane, component, validators);
-	}
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1,
+            final Validator<T> validator2, final Validator<T> validator3, final Validator<T> validator4) {
+        List<Validator<T>> validators = new ArrayList<>();
+        validators.add(validator1);
+        validators.add(validator2);
+        validators.add(validator3);
+        validators.add(validator4);
+        return this.install(parentPane, component, validators);
+    }
 
-	public void setTranslator(Translator translator) {
-		this.translator = translator;
-	}
+    public void setTranslator(Translator translator) {
+        this.translator = translator;
+    }
 }

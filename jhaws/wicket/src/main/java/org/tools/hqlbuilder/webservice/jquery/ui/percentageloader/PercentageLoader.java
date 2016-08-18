@@ -51,17 +51,15 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
  * @see http://www.jqueryscript.net/loading/Percentage-Loader-jQuery-Progress-Bar-Plugin.html
  */
 public class PercentageLoader {
-    public static final JavaScriptResourceReference PercentageLoader_JS = new JavaScriptResourceReference(PercentageLoader.class,
-            "jquery.percentageloader-0.1.js");
+	public static final JavaScriptResourceReference PercentageLoader_JS = new JavaScriptResourceReference(PercentageLoader.class, "jquery.percentageloader-0.1.js");
 
-    static {
-        try {
-            PercentageLoader_JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-        } catch (Exception ex) {
-            //
-        }
-    }
+	static {
+		try {
+			PercentageLoader_JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+		} catch (Exception ex) {
+			//
+		}
+	}
 
-    public static final CssResourceReference PercentageLoader_CSS = new CssResourceReference(PercentageLoader.class,
-            "jquery.percentageloader-0.1.css");
+	public static final CssResourceReference PercentageLoader_CSS = new CssResourceReference(PercentageLoader.class, "jquery.percentageloader-0.1.css");
 }

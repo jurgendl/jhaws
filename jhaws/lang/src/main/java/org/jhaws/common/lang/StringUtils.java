@@ -109,8 +109,8 @@ public interface StringUtils {
 	}
 
 	public static String regularize(String s) {
-		for (int i = 0; i < REGULARS.length; i++) {
-			s = s.replaceAll("\\" + REGULARS[i], "\\\\" + REGULARS[i]);
+		for (char element : REGULARS) {
+			s = s.replaceAll("\\" + element, "\\\\" + element);
 		}
 		return s;
 	}

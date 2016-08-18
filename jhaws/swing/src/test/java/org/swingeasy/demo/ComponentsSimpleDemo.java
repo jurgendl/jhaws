@@ -62,103 +62,103 @@ import net.miginfocom.swing.MigLayout;
  * @author Jurgen
  */
 public class ComponentsSimpleDemo {
-	public static void main(String[] args) {
-		UIUtils.systemLookAndFeel();
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		frame.setTitle("Components Demo");
+    public static void main(String[] args) {
+        UIUtils.systemLookAndFeel();
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setTitle("Components Demo");
 
-		JPanel cp = new JPanel(new MigLayout("wrap 1", "[]", ""));
-		frame.getContentPane().add(new JScrollPane(cp));
+        JPanel cp = new JPanel(new MigLayout("wrap 1", "[]", ""));
+        frame.getContentPane().add(new JScrollPane(cp));
 
-		cp.add(new ELabel("EButton"), "growx");
-		cp.add(new EButton(new EButtonConfig("EButton")), "growx");
+        cp.add(new ELabel("EButton"), "growx");
+        cp.add(new EButton(new EButtonConfig("EButton")), "growx");
 
-		cp.add(new ELabel("ECheckBox"), "growx");
-		cp.add(new ECheckBox(new ECheckBoxConfig()), "growx");
+        cp.add(new ELabel("ECheckBox"), "growx");
+        cp.add(new ECheckBox(new ECheckBoxConfig()), "growx");
 
-		cp.add(new ELabel("EComboBox"), "growx");
-		cp.add(new EComboBox<String>(new EComboBoxConfig()), "growx");
+        cp.add(new ELabel("EComboBox"), "growx");
+        cp.add(new EComboBox<String>(new EComboBoxConfig()), "growx");
 
-		cp.add(new ELabel("EFormattedTextField"), "growx");
-		cp.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Integer)), 100), "growx");
+        cp.add(new ELabel("EFormattedTextField"), "growx");
+        cp.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Integer)), 100), "growx");
 
-		cp.add(new ELabel("EList"), "growx");
-		EList<String> elist = new EList<>(new EListConfig());
-		cp.add(elist, "growx");
+        cp.add(new ELabel("EList"), "growx");
+        EList<String> elist = new EList<>(new EListConfig());
+        cp.add(elist, "growx");
 
-		cp.add(new ELabel("EProgressBar"), "growx");
-		cp.add(new EProgressBar(), "growx");
+        cp.add(new ELabel("EProgressBar"), "growx");
+        cp.add(new EProgressBar(), "growx");
 
-		cp.add(new ELabel("ERadioButton"), "growx");
-		cp.add(new ERadioButton(new ERadioButtonConfig()), "growx");
+        cp.add(new ELabel("ERadioButton"), "growx");
+        cp.add(new ERadioButton(new ERadioButtonConfig()), "growx");
 
-		cp.add(new ELabel("ESpinner"), "growx");
-		cp.add(new ESpinner<Integer>(new ESpinnerDateModel()), "growx");
+        cp.add(new ELabel("ESpinner"), "growx");
+        cp.add(new ESpinner<Integer>(new ESpinnerDateModel()), "growx");
 
-		cp.add(new ELabel("ETable"), "growx");
-		ETable<List<String>> etable = new ETable<>(new ETableConfig());
-		cp.add(etable, "growx");
+        cp.add(new ELabel("ETable"), "growx");
+        ETable<List<String>> etable = new ETable<>(new ETableConfig());
+        cp.add(etable, "growx");
 
-		cp.add(new ELabel("ETextArea"), "growx");
-		cp.add(new ETextArea(new ETextAreaConfig("ETextArea")), "growx");
+        cp.add(new ELabel("ETextArea"), "growx");
+        cp.add(new ETextArea(new ETextAreaConfig("ETextArea")), "growx");
 
-		cp.add(new ELabel("ETextField"), "growx");
-		cp.add(new ETextField(new ETextFieldConfig("ETextField")), "growx");
+        cp.add(new ELabel("ETextField"), "growx");
+        cp.add(new ETextField(new ETextFieldConfig("ETextField")), "growx");
 
-		cp.add(new ELabel("EToggleButton"), "growx");
-		cp.add(new EToggleButton(new EButtonConfig("EToggleButton")), "growx");
+        cp.add(new ELabel("EToggleButton"), "growx");
+        cp.add(new EToggleButton(new EButtonConfig("EToggleButton")), "growx");
 
-		cp.add(new ELabel("EToggleToolBarButton"), "growx");
-		cp.add(new EToolBarToggleButton(new EToolBarButtonConfig(new EToolBarButtonCustomizer() {
-			@Override
-			public void customize(AbstractButton button) {
-				button.setText("EToggleToolBarButton");
-			}
-		})), "growx");
+        cp.add(new ELabel("EToggleToolBarButton"), "growx");
+        cp.add(new EToolBarToggleButton(new EToolBarButtonConfig(new EToolBarButtonCustomizer() {
+            @Override
+            public void customize(AbstractButton button) {
+                button.setText("EToggleToolBarButton");
+            }
+        })), "growx");
 
-		cp.add(new ELabel("ETree"), "growx");
-		cp.add(new ETree<>(new ETreeConfig(), new ETreeNode<>("root")), "growx");
+        cp.add(new ELabel("ETree"), "growx");
+        cp.add(new ETree<>(new ETreeConfig(), new ETreeNode<>("root")), "growx");
 
-		// cp.add(new ETreeTable<String>(new ETreeTableConfig(), new ETreeTableHeaders<String>()));
+        // cp.add(new ETreeTable<String>(new ETreeTableConfig(), new ETreeTableHeaders<String>()));
 
-		cp.add(new ELabel("ETextPane"), "growx");
-		cp.add(new ETextPane(new ETextPaneConfig()), "growx");
+        cp.add(new ELabel("ETextPane"), "growx");
+        cp.add(new ETextPane(new ETextPaneConfig()), "growx");
 
-		// cp.add(new ECheckboxTree(new ECheckBoxTreeConfig(), new ECheckBoxTreeNode<String>("root")));
+        // cp.add(new ECheckboxTree(new ECheckBoxTreeConfig(), new ECheckBoxTreeNode<String>("root")));
 
-		cp.add(new ELabel("EDateChooser"), "growx");
-		cp.add(new EDateTimeChooser(), "growx");
+        cp.add(new ELabel("EDateChooser"), "growx");
+        cp.add(new EDateTimeChooser(), "growx");
 
-		cp.add(new ELabel("EDateEditor"), "growx");
-		cp.add(new EDateEditor(), "growx");
+        cp.add(new ELabel("EDateEditor"), "growx");
+        cp.add(new EDateEditor(), "growx");
 
-		cp.add(new ELabel("EDateTimeEditor"), "growx");
-		cp.add(new EDateTimeEditor(), "growx");
+        cp.add(new ELabel("EDateTimeEditor"), "growx");
+        cp.add(new EDateTimeEditor(), "growx");
 
-		cp.add(new ELabel("TristateCheckBox"), "growx");
-		cp.add(new TristateCheckBox(""), "growx");
+        cp.add(new ELabel("TristateCheckBox"), "growx");
+        cp.add(new TristateCheckBox(""), "growx");
 
-		cp.add(new ELabel("GradientPanel"), "growx");
-		cp.add(new GradientPanel(), "growx");
+        cp.add(new ELabel("GradientPanel"), "growx");
+        cp.add(new GradientPanel(), "growx");
 
-		cp.add(new ELabel("EURILabel"), "growx");
-		cp.add(new EURILabel(URI.create("http://www.google.com")), "growx");
+        cp.add(new ELabel("EURILabel"), "growx");
+        cp.add(new EURILabel(URI.create("http://www.google.com")), "growx");
 
-		cp.add(new ELabel("FileSelection"), "growx");
-		cp.add(new FileSelection(new FileSelectionConfig()), "growx");
+        cp.add(new ELabel("FileSelection"), "growx");
+        cp.add(new FileSelection(new FileSelectionConfig()), "growx");
 
-		cp.add(new ELabel("ECheckBoxList"), "growx");
-		ECheckBoxList echeckboxlist = new ECheckBoxList(new EListConfig());
-		cp.add(echeckboxlist, "growx");
+        cp.add(new ELabel("ECheckBoxList"), "growx");
+        ECheckBoxList echeckboxlist = new ECheckBoxList(new EListConfig());
+        cp.add(echeckboxlist, "growx");
 
-		frame.pack();
-		frame.setSize(400, frame.getWidth());
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+        frame.pack();
+        frame.setSize(400, frame.getWidth());
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
 
-		elist.stsi().addRecord(new EListRecord<>("record"));
-		etable.stsi().addRecord(new ETableRecordCollection<>(Arrays.asList("record")));
-		echeckboxlist.stsi().addRecord(new ECheckBoxListRecord(true));
-	}
+        elist.stsi().addRecord(new EListRecord<>("record"));
+        etable.stsi().addRecord(new ETableRecordCollection<>(Arrays.asList("record")));
+        echeckboxlist.stsi().addRecord(new ECheckBoxListRecord(true));
+    }
 }

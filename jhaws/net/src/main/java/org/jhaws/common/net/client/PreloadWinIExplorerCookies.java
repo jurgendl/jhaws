@@ -1,7 +1,5 @@
 package org.jhaws.common.net.client;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -19,7 +17,7 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 
 	protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
 
-	private HashSet<String> domainsLoaded = new HashSet<String>();
+	private HashSet<String> domainsLoaded = new HashSet<>();
 
 	private boolean failed = false;
 
@@ -88,13 +86,10 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 			IODirectory dir = new IODirectory(CookieStoreInterceptor.user_home.toFile(), "Cookies");
 			PreloadWinIExplorerCookies.logger.info("loadIExplorerCookiesWin(String) - IODirectory dir=" + dir); //$NON-NLS-1$
 
-			IOFile[] cookie_files = dir.listIOFiles(new FileFilter() {
-				@Override
-				public boolean accept(File pathname) {
-					String name = pathname.getName();
+			IOFile[] cookie_files = dir.listIOFiles(pathname -> {
+				String name = pathname.getName();
 
-					return name.contains(domain);
-				}
+				return name.contains(domain);
 			});
 
 			if (cookie_files.length == 0) {

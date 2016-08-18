@@ -209,7 +209,7 @@ public class HTTPClient implements Closeable {
 		chain = new ThreadLocal<List<URI>>() {
 			@Override
 			protected java.util.List<URI> initialValue() {
-				return new ArrayList<URI>();
+				return new ArrayList<>();
 			};
 		};
 

@@ -17,9 +17,9 @@ import org.jboss.resteasy.spi.ResteasyDeployment;
 public class TestRestServer implements AutoCloseable {
 	int port;
 
-	Set<Object> objects = new HashSet<Object>();
+	Set<Object> objects = new HashSet<>();
 
-	Set<Class<?>> classes = new HashSet<Class<?>>();
+	Set<Class<?>> classes = new HashSet<>();
 
 	TJWSEmbeddedJaxrsServer server;
 

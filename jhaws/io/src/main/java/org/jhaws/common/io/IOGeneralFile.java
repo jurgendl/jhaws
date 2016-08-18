@@ -1028,7 +1028,6 @@ public class IOGeneralFile<T extends IOGeneralFile<T>> extends File {
 		return IOGeneralFile.instance.format(round);
 	}
 
-	/** serialVersionUID */
 	private static final long serialVersionUID = 7931119843811634983L;
 
 	/** file date comparator */

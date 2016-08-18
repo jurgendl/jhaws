@@ -96,8 +96,8 @@ public class SvnExec {
 	 * svn status {path} {noignore} --non-interactive --xml --show-updates
 	 */
 	public static SvnStatus status(File projectdir, boolean noIgnore) {
-		return Svn.status(
-				new ByteArrayInputStream(ProcessExecutor.exec(new Value<>(-1), false, projectdir, createParameters().add("noignore", noIgnore ? "--no-ignore" : ""), cmds_svn_status)));
+		return Svn.status(new ByteArrayInputStream(
+				ProcessExecutor.exec(new Value<>(-1), false, projectdir, createParameters().add("noignore", noIgnore ? "--no-ignore" : ""), cmds_svn_status)));
 	}
 
 	/**
@@ -163,8 +163,8 @@ public class SvnExec {
 	 * svn log -r {r}:HEAD --stop-on-copy --limit {limit} --xml {path} --non-interactive
 	 */
 	public static SvnLog log(File projectdir, String r, int limit) {
-		return Svn
-				.log(new ByteArrayInputStream(ProcessExecutor.exec(new Value<>(-1), false, projectdir, createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
+		return Svn.log(new ByteArrayInputStream(
+				ProcessExecutor.exec(new Value<>(-1), false, projectdir, createParameters().add("r", r).add("limit", String.valueOf(limit)), cmds_svn_log)));
 	}
 
 	/**

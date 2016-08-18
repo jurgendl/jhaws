@@ -2,10 +2,10 @@ package org.jhaws.common.io.filter;
 
 /**
  * filters only video files
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -13,7 +13,7 @@ package org.jhaws.common.io.filter;
 public class VideoFileFilter extends FileExtensionFilter {
 	/**
 	 * Creates a new VideoFileFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 */

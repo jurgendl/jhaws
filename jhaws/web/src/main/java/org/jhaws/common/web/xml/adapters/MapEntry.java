@@ -18,8 +18,8 @@ public class MapEntry {
 	public MapEntry(Object key, Object val) {
 		this();
 
-		this.key = new XmlWrapper<Object>(key);
-		this.value = new XmlWrapper<Object>(val);
+		this.key = new XmlWrapper<>(key);
+		this.value = new XmlWrapper<>(val);
 	}
 
 	@Override

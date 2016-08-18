@@ -73,17 +73,15 @@ public class Processes {
 	}
 
 	@SafeVarargs
-	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, List<String> command, FilePath dir,
-			C consumer, Consumer<String>... consumers) throws UncheckedIOException {
+	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, List<String> command, FilePath dir, C consumer, Consumer<String>... consumers)
+			throws UncheckedIOException {
 		return callProcess(throwExitValue, null, new HashMap<>(), command, dir, null, null, consumer, consumers);
 	}
 
 	@SafeVarargs
-	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, FilePath input,
-			Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog, FilePath errorLog,
-			C consumer, Consumer<String>... consumers) throws UncheckedIOException {
-		logger.debug("{}> {}", dir == null ? null : dir.getAbsolutePath(),
-				command.stream().collect(Collectors.joining(" ")));
+	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, FilePath input, Map<String, String> env, List<String> command, FilePath dir,
+			FilePath outputLog, FilePath errorLog, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
+		logger.debug("{}> {}", dir == null ? null : dir.getAbsolutePath(), command.stream().collect(Collectors.joining(" ")));
 		ProcessBuilder builder = new ProcessBuilder(command);
 		builder.redirectErrorStream(true);
 		if (env != null && env.size() > 0) {
@@ -131,8 +129,7 @@ public class Processes {
 			allConsumers = consumer;
 			Arrays.stream(consumers).forEach(allConsumers::andThen);
 			try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
-				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false)
-						.filter(StringUtils::isNotBlank).forEach(allConsumers);
+				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
 			} catch (IOException e1) {
 				throw new UncheckedIOException(e1);
 			}

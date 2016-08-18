@@ -13,60 +13,60 @@ import javax.swing.JList;
  * @author Jurgen
  */
 public class ColorListCellRenderer extends EListCellRenderer<Color> {
-	private static final long serialVersionUID = -7605301072046365348L;
+    private static final long serialVersionUID = -7605301072046365348L;
 
-	protected Icon emptyIcon;
+    protected Icon emptyIcon;
 
-	protected int wh = 10;
+    protected int wh = 10;
 
-	public ColorListCellRenderer() {
-		BufferedImage bi = new BufferedImage(wh, wh, BufferedImage.TYPE_INT_ARGB);
-		emptyIcon = new ImageIcon(bi);
-		setIconTextGap(1);
-	}
+    public ColorListCellRenderer() {
+        BufferedImage bi = new BufferedImage(wh, wh, BufferedImage.TYPE_INT_ARGB);
+        emptyIcon = new ImageIcon(bi);
+        setIconTextGap(1);
+    }
 
-	private Icon createIcon(Color color) {
-		BufferedImage bi = new BufferedImage(wh, wh, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2d = bi.createGraphics();
-		g2d.setColor(color);
-		g2d.fillOval(0, 0, wh, wh);
-		return new ImageIcon(bi);
-	}
+    private Icon createIcon(Color color) {
+        BufferedImage bi = new BufferedImage(wh, wh, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = bi.createGraphics();
+        g2d.setColor(color);
+        g2d.fillOval(0, 0, wh, wh);
+        return new ImageIcon(bi);
+    }
 
-	/**
-	 * @see org.swingeasy.list.renderer.EListCellRenderer#render(javax.swing.JList, java.lang.Object, int, boolean, boolean)
-	 */
-	@Override
-	protected Component render(JList<?> list, Color color, int index, boolean isSelected, boolean cellHasFocus) {
-		super_getListCellRendererComponent(list, color, index, isSelected, cellHasFocus);
-		if (color == null) {
-			setIcon(emptyIcon);
-			setText(""); //$NON-NLS-1$
-			return this;
-		}
-		String red = Integer.toHexString(color.getRed());
-		if (red.length() == 1) {
-			red = "0" + red; //$NON-NLS-1$
-		}
-		String green = Integer.toHexString(color.getGreen());
-		if (green.length() == 1) {
-			green = "0" + green; //$NON-NLS-1$
-		}
-		String blue = Integer.toHexString(color.getBlue());
-		if (blue.length() == 1) {
-			blue = "0" + blue; //$NON-NLS-1$
-		}
-		String alpha = Integer.toHexString(color.getAlpha());
-		if (alpha.length() == 1) {
-			alpha = "0" + alpha; //$NON-NLS-1$
-		}
-		if (alpha.equals("ff")) { //$NON-NLS-1$
-			setText(("#" + red + green + blue).toUpperCase()); //$NON-NLS-1$
-			setIcon(createIcon(color));
-		} else {
-			setText(("#" + red + green + blue + "(" + alpha + ")").toUpperCase()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			setIcon(createIcon(color));
-		}
-		return this;
-	}
+    /**
+     * @see org.swingeasy.list.renderer.EListCellRenderer#render(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+     */
+    @Override
+    protected Component render(JList<?> list, Color color, int index, boolean isSelected, boolean cellHasFocus) {
+        super_getListCellRendererComponent(list, color, index, isSelected, cellHasFocus);
+        if (color == null) {
+            setIcon(emptyIcon);
+            setText(""); //$NON-NLS-1$
+            return this;
+        }
+        String red = Integer.toHexString(color.getRed());
+        if (red.length() == 1) {
+            red = "0" + red; //$NON-NLS-1$
+        }
+        String green = Integer.toHexString(color.getGreen());
+        if (green.length() == 1) {
+            green = "0" + green; //$NON-NLS-1$
+        }
+        String blue = Integer.toHexString(color.getBlue());
+        if (blue.length() == 1) {
+            blue = "0" + blue; //$NON-NLS-1$
+        }
+        String alpha = Integer.toHexString(color.getAlpha());
+        if (alpha.length() == 1) {
+            alpha = "0" + alpha; //$NON-NLS-1$
+        }
+        if (alpha.equals("ff")) { //$NON-NLS-1$
+            setText(("#" + red + green + blue).toUpperCase()); //$NON-NLS-1$
+            setIcon(createIcon(color));
+        } else {
+            setText(("#" + red + green + blue + "(" + alpha + ")").toUpperCase()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            setIcon(createIcon(color));
+        }
+        return this;
+    }
 }

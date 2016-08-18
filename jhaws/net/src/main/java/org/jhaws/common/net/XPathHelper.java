@@ -138,7 +138,7 @@ public class XPathHelper {
 			Object evaluate = xpr.evaluate(doc, XPathConstants.NODESET);
 			NodeList nodes = NodeList.class.cast(evaluate);
 			int length = nodes.getLength();
-			List<Node> results = new ArrayList<Node>();
+			List<Node> results = new ArrayList<>();
 			for (int i = 0; i < length; i++) {
 				Node node = nodes.item(i);
 				results.add(node);

@@ -9,86 +9,86 @@ import javax.swing.filechooser.FileFilter;
  * @author Jurgen
  */
 public class ExtensionFileFilter extends FileFilter {
-	protected static String descriptionFromExtensions(String[] exts) {
-		if (exts == null || exts.length == 0) {
-			return "";
-		}
+    protected static String descriptionFromExtensions(String[] exts) {
+        if (exts == null || exts.length == 0) {
+            return "";
+        }
 
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-		for (String extension : exts) {
-			sb.append(extension).append(", ");
-		}
+        for (String extension : exts) {
+            sb.append(extension).append(", ");
+        }
 
-		sb.deleteCharAt(sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 1);
 
-		String string = sb.deleteCharAt(sb.length() - 1).toString();
+        String string = sb.deleteCharAt(sb.length() - 1).toString();
 
-		return string;
-	}
+        return string;
+    }
 
-	protected String description;
+    protected String description;
 
-	protected String[] extensions;
+    protected String[] extensions;
 
-	public ExtensionFileFilter(final List<String> extensions) {
-		this.extensions = extensions.toArray(new String[extensions.size()]);
-		description = ExtensionFileFilter.descriptionFromExtensions(this.extensions);
-	}
+    public ExtensionFileFilter(final List<String> extensions) {
+        this.extensions = extensions.toArray(new String[extensions.size()]);
+        description = ExtensionFileFilter.descriptionFromExtensions(this.extensions);
+    }
 
-	public ExtensionFileFilter(final String description, final List<String> extensions) {
-		this.extensions = extensions.toArray(new String[extensions.size()]);
-		this.description = description;
-	}
+    public ExtensionFileFilter(final String description, final List<String> extensions) {
+        this.extensions = extensions.toArray(new String[extensions.size()]);
+        this.description = description;
+    }
 
-	public ExtensionFileFilter(final String description, final String... extensions) {
-		if (extensions.length == 0) {
-			this.extensions = new String[] { description };
-			this.description = ExtensionFileFilter.descriptionFromExtensions(extensions);
-		} else {
-			this.extensions = extensions;
-			this.description = description;
-		}
-	}
+    public ExtensionFileFilter(final String description, final String... extensions) {
+        if (extensions.length == 0) {
+            this.extensions = new String[] { description };
+            this.description = ExtensionFileFilter.descriptionFromExtensions(extensions);
+        } else {
+            this.extensions = extensions;
+            this.description = description;
+        }
+    }
 
-	/**
-	 * 
-	 * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
-	 */
-	@Override
-	public boolean accept(File f) {
-		if (f.isDirectory()) {
-			return true;
-		}
+    /**
+     * 
+     * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
+     */
+    @Override
+    public boolean accept(File f) {
+        if (f.isDirectory()) {
+            return true;
+        }
 
-		for (String extension : extensions) {
-			String _extension = extension.replaceAll("\\[", "").replaceAll("\\]", "");
-			if (f.getName().toLowerCase().endsWith("." + _extension.toLowerCase())) {
-				return true;
-			}
-		}
+        for (String extension : extensions) {
+            String _extension = extension.replaceAll("\\[", "").replaceAll("\\]", "");
+            if (f.getName().toLowerCase().endsWith("." + _extension.toLowerCase())) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * 
-	 * @see javax.swing.filechooser.FileFilter#getDescription()
-	 */
-	@Override
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * 
+     * @see javax.swing.filechooser.FileFilter#getDescription()
+     */
+    @Override
+    public String getDescription() {
+        return description;
+    }
 
-	public String[] getExtensions() {
-		return extensions;
-	}
+    public String[] getExtensions() {
+        return extensions;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setExtensions(String[] extensions) {
-		this.extensions = extensions;
-	}
+    public void setExtensions(String[] extensions) {
+        this.extensions = extensions;
+    }
 }

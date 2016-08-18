@@ -23,42 +23,37 @@ public class FlowPlayerPanel extends Panel {
 		add(createFlowplayercontainer(config));
 	}
 
-	protected WebMarkupContainer createFlowplayercontainer(FlowPlayerConfig config) {
+	protected WebMarkupContainer createFlowplayercontainer(FlowPlayerConfig _config) {
 		WebMarkupContainer flowplayercontainer = new WebMarkupContainer("flowplayercontainer");
-		flowplayercontainer.add(createFlowplayer(config));
-		flowplayercontainer.add(createFlowplayerActions(config));
+		flowplayercontainer.add(createFlowplayer(_config));
+		flowplayercontainer.add(createFlowplayerActions(_config));
 		return flowplayercontainer;
 	}
 
-	protected WebMarkupContainer createFlowplayer(FlowPlayerConfig config) {
+	protected WebMarkupContainer createFlowplayer(FlowPlayerConfig _config) {
 		WebMarkupContainer flowplayer = new WebMarkupContainer("flowplayer");
 
-		if (config.getSplash()) {
+		if (_config.getSplash()) {
 			flowplayer.add(new CssClassNameAppender("is-splash"));
-			if (config.getSplashFile().exists()) {
-				if (config.getW() != 0 && config.getH() != 0) {
-					flowplayer.add(new AttributeModifier("style",
-							";background:url(" + config.getSplashUrl()
-									+ ") no-repeat;background-size:cover;background-position-x:center;max-width:"
-									+ config.getW() + "px;max-height:" + config.getH() + "px"));
+			if (_config.getSplashFile().exists()) {
+				if (_config.getW() != 0 && _config.getH() != 0) {
+					flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl()
+							+ ") no-repeat;background-size:cover;background-position-x:center;max-width:" + _config.getW() + "px;max-height:" + _config.getH() + "px"));
 				} else {
-					flowplayer.add(new AttributeModifier("style", ";background:url(" + config.getSplashUrl()
-							+ ") no-repeat;background-size:cover;background-position-x:center"));
+					flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
 				}
 			} else {
-				if (config.getW() != 0 && config.getH() != 0) {
-					flowplayer.add(new AttributeModifier("style",
-							";max-width:" + config.getW() + "px;max-height:" + config.getH() + "px"));
+				if (_config.getW() != 0 && _config.getH() != 0) {
+					flowplayer.add(new AttributeModifier("style", ";max-width:" + _config.getW() + "px;max-height:" + _config.getH() + "px"));
 				} else {
 					flowplayer.add(new AttributeModifier("style", ""));
 				}
 			}
 		} else {
 			flowplayer.add(new CssClassNameRemover("is-splash"));
-			if (config.getW() != 0 && config.getH() != 0) {
-				flowplayer.add(
-						new AttributeModifier("style", ";background-size:cover;background-position-x:center;max-width:"
-								+ config.getW() + "px;max-height:" + config.getH() + "px"));
+			if (_config.getW() != 0 && _config.getH() != 0) {
+				flowplayer.add(new AttributeModifier("style",
+						";background-size:cover;background-position-x:center;max-width:" + _config.getW() + "px;max-height:" + _config.getH() + "px"));
 			} else {
 				flowplayer.add(new AttributeModifier("style", ";background-size:cover"));
 			}
@@ -70,21 +65,21 @@ public class FlowPlayerPanel extends Panel {
 		WebMarkupContainer videosource = new WebMarkupContainer("videosource");
 		videocontainer.add(videosource);
 
-		if (config.getW() != 0 && config.getH() != 0) {
-			videocontainer.add(new AttributeModifier("width", config.getW()));
-			videocontainer.add(new AttributeModifier("height", config.getH()));
-			videosource.add(new AttributeModifier("width", config.getW()));
-			videosource.add(new AttributeModifier("height", config.getH()));
+		if (_config.getW() != 0 && _config.getH() != 0) {
+			videocontainer.add(new AttributeModifier("width", _config.getW()));
+			videocontainer.add(new AttributeModifier("height", _config.getH()));
+			videosource.add(new AttributeModifier("width", _config.getW()));
+			videosource.add(new AttributeModifier("height", _config.getH()));
 		}
 
-		videosource.add(new AttributeModifier("type", config.getMimetype()));
+		videosource.add(new AttributeModifier("type", _config.getMimetype()));
 		videocontainer.add(new AttributeModifier("preload", "none")); // metadata
-		videosource.add(new AttributeModifier("src", config.getUrl()));
+		videosource.add(new AttributeModifier("src", _config.getUrl()));
 
 		return flowplayer;
 	}
 
-	protected WebMarkupContainer createFlowplayerActions(FlowPlayerConfig config) {
+	protected WebMarkupContainer createFlowplayerActions(FlowPlayerConfig _config) {
 		WebMarkupContainer flowplayeractions = new WebMarkupContainer("flowplayeractions");
 		return flowplayeractions;
 	}
@@ -94,12 +89,9 @@ public class FlowPlayerPanel extends Panel {
 		super.renderHead(response);
 		response.render(CssHeaderItem.forReference(FlowPlayer.SKIN_CSS));
 		response.render(JavaScriptHeaderItem.forReference(FlowPlayer.JS));
-		response.render(OnDomReadyHeaderItem.forScript(";$('.customflowplayer').flowplayer({swf:'" + FlowPlayer.url()
-				+ "'"
-				+ (config.getSplash() ? ",splash:true" : "") + (config.getLoop() ? ",loop:true" : "") + "});"));
+		response.render(OnDomReadyHeaderItem.forScript(";$('.customflowplayer').flowplayer({swf:'" + FlowPlayer.url() + "'" + (config.getSplash() ? ",splash:true" : "")
+				+ (config.getLoop() ? ",loop:true" : "") + "});"));
 		if (config.getLoop())
-			response.render(CssHeaderItem.forCSS(
-					".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }",
-					"flowplayer_hide_play"));
+			response.render(CssHeaderItem.forCSS(".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }", "flowplayer_hide_play"));
 	}
 }

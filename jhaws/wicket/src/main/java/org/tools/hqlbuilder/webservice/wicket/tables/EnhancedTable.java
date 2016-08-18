@@ -32,8 +32,9 @@ import org.tools.hqlbuilder.webservice.wicket.tables.Table.URIColumn;
 import org.tools.hqlbuilder.webservice.wicket.tables.Table.URLColumn;
 import org.tools.hqlbuilder.webservice.wicket.tables.Table.URLStringColumn;
 
-@SuppressWarnings("serial")
 public class EnhancedTable<T extends Serializable> extends Panel {
+	private static final long serialVersionUID = 1L;
+
 	private static final Logger logger = LoggerFactory.getLogger(Table.class);
 
 	public static final String FORM_ID = "tableform";
@@ -55,13 +56,13 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 
 	protected Form<T> createForm(final DataProvider<T> dataProvider) {
 		if (dataProvider.isStateless()) {
-			return new StatelessForm<T>(FORM_ID);
+			return new StatelessForm<>(FORM_ID);
 		}
-		return new Form<T>(FORM_ID);
+		return new Form<>(FORM_ID);
 	}
 
 	protected Table<T> createTable(List<TableColumn<T, ?>> columns, final DataProvider<T> dataProvider, Form<T> form) {
-		return new Table<T>(form, TABLE_ID, columns, dataProvider);
+		return new Table<>(form, TABLE_ID, columns, dataProvider);
 	}
 
 	public Table<T> getTable() {
@@ -69,34 +70,37 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 	}
 
 	public static <D, P> TableColumn<D, P> newColumn(Component parent, P argument) {
-		return new TableColumn<D, P>(labelModel(parent, argument), name(argument));
+		return new TableColumn<>(labelModel(parent, argument), name(argument));
 	}
 
 	public static <D> BooleanColumn<D> newBooleanColumn(Component parent, Boolean argument) {
-		return new BooleanColumn<D>(labelModel(parent, argument), name(argument));
+		return new BooleanColumn<>(labelModel(parent, argument), name(argument));
 	}
 
 	public static <D> EmailColumn<D> newEmailColumn(Component parent, String argument) {
-		return new EmailColumn<D>(labelModel(parent, argument), name(argument));
+		return new EmailColumn<>(labelModel(parent, argument), name(argument));
 	}
 
 	/** {@link URL}, {@link URI} and url as {@link String} supported */
 	public static <D> URLColumn<D> newURLColumn(Component parent, URL argument) {
-		return new URLColumn<D>(labelModel(parent, argument), name(argument));
+		return new URLColumn<>(labelModel(parent, argument), name(argument));
 	}
 
 	/** {@link URL}, {@link URI} and url as {@link String} supported */
 	public static <D> URIColumn<D> newURIColumn(Component parent, URI argument) {
-		return new URIColumn<D>(labelModel(parent, argument), name(argument));
+		return new URIColumn<>(labelModel(parent, argument), name(argument));
 	}
 
 	/** {@link URL}, {@link URI} and url as {@link String} supported */
 	public static <D> URLStringColumn<D> newURLStringColumn(Component parent, String argument) {
-		return new URLStringColumn<D>(labelModel(parent, argument), name(argument));
+		return new URLStringColumn<>(labelModel(parent, argument), name(argument));
 	}
 
 	public static <D> TableColumn<D, Object> newTimeColumn(Component parent, Object argument) {
 		return newDateOrTimeColumn(parent, argument, new DateConverter(true) {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected DateTimeFormatter getFormat(Locale locale) {
 				return DateTimeFormat.longTime().withLocale(locale);
@@ -111,6 +115,9 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 
 	public static <D> TableColumn<D, Object> newDateColumn(Component parent, Object argument) {
 		return newDateOrTimeColumn(parent, argument, new DateConverter(true) {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected DateTimeFormatter getFormat(Locale locale) {
 				return DateTimeFormat.longDate().withLocale(locale);
@@ -125,6 +132,9 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 
 	public static <D> TableColumn<D, Object> newDateTimeColumn(Component parent, Object argument) {
 		return newDateOrTimeColumn(parent, argument, new DateConverter(true) {
+
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			protected DateTimeFormatter getFormat(Locale locale) {
 				return DateTimeFormat.longDateTime().withLocale(locale);
@@ -139,6 +149,9 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 
 	public static <D> TableColumn<D, Object> newDateOrTimeColumn(Component parent, Object argument, final DateConverter dateConverter) {
 		return new TableColumn<D, Object>(labelModel(parent, argument), name(argument)) {
+
+			private static final long serialVersionUID = 1L;
+
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public void populateItem(Item<ICellPopulator<D>> item, String componentId, IModel<D> rowModel) {
@@ -158,6 +171,9 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 		IModel<String> label;
 		try {
 			label = new AbstractReadOnlyModel<String>() {
+
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public String getObject() {
 					try {
@@ -176,10 +192,12 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 	}
 
 	public static <T extends Serializable> TableColumn<T, Object> getActionsColumn(Component parent, final DataProvider<T> provider) {
-		return new ActionsColumn<T>(labelModel(parent, ACTIONS_ID), provider);
+		return new ActionsColumn<>(labelModel(parent, ACTIONS_ID), provider);
 	}
 
 	public static class ActionsColumn<T extends Serializable> extends TableColumn<T, Object> {
+
+		private static final long serialVersionUID = 1L;
 		protected final DataProvider<T> provider;
 
 		public ActionsColumn(IModel<String> displayModel, final DataProvider<T> provider) {
@@ -192,6 +210,9 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 		public void populateItem(Item cellItem, String componentId, IModel rowModel) {
 			T object = ((T) rowModel.getObject());
 			cellItem.add(new ActionsPanel<T>(componentId, object, provider) {
+
+				private static final long serialVersionUID = 1L;
+
 				@Override
 				public void onDelete(AjaxRequestTarget target, T o) {
 					provider.delete(target, o);

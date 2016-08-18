@@ -14,106 +14,106 @@ import javax.swing.ButtonModel;
  * @author Jurgen
  */
 public class EButtonGroup extends ButtonGroup implements ItemListener {
-	private static final long serialVersionUID = 6087976164994858164L;
+    private static final long serialVersionUID = 6087976164994858164L;
 
-	public static final String SELECTION = "selection"; //$NON-NLS-1$
+    public static final String SELECTION = "selection"; //$NON-NLS-1$
 
-	protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    protected final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-	protected ButtonModel previousSelection = null;
+    protected ButtonModel previousSelection = null;
 
-	/**
-	 * 
-	 * @see javax.swing.ButtonGroup#add(javax.swing.AbstractButton)
-	 */
-	@Override
-	public void add(AbstractButton b) {
-		if (b.getModel().getActionCommand() == null) {
-			b.setActionCommand(b.getText());
-		}
-		super.add(b);
-		b.addItemListener(this);
-	}
+    /**
+     * 
+     * @see javax.swing.ButtonGroup#add(javax.swing.AbstractButton)
+     */
+    @Override
+    public void add(AbstractButton b) {
+        if (b.getModel().getActionCommand() == null) {
+            b.setActionCommand(b.getText());
+        }
+        super.add(b);
+        b.addItemListener(this);
+    }
 
-	/**
-	 * 
-	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
-	 */
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(listener);
-	}
+    /**
+     * 
+     * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
+     */
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-	/**
-	 * 
-	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
-	 */
-	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
-	}
+    /**
+     * 
+     * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     */
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
 
-	/**
-	 * 
-	 * @see java.beans.PropertyChangeSupport#getPropertyChangeListeners()
-	 */
-	public PropertyChangeListener[] getPropertyChangeListeners() {
-		return propertyChangeSupport.getPropertyChangeListeners();
-	}
+    /**
+     * 
+     * @see java.beans.PropertyChangeSupport#getPropertyChangeListeners()
+     */
+    public PropertyChangeListener[] getPropertyChangeListeners() {
+        return propertyChangeSupport.getPropertyChangeListeners();
+    }
 
-	/**
-	 * 
-	 * @see java.beans.PropertyChangeSupport#getPropertyChangeListeners(java.lang.String)
-	 */
-	public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
-		return propertyChangeSupport.getPropertyChangeListeners(propertyName);
-	}
+    /**
+     * 
+     * @see java.beans.PropertyChangeSupport#getPropertyChangeListeners(java.lang.String)
+     */
+    public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
+        return propertyChangeSupport.getPropertyChangeListeners(propertyName);
+    }
 
-	public String getSelectedButtonText() {
-		for (Enumeration<AbstractButton> b = getElements(); b.hasMoreElements();) {
-			AbstractButton button = b.nextElement();
-			if (button.isSelected()) {
-				return button.getText();
-			}
-		}
-		return null;
-	}
+    public String getSelectedButtonText() {
+        for (Enumeration<AbstractButton> b = getElements(); b.hasMoreElements();) {
+            AbstractButton button = b.nextElement();
+            if (button.isSelected()) {
+                return button.getText();
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * 
-	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-	 */
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-			ButtonModel newSelection = getSelection();
-			propertyChangeSupport.firePropertyChange(EButtonGroup.SELECTION, previousSelection == null ? null : previousSelection.getActionCommand(),
-					newSelection == null ? null : newSelection.getActionCommand());
-			previousSelection = newSelection;
-		}
-	}
+    /**
+     * 
+     * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+     */
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+            ButtonModel newSelection = getSelection();
+            propertyChangeSupport.firePropertyChange(EButtonGroup.SELECTION, previousSelection == null ? null : previousSelection.getActionCommand(),
+                    newSelection == null ? null : newSelection.getActionCommand());
+            previousSelection = newSelection;
+        }
+    }
 
-	/**
-	 * 
-	 * @see javax.swing.ButtonGroup#remove(javax.swing.AbstractButton)
-	 */
-	@Override
-	public void remove(AbstractButton b) {
-		super.remove(b);
-		b.removeItemListener(this);
-	}
+    /**
+     * 
+     * @see javax.swing.ButtonGroup#remove(javax.swing.AbstractButton)
+     */
+    @Override
+    public void remove(AbstractButton b) {
+        super.remove(b);
+        b.removeItemListener(this);
+    }
 
-	/**
-	 * 
-	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
-	 */
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
-		propertyChangeSupport.removePropertyChangeListener(listener);
-	}
+    /**
+     * 
+     * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
+     */
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 
-	/**
-	 * 
-	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
-	 */
-	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
-	}
+    /**
+     * 
+     * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+     */
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
 }

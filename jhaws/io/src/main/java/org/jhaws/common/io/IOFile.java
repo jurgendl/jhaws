@@ -44,10 +44,10 @@ public class IOFile extends IOGeneralFile<IOFile> {
 	 */
 	static class ShutDownHook implements Runnable {
 		/** field */
-		private Set<IOFile> toerase = new HashSet<IOFile>();
+		private Set<IOFile> toerase = new HashSet<>();
 
 		/** field */
-		private Set<IOFile> torecycle = new HashSet<IOFile>();
+		private Set<IOFile> torecycle = new HashSet<>();
 
 		/**
 		 * Creates a new ShutDownHook object.
@@ -250,7 +250,6 @@ public class IOFile extends IOGeneralFile<IOFile> {
 		IOFile.MAX_COMPARE_SIZE = maxCompareSize;
 	}
 
-	/** serialVersionUID */
 	private static final long serialVersionUID = 6893324119288839097L;
 
 	/** maximum size that is taken to compare a file binary is 8 kB */
@@ -1055,7 +1054,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
 	 */
 	public IOFile getShortIOFile() {
 		return new IOFile(this) {
-			/** serialVersionUID */
+
 			private static final long serialVersionUID = 3150080605007952466L;
 
 			@Override

@@ -24,7 +24,7 @@ public abstract class DefaultFormRowPanel<T extends Serializable, C extends Form
 	public IModel<T> getValueModel() {
 		if (valueModel == null) {
 			String property = getPropertyName();
-			valueModel = property == null ? null : new PropertyModel<T>(getDefaultModel(), property);
+			valueModel = property == null ? null : new PropertyModel<>(getDefaultModel(), property);
 		}
 		return valueModel;
 	}

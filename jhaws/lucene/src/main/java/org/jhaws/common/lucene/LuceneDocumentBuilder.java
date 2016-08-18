@@ -15,8 +15,8 @@ import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexableField;
-import org.jhaws.common.lang.DateTime8;
 import org.jhaws.common.lang.ClassUtils;
+import org.jhaws.common.lang.DateTime8;
 
 public abstract class LuceneDocumentBuilder<T> {
 	protected Class<T> type;
@@ -89,7 +89,7 @@ public abstract class LuceneDocumentBuilder<T> {
 				} else if (ChronoLocalDate.class.isAssignableFrom(fieldType)) {
 					d.add(new LongField(name, DateTime8.toDate(ChronoLocalDate.class.cast(v)).getTime(), Field.Store.YES));
 				} else {
-					throw new UnsupportedOperationException(""+fieldType);
+					throw new UnsupportedOperationException("" + fieldType);
 				}
 			}
 		} catch (IllegalArgumentException | IllegalAccessException ex) {
@@ -122,7 +122,7 @@ public abstract class LuceneDocumentBuilder<T> {
 				if (String.class.equals(fieldType)) {
 					entry.set(o, v.stringValue());
 				} else if (Boolean.class.isAssignableFrom(fieldType)) {
-					entry.set(o, v.numericValue().intValue()==1? Boolean.TRUE:Boolean.FALSE);
+					entry.set(o, v.numericValue().intValue() == 1 ? Boolean.TRUE : Boolean.FALSE);
 				} else if (Number.class.isAssignableFrom(fieldType)) {
 					if (Long.class.isAssignableFrom(fieldType)) {
 						entry.set(o, v.numericValue().longValue());
@@ -146,7 +146,7 @@ public abstract class LuceneDocumentBuilder<T> {
 				} else if (ChronoLocalDate.class.isAssignableFrom(fieldType)) {
 					entry.set(o, DateTime8.toLocalDate(new Date(v.numericValue().longValue())));
 				} else {
-					throw new UnsupportedOperationException(""+fieldType);
+					throw new UnsupportedOperationException("" + fieldType);
 				}
 			}
 		} catch (IllegalArgumentException | IllegalAccessException ex) {

@@ -5,10 +5,10 @@ import java.util.Date;
 
 /**
  * compairs the date of file for filtering
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -22,7 +22,7 @@ public class FileDateFilter extends AbstractFileFilter {
 
 	/**
 	 * Creates a new FileDateFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param mod
@@ -38,7 +38,7 @@ public class FileDateFilter extends AbstractFileFilter {
 
 	/**
 	 * Creates a new FileDateFilter object.
-	 * 
+	 *
 	 * @param mod
 	 *            Modifier
 	 * @param date
@@ -51,7 +51,7 @@ public class FileDateFilter extends AbstractFileFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
 	 */
 	@Override

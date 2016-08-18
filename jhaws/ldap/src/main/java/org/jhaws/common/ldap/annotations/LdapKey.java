@@ -8,25 +8,25 @@ import java.lang.annotation.Target;
 
 /**
  * ldap fieldname = key
- * 
+ *
  * @author Jurgen
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Inherited
 public @interface LdapKey {
-    /**
-     * 
-     * key order index, default 0
-     * 
-     * @return index
-     */
-    int index() default 0;
+	/**
+	 * 
+	 * key order index, default 0
+	 * 
+	 * @return index
+	 */
+	int index() default 0;
 
-    /**
-     * fieldname or same as class property when not set
-     * 
-     * @return fieldname
-     */
-    String value() default "";
+	/**
+	 * fieldname or same as class property when not set
+	 * 
+	 * @return fieldname
+	 */
+	String value() default "";
 }

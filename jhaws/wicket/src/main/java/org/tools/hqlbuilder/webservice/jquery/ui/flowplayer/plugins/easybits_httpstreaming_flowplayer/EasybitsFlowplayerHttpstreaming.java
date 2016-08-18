@@ -11,7 +11,6 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.StreamResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WicketUtils;
 
-
 /**
  * @see http://www.easy-bits.com/products/http-streaming-for-flash/flowplayer
  */
@@ -24,7 +23,7 @@ public class EasybitsFlowplayerHttpstreaming {
 
 	static {
 		JS//
-		.addJavaScriptResourceReferenceDependency(JS2)//
+				.addJavaScriptResourceReferenceDependency(JS2)//
 				.addJavaScriptResourceReferenceDependency(JS3)//
 				.addJavaScriptResourceReferenceDependency(FlowPlayer.JS);//
 	}
@@ -56,7 +55,8 @@ public class EasybitsFlowplayerHttpstreaming {
 						public InputStream getInputStream() throws ResourceStreamNotFoundException {
 							if (inputStream == null) {
 								try {
-									inputStream = EasybitsFlowplayerHttpstreaming.class.getClassLoader().getResourceAsStream(EasybitsFlowplayerHttpstreaming.class.getPackage().getName().replace('.', '/') + "/" + swf);
+									inputStream = EasybitsFlowplayerHttpstreaming.class.getClassLoader()
+											.getResourceAsStream(EasybitsFlowplayerHttpstreaming.class.getPackage().getName().replace('.', '/') + "/" + swf);
 								} catch (Exception e) {
 									throw new ResourceStreamNotFoundException(e);
 								}

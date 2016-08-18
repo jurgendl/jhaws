@@ -25,8 +25,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.jhaws.common.lang.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.classreading.MetadataReader;
-import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 
@@ -57,12 +55,7 @@ public class ThreadLocalMarshalling {
 			tmp.add(p);
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 		final AnnotationTypeFilter f1 = new AnnotationTypeFilter(XmlRootElement.class);
-		TypeFilter TypeFilter = new TypeFilter() {
-			@Override
-			public boolean match(MetadataReader metadataReader, MetadataReaderFactory metadataReaderFactory) throws IOException {
-				return f1.match(metadataReader, metadataReaderFactory);
-			}
-		};
+		TypeFilter TypeFilter = (metadataReader, metadataReaderFactory) -> f1.match(metadataReader, metadataReaderFactory);
 		scanner.addIncludeFilter(TypeFilter);
 		List<Class<?>> classesToBeBound = new ArrayList<>();
 		for (Package p : tmp) {

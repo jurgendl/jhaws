@@ -36,7 +36,7 @@ public class Collections8Test {
 		}
 		start = System.currentTimeMillis();
 		for (int i = 0; i < warmup; i++) {
-			List<String> l = new ArrayList<String>(Arrays.asList(array));
+			List<String> l = new ArrayList<>(Arrays.asList(array));
 		}
 		start = System.currentTimeMillis();
 		for (int i = 0; i < testcount; i++) {
@@ -45,7 +45,7 @@ public class Collections8Test {
 		System.out.println("new:" + (System.currentTimeMillis() - start));
 		start = System.currentTimeMillis();
 		for (int i = 0; i < testcount; i++) {
-			List<String> l = new ArrayList<String>(Arrays.asList(array));
+			List<String> l = new ArrayList<>(Arrays.asList(array));
 		}
 		System.out.println("old:" + (System.currentTimeMillis() - start));
 		start = System.currentTimeMillis();

@@ -145,21 +145,18 @@ public class WebHelper {
 	}
 
 	public static void run(Long sleep, EnhancedRunnable runnable, Consumer<Exception> exceptionHandler) {
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				boolean eternal = sleep != null;
-				try {
-					do {
-						runnable.run();
-						if (sleep != null) {
-							sleep(sleep);
-						}
-					} while (eternal);
-				} catch (Exception ex) {
-					if (exceptionHandler != null) {
-						exceptionHandler.accept(ex);
+		Thread thread = new Thread(() -> {
+			boolean eternal = sleep != null;
+			try {
+				do {
+					runnable.run();
+					if (sleep != null) {
+						sleep(sleep);
 					}
+				} while (eternal);
+			} catch (Exception ex) {
+				if (exceptionHandler != null) {
+					exceptionHandler.accept(ex);
 				}
 			}
 		});
@@ -184,7 +181,7 @@ public class WebHelper {
 	}
 
 	public static <T> IModel<T> model(T model) {
-		return new CompoundPropertyModel<T>(model);
+		return new CompoundPropertyModel<>(model);
 	}
 
 	public static <C extends Component> C show(C component) {

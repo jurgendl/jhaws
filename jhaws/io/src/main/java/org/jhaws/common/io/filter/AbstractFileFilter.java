@@ -14,10 +14,10 @@ import java.io.FilenameFilter;
  * - moved all filter classes to same jar<br>
  * - moved filter to other packages<br>
  * - reimplemented case sensitivity and filter chaining (and/or/not)<br>
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see java.io.FileFilter
  * @see java.io.FilenameFilter
  * @see javax.swing.filechooser.FileFilter
@@ -27,10 +27,10 @@ import java.io.FilenameFilter;
 public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter, FilenameFilter {
 	/**
 	 * na
-	 * 
+	 *
 	 * @param filter
 	 *            na
-	 * 
+	 *
 	 * @return
 	 */
 	public static AbstractFileFilter convert(final java.io.FileFilter filter) {
@@ -44,10 +44,10 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * na
-	 * 
+	 *
 	 * @param filter
 	 *            na
-	 * 
+	 *
 	 * @return
 	 */
 	public static AbstractFileFilter convert(final java.io.FilenameFilter filter) {
@@ -61,10 +61,10 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * na
-	 * 
+	 *
 	 * @param filter
 	 *            na
-	 * 
+	 *
 	 * @return
 	 */
 	public static AbstractFileFilter convert(final javax.swing.filechooser.FileFilter filter) {
@@ -84,7 +84,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * Creates a new AbstractFileFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 */
@@ -93,7 +93,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.io.FileFilter#accept(java.io.File)
 	 */
 	@Override
@@ -102,7 +102,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
 	 */
 	@Override
@@ -112,17 +112,17 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * accept file?
-	 * 
+	 *
 	 * @param f
 	 *            File
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public abstract boolean acceptFile(File f);
 
 	/**
 	 * casts to java.io.FileFilter
-	 * 
+	 *
 	 * @return java.io.FileFilter
 	 */
 	public java.io.FileFilter castFileFilter() {
@@ -131,7 +131,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * casts to java.io.FilenameFilter
-	 * 
+	 *
 	 * @return java.io.FilenameFilter
 	 */
 	public java.io.FilenameFilter castFilenameFilter() {
@@ -140,7 +140,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * casts to javax.swing.filechooser.FileFilter
-	 * 
+	 *
 	 * @return javax.swing.filechooser.FileFilter
 	 */
 	public javax.swing.filechooser.FileFilter castSwingFilter() {
@@ -148,7 +148,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 	}
 
 	/**
-	 * 
+	 *
 	 * @see javax.swing.filechooser.FileFilter#getDescription()
 	 */
 	@Override
@@ -158,7 +158,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * sets opposite NOT/invers
-	 * 
+	 *
 	 * @return
 	 */
 	public final AbstractFileFilter invert() {
@@ -169,7 +169,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * gets NOT/invers
-	 * 
+	 *
 	 * @return Returns the not.
 	 */
 	public final boolean isNot() {
@@ -178,7 +178,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * sets description
-	 * 
+	 *
 	 * @param description
 	 *            The description to set.
 	 */
@@ -188,7 +188,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * sets normal instead of NOT/invers
-	 * 
+	 *
 	 * @return
 	 */
 	public final AbstractFileFilter setNormal() {
@@ -199,7 +199,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * sets NOT/invers
-	 * 
+	 *
 	 * @return
 	 */
 	public final AbstractFileFilter setNot() {
@@ -210,10 +210,10 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 
 	/**
 	 * sets NOT/invers
-	 * 
+	 *
 	 * @param not
 	 *            The not to set.
-	 * 
+	 *
 	 * @return
 	 */
 	public final AbstractFileFilter setNot(boolean not) {
@@ -223,7 +223,7 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

@@ -7,7 +7,7 @@ import java.io.OutputStream;
  * @author Jurgen
  */
 public interface Stream {
-	public InputStream getInputStream();
+    public InputStream getInputStream();
 
-	public OutputStream getOutputStream();
+    public OutputStream getOutputStream();
 }

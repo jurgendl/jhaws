@@ -38,7 +38,7 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 	}
 
 	/** domainsLoaded */
-	private HashSet<String> domainsLoaded = new HashSet<String>();
+	private HashSet<String> domainsLoaded = new HashSet<>();
 
 	/** failed */
 	private boolean failed = false;

@@ -10,21 +10,21 @@ import javax.swing.JComponent;
  * @author Jurgen
  */
 public class CheckBoxTitledBorder extends ComponentTitledBorder {
-	public CheckBoxTitledBorder(final JComponent container, String checkboxText) {
-		super(new JCheckBox(checkboxText), container, BorderFactory.createEtchedBorder());
-		final JCheckBox checkBox = getCheckbox();
-		checkBox.setSelected(true);
-		checkBox.setFocusPainted(false);
-		checkBox.addActionListener(e -> {
-			boolean enable = checkBox.isSelected();
-			Component[] components = container.getComponents();
-			for (Component component : components) {
-				component.setEnabled(enable);
-			}
-		});
-	}
+    public CheckBoxTitledBorder(final JComponent container, String checkboxText) {
+        super(new JCheckBox(checkboxText), container, BorderFactory.createEtchedBorder());
+        final JCheckBox checkBox = getCheckbox();
+        checkBox.setSelected(true);
+        checkBox.setFocusPainted(false);
+        checkBox.addActionListener(e -> {
+            boolean enable = checkBox.isSelected();
+            Component[] components = container.getComponents();
+            for (Component component : components) {
+                component.setEnabled(enable);
+            }
+        });
+    }
 
-	public JCheckBox getCheckbox() {
-		return JCheckBox.class.cast(comp);
-	}
+    public JCheckBox getCheckbox() {
+        return JCheckBox.class.cast(comp);
+    }
 }

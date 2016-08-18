@@ -32,240 +32,238 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.lang3.StringUtils;
 
 public class FormDialog extends JDialog {
-    private static final long serialVersionUID = -8912722198073790498L;
+	private static final long serialVersionUID = -8912722198073790498L;
 
-    private final Form form;
+	private final Form form;
 
-    private boolean cancelled = true;
+	private boolean cancelled = true;
 
-    public FormDialog(final Form form) {
-        this(form, 2);
-    }
+	public FormDialog(final Form form) {
+		this(form, 2);
+	}
 
-    public FormDialog(final Form form, int cols) {
-        super((Frame) null, true);
+	public FormDialog(final Form form, int cols) {
+		super((Frame) null, true);
 
-        this.form = form;
+		this.form = form;
 
-        this.getContentPane().setLayout(new BorderLayout());
+		this.getContentPane().setLayout(new BorderLayout());
 
-        JPanel mainpanel = new JPanel(new GridLayout(0, cols * 2));
-        JPanel actionpanel = new JPanel(new FlowLayout());
+		JPanel mainpanel = new JPanel(new GridLayout(0, cols * 2));
+		JPanel actionpanel = new JPanel(new FlowLayout());
 
-        JButton ok = new JButton("ok");
-        ok.addActionListener(e -> {
-		    FormDialog.this.cancelled = false;
-		    FormDialog.this.dispose();
+		JButton ok = new JButton("ok");
+		ok.addActionListener(e -> {
+			FormDialog.this.cancelled = false;
+			FormDialog.this.dispose();
 		});
 
-        JButton cancel = new JButton("cancel");
-        cancel.addActionListener(e -> FormDialog.this.dispose());
+		JButton cancel = new JButton("cancel");
+		cancel.addActionListener(e -> FormDialog.this.dispose());
 
-        actionpanel.add(ok);
-        actionpanel.add(cancel);
+		actionpanel.add(ok);
+		actionpanel.add(cancel);
 
-        this.getContentPane().add(mainpanel, BorderLayout.CENTER);
-        this.getContentPane().add(actionpanel, BorderLayout.SOUTH);
+		this.getContentPane().add(mainpanel, BorderLayout.CENTER);
+		this.getContentPane().add(actionpanel, BorderLayout.SOUTH);
 
-        for (InputElement element : form.getInputElements()) {
-            // System.out.println(element);
+		for (InputElement element : form.getInputElements()) {
+			// System.out.println(element);
 
-            switch (element.getType()) {
-                case button:
+			switch (element.getType()) {
+				case button:
 
-                    Input button = (Input) element;
-                    mainpanel.add(new JLabel(element.getName()), null);
-                    mainpanel.add(new JButton(button.getValue()), null);
+					Input button = (Input) element;
+					mainpanel.add(new JLabel(element.getName()), null);
+					mainpanel.add(new JButton(button.getValue()), null);
 
-                    break;
+					break;
 
-                case checkbox:
+				case checkbox:
 
-                    InputSelection checkbox = (InputSelection) element;
-                    mainpanel.add(new JLabel(checkbox.getName()), null);
+					InputSelection checkbox = (InputSelection) element;
+					mainpanel.add(new JLabel(checkbox.getName()), null);
 
-                    boolean selected = checkbox.getOptions().get(0).equals(checkbox.getValue());
+					boolean selected = checkbox.getOptions().get(0).equals(checkbox.getValue());
 
-                    JCheckBox jCheckBox = new JCheckBox();
-                    jCheckBox.setSelected(selected);
+					JCheckBox jCheckBox = new JCheckBox();
+					jCheckBox.setSelected(selected);
 
-                    mainpanel.add(jCheckBox, null);
+					mainpanel.add(jCheckBox, null);
 
-                    break;
+					break;
 
-                case file:
+				case file:
 
-                    FileInput fileInput = (FileInput) element;
-                    mainpanel.add(new JLabel(element.getType().toString()), null);
-                    mainpanel.add(new JLabel(fileInput.getName()), null);
+					FileInput fileInput = (FileInput) element;
+					mainpanel.add(new JLabel(element.getType().toString()), null);
+					mainpanel.add(new JLabel(fileInput.getName()), null);
 
-                    break;
+					break;
 
-                case hidden:
+				case hidden:
 
-                    // Input hidden = (Input) element;
+					// Input hidden = (Input) element;
 
-                    // do nothing
-                    break;
+					// do nothing
+					break;
 
-                case image:
+				case image:
 
-                    Input image = (Input) element;
-                    mainpanel.add(new JLabel(element.getType().toString()), null);
-                    mainpanel.add(new JLabel(image.getName()), null);
+					Input image = (Input) element;
+					mainpanel.add(new JLabel(element.getType().toString()), null);
+					mainpanel.add(new JLabel(image.getName()), null);
 
-                    break;
+					break;
 
-                case password:
+				case password:
 
-                    Password password = (Password) element;
-                    mainpanel.add(new JLabel(password.getName()), null);
-                    mainpanel.add(this.addListener(password, new JPasswordField(password.getValue())), null);
+					Password password = (Password) element;
+					mainpanel.add(new JLabel(password.getName()), null);
+					mainpanel.add(this.addListener(password, new JPasswordField(password.getValue())), null);
 
-                    break;
+					break;
 
-                case radio:
+				case radio:
 
-                    InputSelection radio = (InputSelection) element;
-                    mainpanel.add(new JLabel(radio.getName()), null);
+					InputSelection radio = (InputSelection) element;
+					mainpanel.add(new JLabel(radio.getName()), null);
 
-                    JPanel optionpanel = new JPanel(new GridLayout(radio.getOptions().size(), 1));
-                    ButtonGroup bg = new ButtonGroup();
+					JPanel optionpanel = new JPanel(new GridLayout(radio.getOptions().size(), 1));
+					ButtonGroup bg = new ButtonGroup();
 
-                    for (String option : radio.getOptions()) {
-                        JRadioButton jRadioButton = new JRadioButton(option);
-                        optionpanel.add(jRadioButton);
-                        bg.add(jRadioButton);
+					for (String option : radio.getOptions()) {
+						JRadioButton jRadioButton = new JRadioButton(option);
+						optionpanel.add(jRadioButton);
+						bg.add(jRadioButton);
 
-                        if (option.equals(radio.getValue())) {
-                            jRadioButton.setSelected(true);
-                        }
-                    }
+						if (option.equals(radio.getValue())) {
+							jRadioButton.setSelected(true);
+						}
+					}
 
-                    mainpanel.add(optionpanel, null);
+					mainpanel.add(optionpanel, null);
 
-                    break;
+					break;
 
-                case reset:
+				case reset:
 
-                    // Input reset = (Input) element;
-                    // do nothing
-                    break;
+					// Input reset = (Input) element;
+					// do nothing
+					break;
 
-                case select:
+				case select:
 
-                    Selection selection = (Selection) element;
-                    mainpanel.add(new JLabel(selection.getName()), null);
+					Selection selection = (Selection) element;
+					mainpanel.add(new JLabel(selection.getName()), null);
 
-                    DefaultListModel<Map.Entry<String, String>> model = new DefaultListModel<>();
+					DefaultListModel<Map.Entry<String, String>> model = new DefaultListModel<>();
 
-                    Map.Entry<String, String> sl = null;
-                    for (Map.Entry<String, String> option : selection.getOptions().entrySet()) {
-                        model.addElement(option);
-                        if (option.getKey().equals(selection.getValue())) {
-                            sl = option;
-                        }
-                    }
+					Map.Entry<String, String> sl = null;
+					for (Map.Entry<String, String> option : selection.getOptions().entrySet()) {
+						model.addElement(option);
+						if (option.getKey().equals(selection.getValue())) {
+							sl = option;
+						}
+					}
 
-                    JList<Map.Entry<String, String>> jList = new JList<>(model);
-                    jList.setCellRenderer(new DefaultListCellRenderer() {
-                        private static final long serialVersionUID = 5621985439026030982L;
+					JList<Map.Entry<String, String>> jList = new JList<>(model);
+					jList.setCellRenderer(new DefaultListCellRenderer() {
+						private static final long serialVersionUID = 5621985439026030982L;
 
-                        @Override
-                        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                                boolean cellHasFocus) {
-                            if (value != null) {
-                                @SuppressWarnings("unchecked")
-                                Map.Entry<String, String> entry = (Entry<String, String>) value;
-                                value = entry.getValue();
-                            }
-                            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                        }
-                    });
+						@Override
+						public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+							if (value != null) {
+								@SuppressWarnings("unchecked")
+								Map.Entry<String, String> entry = (Entry<String, String>) value;
+								value = entry.getValue();
+							}
+							return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+						}
+					});
 
-                    jList.setSelectionMode(
-                            selection.isMultiple() ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION);
+					jList.setSelectionMode(selection.isMultiple() ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION);
 
-                    if (sl != null) {
-                        jList.setSelectedValue(sl, true);
-                    }
+					if (sl != null) {
+						jList.setSelectedValue(sl, true);
+					}
 
-                    mainpanel.add(new JScrollPane(jList), null);
+					mainpanel.add(new JScrollPane(jList), null);
 
-                    break;
+					break;
 
-                case submit:
+				case submit:
 
-                    // Input submit = (Input) element;
-                    // do nothing
-                    break;
+					// Input submit = (Input) element;
+					// do nothing
+					break;
 
-                case text:
+				case text:
 
-                    Input text = (Input) element;
+					Input text = (Input) element;
 
-                    if ("username".equals(text.getId()) && StringUtils.isBlank(text.getValue())) {
-                        text.setValue(System.getProperty("user.name"));
-                    }
+					if ("username".equals(text.getId()) && StringUtils.isBlank(text.getValue())) {
+						text.setValue(System.getProperty("user.name"));
+					}
 
-                    mainpanel.add(new JLabel(text.getName()));
-                    mainpanel.add(this.addListener(text, new JTextField(text.getValue())));
+					mainpanel.add(new JLabel(text.getName()));
+					mainpanel.add(this.addListener(text, new JTextField(text.getValue())));
 
-                    break;
+					break;
 
-                case textarea:
+				case textarea:
 
-                    TextArea textArea = (TextArea) element;
-                    mainpanel.add(new JLabel(textArea.getName()), null);
+					TextArea textArea = (TextArea) element;
+					mainpanel.add(new JLabel(textArea.getName()), null);
 
-                    JTextArea jTextArea = new JTextArea(textArea.getValue());
-                    mainpanel.add(new JScrollPane(jTextArea), null);
+					JTextArea jTextArea = new JTextArea(textArea.getValue());
+					mainpanel.add(new JScrollPane(jTextArea), null);
 
-                    break;
+					break;
 
-                default:
-                    throw new IllegalArgumentException("" + element);
-            }
-        }
+				default:
+					throw new IllegalArgumentException("" + element);
+			}
+		}
 
-        this.setSize(new Dimension(400, 400));
-        this.setLocationRelativeTo(null);
-    }
+		this.setSize(new Dimension(400, 400));
+		this.setLocationRelativeTo(null);
+	}
 
-    private JComponent addListener(final Input input, final JTextComponent jTextComponent) {
-        if (jTextComponent instanceof JPasswordField) {
-            jTextComponent.enableInputMethods(true);
-        }
+	private JComponent addListener(final Input input, final JTextComponent jTextComponent) {
+		if (jTextComponent instanceof JPasswordField) {
+			jTextComponent.enableInputMethods(true);
+		}
 
-        jTextComponent.getDocument().addDocumentListener(new DocumentListener() {
-            private void changed() {
-                input.setValue(jTextComponent.getText());
-            }
+		jTextComponent.getDocument().addDocumentListener(new DocumentListener() {
+			private void changed() {
+				input.setValue(jTextComponent.getText());
+			}
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                this.changed();
-            }
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				this.changed();
+			}
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                this.changed();
-            }
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				this.changed();
+			}
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                this.changed();
-            }
-        });
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				this.changed();
+			}
+		});
 
-        return jTextComponent;
-    }
+		return jTextComponent;
+	}
 
-    public Form getForm() {
-        return this.form;
-    }
+	public Form getForm() {
+		return this.form;
+	}
 
-    public boolean isCancelled() {
-        return this.cancelled;
-    }
+	public boolean isCancelled() {
+		return this.cancelled;
+	}
 }

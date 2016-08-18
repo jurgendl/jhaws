@@ -28,7 +28,7 @@ public class Form implements Serializable, Iterable<InputElement> {
 
 	private static final long serialVersionUID = 7602293891493494638L;
 
-	private Map<String, InputElement> inputElements = new LinkedHashMap<String, InputElement>();
+	private Map<String, InputElement> inputElements = new LinkedHashMap<>();
 
 	private String action;
 

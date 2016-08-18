@@ -4,10 +4,10 @@ import org.jhaws.common.io.IOFile;
 
 /**
  * compairs sizes fo files for filtering
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -21,7 +21,7 @@ public class FileSizeFilter extends FileFilter {
 
 	/**
 	 * Creates a new FileSizeFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param mod
@@ -37,7 +37,7 @@ public class FileSizeFilter extends FileFilter {
 
 	/**
 	 * Creates a new FileSizeFilter object.
-	 * 
+	 *
 	 * @param mod
 	 *            Modifier
 	 * @param size
@@ -48,7 +48,7 @@ public class FileSizeFilter extends FileFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.jhaws.common.io.filter.FileFilter#acceptRealFile(util.io.IOFile)
 	 */
 	@Override

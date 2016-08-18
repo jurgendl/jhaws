@@ -6,5 +6,5 @@ import javax.swing.JComponent;
  * @author Jurgen
  */
 public interface HasParentComponent {
-	public JComponent getParentComponent();
+    public JComponent getParentComponent();
 }

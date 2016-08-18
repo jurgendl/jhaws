@@ -1,6 +1,5 @@
 package org.jhaws.common.lucene;
 
-
 import java.time.LocalDateTime;
 
 import org.apache.lucene.document.Document;

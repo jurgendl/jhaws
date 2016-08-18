@@ -173,6 +173,7 @@ public class MappingFactory {
 		return this.mapArrayToCollection(this.newContext(), sourceArray, targetClass, factory);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <S, T> T[] mapArray(Map<Object, Object> context, S[] sourceArray, Class<T> targetClass) {
 		return array((Class<T>) Object.class, this.mapArrayToCollection(context, sourceArray, targetClass, collectList()));
 	}
@@ -185,6 +186,7 @@ public class MappingFactory {
 		return this.mapStream(context, stream(this.parallel, sourceCollection), targetClass, factory);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <S, T> T[] mapCollectionToArray(Map<Object, Object> context, Collection<S> sourceCollection, Class<T> targetClass) {
 		// return Collections8.toArray(targetClass, this.mapCollection(context,
 		// sourceCollection, targetClass, Collections8.list()));
@@ -199,7 +201,7 @@ public class MappingFactory {
 		if (this.mappings.containsKey(classPair)) {
 			return this.mapping(classPair);
 		}
-		Mapping<S, T> mapping = new Mapping<S, T>(classPair);
+		Mapping<S, T> mapping = new Mapping<>(classPair);
 		this.mappings.put(classPair, mapping);
 		return mapping;
 	}

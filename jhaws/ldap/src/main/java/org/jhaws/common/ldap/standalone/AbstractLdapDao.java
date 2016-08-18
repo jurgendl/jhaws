@@ -63,7 +63,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 					if (attributeValue != null) {
 						if (fieldClass.equals(LdapDAOCommonSuperclass.STRING_ARRAY_CLASS)) {
 							NamingEnumeration<?> enumm = attributeValue.getAll();
-							ArrayList<String> vals = new ArrayList<String>();
+							ArrayList<String> vals = new ArrayList<>();
 
 							while (enumm.hasMore()) {
 								vals.add(enumm.next().toString());
@@ -242,8 +242,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 
 	/**
 	 *
-	 * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String,
-	 *      javax.naming.directory.SearchControls)
+	 * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String, javax.naming.directory.SearchControls)
 	 */
 	@Override
 	protected final List<T> search(final String query, final SearchControls controls) {
@@ -255,7 +254,7 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
 		AbstractLdapDao.logger.debug("search(String, SearchControls) - start"); //$NON-NLS-1$
 		AbstractLdapDao.logger.debug("search(String, SearchControls) - base=" + _base + ", query=" + query); //$NON-NLS-1$ //$NON-NLS-2$
 
-		List<T> list = new ArrayList<T>();
+		List<T> list = new ArrayList<>();
 
 		try {
 			NamingEnumeration<SearchResult> namingEnum = this.contextSource.getContext().search(_base, query, controls);

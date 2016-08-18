@@ -8,7 +8,7 @@ import java.util.Comparator;
  * <b><u>version history</u></b><br>
  * 1.1.0:<br>
  * - sorting is now an enum<br>
- * 
+ *
  * @author Jurgen
  * @version 1.1.0 - 6 June 2006
  */
@@ -16,9 +16,9 @@ import java.util.Comparator;
 @SuppressWarnings("deprecation")
 public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
 	/**
-	 * 
+	 *
 	 * sorting
-	 * 
+	 *
 	 * @author Jurgen
 	 */
 	public enum Sort {
@@ -28,7 +28,7 @@ public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
 		OLDEST_FIRST;
 		/**
 		 * returns 1 or -1
-		 * 
+		 *
 		 * @return 1 or -1
 		 */
 		protected int direction() {
@@ -63,7 +63,7 @@ public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
 
 	/**
 	 * Creates a new FileSizeComparator object.
-	 * 
+	 *
 	 * @param type
 	 */
 	public FileDateComparator(final Sort type) {
@@ -71,7 +71,7 @@ public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see java.util.Comparator#compare(java.lang.Object,java.lang.Object)
 	 */
 	@Override

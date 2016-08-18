@@ -34,39 +34,38 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
  * @see http://apache-wicket.1842946.n4.nabble.com/Javascript-confirm-with-condition-before-submit-td4659672.html
  */
 public class JqueryUIConfirmationDialog extends Panel {
-    protected static class ConfirmationEvent extends AttributeModifier {
-        private static final long serialVersionUID = -4206560140670731402L;
+	protected static class ConfirmationEvent extends AttributeModifier {
+		private static final long serialVersionUID = -4206560140670731402L;
 
-        private String title;
+		private String title;
 
-        private String text;
+		private String text;
 
-        public ConfirmationEvent(String title, String text) {
-            super("onclick", "");
-            this.title = title;
-            this.text = text;
-        }
+		public ConfirmationEvent(String title, String text) {
+			super("onclick", "");
+			this.title = title;
+			this.text = text;
+		}
 
-        @Override
-        protected String newValue(final String currentValue, final String replacementValue) {
-            return "showConfirmationDialog('" + this.title + "','" + this.text + "', function(){ " + currentValue
-                    + " ;}, function(){;});return false;";
-        }
-    }
+		@Override
+		protected String newValue(final String currentValue, final String replacementValue) {
+			return "showConfirmationDialog('" + this.title + "','" + this.text + "', function(){ " + currentValue + " ;}, function(){;});return false;";
+		}
+	}
 
-    private static final long serialVersionUID = 7011309436337649432L;
+	private static final long serialVersionUID = 7011309436337649432L;
 
-    public JqueryUIConfirmationDialog(String id) {
-        super(id);
-    }
+	public JqueryUIConfirmationDialog(String id) {
+		super(id);
+	}
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        response.render(JavaScriptHeaderItem.forReference(JQueryUI.getJQueryUIReference()));
-    }
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forReference(JQueryUI.getJQueryUIReference()));
+	}
 
-    public static void addConfirmationEvent(AbstractLink link, String title, String text) {
-        link.add(new ConfirmationEvent(title, text));
-    }
+	public static void addConfirmationEvent(AbstractLink link, String title, String text) {
+		link.add(new ConfirmationEvent(title, text));
+	}
 }

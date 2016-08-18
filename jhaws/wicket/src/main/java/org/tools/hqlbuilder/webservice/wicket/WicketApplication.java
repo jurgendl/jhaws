@@ -108,11 +108,11 @@ public class WicketApplication extends WebApplication {
 	@SpringBean(name = "gatherBrowserInfo", required = false)
 	protected boolean gatherBrowserInfo = true;
 
-    @SpringBean(name = "googleSigninClientId", required = false)
-    protected String googleSigninClientId = "";
+	@SpringBean(name = "googleSigninClientId", required = false)
+	protected String googleSigninClientId = "";
 
 	public WicketApplication() {
-        GoogleLogin.init(this);
+		GoogleLogin.init(this);
 	}
 
 	public WicketSession createSession(Request request, Response response) {
@@ -183,9 +183,8 @@ public class WicketApplication extends WebApplication {
 		this.getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy(new MessageDigestResourceVersion()));
 		this.getResourceSettings().setUseMinifiedResources(deployed);
 		this.getResourceSettings().setEncodeJSessionId(deployed);
-		this.getResourceSettings().setDefaultCacheDuration(
-				StringUtils.isNotBlank(this.cacheDuration) ? ("none".equals(this.cacheDuration) ? Duration.NONE : Duration.valueOf(this.cacheDuration))
-						: (inDevelopment ? Duration.NONE : WebResponse.MAX_CACHE_DURATION));
+		this.getResourceSettings().setDefaultCacheDuration(StringUtils.isNotBlank(this.cacheDuration)
+				? ("none".equals(this.cacheDuration) ? Duration.NONE : Duration.valueOf(this.cacheDuration)) : (inDevelopment ? Duration.NONE : WebResponse.MAX_CACHE_DURATION));
 
 		if (deployed) {
 			// minify your resources on deploy
@@ -225,12 +224,12 @@ public class WicketApplication extends WebApplication {
 		BeanValidationConfiguration beanValidationConfiguration = new BeanValidationConfiguration();
 		beanValidationConfiguration.configure(this);
 		beanValidationConfiguration.add(component -> {
-        	IModel<?> model = component.getModel();
-        	if (model instanceof IPropertyResolver) {
-        		return ((IPropertyResolver) model).resolveProperty(component);
-        	}
-        	return null;
-        });
+			IModel<?> model = component.getModel();
+			if (model instanceof IPropertyResolver) {
+				return ((IPropertyResolver) model).resolveProperty(component);
+			}
+			return null;
+		});
 
 		// mount resources
 		this.mountImages();
@@ -333,9 +332,10 @@ public class WicketApplication extends WebApplication {
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 		final AnnotationTypeFilter mountedPageFilter = new AnnotationTypeFilter(MountedPage.class);
 		final AssignableTypeFilter webPageFilter = new AssignableTypeFilter(WebPage.class);
-		TypeFilter TypeFilter = (metadataReader, metadataReaderFactory) -> mountedPageFilter.match(metadataReader, metadataReaderFactory) && webPageFilter.match(metadataReader, metadataReaderFactory);
+		TypeFilter TypeFilter = (metadataReader, metadataReaderFactory) -> mountedPageFilter.match(metadataReader, metadataReaderFactory)
+				&& webPageFilter.match(metadataReader, metadataReaderFactory);
 		scanner.addIncludeFilter(TypeFilter);
-		List<String> paths = new ArrayList<String>();
+		List<String> paths = new ArrayList<>();
 		for (BeanDefinition bd : scanner.findCandidateComponents(WicketRoot.class.getPackage().getName())) {
 			try {
 				String className = bd.getBeanClassName();
@@ -446,11 +446,11 @@ public class WicketApplication extends WebApplication {
 		return webApplicationContext;
 	}
 
-    public String getGoogleSigninClientId() {
-        return googleSigninClientId;
-    }
+	public String getGoogleSigninClientId() {
+		return googleSigninClientId;
+	}
 
-    public void setGoogleSigninClientId(String googleSigninClientId) {
-        this.googleSigninClientId = googleSigninClientId;
-    }
+	public void setGoogleSigninClientId(String googleSigninClientId) {
+		this.googleSigninClientId = googleSigninClientId;
+	}
 }

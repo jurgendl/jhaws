@@ -10,7 +10,7 @@ import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
  * @see http://www.telerik.com/kendo-ui
  */
 public class KendoUI {
-    public static CssResourceReference KENDO_COMMON_CSS = new CssResourceReference(KendoUI.class, "kendo.common.css");
+	public static CssResourceReference KENDO_COMMON_CSS = new CssResourceReference(KendoUI.class, "kendo.common.css");
 
-    public static CssResourceReference KENDO_DEFAULT_CSS = new CssResourceReference(KendoUI.class, "kendo.default.css");
+	public static CssResourceReference KENDO_DEFAULT_CSS = new CssResourceReference(KendoUI.class, "kendo.default.css");
 }

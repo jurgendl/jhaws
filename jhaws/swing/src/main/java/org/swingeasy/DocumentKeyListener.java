@@ -10,39 +10,39 @@ import javax.swing.event.DocumentListener;
  * @author Jurgen
  */
 public abstract class DocumentKeyListener implements DocumentListener, KeyListener {
-	public static enum Type {
-		INSERT, UPDATE, REMOVE;
-	}
+    public static enum Type {
+        INSERT, UPDATE, REMOVE;
+    }
 
-	@Override
-	public void changedUpdate(DocumentEvent e) {
-		update(Type.UPDATE, e);
-	}
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        update(Type.UPDATE, e);
+    }
 
-	@Override
-	public void insertUpdate(DocumentEvent e) {
-		update(Type.INSERT, e);
-	}
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        update(Type.INSERT, e);
+    }
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		//
-	}
+    @Override
+    public void keyPressed(KeyEvent e) {
+        //
+    }
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		//
-	}
+    @Override
+    public void keyReleased(KeyEvent e) {
+        //
+    }
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-		//
-	}
+    @Override
+    public void keyTyped(KeyEvent e) {
+        //
+    }
 
-	@Override
-	public void removeUpdate(DocumentEvent e) {
-		update(Type.REMOVE, e);
-	}
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        update(Type.REMOVE, e);
+    }
 
-	public abstract void update(Type type, DocumentEvent e);
+    public abstract void update(Type type, DocumentEvent e);
 }

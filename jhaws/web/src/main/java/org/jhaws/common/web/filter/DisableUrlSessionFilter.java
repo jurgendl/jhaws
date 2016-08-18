@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
  *   <url-pattern>/*</url-pattern>
  * </filter-mapping>
  * </pre>
- * 
+ *
  * @see https://randomcoder.org/articles/jsessionid-considered-harmful
  */
 public class DisableUrlSessionFilter implements Filter {

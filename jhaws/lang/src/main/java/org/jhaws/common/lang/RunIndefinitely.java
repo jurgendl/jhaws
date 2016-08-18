@@ -1,6 +1,5 @@
 package org.jhaws.common.lang;
 
-
 @FunctionalInterface
 public interface RunIndefinitely extends Runnable {
 	public abstract long infinite();

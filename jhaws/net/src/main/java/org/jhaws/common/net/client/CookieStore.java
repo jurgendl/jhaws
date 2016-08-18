@@ -260,10 +260,9 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		 */
 		@Override
 		public String toString() {
-			return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).appendSuper(super.toString())
-					.append("expiryDate", this.expiryDate).append("comment", this.comment).append("domain", this.domain)
-					.append("name", this.name).append("path", this.path).append("value", this.value)
-					.append("isSecure", this.isSecure).append("version", this.version).toString();
+			return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).appendSuper(super.toString()).append("expiryDate", this.expiryDate).append("comment", this.comment)
+					.append("domain", this.domain).append("name", this.name).append("path", this.path).append("value", this.value).append("isSecure", this.isSecure)
+					.append("version", this.version).toString();
 		}
 	}
 
@@ -317,7 +316,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 	protected transient org.apache.http.client.CookieStore cookieStore = new BasicCookieStore();
 
 	/** interceptors */
-	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<CookieStoreInterceptor>();
+	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<>();
 
 	public CookieStore() {
 		super();

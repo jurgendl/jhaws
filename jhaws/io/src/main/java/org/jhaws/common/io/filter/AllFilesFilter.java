@@ -4,10 +4,10 @@ import java.io.File;
 
 /**
  * accepts all files and directories
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -15,7 +15,7 @@ import java.io.File;
 public class AllFilesFilter extends AbstractFileFilter {
 	/**
 	 * Creates a new AllFilesFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 */
@@ -31,7 +31,7 @@ public class AllFilesFilter extends AbstractFileFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
 	 */
 	@Override

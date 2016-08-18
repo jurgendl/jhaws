@@ -2,7 +2,7 @@ package org.jhaws.common.io.filter;
 
 /**
  * modifier
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
  */
@@ -22,7 +22,7 @@ public enum Modifier {
 	DIFFERS;
 	/**
 	 * gets description
-	 * 
+	 *
 	 * @return description
 	 */
 	public String getDescription() {

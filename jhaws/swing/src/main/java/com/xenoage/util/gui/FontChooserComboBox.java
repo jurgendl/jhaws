@@ -28,8 +28,8 @@ import javax.swing.text.Caret;
 import javax.swing.text.PlainDocument;
 
 /**
- * Combobox which lists all installed fonts, sorted alphabetically. In the dropdown, each font name is shown in the default font together with some characters in its own font,
- * which can be customized calling the <code>setPreviewString</code> method.
+ * Combobox which lists all installed fonts, sorted alphabetically. In the dropdown, each font name is shown in the default font together with some
+ * characters in its own font, which can be customized calling the <code>setPreviewString</code> method.
  *
  * In the main text field, the default font is used to display the font name. It is editable and supports auto completion.
  *
@@ -43,355 +43,352 @@ import javax.swing.text.PlainDocument;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class FontChooserComboBox extends JComboBox implements ItemListener {
 
-	/** serialVersionUID */
-	private static final long serialVersionUID = 809529259104912707L;
+    private static final long serialVersionUID = 809529259104912707L;
 
-	/**
-	 * The editor component of the list. This is an editable text area which supports auto completion.
-	 *
-	 * @author Andreas Wenger
-	 */
-	class FontChooserComboBoxEditor extends BasicComboBoxEditor {
+    /**
+     * The editor component of the list. This is an editable text area which supports auto completion.
+     *
+     * @author Andreas Wenger
+     */
+    class FontChooserComboBoxEditor extends BasicComboBoxEditor {
 
-		/**
-		 * Plain text document for the text area. Needed for text selection.
-		 *
-		 * Inspired by http://www.java2s.com/Code/Java/Swing-Components/AutocompleteComboBox.htm
-		 *
-		 * @author Andreas Wenger
-		 */
-		class AutoCompletionDocument extends PlainDocument {
+        /**
+         * Plain text document for the text area. Needed for text selection.
+         *
+         * Inspired by http://www.java2s.com/Code/Java/Swing-Components/AutocompleteComboBox.htm
+         *
+         * @author Andreas Wenger
+         */
+        class AutoCompletionDocument extends PlainDocument {
 
-			/** serialVersionUID */
-			private static final long serialVersionUID = -6960152111754457184L;
-			private JTextField textField = FontChooserComboBoxEditor.this.editor;
+            private static final long serialVersionUID = -6960152111754457184L;
 
-			@Override
-			public void insertString(int i, String s, AttributeSet attributeset) throws BadLocationException {
-				if (s != null && !"".equals(s)) {
-					String s1 = this.getText(0, i);
-					String s2 = getMatch(s1 + s);
-					int j = i + s.length() - 1;
-					if (s2 == null) {
-						s2 = getMatch(s1);
-						j--;
-					}
-					if (s2 != null) {
-						FontChooserComboBox.this.setSelectedItem(s2);
-					}
-					super.remove(0, getLength());
-					super.insertString(0, s2, attributeset);
-					textField.setSelectionStart(j + 1);
-					textField.setSelectionEnd(getLength());
-				}
-			}
+            private JTextField textField = FontChooserComboBoxEditor.this.editor;
 
-			@Override
-			public void remove(int i, int j) throws BadLocationException {
-				int k = textField.getSelectionStart();
-				if (k > 0) {
-					k--;
-				}
-				String s = getMatch(this.getText(0, k));
+            @Override
+            public void insertString(int i, String s, AttributeSet attributeset) throws BadLocationException {
+                if (s != null && !"".equals(s)) {
+                    String s1 = this.getText(0, i);
+                    String s2 = getMatch(s1 + s);
+                    int j = i + s.length() - 1;
+                    if (s2 == null) {
+                        s2 = getMatch(s1);
+                        j--;
+                    }
+                    if (s2 != null) {
+                        FontChooserComboBox.this.setSelectedItem(s2);
+                    }
+                    super.remove(0, getLength());
+                    super.insertString(0, s2, attributeset);
+                    textField.setSelectionStart(j + 1);
+                    textField.setSelectionEnd(getLength());
+                }
+            }
 
-				super.remove(0, getLength());
-				super.insertString(0, s, null);
+            @Override
+            public void remove(int i, int j) throws BadLocationException {
+                int k = textField.getSelectionStart();
+                if (k > 0) {
+                    k--;
+                }
+                String s = getMatch(this.getText(0, k));
 
-				if (s != null) {
-					FontChooserComboBox.this.setSelectedItem(s);
-				}
-				try {
-					textField.setSelectionStart(k);
-					textField.setSelectionEnd(getLength());
-				} catch (Exception exception) {
-					//
-				}
-			}
+                super.remove(0, getLength());
+                super.insertString(0, s, null);
 
-			@Override
-			public void replace(int i, int j, String s, AttributeSet attributeset) throws BadLocationException {
-				super.remove(i, j);
-				insertString(i, s, attributeset);
-			}
+                if (s != null) {
+                    FontChooserComboBox.this.setSelectedItem(s);
+                }
+                try {
+                    textField.setSelectionStart(k);
+                    textField.setSelectionEnd(getLength());
+                } catch (Exception exception) {
+                    //
+                }
+            }
 
-		}
+            @Override
+            public void replace(int i, int j, String s, AttributeSet attributeset) throws BadLocationException {
+                super.remove(i, j);
+                insertString(i, s, attributeset);
+            }
 
-		private FontChooserComboBoxEditor() {
-			editor.setDocument(new AutoCompletionDocument());
-			if (fontNames.size() > 0) {
-				editor.setText(fontNames.get(0).toString());
-			}
-		}
+        }
 
-		private String getMatch(String input) {
-			for (String fontName : fontNames) {
-				if (fontName.toLowerCase().startsWith(input.toLowerCase())) {
-					return fontName;
-				}
-			}
-			return null;
-		}
+        private FontChooserComboBoxEditor() {
+            editor.setDocument(new AutoCompletionDocument());
+            if (fontNames.size() > 0) {
+                editor.setText(fontNames.get(0).toString());
+            }
+        }
 
-		public void replaceSelection(String s) {
-			AutoCompletionDocument doc = (AutoCompletionDocument) editor.getDocument();
-			try {
-				Caret caret = editor.getCaret();
-				int i = Math.min(caret.getDot(), caret.getMark());
-				int j = Math.max(caret.getDot(), caret.getMark());
-				doc.replace(i, j - i, s, null);
-			} catch (BadLocationException ex) {
-				//
-			}
-		}
+        private String getMatch(String input) {
+            for (String fontName : fontNames) {
+                if (fontName.toLowerCase().startsWith(input.toLowerCase())) {
+                    return fontName;
+                }
+            }
+            return null;
+        }
 
-	}
+        public void replaceSelection(String s) {
+            AutoCompletionDocument doc = (AutoCompletionDocument) editor.getDocument();
+            try {
+                Caret caret = editor.getCaret();
+                int i = Math.min(caret.getDot(), caret.getMark());
+                int j = Math.max(caret.getDot(), caret.getMark());
+                doc.replace(i, j - i, s, null);
+            } catch (BadLocationException ex) {
+                //
+            }
+        }
 
-	/**
-	 * The renderer for a list item.
-	 *
-	 * @author Andreas Wenger
-	 */
-	class FontChooserComboBoxRenderer implements ListCellRenderer {
+    }
 
-		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-			// extract the component from the item's value
-			Item item = (Item) value;
-			boolean s = isSelected && !item.isSeparator;
-			item.setBackground(s ? list.getSelectionBackground() : list.getBackground());
-			item.setForeground(s ? list.getSelectionForeground() : list.getForeground());
-			return item;
-		}
-	}
+    /**
+     * The renderer for a list item.
+     *
+     * @author Andreas Wenger
+     */
+    class FontChooserComboBoxRenderer implements ListCellRenderer {
 
-	/**
-	 * The component for a list item.
-	 *
-	 * @author Andreas Wenger
-	 */
-	class Item extends JPanel {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            // extract the component from the item's value
+            Item item = (Item) value;
+            boolean s = isSelected && !item.isSeparator;
+            item.setBackground(s ? list.getSelectionBackground() : list.getBackground());
+            item.setForeground(s ? list.getSelectionForeground() : list.getForeground());
+            return item;
+        }
+    }
 
-		/** serialVersionUID */
-		private static final long serialVersionUID = 1178052687165493955L;
+    /**
+     * The component for a list item.
+     *
+     * @author Andreas Wenger
+     */
+    class Item extends JPanel {
 
-		private final Font font;
+        private static final long serialVersionUID = 1178052687165493955L;
 
-		private final boolean isSeparator;
+        private final Font font;
 
-		private Item(String fontName) {
-			if (fontName != null) {
-				font = new Font(fontName, Font.PLAIN, previewFontSize);
-				isSeparator = false;
-			} else {
-				font = null;
-				isSeparator = true;
-			}
+        private final boolean isSeparator;
 
-			setOpaque(true);
+        private Item(String fontName) {
+            if (fontName != null) {
+                font = new Font(fontName, Font.PLAIN, previewFontSize);
+                isSeparator = false;
+            } else {
+                font = null;
+                isSeparator = true;
+            }
 
-			if (!isSeparator) {
-				setLayout(new FlowLayout(FlowLayout.LEFT));
+            setOpaque(true);
 
-				// font name in default font
-				JLabel labelHelp = new JLabel(font.getName());
-				this.add(labelHelp);
+            if (!isSeparator) {
+                setLayout(new FlowLayout(FlowLayout.LEFT));
 
-				// preview string in this font
-				if (previewString != null) {
-					// show only supported characters
-					StringBuilder thisPreview = new StringBuilder();
-					for (int i = 0; i < previewString.length(); i++) {
-						char c = previewString.charAt(i);
-						if (font.canDisplay(c)) {
-							thisPreview.append(c);
-						}
-					}
-					JLabel labelFont = new JLabel(thisPreview.toString());
-					labelFont.setFont(font);
-					this.add(labelFont);
-				}
-			} else {
-				// separator
-				setLayout(new BorderLayout());
-				this.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.CENTER);
-			}
-		}
+                // font name in default font
+                JLabel labelHelp = new JLabel(font.getName());
+                this.add(labelHelp);
 
-		@Override
-		public String toString() {
-			if (font != null) {
-				return font.getFamily();
-			}
-			return "";
-		}
+                // preview string in this font
+                if (previewString != null) {
+                    // show only supported characters
+                    StringBuilder thisPreview = new StringBuilder();
+                    for (int i = 0; i < previewString.length(); i++) {
+                        char c = previewString.charAt(i);
+                        if (font.canDisplay(c)) {
+                            thisPreview.append(c);
+                        }
+                    }
+                    JLabel labelFont = new JLabel(thisPreview.toString());
+                    labelFont.setFont(font);
+                    this.add(labelFont);
+                }
+            } else {
+                // separator
+                setLayout(new BorderLayout());
+                this.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.CENTER);
+            }
+        }
 
-	}
+        @Override
+        public String toString() {
+            if (font != null) {
+                return font.getFamily();
+            }
+            return "";
+        }
 
-	private int previewFontSize;
+    }
 
-	private String previewString = "AaBbCc";
+    private int previewFontSize;
 
-	private int recentFontsCount = 5;
+    private String previewString = "AaBbCc";
 
-	private List<String> fontNames;
+    private int recentFontsCount = 5;
 
-	private HashMap<String, Item> itemsCache = new HashMap<>();
+    private List<String> fontNames;
 
-	private LinkedList<String> recentFontNames;
+    private HashMap<String, Item> itemsCache = new HashMap<>();
 
-	private HashMap<String, Item> recentItemsCache = new HashMap<>();
+    private LinkedList<String> recentFontNames;
 
-	/**
-	 * Creates a new {@link FontChooserComboBox}.
-	 */
-	public FontChooserComboBox() {
-		// load available font names
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		@SuppressWarnings("hiding")
-		String[] fontNames = ge.getAvailableFontFamilyNames();
-		Arrays.sort(fontNames);
-		this.fontNames = Arrays.asList(fontNames);
+    private HashMap<String, Item> recentItemsCache = new HashMap<>();
 
-		// recent fonts
-		recentFontNames = new LinkedList<>();
+    /**
+     * Creates a new {@link FontChooserComboBox}.
+     */
+    public FontChooserComboBox() {
+        // load available font names
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        String[] fontNames = ge.getAvailableFontFamilyNames();
+        Arrays.sort(fontNames);
+        this.fontNames = Arrays.asList(fontNames);
 
-		// fill combo box
-		JLabel label = new JLabel();
-		previewFontSize = label.getFont().getSize();
-		updateList(null);
+        // recent fonts
+        recentFontNames = new LinkedList<>();
 
-		// set editor and item components
-		setEditable(true);
-		setEditor(new FontChooserComboBoxEditor());
-		setRenderer(new FontChooserComboBoxRenderer());
+        // fill combo box
+        JLabel label = new JLabel();
+        previewFontSize = label.getFont().getSize();
+        updateList(null);
 
-		// listen to own item changes
-		addItemListener(this);
-	}
+        // set editor and item components
+        setEditable(true);
+        setEditor(new FontChooserComboBoxEditor());
+        setRenderer(new FontChooserComboBoxRenderer());
 
-	@Override
-	public Dimension getPreferredSize() {
-		// default height: like a normal combo box
-		return new Dimension(super.getPreferredSize().width, new JComboBox().getPreferredSize().height);
-	}
+        // listen to own item changes
+        addItemListener(this);
+    }
 
-	/**
-	 * Gets the font size of the preview characters.
-	 */
-	public int getPreviewFontSize() {
-		return previewFontSize;
-	}
+    @Override
+    public Dimension getPreferredSize() {
+        // default height: like a normal combo box
+        return new Dimension(super.getPreferredSize().width, new JComboBox().getPreferredSize().height);
+    }
 
-	/**
-	 * Gets the preview characters, or null.
-	 */
-	public String getPreviewString() {
-		return previewString;
-	}
+    /**
+     * Gets the font size of the preview characters.
+     */
+    public int getPreviewFontSize() {
+        return previewFontSize;
+    }
 
-	/**
-	 * Gets the number of recently selected fonts, or 0.
-	 */
-	public int getRecentFontsCount() {
-		return recentFontsCount;
-	}
+    /**
+     * Gets the preview characters, or null.
+     */
+    public String getPreviewString() {
+        return previewString;
+    }
 
-	/**
-	 * Gets the selected font name, or null.
-	 */
-	public String getSelectedFontName() {
-		if (getSelectedItem() != null) {
-			return ((Item) getSelectedItem()).font.getFontName();
-		}
-		return null;
-	}
+    /**
+     * Gets the number of recently selected fonts, or 0.
+     */
+    public int getRecentFontsCount() {
+        return recentFontsCount;
+    }
 
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		// remember current font in list of recent fonts
-		String fontName = getSelectedFontName();
-		if (fontName != null && recentFontsCount > 0 && !(recentFontNames.size() > 0 && recentFontNames.getFirst().equals(fontName))) {
-			// remove occurrence in list
-			recentFontNames.remove(fontName);
-			// add at first position
-			recentFontNames.addFirst(fontName);
-			// trim list
-			if (recentFontNames.size() > recentFontsCount) {
-				recentFontNames.removeLast();
-			}
-			updateList(fontName);
-		}
-	}
+    /**
+     * Gets the selected font name, or null.
+     */
+    public String getSelectedFontName() {
+        if (getSelectedItem() != null) {
+            return ((Item) getSelectedItem()).font.getFontName();
+        }
+        return null;
+    }
 
-	/**
-	 * Sets the font size of the preview characters.
-	 */
-	public void setPreviewFontSize(int previewFontSize) {
-		this.previewFontSize = previewFontSize;
-		updateList(getSelectedFontName());
-	}
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        // remember current font in list of recent fonts
+        String fontName = getSelectedFontName();
+        if (fontName != null && recentFontsCount > 0 && !(recentFontNames.size() > 0 && recentFontNames.getFirst().equals(fontName))) {
+            // remove occurrence in list
+            recentFontNames.remove(fontName);
+            // add at first position
+            recentFontNames.addFirst(fontName);
+            // trim list
+            if (recentFontNames.size() > recentFontsCount) {
+                recentFontNames.removeLast();
+            }
+            updateList(fontName);
+        }
+    }
 
-	/**
-	 * Sets the preview characters, or the empty string or null to display no preview but only the font names.
-	 */
-	public void setPreviewString(String previewString) {
-		this.previewString = previewString != null && previewString.length() > 0 ? previewString : null;
-		updateList(getSelectedFontName());
-	}
+    /**
+     * Sets the font size of the preview characters.
+     */
+    public void setPreviewFontSize(int previewFontSize) {
+        this.previewFontSize = previewFontSize;
+        updateList(getSelectedFontName());
+    }
 
-	/**
-	 * Sets the number of recently selected fonts, that are shown on the top of the list, or 0 to hide them.
-	 */
-	public void setRecentFontsCount(int recentFontsCount) {
-		this.recentFontsCount = recentFontsCount;
-		boolean listChanged = false;
-		while (recentFontNames.size() > recentFontsCount) {
-			recentFontNames.removeLast();
-			listChanged = true;
-		}
-		if (listChanged) {
-			updateList(getSelectedFontName());
-		}
-	}
+    /**
+     * Sets the preview characters, or the empty string or null to display no preview but only the font names.
+     */
+    public void setPreviewString(String previewString) {
+        this.previewString = previewString != null && previewString.length() > 0 ? previewString : null;
+        updateList(getSelectedFontName());
+    }
 
-	/**
-	 * Sets the selected font by the given name. If it does not exist, nothing happens.
-	 */
-	public void setSelectedItem(String fontName) {
-		// if a string is given, find the corresponding font, otherwise do nothing
-		Item item = recentItemsCache.get(fontName); // first in recent items
-		if (item == null) {
-			item = itemsCache.get(fontName); // then in regular items
-		}
-		if (item != null) {
-			this.setSelectedItem(item);
-		}
-	}
+    /**
+     * Sets the number of recently selected fonts, that are shown on the top of the list, or 0 to hide them.
+     */
+    public void setRecentFontsCount(int recentFontsCount) {
+        this.recentFontsCount = recentFontsCount;
+        boolean listChanged = false;
+        while (recentFontNames.size() > recentFontsCount) {
+            recentFontNames.removeLast();
+            listChanged = true;
+        }
+        if (listChanged) {
+            updateList(getSelectedFontName());
+        }
+    }
 
-	private void updateList(String selectedFontName) {
-		// list items
-		removeAllItems();
-		itemsCache.clear();
-		recentItemsCache.clear();
-		// recent fonts
-		if (recentFontNames.size() > 0) {
-			for (String recentFontName : recentFontNames) {
-				Item item = new Item(recentFontName);
-				addItem(item);
-				recentItemsCache.put(recentFontName, item);
-			}
-			addItem(new Item(null)); // separator
-		}
-		// regular items
-		for (String fontName : fontNames) {
-			Item item = new Item(fontName);
-			addItem(item);
-			itemsCache.put(fontName, item);
-		}
-		// reselect item
-		if (selectedFontName != null) {
-			this.setSelectedItem(selectedFontName);
-		}
-	}
+    /**
+     * Sets the selected font by the given name. If it does not exist, nothing happens.
+     */
+    public void setSelectedItem(String fontName) {
+        // if a string is given, find the corresponding font, otherwise do nothing
+        Item item = recentItemsCache.get(fontName); // first in recent items
+        if (item == null) {
+            item = itemsCache.get(fontName); // then in regular items
+        }
+        if (item != null) {
+            this.setSelectedItem(item);
+        }
+    }
+
+    private void updateList(String selectedFontName) {
+        // list items
+        removeAllItems();
+        itemsCache.clear();
+        recentItemsCache.clear();
+        // recent fonts
+        if (recentFontNames.size() > 0) {
+            for (String recentFontName : recentFontNames) {
+                Item item = new Item(recentFontName);
+                addItem(item);
+                recentItemsCache.put(recentFontName, item);
+            }
+            addItem(new Item(null)); // separator
+        }
+        // regular items
+        for (String fontName : fontNames) {
+            Item item = new Item(fontName);
+            addItem(item);
+            itemsCache.put(fontName, item);
+        }
+        // reselect item
+        if (selectedFontName != null) {
+            this.setSelectedItem(selectedFontName);
+        }
+    }
 
 }

@@ -912,12 +912,9 @@ public class UIUtils {
     }
 
     public static void bringToFront(final Window w) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                w.toFront();
-                w.repaint();
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            w.toFront();
+            w.repaint();
         });
     }
 

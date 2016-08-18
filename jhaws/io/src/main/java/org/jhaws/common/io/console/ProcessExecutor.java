@@ -134,7 +134,7 @@ public class ProcessExecutor {
 	}
 
 	public static byte[] exec(boolean print, File projectdir, IMap<String, String> params, String... cmds) {
-		return exec(new Value<Integer>(-1), print, projectdir, params, cmds);
+		return exec(new Value<>(-1), print, projectdir, params, cmds);
 	}
 
 	public static byte[] exec(Value<Integer> returnValue, boolean print, File projectdir, IMap<String, String> params, String... cmds) {

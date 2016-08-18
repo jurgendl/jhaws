@@ -8,17 +8,17 @@ import java.lang.annotation.Target;
 
 /**
  * ldap fieldname
- * 
+ *
  * @author Jurgen
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @Inherited
 public @interface LdapField {
-    /**
-     * fieldname or same as class property when not set
-     * 
-     * @return fieldname
-     */
-    String value() default "";
+	/**
+	 * fieldname or same as class property when not set
+	 * 
+	 * @return fieldname
+	 */
+	String value() default "";
 }

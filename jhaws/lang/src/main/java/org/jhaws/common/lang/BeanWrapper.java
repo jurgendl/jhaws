@@ -27,7 +27,7 @@ public class BeanWrapper {
 		private final Class type;
 
 		/** map */
-		private final Map<String, PropertyDescriptor> fields = new HashMap<String, PropertyDescriptor>();
+		private final Map<String, PropertyDescriptor> fields = new HashMap<>();
 
 		/** allFieldInititalized */
 		private boolean allFieldInititalized = false;
@@ -52,11 +52,11 @@ public class BeanWrapper {
 	private static final Class<Object> OBJECT_CLASS = Object.class;
 
 	/** cache */
-	private static final transient Map<Class, ClassCache> cache = new HashMap<Class, ClassCache>();
+	private static final transient Map<Class, ClassCache> cache = new HashMap<>();
 
 	/**
 	 * get {@link Field} for name
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final PropertyDescriptor cc_getField(ClassCache cc, String fieldName) throws FieldNotFoundException {
@@ -109,7 +109,7 @@ public class BeanWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Object cc_getValue(ClassCache cc, String fieldName, BeanWrapper wrapper) throws FieldNotFoundException {
@@ -129,7 +129,7 @@ public class BeanWrapper {
 
 	/**
 	 * set value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final void cc_setValue(ClassCache cc, String fieldName, BeanWrapper wrapper, Object value) throws FieldNotFoundException {
@@ -162,7 +162,7 @@ public class BeanWrapper {
 
 	/**
 	 * buildPath
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final String[] ow_buildPath(String... path) {
@@ -170,7 +170,7 @@ public class BeanWrapper {
 			throw new FieldNotFoundException();
 		}
 
-		ArrayList<String> rebuild = new ArrayList<String>();
+		ArrayList<String> rebuild = new ArrayList<>();
 
 		for (String arrayElement : path) {
 			Enumeration enumer = new StringTokenizer(arrayElement, ".");
@@ -199,7 +199,7 @@ public class BeanWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Object ow_get(BeanWrapper ow, String field) throws FieldNotFoundException {
@@ -220,7 +220,7 @@ public class BeanWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Object ow_get(BeanWrapper ow, String[] path) throws FieldNotFoundException {
@@ -243,7 +243,7 @@ public class BeanWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final PropertyDescriptor ow_getField(BeanWrapper ow, String field) throws FieldNotFoundException {
@@ -264,7 +264,7 @@ public class BeanWrapper {
 
 	/**
 	 * set value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final void ow_set(BeanWrapper ow, String field, Object value) throws FieldNotFoundException {
@@ -287,7 +287,7 @@ public class BeanWrapper {
 
 	/**
 	 * set value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final void ow_set(BeanWrapper ow, String[] path, Object value) throws FieldNotFoundException {
@@ -312,7 +312,7 @@ public class BeanWrapper {
 	private final transient Class beanclass;
 
 	/** localcache to root */
-	private final transient List<ClassCache> localcache = new ArrayList<ClassCache>();
+	private final transient List<ClassCache> localcache = new ArrayList<>();
 
 	/** bean */
 	private final transient Object bean;
@@ -354,7 +354,7 @@ public class BeanWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	public final <T> T get(Class<T> type, String... path) throws FieldNotFoundException {
@@ -368,7 +368,7 @@ public class BeanWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	public final Object get(String... path) throws FieldNotFoundException {
@@ -377,7 +377,7 @@ public class BeanWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	public final <T> T get(String path, Class<T> type) throws FieldNotFoundException {
@@ -424,7 +424,7 @@ public class BeanWrapper {
 	 * getFieldNames
 	 */
 	public final Set<String> getFieldNames() {
-		HashSet<String> list = new HashSet<String>();
+		HashSet<String> list = new HashSet<>();
 
 		for (ClassCache element : this.localcache) {
 			list.addAll(BeanWrapper.cc_getFieldNames(element));
@@ -437,7 +437,7 @@ public class BeanWrapper {
 	 * get all fields
 	 */
 	public final Map<String, PropertyDescriptor> getFields() {
-		Map<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
+		Map<String, PropertyDescriptor> map = new HashMap<>();
 
 		for (ClassCache element : this.localcache) {
 			map.putAll(BeanWrapper.cc_getFields(element));
@@ -447,13 +447,11 @@ public class BeanWrapper {
 	}
 
 	/**
-	 * configureerbaar wat juist nodig is, subset wordt niet gecached (de
-	 * volledige set wel) waardoor deze functie net iets trager is dan
-	 * {@link #getFields()}
+	 * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan {@link #getFields()}
 	 */
 	public final Map<String, PropertyDescriptor> getFields(boolean removeStatic, boolean removeFinal, Class<?> exclusiveClass) {
-		Map<String, PropertyDescriptor> map = new HashMap<String, PropertyDescriptor>();
-		List<Class<?>> exclusiveClasses = new ArrayList<Class<?>>();
+		Map<String, PropertyDescriptor> map = new HashMap<>();
+		List<Class<?>> exclusiveClasses = new ArrayList<>();
 
 		if (exclusiveClass != null) {
 			Class<?> current = exclusiveClass;
@@ -478,12 +476,10 @@ public class BeanWrapper {
 	}
 
 	/**
-	 * configureerbaar wat juist nodig is, subset wordt niet gecached (de
-	 * volledige set wel) waardoor deze functie net iets trager is dan
-	 * {@link #getFields()}
+	 * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan {@link #getFields()}
 	 */
 	public final Map<String, Class<?>> getTypes(boolean removeStatic, boolean removeFinal, Class<?> exclusiveClass) {
-		Map<String, Class<?>> types = new HashMap<String, Class<?>>();
+		Map<String, Class<?>> types = new HashMap<>();
 
 		for (Map.Entry<String, PropertyDescriptor> entry : this.getFields(removeStatic, removeFinal, exclusiveClass).entrySet()) {
 			types.put(entry.getKey(), entry.getValue().getPropertyType());

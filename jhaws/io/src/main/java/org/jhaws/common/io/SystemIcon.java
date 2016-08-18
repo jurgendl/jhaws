@@ -55,7 +55,7 @@ public class SystemIcon implements ExtensionIconFinder {
 	private static FileSystemView fsv = FileSystemView.getFileSystemView();
 
 	/** field */
-	private static HashMap<String, Icon> iconMap = new HashMap<String, Icon>();
+	private static HashMap<String, Icon> iconMap = new HashMap<>();
 
 	/**
 	 *
@@ -67,7 +67,7 @@ public class SystemIcon implements ExtensionIconFinder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.jhaws.common.io.ExtensionIconFinder#getSmallIcon(org.jhaws.common.io.FilePath)
 	 */
 	@SuppressWarnings("restriction")

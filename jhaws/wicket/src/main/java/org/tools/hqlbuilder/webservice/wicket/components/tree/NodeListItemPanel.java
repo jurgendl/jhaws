@@ -33,6 +33,6 @@ public class NodeListItemPanel<T, N extends DataNode<T>> extends Panel {
 	}
 
 	protected NestedListPanel<T, N> newNodeList(String id, boolean showNode, boolean numbered, List<N> list) {
-		return new NestedListPanel<T, N>(id, list, showNode, numbered);
+		return new NestedListPanel<>(id, list, showNode, numbered);
 	}
 }

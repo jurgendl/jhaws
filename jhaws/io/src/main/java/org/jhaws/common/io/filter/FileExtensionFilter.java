@@ -4,10 +4,10 @@ import org.jhaws.common.io.IOFile;
 
 /**
  * filters files on extensions
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -18,7 +18,7 @@ public class FileExtensionFilter extends FileFilter {
 
 	/**
 	 * Creates a new FileExtensionFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param ext
@@ -30,7 +30,7 @@ public class FileExtensionFilter extends FileFilter {
 
 	/**
 	 * Creates a new FileExtensionFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param exts
@@ -47,8 +47,8 @@ public class FileExtensionFilter extends FileFilter {
 
 	/**
 	 * Creates a new FileExtensionFilter object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param ext
 	 *            one extension
 	 */
@@ -58,8 +58,8 @@ public class FileExtensionFilter extends FileFilter {
 
 	/**
 	 * Creates a new FileExtensionFilter object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param exts
 	 *            list of extensions
 	 */
@@ -69,10 +69,10 @@ public class FileExtensionFilter extends FileFilter {
 
 	/**
 	 * na
-	 * 
+	 *
 	 * @param exts
 	 *            na
-	 * 
+	 *
 	 * @return
 	 */
 	private static String getDescription(String[] exts) {
@@ -90,7 +90,7 @@ public class FileExtensionFilter extends FileFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.jhaws.common.io.filter.FileFilter#acceptRealFile(util.io.IOFile)
 	 */
 	@Override

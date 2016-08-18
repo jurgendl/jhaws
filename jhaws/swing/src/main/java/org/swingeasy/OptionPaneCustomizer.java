@@ -9,5 +9,6 @@ import javax.swing.JOptionPane;
  * @author Jurgen
  */
 public interface OptionPaneCustomizer {
-	void customize(final Component parentComponent, final MessageType messageType, final OptionType optionType, final JOptionPane pane, final JDialog dialog);
+    void customize(final Component parentComponent, final MessageType messageType, final OptionType optionType, final JOptionPane pane,
+            final JDialog dialog);
 }

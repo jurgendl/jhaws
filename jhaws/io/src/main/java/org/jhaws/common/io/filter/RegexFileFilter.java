@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
  * <br>
  * for example: [^$]{#-6#}.class<br>
  * will let filenames pass that end with .class and don't contain $ in the filename and pathname<br>
- * 
+ *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- * 
+ *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -27,8 +27,8 @@ public class RegexFileFilter extends AbstractFileFilter {
 
 	/**
 	 * Creates a new RegexFileFilter object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param regex
 	 *            regular expression
 	 */
@@ -38,7 +38,7 @@ public class RegexFileFilter extends AbstractFileFilter {
 
 	/**
 	 * Creates a new RegexFileFilter object.
-	 * 
+	 *
 	 * @param regex
 	 *            regular expression
 	 * @param caseSensitive
@@ -50,7 +50,7 @@ public class RegexFileFilter extends AbstractFileFilter {
 
 	/**
 	 * Creates a new RegexFileFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param regex
@@ -62,7 +62,7 @@ public class RegexFileFilter extends AbstractFileFilter {
 
 	/**
 	 * Creates a new RegexFileFilter object.
-	 * 
+	 *
 	 * @param description
 	 *            description
 	 * @param regex
@@ -77,7 +77,7 @@ public class RegexFileFilter extends AbstractFileFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
 	 */
 	@Override
@@ -87,10 +87,10 @@ public class RegexFileFilter extends AbstractFileFilter {
 
 	/**
 	 * compairs file string against regular expression
-	 * 
+	 *
 	 * @param name
 	 *            NA
-	 * 
+	 *
 	 * @return NA
 	 */
 	protected final boolean acceptFile(String name) {
@@ -110,14 +110,14 @@ public class RegexFileFilter extends AbstractFileFilter {
 
 	/**
 	 * used by function {@link #replaceSpecialBlocksInRegex(String, int)} for each number
-	 * 
+	 *
 	 * @param _regex
 	 *            : String : regex
 	 * @param length
 	 *            : int : length of String
 	 * @param numberToReplace
 	 *            : int : number
-	 * 
+	 *
 	 * @return : String : string with replaced blocks
 	 */
 	private final String replaceSpecialBlockInRegex(final String _regex, final int length, final int numberToReplace) {
@@ -136,12 +136,12 @@ public class RegexFileFilter extends AbstractFileFilter {
 
 	/**
 	 * replaces patters like <i>#-length#</i> by <i>length_of_string - length</i>
-	 * 
+	 *
 	 * @param _regex
 	 *            : String : regex
 	 * @param length
 	 *            : int : length of String
-	 * 
+	 *
 	 * @return : String : string with replaced blocks
 	 */
 	private final String replaceSpecialBlocksInRegex(final String _regex, final int length) {

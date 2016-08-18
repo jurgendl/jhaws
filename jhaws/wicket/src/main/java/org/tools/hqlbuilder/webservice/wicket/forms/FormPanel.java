@@ -83,7 +83,7 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 
 	protected StringBuilder css = new StringBuilder();
 
-	protected Set<String> cssClasses = new HashSet<String>();
+	protected Set<String> cssClasses = new HashSet<>();
 
 	public FormPanel(String id, FormActions<T> formActions) {
 		this(id, formActions, null);
@@ -114,7 +114,7 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 
 	public <F extends Serializable> AutoCompleteTextFieldPanel<F> addAutoCompleteTextField(F propertyPath, AutoCompleteTextFieldSettings componentSettings, IModel<List<F>> choices,
 			ITextRenderer<F> renderer) {
-		return this.addDefaultRow(new AutoCompleteTextFieldPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
+		return this.addDefaultRow(new AutoCompleteTextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
 	}
 
 	public CheckBoxPanel addCheckBox(Boolean propertyPath, CheckBoxSettings componentSettings) {
@@ -122,7 +122,7 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 	}
 
 	public <F extends Serializable> CKEditorTextAreaPanel<F> addCKEditorTextAreaPanel(F propertyPath, CKEditorTextAreaSettings componentSettings) {
-		return this.addDefaultRow(new CKEditorTextAreaPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new CKEditorTextAreaPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public ColorPickerPanel addColorPicker(String propertyPath, ColorPickerSettings componentSettings) {
@@ -144,7 +144,7 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <F extends Serializable> DatePickerPanel<F> addDatePicker(F propertyPath, FormElementSettings componentSettings, Converter<F, Date> dateConverter) {
-		return this.addDefaultRow((DatePickerPanel) new DatePickerPanel<F>(this.getFormModel(), propertyPath, dateConverter, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow((DatePickerPanel) new DatePickerPanel<>(this.getFormModel(), propertyPath, dateConverter, this.getFormSettings(), componentSettings));
 	}
 
 	public <PropertyType extends Serializable, ComponentType extends FormComponent<PropertyType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends DefaultFormRowPanel<PropertyType, ComponentType, ElementSettings>> RowPanel addDefaultRow(
@@ -153,12 +153,12 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 	}
 
 	public <F extends Serializable> DropDownPanel<F> addDropDown(F propertyPath, DropDownSettings componentSettings, IOptionRenderer<F> renderer, IModel<List<F>> choices) {
-		return this.addDefaultRow(new DropDownPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
+		return this.addDefaultRow(new DropDownPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
 	}
 
 	public <F extends Serializable> DropDownPanel<F> addDropDown(F propertyPath, DropDownSettings componentSettings, IOptionRenderer<F> renderer, IModel<List<F>>[] choices,
 			IModel<String>[] groupLabels) {
-		return this.addDefaultRow(new DropDownPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
+		return this.addDefaultRow(new DropDownPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
 	}
 
 	public EmailTextFieldPanel addEmailTextField(String propertyPath, FormElementSettings componentSettings) {
@@ -169,20 +169,20 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 	 * also "form.setMultiPart(true);" and "form.setMaxSize(Bytes.megabytes(1));"
 	 */
 	public <F> FilePickerPanel<F> addFilePicker(F propertyPath, FilePickerSettings componentSettings, FilePickerHook hook) {
-		return this.addCustomRow(new FilePickerPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, hook));
+		return this.addCustomRow(new FilePickerPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, hook));
 	}
 
 	public <F extends Serializable> HiddenFieldPanel<F> addHidden(F propertyPath) {
-		return this.addDefaultRow(new HiddenFieldPanel<F>(this.getFormModel(), propertyPath));
+		return this.addDefaultRow(new HiddenFieldPanel<>(this.getFormModel(), propertyPath));
 	}
 
 	public <F extends Serializable> ListPanel<F> addList(F propertyPath, ListSettings componentSettings, IOptionRenderer<F> renderer, IModel<List<F>> choices) {
-		return this.addDefaultRow(new ListPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
+		return this.addDefaultRow(new ListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
 	}
 
 	public <F extends Serializable> ListPanel<F> addList(F propertyPath, ListSettings componentSettings, IOptionRenderer<F> renderer, IModel<List<F>>[] choices,
 			IModel<String>[] groupLabels) {
-		return this.addDefaultRow(new ListPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
+		return this.addDefaultRow(new ListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
 	}
 
 	public LocaleDropDownPanel addLocalesDropDown(Locale propertyPath, FormElementSettings componentSettings, IChoiceRenderer<Locale> renderer, IModel<List<Locale>> choices) {
@@ -191,20 +191,20 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 
 	public <F extends Serializable> MultiSelectCheckBoxPanel<F> addMultiSelectCheckBox(Collection<F> propertyPath, FormElementSettings componentSettings, IModel<List<F>> choices,
 			IChoiceRenderer<F> renderer) {
-		return this.addCustomRow(new MultiSelectCheckBoxPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
+		return this.addCustomRow(new MultiSelectCheckBoxPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
 	}
 
 	public <F extends Serializable, C extends Collection<F>> MultiListPanel<F, C> addMultiSelectList(C propertyPath, MultiListSettings componentSettings,
 			IOptionRenderer<F> renderer, IModel<List<F>> choices) {
-		return this.addCustomRow(new MultiListPanel<F, C>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
+		return this.addCustomRow(new MultiListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
 	}
 
 	public <N extends Number & Comparable<N>> NumberFieldPanel<N> addNumberField(N propertyPath, NumberFieldSettings<N> componentSettings) {
-		return this.addDefaultRow(new NumberFieldPanel<N>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new NumberFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public <N extends Number & Comparable<N>> NumberTextFieldPanel<N> addNumberTextField(N propertyPath, NumberFieldSettings<N> componentSettings) {
-		return this.addDefaultRow(new NumberTextFieldPanel<N>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new NumberTextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public PasswordTextFieldPanel addPasswordTextField(String propertyPath, FormElementSettings componentSettings) {
@@ -212,16 +212,16 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 	}
 
 	public <F extends Serializable> PickListPanel<F> addPickList(Collection<F> propertyPath, ListSettings componentSettings, IModel<List<F>> choices, IChoiceRenderer<F> renderer) {
-		return this.addCustomRow(new PickListPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
+		return this.addCustomRow(new PickListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
 	}
 
 	public <F extends Serializable> RadioButtonsPanel<F> addRadioButtons(F propertyPath, FormElementSettings componentSettings, IModel<List<F>> choices,
 			IChoiceRenderer<F> renderer) {
-		return this.addDefaultRow(new RadioButtonsPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
+		return this.addDefaultRow(new RadioButtonsPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
 	}
 
 	public <N extends Number & Comparable<N>> RangeFieldPanel<N> addRangeField(N propertyPath, RangeFieldSettings<N> componentSettings) {
-		return this.addDefaultRow(new RangeFieldPanel<N>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new RangeFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	protected <PropertyType, ModelType, ComponentType extends FormComponent<ModelType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends FormRowPanel<PropertyType, ModelType, ComponentType, ElementSettings>> RowPanel addRow(
@@ -253,7 +253,7 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 	}
 
 	public <N extends Number & Comparable<N>> SliderPanel<N> addSliderField(N propertyPath, NumberFieldSettings<N> componentSettings) {
-		return this.addDefaultRow(new SliderPanel<N>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new SliderPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public TagItTextFieldPanel addTagItTextFieldPanel(String propertyPath, TagItTextFieldSettings componentSettings, IModel<List<String>> choices) {
@@ -261,15 +261,15 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 	}
 
 	public <F extends Serializable> TextAreaPanel<F> addTextArea(F propertyPath, TextAreaSettings componentSettings) {
-		return this.addDefaultRow(new TextAreaPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new TextAreaPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public <F extends Serializable> TextFieldPanel<F> addTextField(F propertyPath, FormElementSettings componentSettings) {
-		return this.addDefaultRow(new TextFieldPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new TextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public <F extends Serializable> TinyMCETextAreaPanel<F> addTinyMCETextArea(F propertyPath, TinyMCETextAreaSettings componentSettings) {
-		return this.addDefaultRow(new TinyMCETextAreaPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(new TinyMCETextAreaPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public TriStateCheckBoxPanel addTriStateCheckBox(Boolean propertyPath, TriStateCheckBoxSettings componentSettings) {

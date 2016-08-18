@@ -14,115 +14,115 @@ import org.swingeasy.EComponentPopupMenu.ReadableComponent;
  * @author Jurgen
  */
 public class ECheckBox extends JCheckBox implements EComponentI, HasValue<Boolean>, ReadableComponent {
-	private static final long serialVersionUID = -7050606626337213461L;
+    private static final long serialVersionUID = -7050606626337213461L;
 
-	protected final List<ValueChangeListener<Boolean>> valueChangeListeners = new ArrayList<>();
+    protected final List<ValueChangeListener<Boolean>> valueChangeListeners = new ArrayList<>();
 
-	protected ECheckBoxConfig cfg;
+    protected ECheckBoxConfig cfg;
 
-	protected ECheckBox() {
-		cfg = null;
-	}
+    protected ECheckBox() {
+        cfg = null;
+    }
 
-	public ECheckBox(ECheckBoxConfig cfg) {
-		super(cfg.getText(), cfg.getIcon(), cfg.isSelected());
-		this.init(this.cfg = cfg.lock());
-	}
+    public ECheckBox(ECheckBoxConfig cfg) {
+        super(cfg.getText(), cfg.getIcon(), cfg.isSelected());
+        this.init(this.cfg = cfg.lock());
+    }
 
-	/**
-	 * 
-	 * @see org.swingeasy.HasValue#addValueChangeListener(org.swingeasy.ValueChangeListener)
-	 */
-	@Override
-	public void addValueChangeListener(ValueChangeListener<Boolean> listener) {
-		valueChangeListeners.add(listener);
-	}
+    /**
+     * 
+     * @see org.swingeasy.HasValue#addValueChangeListener(org.swingeasy.ValueChangeListener)
+     */
+    @Override
+    public void addValueChangeListener(ValueChangeListener<Boolean> listener) {
+        valueChangeListeners.add(listener);
+    }
 
-	/**
-	 * 
-	 * @see org.swingeasy.HasValue#clearValueChangeListeners()
-	 */
-	@Override
-	public void clearValueChangeListeners() {
-		valueChangeListeners.clear();
-	}
+    /**
+     * 
+     * @see org.swingeasy.HasValue#clearValueChangeListeners()
+     */
+    @Override
+    public void clearValueChangeListeners() {
+        valueChangeListeners.clear();
+    }
 
-	/**
-	 * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void copy(ActionEvent e) {
-		EComponentPopupMenu.copyToClipboard(getText());
-	}
+    /**
+     * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void copy(ActionEvent e) {
+        EComponentPopupMenu.copyToClipboard(getText());
+    }
 
-	/**
-	 * @see org.swingeasy.HasParentComponent#getParentComponent()
-	 */
-	@Override
-	public JComponent getParentComponent() {
-		return this;
-	}
+    /**
+     * @see org.swingeasy.HasParentComponent#getParentComponent()
+     */
+    @Override
+    public JComponent getParentComponent() {
+        return this;
+    }
 
-	/**
-	 * 
-	 * @see javax.swing.JComponent#getToolTipText()
-	 */
-	@Override
-	public String getToolTipText() {
-		String toolTipText = super.getToolTipText();
-		if (toolTipText == null) {
-			String text = getText();
-			if (text.trim().length() == 0) {
-				text = null;
-			}
-			return text;
-		}
-		return toolTipText;
-	}
+    /**
+     * 
+     * @see javax.swing.JComponent#getToolTipText()
+     */
+    @Override
+    public String getToolTipText() {
+        String toolTipText = super.getToolTipText();
+        if (toolTipText == null) {
+            String text = getText();
+            if (text.trim().length() == 0) {
+                text = null;
+            }
+            return text;
+        }
+        return toolTipText;
+    }
 
-	/**
-	 * 
-	 * @see org.swingeasy.HasValue#getValue()
-	 */
-	@Override
-	public Boolean getValue() {
-		return isSelected();
-	}
+    /**
+     * 
+     * @see org.swingeasy.HasValue#getValue()
+     */
+    @Override
+    public Boolean getValue() {
+        return isSelected();
+    }
 
-	protected void init(ECheckBoxConfig config) {
-		if (config.isTooltips()) {
-			ToolTipManager.sharedInstance().registerComponent(this);
-		}
+    protected void init(ECheckBoxConfig config) {
+        if (config.isTooltips()) {
+            ToolTipManager.sharedInstance().registerComponent(this);
+        }
 
-		addActionListener(e -> {
-			Boolean value = ECheckBox.this.getValue();
-			for (ValueChangeListener<Boolean> valueChangeListener : valueChangeListeners) {
-				valueChangeListener.valueChanged(value);
-			}
-		});
+        addActionListener(e -> {
+            Boolean value = ECheckBox.this.getValue();
+            for (ValueChangeListener<Boolean> valueChangeListener : valueChangeListeners) {
+                valueChangeListener.valueChanged(value);
+            }
+        });
 
-		if (cfg.isDefaultPopupMenu()) {
-			installPopupMenuAction(EComponentPopupMenu.installPopupMenu(this));
-		}
+        if (cfg.isDefaultPopupMenu()) {
+            installPopupMenuAction(EComponentPopupMenu.installPopupMenu(this));
+        }
 
-		if (config.isLocalized()) {
-			UIUtils.registerLocaleChangeListener((EComponentI) this);
-		}
-	}
+        if (config.isLocalized()) {
+            UIUtils.registerLocaleChangeListener((EComponentI) this);
+        }
+    }
 
-	/**
-	 * JDOC
-	 */
-	protected void installPopupMenuAction(EComponentPopupMenu menu) {
-		//
-	}
+    /**
+     * JDOC
+     */
+    protected void installPopupMenuAction(EComponentPopupMenu menu) {
+        //
+    }
 
-	/**
-	 * 
-	 * @see org.swingeasy.HasValue#removeValueChangeListener(org.swingeasy.ValueChangeListener)
-	 */
-	@Override
-	public void removeValueChangeListener(ValueChangeListener<Boolean> listener) {
-		valueChangeListeners.remove(listener);
-	}
+    /**
+     * 
+     * @see org.swingeasy.HasValue#removeValueChangeListener(org.swingeasy.ValueChangeListener)
+     */
+    @Override
+    public void removeValueChangeListener(ValueChangeListener<Boolean> listener) {
+        valueChangeListeners.remove(listener);
+    }
 }

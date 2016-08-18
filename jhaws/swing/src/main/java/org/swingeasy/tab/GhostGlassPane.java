@@ -20,46 +20,46 @@ import javax.swing.SwingUtilities;
  */
 public class GhostGlassPane extends JPanel {
 
-	private static final long serialVersionUID = 7483905354859468870L;
+    private static final long serialVersionUID = 7483905354859468870L;
 
-	private DnDTabbedPane tabbedPane;
+    private DnDTabbedPane tabbedPane;
 
-	private BufferedImage draggingGhost = null;
+    private BufferedImage draggingGhost = null;
 
-	public GhostGlassPane(DnDTabbedPane tabbedPane) {
-		this.tabbedPane = tabbedPane;
-		// System.out.println("new GhostGlassPane");
-		setOpaque(false);
-		// http://bugs.sun.com/view_bug.do?bug_id=6700748
-		// setCursor(null); //XXX
-	}
+    public GhostGlassPane(DnDTabbedPane tabbedPane) {
+        this.tabbedPane = tabbedPane;
+        // System.out.println("new GhostGlassPane");
+        setOpaque(false);
+        // http://bugs.sun.com/view_bug.do?bug_id=6700748
+        // setCursor(null); //XXX
+    }
 
-	@Override
-	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D) g;
-		DnDTabbedPane.DropLocation dl = tabbedPane.getDropLocation();
-		Point p = this.getMousePosition(true); // dl.getDropPoint();
-		if (draggingGhost != null && dl != null && p != null) {
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-			Rectangle rect = tabbedPane.getDropLineRect();
-			if (rect != null && dl.isDropable()) {
-				Rectangle r = SwingUtilities.convertRectangle(tabbedPane, rect, this);
-				g2.setColor(Color.RED);
-				g2.fill(r);
-				// tabbedPane.paintDropLine(g2);
-			}
-			// Point p = SwingUtilities.convertPoint(tabbedPane, dl.getDropPoint(), this);
-			double xx = p.getX() - draggingGhost.getWidth(this) / 2d;
-			double yy = p.getY() - draggingGhost.getHeight(this) / 2d;
-			g2.drawImage(draggingGhost, (int) xx, (int) yy, this);
-		}
-	}
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        DnDTabbedPane.DropLocation dl = tabbedPane.getDropLocation();
+        Point p = this.getMousePosition(true); // dl.getDropPoint();
+        if (draggingGhost != null && dl != null && p != null) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+            Rectangle rect = tabbedPane.getDropLineRect();
+            if (rect != null && dl.isDropable()) {
+                Rectangle r = SwingUtilities.convertRectangle(tabbedPane, rect, this);
+                g2.setColor(Color.RED);
+                g2.fill(r);
+                // tabbedPane.paintDropLine(g2);
+            }
+            // Point p = SwingUtilities.convertPoint(tabbedPane, dl.getDropPoint(), this);
+            double xx = p.getX() - draggingGhost.getWidth(this) / 2d;
+            double yy = p.getY() - draggingGhost.getHeight(this) / 2d;
+            g2.drawImage(draggingGhost, (int) xx, (int) yy, this);
+        }
+    }
 
-	public void setImage(BufferedImage draggingGhost) {
-		this.draggingGhost = draggingGhost;
-	}
+    public void setImage(BufferedImage draggingGhost) {
+        this.draggingGhost = draggingGhost;
+    }
 
-	public void setTargetTabbedPane(DnDTabbedPane tab) {
-		tabbedPane = tab;
-	}
+    public void setTargetTabbedPane(DnDTabbedPane tab) {
+        tabbedPane = tab;
+    }
 }

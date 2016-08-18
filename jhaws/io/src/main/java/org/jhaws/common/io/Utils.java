@@ -542,7 +542,7 @@ public class Utils {
 	 * @throws IOException
 	 */
 	private static List<String> process(String command, boolean capture, boolean log) throws IOException {
-		List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<>();
 		ProcessBuilder pb = new ProcessBuilder(Utils.split(command));
 		Process p = pb.start();
 
@@ -589,7 +589,7 @@ public class Utils {
 	}
 
 	private static List<String> split(String sysexec) {
-		List<String> parts = new ArrayList<String>();
+		List<String> parts = new ArrayList<>();
 		Matcher m = Pattern.compile("\"[^\"]++\"").matcher(sysexec);
 		int pos = 0;
 		boolean found = false;
@@ -769,12 +769,12 @@ public class Utils {
 	public static final File NIX_LIB;
 
 	/** default open file commands for windows */
-	public static final Map<String, String> WIN_FILE_OPEN_CMDS = new HashMap<String, String>();
+	public static final Map<String, String> WIN_FILE_OPEN_CMDS = new HashMap<>();
 
-	public static final Map<String, Boolean> WIN_FILE_OPEN_CMDS_PRE = new HashMap<String, Boolean>();
+	public static final Map<String, Boolean> WIN_FILE_OPEN_CMDS_PRE = new HashMap<>();
 
 	/** file extension map for windows */
-	public static final Map<String, String> WIN_FILE_EXTS = new HashMap<String, String>();
+	public static final Map<String, String> WIN_FILE_EXTS = new HashMap<>();
 
 	/** windows specific dir */
 	public static final String WINDIR_PROGRAM_FILES;

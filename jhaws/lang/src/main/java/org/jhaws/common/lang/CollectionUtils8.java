@@ -1184,7 +1184,7 @@ public interface CollectionUtils8 {
 	 * c1 - c2, does not change input collections
 	 */
 	public static <T> Collection<T> subtract(Collection<T> c1, Collection<T> c2) {
-		Collection<T> tmp = new ArrayDeque<T>(c1);
+		Collection<T> tmp = new ArrayDeque<>(c1);
 		tmp.removeAll(c2);
 		return tmp;
 	}
@@ -1200,7 +1200,7 @@ public interface CollectionUtils8 {
 	 * intersection of c1 and c2, does not change input collections
 	 */
 	public static <T> Collection<T> union(Collection<T> c1, Collection<T> c2) {
-		Collection<T> tmp = new ArrayDeque<T>(c1.size() + c2.size());
+		Collection<T> tmp = new ArrayDeque<>(c1.size() + c2.size());
 		tmp.addAll(c1);
 		tmp.addAll(c2);
 		return tmp;
@@ -1208,7 +1208,7 @@ public interface CollectionUtils8 {
 
 	/**
 	 * aanTeMakenAct roept teBewaren op met als nieuw object aangeboden door param constructor, constructor en teBewaren zijn niet nullable
-	 * 
+	 *
 	 * @see #sync(Map, Map, BiConsumer, BiConsumer, BiConsumer)
 	 */
 	public static <K, N, B> void sync(//
@@ -1236,7 +1236,7 @@ public interface CollectionUtils8 {
 	 *            nullable, actie op te roepen indien nieuw object aan te maken, krijgt key en nieuw object binnen
 	 * @param teBewaren
 	 *            nullable, actie op te roepen indien overeenkomst, krijgt key en nieuw en bestaand object binnen
-	 * 
+	 *
 	 * @param <K>
 	 *            key waarop vergeleken moet worden
 	 * @param <N>

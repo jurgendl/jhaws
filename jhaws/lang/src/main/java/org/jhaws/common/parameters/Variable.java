@@ -21,7 +21,7 @@ public class Variable<T> {
 
 	protected final Field field;
 
-	protected final List<T> values = new ArrayList<T>();
+	protected final List<T> values = new ArrayList<>();
 
 	protected final Class<T[]> arrayType;
 

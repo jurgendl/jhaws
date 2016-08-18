@@ -28,19 +28,19 @@ import java.nio.ByteBuffer;
  * UTF-16BE -> Sixteen-bit UCS Transformation Format, big-endian byte-order<br>
  * UTF-16LE -> Sixteen-bit UCS Transformation Format, little-endian byte-order<br>
  * UTF-16 -> Sixteen-bit UCS Transformation Format, byte-order identified by an optional byte-order mark<br>
- * 
+ *
  * @author Jurgen
  * @version 1.0.0 - 24 February 2005
- * 
+ *
  * @see <a href="http://mindprod.com/jgloss/encoding.html">here</a>
  */
 public class DecodingReader {
 	/**
 	 * will read the first bytes of a file and returns the {@link EncodingInfo}
-	 * 
+	 *
 	 * @param file
 	 *            : File : input file
-	 * 
+	 *
 	 * @return : EncodingInfo : contains encoding name, name and <i>BOM</i> string
 	 */
 	public static EncodingInfo findEncoding(final File file) {
@@ -65,10 +65,10 @@ public class DecodingReader {
 
 	/**
 	 * reads file (decoded) if necessary (and possible) to a byte array (pure for binary files or unknown decoding, usable for constructing a String if known encoding)
-	 * 
+	 *
 	 * @param file
 	 *            : File : input file
-	 * 
+	 *
 	 * @return : byte[] : byte array from string (pure if binary, usable for constructing a String if other)
 	 */
 	public static byte[] readDecoded(final File file) {

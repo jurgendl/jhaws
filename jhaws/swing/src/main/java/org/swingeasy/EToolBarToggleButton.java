@@ -14,63 +14,63 @@ import org.swingeasy.EComponentPopupMenu.ReadableComponent;
  * @author Jurgen
  */
 public class EToolBarToggleButton extends JToggleButton implements EComponentI, ReadableComponent {
-	private static final long serialVersionUID = -6193067407274776197L;
+    private static final long serialVersionUID = -6193067407274776197L;
 
-	protected EButtonConfig cfg;
+    protected EButtonConfig cfg;
 
-	protected EToolBarToggleButton() {
-		cfg = null;
-	}
+    protected EToolBarToggleButton() {
+        cfg = null;
+    }
 
-	public EToolBarToggleButton(EToolBarButtonConfig cfg) {
-		this.init(cfg = cfg.lock());
-	}
+    public EToolBarToggleButton(EToolBarButtonConfig cfg) {
+        this.init(cfg = cfg.lock());
+    }
 
-	/**
-	 * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void copy(ActionEvent e) {
-		String text = getText();
-		EComponentPopupMenu.copyToClipboard(StringUtils.isNotBlank(text) ? text : this.getToolTipText());
-	}
+    /**
+     * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void copy(ActionEvent e) {
+        String text = getText();
+        EComponentPopupMenu.copyToClipboard(StringUtils.isNotBlank(text) ? text : this.getToolTipText());
+    }
 
-	/**
-	 * @see org.swingeasy.HasParentComponent#getParentComponent()
-	 */
-	@Override
-	public JComponent getParentComponent() {
-		return this;
-	}
+    /**
+     * @see org.swingeasy.HasParentComponent#getParentComponent()
+     */
+    @Override
+    public JComponent getParentComponent() {
+        return this;
+    }
 
-	protected void init(EToolBarButtonConfig config) {
-		if (config.getAction() != null) {
-			setAction(config.getAction());
-			setName(String.valueOf(config.getAction().getValue(Action.NAME)));
-		}
+    protected void init(EToolBarButtonConfig config) {
+        if (config.getAction() != null) {
+            setAction(config.getAction());
+            setName(String.valueOf(config.getAction().getValue(Action.NAME)));
+        }
 
-		if (config.getIcon() != null) {
-			setIcon(config.getIcon());
-		}
+        if (config.getIcon() != null) {
+            setIcon(config.getIcon());
+        }
 
-		if (config.getButtonCustomizer() != null) {
-			config.getButtonCustomizer().customize(this);
-		}
+        if (config.getButtonCustomizer() != null) {
+            config.getButtonCustomizer().customize(this);
+        }
 
-		if (config.isDefaultPopupMenu()) {
-			installPopupMenuAction(EComponentPopupMenu.installPopupMenu(this));
-		}
+        if (config.isDefaultPopupMenu()) {
+            installPopupMenuAction(EComponentPopupMenu.installPopupMenu(this));
+        }
 
-		if (config.isLocalized()) {
-			UIUtils.registerLocaleChangeListener((EComponentI) this);
-		}
+        if (config.isLocalized()) {
+            UIUtils.registerLocaleChangeListener((EComponentI) this);
+        }
 
-		if (config.isTooltips()) {
-			ToolTipManager.sharedInstance().registerComponent(this);
-		}
-	}
+        if (config.isTooltips()) {
+            ToolTipManager.sharedInstance().registerComponent(this);
+        }
+    }
 
-	protected void installPopupMenuAction(EComponentPopupMenu menu) {
-		//
-	}
+    protected void installPopupMenuAction(EComponentPopupMenu menu) {
+        //
+    }
 }

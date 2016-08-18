@@ -224,7 +224,7 @@ public class WinRegistry {
 	}
 
 	private static List<String> readStringSubKeys(Preferences root, int hkey, String key) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		List<String> results = new ArrayList<String>();
+		List<String> results = new ArrayList<>();
 		int[] handles = (int[]) WinRegistry.regOpenKey.invoke(root, new Object[] { new Integer(hkey), WinRegistry.toCstr(key), new Integer(WinRegistry.KEY_READ) });
 		if (handles[1] != WinRegistry.REG_SUCCESS) {
 			return null;
@@ -263,7 +263,7 @@ public class WinRegistry {
 	}
 
 	private static Map<String, String> readStringValues(Preferences root, int hkey, String key) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		Map<String, String> results = new LinkedHashMap<String, String>();
+		Map<String, String> results = new LinkedHashMap<>();
 		int[] handles = (int[]) WinRegistry.regOpenKey.invoke(root, new Object[] { new Integer(hkey), WinRegistry.toCstr(key), new Integer(WinRegistry.KEY_READ) });
 		if (handles[1] != WinRegistry.REG_SUCCESS) {
 			return null;

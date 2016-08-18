@@ -131,7 +131,7 @@ public class Response implements Serializable {
 			throw new UncheckedIOException(ex);
 		}
 		List<? extends TagNode> formlist = n.getElementListByName("form", true);
-		List<Form> forms = new ArrayList<Form>();
+		List<Form> forms = new ArrayList<>();
 		for (TagNode formnode : formlist) {
 			forms.add(new Form(getLastUri(), formnode));
 		}

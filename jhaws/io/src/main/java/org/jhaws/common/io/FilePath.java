@@ -850,7 +850,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public static List<FilePath> getDrives() {
-		List<FilePath> drives = new ArrayList<FilePath>();
+		List<FilePath> drives = new ArrayList<>();
 		FileSystemView fsv = FileSystemView.getFileSystemView();
 		// windows
 		if (System.getProperty("os.name").toLowerCase().indexOf("win") != -1) {
@@ -2514,7 +2514,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public List<FilePath> siblings() {
-		List<FilePath> siblings = new ArrayList<FilePath>();
+		List<FilePath> siblings = new ArrayList<>();
 		if (this.getParent() != null) {
 			for (FilePath child : this.getChildren()) {
 				if (!child.equals(this.getPath())) {

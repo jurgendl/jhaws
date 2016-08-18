@@ -77,22 +77,20 @@ public class SassResourceReference extends StreamResourceReference implements IR
 			if (this.css == null) {
 				SassResourceReference.logger.info("building " + fullPath + " because is new");
 				rebuild = true;
-			} else
-				if (this.lastModified == null) {
-					SassResourceReference.logger.info("building " + fullPath + " because out of date");
-					rebuild = true;
-				} else
-					if (WicketApplication.get().usesDevelopmentConfig()) {
-						try {
-							if (this.lastModified.getMilliseconds() < this.getClass().getClassLoader().getResource(fullPath).openConnection().getLastModified()) {
-								SassResourceReference.logger.info("building " + fullPath + " because template out of date");
-								rebuild = true;
-							}
-						} catch (IOException ex1) {
-							SassResourceReference.logger.info("building " + fullPath + " because of exception: " + ex1);
-							rebuild = true;
-						}
+			} else if (this.lastModified == null) {
+				SassResourceReference.logger.info("building " + fullPath + " because out of date");
+				rebuild = true;
+			} else if (WicketApplication.get().usesDevelopmentConfig()) {
+				try {
+					if (this.lastModified.getMilliseconds() < this.getClass().getClassLoader().getResource(fullPath).openConnection().getLastModified()) {
+						SassResourceReference.logger.info("building " + fullPath + " because template out of date");
+						rebuild = true;
 					}
+				} catch (IOException ex1) {
+					SassResourceReference.logger.info("building " + fullPath + " because of exception: " + ex1);
+					rebuild = true;
+				}
+			}
 			if (rebuild) {
 				ByteArrayOutputStream out;
 				try {

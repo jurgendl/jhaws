@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class PostRequest extends AbstractPutRequest<PostRequest> {
 	private static final long serialVersionUID = -3939699621850878105L;
 
-	private HashMap<String, Path> attachments = new HashMap<String, Path>();
+	private HashMap<String, Path> attachments = new HashMap<>();
 
 	private String name;
 

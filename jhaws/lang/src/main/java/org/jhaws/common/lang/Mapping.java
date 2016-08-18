@@ -14,9 +14,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
@@ -24,6 +21,8 @@ import org.slf4j.LoggerFactory;
 
 import ch.lambdaj.Lambda;
 import ch.lambdaj.function.argument.Argument;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 public class Mapping<S, T> {
 	public static <T> T proxy(T target, Class<?> targetClass, Map<String, Property<Object, Object>> targetInfo) {
@@ -80,9 +79,9 @@ public class Mapping<S, T> {
 
 	protected final List<Mapper<S, T>> mappers = new ArrayList<>();
 
-	protected final List<String> conditionals = new ArrayList<String>();
+	protected final List<String> conditionals = new ArrayList<>();
 
-	protected final List<String> collections = new ArrayList<String>();
+	protected final List<String> collections = new ArrayList<>();
 
 	public Mapping(ClassPair<S, T> classPair) {
 		this.classPair = classPair;
@@ -152,7 +151,7 @@ public class Mapping<S, T> {
 				@SuppressWarnings("unchecked")
 				Property<T, Object> targetPD = (Property<T, Object>) Mapping.this.targetInfo.get(targetProperty);
 				Object sourceIterable = sourcePD.read(source);
-				Collection<TC> tmpTargetCollection = new ArrayList<TC>();
+				Collection<TC> tmpTargetCollection = new ArrayList<>();
 
 				try {
 					if (sourceIterable instanceof Collection) {
@@ -194,16 +193,14 @@ public class Mapping<S, T> {
 					}
 					if (targetIterable == null) {
 						if (SortedSet.class.isAssignableFrom(targetPD.type())) {
-							targetIterable = new TreeSet<TC>(tmpTargetCollection);
-						} else
-							if (Set.class.isAssignableFrom(targetPD.type())) {
-								targetIterable = new HashSet<TC>(tmpTargetCollection);
-							} else
-								if (List.class.isAssignableFrom(targetPD.type())) {
-									targetIterable = new ArrayList<TC>(tmpTargetCollection);
-								} else {
-									targetIterable = new ArrayList<TC>(tmpTargetCollection);
-								}
+							targetIterable = new TreeSet<>(tmpTargetCollection);
+						} else if (Set.class.isAssignableFrom(targetPD.type())) {
+							targetIterable = new HashSet<>(tmpTargetCollection);
+						} else if (List.class.isAssignableFrom(targetPD.type())) {
+							targetIterable = new ArrayList<>(tmpTargetCollection);
+						} else {
+							targetIterable = new ArrayList<>(tmpTargetCollection);
+						}
 					} else {
 						@SuppressWarnings("unchecked")
 						Collection<TC> coll = Collection.class.cast(targetIterable);

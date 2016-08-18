@@ -6,7 +6,7 @@ package org.swingeasy;
  * @author Jurgen
  */
 public interface ESpinnerCyclingModelListener {
-	public abstract void overflow();
+    public abstract void overflow();
 
-	public abstract void rollback();
+    public abstract void rollback();
 }

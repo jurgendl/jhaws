@@ -19,15 +19,19 @@ public interface Indexable<T> {
 
 	public default Document indexable() {
 		Document d = new Document();
-		if (getUuid() != null) d.add(new StringField(LuceneIndex.DOC_UUID, getUuid(), Field.Store.YES));
-		if (getVersion() != null) d.add(new IntField(LuceneIndex.DOC_VERSION, getVersion(), Field.Store.YES));
+		if (getUuid() != null)
+			d.add(new StringField(LuceneIndex.DOC_UUID, getUuid(), Field.Store.YES));
+		if (getVersion() != null)
+			d.add(new IntField(LuceneIndex.DOC_VERSION, getVersion(), Field.Store.YES));
 		d.add(new LongField(LuceneIndex.DOC_LASTMOD, Date.from(getLastmodified().toInstant(ZoneOffset.ofHours(0))).getTime(), Field.Store.YES));
 		return d;
 	}
 
 	public default void retrieveBase(Document doc) {
-		if (doc.getField(LuceneIndex.DOC_UUID) != null) setUuid(doc.get(LuceneIndex.DOC_UUID));
-		if (doc.getField(LuceneIndex.DOC_VERSION) != null) setVersion(doc.getField(LuceneIndex.DOC_VERSION).numericValue().intValue());
+		if (doc.getField(LuceneIndex.DOC_UUID) != null)
+			setUuid(doc.get(LuceneIndex.DOC_UUID));
+		if (doc.getField(LuceneIndex.DOC_VERSION) != null)
+			setVersion(doc.getField(LuceneIndex.DOC_VERSION).numericValue().intValue());
 		if (doc.getField(LuceneIndex.DOC_LASTMOD) != null) {
 			Number l = doc.getField(LuceneIndex.DOC_LASTMOD).numericValue();
 			Date d = new Date(Long.class.cast(l));

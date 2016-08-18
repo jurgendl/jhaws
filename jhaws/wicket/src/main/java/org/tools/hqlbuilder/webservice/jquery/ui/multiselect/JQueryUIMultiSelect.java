@@ -13,19 +13,18 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
  * @see http://www.erichynds.com/examples/jquery-ui-multiselect-widget/demos/#basic
  */
 public class JQueryUIMultiSelect {
-    public static JavaScriptResourceReference JQueryUIMultiSelect_JS = new JavaScriptResourceReference(JQueryUIMultiSelect.class,
-            "jquery.multiselect.js");
+	public static JavaScriptResourceReference JQueryUIMultiSelect_JS = new JavaScriptResourceReference(JQueryUIMultiSelect.class, "jquery.multiselect.js");
 
-    static {
-        try {
-            JQueryUIMultiSelect_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
-        } catch (Exception ex) {
-            //
-        }
-    }
+	static {
+		try {
+			JQueryUIMultiSelect_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+		} catch (Exception ex) {
+			//
+		}
+	}
 
-    public static JavaScriptResourceReference JQueryUIMultiSelect_Filter_JS = new JavaScriptResourceReference(JQueryUIMultiSelect.class,
-            "jquery.multiselect.filter.js").addJavaScriptResourceReferenceDependency(JQueryUIMultiSelect_JS);
+	public static JavaScriptResourceReference JQueryUIMultiSelect_Filter_JS = new JavaScriptResourceReference(JQueryUIMultiSelect.class, "jquery.multiselect.filter.js")
+			.addJavaScriptResourceReferenceDependency(JQueryUIMultiSelect_JS);
 
-    public static CssResourceReference JQueryUIMultiSelect_CSS = new CssResourceReference(JQueryUIMultiSelect.class, "jquery.multiselect.css");
+	public static CssResourceReference JQueryUIMultiSelect_CSS = new CssResourceReference(JQueryUIMultiSelect.class, "jquery.multiselect.css");
 }

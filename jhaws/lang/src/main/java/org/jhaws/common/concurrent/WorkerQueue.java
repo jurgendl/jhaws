@@ -12,10 +12,10 @@ public class WorkerQueue<T> {
 	private final ExecutorService service;
 
 	public WorkerQueue(int numWorkers, int workQueueSize, Consumer<T> action) {
-		workQueue = new LinkedBlockingQueue<T>(workQueueSize);
+		workQueue = new LinkedBlockingQueue<>(workQueueSize);
 		service = Executors.newFixedThreadPool(numWorkers);
 		for (int i = 0; i < numWorkers; i++) {
-			service.submit(new Worker<T>(workQueue, action));
+			service.submit(new Worker<>(workQueue, action));
 		}
 	}
 

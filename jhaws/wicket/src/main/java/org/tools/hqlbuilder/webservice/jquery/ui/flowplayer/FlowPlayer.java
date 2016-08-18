@@ -12,15 +12,13 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.StreamResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WicketUtils;
 
-
 /**
- * <div wicket:id="flowplayer" class="customflowplayer is-splash
- * grayscale-gradient"><br>
+ * <div wicket:id="flowplayer" class="customflowplayer is-splash grayscale-gradient"><br>
  * <video preload="none" controls wicket:id="videocontainer"><br>
  * <source wicket:id="videosource" type="video/webm" src="video.webm"><br>
  * </video><br>
  * </div><br>
- * 
+ *
  * @see https://developer.mozilla.org/nl/docs/Web/Guide/HTML/HTML5_audio_en_video_gebruiken
  */
 public class FlowPlayer {
@@ -79,16 +77,16 @@ public class FlowPlayer {
 		return url;
 	}
 
-    /**
-     * response.render(CssHeaderItem.forReference(FlowPlayer.SKIN_CSS));<br>
-     * response.render(JavaScriptHeaderItem.forReference(FlowPlayer.JS));<br>
-     * response.render(OnDomReadyHeaderItem.forScript(FlowPlayer.javaScript("customflowplayer", true, true)));<br>
-     */
-    public static String javaScript(String tag, boolean loop, boolean splash) {
-        return ";$('." + tag + "').children('video').removeAttr('controls');$('." + tag + "').flowplayer({"//
-                + "swf:'" + FlowPlayer.url() + "',"//
-                + "splash:" + splash + "," //
-                + "loop:" + loop //
-                + "});";
-    }
+	/**
+	 * response.render(CssHeaderItem.forReference(FlowPlayer.SKIN_CSS));<br>
+	 * response.render(JavaScriptHeaderItem.forReference(FlowPlayer.JS));<br>
+	 * response.render(OnDomReadyHeaderItem.forScript(FlowPlayer.javaScript("customflowplayer", true, true)));<br>
+	 */
+	public static String javaScript(String tag, boolean loop, boolean splash) {
+		return ";$('." + tag + "').children('video').removeAttr('controls');$('." + tag + "').flowplayer({"//
+				+ "swf:'" + FlowPlayer.url() + "',"//
+				+ "splash:" + splash + "," //
+				+ "loop:" + loop //
+				+ "});";
+	}
 }
