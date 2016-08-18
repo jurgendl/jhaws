@@ -142,9 +142,9 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 		return this.addDatePicker(propertyPath, componentSettings, (Converter<Date, Date>) null);
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public <F extends Serializable> DatePickerPanel<F> addDatePicker(F propertyPath, FormElementSettings componentSettings, Converter<F, Date> dateConverter) {
-		return this.addDefaultRow(new DatePickerPanel<F>(this.getFormModel(), propertyPath, dateConverter, this.getFormSettings(), componentSettings));
+		return this.addDefaultRow((DatePickerPanel) new DatePickerPanel<F>(this.getFormModel(), propertyPath, dateConverter, this.getFormSettings(), componentSettings));
 	}
 
 	public <PropertyType extends Serializable, ComponentType extends FormComponent<PropertyType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends DefaultFormRowPanel<PropertyType, ComponentType, ElementSettings>> RowPanel addDefaultRow(
