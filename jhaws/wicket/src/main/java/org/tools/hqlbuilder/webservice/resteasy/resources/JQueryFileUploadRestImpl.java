@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt;
+package org.tools.hqlbuilder.webservice.resteasy.resources;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +17,12 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.DeleteResult;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.FileDownload;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.FileMeta;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.FileService;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.UploadResult;
+import org.tools.hqlbuilder.webservice.resteasy.resources.jquery_file_upload;
 
 /**
  * @see http://www.mkyong.com/webservices/jax-rs/file-upload-example-in-resteasy/

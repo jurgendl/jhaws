@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt;
+package org.tools.hqlbuilder.webservice.resteasy.resources;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -16,6 +16,8 @@ import org.jboss.resteasy.annotations.GZIP;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jhaws.common.web.resteasy.Pretty;
 import org.jhaws.common.web.resteasy.RestResource;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.DeleteResult;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt.UploadResult;
 
 @Path(JQueryFileUploadRestImpl.PATH)
 @Pretty
