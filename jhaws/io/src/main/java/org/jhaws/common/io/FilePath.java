@@ -2109,6 +2109,14 @@ public class FilePath implements Path, Externalizable {
 		return this.newBufferedWriter(this.getDefaultCharset(), options);
 	}
 
+	public SeekableByteChannel newReadableByteChannel() {
+		return newByteChannel(StandardOpenOption.READ);
+	}
+
+	public SeekableByteChannel newWritableByteChannelRead() {
+		return newByteChannel(StandardOpenOption.WRITE);
+	}
+
 	public SeekableByteChannel newByteChannel(OpenOption... options) {
 		try {
 			return Files.newByteChannel(this.getPath(), options);
