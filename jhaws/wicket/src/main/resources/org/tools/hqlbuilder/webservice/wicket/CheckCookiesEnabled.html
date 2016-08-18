@@ -1,0 +1,12 @@
+<wicket:panel>
+	<div class="ui-state-highlight ui-corner-all" style="margin:14px;padding-left:20px;padding-right:20px;z-index:250" wicket:id="nocookies">
+		<p>
+			<wicket:message key="nocookies"></wicket:message>&nbsp;<a href="#" wicket:id="allowCookies"><wicket:message key="allowcookies">allow cookies</wicket:message></a>,&nbsp;<a href="#" wicket:id="disallowCookies"><wicket:message key="disallowcookies">disallow cookies</wicket:message></a>.&nbsp;<a href="#" onclick="if(showhide('nocookies_more_information')){this.innerHTML='-'}else{this.innerHTML='+'};return false;">+</a>
+		</p>
+		<div id="nocookies_more_information">
+			<p>
+				<wicket:message key="cookiesfull"></wicket:message>
+			</p>
+		</div>
+	</div>
+</wicket:panel>

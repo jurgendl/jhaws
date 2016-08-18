@@ -1,0 +1,1 @@
+$('.jquicolorpicker').colorpicker();

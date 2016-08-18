@@ -39,6 +39,8 @@
         <version.guava>18.0</version.guava>
         <version.wro4j>1.7.7</version.wro4j>
         <version.yui>2.4.7</version.yui>
+        <version.commons-beanutils>1.9.2</version.commons-beanutils><!-- recent version, keep up to date -->
+        <version.commons-codec>1.10</version.commons-codec><!-- recent version, keep up to date -->
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -56,6 +58,31 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jhaws-net</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${version.commons-codec}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${version.commons-beanutils}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-collections</artifactId>
+                    <groupId>commons-collections</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cglib</groupId>
@@ -234,5 +261,9 @@
             </exclusions>
         </dependency>
         <!-- <dependency> <groupId>com.yahoo.platform.yui</groupId> <artifactId>yuicompressor</artifactId> <version>${version.yui}</version> </dependency> -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
     </dependencies>
 </project>

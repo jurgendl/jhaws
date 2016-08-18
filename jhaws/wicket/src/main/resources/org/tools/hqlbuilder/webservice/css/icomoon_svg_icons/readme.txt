@@ -1,0 +1,1 @@
+example doesn't work in Chrome when openened from file system

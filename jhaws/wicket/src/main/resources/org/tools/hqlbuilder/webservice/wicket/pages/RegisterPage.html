@@ -1,0 +1,25 @@
+<wicket:extend>
+	<span class="centeredvertical centeredhorizontal">
+		<form wicket:id="registerform" method="post">
+			<fieldset>
+				<h1><wicket:message key="register.label">Register</wicket:message></h1>
+			</fieldset>
+			<fieldset>
+				<label for="email" wicket:id="email.label">Email</label>
+				<input class="email" type="email" wicket:id="email" placeholder="email@gmail.com" required autofocus></input>
+			</fieldset>
+			<fieldset>
+				<label for="username" wicket:id="username.label">Username</label>
+				<input class="username" type="text" wicket:id="username" placeholder="Username" required></input>
+			</fieldset>
+			<fieldset>
+				<label for="password" wicket:id="password.label">Password</label>
+				<input class="password" type="password" wicket:id="password" placeholder="Password" required></input>
+			</fieldset>
+			<fieldset class="actions">
+				<input wicket:id="register" type="submit" value="register"></input>
+				<input wicket:id="reset" type="reset" value="reset"></input>
+			</fieldset>
+		</form>
+	</span>
+</wicket:extend>

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en" lang="en">
+
+<wicket:panel xmlns:wicket="http://wicket.apache.org">
+<wicket:enclosure child="loginform">
+	<form wicket:id="loginform" method="post">
+		<fieldset>
+			<h1><wicket:message key="login.label">Login</wicket:message></h1>
+		</fieldset>
+		<fieldset>
+			<label for="username" wicket:id="username.label">Username</label>
+			<input class="username" type="text" wicket:id="username" placeholder="Username" required autofocus></input>
+		</fieldset>
+		<fieldset>
+			<label for="password" wicket:id="password.label">Password</label>
+			<input class="password" type="password" wicket:id="password" placeholder="Password" required></input>
+		</fieldset>
+		<fieldset class="actions">
+			<input wicket:id="login" type="submit" value="login"></input>
+			<input wicket:id="reset" type="reset" value="reset"></input>
+			<a wicket:id="register" class="likebutton" href="./register"><span wicket:id="register.label">Register</span></a>
+		</fieldset>
+	</form>
+</wicket:enclosure>
+</wicket:panel>
+
+</html>

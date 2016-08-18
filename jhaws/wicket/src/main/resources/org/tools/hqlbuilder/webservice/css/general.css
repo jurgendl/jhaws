@@ -1,0 +1,717 @@
+/* ========================xxx======================== */
+
+/* ======================== fonts ======================== */
+/* https://www.google.com/fonts */
+/* http://fontfabric.com/idealist-sans/ */
+/* http://fontm.com/hans-kendrick-v3-font/ */
+/* http://www.fontsquirrel.com/fonts/archivo-narrow */
+/* http://www.smashingmagazine.com/2009/09/22/complete-guide-to-css-font-stacks/ */
+
+/* serif */
+@import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic&subset=latin,latin-ext);
+
+/* sans serif */
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic);
+
+/* monospace */
+@import url(http://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900&subset=latin,latin-ext);
+
+/* https://www.google.com/fonts/specimen/Tinos#pairings */
+/* serif, replacer for Times New Roman */
+@import url(http://fonts.googleapis.com/css?family=Tinos:400,700,400italic,700italic&subset=latin,latin-ext,cyrillic,cyrillic-ext,greek-ext,greek,vietnamese);
+/* sans-serif */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,cyrillic,latin-ext,greek-ext,greek,vietnamese);
+
+/* font stacks */
+/*Baskerville, 'Times New Roman', Times, serif*/
+/*Garamond, 'Hoefler Text', 'Times New Roman', Times, serif*/
+/*Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif*/
+/*GillSans, Calibri, Trebuchet, sans-serif*/
+
+/* ======================== body ======================== */
+
+body {
+	background-color:rgb(238,238,238);
+	font-size: 14px;
+	font-family: 'Open Sans', Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+	font-weight: 400;
+	overflow-x: hidden;
+}
+
+/* ======================== scrollbar ======================== */
+
+/* http://www.ourtuts.com/how-to-customize-browser-scrollbars-using-css3/ */
+/* https://css-tricks.com/examples/WebKitScrollbars/ */
+/* https://css-tricks.com/custom-scrollbars-in-webkit/ */
+/* https://css-tricks.com/almanac/properties/s/scrollbar/ */
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-button {
+	width: 10px;
+	height: 1px;
+}
+::-webkit-scrollbar-track {
+	background: rgb(250,250,250);
+	border: thin solid rgb(200,200,200);
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.1); 
+	box-shadow: 0px 0px 3px rgba(0,0,0,0.1) inset;
+}
+::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	border: thin solid rgb(150,150,150);
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.1); 
+	box-shadow: 0px 0px 3px rgba(0,0,0,.1) inset;
+	background: rgb(180,180,180);
+}
+::-webkit-scrollbar-thumb:hover {
+	background: rgb(210,210,210);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+}
+
+/* ======================== box sizing ======================== */
+*, *:before, *:after {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/* ======================== titles ======================== */
+/*Georgia, Times, 'Times New Roman', serif*/
+/*Palatino, 'Palatino Linotype', 'Hoefler Text', Times, 'Times New Roman', serif*/
+/*Tahoma, Verdana, Geneva*/
+/*Trebuchet, Tahoma, Arial, sans-serif*/
+h1, h2, h3, h4, h5 {
+	font-weight: 700;
+}
+
+/* ======================== placeholder ======================== */
+::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder {
+	padding: 0px;
+	font-size: 10px;
+}
+
+/* ======================== rotated ======================== */
+
+.rotate45 {
+	-ms-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.rotate90 {
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.rotate135 {
+	-ms-transform: rotate(135deg);
+	-webkit-transform: rotate(135deg);
+	-moz-transform: rotate(135deg);
+	-o-transform: rotate(135deg);
+	transform: rotate(135deg);
+}
+
+.rotate180 {
+	-ms-transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+.rotate225 {
+	-ms-transform: rotate(225deg);
+	-webkit-transform: rotate(225deg);
+	-moz-transform: rotate(225deg);
+	-o-transform: rotate(225deg);
+	transform: rotate(225deg);
+}
+
+.rotate270 {
+	-ms-transform: rotate(270deg);
+	-webkit-transform: rotate(270deg);
+	-moz-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+
+.rotate345 {
+	-ms-transform: rotate(345deg);
+	-webkit-transform: rotate(345deg);
+	-moz-transform: rotate(345deg);
+	-o-transform: rotate(345deg);
+	transform: rotate(345deg);
+}
+
+/* ======================== rotation animation ======================== */
+@-webkit-keyframes rotate {
+	from { -webkit-transform:rotate(0deg); }
+	to { -webkit-transform:rotate(360deg); }
+}
+@-moz-keyframes rotate {
+	from { -moz-transform:rotate(0deg); }
+	to { -moz-transform:rotate(360deg); }
+}
+@-ms-keyframes rotate {
+	from { -ms-transform:rotate(0deg); }
+	to { -ms-transform:rotate(360deg); }
+}
+@-o-keyframes rotate {
+	from { -o-transform:rotate(0deg); }
+	to { -o-transform:rotate(360deg); }
+}
+.rotatingslower,
+.rotating,
+.rotatingfaster {
+	-webkit-transform-origin: 50% 50%;
+	-webkit-animation-name: rotate;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-transform-origin: 50% 50%;
+	-moz-animation-name: rotate;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-transform-origin: 50% 50%;
+	-ms-animation-name: rotate;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	-o-transform-origin: 50% 50%;
+	-o-animation-name: rotate;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
+}
+.rotatingfaster {
+	-webkit-animation-duration: 0.75s;
+	-moz-animation-duration: 0.75s;
+	-ms-animation-duration: 0.75s;
+	-o-animation-duration: 0.75s;
+}
+.rotating {
+	-webkit-animation-duration: 1.5s;
+	-moz-animation-duration: 1.5s;
+	-ms-animation-duration: 1.5s;
+	-o-animation-duration: 1.5s;
+}
+.rotatingslower {
+	-webkit-animation-duration: 3s;
+	-moz-animation-duration: 3s;
+	-ms-animation-duration: 3s;
+	-o-animation-duration: 3s;
+}
+
+/* ======================== icon fonts ======================== */
+.transparentbg {
+	background-color : transparent !important;
+}
+
+/* ======================== hyperlink ======================== */
+/* link: the normal state of a hyperlink */
+/* visited: when the link has been visited before */
+/* hover: when the user hovers their mouse over a link */
+/* active: when the user clicks on the link (or presses the Enter key on a focused link) */
+/* focus: when the user uses the Tab key to navigate to hyperlinks */
+/* link used to be "a:not(.fake):not(.ui-button-text-only):not(.pui-menuitem-link):not(.cke)" */
+a.ui-button {
+	text-decoration: none;
+}
+.link,
+.link:visited,
+.link:hover,
+.link:active,
+.link:focus {
+	text-decoration: none;
+	outline: none;
+	color: #1E608E;
+}
+.link,
+.link:visited {
+	border-bottom: .1em solid rgba(0,0,0,.1);
+}
+.link:hover,
+.link:active,
+.link:focus {
+	border-bottom: .1em solid #1E608E;
+}
+a img,
+a.image-border,
+a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=bmp] {
+	text-decoration: none;
+	border: 0 none;
+}
+
+/* ======================== ui-state-* fix unreadable blur ======================== */
+.ui-state-error,
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+/* ======================== disable selection ======================== */
+
+.noselect {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* ======================== fileupload ======================== */
+.fileupload {
+	overflow: hidden;
+	position: relative;
+}
+.fileupload input[type='file'] {
+	cursor: pointer;
+	display: block;
+	font-size: 0px;
+	filter: alpha(opacity = 0);
+	min-height: 100%;
+	min-width: 100%;
+	opacity: 0;
+	position: absolute;
+	right: 0;
+	text-align: right;
+	top: 0;
+}
+
+/* ======================== popout ======================== */
+/* http://perishablepress.com/margin-list-floated-image/ */
+.popout {
+	width: auto;
+	overflow: hidden;
+}
+
+/* ======================== centering ======================== */
+/* http://css-tricks.com/centering-css-complete-guide */
+/* inline, inline-block, inline-table, inline-flex in block-level parent element */
+.center-children-hor {
+	text-align: center;
+}
+/* block-level element */
+.center-me-hor {
+	margin: 0 auto;
+	width: auto; /* needs to set fixed width */ 
+}
+
+/* ======================== feedback ======================== */
+.feedbackPanel.ui-state-error{
+	background-color: transparent;
+	border: none;
+	list-style-type: none;
+	font-size: 0.8em;
+	margin: 0px;
+	padding: 2px 3px 2px 3px;
+}
+.feedbackPanel .feedbackPanelFATAL {
+	color: #b94a48;
+}
+.feedbackPanel .feedbackPanelERROR {
+	color: #b94a48;
+}
+.feedbackPanel .feedbackPanelWARNING {
+	color: rgb(185, 150, 72);
+}
+.feedbackPanel .feedbackPanelINFO {
+	color: rgb(72, 185, 75);
+}
+.feedbackPanel .feedbackPanelSUCCESS {
+	color: rgb(72, 185, 75);
+}
+.feedbackPanel .feedbackPanelDEBUG {
+	color: rgb(72, 185, 75);
+}
+
+/* ======================== tables ======================== */
+.tablesorter-filter {
+	width: 100%;
+}
+
+.pui-datatable.ui-widget table {
+	table-layout: auto;
+}
+
+th.pui-sortable-column.wicket_orderUp div.tableheaderlabel::after { 
+	font-family: 'FontAwesome';
+	content: " \f0dd";
+}
+th.pui-sortable-column.wicket_orderDown div.tableheaderlabel::after { 
+	font-family: 'FontAwesome';
+	content: " \f0de";
+}
+th.pui-sortable-column:not(.wicket_orderDown):not(.wicket_orderUp):not(.unsortable) div.tableheaderlabel::after { 
+	font-family: 'FontAwesome';
+	content: " \f0dc";
+}
+
+.icon.delete::before,
+.ui-button.delete::before {
+	font-family: 'FontAwesome';
+	content: "\f00d  ";
+	color: red;
+}
+.icon.edit::before,
+.ui-button.edit::before {
+	font-family: 'FontAwesome';
+	content: "\f044  ";
+	color: green;
+}
+.icon.add::before,
+.ui-button.add::before {
+	font-family: 'FontAwesome';
+	content: "\f067  ";
+	color: blue;
+}
+.icon.submit::before,
+.ui-button.submit::before {
+	font-family: 'IconicStroke';
+	content: "\2717  ";
+	color: green;
+}
+.icon.reset::before,
+.ui-button.reset::before {
+	font-family: 'IconicStroke';
+	content: "\e02f  ";
+	color: blue;
+}
+.icon.cancel::before,
+.ui-button.cancel::before {
+	font-family: 'IconicStroke';
+	content: "\2713  ";
+	color: red;
+}
+
+/* ======================== text transformations ======================== */
+.lower {
+	text-transform: lowercase;
+}
+.upper {
+	text-transform: uppercase;
+}
+.cap {
+	text-transform: capitalize;
+}
+
+/* ======================== html tags ======================== */
+abbr[title],
+acronym[title] {
+	border-bottom: .1em dotted;
+	cursor: help;
+}
+address {
+	font-style: normal;
+}
+b {
+}
+big {
+}
+blockquote {
+	border-left: .5em solid rgba(0,0,0,.1);
+	padding: .1em .1em .1em 1em;
+	margin: .1em .1em .1em 1em;
+}
+cite {
+}
+del {
+}
+ins {
+}
+dfn {
+}
+em {
+}
+img {
+}
+i {
+}
+mark {
+}
+/* http://perishablepress.com/wrapping-content/ */
+pre {
+	white-space: pre;           /* CSS 2.0 */
+	white-space: pre-wrap;      /* CSS 2.1 */
+	white-space: pre-line;      /* CSS 3.0 */
+	white-space: -pre-wrap;     /* Opera 4-6 */
+	white-space: -o-pre-wrap;   /* Opera 7 */
+	white-space: -moz-pre-wrap; /* Mozilla */
+	white-space: -hp-pre-wrap;  /* HP Printers */
+	word-wrap: break-word;      /* IE 5+ */
+}
+q {
+}
+small {
+}
+s,
+strike {
+}
+strong {
+}
+sub {
+}
+sup {
+}
+tt {
+}
+u {
+}
+
+/* ======================== code/var/samp ======================== */
+code,
+samp,
+var {
+	font-style: normal;
+	font-size: 1.2em;
+	font-family: 'Source Code Pro', monospace;
+}
+code {
+	display: block;
+	border-left: .5em solid rgba(0,0,0,.1);
+	color: rgba(0,0,0,.6);
+	padding: .1em .1em .1em 1em;
+}
+samp {
+	border-style: outset;
+	border-width: .1em;
+	border-color: rgb(126,126,126);
+	color: rgba(255,255,255,.9);
+	background-color: rgba(0,0,0,.9);
+	font-weight: 700;
+	font-size: .9em;
+	padding: .14em .4em;
+	display: inline-block;
+}
+var {
+	color: brown;
+	font-size: 1em;
+	font-weight: 700;
+}
+
+/* ======================== figures/images ======================== */
+/* http://css-tricks.com/slide-in-image-captions/ */
+/* http://www.hongkiat.com/blog/css3-image-captions/ */
+/* common */
+figure,
+.figure {
+	display: block;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+	border: 5px solid #fff;
+	margin: 5px;
+	-webkit-box-shadow: 1px 1px 1px 1px #ccc;
+	-moz-box-shadow: 1px 1px 1px 1px #ccc;
+	box-shadow: 1px 1px 1px 1px #ccc;
+}
+figure img,
+.figure img {
+	background: gray;
+	background: rgba(0, 0, 0, 0.50);
+}
+figure figcaption,
+.figure .figcaption {
+	-webkit-transition: all 300ms ease-out;
+	-moz-transition: all 300ms ease-out;
+	-o-transition: all 300ms ease-out;
+	transition: all 300ms ease-out; 
+	position: absolute;
+	z-index: 222;
+	display: block;
+	background-color: rgba(0,0,0,0.8);
+	color: #fff;
+}
+figure figcaption p,
+.figure .figcaption p {
+	margin: 0px;
+	padding: .4em;
+	border: 0px;
+}
+figure:hover figcaption,
+.figure:hover .figcaption {
+	opacity: 1;
+}
+/* slide caption from bottom (default) */
+figure figcaption,
+.figure .figcaption.slidebottom {
+	left: 0;
+	bottom: -100%;
+}
+figure:hover figcaption,
+.figure:hover .figcaption.slidebottom {
+	bottom: 0;
+}
+/* slide caption from top */
+.figure .figcaption.slidetop {
+	left: 0;
+	top: -100%;
+}
+.figure:hover .figcaption.slidetop {
+	top: 0;
+}
+/* slide caption from left */
+.figure .figcaption.slideleft {
+	bottom: 0;
+	width: 100%;
+	left: -100%;
+}
+.figure:hover .figcaption.slideleft {
+	left: 0;
+}
+/* slide caption from right */
+.figure .figcaption.slideright {
+	bottom: 0;
+	width: 100%;
+	right: -100%;
+}
+.figure:hover .figcaption.slideright {
+	right: 0;
+}
+/* full view caption */
+.figure:hover .figcaption.full {
+	width: 100%;
+	height: 100%;
+}
+/* caption centered horizontally */
+.figure .figcaption.center p {
+	text-align: center;
+}
+/* caption centered vertically (only compatible when full view) */
+.figure .figcaption.full.center p {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+/* scale image on hover */
+.figure:hover img.scale {
+	-webkit-transition: all 300ms ease-out;
+	-moz-transition: all 300ms ease-out;
+	-o-transition: all 300ms ease-out;
+	transition: all 300ms ease-out;
+	-moz-transform: scale(1.25);
+	-o-transform: scale(1.25);
+	-webkit-transform: scale(1.25);
+	transform: scale(1.25);
+}
+/* fade caption (not compatible with slide) */
+.figure .figcaption.fade {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+}
+.figure:hover .figcaption.fade {
+	opacity: 1;
+}
+
+/* ======================== kdb ======================== */
+/**
+ * KEYS.css
+ *
+ * A simple stylesheet for rendering beautiful keyboard-style elements.
+ *
+ * Author:  Michael Hüneburg
+ * Website: http://michaelhue.com/keyscss
+ * License: MIT License (see LICENSE.txt)
+ */
+/* Base style, essential for every key. */
+kbd, .key {
+	display: inline;
+	display: inline-block;
+	min-width: 1em;
+	padding: .2em .3em;
+	font: normal .85em/1 "Droid Sans Mono", "Lucida Grande", Lucida, Arial, sans-serif;
+	text-align: center;
+	text-decoration: none;
+	-moz-border-radius: .3em;
+	-webkit-border-radius: .3em;
+	border-radius: .3em;
+	border: none;
+	cursor: default;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+kbd[title], .key[title] {
+	cursor: help;
+}
+/* Dark style for display on light background. This is the default style. */
+kbd, kbd.dark, .dark-keys kbd, .key, .key.dark, .dark-keys .key {
+	background: rgb(80, 80, 80);
+	background: -moz-linear-gradient(top, rgb(60, 60, 60), rgb(80, 80, 80));
+	background: -webkit-gradient(linear, left top, left bottom, from(rgb(60, 60, 60)), to(rgb(80, 80, 80)));
+	color: rgb(250, 250, 250);
+	text-shadow: -1px -1px 0 rgb(70, 70, 70);
+	-moz-box-shadow: inset 0 0 1px rgb(150, 150, 150), inset 0 -.05em .4em rgb(80, 80, 80), 0 .1em 0 rgb(30, 30, 30), 0 .1em .1em rgba(0, 0, 0, .3);
+	-webkit-box-shadow: inset 0 0 1px rgb(150, 150, 150), inset 0 -.05em .4em rgb(80, 80, 80), 0 .1em 0 rgb(30, 30, 30), 0 .1em .1em rgba(0, 0, 0, .3);
+	box-shadow: inset 0 0 1px rgb(150, 150, 150), inset 0 -.05em .4em rgb(80, 80, 80), 0 .1em 0 rgb(30, 30, 30), 0 .1em .1em rgba(0, 0, 0, .3);
+}
+/* Light style for display on dark background. */
+kbd.light, .light-keys kbd, .key.light, .light-keys .key {
+	background: rgb(250, 250, 250);
+	background: -moz-linear-gradient(top, rgb(210, 210, 210), rgb(255, 255, 255));
+	background: -webkit-gradient(linear, left top, left bottom, from(rgb(210, 210, 210)), to(rgb(255, 255, 255)));
+	color:  rgb(50, 50, 50);
+	text-shadow: 0 0 2px rgb(255, 255, 255);
+	-moz-box-shadow: inset 0 0 1px rgb(255, 255, 255), inset 0 0 .4em rgb(200, 200, 200), 0 .1em 0 rgb(130, 130, 130), 0 .11em 0 rgba(0, 0, 0, .4), 0 .1em .11em rgba(0, 0, 0, .9);
+	-webkit-box-shadow: inset 0 0 1px rgb(255, 255, 255), inset 0 0 .4em rgb(200, 200, 200), 0 .1em 0 rgb(130, 130, 130), 0 .11em 0 rgba(0, 0, 0, .4), 0 .1em .11em rgba(0, 0, 0, .9);
+	box-shadow: inset 0 0 1px rgb(255, 255, 255), inset 0 0 .4em rgb(200, 200, 200), 0 .1em 0 rgb(130, 130, 130), 0 .11em 0 rgba(0, 0, 0, .4), 0 .1em .11em rgba(0, 0, 0, .9);
+}
+
+/* ======================== toggle by radiobuttons ======================== */
+
+/* http://codepen.io/anon/pen/NPZNPq */
+
+.optiontoggle.hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: scale(0.5);
+  transition: 0.25s ease-in;
+}
+.optiontoggle {
+  opacity: 1;
+  max-height: 9999; 
+  overflow: hidden;
+  transform: scale(1);
+  transition: 0.5s ease-out;
+}
+
+/*
+<div>
+  <input type="radio" name="opts" id="opt1" value="opt1">opt1
+  <input type="radio" name="opts" id="opt2" value="opt2">opt2
+</div>
+
+<div class="b">
+  block0<br/>
+  block0
+</div>
+
+<div class="b" data-group="opts" data-value="opt1">
+  block1<br/>
+  block1<br/>
+  block1
+</div>
+
+<div class="b" data-group="opts" data-value="opt2">
+  block2<br/>
+  block2
+</div>
+
+<div class="b">
+  block3<br/>
+  block3
+</div>
+*/
+
+/* ========================xxx======================== */

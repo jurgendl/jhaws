@@ -1,0 +1,129 @@
+@mixin border-radius($rad) {
+	-webkit-border-radius:$rad;
+	-moz-border-radius:$rad;
+	border-radius:$rad;
+}
+
+$docfontsize: 1em;
+$headerfontsize: 1.2em;
+$footerfontsize: .8em;
+
+$borderradius: 3px;
+$borderwidth: .1em;
+$bordercolor: rgba(0,0,0,.3);
+
+$marginbottom: .4em;
+$smallpadding: .4em;
+$largepadding: .8em;
+$inset: 1.2em;
+$docmargin: 1.2em;
+
+$fixedbackground: #EEE;
+
+.document {
+	img {
+		background: rgba(0, 0, 0, 0.25);
+	}
+
+	.documentborder {
+		border-width: $borderwidth;
+		border-style: solid;
+		border-color: $bordercolor;
+		@include border-radius($borderradius);
+	}
+
+	margin: $docmargin;
+	font-size: $docfontsize;
+
+	footer {
+		font-size: $footerfontsize;
+	}
+
+	header.documentcontent {
+		font-size: $headerfontsize;
+		padding-bottom: $smallpadding;
+		padding-top: $smallpadding;
+		.banner {
+			width: 100%;
+			border-width: $borderwidth;
+			border-style: solid;
+			border-color: rgba(0,0,0,.1);
+		}
+	}
+
+	nav {
+	}
+
+	article {
+		section {
+			margin-left: $inset;
+		}
+	}
+
+	details {
+		summary {
+		}
+	}
+
+	.documentcontent {
+		position: relative;
+		&.maindocumentcontent {
+			float: left;
+			&:not(last) {
+				padding-right: $smallpadding;
+			}
+			&:not(first) {
+				padding-left: $smallpadding;
+			}
+		}
+	}
+	.documentcontent:not(main) {
+		padding: $smallpadding;
+		margin-bottom: $marginbottom;
+	}
+	main.documentcontent {
+		section,
+		article {
+			padding: $largepadding;
+			margin-bottom: $marginbottom;
+		}
+	}
+	aside.documentcontent.maindocumentcontent {
+		padding: $largepadding;
+	}
+
+	footer.documentcontent {
+		padding-top: $smallpadding;
+		padding-bottom: $smallpadding;
+	}
+	.docked {
+		display: block;
+		width: 100%;
+	}
+	.docked footer.documentcontent {
+		position: fixed;
+		bottom: 0px;
+		left: 0px;
+		width: 100%;
+		margin: 0px;
+		border-bottom: none;
+		border-left: none;
+		border-right: none;
+		padding-bottom: 0px;
+		@include border-radius(0px);
+	}
+
+	footer.documentcontent {
+		background: $fixedbackground;
+	}
+
+	.sticky {
+		//left: 0px;
+		.ui-widget-content {
+			background: $fixedbackground;
+			border-width: $borderwidth;
+			border-style: solid;
+			border-color: $bordercolor;
+		}
+	}
+}

@@ -1,0 +1,60 @@
+<html>
+<head>
+<style>
+* {
+	margin: 0px;
+	padding: 0px;
+}
+div {
+	border-width: 2px;
+	border-style: solid;
+	border-color: rgba(0,0,0,.5);
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	border-radius:5px;
+	width: 200px;
+	height: 200px;
+}
+</style>
+</head>
+<body>
+*A*<div style="width: 100%; height: auto;">
+	*A* width: 100%; height: auto;
+	*B*<div style="position: fixed; bottom: 200px; right: 200px;">B: position: fixed; bottom: 200px; right: 200px;</div>
+	*C*<div style="position: relative; top: 200px; left: 200px;">C: position: relative from A; top: 200px; left: 200px;</div>
+	*D*<div>D: div</div>
+	*E*<div style="position: absolute; top: 50px; left: 50px;">E: position: absolute from non static parent body; top: 50px; left: 50px;</div>
+	*F*<div style="position: relative;">
+		F: position: relative;
+		*G*<div style="position: absolute; top: 200px; left: 200px;">G: position: absolute from non static parent F; top: 200px; left: 200px;</div>
+		*H*<div style="position: absolute; bottom: 200px; right: -400px;">H: position: absolute from non static parent F; bottom: 200px; right: -400px;</div>
+	</div>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+</body>
+</html>

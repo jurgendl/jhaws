@@ -1,0 +1,154 @@
+HTTP STREAMING PLUGIN FOR FLASH LICENSE version 1.0
+==========================================
+Copyright (c) 2013 Easy Bits Limited, all rights reserved
+
+http://easy-bits.com
+
+Please read this License carefully before using, downloading or installing
+the Software (HTTP STREAMING PLUGIN FOR FLASH, as defined below). By using, downloading or
+installing the Software, Licensee is agreeing to be bound by this License
+and the licenses granted hereunder are subject to compliance with any and
+all terms of this License. IF YOU DO NOT ACCEPT THE TERMS AND CONDITIONS
+OF THIS LICENSE, DO NOT USE, DOWNLOAD, INSTALL OR DISTRIBUTE ANY OF THE
+SOFTWARE.
+
+Terms and definitions
+=====================
+
+"Software" means the HTTP STREAMING PLUGIN FOR FLASH software
+
+"Adaptation" means a derivative work based upon the Software resulting
+from any addition to, editing of or deletion from the substance or structure of the
+original source code or a compiled version of the Software or any previous
+Adaptations or a work that programmatically interacts with the Software.
+
+"License" means this document.
+
+"Licensor" means Easy Bits Limited.
+
+"License Key" means an alphanumeric key that is used to activate the Sofware. The License
+Key is provided by Licensor.
+
+"Licensee" means an individual or entity exercising rights under and complying with the
+terms of this License who has not previously violated the terms of this License with respect
+to the Software, or who has received express permission from the Licensor to exercise rights
+under this License despite a previous violation.
+
+License Grant
+=============
+
+Licensor hereby grants the Licensee a non-exclusive, non-transferable, non-assignable license,
+without the right to sublicense to: Access, display, integrate and use the Software.
+
+Licensee is not allowed to reverse-engineer, disassemble or make Adaptation of the Software.
+
+Licensee must not obscure Licensor's logo. To remove Licensor's logo Licensee must buy License Key from Licensor for each internet domain name where the Software is used.
+
+All rights not expressly granted by this Agreement are expressly reserved by Licensor.
+
+Applicability of License
+========================
+
+This License applies to the Software version purchased by the Licensee.
+Additional later versions released by the Licensor are not part of this License.
+
+Protection of Software
+===============================
+
+Except as specifically set forth herein or as otherwise agreed to between Licensor and Licensee,
+Licensee shall not have the right to copy, relicense, sell, lease, transfer, encumber, assign
+or make available for public use the Software. Any attempt to take any such actions is void,
+and will automatically terminate your rights under this License.
+
+Licensee shall use its best efforts to ensure that no unauthorized copy of the Licensed Programs
+shall be made, in whole or in part, in any form.  Licensee shall prohibit all users of the Software
+from modifying, reverse-engineering or disassembling any part of the Software.  All rights not
+expressly granted by Licensor are hereby reserved.
+
+Support
+=======
+
+No support is included with the Software. Support may be provided based on a separate agreement.
+
+Effective Date
+==============
+
+The rights and licenses granted hereunder shall commence on the date any of the Software are
+electronically delivered to Licensee.
+
+Termination of the license
+==========================
+
+This license is subject to termination by Licensor at any time if (a) Licensee violates any terms
+of this License, (b) Licensor has a reasonable basis to believe that Licensee's business is
+impairing Licensor's business.
+
+Ownership of Intellectual Property
+==================================
+
+Licensor is the sole owner of all intellectual property rights pertaining to the Software.
+Licensor reserves all rights not expressly granted herein.
+
+NO WARRANTY
+===========
+
+TO THE FULLEST EXTENT PERMISSIBLE UNDER APPLICABLE LAW, THE SOFTWARE IS PROVIDED TO YOU "AS IS,"
+WITH ALL FAULTS, WITHOUT WARRANTY OF ANY KIND, AND YOUR USE IS AT YOUR SOLE RISK. THE ENTIRE RISK
+OF SATISFACTORY QUALITY AND PERFORMANCE RESIDES WITH YOU. LICENSOR DISCLAIMS ANY AND ALL EXPRESS,
+IMPLIED OR STATUTORY WARRANTIES, INCLUDING IMPLIED WARRANTIES OF MERCHANTABILITY, SATISFACTORY QUALITY,
+FITNESS FOR A PARTICULAR PURPOSE, NONINFRINGEMENT OF THIRD PARTY RIGHTS, ANY WARRANTIES OR CONDITIONS
+OF TITLE, AND WARRANTIES (IF ANY) ARISING FROM A COURSE OF DEALING, USAGE, OR TRADE PRACTICE. LICENSOR
+DOES NOT WARRANT AGAINST INTERFERENCE WITH YOUR ENJOYMENT OF THE PROGRAM; THAT THE PROGRAM WILL MEET
+YOUR REQUIREMENTS; THAT OPERATION OF THE PROGRAM WILL BE UNINTERRUPTED OR ERROR-FREE, OR THAT THE PROGRAM
+WILL BE COMPATIBLE WITH THIRD PARTY SOFTWARE OR THAT ANY ERRORS IN THE PROGRAM WILL BE CORRECTED. NO ORAL
+OR WRITTEN ADVICE PROVIDED BY LICENSOR OR ANY AUTHORIZED REPRESENTATIVE SHALL CREATE A WARRANTY. SOME
+JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF OR LIMITATIONS ON IMPLIED WARRANTIES OR THE LIMITATIONS
+ON THE APPLICABLE STATUTORY RIGHTS OF A CONSUMER, SO SOME OR ALL OF THE ABOVE EXCLUSIONS AND LIMITATIONS
+MAY NOT APPLY TO YOU. LICENSEE IS SOLELY RESPONSIBLE FOR DETERMINING THE APPROPRIATENESS OF USING AND
+DISTRIBUTING THE SOFTWARE AND ASSUMES ALL RISKS ASSOCIATED WITH ITS EXERCISE OF RIGHTS UNDER
+THIS AGREEMENT, INCLUDING BUT NOT LIMITED TO THE RISKS AND COSTS OF PROGRAM ERRORS, COMPLIANCE WITH
+APPLICABLE LAWS, DAMAGE TO OR LOSS OF DATA, PROGRAMS OR EQUIPMENT, SUITABILITY FOR HOSTING AND
+UNAVAILABILITY OR INTERRUPTION OF OPERATIONS.
+
+Limitation of Liability
+=======================
+Except to the extent required by applicable law, THE CUMULATIVE, AGGREGATE LIABILITY OF LICENSOR
+TO LICENSEE FOR ALL CLAIMS RELATED TO THE LICENSED SOFTWARE AND THIS AGREEMENT, WILL NOT EXCEED
+THE TOTAL AMOUNT OF ALL LICENSE FEES PAID TO LICENSOR HEREUNDER. LICENSOR WILL NOT IN ANY CASE
+BE LIABLE FOR ANY SPECIAL, INCIDENTAL, CONSEQUENTIAL, INDIRECT, PUNITIVE, OR EXEMPLARY DAMAGES
+ARISING IN ANY WAY OUT OF THE USE OF THE PRODUCT, THE SERVICES OR THIS AGREEMENT, INCLUDING
+WITHOUT LIMITATION, DAMAGES FOR LOST PROFIT, LOST REVENUE, LOSS OF USE, LOSS OF DATA, COSTS
+OF RECREATING LOST DATA, THE COST OF ANY SUBSTITUTE EQUIPMENT, PROGRAM, OR DATA, OR CLAIMS
+BY ANY THIRD PARTY, INCLUDING WITH LIMITATION THIRD PARTY CLAIMS OF INFRINGEMENT OF INTELLECTUAL
+PROPERTY RIGHTS, INFRINGEMENT OF COPYRIGHT, TRADEMARK, PATENT, OR TRADE SECRETS. LICENSEE'S
+SOLE AND EXCLUSIVE REMEDY IS SET FORTH IN THIS AGREEMENT. THE LIMITATION ON DAMAGES SET FORTH
+IN SECTION WILL NOT APPLY TO INDEMNIFICATION OBLIGATIONS OR BREACHES BY LICENSEE.
+
+Indemnity
+=========
+Licensee shall indemnify Licensor, its employees, officers, licensees and agents for all damages,
+costs and expenses, including, without limitation, attorneys' fees, arising from any claims arising
+as a result of Licensee's use of the Software.
+
+Export
+======
+Licensee agrees and certifies that it will not export or re-export, directly or indirectly, the
+Software contrary to the laws of the United States or any other country.
+
+Severability
+============
+If for any reason a court of competent jurisdiction finds any provision of this License or portion
+thereof, to be unenforceable, that provision of the License shall be enforced to the maximum extent
+permissible so as to affect the intent of the parties, and the remainder of this License shall
+continue in full force and effect.
+
+Governing Law
+=============
+This License shall be governed by the laws of England.
+
+
+Waiver of Breach
+================
+No term or provision of this License shall be deemed waived and no breach excused, unless such
+waiver or consent shall be in writing and signed by Licensor.
+

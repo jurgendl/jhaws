@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util.xsd  
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd  
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security.xsd
+	">
+
+	<import resource="classpath:org/tools/hqlbuilder/webcommon/properties-config.xml" />
+
+	<security:global-method-security pre-post-annotations="enabled"/>
+
+	<alias name="filterChainProxy" alias="spring-security-filter"/>
+
+	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+		<security:filter-chain-map path-type="ant">
+			<security:filter-chain pattern="/auth/**" filters="securityContextFilter, logoutFilter, loginFilter, requestCacheFilter, servletApiFilter, anonAuthenticationFilter, sessionManagementFilter, exceptionTranslator, filterSecurityInterceptor"/>
+			<security:filter-chain pattern="/resource/**" filters="none"/>
+			<security:filter-chain pattern="/images/**" filters="none"/>
+			<security:filter-chain pattern="/pages/wicket/resource/**" filters="none"/>
+			<security:filter-chain pattern="/pages/wicket/images/**" filters="none"/>
+			<security:filter-chain pattern="/pages/public/**" filters="securityContextFilter, logoutFilter, loginFilter, requestCacheFilter, servletApiFilter, anonAuthenticationFilter, sessionManagementFilter, exceptionTranslator, filterSecurityInterceptor"/>
+			<security:filter-chain pattern="/pages/login/**" filters="securityContextFilter, logoutFilter, loginFilter, requestCacheFilter, servletApiFilter, anonAuthenticationFilter, sessionManagementFilter, exceptionTranslator, filterSecurityInterceptor"/>
+			<security:filter-chain pattern="/pages/logout/**" filters="securityContextFilter, logoutFilter, loginFilter, requestCacheFilter, servletApiFilter, anonAuthenticationFilter, sessionManagementFilter, exceptionTranslator, filterSecurityInterceptor"/>
+			<security:filter-chain pattern="/pages/**" filters="securityContextFilter, logoutFilter, loginFilter, requestCacheFilter, servletApiFilter, anonAuthenticationFilter, sessionManagementFilter, exceptionTranslator, filterSecurityInterceptor"/>
+			<security:filter-chain pattern="/xml/**" filters="securityContextFilter, logoutFilter, loginFilter, requestCacheFilter, servletApiFilter, anonAuthenticationFilter, sessionManagementFilter, exceptionTranslator, filterSecurityInterceptor"/>
+			<security:filter-chain pattern="/**" filters="none"/>
+		</security:filter-chain-map>
+	</bean>
+
+	<bean id="filterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+		<property name="securityMetadataSource">
+			<security:filter-security-metadata-source>
+				<security:intercept-url pattern="/resource/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+				<security:intercept-url pattern="/images/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+				<security:intercept-url pattern="/pages/wicket/resource/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+				<security:intercept-url pattern="/pages/wicket/images/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+				<security:intercept-url pattern="/pages/public/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+				<security:intercept-url pattern="/pages/login/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+				<security:intercept-url pattern="/pages/logout/**" access="IS_AUTHENTICATED_FULLY"/>
+				<security:intercept-url pattern="/pages/**" access="IS_AUTHENTICATED_FULLY"/>
+				<security:intercept-url pattern="/xml/**" access="IS_AUTHENTICATED_FULLY"/>
+				<security:intercept-url pattern="/**"  access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+			</security:filter-security-metadata-source>
+		</property>
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="accessDecisionManager" ref="accessDecisionManager"/>
+	</bean>
+
+	<bean id="securityContextFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+		<constructor-arg ref="securityContextRepository"/>
+	</bean>
+
+	<bean id="securityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository"/>
+
+	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<constructor-arg value="${wicket.login}"/>
+		<constructor-arg>
+			<list>
+				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+			</list>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="${logout}"/>
+	</bean>
+
+	<bean id="loginFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<property name="filterProcessesUrl" value="${login}"/>
+		<property name="authenticationManager" ref="authenticationManager"/>
+		<property name="authenticationSuccessHandler">
+			<bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+				<property name="defaultTargetUrl" value="${wicket.login}"/>
+				<property name="alwaysUseDefaultTargetUrl" value="false"/>
+				<property name="useReferer" value="true"/>
+				<property name="targetUrlParameter" value="${returnto.propertyname}"/>
+			</bean>
+		</property>
+		<property name="authenticationFailureHandler">
+			<bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+				<property name="defaultFailureUrl" value="${wicket.login}"/>
+			</bean>
+		</property>
+		<property name="usernameParameter" value="${username.propertyname}"/>
+		<property name="passwordParameter" value="${password.propertyname}"/>
+	</bean>
+
+	<security:authentication-manager id="authenticationManager" alias="org.springframework.security.authenticationManager">
+		<security:authentication-provider ref="authenticationProvider"/>
+		<security:authentication-provider ref="anonAuthenticationProvider"/>
+	</security:authentication-manager>
+
+	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<property name="userDetailsService" ref="userDetailsService"/>
+		<property name="passwordEncoder" ref="passwordEncoder"/>
+	</bean>
+
+	<bean id="userDetailsService" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+		<property name="enableGroups" value="true"/>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<bean id="anonAuthenticationProvider" class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+		<constructor-arg value="${anonymous.user}"/>
+	</bean>
+
+	<bean id="requestCacheFilter" class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter">
+		<constructor-arg ref="requestCache"/>
+	</bean>
+
+	<bean id="servletApiFilter" class="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter"/>
+
+	<bean id="anonAuthenticationFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+		<constructor-arg value="${anonymous.user}"/>
+	</bean>
+
+	<bean id="sessionManagementFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+		<constructor-arg ref="securityContextRepository"/>
+	</bean>
+
+	<bean id="exceptionTranslator" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<constructor-arg>
+			<bean class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+				<property name="loginFormUrl" value="${wicket.login}"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg ref="requestCache"/>
+	</bean>
+
+	<bean id="requestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache"/>
+
+	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		<property name="decisionVoters">
+			<list>
+				<bean class="org.springframework.security.access.vote.RoleVoter"/>
+				<bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+			</list>
+		</property>
+	</bean>
+
+</beans>
