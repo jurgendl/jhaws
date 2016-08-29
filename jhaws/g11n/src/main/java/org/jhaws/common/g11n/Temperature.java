@@ -2,13 +2,11 @@ package org.jhaws.common.g11n;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.NumberFormat;
 
 /**
  * @see https://en.wikipedia.org/wiki/Conversion_of_units_of_temperature
  */
-public class Temperature implements Serializable {
+public class Temperature extends Helper implements Serializable {
 	private static final BigDecimal CTE_ROMER_B = div(40, 21);
 
 	private static final BigDecimal CTE_ROMER_A = div(75, 10);
@@ -26,10 +24,6 @@ public class Temperature implements Serializable {
 	private static final BigDecimal CTE_KELVIN = div(27315, 100);
 
 	private static final long serialVersionUID = 3786946493426325164L;
-
-	protected static final NumberFormat FORMATTER = NumberFormat.getInstance();
-
-	protected static final int PRECISION = 100;
 
 	public static enum TemperatureUnit {
 		Celsius("°C"), Kelvin("K"), Fahrenheit("°F"), Rankine("°R"), Delisle("°De"), Newton("°N"), Réaumur("°Ré"), Rømer("°Rø");
@@ -99,50 +93,6 @@ public class Temperature implements Serializable {
 	protected void check() throws IllegalArgumentException {
 		// if (getKelvin().longValue() < 0)
 		// throw new IllegalArgumentException("Absolute zero");
-	}
-
-	public static BigDecimal bd(long val) {
-		return BigDecimal.valueOf(val);
-	}
-
-	public static BigDecimal bd(double val) {
-		return BigDecimal.valueOf(val);
-	}
-
-	public static BigDecimal multiply(long val, long multiplicand) {
-		return multiply(bd(val), multiplicand);
-	}
-
-	public static BigDecimal multiply(BigDecimal val, long multiplicand) {
-		return multiply(val, bd(multiplicand));
-	}
-
-	public static BigDecimal multiply(BigDecimal val, BigDecimal multiplicand) {
-		return val.multiply(multiplicand);
-	}
-
-	public static BigDecimal div(long val, long divisor) {
-		return div(bd(val), divisor);
-	}
-
-	public static BigDecimal div(BigDecimal val, long divisor) {
-		return div(val, bd(divisor));
-	}
-
-	public static BigDecimal div(BigDecimal val, BigDecimal divisor) {
-		return val.divide(divisor, PRECISION, RoundingMode.HALF_UP);
-	}
-
-	public static BigDecimal add(long val, long augend) {
-		return add(bd(val), augend);
-	}
-
-	public static BigDecimal add(BigDecimal val, long augend) {
-		return add(val, bd(augend));
-	}
-
-	public static BigDecimal add(BigDecimal val, BigDecimal augend) {
-		return val.add(augend);
 	}
 
 	public BigDecimal getCelsius() {
