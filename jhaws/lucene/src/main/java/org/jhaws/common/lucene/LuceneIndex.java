@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -51,7 +52,6 @@ import org.apache.lucene.util.Bits;
 import org.apache.lucene.util.Version;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.CollectionUtils8;
-import org.jhaws.common.lang.Pair;
 import org.jhaws.common.lang.functions.EConsumer;
 import org.jhaws.common.lang.functions.ESupplier;
 import org.slf4j.Logger;
@@ -64,7 +64,7 @@ public class LuceneIndex implements Runnable {
 	protected static final Logger logger = LoggerFactory.getLogger(LuceneIndex.class);
 
 	public static interface ForceRedo<F extends Indexable<? super F>> {
-		void forceRedo(List<Pair<F>> match, List<Pair<F>> redo);
+		void forceRedo(List<Map.Entry<F, F>> match, List<Map.Entry<F, F>> redo);
 	}
 
 	protected static final String LUCENE_METADATA = "LUCENE_METADATA";
@@ -297,13 +297,13 @@ public class LuceneIndex implements Runnable {
 		Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
 		Consumer<F> onCreate = optional(onCreateOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
 		BiConsumer<F, F> onRematch2 = optional(onRematchOptional, (Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
-		Consumer<Pair<F>> onRematch = p -> onRematch2.accept(p.getKey(), p.getValue());
+		Consumer<Map.Entry<F, F>> onRematch = p -> onRematch2.accept(p.getKey(), p.getValue());
 
 		List<F> delete = indexed.parallelStream().filter(notContainedIn(fetched)).collect(collectList());
 		List<F> create = fetched.parallelStream().filter(notContainedIn(indexed)).collect(collectList());
 
-		List<Pair<F>> match = match(indexed, fetched);
-		List<Pair<F>> redo = match.parallelStream().filter(p -> p.getValue().getLastmodified().isAfter(p.getKey().getLastmodified())).collect(collectList());
+		List<Map.Entry<F, F>> match = match(indexed, fetched);
+		List<Map.Entry<F, F>> redo = match.parallelStream().filter(p -> p.getValue().getLastmodified().isAfter(p.getKey().getLastmodified())).collect(collectList());
 		if (forceRedoOptional != null) {
 			forceRedoOptional.forceRedo(match, redo);
 		}
@@ -313,8 +313,8 @@ public class LuceneIndex implements Runnable {
 
 		if (redo.size() > 0)
 			logger.info("*{}", redo.size());
-		redo.stream().map(Pair::getKey).forEach(delete::add);
-		redo.stream().map(Pair::getValue).forEach(create::add);
+		redo.stream().map(Map.Entry::getKey).forEach(delete::add);
+		redo.stream().map(Map.Entry::getValue).forEach(create::add);
 
 		if (delete.size() - redo.size() > 0)
 			logger.info("-{}", delete.size() - redo.size());
@@ -327,7 +327,7 @@ public class LuceneIndex implements Runnable {
 		transaction(w -> create.stream().map(Indexable::indexable).forEach(EConsumer.enhance(this::addDocs)));
 
 		List<F> result = new ArrayList<>(create);
-		match.stream().map(Pair::getKey).forEach(result::add); // do not change to parallelStream or it will add null values
+		match.stream().map(Map.Entry::getKey).forEach(result::add); // do not change to parallelStream or it will add null values
 		return result;
 	}
 

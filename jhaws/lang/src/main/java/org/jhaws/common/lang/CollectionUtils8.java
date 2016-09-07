@@ -991,7 +991,7 @@ public interface CollectionUtils8 {
 		return streamp(text).mapToObj(i -> (char) i);
 	}
 
-	public static <T> List<Pair<T>> match(List<T> keys, List<T> values) {
+	public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
 		return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
 	}
 
@@ -1379,7 +1379,7 @@ public interface CollectionUtils8 {
 		return stream.filter(t -> type.isAssignableFrom(t.getClass())).map(t -> type.cast(t));
 	}
 
-	public static Stream<Pair<String>> stream(Properties properties) {
+	public static Stream<Map.Entry<String, String>> stream(Properties properties) {
 		return stream(false, properties).map(entry -> new Pair<>(String.valueOf(entry.getKey()), String.valueOf(entry.getValue())));
 	}
 
@@ -1400,5 +1400,14 @@ public interface CollectionUtils8 {
 		return (t1, t2) -> {
 			return comparator.compare(compare.apply(t1), compare.apply(t2));
 		};
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static Map<String, List<String>> groupByValue(Properties properties) {
+		return groupByValue((Map<String, String>) (Map) properties);
+	}
+
+	public static <K, V> Map<V, List<K>> groupByValue(Map<K, V> map) {
+		return stream(map.entrySet()).collect(Collectors.groupingBy(e -> e.getValue(), Collectors.mapping(e -> e.getKey(), Collectors.toList())));
 	}
 }

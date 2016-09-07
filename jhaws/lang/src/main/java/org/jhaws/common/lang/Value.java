@@ -27,8 +27,8 @@ public class Value<T> implements Serializable {
 		return this.value;
 	}
 
-	public void setValue(T value) {
-		this.value = value;
+	public T setValue(T value) {
+		return this.value = value;
 	}
 
 	public T get() {

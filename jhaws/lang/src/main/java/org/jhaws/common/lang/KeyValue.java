@@ -1,5 +1,6 @@
 package org.jhaws.common.lang;
 
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -7,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 @XmlRootElement
-public class KeyValue<K, V> extends Value<V> {
+public class KeyValue<K, V> extends Value<V> implements Map.Entry<K, V> {
 	private static final long serialVersionUID = 5148190064982535265L;
 
 	public static <T, U> KeyValue<T, U> value(T key, U value) {
@@ -25,12 +26,13 @@ public class KeyValue<K, V> extends Value<V> {
 		this.key = key;
 	}
 
+	@Override
 	public K getKey() {
 		return key;
 	}
 
-	public void setKey(K key) {
-		this.key = key;
+	public K setKey(K key) {
+		return this.key = key;
 	}
 
 	@Override
