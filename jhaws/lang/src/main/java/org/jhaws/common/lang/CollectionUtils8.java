@@ -82,6 +82,20 @@ public interface CollectionUtils8 {
 				return (o1 == null ? "" : o1).compareToIgnoreCase((o2 == null ? "" : o2));
 			}
 		}
+
+		public static class MapEntryKVComparator<K, V> implements Comparator<Map.Entry<K, V>> {
+			@Override
+			public int compare(Entry<K, V> o1, Entry<K, V> o2) {
+				return new CompareToBuilder().append(o1.getKey(), o2.getKey()).append(o1.getValue(), o2.getValue()).toComparison();
+			}
+		}
+
+		public static class MapEntryVKComparator<K, V> implements Comparator<Map.Entry<K, V>> {
+			@Override
+			public int compare(Entry<K, V> o1, Entry<K, V> o2) {
+				return new CompareToBuilder().append(o1.getValue(), o2.getValue()).append(o1.getKey(), o2.getKey()).toComparison();
+			}
+		}
 	}
 
 	public static class RegexIterator implements Iterator<String> {
