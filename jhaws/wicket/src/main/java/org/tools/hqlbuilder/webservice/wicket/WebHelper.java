@@ -4,6 +4,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.jhaws.common.lang.EnhancedRunnable;
 import org.springframework.beans.BeanUtils;
@@ -218,5 +220,10 @@ public class WebHelper {
 			}
 		}
 		return pp;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static IModel<List<String>> model(String... options) {
+		return (IModel) Model.of(Arrays.asList(options));
 	}
 }
