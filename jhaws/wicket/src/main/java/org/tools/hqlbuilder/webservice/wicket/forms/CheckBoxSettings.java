@@ -5,7 +5,7 @@ public class CheckBoxSettings extends AbstractFormElementSettings<CheckBoxSettin
 
 	protected boolean nice = true;
 
-	protected boolean labelBehind = true;
+	protected boolean labelBehind = false;
 
 	public CheckBoxSettings() {
 		super();
