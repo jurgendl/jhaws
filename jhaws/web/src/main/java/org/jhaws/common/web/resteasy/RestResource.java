@@ -27,6 +27,8 @@ public interface RestResource {
 
 	public static final String JSON_EXTENSION = "json";
 
+	public static final String JS_EXTENSION = "js";
+
 	public static final String HTML_EXTENSION = "html";
 
 	public static final String BINARY_EXTENSION = "bin";
