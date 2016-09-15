@@ -1,3 +1,26 @@
+/*
+	<div id="id1" class="collapsed" onclick="toggle_visibility('id1','id2')">toggle visibility</div>
+	<div id="id2" class="hidden"></div>
+*/
+/*
+	<div id="id1" class="expanded" onclick="toggle_visibility('id1','id2')">toggle visibility</div>
+	<div id="id2"></div>
+*/
+
+function toggle_visibility(expander,collapsible) {
+	collapsibletag = $("[id="+collapsible+"]");
+	expandertag = $("[id="+expander+"]");
+	if( collapsibletag.hasClass( "hidden" ) ) {
+		collapsibletag.removeClass( "hidden" );
+		expandertag.removeClass( "collapsed" );
+		expandertag.addClass( "expanded" );
+	} else {
+		collapsibletag.addClass( "hidden" );
+		expandertag.removeClass( "expanded" );
+		expandertag.addClass( "collapsed" );
+	}
+}
+
 /* http://stackoverflow.com/questions/8579643/simple-jquery-scroll-to-anchor-up-or-down-the-page */
 function anchorDoScroll(dest) {
 	$('html,body').animate({scrollTop:$('a[name='+dest+']').offset().top},1000);/*,'easeInOutCirc'*/
