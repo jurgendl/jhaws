@@ -730,11 +730,11 @@ kbd.light, .light-keys kbd, .key.light, .light-keys .key {
 .expanded,.collapsed {
 	cursor: pointer; cursor: hand;
 } 
-.expanded::before { 
+/*.expanded::before { 
 	content: "- ";
 }
 .collapsed::before { 
 	content: "+ ";
-}
+}*/
 
 /* ========================xxx======================== */
