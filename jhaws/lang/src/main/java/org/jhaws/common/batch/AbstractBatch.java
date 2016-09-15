@@ -1,5 +1,6 @@
 package org.jhaws.common.batch;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -45,7 +46,23 @@ public class AbstractBatch implements Runnable {
 		return Boolean.TRUE.equals(act) ? step(parent, id, supplyingAction, throwsException) : null;
 	}
 
-	protected static <C> BatchExecution<Runnable> step(C context, BatchExecution<RunnableList> parent, String id, boolean act, Function<C, String> supplyingAction, boolean throwsException) {
+	protected static BatchExecution<Runnable> step(BatchExecution<RunnableList> parent, String id, boolean act, Runnable action, boolean throwsException) {
+		return step(parent, id, act, () -> {
+			action.run();
+			return null;
+		}, throwsException);
+	}
+
+	protected static <C> BatchExecution<Runnable> step(C context, BatchExecution<RunnableList> parent, String id, boolean act, Function<C, String> supplyingAction,
+			boolean throwsException) {
 		return step(parent, id, act, () -> supplyingAction.apply(context), throwsException);
+	}
+
+	protected static <C> BatchExecution<Runnable> step(C context, BatchExecution<RunnableList> parent, String id, boolean act, Consumer<C> supplyingAction,
+			boolean throwsException) {
+		return step(parent, id, act, () -> {
+			supplyingAction.accept(context);
+			return null;
+		}, throwsException);
 	}
 }
