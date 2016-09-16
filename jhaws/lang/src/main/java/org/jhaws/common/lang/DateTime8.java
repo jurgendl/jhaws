@@ -54,7 +54,7 @@ public class DateTime8 {
 		return formatted.toString();
 	}
 
-	public static String printShort(Duration duration, char decimalSeperator) {
+	public static String printShort(Duration duration, Character decimalSeperator) {
 		long days = duration.toDays();
 		duration = duration.minusDays(days);
 		long hours = duration.toHours();
@@ -85,7 +85,7 @@ public class DateTime8 {
 				formatted.append("0");
 			}
 			formatted.append(seconds);
-			if (millis > 0) {
+			if (decimalSeperator != null && millis > 0) {
 				formatted.append(decimalSeperator);
 				if (millis < 100) {
 					formatted.append("0");

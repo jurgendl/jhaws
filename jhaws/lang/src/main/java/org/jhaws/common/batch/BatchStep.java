@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.lang.CollectionUtils8;
 
@@ -62,7 +61,8 @@ public class BatchStep implements Serializable {
 	}
 
 	public BatchStep add(BatchStep step) {
-		if (steps == null) steps = new ArrayList<>();
+		if (steps == null)
+			steps = new ArrayList<>();
 		step.parent = this;
 		steps.add(step);
 		total++;
@@ -144,11 +144,12 @@ public class BatchStep implements Serializable {
 	}
 
 	public void setInfo(String info) {
-		this.info = StringUtils.isBlank(info) ? null : StringEscapeUtils.escapeXml10(info);
+		this.info = StringUtils.isBlank(info) ? null : /* StringEscapeUtils.escapeXml10( */info/* ) */;
 	}
 
 	@Override
 	public String toString() {
-		return "BatchStep[" + id + ":" + (total > 0 ? progress + "/" + total : "") + ":" + state + (steps == null ? "" : ":\n\t" + steps.stream().map(Object::toString).collect(Collectors.joining("\n\t")) + "\n") + "]";
+		return "BatchStep[" + id + ":" + (total > 0 ? progress + "/" + total : "") + ":" + state
+				+ (steps == null ? "" : ":\n\t" + steps.stream().map(Object::toString).collect(Collectors.joining("\n\t")) + "\n") + "]";
 	}
 }

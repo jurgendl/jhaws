@@ -1033,12 +1033,24 @@ public interface CollectionUtils8 {
 		};
 	}
 
-	public static String join(Collection<String> strings) {
+	public static <T> String join(Collection<T> strings) {
 		return join(strings, " ");
 	}
 
-	public static String join(Collection<String> strings, String delimiter) {
-		return stream(strings).collect(Collectors.joining(delimiter));
+	public static <T> String join(Collection<T> strings, String delimiter) {
+		return join(stream(strings), delimiter);
+	}
+
+	public static <T> String join(Stream<T> stream) {
+		return join(stream, " ");
+	}
+
+	public static <T> String join(Stream<T> stream, String delimiter) {
+		return stream.map(Object::toString).filter(StringUtils::isNotBlank).collect(Collectors.joining(delimiter));
+	}
+
+	public static Stream<String> split(String string, String delimiter) {
+		return streamArray(string.split(delimiter));
 	}
 
 	/**
@@ -1352,14 +1364,6 @@ public interface CollectionUtils8 {
 
 	public static <T> Function<List<T>, T> first() {
 		return list -> list.isEmpty() ? null : list.get(0);
-	}
-
-	public static String joining(Stream<String> stream, String delimiter) {
-		return stream.collect(Collectors.joining(delimiter));
-	}
-
-	public static Stream<String> split(String string, String delimiter) {
-		return streamArray(string.split(delimiter));
 	}
 
 	@SafeVarargs
