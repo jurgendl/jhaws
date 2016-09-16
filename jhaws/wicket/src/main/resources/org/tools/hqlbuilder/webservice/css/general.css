@@ -74,6 +74,7 @@ body {
 }
 
 /* ======================== box sizing ======================== */
+
 *, *:before, *:after {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -81,6 +82,7 @@ body {
 }
 
 /* ======================== titles ======================== */
+
 /*Georgia, Times, 'Times New Roman', serif*/
 /*Palatino, 'Palatino Linotype', 'Hoefler Text', Times, 'Times New Roman', serif*/
 /*Tahoma, Verdana, Geneva*/
@@ -90,6 +92,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ======================== placeholder ======================== */
+
 ::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder {
 	padding: 0px;
 	font-size: 10px;
@@ -145,34 +148,39 @@ h1, h2, h3, h4, h5 {
 	transform: rotate(270deg);
 }
 
-.rotate345 {
-	-ms-transform: rotate(345deg);
-	-webkit-transform: rotate(345deg);
-	-moz-transform: rotate(345deg);
-	-o-transform: rotate(345deg);
-	transform: rotate(345deg);
+.rotate315 {
+	-ms-transform: rotate(315deg);
+	-webkit-transform: rotate(315deg);
+	-moz-transform: rotate(315deg);
+	-o-transform: rotate(315deg);
+	transform: rotate(315deg);
+}
+
+.rotate360 {
+	-ms-transform: rotate(360deg);
+	-webkit-transform: rotate(360deg);
+	-moz-transform: rotate(360deg);
+	-o-transform: rotate(360deg);
+	transform: rotate(360deg);
 }
 
 /* ======================== rotation animation ======================== */
+
 @-webkit-keyframes rotate {
-	from { -webkit-transform:rotate(0deg); }
-	to { -webkit-transform:rotate(360deg); }
+	from { -webkit-transform:rotate(0deg); } to { -webkit-transform:rotate(360deg); }
 }
 @-moz-keyframes rotate {
-	from { -moz-transform:rotate(0deg); }
-	to { -moz-transform:rotate(360deg); }
+	from { -moz-transform:rotate(0deg); } to { -moz-transform:rotate(360deg); }
 }
 @-ms-keyframes rotate {
-	from { -ms-transform:rotate(0deg); }
-	to { -ms-transform:rotate(360deg); }
+	from { -ms-transform:rotate(0deg); } to { -ms-transform:rotate(360deg); }
 }
 @-o-keyframes rotate {
-	from { -o-transform:rotate(0deg); }
-	to { -o-transform:rotate(360deg); }
+	from { -o-transform:rotate(0deg); } to { -o-transform:rotate(360deg); }
 }
-.rotatingslower,
-.rotating,
-.rotatingfaster {
+
+.rotatingfastest {
+	-webkit-filter: blur(0);
 	-webkit-transform-origin: 50% 50%;
 	-webkit-animation-name: rotate;
 	-webkit-animation-iteration-count: infinite;
@@ -189,32 +197,112 @@ h1, h2, h3, h4, h5 {
 	-o-animation-name: rotate;
 	-o-animation-iteration-count: infinite;
 	-o-animation-timing-function: linear;
+	-webkit-animation-duration: 0.25s;
+	-moz-animation-duration: 0.25s;
+	-ms-animation-duration: 0.25s;
+	-o-animation-duration: 0.25s;
 }
 .rotatingfaster {
+	-webkit-filter: blur(0);
+	-webkit-transform-origin: 50% 50%;
+	-webkit-animation-name: rotate;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-transform-origin: 50% 50%;
+	-moz-animation-name: rotate;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-transform-origin: 50% 50%;
+	-ms-animation-name: rotate;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	-o-transform-origin: 50% 50%;
+	-o-animation-name: rotate;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
 	-webkit-animation-duration: 0.75s;
 	-moz-animation-duration: 0.75s;
 	-ms-animation-duration: 0.75s;
 	-o-animation-duration: 0.75s;
 }
-.rotating {
+.rotating , .rotatingnormal {
+	-webkit-filter: blur(0);
+	-webkit-transform-origin: 50% 50%;
+	-webkit-animation-name: rotate;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-transform-origin: 50% 50%;
+	-moz-animation-name: rotate;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-transform-origin: 50% 50%;
+	-ms-animation-name: rotate;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	-o-transform-origin: 50% 50%;
+	-o-animation-name: rotate;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
 	-webkit-animation-duration: 1.5s;
 	-moz-animation-duration: 1.5s;
 	-ms-animation-duration: 1.5s;
 	-o-animation-duration: 1.5s;
 }
 .rotatingslower {
+	-webkit-filter: blur(0);
+	-webkit-transform-origin: 50% 50%;
+	-webkit-animation-name: rotate;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-transform-origin: 50% 50%;
+	-moz-animation-name: rotate;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-transform-origin: 50% 50%;
+	-ms-animation-name: rotate;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	-o-transform-origin: 50% 50%;
+	-o-animation-name: rotate;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
 	-webkit-animation-duration: 3s;
 	-moz-animation-duration: 3s;
 	-ms-animation-duration: 3s;
 	-o-animation-duration: 3s;
 }
+.rotatingslowest {
+	-webkit-filter: blur(0);
+	-webkit-transform-origin: 50% 50%;
+	-webkit-animation-name: rotate;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-transform-origin: 50% 50%;
+	-moz-animation-name: rotate;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-ms-transform-origin: 50% 50%;
+	-ms-animation-name: rotate;
+	-ms-animation-iteration-count: infinite;
+	-ms-animation-timing-function: linear;
+	-o-transform-origin: 50% 50%;
+	-o-animation-name: rotate;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
+	-webkit-animation-duration: 5s;
+	-moz-animation-duration: 5s;
+	-ms-animation-duration: 5s;
+	-o-animation-duration: 5s;
+}
 
 /* ======================== icon fonts ======================== */
+
 .transparentbg {
 	background-color : transparent !important;
 }
 
 /* ======================== hyperlink ======================== */
+
 /* link: the normal state of a hyperlink */
 /* visited: when the link has been visited before */
 /* hover: when the user hovers their mouse over a link */
@@ -250,6 +338,7 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 }
 
 /* ======================== ui-state-* fix unreadable blur ======================== */
+
 .ui-state-error,
 .ui-state-highlight {
 	text-shadow: none !important;
@@ -267,6 +356,7 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 }
 
 /* ======================== fileupload ======================== */
+
 .fileupload {
 	overflow: hidden;
 	position: relative;
@@ -286,6 +376,7 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 }
 
 /* ======================== popout ======================== */
+
 /* http://perishablepress.com/margin-list-floated-image/ */
 .popout {
 	width: auto;
@@ -293,6 +384,7 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 }
 
 /* ======================== centering ======================== */
+
 /* http://css-tricks.com/centering-css-complete-guide */
 /* inline, inline-block, inline-table, inline-flex in block-level parent element */
 .center-children-hor {
@@ -305,6 +397,7 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 }
 
 /* ======================== feedback ======================== */
+
 .feedbackPanel.ui-state-error{
 	background-color: transparent;
 	border: none;
@@ -333,6 +426,7 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 }
 
 /* ======================== tables ======================== */
+
 .tablesorter-filter {
 	width: 100%;
 }
@@ -392,17 +486,19 @@ th.pui-sortable-column:not(.wicket_orderDown):not(.wicket_orderUp):not(.unsortab
 }
 
 /* ======================== text transformations ======================== */
-.lower {
+
+.lower , .lowercase , .lowercased {
 	text-transform: lowercase;
 }
-.upper {
+.upper , .uppercase , .uppercased {
 	text-transform: uppercase;
 }
-.cap {
+.cap , .capitalize , .capitalized {
 	text-transform: capitalize;
 }
 
 /* ======================== html tags ======================== */
+
 abbr[title],
 acronym[title] {
 	border-bottom: .1em dotted;
@@ -466,6 +562,7 @@ u {
 }
 
 /* ======================== code/var/samp ======================== */
+
 code,
 samp,
 var {
@@ -497,6 +594,7 @@ var {
 }
 
 /* ======================== figures/images ======================== */
+
 /* http://css-tricks.com/slide-in-image-captions/ */
 /* http://www.hongkiat.com/blog/css3-image-captions/ */
 /* common */
@@ -614,6 +712,7 @@ figure:hover figcaption,
 }
 
 /* ======================== kdb ======================== */
+
 /**
  * KEYS.css
  *
