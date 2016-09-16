@@ -47,7 +47,7 @@ public class BatchExecution<T extends Runnable> implements Runnable {
 			String duration = ((step.getEnd().getTime() - step.getStart().getTime()) < 1000l) ? null
 					: DateTime8.printShort(Duration.ofMillis(step.getEnd().getTime() - step.getStart().getTime()), null);
 			if (exception != null && duration != null) {
-				step.setInfo("<" + duration + "> " + exception);
+				step.setInfo("<" + duration + ">" + exception);
 			} else if (duration != null) {
 				step.setInfo("<" + duration + ">");
 			} else if (exception != null) {
