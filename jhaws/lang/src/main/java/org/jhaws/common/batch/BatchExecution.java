@@ -29,23 +29,27 @@ public class BatchExecution<T extends Runnable> implements Runnable {
 	@Override
 	public void run() {
 		String exception = null;
+		Date start = new Date();
+		String fullId = step.fullId();
 		try {
-			logger.info("start: {}", step.fullId());
-			step.setStart(new Date());
+			logger.info("start: {} {}", fullId, start);
+			step.setStart(start);
 			step.setState(BatchState.busy);
 			action.run();
 			step.setState(BatchState.done);
 			step.progress();
 		} catch (RuntimeException ex) {
-			logger.info("error throw {}: {}", throwsException, step.fullId(), ex);
+			logger.info("error throw {}: {}", throwsException, fullId, ex);
 			step.setState(BatchState.error);
 			exception = ex.getLocalizedMessage();
-			if (throwsException)
+			if (throwsException) {
 				throw ex;
+			}
 		} finally {
-			step.setEnd(new Date());
-			String duration = ((step.getEnd().getTime() - step.getStart().getTime()) < 1000l) ? null
-					: DateTime8.printShort(Duration.ofMillis(step.getEnd().getTime() - step.getStart().getTime()), null);
+			Date end = new Date();
+			step.setEnd(end);
+			long millis = start.getTime() - end.getTime();
+			String duration = (millis < 1000l) ? null : DateTime8.printShort(Duration.ofMillis(millis), null);
 			if (exception != null && duration != null) {
 				step.setInfo("<" + duration + ">" + exception);
 			} else if (duration != null) {
@@ -53,7 +57,7 @@ public class BatchExecution<T extends Runnable> implements Runnable {
 			} else if (exception != null) {
 				step.setInfo(exception);
 			}
-			logger.info("end: {}", step.fullId());
+			logger.info("end: {} {}", fullId, end);
 		}
 	}
 
@@ -83,6 +87,6 @@ public class BatchExecution<T extends Runnable> implements Runnable {
 
 	@Override
 	public String toString() {
-		return "BatchExecution[throwsException=" + throwsException + ":" + step + "]";
+		return "BatchExecution[" + throwsException + ":" + step + "]";
 	}
 }
