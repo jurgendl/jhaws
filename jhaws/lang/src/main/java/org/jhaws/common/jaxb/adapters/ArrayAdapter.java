@@ -1,8 +1,8 @@
-package org.jhaws.common.web.xml.adapters;
+package org.jhaws.common.jaxb.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.jhaws.common.web.xml.XmlWrapper;
+import org.jhaws.common.jaxb.XmlWrapper;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ArrayAdapter extends XmlAdapter<XmlWrapper[], Object[]> {

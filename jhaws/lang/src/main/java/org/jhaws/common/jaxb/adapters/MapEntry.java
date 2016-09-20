@@ -1,8 +1,8 @@
-package org.jhaws.common.web.xml.adapters;
+package org.jhaws.common.jaxb.adapters;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import org.jhaws.common.web.xml.XmlWrapper;
+import org.jhaws.common.jaxb.XmlWrapper;
 
 public class MapEntry {
 	@XmlElement(name = "key", required = false)

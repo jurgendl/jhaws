@@ -1,4 +1,4 @@
-package org.jhaws.common.web.xml;
+package org.jhaws.common.jaxb;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -10,10 +10,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.jhaws.common.web.xml.adapters.ArrayAdapter;
-import org.jhaws.common.web.xml.adapters.CollectionAdapter;
-import org.jhaws.common.web.xml.adapters.EnumAdapter;
-import org.jhaws.common.web.xml.adapters.MapAdapter;
+import org.jhaws.common.jaxb.adapters.ArrayAdapter;
+import org.jhaws.common.jaxb.adapters.CollectionAdapter;
+import org.jhaws.common.jaxb.adapters.EnumAdapter;
+import org.jhaws.common.jaxb.adapters.MapAdapter;
 
 @XmlRootElement(name = "any")
 public class XmlWrapper<T> implements Serializable {

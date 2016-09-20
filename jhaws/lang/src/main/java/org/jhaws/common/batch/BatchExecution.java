@@ -1,9 +1,7 @@
 package org.jhaws.common.batch;
 
-import java.time.Duration;
 import java.util.Date;
 
-import org.jhaws.common.lang.DateTime8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,15 +46,7 @@ public class BatchExecution<T extends Runnable> implements Runnable {
 		} finally {
 			Date end = new Date();
 			step.setEnd(end);
-			long millis = start.getTime() - end.getTime();
-			String duration = (millis < 1000l) ? null : DateTime8.printShort(Duration.ofMillis(millis), null);
-			if (exception != null && duration != null) {
-				step.setInfo("<" + duration + ">" + exception);
-			} else if (duration != null) {
-				step.setInfo("<" + duration + ">");
-			} else if (exception != null) {
-				step.setInfo(exception);
-			}
+			step.setInfo(exception);
 			logger.info("end: {} {}", fullId, end);
 		}
 	}

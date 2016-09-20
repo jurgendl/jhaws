@@ -1,4 +1,4 @@
-package org.jhaws.common.web.xml.adapters;
+package org.jhaws.common.jaxb.adapters;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.jhaws.common.web.xml.XmlWrapper;
+import org.jhaws.common.jaxb.XmlWrapper;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CollectionEntries {
