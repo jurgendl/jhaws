@@ -13,7 +13,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -35,7 +37,21 @@ public class ThreadLocalMarshalling {
 
 	protected boolean formatOutput = true;
 
-	public static JAXBContext getJaxbContext(Class<?> atLeastOneClass, Class<?>... dtoClasses) {
+	public static JAXBContext getJaxbContext(String tremaSeperatedPackages) {
+		try {
+			return JAXBContext.newInstance(tremaSeperatedPackages);
+		} catch (JAXBException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static JAXBContext getJaxbContext(Class[] atLeastOneClass) {
+		return getJaxbContext(atLeastOneClass[0], Arrays.stream(atLeastOneClass).skip(1).collect(Collectors.toList()).toArray(new Class[atLeastOneClass.length - 1]));
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static JAXBContext getJaxbContext(Class atLeastOneClass, Class... dtoClasses) {
 		try {
 			List<Class<?>> tmp = new ArrayList<>();
 			tmp.add(atLeastOneClass);
@@ -70,6 +86,10 @@ public class ThreadLocalMarshalling {
 		return classesToBeBound;
 	}
 
+	public static JAXBContext getJaxbContext(Package[] atLeastOnePackage) {
+		return getJaxbContext(atLeastOnePackage[0], Arrays.stream(atLeastOnePackage).skip(1).collect(Collectors.toList()).toArray(new Package[atLeastOnePackage.length - 1]));
+	}
+
 	public static JAXBContext getJaxbContext(Package atLeastOnePackage, Package... packages) {
 		List<Class<?>> classesToBeBound = getJaxbClasses(atLeastOnePackage, packages);
 		try {
@@ -83,8 +103,22 @@ public class ThreadLocalMarshalling {
 		jaxbContext = getJaxbContext(atLeastOnePackage, packages);
 	}
 
-	public ThreadLocalMarshalling(Class<?> atLeastOneClass, Class<?>... dtoClasses) {
+	public ThreadLocalMarshalling(Package[] atLeastOnePackage) {
+		jaxbContext = getJaxbContext(atLeastOnePackage);
+	}
+
+	public ThreadLocalMarshalling(String tremaSeperatedPackages) {
+		jaxbContext = getJaxbContext(tremaSeperatedPackages);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public ThreadLocalMarshalling(Class atLeastOneClass, Class... dtoClasses) {
 		jaxbContext = getJaxbContext(atLeastOneClass, dtoClasses);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public ThreadLocalMarshalling(Class[] atLeastOneClass) {
+		jaxbContext = getJaxbContext(atLeastOneClass);
 	}
 
 	protected ThreadLocal<Unmarshaller> threadLocalUnmarshaller = new ThreadLocal<Unmarshaller>() {
@@ -129,10 +163,14 @@ public class ThreadLocalMarshalling {
 	}
 
 	public <DTO> String marshall(DTO dto) {
+		return marshall(dto, charSet);
+	}
+
+	public <DTO> String marshall(DTO dto, String charset) {
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			marshall(dto, out);
 			out.flush();
-			return new String(out.toByteArray(), charSet);
+			return new String(out.toByteArray(), charset);
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex);
 		} catch (IOException ex) {
@@ -148,9 +186,21 @@ public class ThreadLocalMarshalling {
 		}
 	}
 
+	public <DTO> DTO unmarshall(byte[] xml) {
+		return unmarshall(new ByteArrayInputStream(xml));
+	}
+
 	public <DTO> DTO unmarshall(String xml) {
 		try {
-			return unmarshall(new ByteArrayInputStream(xml.getBytes(charSet)));
+			return unmarshall(xml.getBytes(charSet));
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public <DTO> DTO unmarshall(String xml, String charset) {
+		try {
+			return unmarshall(xml.getBytes(charset));
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -186,5 +236,9 @@ public class ThreadLocalMarshalling {
 
 	public void setFormatOutput(boolean formatOutput) {
 		this.formatOutput = formatOutput;
+	}
+
+	public JAXBContext getJaxbContext() {
+		return this.jaxbContext;
 	}
 }
