@@ -1,8 +1,10 @@
 package org.jhaws.common.net.client;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -23,6 +26,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.StreamingOutput;
 
+import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
@@ -56,7 +60,9 @@ public class TestResource {
 
 	public static final String GET_WITH_QUERY = "getwithquery";
 
-	public static final String STREAM = "stream";
+	public static final String STREAM_IN = "streamin";
+
+	public static final String STREAM_OUT = "streamout";
 
 	Object put;
 
@@ -69,6 +75,14 @@ public class TestResource {
 	Boolean streamBusy = null;
 
 	Random r = new Random(System.currentTimeMillis());
+
+	@GET
+	@HEAD
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("ping")
+	public String ping() {
+		return String.valueOf(new Date());
+	}
 
 	@GET
 	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
@@ -121,7 +135,7 @@ public class TestResource {
 
 	@POST
 	@Path(POST_MULTI)
-	@Consumes("multipart/form-data")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public String uploadFile(MultipartFormDataInput input) {
 		Map<String, List<String>> values = new HashMap<>();
 		Map<String, byte[]> content = new HashMap<>();
@@ -133,7 +147,7 @@ public class TestResource {
 					values.put(entry.getKey(), list);
 				}
 				try {
-					if ("octet-stream".equals(p.getMediaType().getSubtype())) {
+					if (MediaType.APPLICATION_OCTET_STREAM_TYPE.getSubtype().equals(p.getMediaType().getSubtype())) {
 						String fileName = getFileName(p.getHeaders());
 						list.add(fileName);
 						content.put(fileName, p.getBody(new javax.ws.rs.core.GenericType<byte[]>() {}));
@@ -164,9 +178,21 @@ public class TestResource {
 		return "unknown";
 	}
 
+	@POST
+	@Path(STREAM_IN)
+	public void stream(@HeaderParam("filename") String filename, InputStream fileinput) {
+		try {
+			String data = new String(IOUtils.toByteArray(fileinput));
+			System.out.println("> filename = " + filename);
+			System.out.println("> data = " + data);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
 	@GET
-	@Path(STREAM)
-	@Produces("application/octet-stream")
+	@Path(STREAM_OUT)
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public StreamingOutput stream() {
 		return output -> {
 			written.clear();
@@ -197,13 +223,13 @@ public class TestResource {
 	}
 
 	@Path(GET_DOUBLE)
-	@Produces("text/xml")
+	@Produces(MediaType.TEXT_XML)
 	public String getDoubleXml() {
 		return "<xmlcontent></xmlcontent>";
 	}
 
 	@Path(GET_DOUBLE)
-	@Produces("text/plain")
+	@Produces(MediaType.TEXT_XML)
 	public String getDoublePlain() {
 		return "textcontent";
 	}

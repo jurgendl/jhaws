@@ -1,5 +1,6 @@
 package org.jhaws.common.net.client;
 
+import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.io.jaxb.ThreadLocalMarshalling;
 import org.jhaws.common.lang.StringUtils;
-import org.jhaws.common.net.XmlMarshalling;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -30,7 +31,7 @@ public class HttpClientTest {
 
 	private static TestResource testResource;
 
-	private static XmlMarshalling xmlMarshalling;
+	private static ThreadLocalMarshalling xmlMarshalling;
 
 	private UriBuilder getBase() {
 		return UriBuilder.fromPath(server.baseUri()).path(TestResource.PATH);
@@ -41,7 +42,7 @@ public class HttpClientTest {
 		hc = new HTTPClient();
 		testResource = new TestResource();
 		server = TestRestServer.create(testResource);
-		xmlMarshalling = new XmlMarshalling(TestBody.class);
+		xmlMarshalling = new ThreadLocalMarshalling(TestBody.class);
 	}
 
 	@AfterClass
@@ -67,8 +68,8 @@ public class HttpClientTest {
 	public void test_getBody() {
 		try {
 			URI uri = getBase().path(TestResource.GET_BODY).build();
-			TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
-			TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetRequest(uri)).getContent());
+			TestBody rec = xmlMarshalling.<TestBody>unmarshall(server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
+			TestBody hcr = xmlMarshalling.<TestBody>unmarshall(hc.get(new GetRequest(uri)).getContent());
 			Assert.assertEquals(rec, hcr);
 		} catch (Exception e) {
 			e.printStackTrace(System.out);
@@ -198,11 +199,8 @@ public class HttpClientTest {
 	}
 
 	@Test
-	public void test_stream() {
-		Object o = server;
-		System.out.println(o);
-
-		URI uri = getBase().path(TestResource.STREAM).build();
+	public void test_stream_out() {
+		URI uri = getBase().path(TestResource.STREAM_OUT).build();
 		GetRequest get = new GetRequest(uri);
 
 		FilePath tmp1 = FilePath.getTempDirectory().child("hctest_1_.txt");
@@ -215,5 +213,14 @@ public class HttpClientTest {
 
 		Assert.assertEquals(tmp1.getFileSize(), tmp2.getFileSize());
 		Assert.assertEquals(tmp1.readAll(), tmp2.readAll());
+	}
+
+	@Test
+	public void test_stream_in() {
+		URI uri = getBase().path(TestResource.STREAM_IN).build();
+		PostRequest post = new PostRequest(uri);
+		post.addHeader("filename", "hctest_3_.txt");
+		post.setStream(() -> new ByteArrayInputStream("file text data".getBytes()));
+		hc.execute(post, hc.createPost(post));
 	}
 }

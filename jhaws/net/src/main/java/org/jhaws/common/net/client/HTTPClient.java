@@ -50,6 +50,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -344,11 +345,15 @@ public class HTTPClient implements Closeable {
 			req = builder.build();
 		} else if (post.getAttachments().size() > 0) {
 			MultipartEntityBuilder mb = MultipartEntityBuilder.create();
-			mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);// STRICT, BROWSER_COMPATIBLE, RFC6532
 			post.getAttachments().entrySet().forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
 			post.getFormValues().entrySet().forEach(entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
 			req = new HttpPost(post.getUri());
 			HttpEntity body = mb.build();
+			HttpPost.class.cast(req).setEntity(body);
+		} else if (post.getStream() != null) {
+			req = new HttpPost(post.getUri());
+			HttpEntity body = new InputStreamEntity(post.getStream().get());
 			HttpPost.class.cast(req).setEntity(body);
 		} else {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());

@@ -1,13 +1,21 @@
 package org.jhaws.common.net.client;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class PostRequest extends AbstractPutRequest<PostRequest> {
 	private static final long serialVersionUID = -3939699621850878105L;
 
-	private HashMap<String, Path> attachments = new HashMap<>();
+	private Map<String, Path> attachments = new LinkedHashMap<>();
+
+	private Supplier<InputStream> stream;
 
 	private String name;
 
@@ -31,11 +39,11 @@ public class PostRequest extends AbstractPutRequest<PostRequest> {
 		super(uri, body, mime);
 	}
 
-	public HashMap<String, Path> getAttachments() {
-		return attachments;
+	public Map<String, Path> getAttachments() {
+		return Collections.unmodifiableMap(attachments);
 	}
 
-	public PostRequest setAttachments(HashMap<String, Path> attachments) {
+	public PostRequest setAttachments(Map<String, Path> attachments) {
 		this.attachments = attachments;
 		return cast();
 	}
@@ -47,5 +55,21 @@ public class PostRequest extends AbstractPutRequest<PostRequest> {
 	public PostRequest setName(String name) {
 		this.name = name;
 		return cast();
+	}
+
+	public PostRequest addAttachment(String filename, Path path) {
+		if (attachments.containsKey(filename) && !new EqualsBuilder().append(attachments.get(filename), path).isEquals()) {
+			throw new IllegalArgumentException(filename);
+		}
+		this.attachments.put(filename, path);
+		return cast();
+	}
+
+	public Supplier<InputStream> getStream() {
+		return this.stream;
+	}
+
+	public void setStream(Supplier<InputStream> stream) {
+		this.stream = stream;
 	}
 }
