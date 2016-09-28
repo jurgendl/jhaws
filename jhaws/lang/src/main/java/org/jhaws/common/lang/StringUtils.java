@@ -7,6 +7,14 @@ public interface StringUtils {
 
 	public static final char[] REGULARS = "\\<([{^-=$!|]})?*+.>".toCharArray();
 
+	/**
+	 * because /s is not capturing all unicode whitespaces <br>
+	 * or use \s\u0085\p{Z} instead <br>
+	 * (since java 1.7) or set Pattern.UNICODE_CHARACTER_CLASS to true when creating Pattern <br>
+	 * (since java 1.7) or use (?U)...\s instead
+	 * 
+	 * @see http://stackoverflow.com/questions/4731055/whitespace-matching-regex-java
+	 */
 	public static final char[] whitespace_chars = ( //
 	"\u0009" // CHARACTER TABULATION
 			+ "\n" // LINE FEED (LF)
@@ -37,7 +45,7 @@ public interface StringUtils {
 	).toCharArray();
 
 	public static boolean isWhiteSpace(char c) {
-		for (char ws : StringUtils.whitespace_chars) {
+		for (char ws : whitespace_chars) {
 			if (ws == c) {
 				return true;
 			}
@@ -50,7 +58,7 @@ public interface StringUtils {
 		boolean wasWhiteSpace = false; // was previous character(s) whitespaces
 		boolean start = true; // to remove whitespaces at front
 		for (char c : s.toCharArray()) {
-			if (StringUtils.isWhiteSpace(c)) {
+			if (isWhiteSpace(c)) {
 				if (start || wasWhiteSpace) {
 					continue;
 				}
@@ -138,5 +146,39 @@ public interface StringUtils {
 
 	public static boolean isNotEmpty(String s) {
 		return org.apache.commons.lang3.StringUtils.isNotEmpty(s);
+	}
+
+	/** a not followed by b */
+	public static String regexNotLookAhead(String a, String b) {
+		return a + "(?!" + b + ")";
+	}
+
+	/** b not preceeded by a */
+	public static String regexNotLookBehind(String a, String b) {
+		return "(?<!" + a + ")" + b;
+	}
+
+	public static String regexMultipleOr(String... x) {
+		String r = x[0];
+		for (int i = 1; i < x.length; i++) {
+			r = regexOr(r, x[i]);
+		}
+		return r;
+	}
+
+	static String regexOr(String x, String y) {
+		return "(" + x + "|" + y + ")";
+	}
+
+	public static String regexMultipleAnd(String... x) {
+		String r = x[0];
+		for (int i = 1; i < x.length; i++) {
+			r = regexAnd(r, x[i]);
+		}
+		return r;
+	}
+
+	static String regexAnd(String x, String y) {
+		return "(?=" + x + ")" + y;
 	}
 }

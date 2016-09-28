@@ -14,8 +14,12 @@ public class BooleanValue extends Value<Boolean> {
 		super(value);
 	}
 
-	public BooleanValue negate() {
+	public BooleanValue not() {
 		set(!Boolean.TRUE.equals(get()));
 		return this;
+	}
+
+	public Boolean is() {
+		return get();
 	}
 }
