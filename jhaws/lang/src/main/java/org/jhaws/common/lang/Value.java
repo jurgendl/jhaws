@@ -83,7 +83,12 @@ public class Value<T> implements Serializable {
 		return value != null;
 	}
 
-	public void reset() {
+	public Value<T> reset() {
 		value = null;
+		return this;
+	}
+
+	public boolean isNull() {
+		return value == null;
 	}
 }

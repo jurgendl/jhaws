@@ -15,11 +15,33 @@ public class BooleanValue extends Value<Boolean> {
 	}
 
 	public BooleanValue not() {
-		set(!Boolean.TRUE.equals(get()));
+		set(!isTrue());
 		return this;
 	}
 
 	public Boolean is() {
 		return get();
+	}
+
+	public boolean isTrue() {
+		return Boolean.TRUE.equals(get());
+	}
+
+	/**
+	 * does not return true when equals to null !!!!!!!!!!!!!!!!!!!!!
+	 * 
+	 * @see #isNull()
+	 * @see #isNotTrue()
+	 */
+	public boolean isFalse() {
+		return Boolean.FALSE.equals(get());
+	}
+
+	public boolean isNotTrue() {
+		return !isTrue();
+	}
+
+	public boolean isNotFalse() {
+		return !isFalse();
 	}
 }
