@@ -19,8 +19,8 @@ public class BooleanValue extends Value<Boolean> {
 		return this;
 	}
 
-	public Boolean is() {
-		return get();
+	public boolean is() {
+		return isTrue();
 	}
 
 	public boolean isTrue() {
@@ -39,6 +39,10 @@ public class BooleanValue extends Value<Boolean> {
 
 	public boolean isNotTrue() {
 		return !isTrue();
+	}
+
+	public boolean isNot() {
+		return isNotTrue();
 	}
 
 	public boolean isNotFalse() {

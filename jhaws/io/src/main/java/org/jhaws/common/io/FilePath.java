@@ -17,6 +17,7 @@ import java.io.LineNumberReader;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Method;
@@ -2744,16 +2745,31 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public FilePath write(Iterable<? extends CharSequence> lines, Charset charset, OpenOption... options) {
-		try {
-			return new FilePath(Files.write(this.getPath(), lines, charset, options));
+	public FilePath write(boolean lastNewLine, Iterable<? extends CharSequence> lines, Charset charset, OpenOption... options) {
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(newOutputStream(options), charset.newEncoder()))) {
+			Iterator<? extends CharSequence> it = lines.iterator();
+			while (it.hasNext()) {
+				writer.append(it.next());
+				if (it.hasNext() || lastNewLine) {
+					writer.newLine();
+				}
+			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
+		return this;
+	}
+
+	public FilePath write(boolean lastNewLine, Iterable<? extends CharSequence> lines, OpenOption... options) {
+		return write(lastNewLine, lines, this.getDefaultCharset(), options);
+	}
+
+	public FilePath write(Iterable<? extends CharSequence> lines, Charset charset, OpenOption... options) {
+		return write(true, lines, this.getDefaultCharset(), options);
 	}
 
 	public FilePath write(Iterable<? extends CharSequence> lines, OpenOption... options) {
-		return write(lines, this.getDefaultCharset(), options);
+		return write(true, lines, this.getDefaultCharset(), options);
 	}
 
 	public FilePath write(String text, Charset charset, OpenOption... options) {
