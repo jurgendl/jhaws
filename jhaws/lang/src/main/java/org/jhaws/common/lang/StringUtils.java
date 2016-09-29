@@ -214,7 +214,16 @@ public interface StringUtils {
 	}
 
 	public static String replaceLeading(String string, char replaced, char replacedBy) {
-		Pattern p = Pattern.compile("" + replaced + "++");
+		Pattern p = Pattern.compile(replaced + "++");
+		Matcher matcher = p.matcher(string);
+		if (matcher.find()) {
+			string = matcher.replaceFirst(matcher.group(0).replace(replaced, replacedBy));
+		}
+		return string;
+	}
+
+	public static String replaceLeading(String string, String replaced, String replacedBy) {
+		Pattern p = Pattern.compile("(" + replaced + ")++");
 		Matcher matcher = p.matcher(string);
 		if (matcher.find()) {
 			string = matcher.replaceFirst(matcher.group(0).replace(replaced, replacedBy));
