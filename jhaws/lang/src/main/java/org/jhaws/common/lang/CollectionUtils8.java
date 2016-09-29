@@ -1428,4 +1428,11 @@ public interface CollectionUtils8 {
 	public static <K, V> Map<V, List<K>> groupByValue(Map<K, V> map) {
 		return stream(map.entrySet()).collect(Collectors.groupingBy(e -> e.getValue(), Collectors.mapping(e -> e.getKey(), Collectors.toList())));
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <X, Y> Function<X, Y> functions(Function<X, Y>... functions) {
+		Value<Function<X, Y>> returningFunction = new Value<>(functions[0]);
+		Arrays.stream(functions).skip(1).forEach(f -> returningFunction.set(returningFunction.get().andThen(Function.class.cast(f))));
+		return returningFunction.get();
+	}
 }

@@ -1,11 +1,20 @@
 package org.jhaws.common.lang;
 
 import java.text.Normalizer;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public interface StringUtils {
 	public static final String UTF8 = "UTF-8";
 
-	public static final char[] REGULARS = "\\<([{^-=$!|]})?*+.>".toCharArray();
+	public static final String REGULAR_STRING = "\\<([{^-=$!|]})?*+.>";
+
+	public static final char[] REGULAR_ARRAY = REGULAR_STRING.toCharArray();
+
+	public static final List<Character> REGULAR_LIST = Collections.unmodifiableList(CollectionUtils8.stream(REGULAR_STRING).collect(Collectors.toList()));
 
 	/**
 	 * because /s is not capturing all unicode whitespaces <br>
@@ -117,10 +126,11 @@ public interface StringUtils {
 	}
 
 	public static String regularize(String s) {
-		for (char element : REGULARS) {
-			s = s.replaceAll("\\" + element, "\\\\" + element);
-		}
-		return s;
+		return s == null ? null : s.chars().mapToObj(i -> (char) i).map(StringUtils::regularize).collect(Collectors.joining());
+	}
+
+	public static String regularize(char c) {
+		return REGULAR_LIST.contains(c) ? "\\" + c : String.valueOf(c);
 	}
 
 	public static String escape(String s) {
@@ -149,13 +159,13 @@ public interface StringUtils {
 	}
 
 	/** a not followed by b */
-	public static String regexNotLookAhead(String a, String b) {
-		return a + "(?!" + b + ")";
+	public static String regexNotLookAhead(String a, String notB) {
+		return groupRegex(a) + "(" + "?!" + notB + ")";
 	}
 
 	/** b not preceeded by a */
-	public static String regexNotLookBehind(String a, String b) {
-		return "(?<!" + a + ")" + b;
+	public static String regexNotLookBehind(String notA, String b) {
+		return "(" + "?<!" + notA + ")" + groupRegex(b);
 	}
 
 	public static String regexMultipleOr(String... x) {
@@ -167,7 +177,7 @@ public interface StringUtils {
 	}
 
 	static String regexOr(String x, String y) {
-		return "(" + x + "|" + y + ")";
+		return "(" + groupRegex(x) + "|" + groupRegex(y) + ")";
 	}
 
 	public static String regexMultipleAnd(String... x) {
@@ -179,6 +189,36 @@ public interface StringUtils {
 	}
 
 	static String regexAnd(String x, String y) {
-		return "(?=" + x + ")" + y;
+		return "((" + "?=" + x + ")" + groupRegex(y) + ")";
+	}
+
+	static String groupRegex(String x) {
+		return x.startsWith("(") && x.endsWith(")") ? x : "(" + x + ")";
+	}
+
+	/**
+	 * remove leadin and trailing spaces and replace multiple spaces by 1 space
+	 * 
+	 * @see http://stackoverflow.com/questions/2932392/java-how-to-replace-2-or-more-spaces-with-single-space-in-string-and-delete-lead
+	 */
+	public static String cleanSpaces(String s) {
+		return s.replaceAll("^ +| +$|( )+", "$1");
+	}
+
+	public static String repeat(char c, int len) {
+		char[] cc = new char[len];
+		for (int i = 0; i < cc.length; i++) {
+			cc[i] = c;
+		}
+		return new String(cc);
+	}
+
+	public static String replaceLeading(String string, char replaced, char replacedBy) {
+		Pattern p = Pattern.compile("" + replaced + "++");
+		Matcher matcher = p.matcher(string);
+		if (matcher.find()) {
+			string = matcher.replaceFirst(matcher.group(0).replace(replaced, replacedBy));
+		}
+		return string;
 	}
 }
