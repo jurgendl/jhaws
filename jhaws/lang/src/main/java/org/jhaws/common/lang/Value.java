@@ -79,16 +79,32 @@ public class Value<T> implements Serializable {
 		return this;
 	}
 
+	/**
+	 * @deprecated {@link #isSet()}
+	 */
+	@Deprecated
 	public boolean set() {
-		return value != null;
+		return isSet();
 	}
 
 	public Value<T> reset() {
-		value = null;
-		return this;
+		return setNull();
 	}
 
 	public boolean isNull() {
 		return value == null;
+	}
+
+	public boolean isSet() {
+		return value != null;
+	}
+
+	public boolean isNotSet() {
+		return isNull();
+	}
+
+	public Value<T> setNull() {
+		value = null;
+		return this;
 	}
 }

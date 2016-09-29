@@ -44,4 +44,14 @@ public class BooleanValue extends Value<Boolean> {
 	public boolean isNotFalse() {
 		return !isFalse();
 	}
+
+	public BooleanValue setTrue() {
+		set(Boolean.TRUE);
+		return this;
+	}
+
+	public BooleanValue setFalse() {
+		set(Boolean.FALSE);
+		return this;
+	}
 }
