@@ -1435,4 +1435,12 @@ public interface CollectionUtils8 {
 		Arrays.stream(functions).skip(1).forEach(f -> returningFunction.set(returningFunction.get().andThen(Function.class.cast(f))));
 		return returningFunction.get();
 	}
+
+	public static <X> X nn(X nullable, X defaultValue) {
+		return nullable == null ? defaultValue : nullable;
+	}
+
+	public static <S, T> Function<S, T> getDefaulted(Function<S, T> getter, T defaultValue) {
+		return ((Function<S, T>) s -> getter.apply(s)).andThen(e -> nn(e, defaultValue));
+	}
 }
