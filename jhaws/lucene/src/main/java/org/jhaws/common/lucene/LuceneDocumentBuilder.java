@@ -89,7 +89,7 @@ public abstract class LuceneDocumentBuilder<T> {
 				} else if (ChronoLocalDate.class.isAssignableFrom(fieldType)) {
 					d.add(new LongField(name, DateTime8.toDate(ChronoLocalDate.class.cast(v)).getTime(), Field.Store.YES));
 				} else {
-					throw new UnsupportedOperationException("" + fieldType);
+					throw new UnsupportedOperationException(String.valueOf(fieldType));
 				}
 			}
 		} catch (IllegalArgumentException | IllegalAccessException ex) {

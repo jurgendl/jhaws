@@ -16,6 +16,13 @@ public class BuildableIndexable<T> implements Indexable<T> {
 	@IndexField(LuceneIndex.DOC_LASTMOD)
 	protected LocalDateTime lastmodified;
 
+	@SuppressWarnings("unchecked")
+	public BuildableIndexable() {
+		builder = new LuceneDocumentBuilder<T>((Class<T>) getClass()) {
+			//
+		};
+	}
+
 	@Override
 	public Integer getVersion() {
 		return version;
@@ -44,11 +51,6 @@ public class BuildableIndexable<T> implements Indexable<T> {
 	@Override
 	public void setLastmodified(LocalDateTime lastmodified) {
 		this.lastmodified = lastmodified;
-	}
-
-	@SuppressWarnings("unchecked")
-	public BuildableIndexable() {
-		builder = new LuceneDocumentBuilder<T>((Class<T>) getClass()) {};
 	}
 
 	@Override
