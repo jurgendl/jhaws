@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.jaxb.ThreadLocalMarshalling;
+import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.lang.StringUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -31,7 +31,7 @@ public class HttpClientTest {
 
 	private static TestResource testResource;
 
-	private static ThreadLocalMarshalling xmlMarshalling;
+	private static JAXBMarshalling xmlMarshalling;
 
 	private UriBuilder getBase() {
 		return UriBuilder.fromPath(server.baseUri()).path(TestResource.PATH);
@@ -42,7 +42,7 @@ public class HttpClientTest {
 		hc = new HTTPClient();
 		testResource = new TestResource();
 		server = TestRestServer.create(testResource);
-		xmlMarshalling = new ThreadLocalMarshalling(TestBody.class);
+		xmlMarshalling = new JAXBMarshalling(TestBody.class);
 	}
 
 	@AfterClass

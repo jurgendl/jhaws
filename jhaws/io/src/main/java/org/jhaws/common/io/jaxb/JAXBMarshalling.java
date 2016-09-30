@@ -11,7 +11,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +27,14 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 
-public class ThreadLocalMarshalling {
+public class JAXBMarshalling {
 	protected final JAXBContext jaxbContext;
 
 	protected String charSet = StringUtils.UTF8;
@@ -99,25 +103,25 @@ public class ThreadLocalMarshalling {
 		}
 	}
 
-	public ThreadLocalMarshalling(Package atLeastOnePackage, Package... packages) {
+	public JAXBMarshalling(Package atLeastOnePackage, Package... packages) {
 		jaxbContext = getJaxbContext(atLeastOnePackage, packages);
 	}
 
-	public ThreadLocalMarshalling(Package[] atLeastOnePackage) {
+	public JAXBMarshalling(Package[] atLeastOnePackage) {
 		jaxbContext = getJaxbContext(atLeastOnePackage);
 	}
 
-	public ThreadLocalMarshalling(String tremaSeperatedPackages) {
+	public JAXBMarshalling(String tremaSeperatedPackages) {
 		jaxbContext = getJaxbContext(tremaSeperatedPackages);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public ThreadLocalMarshalling(Class atLeastOneClass, Class... dtoClasses) {
+	public JAXBMarshalling(Class atLeastOneClass, Class... dtoClasses) {
 		jaxbContext = getJaxbContext(atLeastOneClass, dtoClasses);
 	}
 
 	@SuppressWarnings("rawtypes")
-	public ThreadLocalMarshalling(Class[] atLeastOneClass) {
+	public JAXBMarshalling(Class[] atLeastOneClass) {
 		jaxbContext = getJaxbContext(atLeastOneClass);
 	}
 
@@ -154,11 +158,19 @@ public class ThreadLocalMarshalling {
 		}
 	}
 
-	public <DTO> void marshall(DTO dto, File file) {
+	public <DTO> void marshall(DTO dto, File xml) {
 		try {
-			marshall(dto, new BufferedOutputStream(new FileOutputStream(file)));
+			marshall(dto, new BufferedOutputStream(new FileOutputStream(xml)));
 		} catch (FileNotFoundException ex) {
-			throw new RuntimeException(ex);
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public <DTO> void marshall(DTO dto, Path xml) {
+		try {
+			marshall(dto, Files.newOutputStream(FilePath.getPath(xml)));
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
 		}
 	}
 
@@ -174,7 +186,7 @@ public class ThreadLocalMarshalling {
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex);
 		} catch (IOException ex) {
-			throw new RuntimeException(ex);
+			throw new UncheckedIOException(ex);
 		}
 	}
 
@@ -182,7 +194,15 @@ public class ThreadLocalMarshalling {
 		try {
 			return unmarshall(new BufferedInputStream(new FileInputStream(xml)));
 		} catch (FileNotFoundException ex) {
-			throw new RuntimeException(ex);
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public <DTO> DTO unmarshall(Path xml) {
+		try {
+			return unmarshall(Files.newInputStream(FilePath.getPath(xml)));
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
 		}
 	}
 
