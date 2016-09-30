@@ -13,4 +13,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface IndexField {
 	String value() default "";
+
+	boolean store() default true;
 }

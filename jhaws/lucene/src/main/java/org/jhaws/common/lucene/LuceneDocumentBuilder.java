@@ -10,10 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
 import org.jhaws.common.lang.ClassUtils;
 import org.jhaws.common.lang.DateTime8;
@@ -58,36 +60,43 @@ public abstract class LuceneDocumentBuilder<T> {
 				if (v == null) {
 					continue;
 				}
-				String name = entry.getAnnotation(IndexField.class).value();
+				IndexField anno = entry.getAnnotation(IndexField.class);
+				Store store = anno.store() ? Field.Store.YES : Field.Store.NO;
+				String name = anno.value();
 				if (StringUtils.isBlank(name))
 					name = entry.getName();
 				Class<?> fieldType = entry.getType();
 				if (String.class.equals(fieldType)) {
-					d.add(new StringField(name, String.class.cast(v), Field.Store.YES));
+					String s = String.class.cast(v);
+					if (s.length() >= 32766) {
+						d.add(new TextField(name, s, store));
+					} else {
+						d.add(new StringField(name, s, store));
+					}
 				} else if (Boolean.class.isAssignableFrom(fieldType)) {
-					d.add(new IntField(name, Boolean.TRUE.equals(v) ? 1 : 0, Field.Store.YES));
+					d.add(new IntField(name, Boolean.TRUE.equals(v) ? 1 : 0, store));
 				} else if (Number.class.isAssignableFrom(fieldType)) {
 					if (v instanceof Long) {
-						d.add(new LongField(name, Long.class.cast(v), Field.Store.YES));
+						d.add(new LongField(name, Long.class.cast(v), store));
 					} else if (v instanceof Integer) {
-						d.add(new IntField(name, Integer.class.cast(v), Field.Store.YES));
+						d.add(new IntField(name, Integer.class.cast(v), store));
 					} else if (v instanceof Float) {
-						d.add(new FloatField(name, Float.class.cast(v), Field.Store.YES));
+						d.add(new FloatField(name, Float.class.cast(v), store));
 					} else if (v instanceof Double) {
-						d.add(new DoubleField(name, Double.class.cast(v), Field.Store.YES));
+						d.add(new DoubleField(name, Double.class.cast(v), store));
 					} else if (v instanceof Short) {
-						d.add(new IntField(name, Short.class.cast(v).intValue(), Field.Store.YES));
+						d.add(new IntField(name, Short.class.cast(v).intValue(), store));
 					} else if (v instanceof Byte) {
-						d.add(new IntField(name, Byte.class.cast(v).intValue(), Field.Store.YES));
+						d.add(new IntField(name, Byte.class.cast(v).intValue(), store));
 					} else {
 						throw new UnsupportedOperationException();
 					}
 				} else if (Date.class.isAssignableFrom(fieldType)) {
-					d.add(new LongField(name, Date.class.cast(v).getTime(), Field.Store.YES));
+					d.add(new LongField(name, Date.class.cast(v).getTime(), store));
 				} else if (ChronoLocalDateTime.class.isAssignableFrom(fieldType)) {
-					d.add(new LongField(name, DateTime8.toDate(ChronoLocalDateTime.class.cast(v)).getTime(), Field.Store.YES));
+					d.add(new LongField(name, DateTime8.toDate(ChronoLocalDateTime.class.cast(v)).getTime(), store));
 				} else if (ChronoLocalDate.class.isAssignableFrom(fieldType)) {
-					d.add(new LongField(name, DateTime8.toDate(ChronoLocalDate.class.cast(v)).getTime(), Field.Store.YES));
+					d.add(new LongField(name, DateTime8.toDate(ChronoLocalDate.class.cast(v)).getTime(), store));
 				} else {
 					throw new UnsupportedOperationException(String.valueOf(fieldType));
 				}
