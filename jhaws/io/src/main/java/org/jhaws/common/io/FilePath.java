@@ -64,6 +64,10 @@ import java.nio.file.attribute.UserPrincipal;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.NumberFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -153,6 +157,14 @@ public class FilePath implements Path, Externalizable {
 
 	public static void setFileExtensionSeperatorChar(char c) {
 		EXTENSION_SEPERATOR = c;
+	}
+
+	public static LocalDateTime convert(FileTime fileTime) {
+		return LocalDateTime.ofInstant(fileTime.toInstant(), ZoneId.systemDefault());
+	}
+
+	public static FileTime convert(LocalDateTime dateTime) {
+		return FileTime.from(dateTime.toInstant(ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
 	}
 
 	public static String getCurrentUser() {
@@ -1807,6 +1819,18 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
+	public LocalDateTime getLastAccessDateTime() {
+		return convert(getLastAccessTime());
+	}
+
+	public LocalDateTime getCreationDateTime() {
+		return convert(getCreationTime());
+	}
+
+	public LocalDateTime getLastModifiedDateTime(LinkOption... options) {
+		return convert(getLastModifiedTime(options));
+	}
+
 	public FileTime getLastAccessTime() {
 		return getAttributes().lastAccessTime();
 	}
@@ -2441,6 +2465,18 @@ public class FilePath implements Path, Externalizable {
 			throw new UncheckedIOException(ex);
 		}
 		return true;
+	}
+
+	public FilePath setLastAccessDateTime(LocalDateTime lastAccessTime) {
+		return setLastAccessTime(convert(lastAccessTime));
+	}
+
+	public FilePath setCreationDateTime(LocalDateTime creationTime) {
+		return setCreationTime(convert(creationTime));
+	}
+
+	public FilePath setLastModifiedDateTime(LocalDateTime time) {
+		return setLastModifiedTime(convert(time));
 	}
 
 	public FilePath setLastAccessTime(FileTime lastAccessTime) {
