@@ -68,7 +68,7 @@ public abstract class LuceneDocumentBuilder<T> {
 				Class<?> fieldType = entry.getType();
 				if (String.class.equals(fieldType)) {
 					String s = String.class.cast(v);
-					if (s.length() >= 32766) {
+					if (anno.big() || s.length() >= 32766) {
 						d.add(new TextField(name, s, store));
 					} else {
 						d.add(new StringField(name, s, store));

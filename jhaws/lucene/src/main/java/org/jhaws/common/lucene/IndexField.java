@@ -15,4 +15,6 @@ public @interface IndexField {
 	String value() default "";
 
 	boolean store() default true;
+
+	boolean big() default true;
 }

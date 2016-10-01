@@ -31,6 +31,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -53,14 +54,13 @@ import org.apache.lucene.util.Version;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.CollectionUtils8;
 import org.jhaws.common.lang.functions.EConsumer;
-import org.jhaws.common.lang.functions.ESupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @see http://stackoverflow.com/questions/8878448/lucene-good-practice-and-thread-safety
  */
-public class LuceneIndex implements Runnable {
+public class LuceneIndex {
 	protected static final Logger logger = LoggerFactory.getLogger(LuceneIndex.class);
 
 	public static interface ForceRedo<F extends Indexable<? super F>> {
@@ -97,22 +97,25 @@ public class LuceneIndex implements Runnable {
 
 	protected boolean autoCloseWaitEnabled = false;
 
+	protected Thread startupThread;
+
 	protected int maxBatchSize = 1000;
+
+	protected long writeLockTimeout = 10000l;
 
 	public LuceneIndex(FilePath dir) {
 		this.dir = dir;
-		Thread t = new Thread(this);
-		t.setDaemon(true);
-		t.start();
 	}
 
 	protected Directory getIndex() {
-		return optional(index, this::initIndex);
+		return optional(index, this::createIndex);
 	}
 
-	protected Directory initIndex() {
+	protected Directory createIndex() {
 		if (dir.notExists()) {
-			try (FSDirectory tmpDir = FSDirectory.open(dir.toFile()); IndexWriter tmpW = new IndexWriter(tmpDir, new IndexWriterConfig(Version.LATEST, new StandardAnalyzer()))) {
+			try (FSDirectory tmpDir = FSDirectory.open(dir.toFile());
+					IndexWriter tmpW = new IndexWriter(tmpDir,
+							new IndexWriterConfig(Version.LATEST, new StandardAnalyzer()))) {
 				Document tmpDoc = new Document();
 				String uuid = uuid(tmpDoc).get(DOC_UUID);
 				tmpW.addDocument(tmpDoc);
@@ -128,7 +131,8 @@ public class LuceneIndex implements Runnable {
 		new FilePath(dir, "write.lock").deleteIfExists();
 		MMapDirectory mMapDirectory;
 		try {
-			mMapDirectory = new MMapDirectory(dir.toFile()/* ,new SimpleFSLockFactory() */);
+			mMapDirectory = new MMapDirectory(
+					dir.toFile()/* ,new SimpleFSLockFactory() */);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -211,28 +215,57 @@ public class LuceneIndex implements Runnable {
 		});
 	}
 
+	protected Analyzer createIndexAnalyzer() {
+		return indexAnalyzer = new StandardAnalyzer();
+	}
+
 	protected Analyzer getIndexAnalyzer() {
-		return optional(indexAnalyzer, () -> indexAnalyzer = new StandardAnalyzer());
+		return optional(indexAnalyzer, this::createIndexAnalyzer);
+	}
+
+	protected IndexWriter createIndexWriter() {
+		try {
+			return indexWriter = new IndexWriter(getIndex(), getIndexWriterConfig());
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
 	}
 
 	protected IndexWriter getIndexWriter() {
 		activity = System.currentTimeMillis();
 		fixDocVersion();
-		return optional(indexWriter, ESupplier.enhance(() -> indexWriter = new IndexWriter(getIndex(), getIndexWriterConfig())));
+		return optional(indexWriter, this::createIndexWriter);
+	}
+
+	protected IndexWriterConfig createIndexWriterConfig() {
+		return indexWriterConfig = new IndexWriterConfig(Version.LATEST, getIndexAnalyzer())
+				.setWriteLockTimeout(writeLockTimeout);
 	}
 
 	protected IndexWriterConfig getIndexWriterConfig() {
-		return optional(indexWriterConfig, () -> indexWriterConfig = new IndexWriterConfig(Version.LATEST, getIndexAnalyzer()).setWriteLockTimeout(10000l));
+		return optional(indexWriterConfig, this::createIndexWriterConfig);
+	}
+
+	protected DirectoryReader createIndexReader() {
+		try {
+			return indexReader = DirectoryReader.open(getIndex());
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
 	}
 
 	protected DirectoryReader getIndexReader() {
 		activity = System.currentTimeMillis();
 		fixDocVersion();
-		return optional(indexReader, ESupplier.enhance(() -> indexReader = DirectoryReader.open(getIndex())));
+		return optional(indexReader, this::createIndexReader);
+	}
+
+	protected IndexSearcher createIndexSearcher() {
+		return indexSearcher = new IndexSearcher(getIndexReader());
 	}
 
 	protected IndexSearcher getIndexSearcher() {
-		return optional(indexSearcher, () -> indexSearcher = new IndexSearcher(getIndexReader()));
+		return optional(indexSearcher, this::createIndexSearcher);
 	}
 
 	public void shutDown() {
@@ -272,8 +305,7 @@ public class LuceneIndex implements Runnable {
 	protected void transaction(IndexWriterAction action) {
 		action.transaction(getIndexWriter());
 		try {
-			if (indexReader != null)
-				indexReader.close();
+			indexReader.close();
 		} catch (Exception ex) {
 			//
 		}
@@ -285,8 +317,8 @@ public class LuceneIndex implements Runnable {
 		return dir;
 	}
 
-	public <F extends Indexable<? super F>> List<F> sync(List<F> indexed, List<F> fetched, Consumer<F> onDeleteOptional, Consumer<F> onCreateOptional,
-			BiConsumer<F, F> onRematchOptional, ForceRedo<F> forceRedoOptional) {
+	public <F extends Indexable<? super F>> List<F> sync(List<F> indexed, List<F> fetched, Consumer<F> onDeleteOptional,
+			Consumer<F> onCreateOptional, BiConsumer<F, F> onRematchOptional, ForceRedo<F> forceRedoOptional) {
 		fetched.forEach(f -> {
 			if (f.getUuid() == null)
 				f.setUuid(newUuid());
@@ -296,14 +328,17 @@ public class LuceneIndex implements Runnable {
 
 		Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
 		Consumer<F> onCreate = optional(onCreateOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
-		BiConsumer<F, F> onRematch2 = optional(onRematchOptional, (Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
+		BiConsumer<F, F> onRematch2 = optional(onRematchOptional,
+				(Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
 		Consumer<Map.Entry<F, F>> onRematch = p -> onRematch2.accept(p.getKey(), p.getValue());
 
 		List<F> delete = indexed.parallelStream().filter(notContainedIn(fetched)).collect(collectList());
 		List<F> create = fetched.parallelStream().filter(notContainedIn(indexed)).collect(collectList());
 
 		List<Map.Entry<F, F>> match = match(indexed, fetched);
-		List<Map.Entry<F, F>> redo = match.parallelStream().filter(p -> p.getValue().getLastmodified().isAfter(p.getKey().getLastmodified())).collect(collectList());
+		List<Map.Entry<F, F>> redo = match.parallelStream()
+				.filter(p -> p.getValue().getLastmodified().isAfter(p.getKey().getLastmodified()))
+				.collect(collectList());
 		if (forceRedoOptional != null) {
 			forceRedoOptional.forceRedo(match, redo);
 		}
@@ -327,7 +362,8 @@ public class LuceneIndex implements Runnable {
 		transaction(w -> create.stream().map(Indexable::indexable).forEach(EConsumer.enhance(this::addDocs)));
 
 		List<F> result = new ArrayList<>(create);
-		match.stream().map(Map.Entry::getKey).forEach(result::add); // do not change to parallelStream or it will add null values
+		// do not change to parallelStream or it will add null values
+		match.stream().map(Map.Entry::getKey).forEach(result::add);
 		return result;
 	}
 
@@ -337,7 +373,22 @@ public class LuceneIndex implements Runnable {
 	}
 
 	public void startUp() throws Exception {
-		//
+		if (startupThread == null) {
+			startupThread = new Thread(() -> {
+				while (autoCloseWaitEnabled) {
+					try {
+						Thread.sleep(autoCloseWait);
+					} catch (InterruptedException ex) {
+						//
+					}
+					if (activity != null && System.currentTimeMillis() - activity > autoCloseWait) {
+						shutDown();
+					}
+				}
+			}, getClass().getName() + "[" + hashCode() + "]");
+			startupThread.setDaemon(true);
+			startupThread.start();
+		}
 	}
 
 	public <F extends Indexable<? super F>> void delete(@SuppressWarnings("unchecked") F... indexables) {
@@ -353,8 +404,8 @@ public class LuceneIndex implements Runnable {
 	}
 
 	protected void deleteDocs(Collection<Document> docs) {
-		split(docs, maxBatchSize).stream()
-				.forEach(batch -> transaction(w -> batch.stream().forEach(EConsumer.enhance(doc -> w.deleteDocuments(uuidQuery(doc.get(DOC_UUID).toString()))))));
+		split(docs, maxBatchSize).stream().forEach(batch -> transaction(w -> batch.stream()
+				.forEach(EConsumer.enhance(doc -> w.deleteDocuments(uuidQuery(doc.get(DOC_UUID).toString()))))));
 	}
 
 	public ScoreDoc search1(Query query) {
@@ -374,7 +425,8 @@ public class LuceneIndex implements Runnable {
 	public BooleanQuery searchAllQuery() {
 		BooleanQuery query = new BooleanQuery();
 		query.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
-		query.add(keyValueQuery(LuceneIndex.LUCENE_METADATA, LuceneIndex.LUCENE_METADATA), BooleanClause.Occur.MUST_NOT);
+		query.add(keyValueQuery(LuceneIndex.LUCENE_METADATA, LuceneIndex.LUCENE_METADATA),
+				BooleanClause.Occur.MUST_NOT);
 		return query;
 	}
 
@@ -404,10 +456,12 @@ public class LuceneIndex implements Runnable {
 		return keyValueQuery(new BooleanQuery(), key, value);
 	}
 
-	public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy, Comparator<Document> comparator, Consumer<Document> after) {
+	public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy,
+			Comparator<Document> comparator, Consumer<Document> after) {
 		Consumer<Document> deleter = doc -> deleteDocs(doc);
 		Consumer<Document> action = after == null ? deleter : deleter.andThen(after);
-		streamDeepValues(groupBy(stream(search(query, max)).map(hit -> getDoc(hit)), groupBy)).forEach(stream -> stream.sorted(comparator).skip(1).forEach(action));
+		streamDeepValues(groupBy(stream(search(query, max)).map(hit -> getDoc(hit)), groupBy))
+				.forEach(stream -> stream.sorted(comparator).skip(1).forEach(action));
 	}
 
 	public void add(Indexable<?>... indexables) {
@@ -429,7 +483,8 @@ public class LuceneIndex implements Runnable {
 	}
 
 	public <F extends Indexable<? super F>> List<F> searchAll(Supplier<F> indexable) {
-		return searchAllDocs().stream().filter(doc -> doc.getField(LUCENE_METADATA) == null).map(doc -> get(doc, indexable)).collect(collectList());
+		return searchAllDocs().stream().filter(doc -> doc.getField(LUCENE_METADATA) == null)
+				.map(doc -> get(doc, indexable)).collect(collectList());
 	}
 
 	protected List<Document> searchAllDocs() {
@@ -459,6 +514,12 @@ public class LuceneIndex implements Runnable {
 		return doc;
 	}
 
+	public Document replaceValueLongText(Document doc, String key, String value, boolean store) {
+		doc.removeField(key);
+		doc.add(new TextField(key, value, store ? YES : NO));
+		return doc;
+	}
+
 	public Document replaceValue(Document doc, String key, int value, boolean store) {
 		doc.removeField(key);
 		doc.add(new IntField(key, value, store ? YES : NO));
@@ -467,20 +528,6 @@ public class LuceneIndex implements Runnable {
 
 	public BooleanQuery uuidQuery(String uuid) {
 		return keyValueQuery(DOC_UUID, uuid);
-	}
-
-	@Override
-	public void run() {
-		while (autoCloseWaitEnabled) {
-			try {
-				Thread.sleep(autoCloseWait);
-			} catch (InterruptedException ex) {
-				//
-			}
-			if (activity != null && System.currentTimeMillis() - activity > autoCloseWait) {
-				shutDown();
-			}
-		}
 	}
 
 	public long getAutoCloseWait() {
@@ -515,5 +562,13 @@ public class LuceneIndex implements Runnable {
 
 	public void setAutoCloseWaitEnabled(boolean autoCloseWaitEnabled) {
 		this.autoCloseWaitEnabled = autoCloseWaitEnabled;
+	}
+
+	public long getWriteLockTimeout() {
+		return this.writeLockTimeout;
+	}
+
+	public void setWriteLockTimeout(long writeLockTimeout) {
+		this.writeLockTimeout = writeLockTimeout;
 	}
 }
