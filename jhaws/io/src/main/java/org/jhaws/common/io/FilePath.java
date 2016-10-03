@@ -6,6 +6,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.Externalizable;
 import java.io.File;
@@ -96,6 +97,9 @@ import java.util.stream.StreamSupport;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -1566,40 +1570,6 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * downloads a file from the web to a local file when it does not exists or is older, binary copy
-	 *
-	 * @param urlSourceFile
-	 *            : URL : file on the web
-	 *
-	 * @return : boolean : file downloaded or not
-	 */
-	public boolean download(URL urlSourceFile) {
-		if (this.exists()) {
-			long localFileTime = this.getLastModifiedTime().toMillis();
-			URLConnection conn;
-			try {
-				conn = urlSourceFile.openConnection();
-			} catch (IOException ex) {
-				throw new UncheckedIOException(ex);
-			}
-			long webFileTime = conn.getLastModified();
-			if (webFileTime <= localFileTime) {
-				return false;
-			}
-			long len = conn.getContentLengthLong();
-			if ((len != -1) && (len == this.getFileSize())) {
-				return false;
-			}
-		}
-		try (InputStream in = new BufferedInputStream(urlSourceFile.openStream()); OutputStream out = this.newBufferedOutputStream()) {
-			Utils.copy(in, out);
-		} catch (IOException ex) {
-			throw new UncheckedIOException(ex);
-		}
-		return true;
-	}
-
-	/**
 	 * @see java.nio.file.Path#endsWith(java.nio.file.Path)
 	 */
 	@Override
@@ -2934,6 +2904,54 @@ public class FilePath implements Path, Externalizable {
 		return this;
 	}
 
+	public FilePath download(URI uri) {
+		return write(uri);
+	}
+
+	public FilePath download(URL url) {
+		return write(url);
+	}
+
+	public FilePath write(URI uri) {
+		try {
+			return write(uri.toURL());
+		} catch (MalformedURLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	/**
+	 * downloads a file from the web to a local file when it does not exists or is older, binary copy
+	 *
+	 * @param urlSourceFile
+	 *            : URL : file on the web
+	 */
+	public FilePath write(URL url) {
+		if (this.exists()) {
+			long localFileTime = this.getLastModifiedTime().toMillis();
+			URLConnection conn;
+			try {
+				conn = url.openConnection();
+			} catch (IOException ex) {
+				throw new UncheckedIOException(ex);
+			}
+			long webFileTime = conn.getLastModified();
+			if (webFileTime <= localFileTime) {
+				return null;
+			}
+			long len = conn.getContentLengthLong();
+			if ((len != -1) && (len == this.getFileSize())) {
+				return null;
+			}
+		}
+		try (InputStream in = new BufferedInputStream(url.openStream()); OutputStream out = this.newBufferedOutputStream()) {
+			Utils.copy(in, out);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		return this;
+	}
+
 	public FilePath write(InputStream binaryStream) {
 		try (BufferedInputStream in = new BufferedInputStream(binaryStream); BufferedOutputStream out = newBufferedOutputStream()) {
 			IOUtils.copyLarge(in, out);
@@ -2966,5 +2984,74 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath renameFileName(String filename) {
 		return moveTo(getParentPath().child(filename));
+	}
+
+	/**
+	 * extract files from this zip, overwrites
+	 */
+	public void unzip(FilePath target) throws IOException {
+		try (ZipInputStream zin = new ZipInputStream(newBufferedInputStream())) {
+			ZipEntry entry;
+			while ((entry = zin.getNextEntry()) != null) {
+				if (!entry.isDirectory()) {
+					FilePath file = target.child(entry.getName());
+					file.getParentPath().createDirectoryIfNotExists();
+					file.copyFrom(zin);
+				} else {
+					FilePath dir = target.child(entry.getName());
+					dir.createDirectoryIfNotExists();
+				}
+			}
+		}
+	}
+
+	/**
+	 * write files into this zip, overwrites
+	 */
+	public void zip(FilePath... files) throws IOException {
+		byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
+		int read;
+		try (ZipOutputStream zout = new ZipOutputStream(newBufferedOutputStream())) {
+			int count = 0;
+			for (FilePath file : files) {
+				if (file.isDirectory()) {
+					continue;
+				}
+				zout.putNextEntry(new ZipEntry(file.getName()));
+				try (InputStream fin = file.newBufferedInputStream()) {
+					while ((read = fin.read(buffer)) > 0) {
+						zout.write(buffer, 0, read);
+					}
+					fin.close();
+				}
+				zout.closeEntry();
+				count++;
+			}
+			zout.close();
+		}
+	}
+
+	/**
+	 * write single file/data=byte[] into this zip, overwrites
+	 */
+	public void zip(String entryname, byte[] data) throws IOException {
+		zip(entryname, new ByteArrayInputStream(data));
+	}
+
+	/**
+	 * write single file/data=InputStream into this zip, overwrites
+	 */
+	public void zip(String entryname, InputStream in) throws IOException {
+		byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
+		int read;
+		try (ZipOutputStream zout = new ZipOutputStream(newOutputStream())) {
+			zout.putNextEntry(new ZipEntry(entryname));
+			while ((read = in.read(buffer)) > 0) {
+				zout.write(buffer, 0, read);
+			}
+			in.close();
+			zout.closeEntry();
+			zout.close();
+		}
 	}
 }

@@ -16,5 +16,5 @@ public @interface IndexField {
 
 	boolean store() default true;
 
-	boolean big() default true;
+	boolean big() default false;
 }
