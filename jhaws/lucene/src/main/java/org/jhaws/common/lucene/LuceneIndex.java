@@ -562,4 +562,28 @@ public class LuceneIndex {
 	public void setWriteLockTimeout(long writeLockTimeout) {
 		this.writeLockTimeout = writeLockTimeout;
 	}
+
+	public void setIndex(Directory index) {
+		this.index = index;
+	}
+
+	public void setIndexAnalyzer(Analyzer indexAnalyzer) {
+		this.indexAnalyzer = indexAnalyzer;
+	}
+
+	public void setIndexSearcher(IndexSearcher indexSearcher) {
+		this.indexSearcher = indexSearcher;
+	}
+
+	public void setIndexWriter(IndexWriter indexWriter) {
+		this.indexWriter = indexWriter;
+	}
+
+	public void setIndexReader(DirectoryReader indexReader) {
+		this.indexReader = indexReader;
+	}
+
+	public void setIndexWriterConfig(IndexWriterConfig indexWriterConfig) {
+		this.indexWriterConfig = indexWriterConfig;
+	}
 }
