@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
  * @see http://stackoverflow.com/questions/8878448/lucene-good-practice-and-thread-safety
  */
 public class LuceneIndex {
-	public static final String WRITE_LOCK = "write.lock";
+	protected static final String WRITE_LOCK = "write.lock";
 
 	protected static final Logger logger = LoggerFactory.getLogger(LuceneIndex.class);
 
