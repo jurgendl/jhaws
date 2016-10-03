@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -760,5 +761,14 @@ public class EList<T> extends JList<EListRecord<T>> implements EListI<T>, Iterab
      */
     public EList<T> STSI() {
         return this.getSimpleThreadSafeInterface();
+    }
+
+    /**
+     * 
+     * @see java.awt.Component#addMouseListener(java.awt.event.MouseListener)
+     */
+    @Override
+    public synchronized void addMouseListener(MouseListener l) {
+        super.addMouseListener(l);
     }
 }
