@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
@@ -224,7 +225,7 @@ public class LuceneIndex {
 	}
 
 	protected Analyzer createSearchAnalyzer() {
-		return searchAnalyzer = new LuceneSearchAnalyzer();
+		return searchAnalyzer = new StandardAnalyzer();
 	}
 
 	protected Analyzer getSearchAnalyzer() {
@@ -423,7 +424,9 @@ public class LuceneIndex {
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
-		return toList(collector.topDocs().scoreDocs);
+		ScoreDoc[] scoreDocs = collector.topDocs().scoreDocs;
+		logger.info("{} -> #{}", query, scoreDocs.length);
+		return toList(scoreDocs);
 	}
 
 	public BooleanQuery searchAllQuery() {

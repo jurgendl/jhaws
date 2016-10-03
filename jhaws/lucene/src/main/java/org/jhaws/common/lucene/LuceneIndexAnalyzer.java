@@ -9,7 +9,7 @@ import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
-import org.apache.lucene.analysis.en.KStemFilter;
+import org.apache.lucene.analysis.en.PorterStemFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.miscellaneous.HyphenatedWordsFilter;
 import org.apache.lucene.analysis.miscellaneous.LengthFilter;
@@ -18,14 +18,15 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.util.CharArraySet;
 
 public class LuceneIndexAnalyzer extends Analyzer {
-	protected CharArraySet defaultStopSet = EnglishAnalyzer.getDefaultStopSet();
-
 	protected int maxLength = Integer.MAX_VALUE;
 
 	protected int minLength = 3;
 
+	protected CharArraySet defaultStopSet = EnglishAnalyzer.getDefaultStopSet();
+
 	protected TokenStream createStemFilter(TokenStream tf) {
-		return new KStemFilter(tf); // new PorterStemFilter(tf);
+		// return new KStemFilter(tf);
+		return new PorterStemFilter(tf);
 	}
 
 	protected TokenStream createStopFilter(TokenStream tf) {
@@ -38,28 +39,31 @@ public class LuceneIndexAnalyzer extends Analyzer {
 		return tf;
 	}
 
-	@SuppressWarnings("resource")
-	@Override
-	protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
-		Tokenizer source = new StandardTokenizer(reader);
-		TokenStream tf = source;
-		tf = new HyphenatedWordsFilter(tf);
-		tf = new LowerCaseFilter(tf);
-		tf = createCleanupFilter(tf);
-		tf = new ClassicFilter(tf);
-		tf = new ASCIIFoldingFilter(tf);
-		tf = createStopFilter(tf);
-		tf = createStemFilter(tf);
-		tf = new LengthFilter(tf, minLength, maxLength);
-		return new TokenStreamComponents(source, tf);
-	}
-
 	public CharArraySet getDefaultStopSet() {
 		return this.defaultStopSet;
 	}
 
 	public void setDefaultStopSet(CharArraySet defaultStopSet) {
 		this.defaultStopSet = defaultStopSet;
+	}
+
+	@Override
+	protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
+		Tokenizer source = new StandardTokenizer(reader);
+		return new TokenStreamComponents(source, addFilters(source));
+	}
+
+	@SuppressWarnings("resource")
+	protected TokenStream addFilters(TokenStream tf) {
+		tf = new LowerCaseFilter(tf);
+		tf = createCleanupFilter(tf);
+		tf = new ClassicFilter(tf);
+		tf = new ASCIIFoldingFilter(tf);
+		tf = createStopFilter(tf);
+		tf = createStemFilter(tf);
+		tf = new HyphenatedWordsFilter(tf);
+		tf = new LengthFilter(tf, minLength, maxLength);
+		return tf;
 	}
 
 	public int getMaxLength() {

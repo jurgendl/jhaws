@@ -7,7 +7,8 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 public class LuceneTokenizerTest {
 	public static void main(String[] args) {
 		try {
-			try (Analyzer analyzer = new LuceneIndexAnalyzer(); TokenStream tokenStream = analyzer.tokenStream("fieldName", "Some stuff that is in need of analysis, we love words.")) {
+			try (Analyzer analyzer = new LuceneIndexAnalyzer();
+					TokenStream tokenStream = analyzer.tokenStream("fieldName", "4.5 Some stuff that is in need of analysis, we love words and classes.")) {
 				tokenStream.reset();
 				CharTermAttribute token = tokenStream.getAttribute(CharTermAttribute.class);
 				while (tokenStream.incrementToken()) {
