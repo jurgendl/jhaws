@@ -27,7 +27,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
@@ -215,7 +214,7 @@ public class LuceneIndex {
 	}
 
 	protected Analyzer createIndexAnalyzer() {
-		return indexAnalyzer = new StandardAnalyzer();
+		return indexAnalyzer = new LuceneAnalyzer();
 	}
 
 	protected Analyzer getIndexAnalyzer() {
