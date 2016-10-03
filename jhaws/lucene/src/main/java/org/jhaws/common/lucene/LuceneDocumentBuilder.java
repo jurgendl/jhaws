@@ -11,11 +11,11 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
-import org.apache.lucene.document.StringField;
-import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.FieldInfo.IndexOptions;
 import org.apache.lucene.index.IndexableField;
 import org.jhaws.common.lang.ClassUtils;
 import org.jhaws.common.lang.DateTime8;
@@ -68,11 +68,24 @@ public abstract class LuceneDocumentBuilder<T> {
 				Class<?> fieldType = entry.getType();
 				if (String.class.equals(fieldType)) {
 					String s = String.class.cast(v);
-					if (anno.big() || s.length() >= 32766) {
-						d.add(new TextField(name, s, store));
-					} else {
-						d.add(new StringField(name, s, store));
+					if (s.length() >= 32766 && !anno.big()) {
+						throw new IllegalArgumentException("big should be set on " + entry.getDeclaringClass().getName() + "#" + entry.getName());
 					}
+					FieldType indexFieldType;
+					if (anno.big()) {
+						if (anno.store()) {
+							indexFieldType = TEXT_TYPE_STORED;
+						} else {
+							indexFieldType = TEXT_TYPE_NOT_STORED;
+						}
+					} else {
+						if (anno.store()) {
+							indexFieldType = STRING_TYPE_STORED;
+						} else {
+							indexFieldType = STRING_TYPE_NOT_STORED;
+						}
+					}
+					d.add(new Field(name, s, indexFieldType));
 				} else if (Boolean.class.isAssignableFrom(fieldType)) {
 					d.add(new IntField(name, Boolean.TRUE.equals(v) ? 1 : 0, store));
 				} else if (Number.class.isAssignableFrom(fieldType)) {
@@ -173,5 +186,40 @@ public abstract class LuceneDocumentBuilder<T> {
 
 	public void setType(Class<T> type) {
 		this.type = type;
+	}
+
+	public static final FieldType TEXT_TYPE_NOT_STORED = new FieldType();
+	public static final FieldType TEXT_TYPE_STORED = new FieldType();
+	public static final FieldType STRING_TYPE_NOT_STORED = new FieldType();
+	public static final FieldType STRING_TYPE_STORED = new FieldType();
+
+	static {
+		TEXT_TYPE_NOT_STORED.setIndexed(true);
+		TEXT_TYPE_NOT_STORED.setOmitNorms(false);
+		TEXT_TYPE_NOT_STORED.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);// DOCS_AND_FREQS_AND_POSITIONS
+		TEXT_TYPE_NOT_STORED.setTokenized(true);
+		TEXT_TYPE_NOT_STORED.setStored(false);
+		TEXT_TYPE_NOT_STORED.freeze();
+
+		TEXT_TYPE_STORED.setIndexed(true);
+		TEXT_TYPE_STORED.setOmitNorms(false);
+		TEXT_TYPE_STORED.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);// DOCS_AND_FREQS_AND_POSITIONS
+		TEXT_TYPE_STORED.setTokenized(true);
+		TEXT_TYPE_STORED.setStored(true);
+		TEXT_TYPE_STORED.freeze();
+
+		STRING_TYPE_NOT_STORED.setIndexed(true);
+		STRING_TYPE_NOT_STORED.setOmitNorms(true);
+		STRING_TYPE_NOT_STORED.setIndexOptions(IndexOptions.DOCS_ONLY);
+		STRING_TYPE_NOT_STORED.setTokenized(false);
+		STRING_TYPE_NOT_STORED.setStored(false);
+		STRING_TYPE_NOT_STORED.freeze();
+
+		STRING_TYPE_STORED.setIndexed(true);
+		STRING_TYPE_STORED.setOmitNorms(true);
+		STRING_TYPE_STORED.setIndexOptions(IndexOptions.DOCS_ONLY);
+		STRING_TYPE_STORED.setTokenized(false);
+		STRING_TYPE_STORED.setStored(true);
+		STRING_TYPE_STORED.freeze();
 	}
 }

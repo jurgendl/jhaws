@@ -15,6 +15,7 @@ import static org.jhaws.common.lang.CollectionUtils8.streamDeepValues;
 import static org.jhaws.common.lang.CollectionUtils8.toList;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +28,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
@@ -42,10 +45,13 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.postingshighlight.PostingsHighlighter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
@@ -59,6 +65,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @see http://stackoverflow.com/questions/8878448/lucene-good-practice-and-thread-safety
+ * @see http://blog.swwomm.com/2013/07/tuning-lucene-to-get-most-relevant.html
  */
 public class LuceneIndex {
 	protected static final String WRITE_LOCK = "write.lock";
@@ -418,15 +425,19 @@ public class LuceneIndex {
 	}
 
 	public List<ScoreDoc> search(Query query, int max) {
+		ScoreDoc[] scoreDocs = score(query, max).scoreDocs;
+		logger.info("{} -> #{}", query, scoreDocs.length);
+		return toList(scoreDocs);
+	}
+
+	public TopDocs score(Query query, int max) {
 		TopScoreDocCollector collector = TopScoreDocCollector.create(max, true);
 		try {
 			getIndexSearcher().search(query, collector);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
-		ScoreDoc[] scoreDocs = collector.topDocs().scoreDocs;
-		logger.info("{} -> #{}", query, scoreDocs.length);
-		return toList(scoreDocs);
+		return collector.topDocs();
 	}
 
 	public BooleanQuery searchAllQuery() {
@@ -597,5 +608,90 @@ public class LuceneIndex {
 
 	public void setIndexWriterConfig(IndexWriterConfig indexWriterConfig) {
 		this.indexWriterConfig = indexWriterConfig;
+	}
+
+	public Query buildQuery(String phrase, List<String> fields, String defaultField) {
+		List<String> tokens;
+		try {
+			tokens = tokenizePhrase(phrase);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		BooleanQuery q = new BooleanQuery();
+		// create term combinations if there are multiple words in the query
+		if (tokens.size() > 1) {
+			// exact-phrase query
+			PhraseQuery phraseQ = new PhraseQuery();
+			for (int w = 0; w < tokens.size(); w++)
+				phraseQ.add(new Term(defaultField, tokens.get(w)));
+			phraseQ.setBoost(tokens.size() * 5);
+			phraseQ.setSlop(2);
+			q.add(phraseQ, BooleanClause.Occur.SHOULD);
+			// 2 out of 4, 3 out of 4, 4 out of 4 (any order), etc
+			// stop at 7 in case user enters a pathologically long query
+			int maxRequired = Math.min(tokens.size(), 7);
+			for (int minRequired = 2; minRequired <= maxRequired; minRequired++) {
+				BooleanQuery comboQ = new BooleanQuery();
+				for (int w = 0; w < tokens.size(); w++)
+					comboQ.add(new TermQuery(new Term(defaultField, tokens.get(w))), BooleanClause.Occur.SHOULD);
+				comboQ.setBoost(minRequired * 3);
+				comboQ.setMinimumNumberShouldMatch(minRequired);
+				q.add(comboQ, BooleanClause.Occur.SHOULD);
+			}
+		}
+		// create an individual term query for each word for each field
+		for (int w = 0; w < tokens.size(); w++)
+			for (int f = 0; f < fields.size(); f++)
+				q.add(new TermQuery(new Term(fields.get(f), tokens.get(w))), BooleanClause.Occur.SHOULD);
+		return q;
+	}
+
+	protected List<String> tokenizePhrase(String phrase) throws IOException {
+		List<String> tokens = new ArrayList<String>();
+		@SuppressWarnings("resource")
+		TokenStream stream = getSearchAnalyzer().tokenStream("someField", new StringReader(phrase));
+		stream.reset();
+		while (stream.incrementToken())
+			tokens.add(stream.getAttribute(CharTermAttribute.class).toString());
+		stream.end();
+		stream.close();
+		return tokens;
+	}
+
+	public List<HighlightResult> highlight(Query query, TopDocs topDocs, String field) {
+		try {
+			PostingsHighlighter highlighter = new PostingsHighlighter();
+			// select up to the three best highlights from the "all" field
+			// of each result, concatenated with ellipses
+			String[] highlights = highlighter.highlight(field, query, getIndexSearcher(), topDocs, 3);
+			int length = topDocs.scoreDocs.length;
+			List<HighlightResult> results = new ArrayList<HighlightResult>(length);
+			for (int i = 0; i < length; i++) {
+				int docId = topDocs.scoreDocs[i].doc;
+				results.add(new HighlightResult(getIndexSearcher().doc(docId), highlights[i]));
+			}
+			return results;
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public class HighlightResult {
+		final public Document document;
+
+		final public String highlights;
+
+		public HighlightResult(Document document, String highlights) {
+			this.document = document;
+			this.highlights = highlights;
+		}
+
+		public Document getDocument() {
+			return this.document;
+		}
+
+		public String getHighlights() {
+			return this.highlights;
+		}
 	}
 }

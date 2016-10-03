@@ -9,11 +9,12 @@ import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
-import org.apache.lucene.analysis.en.PorterStemFilter;
+import org.apache.lucene.analysis.en.KStemFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.miscellaneous.HyphenatedWordsFilter;
 import org.apache.lucene.analysis.miscellaneous.LengthFilter;
 import org.apache.lucene.analysis.standard.ClassicFilter;
+import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.util.CharArraySet;
 
@@ -23,21 +24,6 @@ public class LuceneIndexAnalyzer extends Analyzer {
 	protected int minLength = 3;
 
 	protected CharArraySet defaultStopSet = EnglishAnalyzer.getDefaultStopSet();
-
-	protected TokenStream createStemFilter(TokenStream tf) {
-		// return new KStemFilter(tf);
-		return new PorterStemFilter(tf);
-	}
-
-	protected TokenStream createStopFilter(TokenStream tf) {
-		return new StopFilter(tf, defaultStopSet);
-	}
-
-	protected TokenStream createCleanupFilter(TokenStream tf) {
-		tf = new EnglishPossessiveFilter(getVersion(), tf);// remove end 's
-		// tf = new ElisionFilter(tf, new CharArraySet(ElisionFilterFactory.availableTokenFilters(), true)); // remove l' (french)
-		return tf;
-	}
 
 	public CharArraySet getDefaultStopSet() {
 		return this.defaultStopSet;
@@ -53,14 +39,14 @@ public class LuceneIndexAnalyzer extends Analyzer {
 		return new TokenStreamComponents(source, addFilters(source));
 	}
 
-	@SuppressWarnings("resource")
 	protected TokenStream addFilters(TokenStream tf) {
+		tf = new StandardFilter(tf);
 		tf = new LowerCaseFilter(tf);
-		tf = createCleanupFilter(tf);
+		tf = new EnglishPossessiveFilter(getVersion(), tf);
 		tf = new ClassicFilter(tf);
 		tf = new ASCIIFoldingFilter(tf);
-		tf = createStopFilter(tf);
-		tf = createStemFilter(tf);
+		tf = new StopFilter(tf, defaultStopSet);
+		tf = new KStemFilter(tf); // PorterStemFilter/KStemFilter(;
 		tf = new HyphenatedWordsFilter(tf);
 		tf = new LengthFilter(tf, minLength, maxLength);
 		return tf;
