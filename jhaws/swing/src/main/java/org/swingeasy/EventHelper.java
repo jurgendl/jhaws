@@ -16,28 +16,40 @@ public class EventHelper {
                 || EventHelper.keyEvent(e, EventModifier.SHIFT_DOWN);
     }
 
-    public static boolean isMouse1x1(MouseEvent e) {
+    public static boolean isMouse1xMB1(MouseEvent e) {
         return e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1;
     }
 
-    public static boolean isMouse1x2(MouseEvent e) {
+    public static boolean isMouse1xMB2(MouseEvent e) {
         return e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON2;
     }
 
-    public static boolean isMouse1x3(MouseEvent e) {
+    public static boolean isMouse1xMB3(MouseEvent e) {
         return e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3;
     }
 
-    public static boolean isMouse2x1(MouseEvent e) {
+    public static boolean isMouse2xMB1(MouseEvent e) {
         return e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1;
     }
 
-    public static boolean isMouse2x2(MouseEvent e) {
+    public static boolean isMouse2xMB2(MouseEvent e) {
         return e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON2;
     }
 
-    public static boolean isMouse2x3(MouseEvent e) {
+    public static boolean isMouse2xMB3(MouseEvent e) {
         return e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON3;
+    }
+
+    public static boolean isMouse3xMB1(MouseEvent e) {
+        return e.getClickCount() == 3 && e.getButton() == MouseEvent.BUTTON1;
+    }
+
+    public static boolean isMouse3xMB2(MouseEvent e) {
+        return e.getClickCount() == 3 && e.getButton() == MouseEvent.BUTTON2;
+    }
+
+    public static boolean isMouse3xMB3(MouseEvent e) {
+        return e.getClickCount() == 3 && e.getButton() == MouseEvent.BUTTON3;
     }
 
     public static boolean isNavigate(KeyEvent e) {
