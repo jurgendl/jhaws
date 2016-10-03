@@ -80,6 +80,8 @@ public class LuceneIndex {
 
 	protected Analyzer indexAnalyzer;
 
+	protected Analyzer searchAnalyzer;
+
 	protected IndexSearcher indexSearcher;
 
 	protected IndexWriter indexWriter;
@@ -214,11 +216,19 @@ public class LuceneIndex {
 	}
 
 	protected Analyzer createIndexAnalyzer() {
-		return indexAnalyzer = new LuceneAnalyzer();
+		return indexAnalyzer = new LuceneIndexAnalyzer();
 	}
 
 	protected Analyzer getIndexAnalyzer() {
 		return optional(indexAnalyzer, this::createIndexAnalyzer);
+	}
+
+	protected Analyzer createSearchAnalyzer() {
+		return searchAnalyzer = new LuceneSearchAnalyzer();
+	}
+
+	protected Analyzer getSearchAnalyzer() {
+		return optional(searchAnalyzer, this::createSearchAnalyzer);
 	}
 
 	protected IndexWriter createIndexWriter() {
@@ -541,7 +551,7 @@ public class LuceneIndex {
 	}
 
 	public QueryParser newQueryParser(String field) {
-		QueryParser queryParser = new QueryParser(field, getIndexAnalyzer());
+		QueryParser queryParser = new QueryParser(field, getSearchAnalyzer());
 		queryParser.setAllowLeadingWildcard(true);
 		return queryParser;
 	}
