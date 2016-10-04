@@ -1005,6 +1005,10 @@ public interface CollectionUtils8 {
 		return streamp(text).mapToObj(i -> (char) i);
 	}
 
+	public static Stream<Character> stream(char[] text) {
+		return stream(new String(text));
+	}
+
 	public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
 		return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
 	}
@@ -1288,12 +1292,20 @@ public interface CollectionUtils8 {
 			teVerwijderen.forEach(teVerwijderenAct);
 	}
 
+	public static <K, V> Map<K, V> getMap(Stream<V> values, Function<V, K> keyMapper) {
+		return values.collect(Collectors.toMap(keyMapper, self()));
+	}
+
 	public static <K, V> Map<K, V> getMap(Collection<V> values, Function<V, K> keyMapper) {
-		return values.stream().collect(Collectors.toMap(keyMapper, self()));
+		return getMap(values.stream(), keyMapper);
+	}
+
+	public static <K, V> Map<K, V> getMap(Stream<V> values, Supplier<K> keyMapper) {
+		return values.collect(Collectors.toMap(supplierToFunction(keyMapper), self()));
 	}
 
 	public static <K, V> Map<K, V> getMap(Collection<V> values, Supplier<K> keyMapper) {
-		return values.stream().collect(Collectors.toMap(supplierToFunction(keyMapper), self()));
+		return getMap(values.stream(), keyMapper);
 	}
 
 	public static <K, V> Map<K, V> getKeyMap(Collection<K> values, Function<K, V> valueMapper) {
@@ -1442,5 +1454,28 @@ public interface CollectionUtils8 {
 
 	public static <S, T> Function<S, T> getDefaulted(Function<S, T> getter, T defaultValue) {
 		return ((Function<S, T>) s -> getter.apply(s)).andThen(e -> nn(e, defaultValue));
+	}
+
+	public static <X, Y> Y getMapValue(Map<? extends Predicate<X>, Y> map, X in) {
+		return map.entrySet().stream().filter(entry -> entry.getKey().test(in)).map(Map.Entry::getValue).findFirst().orElse(null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> emptyList() {
+		return Collections.EMPTY_LIST;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T, U> Map<T, U> emptyMap() {
+		return Collections.EMPTY_MAP;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> emptySet() {
+		return Collections.EMPTY_SET;
+	}
+
+	public static String toString(IntStream s) {
+		return s.mapToObj(String::valueOf).collect(Collectors.joining());
 	}
 }

@@ -270,8 +270,24 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public static class Filters implements DirectoryStream.Filter<Path>, Serializable {
+	public static class Filters implements DirectoryStream.Filter<Path>, Serializable, Predicate<Path> {
 		private static final long serialVersionUID = 8537116661747478884L;
+
+		public static class PredicateDelegate extends Filters {
+			private static final long serialVersionUID = -6114632909752594855L;
+
+			protected final Predicate<Path> predicate;
+
+			public PredicateDelegate(Predicate<Path> predicate) {
+				super();
+				this.predicate = predicate;
+			}
+
+			@Override
+			public boolean accept(Path entry) {
+				return predicate.test(entry);
+			}
+		}
 
 		public static class ExtensionFilter extends Filters implements Iterable<String> {
 			private static final long serialVersionUID = -3873046181234664986L;
@@ -323,6 +339,11 @@ public class FilePath implements Path, Externalizable {
 			@Override
 			public Iterator<String> iterator() {
 				return ext.iterator();
+			}
+
+			@Override
+			public String toString() {
+				return getClass().getSimpleName() + ":" + ext;
 			}
 		}
 
@@ -446,6 +467,11 @@ public class FilePath implements Path, Externalizable {
 		@SafeVarargs
 		public Filters(DirectoryStream.Filter<? super Path>... filters) {
 			this(true, false, filters);
+		}
+
+		@Override
+		public boolean test(Path t) {
+			return accept(t);
 		}
 
 		@Override
