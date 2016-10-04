@@ -197,7 +197,7 @@ public interface StringUtils {
 	}
 
 	/**
-	 * remove leadin and trailing spaces and replace multiple spaces by 1 space
+	 * remove leading and trailing spaces and replace multiple spaces by 1 space
 	 * 
 	 * @see http://stackoverflow.com/questions/2932392/java-how-to-replace-2-or-more-spaces-with-single-space-in-string-and-delete-lead
 	 */
