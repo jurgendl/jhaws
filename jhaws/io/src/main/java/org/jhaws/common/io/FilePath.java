@@ -340,6 +340,11 @@ public class FilePath implements Path, Externalizable {
 			public Iterator<String> iterator() {
 				return ext.iterator();
 			}
+
+			@Override
+			public String toString() {
+				return getClass().getSimpleName() + ":" + ext;
+			}
 		}
 
 		public static class WebImageFilter extends Filters.ExtensionFilter {

@@ -1447,4 +1447,19 @@ public interface CollectionUtils8 {
 	public static <X, Y> Y getMapValue(Map<? extends Predicate<X>, Y> map, X in) {
 		return map.entrySet().stream().filter(entry -> entry.getKey().test(in)).map(Map.Entry::getValue).findFirst().orElse(null);
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> List<T> emptyList() {
+		return Collections.EMPTY_LIST;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T, U> Map<T, U> emptyMap() {
+		return Collections.EMPTY_MAP;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> Set<T> emptySet() {
+		return Collections.EMPTY_SET;
+	}
 }

@@ -1,5 +1,6 @@
 package org.jhaws.common.documents;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,11 +16,11 @@ public interface FileTextExtracter {
 		return new org.jhaws.common.io.FilePath.Filters.ExtensionFilter(accepts()).accept(file);
 	}
 
-	default String extract(FilePath file) {
+	default String extract(FilePath file) throws IOException {
 		FilePath target = file.appendExtension("txt");
 		extract(file, target);
 		return target.readAll();
 	}
 
-	void extract(FilePath file, FilePath target);
+	void extract(FilePath file, FilePath target) throws IOException;
 }
