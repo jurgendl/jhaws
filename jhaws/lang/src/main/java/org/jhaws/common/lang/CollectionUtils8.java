@@ -1005,6 +1005,10 @@ public interface CollectionUtils8 {
 		return streamp(text).mapToObj(i -> (char) i);
 	}
 
+	public static Stream<Character> stream(char[] text) {
+		return stream(new String(text));
+	}
+
 	public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
 		return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
 	}
@@ -1469,5 +1473,9 @@ public interface CollectionUtils8 {
 	@SuppressWarnings("unchecked")
 	public static <T> Set<T> emptySet() {
 		return Collections.EMPTY_SET;
+	}
+
+	public static String toString(IntStream s) {
+		return s.mapToObj(String::valueOf).collect(Collectors.joining());
 	}
 }
