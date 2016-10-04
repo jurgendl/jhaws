@@ -1443,4 +1443,8 @@ public interface CollectionUtils8 {
 	public static <S, T> Function<S, T> getDefaulted(Function<S, T> getter, T defaultValue) {
 		return ((Function<S, T>) s -> getter.apply(s)).andThen(e -> nn(e, defaultValue));
 	}
+
+	public static <X, Y> Y getMapValue(Map<? extends Predicate<X>, Y> map, X in) {
+		return map.entrySet().stream().filter(entry -> entry.getKey().test(in)).map(Map.Entry::getValue).findFirst().orElse(null);
+	}
 }
