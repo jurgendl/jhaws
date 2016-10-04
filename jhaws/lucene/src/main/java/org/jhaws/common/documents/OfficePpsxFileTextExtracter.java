@@ -1,6 +1,7 @@
 package org.jhaws.common.documents;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,9 +19,9 @@ public class OfficePpsxFileTextExtracter implements FileTextExtracter {
 	}
 
 	@Override
-	public void extract(FilePath inputFile, FilePath target) throws IOException {
+	public void extract(InputStream inputFile, FilePath target) throws IOException {
 		try {
-			OPCPackage d = OPCPackage.open(inputFile.newInputStream());
+			OPCPackage d = OPCPackage.open(inputFile);
 			XSLFSlideShow ppsx = new XSLFSlideShow(d);
 			try (XSLFPowerPointExtractor xw = new XSLFPowerPointExtractor(ppsx);) {
 				target.write(xw.getText());

@@ -1,6 +1,7 @@
 package org.jhaws.common.documents;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class OfficeDocxFileTextExtracter implements FileTextExtracter {
 	}
 
 	@Override
-	public void extract(FilePath inputFile, FilePath target) throws IOException {
-		XWPFDocument docx = new XWPFDocument(inputFile.newInputStream());
+	public void extract(InputStream inputFile, FilePath target) throws IOException {
+		XWPFDocument docx = new XWPFDocument(inputFile);
 		try (XWPFWordExtractor we = new XWPFWordExtractor(docx)) {
 			target.write(we.getText());
 		}

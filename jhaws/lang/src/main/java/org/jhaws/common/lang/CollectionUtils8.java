@@ -1288,12 +1288,20 @@ public interface CollectionUtils8 {
 			teVerwijderen.forEach(teVerwijderenAct);
 	}
 
+	public static <K, V> Map<K, V> getMap(Stream<V> values, Function<V, K> keyMapper) {
+		return values.collect(Collectors.toMap(keyMapper, self()));
+	}
+
 	public static <K, V> Map<K, V> getMap(Collection<V> values, Function<V, K> keyMapper) {
-		return values.stream().collect(Collectors.toMap(keyMapper, self()));
+		return getMap(values.stream(), keyMapper);
+	}
+
+	public static <K, V> Map<K, V> getMap(Stream<V> values, Supplier<K> keyMapper) {
+		return values.collect(Collectors.toMap(supplierToFunction(keyMapper), self()));
 	}
 
 	public static <K, V> Map<K, V> getMap(Collection<V> values, Supplier<K> keyMapper) {
-		return values.stream().collect(Collectors.toMap(supplierToFunction(keyMapper), self()));
+		return getMap(values.stream(), keyMapper);
 	}
 
 	public static <K, V> Map<K, V> getKeyMap(Collection<K> values, Function<K, V> valueMapper) {

@@ -1,7 +1,7 @@
 package org.jhaws.common.documents;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,8 +24,7 @@ public class OfficeFileTextExtracter implements FileTextExtracter {
 	}
 
 	@Override
-	public void extract(FilePath inputFile, FilePath target) throws IOException {
-		FileInputStream fis = new FileInputStream(inputFile.toFile());
+	public void extract(InputStream fis, FilePath target) throws IOException {
 		NPOIFSFileSystem fileSystem = new NPOIFSFileSystem(fis);
 		// Firstly, get an extractor for the Workbook
 		POIOLE2TextExtractor oleTextExtractor;

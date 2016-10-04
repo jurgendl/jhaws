@@ -1,6 +1,7 @@
 package org.jhaws.common.documents;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class OfficeXlsxFileTextExtracter implements FileTextExtracter {
 	}
 
 	@Override
-	public void extract(FilePath inputFile, FilePath target) throws IOException {
-		XSSFWorkbook xlsx = new XSSFWorkbook(inputFile.newInputStream());
+	public void extract(InputStream inputFile, FilePath target) throws IOException {
+		XSSFWorkbook xlsx = new XSSFWorkbook(inputFile);
 		try (XSSFExcelExtractor xe = new XSSFExcelExtractor(xlsx);) {
 			target.write(xe.getText());
 		}

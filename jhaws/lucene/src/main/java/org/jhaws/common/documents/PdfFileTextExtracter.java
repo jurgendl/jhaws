@@ -1,6 +1,7 @@
 package org.jhaws.common.documents;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,6 +13,13 @@ import org.jhaws.common.io.console.Processes;
 
 public class PdfFileTextExtracter implements FileTextExtracter {
 	private FilePath xpdfexe;
+
+	@Override
+	public void extract(InputStream stream, FilePath target) throws IOException {
+		FilePath tmp = FilePath.createDefaultTempFile(target.getFileNameString(), "pdf");
+		tmp.write(stream);
+		extract(tmp, target);
+	}
 
 	@Override
 	public void extract(FilePath pdf, FilePath txt) {
