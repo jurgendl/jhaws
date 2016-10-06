@@ -29,7 +29,6 @@ import java.util.function.Supplier;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntField;
@@ -236,7 +235,7 @@ public class LuceneIndex {
 	}
 
 	protected Analyzer createSearchAnalyzer() {
-		return searchAnalyzer = new StandardAnalyzer();
+		return searchAnalyzer = new LuceneIndexAnalyzer();
 	}
 
 	protected Analyzer getSearchAnalyzer() {
