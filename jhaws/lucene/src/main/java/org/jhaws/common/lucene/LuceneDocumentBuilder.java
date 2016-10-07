@@ -69,7 +69,8 @@ public abstract class LuceneDocumentBuilder<T> {
 				if (String.class.equals(fieldType)) {
 					String s = String.class.cast(v);
 					if (s.length() >= 32766 && !anno.big()) {
-						throw new IllegalArgumentException("big should be set on " + entry.getDeclaringClass().getName() + "#" + entry.getName());
+						throw new IllegalArgumentException(
+								"big should be set on " + entry.getDeclaringClass().getName() + "#" + entry.getName());
 					}
 					FieldType indexFieldType;
 					if (anno.big()) {
@@ -206,6 +207,11 @@ public abstract class LuceneDocumentBuilder<T> {
 		TEXT_TYPE_STORED.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);// DOCS_AND_FREQS_AND_POSITIONS
 		TEXT_TYPE_STORED.setTokenized(true);
 		TEXT_TYPE_STORED.setStored(true);
+		TEXT_TYPE_STORED.setStoreTermVectorOffsets(true);
+		TEXT_TYPE_STORED.setStoreTermVectorPayloads(true);
+		TEXT_TYPE_STORED.setStoreTermVectorPositions(true);
+		TEXT_TYPE_STORED.setStoreTermVectorPositions(true);
+		TEXT_TYPE_STORED.setStoreTermVectors(true);
 		TEXT_TYPE_STORED.freeze();
 
 		STRING_TYPE_NOT_STORED.setIndexed(true);

@@ -50,7 +50,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
-import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.postingshighlight.PostingsHighlighter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -635,17 +634,20 @@ public class LuceneIndex {
 		if (tokens.isEmpty())
 			return null;
 		if (fields == null)
-			fields = CollectionUtils8.emptyList();
+			fields = new ArrayList<>();
 		if (tokens.size() == 1) {
 			String term = tokens.get(0);
-			if (term.indexOf('*') == -1) {
-				term = term + "*";
+			// if (term.indexOf('*') == -1) {
+			// term = term + "*";
+			// }
+			fields.add(0, defaultField);
+			BooleanQuery b = new BooleanQuery();
+			PhraseQuery p = new PhraseQuery();
+			for (int i = 0; i < fields.size(); ++i) {
+				p.add(new Term(fields.get(i), term));
 			}
-			BooleanQuery q = new BooleanQuery();
-			q.add(new WildcardQuery(new Term(defaultField, term)), BooleanClause.Occur.SHOULD);
-			for (int f = 0; f < fields.size(); f++)
-				q.add(new WildcardQuery(new Term(fields.get(f), term)), BooleanClause.Occur.SHOULD);
-			return q;
+			b.add(p, BooleanClause.Occur.SHOULD);
+			return b;
 		}
 		BooleanQuery q = new BooleanQuery();
 		// create term combinations if there are multiple words in the query
