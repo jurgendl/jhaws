@@ -235,7 +235,7 @@ public class LuceneIndex {
 		return searchAnalyzer = new LuceneIndexAnalyzer();
 	}
 
-	protected Analyzer getSearchAnalyzer() {
+	public Analyzer getSearchAnalyzer() {
 		return optional(searchAnalyzer, this::createSearchAnalyzer);
 	}
 
@@ -641,7 +641,7 @@ public class LuceneIndex {
 			// b.add(p, BooleanClause.Occur.SHOULD);
 			BooleanQuery b = new BooleanQuery();
 			for (int i = 0; i < fields.size(); ++i) {
-				b.add(new WildcardQuery(new Term(fields.get(i), term)), BooleanClause.Occur.SHOULD);
+				b.add(new WildcardQuery(new Term(fields.get(i), term)), BooleanClause.Occur.MUST);
 			}
 			return b;
 		}
