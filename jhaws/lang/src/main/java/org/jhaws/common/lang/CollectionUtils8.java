@@ -45,6 +45,7 @@ import java.util.concurrent.TransferQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
@@ -1477,5 +1478,32 @@ public interface CollectionUtils8 {
 
 	public static String toString(IntStream s) {
 		return s.mapToObj(String::valueOf).collect(Collectors.joining());
+	}
+
+	@SafeVarargs
+	public static <T> BiPredicate<T, T> equals(Function<T, ?>... methods) {
+		return (a, b) -> {
+			EqualsBuilder eb = new EqualsBuilder();
+			Arrays.asList(methods).forEach(g -> eb.append(g.apply(a), g.apply(b)));
+			return eb.isEquals();
+		};
+	}
+
+	@SafeVarargs
+	public static <T> BiFunction<T, T, Integer> bifunction(Function<T, ?>... methods) {
+		return (a, b) -> {
+			CompareToBuilder ctb = new CompareToBuilder();
+			Arrays.asList(methods).forEach(g -> ctb.append(g.apply(a), g.apply(b)));
+			return ctb.toComparison();
+		};
+	}
+
+	@SafeVarargs
+	public static <T> Comparator<T> comparator(Function<T, ?>... methods) {
+		return comparator(bifunction(methods));
+	}
+
+	public static <T> Comparator<T> comparator(BiFunction<T, T, Integer> method) {
+		return method::apply;
 	}
 }
