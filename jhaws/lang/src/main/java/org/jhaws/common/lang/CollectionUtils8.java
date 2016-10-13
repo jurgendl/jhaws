@@ -1499,11 +1499,11 @@ public interface CollectionUtils8 {
 	}
 
 	@SafeVarargs
-	public static <T> Comparator<T> comparator(Function<T, ?>... methods) {
-		return comparator(bifunction(methods));
+	public static <T> Comparator<T> comparatorFor(Function<T, ?>... methods) {
+		return comparatorFor(bifunction(methods));
 	}
 
-	public static <T> Comparator<T> comparator(BiFunction<T, T, Integer> method) {
+	public static <T> Comparator<T> comparatorFor(BiFunction<T, T, Integer> method) {
 		return method::apply;
 	}
 }
