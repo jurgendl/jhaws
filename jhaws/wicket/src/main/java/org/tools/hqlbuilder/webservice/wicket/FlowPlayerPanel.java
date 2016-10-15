@@ -38,13 +38,20 @@ public class FlowPlayerPanel extends Panel {
 			if (_config.getSplashFile().exists()) {
 				if (_config.getW() != 0 && _config.getH() != 0) {
 					flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl()
-							+ ") no-repeat;background-size:cover;background-position-x:center;max-width:" + _config.getW() + "px;max-height:" + _config.getH() + "px"));
+							+ ") no-repeat;background-size:cover;background-position-x:center"
+					// + ";max-width:" + _config.getW() + "px"
+					// + ";max-height:" + _config.getH() + "px"
+					));
 				} else {
-					flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
+					flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl()
+							+ ") no-repeat;background-size:cover;background-position-x:center"));
 				}
 			} else {
 				if (_config.getW() != 0 && _config.getH() != 0) {
-					flowplayer.add(new AttributeModifier("style", ";max-width:" + _config.getW() + "px;max-height:" + _config.getH() + "px"));
+					// flowplayer.add(new AttributeModifier("style",
+					// ";max-width:" + _config.getW() + "px"
+					// + ";max-height:" + _config.getH() + "px"
+					// ));
 				} else {
 					flowplayer.add(new AttributeModifier("style", ""));
 				}
@@ -52,8 +59,10 @@ public class FlowPlayerPanel extends Panel {
 		} else {
 			flowplayer.add(new CssClassNameRemover("is-splash"));
 			if (_config.getW() != 0 && _config.getH() != 0) {
-				flowplayer.add(new AttributeModifier("style",
-						";background-size:cover;background-position-x:center;max-width:" + _config.getW() + "px;max-height:" + _config.getH() + "px"));
+				flowplayer.add(new AttributeModifier("style", ";background-size:cover;background-position-x:center"
+				// + ";max-width:" + _config.getW() + "px"
+				// + ";max-height:" + _config.getH() + "px"
+				));
 			} else {
 				flowplayer.add(new AttributeModifier("style", ";background-size:cover"));
 			}
@@ -89,9 +98,11 @@ public class FlowPlayerPanel extends Panel {
 		super.renderHead(response);
 		response.render(CssHeaderItem.forReference(FlowPlayer.SKIN_CSS));
 		response.render(JavaScriptHeaderItem.forReference(FlowPlayer.JS));
-		response.render(OnDomReadyHeaderItem.forScript(";$('.customflowplayer').flowplayer({swf:'" + FlowPlayer.url() + "'" + (config.getSplash() ? ",splash:true" : "")
-				+ (config.getLoop() ? ",loop:true" : "") + "});"));
+		response.render(OnDomReadyHeaderItem.forScript(";$('.customflowplayer').flowplayer({swf:'" + FlowPlayer.url()
+				+ "'" + (config.getSplash() ? ",splash:true" : "") + (config.getLoop() ? ",loop:true" : "") + "});"));
 		if (config.getLoop())
-			response.render(CssHeaderItem.forCSS(".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }", "flowplayer_hide_play"));
+			response.render(CssHeaderItem.forCSS(
+					".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }",
+					"flowplayer_hide_play"));
 	}
 }
