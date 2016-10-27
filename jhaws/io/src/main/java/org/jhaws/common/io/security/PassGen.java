@@ -12,9 +12,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class PassGen {
 	private static final String STRING_NR = "0123456789";
 
-	private static final String STRING_LC = "abcdefghijklmnopqrstuvwxyz";
+	private static final String STRING_LC = "abcdefghjkmnpqrstuvwxyz";
 
-	private static final String STRING_UC = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static final String STRING_UC = "ABCDEFGHJLMNPQRSTUVWXYZ";
 
 	private static final String STRING_SP = "~$^_-";
 
@@ -46,11 +46,11 @@ public class PassGen {
 	}
 
 	public static String pass(int length) {
-		return pass(length, PassType.lowercase, PassType.uppercase, PassType.numbers);
+		return pass(length, PassType.lowercase, PassType.numbers);
 	}
 
 	public static String pass() {
-		return pass(20);
+		return pass(10);
 	}
 
 	public static String pass(int length, PassType type, PassType... types) {
@@ -77,7 +77,8 @@ public class PassGen {
 			length -= 1;
 			S += STRING_SP;
 		}
-		RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random).chars().mapToObj(c -> String.valueOf((char) c)).forEach(list::add);
+		RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random).chars()
+				.mapToObj(c -> String.valueOf((char) c)).forEach(list::add);
 		Collections.shuffle(list);
 		String p = list.stream().collect(Collectors.joining());
 		return p;
