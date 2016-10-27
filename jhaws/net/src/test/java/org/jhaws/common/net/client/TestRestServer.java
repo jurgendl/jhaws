@@ -65,6 +65,7 @@ public class TestRestServer implements AutoCloseable {
 		server.setPort(port);
 		server.setBindAddress(bindAddress);
 		server.setSecurityDomain(securityDomain);
+		System.out.println(bindAddress + ":" + port);
 		ResteasyDeployment deployment = server.getDeployment();
 		for (Object object : objects) {
 			if (object instanceof Application) {

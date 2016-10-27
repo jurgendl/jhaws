@@ -8,8 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -22,16 +25,29 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.PathSegment;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 @Path(TestResource.PATH)
-public class TestResource {
+public class TestResource /* extends RestResource */ {
+	public static final String GET_MATRIXBEAN = "getmatrixbean";
+
+	public static final String GET_HEADERINFO = "headerinfo";
+
+	public static final String GET_COOKIEINFO = "cookieinfo";
+
 	private static final String IS = "=";
 
 	public static final String PATH_PARAM = "pathParam";
@@ -45,6 +61,12 @@ public class TestResource {
 	public static final String GET = "get";
 
 	public static final String GET_DOUBLE = "getdouble";
+
+	public static final String MATRIX_PARAMS = "matrixparams";
+
+	public static final String MATRIX_PATH = "matrix/";
+
+	public static final String MATRIX = MATRIX_PATH + "{" + MATRIX_PARAMS + "}";
 
 	public static final String GET_BODY = "getbody";
 
@@ -64,17 +86,15 @@ public class TestResource {
 
 	public static final String STREAM_OUT = "streamout";
 
-	Object put;
+	protected Object put;
 
-	Object putBody;
+	protected Object putBody;
 
-	Object delete;
+	protected Object delete;
 
-	List<String> written = new ArrayList<>();
+	private List<String> written = new ArrayList<>();
 
-	Boolean streamBusy = null;
-
-	Random r = new Random(System.currentTimeMillis());
+	protected Boolean streamBusy = null;
 
 	@GET
 	@HEAD
@@ -232,5 +252,96 @@ public class TestResource {
 	@Produces(MediaType.TEXT_XML)
 	public String getDoublePlain() {
 		return "textcontent";
+	}
+
+	@Path(MATRIX)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String matrixParams(@PathParam(MATRIX_PARAMS) PathSegment matrix) {
+		return "" + matrix.getMatrixParameters();
+	}
+
+	@GET
+	@Path(GET_HEADERINFO)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String headers(//
+			@HeaderParam("Accept") String Accept, //
+			@HeaderParam("Accept-Charset") String Accept_Charset, //
+			@HeaderParam("Accept-Encoding") String Accept_Encoding, //
+			@HeaderParam("Accept-Language") String Accept_Language, //
+			@HeaderParam("Accept-Datetime") String Accept_Datetime, //
+			// Authorization
+			@HeaderParam("Cache-Control") String Cache_Control, //
+			@HeaderParam("Connection") String Connection, //
+			@HeaderParam("Content-Length") Long Content_Length, //
+			@HeaderParam("Content-Type") String Content_Type, //
+			@HeaderParam("Date") Date Date, //
+			@HeaderParam("Expect") String Expect, //
+			@HeaderParam("From") String From_email, //
+			@HeaderParam("If-Modified-Since") Date If_Modified_Since, //
+			@HeaderParam("Origint") String Origin, //
+			@HeaderParam("Range") String Range, //
+			@HeaderParam("Referer") String Referer, //
+			@HeaderParam("User-Agent") String User_Agent//
+	) {
+		return User_Agent;
+	}
+
+	@GET
+	@Path(GET_COOKIEINFO)
+	@Produces(MediaType.TEXT_PLAIN)
+	public String cookies(@HeaderParam("JSESSIONID") String JSESSIONID) {
+		return JSESSIONID;
+	}
+
+	@GET
+	@Path("a")
+	public String get(@Context HttpHeaders hh) {
+		MultivaluedMap<String, String> headerParameters = hh.getRequestHeaders();
+		Map<String, Cookie> params = hh.getCookies();
+		return null;
+	}
+
+	@GET
+	@Path("b")
+	public String get(@Context UriInfo ui) {
+		MultivaluedMap<String, String> queryParameters = ui.getQueryParameters();
+		MultivaluedMap<String, String> pathParameters = ui.getPathParameters();
+		return null;
+	}
+
+	@GET
+	@Path("c")
+	public String get(@Context Request req) {
+		return null;
+	}
+
+	@GET
+	@Path("d")
+	public String get(@Context HttpServletRequest req) {
+		return null;
+	}
+
+	@GET
+	@Path("e")
+	public String get(@Context ServletConfig req) {
+		return null;
+	}
+
+	@GET
+	@Path("f")
+	public String get(@Context ServletContext req) {
+		return null;
+	}
+
+	@GET
+	@Path("g")
+	public String get(@Context SecurityContext req) {
+		return null;
+	}
+
+	@GET
+	@Path(GET_MATRIXBEAN)
+	public String matrixBean(@BeanParam MatrixTestBean matrix) {
+		return "" + matrix;
 	}
 }

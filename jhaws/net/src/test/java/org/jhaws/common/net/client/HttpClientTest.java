@@ -223,4 +223,34 @@ public class HttpClientTest {
 		post.setStream(() -> new ByteArrayInputStream("file text data".getBytes()));
 		hc.execute(post, hc.createPost(post));
 	}
+
+	@Test
+	public void test_matrix_1() {
+		URI uri = getBase().path(TestResource.MATRIX_PATH).matrixParam("key1", "value1a").matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
+		GetRequest get = new GetRequest(uri);
+		System.out.println(uri);
+		System.out.println(hc.get(get).getContentString());
+	}
+
+	@Test
+	public void test_matrix_2() {
+		URI uri = getBase().path(TestResource.GET_MATRIXBEAN).matrixParam("key1", "value1a").matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
+		GetRequest get = new GetRequest(uri);
+		System.out.println(uri);
+		System.out.println(hc.get(get).getContentString());
+	}
+
+	@Test
+	public void test_headers_info() {
+		URI uri = getBase().path(TestResource.GET_HEADERINFO).build();
+		GetRequest get = new GetRequest(uri);
+		System.out.println(hc.get(get).getContentString());
+	}
+
+	@Test
+	public void test_cookie_info() {
+		URI uri = getBase().path(TestResource.GET_COOKIEINFO).build();
+		GetRequest get = new GetRequest(uri);
+		System.out.println(hc.get(get).getContentString());
+	}
 }
