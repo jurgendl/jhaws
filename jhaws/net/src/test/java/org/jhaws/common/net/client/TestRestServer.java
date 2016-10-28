@@ -81,6 +81,7 @@ public class TestRestServer implements AutoCloseable {
 				deployment.getProviderClasses().add(resourceOrProvider.getName());
 			}
 		}
+		deployment.getProviderClasses().add(MatrixTestBeanMessageBodyReader.class.getName());
 		server.start();
 	}
 

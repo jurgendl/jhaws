@@ -44,6 +44,8 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 public class TestResource /* extends RestResource */ {
 	public static final String GET_MATRIXBEAN = "getmatrixbean";
 
+	public static final String GET_MATRIXBEANI = "getmatrixbeani";
+
 	public static final String GET_HEADERINFO = "headerinfo";
 
 	public static final String GET_COOKIEINFO = "cookieinfo";
@@ -254,12 +256,6 @@ public class TestResource /* extends RestResource */ {
 		return "textcontent";
 	}
 
-	@Path(MATRIX)
-	@Produces(MediaType.TEXT_PLAIN)
-	public String matrixParams(@PathParam(MATRIX_PARAMS) PathSegment matrix) {
-		return "" + matrix.getMatrixParameters();
-	}
-
 	@GET
 	@Path(GET_HEADERINFO)
 	@Produces(MediaType.TEXT_PLAIN)
@@ -340,8 +336,20 @@ public class TestResource /* extends RestResource */ {
 	}
 
 	@GET
+	@Path(MATRIX)
+	public String matrixParams(@PathParam(MATRIX_PARAMS) PathSegment matrix) {
+		return "*" + matrix.getMatrixParameters();
+	}
+
+	@GET
 	@Path(GET_MATRIXBEAN)
 	public String matrixBean(@BeanParam MatrixTestBean matrix) {
-		return "" + matrix;
+		return "*" + matrix;
+	}
+
+	@GET
+	@Path(GET_MATRIXBEANI)
+	public String matrixBeani(@PathParam(MATRIX_PARAMS) MatrixTestBeanI matrix) {
+		return "*" + matrix;
 	}
 }

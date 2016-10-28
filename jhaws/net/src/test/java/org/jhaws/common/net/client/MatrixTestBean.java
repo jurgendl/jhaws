@@ -4,25 +4,29 @@ import java.util.List;
 
 import javax.ws.rs.MatrixParam;
 
-public class MatrixTestBean {
+public class MatrixTestBean implements MatrixTestBeanI {
 	@MatrixParam("key1")
 	private List<String> key1;
 
 	@MatrixParam("key2")
 	private String key2;
 
+	@Override
 	public String getKey2() {
 		return this.key2;
 	}
 
+	@Override
 	public void setKey2(String key2) {
 		this.key2 = key2;
 	}
 
+	@Override
 	public List<String> getKey1() {
 		return this.key1;
 	}
 
+	@Override
 	public void setKey1(List<String> key1) {
 		this.key1 = key1;
 	}
