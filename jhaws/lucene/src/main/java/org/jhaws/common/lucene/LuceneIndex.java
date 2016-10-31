@@ -125,7 +125,9 @@ public class LuceneIndex {
 
 	protected Directory createIndex() {
 		if (dir.notExists()) {
-			try (FSDirectory tmpDir = FSDirectory.open(dir.toFile()); IndexWriter tmpW = new IndexWriter(tmpDir, new IndexWriterConfig(Version.LATEST, getIndexAnalyzer()))) {
+			try (FSDirectory tmpDir = FSDirectory.open(dir.toFile());
+					IndexWriter tmpW = new IndexWriter(tmpDir,
+							new IndexWriterConfig(Version.LATEST, getIndexAnalyzer()))) {
 				Document tmpDoc = new Document();
 				String uuid = uuid(tmpDoc).get(DOC_UUID);
 				tmpW.addDocument(tmpDoc);
@@ -141,7 +143,8 @@ public class LuceneIndex {
 		new FilePath(dir, WRITE_LOCK).deleteIfExists();
 		MMapDirectory mMapDirectory;
 		try {
-			mMapDirectory = new MMapDirectory(dir.toFile()/* ,new SimpleFSLockFactory() */);
+			mMapDirectory = new MMapDirectory(
+					dir.toFile()/* ,new SimpleFSLockFactory() */);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -255,7 +258,8 @@ public class LuceneIndex {
 	}
 
 	protected IndexWriterConfig createIndexWriterConfig() {
-		return indexWriterConfig = new IndexWriterConfig(Version.LATEST, getIndexAnalyzer()).setWriteLockTimeout(writeLockTimeout);
+		return indexWriterConfig = new IndexWriterConfig(Version.LATEST, getIndexAnalyzer())
+				.setWriteLockTimeout(writeLockTimeout);
 	}
 
 	protected IndexWriterConfig getIndexWriterConfig() {
@@ -334,8 +338,8 @@ public class LuceneIndex {
 		return dir;
 	}
 
-	public <F extends Indexable<? super F>> List<F> sync(List<F> indexed, List<F> fetched, Consumer<F> onDeleteOptional, Consumer<F> onCreateOptional,
-			BiConsumer<F, F> onRematchOptional, ForceRedo<F> forceRedoOptional) {
+	public <F extends Indexable<? super F>> List<F> sync(List<F> indexed, List<F> fetched, Consumer<F> onDeleteOptional,
+			Consumer<F> onCreateOptional, BiConsumer<F, F> onRematchOptional, ForceRedo<F> forceRedoOptional) {
 		fetched.forEach(f -> {
 			if (f.getUuid() == null)
 				f.setUuid(newUuid());
@@ -345,27 +349,26 @@ public class LuceneIndex {
 
 		Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
 		Consumer<F> onCreate = optional(onCreateOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
-		BiConsumer<F, F> onRematch2 = optional(onRematchOptional, (Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
+		BiConsumer<F, F> onRematch2 = optional(onRematchOptional,
+				(Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
 		Consumer<Map.Entry<F, F>> onRematch = p -> onRematch2.accept(p.getKey(), p.getValue());
 
-		List<F> delete = indexed.stream()
-				// .parallel()
+		List<F> delete = indexed.stream().parallel() //
 				.filter(notContainedIn(fetched)).collect(collectList());
-		List<F> create = fetched.stream()
-				// .parallel()
+		List<F> create = fetched.stream().parallel() //
 				.filter(notContainedIn(indexed)).collect(collectList());
 
 		List<Map.Entry<F, F>> match = match(indexed, fetched);
-		List<Map.Entry<F, F>> redo = match.stream()
-				// .parallel()
-				.filter(p -> p.getValue().getLastmodified() != null && p.getValue().getLastmodified().isAfter(p.getKey().getLastmodified())).collect(collectList());
+		List<Map.Entry<F, F>> redo = match.stream().parallel() //
+				.filter(p -> p.getValue().getLastmodified() != null
+						&& p.getValue().getLastmodified().isAfter(p.getKey().getLastmodified()))
+				.collect(collectList());
 		if (forceRedoOptional != null) {
 			forceRedoOptional.forceRedo(match, redo);
 		}
 		match.removeAll(redo);
 
-		redo.stream()
-				// .parallel()
+		redo.stream().parallel() //
 				.forEach(onRematch.andThen(p -> log("sync:index:redo", p)));
 
 		if (redo.size() > 0)
@@ -377,11 +380,9 @@ public class LuceneIndex {
 			logger.info("-{}", delete.size() - redo.size());
 		if (create.size() - redo.size() > 0)
 			logger.info("+{}", create.size() - redo.size());
-		delete.stream()
-				// .parallel()
+		delete.stream().parallel() //
 				.forEach(onDelete.andThen(e -> log("sync:index:delete", e)));
-		create.stream()
-				// .parallel()
+		create.stream().parallel() //
 				.forEach(onCreate.andThen(f -> log("sync:index:create", f)));
 
 		transaction(w -> delete.stream().map(Indexable::term).forEach(EConsumer.enhance(w::deleteDocuments)));
@@ -422,8 +423,7 @@ public class LuceneIndex {
 	}
 
 	public <F extends Indexable<? super F>> void delete(Collection<F> indexables) {
-		deleteDocs(indexables.stream()
-				// .parallel()
+		deleteDocs(indexables.stream().parallel() //
 				.map(Indexable::indexable).collect(collectList()));
 	}
 
@@ -432,8 +432,8 @@ public class LuceneIndex {
 	}
 
 	protected void deleteDocs(Collection<Document> docs) {
-		split(docs, maxBatchSize).stream()
-				.forEach(batch -> transaction(w -> batch.stream().forEach(EConsumer.enhance(doc -> w.deleteDocuments(uuidQuery(doc.get(DOC_UUID).toString()))))));
+		split(docs, maxBatchSize).stream().forEach(batch -> transaction(w -> batch.stream()
+				.forEach(EConsumer.enhance(doc -> w.deleteDocuments(uuidQuery(doc.get(DOC_UUID).toString()))))));
 	}
 
 	public ScoreDoc search1(Query query) {
@@ -459,7 +459,8 @@ public class LuceneIndex {
 	public BooleanQuery searchAllQuery() {
 		BooleanQuery query = new BooleanQuery();
 		query.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
-		query.add(keyValueQuery(LuceneIndex.LUCENE_METADATA, LuceneIndex.LUCENE_METADATA), BooleanClause.Occur.MUST_NOT);
+		query.add(keyValueQuery(LuceneIndex.LUCENE_METADATA, LuceneIndex.LUCENE_METADATA),
+				BooleanClause.Occur.MUST_NOT);
 		return query;
 	}
 
@@ -489,10 +490,12 @@ public class LuceneIndex {
 		return keyValueQuery(new BooleanQuery(), key, value);
 	}
 
-	public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy, Comparator<Document> comparator, Consumer<Document> after) {
+	public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy,
+			Comparator<Document> comparator, Consumer<Document> after) {
 		Consumer<Document> deleter = doc -> deleteDocs(doc);
 		Consumer<Document> action = after == null ? deleter : deleter.andThen(after);
-		streamDeepValues(groupBy(stream(search(query, max)).map(hit -> getDoc(hit)), groupBy)).forEach(stream -> stream.sorted(comparator).skip(1).forEach(action));
+		streamDeepValues(groupBy(stream(search(query, max)).map(hit -> getDoc(hit)), groupBy))
+				.forEach(stream -> stream.sorted(comparator).skip(1).forEach(action));
 	}
 
 	public void addIndexable(Indexable<?>... indexables) {
@@ -500,8 +503,7 @@ public class LuceneIndex {
 	}
 
 	public void addIndexables(Collection<Indexable<?>> indexables) {
-		addDocs(indexables.stream()
-				// .parallel()
+		addDocs(indexables.stream().parallel() //
 				.map(Indexable::indexable).collect(collectList()));
 	}
 
@@ -512,17 +514,16 @@ public class LuceneIndex {
 
 	public void addDocs(Collection<Document> docs) {
 		System.out.println("+" + docs.size());
-		docs.stream()
-				// .parallel()
+		docs.stream().parallel() //
 				.filter(d -> isBlank(d.get(DOC_UUID))).forEach(this::uuid);
-		docs.stream()
-				// .parallel()
+		docs.stream().parallel() //
 				.filter(d -> d.getField(DOC_VERSION) == null).forEach(this::version);
 		split(docs, maxBatchSize).stream().forEach(batch -> transaction(w -> w.addDocuments(batch)));
 	}
 
 	public <F extends Indexable<? super F>> List<F> searchAll(Supplier<F> indexable) {
-		return searchAllDocs().stream().filter(doc -> doc.getField(LUCENE_METADATA) == null).map(doc -> get(doc, indexable)).collect(collectList());
+		return searchAllDocs().stream().filter(doc -> doc.getField(LUCENE_METADATA) == null)
+				.map(doc -> get(doc, indexable)).collect(collectList());
 	}
 
 	public List<Document> searchAllDocs() {
