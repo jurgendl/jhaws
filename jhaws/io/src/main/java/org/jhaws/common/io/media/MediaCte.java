@@ -167,6 +167,8 @@ public interface MediaCte {
 
 	public static final String AAC = "aac";
 
+	public static final String MONO = "mono";
+
 	public static final String MP3C = "libmp3lame";
 
 	public static final String FLV = "flv";
