@@ -17,7 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
@@ -26,9 +28,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.StringUtils;
+import org.jhaws.common.lang.functions.EFunction;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
@@ -69,25 +73,24 @@ public class JAXBMarshalling {
 
 	public static List<Class<?>> getJaxbClasses(Package atLeastOnePackage, Package... packages) {
 		// @XmlType(factoryClass=ObjectFactory.class, factoryMethod="createBean")
-		List<Package> tmp = new ArrayList<>();
-		tmp.add(atLeastOnePackage);
-		for (Package p : packages)
-			tmp.add(p);
-		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
-		final AnnotationTypeFilter f1 = new AnnotationTypeFilter(XmlRootElement.class);
-		TypeFilter TypeFilter = (metadataReader, metadataReaderFactory) -> f1.match(metadataReader, metadataReaderFactory);
-		scanner.addIncludeFilter(TypeFilter);
-		List<Class<?>> classesToBeBound = new ArrayList<>();
-		for (Package p : tmp) {
-			for (BeanDefinition bd : scanner.findCandidateComponents(p.getName())) {
-				try {
-					classesToBeBound.add(Class.forName(bd.getBeanClassName()));
-				} catch (ClassNotFoundException ex) {
-					throw new RuntimeException(ex);
-				}
-			}
+		List<Package> _packages = new ArrayList<>();
+		_packages.add(atLeastOnePackage);
+		for (Package p : packages) {
+			_packages.add(p);
 		}
-		return classesToBeBound;
+		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+		AnnotationTypeFilter f1 = new AnnotationTypeFilter(XmlRootElement.class);
+		AnnotationTypeFilter f2 = new AnnotationTypeFilter(XmlType.class);
+		TypeFilter typeFilter = (metadataReader, metadataReaderFactory) -> f1.match(metadataReader, metadataReaderFactory) || f2.match(metadataReader, metadataReaderFactory);
+		scanner.addIncludeFilter(typeFilter);
+		return _packages//
+				.stream()//
+				.map(p -> scanner.findCandidateComponents(p.getName()))//
+				.map(Collection::stream)//
+				.flatMap(Function.identity())//
+				.map((EFunction<BeanDefinition, Class<?>>) bd -> Class.forName(bd.getBeanClassName()))//
+				.collect(Collectors.toList())//
+		;
 	}
 
 	public static JAXBContext getJaxbContext(Package[] atLeastOnePackage) {

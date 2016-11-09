@@ -11,13 +11,11 @@ import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Set;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.io.IOUtils;
+import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.svn.xml.ObjectFactory;
 import org.jhaws.common.svn.xml.SvnInfo;
 import org.jhaws.common.svn.xml.SvnList;
@@ -33,11 +31,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 public class Svn {
 	private static final Logger logger = LoggerFactory.getLogger(Svn.class);
 
-	private static JAXBContext jaxbContext;
-
-	private static Unmarshaller jaxbUnmarshaller;
-
-	private static Marshaller jaxbMarshaller;
+	private static JAXBMarshalling jaxbMarshalling;
 
 	private static <T extends SvnRootBean> T get(Class<T> clazz, InputStream input) {
 		byte[] data = new byte[0];
@@ -48,14 +42,14 @@ public class Svn {
 			IOUtils.closeQuietly(output);
 			data = output.toByteArray();
 			try (ByteArrayInputStream in = new ByteArrayInputStream(data)) {
-				T t = clazz.cast(Svn.getJaxbUnmarshaller().unmarshal(in));
+				T t = clazz.cast(getJaxbContext().unmarshall(in));
 				try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
-					Svn.getJaxbMarshaller().marshal(t, os);
+					getJaxbContext().marshall(t, os);
 					t.toString(new String(os.toByteArray()));
 				}
 				return t;
 			}
-		} catch (IOException | JAXBException | RuntimeException ex) {
+		} catch (IOException | RuntimeException | JAXBException ex) {
 			logger.error("{}", ex);
 			logger.error("{}", new String(data));
 			throw new RuntimeException(ex);
@@ -63,8 +57,8 @@ public class Svn {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static JAXBContext getJaxbContext() throws JAXBException {
-		if (Svn.jaxbContext == null) {
+	private static JAXBMarshalling getJaxbContext() throws JAXBException {
+		if (jaxbMarshalling == null) {
 			ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
 			provider.addIncludeFilter(new AnnotationTypeFilter(XmlRootElement.class));
 			Set<BeanDefinition> beans = provider.findCandidateComponents(ObjectFactory.class.getPackage().getName());
@@ -76,24 +70,9 @@ public class Svn {
 					throw new RuntimeException(ex);
 				}
 			}
-			Svn.jaxbContext = JAXBContext.newInstance(c.toArray(new Class[c.size()]));
+			jaxbMarshalling = new JAXBMarshalling(c.toArray(new Class[c.size()]));
 		}
-		return Svn.jaxbContext;
-	}
-
-	private static Marshaller getJaxbMarshaller() throws JAXBException {
-		if (Svn.jaxbMarshaller == null) {
-			Svn.jaxbMarshaller = Svn.getJaxbContext().createMarshaller();
-			Svn.jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-		}
-		return Svn.jaxbMarshaller;
-	}
-
-	private static Unmarshaller getJaxbUnmarshaller() throws JAXBException {
-		if (Svn.jaxbUnmarshaller == null) {
-			Svn.jaxbUnmarshaller = Svn.getJaxbContext().createUnmarshaller();
-		}
-		return Svn.jaxbUnmarshaller;
+		return jaxbMarshalling;
 	}
 
 	public static SvnInfo info(File fp) {
