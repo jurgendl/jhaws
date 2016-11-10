@@ -513,7 +513,7 @@ public class LuceneIndex {
 	}
 
 	public void addDocs(Collection<Document> docs) {
-		System.out.println("+" + docs.size());
+		// System.out.println("+" + docs.size());
 		docs.stream().parallel() //
 				.filter(d -> isBlank(d.get(DOC_UUID))).forEach(this::uuid);
 		docs.stream().parallel() //
