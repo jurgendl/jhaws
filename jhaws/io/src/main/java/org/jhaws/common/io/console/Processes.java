@@ -136,8 +136,8 @@ public class Processes {
 		}
 		try {
 			int exitValue = process.waitFor();
-			if (allConsumers != null)
-				allConsumers.accept("exit value=" + exitValue);
+			// if (allConsumers != null)
+			// allConsumers.accept("exit value=" + exitValue);
 			if (exitValue != 0 && throwExitValue)
 				throw new ExitValueException(exitValue);
 		} catch (InterruptedException e) {
