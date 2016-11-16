@@ -21,14 +21,13 @@ import org.slf4j.LoggerFactory;
  * @see http://www.sno.phy.queensu.ca/~phil/exiftool/
  */
 public class ExifTool implements MediaCte {
-	private static final Logger logger = LoggerFactory.getLogger(ExifTool.class);
+	private static final Logger logger = LoggerFactory.getLogger("exif");
 
 	private String splite(String s) {
 		return s.substring(s.indexOf(":") + 1).trim();
 	}
 
 	public static interface ExifInfo {
-
 		boolean isWHKnown();
 
 		Integer getW();
