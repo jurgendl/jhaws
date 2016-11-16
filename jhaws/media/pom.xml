@@ -25,11 +25,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.junit>4.12</version.junit>
-        <version.commons.lang3>3.4</version.commons.lang3>
-        <version.bouncycastle>1.54</version.bouncycastle>
-        <version.jai>1.3.0</version.jai>
-        <version.commons.io>2.5</version.commons.io>
+        <version.commons-lang>2.6</version.commons-lang><!-- stale -->
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -47,6 +43,16 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-io</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${version.commons-lang}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf.xjc-utils</groupId>
+            <artifactId>cxf-xjc-runtime</artifactId>
+            <version>3.0.3</version>
         </dependency>
     </dependencies>
 </project>
