@@ -6,9 +6,11 @@ import static org.jhaws.common.lang.DateTime8.printUpToSeconds;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jhaws.common.io.FilePath;
@@ -21,6 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FfmpegTool implements MediaCte {
+	public static class FfmpegDebug implements Consumer<String> {
+		@Override
+		public void accept(String t) {
+			logger_ffmpeg.debug("{}", t);
+		}
+	}
+
 	private static final Logger logger_ffmpeg = LoggerFactory.getLogger("ffmpeg");
 
 	private static final Logger logger_ffprobe = LoggerFactory.getLogger("ffprobe");
@@ -30,6 +39,22 @@ public class FfmpegTool implements MediaCte {
 	protected FilePath ffmpeg;
 
 	protected FilePath ffprobe;
+
+	private List<String> hwAccel = null;
+
+	/** dxva2, qsv, nvenc */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<String> getHwAccel() {
+		if (hwAccel == null) {
+			Lines lines = new Lines();
+			Consumer<String> c = lines.andThen(new FfmpegDebug());
+			callProcess(true, (List<String>) (List) Arrays.asList(getFfmpeg(), "-hwaccels", "y", "-hide_banner"), (FilePath) null, c);
+			hwAccel = lines.lines();
+			hwAccel.remove("Hardware acceleration methods:");
+			hwAccel.add("nvenc");
+		}
+		return hwAccel;
+	}
 
 	public static FfprobeType unmarshall(String xml) {
 		return jaxbMarshalling.unmarshall(xml);
@@ -59,7 +84,8 @@ public class FfmpegTool implements MediaCte {
 			Lines lines = new Lines();
 			callProcess(true, command, parentDir, lines);
 			String xml = lines.lines().stream().collect(Collectors.joining());
-			return FfmpegTool.unmarshall(xml);
+			logger_ffprobe.info("{}", xml);
+			return unmarshall(xml);
 		} catch (RuntimeException ex) {
 			logger_ffprobe.error("{}", ex);
 			return null;
@@ -86,11 +112,11 @@ public class FfmpegTool implements MediaCte {
 			command.add("-qscale:v");
 			command.add("15");// good=1-35=bad, preferred range 2-5
 			command.add("\"" + splashFile.getAbsolutePath() + "\"");
-			logger_ffmpeg.warn("{}", join(command));
+			logger_ffmpeg.info("{}", join(command));
 			callProcess(true, command, vid.getParentPath(), new Processes.Out());
 			return splashFile.exists();
 		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
+			logger_ffmpeg.error("{}", ex);
 			return false;
 		}
 	}
@@ -109,5 +135,9 @@ public class FfmpegTool implements MediaCte {
 
 	public void setFfprobe(FilePath ffprobe) {
 		this.ffprobe = ffprobe;
+	}
+
+	public void disableHwAccelNvenc() {
+		getHwAccel().remove("nvenc");
 	}
 }
