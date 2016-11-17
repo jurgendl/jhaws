@@ -602,13 +602,4 @@ public class FfmpegTool implements MediaCte {
 		callProcess(true, command, null, new FfmpegDebug());
 		logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
 	}
-
-	public static void main(String[] args) {
-		FfmpegTool f = new FfmpegTool();
-		f.setFfmpeg(new FilePath("C:/tmp/ffmpeg/ffmpeg-20161108-1bbb18f-win64-static/bin/ffmpeg.exe"));
-		f.setFfprobe(new FilePath("C:/tmp/ffmpeg/ffmpeg-20161108-1bbb18f-win64-static/bin/ffprobe.exe"));
-		FilePath o = new FilePath("C:/tmp/img.png.mp4");
-		o.deleteIfExists();
-		f.slideshow(1, "C:/tmp/img%03d.jpg", o);
-	}
 }
