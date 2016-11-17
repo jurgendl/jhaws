@@ -80,10 +80,14 @@ public class FfmpegTool implements MediaCte {
 			try {
 				lines = new Lines();
 				callProcess(true, command, null, lines);
-				hwAccel.add("nvenc");
+				if (!hwAccel.contains("nvenc"))
+					hwAccel.add("nvenc");
+				if (!hwAccel.contains("nvdec"))
+					hwAccel.add("nvdec");
 			} catch (Exception ex) {
 				if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load nvcuda.dll"))) {
 					hwAccel.remove("nvenc");
+					hwAccel.remove("nvdec");
 				}
 			}
 		}
@@ -153,11 +157,11 @@ public class FfmpegTool implements MediaCte {
 			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
 			command.add("-hide_banner");
 			command.add("-y");
-			if (accel.contains("nvenc")) {
+			if (accel.contains("nvdec")) {
 				// "CUDA Video Decoding API" or "CUVID."
 				command.add("-hwaccel");
 				// command.add("cuvid");
-				command.add("nvenc");
+				command.add("nvdec");
 			} else if (accel.contains("qsv")) {
 				// qsv (intel onboard vid HW accel)
 				command.add("-hwaccel");
@@ -372,7 +376,7 @@ public class FfmpegTool implements MediaCte {
 			// command.add("error"); // quiet,panic,fatal,error,warning,info,verbose,debug,trace
 		}
 		if (!cfg.vcopy) {
-			if (accel.contains("nvenc")) {
+			if (accel.contains("nvdec")) {
 				// "CUDA Video Decoding API" or "CUVID."
 				command.add("-hwaccel");
 				// command.add("cuvid");
