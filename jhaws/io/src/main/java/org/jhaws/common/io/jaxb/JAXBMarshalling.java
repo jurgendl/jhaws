@@ -27,8 +27,12 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.StringUtils;
@@ -37,13 +41,85 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLFilterImpl;
 
 public class JAXBMarshalling {
 	protected final JAXBContext jaxbContext;
 
+	protected final String defaultNameSpace;
+
 	protected String charSet = StringUtils.UTF8;
 
 	protected boolean formatOutput = true;
+
+	protected ThreadLocal<Unmarshaller> threadLocalUnmarshaller = new ThreadLocal<Unmarshaller>() {
+		@Override
+		protected Unmarshaller initialValue() {
+			try {
+				return jaxbContext.createUnmarshaller();
+			} catch (JAXBException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+	};
+
+	protected ThreadLocal<XMLFilter> threadLocalXMLFilter = new ThreadLocal<XMLFilter>() {
+		@Override
+		protected XMLFilter initialValue() {
+			if (defaultNameSpace == null)
+				return null;
+			XMLFilter filter = new XMLFilterImpl() {
+				@Override
+				public void endElement(String uri, String localName, String qName) throws SAXException {
+					super.endElement(defaultNameSpace, localName, qName);
+				}
+
+				@Override
+				public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+					super.startElement(defaultNameSpace, localName, qName, atts);
+				}
+			};
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+			try {
+				SAXParser sp = spf.newSAXParser();
+				XMLReader xr = sp.getXMLReader();
+				filter.setParent(xr);
+			} catch (ParserConfigurationException | SAXException ex) {
+				throw new RuntimeException(ex);
+			}
+			return filter;
+		}
+	};
+
+	protected ThreadLocal<UnmarshallerHandler> threadLocalUnmarshallerHandler = new ThreadLocal<UnmarshallerHandler>() {
+		@Override
+		protected UnmarshallerHandler initialValue() {
+			if (defaultNameSpace == null)
+				return null;
+			UnmarshallerHandler unmarshallerHandler = threadLocalUnmarshaller.get().getUnmarshallerHandler();
+			threadLocalXMLFilter.get().setContentHandler(unmarshallerHandler);
+			return unmarshallerHandler;
+		}
+	};
+
+	protected ThreadLocal<Marshaller> threadLocalMarshaller = new ThreadLocal<Marshaller>() {
+		@Override
+		protected Marshaller initialValue() {
+			try {
+				Marshaller m = jaxbContext.createMarshaller();
+				if (formatOutput)
+					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+				return m;
+			} catch (JAXBException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+	};
 
 	public static JAXBContext getJaxbContext(String tremaSeperatedPackages) {
 		try {
@@ -106,52 +182,54 @@ public class JAXBMarshalling {
 		}
 	}
 
-	public JAXBMarshalling(Package atLeastOnePackage, Package... packages) {
+	public JAXBMarshalling(String defaultNamesSpace, Package atLeastOnePackage, Package... packages) {
+		this.defaultNameSpace = defaultNamesSpace;
 		jaxbContext = getJaxbContext(atLeastOnePackage, packages);
 	}
 
+	public JAXBMarshalling(String defaultNamesSpace, Package[] atLeastOnePackage) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(atLeastOnePackage);
+	}
+
+	public JAXBMarshalling(String defaultNamesSpace, String tremaSeperatedPackages) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(tremaSeperatedPackages);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(String defaultNamesSpace, Class atLeastOneClass, Class... dtoClasses) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(atLeastOneClass, dtoClasses);
+	}
+
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(String defaultNamesSpace, Class[] atLeastOneClass) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(atLeastOneClass);
+	}
+
+	public JAXBMarshalling(Package atLeastOnePackage, Package... packages) {
+		this((String) null, atLeastOnePackage, packages);
+	}
+
 	public JAXBMarshalling(Package[] atLeastOnePackage) {
-		jaxbContext = getJaxbContext(atLeastOnePackage);
+		this((String) null, atLeastOnePackage);
 	}
 
 	public JAXBMarshalling(String tremaSeperatedPackages) {
-		jaxbContext = getJaxbContext(tremaSeperatedPackages);
+		this((String) null, tremaSeperatedPackages);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public JAXBMarshalling(Class atLeastOneClass, Class... dtoClasses) {
-		jaxbContext = getJaxbContext(atLeastOneClass, dtoClasses);
+		this((String) null, atLeastOneClass, dtoClasses);
 	}
 
 	@SuppressWarnings("rawtypes")
 	public JAXBMarshalling(Class[] atLeastOneClass) {
-		jaxbContext = getJaxbContext(atLeastOneClass);
+		this((String) null, atLeastOneClass);
 	}
-
-	protected ThreadLocal<Unmarshaller> threadLocalUnmarshaller = new ThreadLocal<Unmarshaller>() {
-		@Override
-		protected Unmarshaller initialValue() {
-			try {
-				return jaxbContext.createUnmarshaller();
-			} catch (JAXBException ex) {
-				throw new RuntimeException(ex);
-			}
-		}
-	};
-
-	protected ThreadLocal<Marshaller> threadLocalMarshaller = new ThreadLocal<Marshaller>() {
-		@Override
-		protected Marshaller initialValue() {
-			try {
-				Marshaller m = jaxbContext.createMarshaller();
-				if (formatOutput)
-					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-				return m;
-			} catch (JAXBException ex) {
-				throw new RuntimeException(ex);
-			}
-		}
-	};
 
 	public <DTO> void marshall(DTO dto, OutputStream out) {
 		try {
@@ -231,7 +309,14 @@ public class JAXBMarshalling {
 
 	public <DTO> DTO unmarshall(InputStream xml) {
 		try {
-			Object unmarshalled = threadLocalUnmarshaller.get().unmarshal(xml);
+			Object unmarshalled;
+			if (defaultNameSpace == null) {
+				unmarshalled = threadLocalUnmarshaller.get().unmarshal(xml);
+			} else {
+				InputSource is = new InputSource(xml);
+				threadLocalXMLFilter.get().parse(is);
+				unmarshalled = threadLocalUnmarshallerHandler.get().getResult();
+			}
 			if (unmarshalled instanceof JAXBElement) {
 				// xml is soap message => JAXBElement wrapper
 				unmarshalled = JAXBElement.class.cast(unmarshalled).getValue();
@@ -240,7 +325,7 @@ public class JAXBMarshalling {
 			@SuppressWarnings("unchecked")
 			DTO dto = (DTO) unmarshalled;
 			return dto;
-		} catch (JAXBException ex) {
+		} catch (JAXBException | IOException | SAXException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
@@ -263,5 +348,9 @@ public class JAXBMarshalling {
 
 	public JAXBContext getJaxbContext() {
 		return this.jaxbContext;
+	}
+
+	public String getDefaultNameSpace() {
+		return this.defaultNameSpace;
 	}
 }

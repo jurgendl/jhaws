@@ -100,12 +100,12 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <schemaDirectory>src/main/resources/services/impl/other/</schemaDirectory>
+                            <schemaDirectory>src/main/resources/ffprobe/</schemaDirectory>
                             <schemaIncludes>
                                 <include>ffprobe.xsd</include>
                             </schemaIncludes>
                             <generateDirectory>src/main/java/</generateDirectory>
-                            <generatePackage>services.impl.other.xml</generatePackage>
+                            <generatePackage>org.jhaws.common.io.media.ffmpeg.xml</generatePackage>
                             <encoding>UTF-8</encoding>
                             <verbose>true</verbose>
                             <extension>true</extension>
