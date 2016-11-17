@@ -38,7 +38,8 @@ public class FfmpegTool implements MediaCte {
 
 	protected static final Logger logger_ffprobe = LoggerFactory.getLogger("ffprobe");
 
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
+			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -51,13 +52,15 @@ public class FfmpegTool implements MediaCte {
 		if (hwAccel == null) {
 			Lines lines = new Lines();
 			Consumer<String> c = lines.andThen(new FfmpegDebug());
-			List<String> command = Arrays.asList("\"" + getFfmpeg().getAbsolutePath() + "\"", "-hwaccels", "-hide_banner", "-y");
+			List<String> command = Arrays.asList("\"" + getFfmpeg().getAbsolutePath() + "\"", "-hwaccels",
+					"-hide_banner", "-y");
 			logger_ffmpeg.info("{}", join(command));
 			callProcess(true, command, null, c);
 			hwAccel = lines.lines();
 			hwAccel.remove("Hardware acceleration methods:");
 
-			// ffmpeg -i input -c:v h264_nvenc -profile high444p -pixel_format yuv444p -preset default output.mp4
+			// ffmpeg -i input -c:v h264_nvenc -profile high444p -pixel_format
+			// yuv444p -preset default output.mp4
 			FilePath f = FilePath.createDefaultTempFile("mp4");
 			f.write(FfmpegTool.class.getClassLoader().getResourceAsStream("ffmpeg/test.mp4"));
 			FilePath o = FilePath.createDefaultTempFile("mp4");
@@ -82,8 +85,8 @@ public class FfmpegTool implements MediaCte {
 				callProcess(true, command, null, lines);
 				if (!hwAccel.contains("nvenc"))
 					hwAccel.add("nvenc");
-				if (!hwAccel.contains("nvdec"))
-					hwAccel.add("nvdec");
+				// if (!hwAccel.contains("nvdec"))
+				// hwAccel.add("nvdec");
 			} catch (Exception ex) {
 				if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load nvcuda.dll"))) {
 					hwAccel.remove("nvenc");
@@ -122,7 +125,6 @@ public class FfmpegTool implements MediaCte {
 			Lines lines = new Lines();
 			callProcess(true, command, null, lines);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
-			new FilePath("c:/tmp/test.xml").write(xml);
 			logger_ffprobe.info("{}", xml);
 			return unmarshall(xml);
 		} catch (RuntimeException ex) {
@@ -141,8 +143,10 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public boolean splash(FilePath vid, FilePath splashFile, Duration duration, long frames, SplashPow pow) {
-		// That will seek 10 seconds into the movie, select every 1000th frame, scale it to 320x240 pixels and create 2x3 tiles
-		// ffmpeg -ss 00:00:10 -i movie.avi -frames 1 -vf "select=not(mod(n\,1000)),scale=320:240,tile=2x3" out.png
+		// That will seek 10 seconds into the movie, select every 1000th frame,
+		// scale it to 320x240 pixels and create 2x3 tiles
+		// ffmpeg -ss 00:00:10 -i movie.avi -frames 1 -vf
+		// "select=not(mod(n\,1000)),scale=320:240,tile=2x3" out.png
 		// wh=1: 1x1=1: parts=1+2=3: 2/3
 		// wh=2: 2x2=4: parts=4+2=6: 2/6=1/3, 3/6=1/2, 4/6=2/3, 5/6
 		// wh=3: 3x3=9: parts=9+2=11: 2/11, 3/11 ... 9/11, 10/11
@@ -157,20 +161,28 @@ public class FfmpegTool implements MediaCte {
 			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
 			command.add("-hide_banner");
 			command.add("-y");
-			if (accel.contains("nvdec")) {
-				// "CUDA Video Decoding API" or "CUVID."
-				command.add("-hwaccel");
-				// command.add("cuvid");
-				command.add("nvdec");
-			} else if (accel.contains("qsv")) {
-				// qsv (intel onboard vid HW accel)
-				command.add("-hwaccel");
-				command.add("qsv");
-			} else if (accel.contains("dxva2")) {
-				// Direct-X Video Acceleration API, developed by Microsoft (supports Windows and XBox360)
-				command.add("-hwaccel");
-				command.add("dxva2");
-			}
+			// // if (accel.contains("nvdec")) {
+			// // // "CUDA Video Decoding API" or "CUVID."
+			// // command.add("-hwaccel");
+			// // // command.add("cuvid");
+			// // command.add("nvdec");
+			// // // command.add("-threads");
+			// // // command.add("1");
+			// // } else
+			// if (accel.contains("qsv")) {
+			// // qsv (intel onboard vid HW accel)
+			// command.add("-hwaccel");
+			// command.add("qsv");
+			// // command.add("-threads");
+			// // command.add("1");
+			// } else if (accel.contains("dxva2")) {
+			// // Direct-X Video Acceleration API, developed by Microsoft
+			// // (supports Windows and XBox360)
+			// command.add("-hwaccel");
+			// command.add("dxva2");
+			// // command.add("-threads");
+			// // command.add("1");
+			// }
 			command.add("-ss");
 			if (one) {
 				command.add(printUpToSeconds(duration.dividedBy(2)));
@@ -180,15 +192,16 @@ public class FfmpegTool implements MediaCte {
 			command.add("-i");
 			command.add("\"" + vid.getAbsolutePath() + "\"");
 			if (one) {
-			command.add("-vframes");
-			command.add("1");
-			command.add("-qscale:v");
-			command.add("15");// good=1-35=bad, preferred range 2-5
+				command.add("-vframes");
+				command.add("1");
+				command.add("-qscale:v");
+				command.add("15");// good=1-35=bad, preferred range 2-5
 			} else {
 				command.add("-frames");
 				command.add("1");
 				command.add("-vf");
-				command.add("\"select=not(mod(n\\," + (frames / parts) + ")),scale=iw/" + wh + ":ih/" + wh + ",tile=" + wh + "x" + wh + "\"");
+				command.add("\"select=not(mod(n\\," + (frames / parts) + ")),scale=iw/" + wh + ":ih/" + wh + ",tile="
+						+ wh + "x" + wh + "\"");
 			}
 			command.add("\"" + splashFile.getAbsolutePath() + "\"");
 			logger_ffmpeg.info("{}", join(command));
@@ -253,7 +266,7 @@ public class FfmpegTool implements MediaCte {
 				logger_ffmpeg.error("error {}", output);
 				output.deleteIfExists();
 				output = null;
-	}
+			}
 		} catch (Exception ex) {
 			logger_ffmpeg.error("error {}", input, ex);
 			if (output != null) {
@@ -266,13 +279,19 @@ public class FfmpegTool implements MediaCte {
 
 	public void remux(Supplier<Consumer<String>> listener, FilePath parentDir, FilePath input, FilePath output) {
 		Cfg cfg = new Cfg();
+		cfg.input = input;
+		cfg.output = output;
 		cfg.info = info(input);
 		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
-		StreamType videostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "video".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
-		StreamType audiostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "audio".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
-		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
+		StreamType videostreaminfo = cfg.info.getStreams().getStream().stream()
+				.filter(stream -> "video".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
+		StreamType audiostreaminfo = cfg.info.getStreams().getStream().stream()
+				.filter(stream -> "audio".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
+		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000)
+				: videostreaminfo.getBitRate() / 1000;
 		cfg.vt = videostreaminfo.getCodecName();
-		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
+		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
+				: audiostreaminfo.getBitRate() / 1000;
 		cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
 		cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
 		cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
@@ -286,7 +305,7 @@ public class FfmpegTool implements MediaCte {
 		logger_ffmpeg.info("{}", join(command));
 		Lines lines = new Lines();
 		try {
-			callProcess(true, command, parentDir, lines.andThen(listener.get()));
+			callProcess(true, command, parentDir, lines.andThen(new FfmpegDebug()).andThen(listener.get()));
 		} catch (RuntimeException ex) {
 			exception = ex;
 		}
@@ -303,7 +322,7 @@ public class FfmpegTool implements MediaCte {
 			command = command(cfg);
 			logger_ffmpeg.info("{}", join(command));
 			lines = new Lines();
-			callProcess(true, command, parentDir, lines.andThen(listener.get()));
+			callProcess(true, command, parentDir, lines.andThen(new FfmpegDebug()).andThen(listener.get()));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -333,7 +352,8 @@ public class FfmpegTool implements MediaCte {
 			cfg.fixes.fixDiv2 = true;
 		}
 		// Cannot load nvcuda.dll
-		// if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load nvcuda.dll"))) {
+		// if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load
+		// nvcuda.dll"))) {
 		// needsFixing.set(true);
 		// resetException.set(true);
 		// disableHwAccelNvenc();
@@ -373,24 +393,33 @@ public class FfmpegTool implements MediaCte {
 		}
 		{
 			// command.add("-loglevel");
-			// command.add("error"); // quiet,panic,fatal,error,warning,info,verbose,debug,trace
+			// command.add("error"); //
+			// quiet,panic,fatal,error,warning,info,verbose,debug,trace
 		}
-		if (!cfg.vcopy) {
-			if (accel.contains("nvdec")) {
-				// "CUDA Video Decoding API" or "CUVID."
-				command.add("-hwaccel");
-				// command.add("cuvid");
-				command.add("nvdec");
-			} else if (accel.contains("qsv")) {
-				// qsv (intel onboard vid HW accel)
-				command.add("-hwaccel");
-				command.add("qsv");
-			} else if (accel.contains("dxva2")) {
-				// Direct-X Video Acceleration API, developed by Microsoft (supports Windows and XBox360)
-				command.add("-hwaccel");
-				command.add("dxva2");
-			}
-		}
+		// if (!cfg.vcopy) {
+		// // if (accel.contains("nvdec")) {
+		// // // "CUDA Video Decoding API" or "CUVID."
+		// // command.add("-hwaccel");
+		// // // command.add("cuvid");
+		// // command.add("nvdec");
+		// // // command.add("-threads");
+		// // // command.add("1");
+		// // } else
+		// if (accel.contains("qsv")) {
+		// // qsv (intel onboard vid HW accel)
+		// command.add("-hwaccel");
+		// command.add("qsv");
+		// // command.add("-threads");
+		// // command.add("1");
+		// } else if (accel.contains("dxva2")) {
+		// // Direct-X Video Acceleration API, developed by Microsoft
+		// // (supports Windows and XBox360)
+		// command.add("-hwaccel");
+		// command.add("dxva2");
+		// // command.add("-threads");
+		// // command.add("1");
+		// }
+		// }
 		{
 			command.add("-i");
 			command.add("\"" + cfg.input.getAbsolutePath() + "\"");
@@ -428,7 +457,8 @@ public class FfmpegTool implements MediaCte {
 		{
 			command.add("-threads");
 			command.add("2");
-			// command.add(String.valueOf(Runtime.getRuntime().availableProcessors() / 2));
+			// command.add(String.valueOf(Runtime.getRuntime().availableProcessors()
+			// / 2));
 		}
 		{
 			command.add("-tune");
@@ -577,9 +607,12 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public void slideshow(int seconds, String images, FilePath out) {
-		// In this example each image will have a duration of 5 seconds (the inverse of 1/5 frames per second). The video stream will have a frame rate of 30 fps by duplicating the
+		// In this example each image will have a duration of 5 seconds (the
+		// inverse of 1/5 frames per second). The video stream will have a frame
+		// rate of 30 fps by duplicating the
 		// frames accordingly:
-		// ffmpeg -framerate 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+		// ffmpeg -framerate 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt
+		// yuv420p out.mp4
 		List<String> command = new ArrayList<>();
 		command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
 		command.add("-hide_banner");
