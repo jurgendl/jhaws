@@ -34,7 +34,8 @@ public class FfmpegTool implements MediaCte {
 
 	private static final Logger logger_ffprobe = LoggerFactory.getLogger("ffprobe");
 
-	protected static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	protected static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
+			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -43,12 +44,12 @@ public class FfmpegTool implements MediaCte {
 	private List<String> hwAccel = null;
 
 	/** dxva2, qsv, nvenc */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<String> getHwAccel() {
 		if (hwAccel == null) {
 			Lines lines = new Lines();
 			Consumer<String> c = lines.andThen(new FfmpegDebug());
-			callProcess(true, (List<String>) (List) Arrays.asList(getFfmpeg(), "-hwaccels", "y", "-hide_banner"), (FilePath) null, c);
+			callProcess(true, Arrays.asList(getFfmpeg().getAbsolutePath(), "-hwaccels", "y", "-hide_banner"),
+					(FilePath) null, c);
 			hwAccel = lines.lines();
 			hwAccel.remove("Hardware acceleration methods:");
 			hwAccel.add("nvenc");
