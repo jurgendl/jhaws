@@ -10,9 +10,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -68,7 +66,7 @@ public class FfmpegTool implements MediaCte {
 		return jaxbMarshalling.unmarshall(xml);
 	}
 
-	public FfprobeType info(Map<String, Object> meta, FilePath parentDir, FilePath input) {
+	public FfprobeType info(FilePath input) {
 		// https://trac.ffmpeg.org/wiki/FFprobeTips
 		try {
 			List<String> command = new ArrayList<>();
@@ -90,8 +88,8 @@ public class FfmpegTool implements MediaCte {
 			command.add("\"" + input.getAbsolutePath() + "\"");
 			logger_ffprobe.info("{}", join(command));
 			Lines lines = new Lines();
-			callProcess(true, command, parentDir, lines);
-			String xml = lines.lines().stream().collect(Collectors.joining());
+			callProcess(true, command, null, lines);
+			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
 			logger_ffprobe.info("{}", xml);
 			return unmarshall(xml);
 		} catch (RuntimeException ex) {
@@ -101,24 +99,39 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public Duration duration(FilePath file) {
-		FfprobeType info = info(new HashMap<>(), file.getParentPath(), file);
+		FfprobeType info = info(file);
 		return Duration.ofSeconds(info.getFormat().getDuration().longValue());
 	}
 
-	public boolean splash(FilePath vid, FilePath splashFile, Duration loc) {
+	public boolean splash(FilePath vid, FilePath splashFile, Duration duration, long frames) {
+		// That will seek 10 seconds into the movie, select every 1000th frame, scale it to 320x240 pixels and create 2x3 tiles
+		// ffmpeg -ss 00:00:10 -i movie.avi -frames 1 -vf "select=not(mod(n\,1000)),scale=320:240,tile=2x3" out.png
+		// 2/6=1/3, 3/6=1/2, 4/6=2/3, 5/6
+		long seconds = duration.getSeconds();
 		try {
 			List<String> command = new ArrayList<>();
 			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
 			command.add("-y");
 			command.add("-hide_banner");
 			command.add("-ss");
-			command.add(printUpToSeconds(loc));
+			if (seconds < 6 || frames < 180) {
+				command.add(printUpToSeconds(duration.dividedBy(2)));
+			} else {
+				command.add(printUpToSeconds(duration.dividedBy(3)));
+			}
 			command.add("-i");
 			command.add("\"" + vid.getAbsolutePath() + "\"");
-			command.add("-vframes");
-			command.add("1");
-			command.add("-qscale:v");
-			command.add("15");// good=1-35=bad, preferred range 2-5
+			if (seconds < 6 || frames < 180) {
+				command.add("-vframes");
+				command.add("1");
+				command.add("-qscale:v");
+				command.add("15");// good=1-35=bad, preferred range 2-5
+			} else {
+				command.add("-frames");
+				command.add("1");
+				command.add("-vf");
+				command.add("\"select=not(mod(n\\," + (frames / 6) + ")),scale=iw/2:ih/2,tile=2x2\"");
+			}
 			command.add("\"" + splashFile.getAbsolutePath() + "\"");
 			logger_ffmpeg.info("{}", join(command));
 			callProcess(true, command, vid.getParentPath(), new Processes.Out());
@@ -193,9 +206,9 @@ public class FfmpegTool implements MediaCte {
 		return output;
 	}
 
-	public void remux(Map<String, Object> meta, Supplier<Consumer<String>> listener, FilePath parentDir, FilePath input, FilePath output) {
+	public void remux(Supplier<Consumer<String>> listener, FilePath parentDir, FilePath input, FilePath output) {
 		Cfg cfg = new Cfg();
-		cfg.info = info(meta, parentDir, input);
+		cfg.info = info(input);
 		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
 		StreamType videostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "video".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
 		StreamType audiostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "audio".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
@@ -459,6 +472,8 @@ public class FfmpegTool implements MediaCte {
 		}
 		try {
 			List<String> command = new ArrayList<>();
+			command.add("-y");
+			command.add("-hide_banner");
 			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
 			command.add("-i");
 			command.add("\"" + video.getAbsolutePath() + "\"");

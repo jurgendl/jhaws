@@ -367,12 +367,4 @@ public class ExifTool implements MediaCte {
 		}
 		return duration;
 	}
-
-	public Duration half(Duration duration) {
-		Duration half = Duration.ofMillis(0);
-		if (duration == null)
-			return half;
-		half = half.plusNanos(duration.toNanos() / 2);
-		return half;
-	}
 }
