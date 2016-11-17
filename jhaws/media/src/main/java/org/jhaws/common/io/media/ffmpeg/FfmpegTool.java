@@ -39,7 +39,8 @@ public class FfmpegTool implements MediaCte {
 
 	protected static final Logger logger_ffprobe = LoggerFactory.getLogger("ffprobe");
 
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling("http://www.ffmpeg.org/schema/ffprobe",
+			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
