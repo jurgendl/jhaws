@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileExistsException;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.io.media.MediaCte;
@@ -48,16 +47,45 @@ public class FfmpegTool implements MediaCte {
 	protected List<String> hwAccel = null;
 
 	/** dxva2, qsv, nvenc */
-	public List<String> getHwAccel() {
+	public synchronized List<String> getHwAccel() {
 		if (hwAccel == null) {
 			Lines lines = new Lines();
 			Consumer<String> c = lines.andThen(new FfmpegDebug());
-			List<String> command = Arrays.asList("\"" + getFfmpeg().getAbsolutePath() + "\"", "-hwaccels", "y", "-hide_banner");
+			List<String> command = Arrays.asList("\"" + getFfmpeg().getAbsolutePath() + "\"", "-hwaccels", "-hide_banner", "-y");
 			logger_ffmpeg.info("{}", join(command));
 			callProcess(true, command, null, c);
 			hwAccel = lines.lines();
 			hwAccel.remove("Hardware acceleration methods:");
-			hwAccel.add("nvenc");
+
+			// ffmpeg -i input -c:v h264_nvenc -profile high444p -pixel_format yuv444p -preset default output.mp4
+			FilePath f = FilePath.createDefaultTempFile("mp4");
+			f.write(FfmpegTool.class.getClassLoader().getResourceAsStream("ffmpeg/test.mp4"));
+			FilePath o = FilePath.createDefaultTempFile("mp4");
+			command = new ArrayList<>();
+			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+			command.add("-hide_banner");
+			command.add("-y");
+			command.add("-i");
+			command.add("\"" + f.getAbsolutePath() + "\"");
+			command.add("-c:v");
+			command.add("h264_nvenc");
+			command.add("-profile");
+			command.add("high444p");
+			command.add("-pixel_format");
+			command.add("yuv444p");
+			command.add("-preset");
+			command.add("default");
+			command.add("\"" + o.getAbsolutePath() + "\"");
+			logger_ffmpeg.info("{}", join(command));
+			try {
+				lines = new Lines();
+				callProcess(true, command, null, lines);
+				hwAccel.add("nvenc");
+			} catch (Exception ex) {
+				if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load nvcuda.dll"))) {
+					hwAccel.remove("nvenc");
+				}
+			}
 		}
 		return Collections.unmodifiableList(hwAccel);
 	}
@@ -104,25 +132,50 @@ public class FfmpegTool implements MediaCte {
 		return Duration.ofSeconds(info.getFormat().getDuration().longValue());
 	}
 
-	public boolean splash(FilePath vid, FilePath splashFile, Duration duration, long frames) {
+	public static enum SplashPow {
+		_1, _2, _3, _4;
+	}
+
+	public boolean splash(FilePath vid, FilePath splashFile, Duration duration, long frames, SplashPow pow) {
 		// That will seek 10 seconds into the movie, select every 1000th frame, scale it to 320x240 pixels and create 2x3 tiles
 		// ffmpeg -ss 00:00:10 -i movie.avi -frames 1 -vf "select=not(mod(n\,1000)),scale=320:240,tile=2x3" out.png
-		// 2/6=1/3, 3/6=1/2, 4/6=2/3, 5/6
+		// wh=1: 1x1=1: parts=1+2=3: 2/3
+		// wh=2: 2x2=4: parts=4+2=6: 2/6=1/3, 3/6=1/2, 4/6=2/3, 5/6
+		// wh=3: 3x3=9: parts=9+2=11: 2/11, 3/11 ... 9/11, 10/11
+		// wh=4: 4x4=16: parts=16+2=18: 2/18, 3/18 ... 16/18, 17/18
 		long seconds = duration.getSeconds();
+		boolean one = seconds < 6 || frames < 180 || pow == null || pow == SplashPow._1;
+		int wh = one || pow == null ? 1 : Integer.parseInt(pow.name().substring(1));
+		int parts = wh * wh + 2;
 		try {
+			List<String> accel = getHwAccel();
 			List<String> command = new ArrayList<>();
 			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
-			command.add("-y");
 			command.add("-hide_banner");
+			command.add("-y");
+			if (accel.contains("nvenc")) {
+				// "CUDA Video Decoding API" or "CUVID."
+				command.add("-hwaccel");
+				// command.add("cuvid");
+				command.add("nvenc");
+			} else if (accel.contains("qsv")) {
+				// qsv (intel onboard vid HW accel)
+				command.add("-hwaccel");
+				command.add("qsv");
+			} else if (accel.contains("dxva2")) {
+				// Direct-X Video Acceleration API, developed by Microsoft (supports Windows and XBox360)
+				command.add("-hwaccel");
+				command.add("dxva2");
+			}
 			command.add("-ss");
-			if (seconds < 6 || frames < 180) {
+			if (one) {
 				command.add(printUpToSeconds(duration.dividedBy(2)));
 			} else {
-				command.add(printUpToSeconds(duration.dividedBy(3)));
+				command.add(printUpToSeconds(duration.dividedBy(parts).multipliedBy(2)));
 			}
 			command.add("-i");
 			command.add("\"" + vid.getAbsolutePath() + "\"");
-			if (seconds < 6 || frames < 180) {
+			if (one) {
 				command.add("-vframes");
 				command.add("1");
 				command.add("-qscale:v");
@@ -131,11 +184,13 @@ public class FfmpegTool implements MediaCte {
 				command.add("-frames");
 				command.add("1");
 				command.add("-vf");
-				command.add("\"select=not(mod(n\\," + (frames / 6) + ")),scale=iw/2:ih/2,tile=2x2\"");
+				command.add("\"select=not(mod(n\\," + (frames / parts) + ")),scale=iw/" + wh + ":ih/" + wh + ",tile=" + wh + "x" + wh + "\"");
 			}
 			command.add("\"" + splashFile.getAbsolutePath() + "\"");
 			logger_ffmpeg.info("{}", join(command));
-			callProcess(true, command, vid.getParentPath(), new Processes.Out());
+			long start = System.currentTimeMillis();
+			callProcess(true, command, vid.getParentPath(), new FfmpegDebug());
+			logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
 			return splashFile.exists();
 		} catch (Exception ex) {
 			logger_ffmpeg.error("{}", ex);
@@ -159,18 +214,14 @@ public class FfmpegTool implements MediaCte {
 		this.ffprobe = ffprobe;
 	}
 
-	public void disableHwAccelNvenc() {
-		getHwAccel().remove("nvenc");
-	}
-
 	public FilePath cut(FilePath input, String suffix, String from, String length) {
 		FilePath parentDir = input.getParentPath();
 		FilePath output = input.changeExtension(suffix).appendExtension(MP4);
 		try {
 			List<String> command = new ArrayList<>();
 			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
-			command.add("-y");
 			command.add("-hide_banner");
+			command.add("-y");
 			command.add("-i");
 			command.add("\"" + input.getAbsolutePath() + "\"");
 			command.add("-acodec");
@@ -189,7 +240,9 @@ public class FfmpegTool implements MediaCte {
 			command.add(length);
 			command.add("\"" + output.getAbsolutePath() + "\"");
 			logger_ffmpeg.info("{}", join(command));
+			long start = System.currentTimeMillis();
 			callProcess(true, command, parentDir, new FfmpegDebug());
+			logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
 			if (output.exists() && output.getFileSize() > 500) {
 				logger_ffmpeg.info("done {}", output);
 			} else {
@@ -276,11 +329,11 @@ public class FfmpegTool implements MediaCte {
 			cfg.fixes.fixDiv2 = true;
 		}
 		// Cannot load nvcuda.dll
-		if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load nvcuda.dll"))) {
-			needsFixing.set(true);
-			resetException.set(true);
-			disableHwAccelNvenc();
-		}
+		// if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load nvcuda.dll"))) {
+		// needsFixing.set(true);
+		// resetException.set(true);
+		// disableHwAccelNvenc();
+		// }
 	}
 
 	protected static class CfgFixes {
@@ -310,17 +363,30 @@ public class FfmpegTool implements MediaCte {
 		List<String> accel = getHwAccel();
 		List<String> command = new ArrayList<>();
 		{
-			command.add("\"" + getFfmpeg() + "\"");
-			command.add("-y");
+			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
 			command.add("-hide_banner");
+			command.add("-y");
 		}
-		// command.add("-loglevel");
-		// command.add("error"); // quiet,panic,fatal,error,warning,info,verbose,debug,trace
-		// if (!copyVideo && (true || hwAccel().contains("nvenc"))) {
-		// // "CUDA Video Decoding API" or "CUVID."
-		// command.add("-hwaccel");
-		// command.add("cuvid");
-		// }
+		{
+			// command.add("-loglevel");
+			// command.add("error"); // quiet,panic,fatal,error,warning,info,verbose,debug,trace
+		}
+		if (!cfg.vcopy) {
+			if (accel.contains("nvenc")) {
+				// "CUDA Video Decoding API" or "CUVID."
+				command.add("-hwaccel");
+				// command.add("cuvid");
+				command.add("nvdec");
+			} else if (accel.contains("qsv")) {
+				// qsv (intel onboard vid HW accel)
+				command.add("-hwaccel");
+				command.add("qsv");
+			} else if (accel.contains("dxva2")) {
+				// Direct-X Video Acceleration API, developed by Microsoft (supports Windows and XBox360)
+				command.add("-hwaccel");
+				command.add("dxva2");
+			}
+		}
 		{
 			command.add("-i");
 			command.add("\"" + cfg.input.getAbsolutePath() + "\"");
@@ -340,10 +406,11 @@ public class FfmpegTool implements MediaCte {
 				command.add("h264_nvenc");
 				// No NVENC capable devices found
 				// -profile high444p -pixel_format yuv444p
-			} else if (getHwAccel().contains("qsv")) {
+				// -pix_fmt nv12
+			} else if (accel.contains("qsv")) {
 				// h264_qsv (intel onboard vid HW accel)
 				command.add("h264_qsv");
-			} else if (getHwAccel().contains("dxva2")) {
+			} else if (accel.contains("dxva2")) {
 				command.add("h264_dxva2");
 			} else {
 				command.add("libx264");
@@ -473,9 +540,9 @@ public class FfmpegTool implements MediaCte {
 		}
 		try {
 			List<String> command = new ArrayList<>();
-			command.add("-y");
-			command.add("-hide_banner");
 			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+			command.add("-hide_banner");
+			command.add("-y");
 			command.add("-i");
 			command.add("\"" + video.getAbsolutePath() + "\"");
 			command.add("-i");
@@ -495,11 +562,53 @@ public class FfmpegTool implements MediaCte {
 			command.add("+faststart");
 			command.add("\"" + out.getAbsolutePath() + "\"");
 			logger_ffmpeg.info("{}", join(command));
-			callProcess(true, command, null, new Lines());
+			long start = System.currentTimeMillis();
+			callProcess(true, command, null, new FfmpegDebug());
+			logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
 			return true;
 		} catch (RuntimeException ex) {
 			out.delete();
 			throw ex;
 		}
+	}
+
+	public void slideshow(int seconds, String images, FilePath out) {
+		// In this example each image will have a duration of 5 seconds (the inverse of 1/5 frames per second). The video stream will have a frame rate of 30 fps by duplicating the
+		// frames accordingly:
+		// ffmpeg -framerate 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p out.mp4
+		List<String> command = new ArrayList<>();
+		command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+		command.add("-hide_banner");
+		command.add("-y");
+		command.add("-framerate");
+		command.add("1/" + seconds);
+		command.add("-i");
+		command.add(images);
+		command.add("-movflags");
+		command.add("+faststart");
+		command.add("-c:v");
+		command.add("libx264");
+		command.add("-tune");
+		command.add("film");
+		command.add("-tune");
+		command.add("zerolatency");
+		command.add("-r");
+		command.add("1");
+		command.add("-pix_fmt");
+		command.add("yuv420p");
+		command.add("\"" + out.getAbsolutePath() + "\"");
+		logger_ffmpeg.info("{}", join(command));
+		long start = System.currentTimeMillis();
+		callProcess(true, command, null, new FfmpegDebug());
+		logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
+	}
+
+	public static void main(String[] args) {
+		FfmpegTool f = new FfmpegTool();
+		f.setFfmpeg(new FilePath("C:/tmp/ffmpeg/ffmpeg-20161108-1bbb18f-win64-static/bin/ffmpeg.exe"));
+		f.setFfprobe(new FilePath("C:/tmp/ffmpeg/ffmpeg-20161108-1bbb18f-win64-static/bin/ffprobe.exe"));
+		FilePath o = new FilePath("C:/tmp/img.png.mp4");
+		o.deleteIfExists();
+		f.slideshow(1, "C:/tmp/img%03d.jpg", o);
 	}
 }
