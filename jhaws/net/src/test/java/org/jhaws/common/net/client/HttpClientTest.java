@@ -68,8 +68,8 @@ public class HttpClientTest {
 	public void test_getBody() {
 		try {
 			URI uri = getBase().path(TestResource.GET_BODY).build();
-			TestBody rec = xmlMarshalling.<TestBody>unmarshall(server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
-			TestBody hcr = xmlMarshalling.<TestBody>unmarshall(hc.get(new GetRequest(uri)).getContent());
+			TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
+			TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetRequest(uri)).getContent());
 			Assert.assertEquals(rec, hcr);
 		} catch (Exception e) {
 			e.printStackTrace(System.out);

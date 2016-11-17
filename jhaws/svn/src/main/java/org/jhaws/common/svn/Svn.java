@@ -42,7 +42,7 @@ public class Svn {
 			IOUtils.closeQuietly(output);
 			data = output.toByteArray();
 			try (ByteArrayInputStream in = new ByteArrayInputStream(data)) {
-				T t = clazz.cast(getJaxbContext().unmarshall(in));
+				T t = clazz.cast(getJaxbContext().unmarshall(clazz, in));
 				try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 					getJaxbContext().marshall(t, os);
 					t.toString(new String(os.toByteArray()));

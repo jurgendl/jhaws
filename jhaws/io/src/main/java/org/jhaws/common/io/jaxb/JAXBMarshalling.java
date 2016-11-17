@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.stream.StreamSource;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.StringUtils;
@@ -48,6 +49,12 @@ import org.xml.sax.XMLFilter;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 
+/**
+ * @see http://www.source4code.info/2013/07/jaxb-marshal-element-missing-xmlrootelement-annotation.html
+ * @see http://blog.bdoughan.com/2012/07/jaxb-and-root-elements.html
+ * @see http://stackoverflow.com/questions/24519449/unable-to-marshal-type-as-an-element-because-it-is-missing-an-xmlrootelement-an
+ * @see http://blog.bdoughan.com/2010/08/jaxb-namespaces.html
+ */
 public class JAXBMarshalling {
 	protected final JAXBContext jaxbContext;
 
@@ -102,7 +109,8 @@ public class JAXBMarshalling {
 			if (defaultNameSpace == null)
 				return null;
 			UnmarshallerHandler unmarshallerHandler = threadLocalUnmarshaller.get().getUnmarshallerHandler();
-			threadLocalXMLFilter.get().setContentHandler(unmarshallerHandler);
+			XMLFilter xmlFilter = threadLocalXMLFilter.get();
+			xmlFilter.setContentHandler(unmarshallerHandler);
 			return unmarshallerHandler;
 		}
 	};
@@ -271,51 +279,54 @@ public class JAXBMarshalling {
 		}
 	}
 
-	public <DTO> DTO unmarshall(File xml) {
+	public <DTO> DTO unmarshall(Class<DTO> type, File xml) {
 		try {
-			return unmarshall(new BufferedInputStream(new FileInputStream(xml)));
+			return unmarshall(type, new BufferedInputStream(new FileInputStream(xml)));
 		} catch (FileNotFoundException ex) {
 			throw new UncheckedIOException(ex);
 		}
 	}
 
-	public <DTO> DTO unmarshall(Path xml) {
+	public <DTO> DTO unmarshall(Class<DTO> type, Path xml) {
 		try {
-			return unmarshall(Files.newInputStream(FilePath.getPath(xml)));
+			return unmarshall(type, Files.newInputStream(FilePath.getPath(xml)));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 	}
 
-	public <DTO> DTO unmarshall(byte[] xml) {
-		return unmarshall(new ByteArrayInputStream(xml));
+	public <DTO> DTO unmarshall(Class<DTO> type, byte[] xml) {
+		return unmarshall(type, new ByteArrayInputStream(xml));
 	}
 
-	public <DTO> DTO unmarshall(String xml) {
+	public <DTO> DTO unmarshall(Class<DTO> type, String xml) {
 		try {
-			return unmarshall(xml.getBytes(charSet));
+			return unmarshall(type, xml.getBytes(charSet));
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	public <DTO> DTO unmarshall(String xml, String charset) {
+	public <DTO> DTO unmarshall(Class<DTO> type, String xml, String charset) {
 		try {
-			return unmarshall(xml.getBytes(charset));
+			return unmarshall(type, xml.getBytes(charset));
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	public <DTO> DTO unmarshall(InputStream xml) {
+	public <DTO> DTO unmarshall(Class<DTO> type, InputStream xml) {
 		try {
 			Object unmarshalled;
 			if (defaultNameSpace == null) {
-				unmarshalled = threadLocalUnmarshaller.get().unmarshal(xml);
+				Unmarshaller unmarshaller = threadLocalUnmarshaller.get();
+				unmarshalled = unmarshaller.unmarshal(new StreamSource(xml), type).getValue();
 			} else {
+				XMLFilter xmlFilter = threadLocalXMLFilter.get();
+				UnmarshallerHandler unmarshallerHandler = threadLocalUnmarshallerHandler.get();
 				InputSource is = new InputSource(xml);
-				threadLocalXMLFilter.get().parse(is);
-				unmarshalled = threadLocalUnmarshallerHandler.get().getResult();
+				xmlFilter.parse(is);
+				unmarshalled = unmarshallerHandler.getResult();
 			}
 			if (unmarshalled instanceof JAXBElement) {
 				// xml is soap message => JAXBElement wrapper

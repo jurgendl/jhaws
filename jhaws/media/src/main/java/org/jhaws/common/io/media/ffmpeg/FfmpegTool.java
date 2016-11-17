@@ -39,8 +39,7 @@ public class FfmpegTool implements MediaCte {
 
 	protected static final Logger logger_ffprobe = LoggerFactory.getLogger("ffprobe");
 
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling("http://www.ffmpeg.org/schema/ffprobe",
-			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -64,7 +63,7 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public static FfprobeType unmarshall(String xml) {
-		return jaxbMarshalling.unmarshall(xml);
+		return jaxbMarshalling.unmarshall(FfprobeType.class, xml);
 	}
 
 	public FfprobeType info(FilePath input) {
@@ -91,6 +90,7 @@ public class FfmpegTool implements MediaCte {
 			Lines lines = new Lines();
 			callProcess(true, command, null, lines);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
+			new FilePath("c:/tmp/test.xml").write(xml);
 			logger_ffprobe.info("{}", xml);
 			return unmarshall(xml);
 		} catch (RuntimeException ex) {
