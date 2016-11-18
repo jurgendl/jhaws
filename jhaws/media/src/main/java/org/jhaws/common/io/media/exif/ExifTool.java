@@ -21,6 +21,54 @@ import org.slf4j.LoggerFactory;
  * @see http://www.sno.phy.queensu.ca/~phil/exiftool/
  */
 public class ExifTool implements MediaCte {
+	private static final String UNKNOWN = "unknown";
+
+	private static final String TREMAW = " : ";
+
+	private static final String TREMAZ = " :0";
+
+	private static final String MIME1 = "MIME Type";
+
+	private static final String DURATION1 = "Media Duration";
+
+	private static final String DURATION2 = "Duration";
+
+	private static final String DURATION3 = "Play Duration";
+
+	private static final String DURATION4 = "Send Duration";
+
+	private static final String VIDEO1 = "Compressor ID";
+
+	private static final String VIDEO2 = "Video Codec";
+
+	private static final String VIDEO3 = "Video Encoding";
+
+	private static final String VIDEO4 = "Video Codec Name";
+
+	private static final String AUDIO1 = "Audio Format";
+
+	private static final String AUDIO2 = "Audio Codec";
+
+	private static final String AUDIO3 = "Audio Encoding";
+
+	private static final String AUDIO4 = "Audio Codec Name";
+
+	private static final String VFR1 = "Video Frame Rate";
+
+	private static final String VFR2 = "Frame Rate";
+
+	private static final String AVGBITRATE1 = "Avg Bitrate";
+
+	private static final String AVGBITRATE2 = "Avg Bytes Per Sec";
+
+	private static final String H = "Source Image Height";
+
+	private static final String W = "Source Image Width";
+
+	private static final String IH = "Image Height";
+
+	private static final String IW = "Image Width";
+
 	private static final Logger logger = LoggerFactory.getLogger("exif");
 
 	private String splite(String s) {

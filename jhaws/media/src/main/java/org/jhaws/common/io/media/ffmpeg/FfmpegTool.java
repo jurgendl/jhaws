@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileExistsException;
@@ -27,6 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FfmpegTool implements MediaCte {
+	private static final String VIDEO = "video";
+
+	private static final String AUDIO = "audio";
+
 	protected static class FfmpegDebug implements Consumer<String> {
 		@Override
 		public void accept(String t) {
@@ -47,22 +51,22 @@ public class FfmpegTool implements MediaCte {
 	/** dxva2, qsv, nvenc */
 	public synchronized List<String> getHwAccel() {
 		if (hwAccel == null) {
-			List<String> command = Arrays.asList("\"" + getFfmpeg().getAbsolutePath() + "\"", "-hwaccels", "-hide_banner", "-y");
+			List<String> command = Arrays.asList(command(getFfmpeg()), "-hwaccels", "-hide_banner", "-y");
 			Lines lines = call(command, false);
 			hwAccel = lines.lines();
 			hwAccel.remove("Hardware acceleration methods:");
 
 			// ffmpeg -i input -c:v h264_nvenc -profile high444p -pixel_format
 			// yuv444p -preset default output.mp4
-			FilePath f = FilePath.createDefaultTempFile("mp4");
-			f.write(FfmpegTool.class.getClassLoader().getResourceAsStream("ffmpeg/test.mp4"));
-			FilePath o = FilePath.createDefaultTempFile("mp4");
+			FilePath input = FilePath.createDefaultTempFile("mp4");
+			input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("ffmpeg/test.mp4"));
+			FilePath output = FilePath.createDefaultTempFile("mp4");
 			command = new ArrayList<>();
-			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+			command.add(command(getFfmpeg()));
 			command.add("-hide_banner");
 			command.add("-y");
 			command.add("-i");
-			command.add("\"" + f.getAbsolutePath() + "\"");
+			command.add(command(input));
 			command.add("-c:v");
 			command.add("h264_nvenc");
 			command.add("-profile");
@@ -71,7 +75,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("yuv444p");
 			command.add("-preset");
 			command.add("default");
-			command.add("\"" + o.getAbsolutePath() + "\"");
+			command.add(command(output));
 			logger.info("{}", join(command));
 			try {
 				lines = call(command, false);
@@ -97,7 +101,7 @@ public class FfmpegTool implements MediaCte {
 		// https://trac.ffmpeg.org/wiki/FFprobeTips
 		try {
 			List<String> command = new ArrayList<>();
-			command.add("\"" + getFfprobe().getAbsolutePath() + "\"");
+			command.add(command(getFfprobe()));
 			command.add("-v");
 			command.add("quiet");
 			command.add("-print_format");
@@ -112,7 +116,7 @@ public class FfmpegTool implements MediaCte {
 			// command.add("-byte_binary_prefix");
 			// command.add("-sexagesimal");
 			command.add("-i");
-			command.add("\"" + input.getAbsolutePath() + "\"");
+			command.add(command(input));
 			Lines lines = call(command, false);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
 			logger.info("{}", xml);
@@ -132,7 +136,7 @@ public class FfmpegTool implements MediaCte {
 		_1, _2, _3, _4;
 	}
 
-	public boolean splash(FilePath vid, FilePath splashFile, Duration duration, long frames, SplashPow pow) {
+	public boolean splash(FilePath video, FilePath splashFile, Duration duration, long frames, SplashPow pow) {
 		// That will seek 10 seconds into the movie, select every 1000th frame,
 		// scale it to 320x240 pixels and create 2x3 tiles
 		// ffmpeg -ss 00:00:10 -i movie.avi -frames 1 -vf
@@ -148,7 +152,7 @@ public class FfmpegTool implements MediaCte {
 		try {
 			List<String> accel = getHwAccel();
 			List<String> command = new ArrayList<>();
-			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+			command.add(command(getFfmpeg()));
 			command.add("-hide_banner");
 			command.add("-y");
 			// // if (accel.contains("nvdec")) {
@@ -180,7 +184,7 @@ public class FfmpegTool implements MediaCte {
 				command.add(printUpToSeconds(duration.dividedBy(parts).multipliedBy(2)));
 			}
 			command.add("-i");
-			command.add("\"" + vid.getAbsolutePath() + "\"");
+			command.add(command(video));
 			if (one) {
 				command.add("-vframes");
 				command.add("1");
@@ -192,7 +196,7 @@ public class FfmpegTool implements MediaCte {
 				command.add("-vf");
 				command.add("\"select=not(mod(n\\," + (frames / parts) + ")),scale=iw/" + wh + ":ih/" + wh + ",tile=" + wh + "x" + wh + "\"");
 			}
-			command.add("\"" + splashFile.getAbsolutePath() + "\"");
+			command.add(command(splashFile));
 			call(command, true);
 			return splashFile.exists();
 		} catch (Exception ex) {
@@ -221,11 +225,11 @@ public class FfmpegTool implements MediaCte {
 		FilePath output = input.changeExtension(suffix).appendExtension(MP4);
 		try {
 			List<String> command = new ArrayList<>();
-			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+			command.add(command(getFfmpeg()));
 			command.add("-hide_banner");
 			command.add("-y");
 			command.add("-i");
-			command.add("\"" + input.getAbsolutePath() + "\"");
+			command.add(command(input));
 			command.add("-acodec");
 			command.add("copy");
 			command.add("-vcodec");
@@ -240,7 +244,7 @@ public class FfmpegTool implements MediaCte {
 			command.add(from);
 			command.add("-t");
 			command.add(length);
-			command.add("\"" + output.getAbsolutePath() + "\"");
+			command.add(command(output));
 			call(command, true);
 			if (output.exists() && output.getFileSize() > 500) {
 				logger.info("done {}", output);
@@ -259,14 +263,14 @@ public class FfmpegTool implements MediaCte {
 		return output;
 	}
 
-	public void remux(Supplier<Consumer<String>> listener, FilePath parentDir, FilePath input, FilePath output) {
+	public void remux(Function<Cfg, Consumer<String>> listener, FilePath parentDir, FilePath input, FilePath output) {
 		Cfg cfg = new Cfg();
 		cfg.input = input;
 		cfg.output = output;
 		cfg.info = info(input);
 		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
-		StreamType videostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "video".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
-		StreamType audiostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "audio".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
+		StreamType videostreaminfo = video(cfg.info);
+		StreamType audiostreaminfo = audio(cfg.info);
 		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
 		cfg.vt = videostreaminfo.getCodecName();
 		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
@@ -282,7 +286,7 @@ public class FfmpegTool implements MediaCte {
 		List<String> command = command(cfg);
 		Lines lines = new Lines();
 		try {
-			lines = call(command, true, listener.get());
+			lines = call(command, true, listener.apply(cfg));
 		} catch (RuntimeException ex) {
 			exception = ex;
 		}
@@ -297,7 +301,7 @@ public class FfmpegTool implements MediaCte {
 		}
 		if (needsFixing.is()) {
 			command = command(cfg);
-			lines = call(command, true, listener.get());
+			lines = call(command, true, listener.apply(cfg));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -342,11 +346,12 @@ public class FfmpegTool implements MediaCte {
 		boolean fixDiv2;
 	}
 
-	protected static class Cfg {
+	public static class Cfg {
 		String at;
 		int ar;
 		String vt;
 		int vr;
+		int tvr;
 		boolean hq;
 		FfprobeType info;
 		FilePath parentDir;
@@ -356,13 +361,21 @@ public class FfmpegTool implements MediaCte {
 		int[] wh;
 		FilePath output;
 		CfgFixes fixes = new CfgFixes();
+
+		public int getVr() {
+			return this.vr;
+		}
+
+		public int getTvr() {
+			return this.tvr;
+		}
 	}
 
 	protected List<String> command(Cfg cfg) {
 		List<String> accel = getHwAccel();
 		List<String> command = new ArrayList<>();
 		{
-			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+			command.add(command(getFfmpeg()));
 			command.add("-hide_banner");
 			command.add("-y");
 		}
@@ -397,7 +410,7 @@ public class FfmpegTool implements MediaCte {
 		// }
 		{
 			command.add("-i");
-			command.add("\"" + cfg.input.getAbsolutePath() + "\"");
+			command.add(command(cfg.input));
 		}
 		{
 			command.add("-tune");
@@ -535,27 +548,27 @@ public class FfmpegTool implements MediaCte {
 		// command.add("mp4");
 		// command.add("NUL");
 		// } else {
-		command.add("\"" + cfg.output.getAbsolutePath() + "\"");
+		command.add(command(cfg.output));
 		// }
 		return command;
 	}
 
-	public boolean merge(FilePath video, FilePath audio, FilePath out) {
+	public boolean merge(FilePath video, FilePath audio, FilePath output) {
 		if (video == null || video.notExists() || audio == null || audio.notExists()) {
 			return false;
 		}
-		if (out.exists()) {
-			throw new UncheckedIOException(new FileExistsException(out.getAbsolutePath()));
+		if (output.exists()) {
+			throw new UncheckedIOException(new FileExistsException(output.getAbsolutePath()));
 		}
 		try {
 			List<String> command = new ArrayList<>();
-			command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+			command.add(command(getFfmpeg()));
 			command.add("-hide_banner");
 			command.add("-y");
 			command.add("-i");
-			command.add("\"" + video.getAbsolutePath() + "\"");
+			command.add(command(video));
 			command.add("-i");
-			command.add("\"" + audio.getAbsolutePath() + "\"");
+			command.add(command(audio));
 			command.add("-c:v");
 			command.add("copy");
 			command.add("-c:a");
@@ -569,16 +582,16 @@ public class FfmpegTool implements MediaCte {
 			command.add("-shortest");
 			command.add("-movflags");
 			command.add("+faststart");
-			command.add("\"" + out.getAbsolutePath() + "\"");
+			command.add(command(output));
 			call(command, true);
 			return true;
 		} catch (RuntimeException ex) {
-			out.delete();
+			output.delete();
 			throw ex;
 		}
 	}
 
-	public void slideshow(int seconds, String images, FilePath out) {
+	public void slideshow(int seconds, String images, FilePath output) {
 		// In this example each image will have a duration of 5 seconds (the
 		// inverse of 1/5 frames per second). The video stream will have a frame
 		// rate of 30 fps by duplicating the
@@ -586,7 +599,7 @@ public class FfmpegTool implements MediaCte {
 		// ffmpeg -framerate 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt
 		// yuv420p out.mp4
 		List<String> command = new ArrayList<>();
-		command.add("\"" + getFfmpeg().getAbsolutePath() + "\"");
+		command.add(command(getFfmpeg()));
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-framerate");
@@ -605,7 +618,7 @@ public class FfmpegTool implements MediaCte {
 		command.add("1");
 		command.add("-pix_fmt");
 		command.add("yuv420p");
-		command.add("\"" + out.getAbsolutePath() + "\"");
+		command.add(command(output));
 		call(command, true);
 	}
 
@@ -628,5 +641,25 @@ public class FfmpegTool implements MediaCte {
 			logger.info("{} :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
 		}
 		return lines;
+	}
+
+	public StreamType video(FfprobeType finfo) {
+		return videos(finfo).stream().findAny().orElse(null);
+	}
+
+	public StreamType audio(FfprobeType finfo) {
+		return audios(finfo).stream().findAny().orElse(null);
+	}
+
+	public List<StreamType> videos(FfprobeType finfo) {
+		return finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+	}
+
+	public List<StreamType> audios(FfprobeType finfo) {
+		return finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+	}
+
+	protected String command(FilePath f) {
+		return "\"" + f.getAbsolutePath() + "\"";
 	}
 }
