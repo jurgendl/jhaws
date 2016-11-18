@@ -44,7 +44,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
 /**
- * @see Hugo Teixeira High-Quality Image Resize with Java http://www.componenthouse.com/article-20
+ * @see Hugo Teixeira High-Quality Image Resize with Java
+ *      http://www.componenthouse.com/article-20
  */
 public class ImageTools {
 	// /**
@@ -57,7 +58,8 @@ public class ImageTools {
 	// *
 	// * @return bloomed image
 	// */
-	// public static BufferedImage bloom(Image image, float tresshold, int iterations, int gauss) {
+	// public static BufferedImage bloom(Image image, float tresshold, int
+	// iterations, int gauss) {
 	// BufferedImage result = ImageTools.toBufferedImage(image);
 	// int w = result.getWidth();
 	// int h = result.getHeight();
@@ -76,11 +78,14 @@ public class ImageTools {
 	// Graphics2D g2 = bloom.createGraphics();
 	// g2.drawImage(image, 0, 0, null);
 	// g2.setComposite(BlendComposite.Add);
-	// g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	// g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+	// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 	//
 	// for (int i = 0; i < iterations; i++) {
-	// g2.drawImage(gaussianBlurFilter.filter(brightPass, null), 0, 0, result.getWidth(), h, null);
-	// brightPass = ImageTools.createThumbnailFast(brightPass, brightPass.getWidth() / 2);
+	// g2.drawImage(gaussianBlurFilter.filter(brightPass, null), 0, 0,
+	// result.getWidth(), h, null);
+	// brightPass = ImageTools.createThumbnailFast(brightPass,
+	// brightPass.getWidth() / 2);
 	// }
 	//
 	// g2.dispose();
@@ -122,7 +127,8 @@ public class ImageTools {
 	// *
 	// * @return blurred image
 	// */
-	// public static BufferedImage blurBox(final Image image, final int strength) {
+	// public static BufferedImage blurBox(final Image image, final int
+	// strength) {
 	// return new BoxBlur(strength).filter(ImageTools.toBufferedImage(image));
 	// }
 
@@ -134,7 +140,8 @@ public class ImageTools {
 	// *
 	// * @return blurred image
 	// */
-	// public static BufferedImage blurFast(final Image image, final int radius) {
+	// public static BufferedImage blurFast(final Image image, final int radius)
+	// {
 	// return ImageTools.blurFast(image, radius, 1);
 	// }
 
@@ -147,8 +154,10 @@ public class ImageTools {
 	// *
 	// * @return blurred image
 	// */
-	// public static BufferedImage blurFast(final Image image, final int radius, final int iterations) {
-	// return new StackBlurFilter(radius, iterations).filter(ImageTools.toBufferedImage(image), null);
+	// public static BufferedImage blurFast(final Image image, final int radius,
+	// final int iterations) {
+	// return new StackBlurFilter(radius,
+	// iterations).filter(ImageTools.toBufferedImage(image), null);
 	// }
 
 	// /**
@@ -172,15 +181,18 @@ public class ImageTools {
 	// *
 	// * @return blurred image
 	// */
-	// public static BufferedImage blurGaussian(Image image, int radius, boolean faster) {
+	// public static BufferedImage blurGaussian(Image image, int radius, boolean
+	// faster) {
 	// BufferedImage bi = ImageTools.toBufferedImage(image);
 	//
 	// if (faster) {
 	// image = ImageTools.getScaledInstance(bi, 0.5);
 	// }
 	//
-	// bi = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(radius, true).filter(bi, null);
-	// bi = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(radius, false).filter(bi, null);
+	// bi = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(radius,
+	// true).filter(bi, null);
+	// bi = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(radius,
+	// false).filter(bi, null);
 	//
 	// if (faster) {
 	// image = ImageTools.getScaledInstance(bi, 2.0);
@@ -197,7 +209,8 @@ public class ImageTools {
 	// *
 	// * @return blurred image
 	// */
-	// public static BufferedImage blurRadial(final Image image, final int radius) {
+	// public static BufferedImage blurRadial(final Image image, final int
+	// radius) {
 	// return new RadialBlur(radius).filter(ImageTools.toBufferedImage(image));
 	// }
 
@@ -318,7 +331,8 @@ public class ImageTools {
 	 *
 	 * @see java.awt.RenderingHints
 	 */
-	public static BufferedImage copy(final BufferedImage source, final BufferedImage target, final Object interpolationHint) {
+	public static BufferedImage copy(final BufferedImage source, final BufferedImage target,
+			final Object interpolationHint) {
 		Graphics2D g2 = target.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interpolationHint);
 
@@ -344,27 +358,34 @@ public class ImageTools {
 	 * @see java.awt.RenderingHints
 	 */
 	public static BufferedImage copy(final BufferedImage source, final Object interpolationHint) {
-		return ImageTools.copy(source, ImageTools.newBufferedImage(source.getWidth(), source.getHeight()), interpolationHint);
+		return ImageTools.copy(source, ImageTools.newBufferedImage(source.getWidth(), source.getHeight()),
+				interpolationHint);
 	}
 
 	/**
 	 * <p>
-	 * Returns a new <code>BufferedImage</code> using the same color model as the image passed as a parameter. The returned image is only compatible with the image passed as a
-	 * parameter. This does not mean the returned image is compatible with the hardware.
+	 * Returns a new <code>BufferedImage</code> using the same color model as
+	 * the image passed as a parameter. The returned image is only compatible
+	 * with the image passed as a parameter. This does not mean the returned
+	 * image is compatible with the hardware.
 	 * </p>
 	 *
 	 * @param image
-	 *            the reference image from which the color model of the new image is obtained
-	 * @return a new <code>BufferedImage</code>, compatible with the color model of <code>image</code>
+	 *            the reference image from which the color model of the new
+	 *            image is obtained
+	 * @return a new <code>BufferedImage</code>, compatible with the color model
+	 *         of <code>image</code>
 	 */
 	public static BufferedImage createColorModelCompatibleImage(BufferedImage image) {
 		ColorModel cm = image.getColorModel();
-		return new BufferedImage(cm, cm.createCompatibleWritableRaster(image.getWidth(), image.getHeight()), cm.isAlphaPremultiplied(), null);
+		return new BufferedImage(cm, cm.createCompatibleWritableRaster(image.getWidth(), image.getHeight()),
+				cm.isAlphaPremultiplied(), null);
 	}
 
 	/**
 	 * <p>
-	 * Returns a new compatible image with the same width, height and transparency as the image specified as a parameter.
+	 * Returns a new compatible image with the same width, height and
+	 * transparency as the image specified as a parameter.
 	 * </p>
 	 *
 	 * @see java.awt.Transparency
@@ -374,8 +395,10 @@ public class ImageTools {
 	 * @see #loadCompatibleImage(java.net.URL)
 	 * @see #toCompatibleImage(java.awt.image.BufferedImage)
 	 * @param image
-	 *            the reference image from which the dimension and the transparency of the new image are obtained
-	 * @return a new compatible <code>BufferedImage</code> with the same dimension and transparency as <code>image</code>
+	 *            the reference image from which the dimension and the
+	 *            transparency of the new image are obtained
+	 * @return a new compatible <code>BufferedImage</code> with the same
+	 *         dimension and transparency as <code>image</code>
 	 */
 	public static BufferedImage createCompatibleImage(BufferedImage image) {
 		return ImageTools.createCompatibleImage(image, image.getWidth(), image.getHeight());
@@ -383,7 +406,8 @@ public class ImageTools {
 
 	/**
 	 * <p>
-	 * Returns a new compatible image of the specified width and height, and the same transparency setting as the image specified as a parameter.
+	 * Returns a new compatible image of the specified width and height, and the
+	 * same transparency setting as the image specified as a parameter.
 	 * </p>
 	 *
 	 * @see java.awt.Transparency
@@ -397,8 +421,10 @@ public class ImageTools {
 	 * @param height
 	 *            the height of the new image
 	 * @param image
-	 *            the reference image from which the transparency of the new image is obtained
-	 * @return a new compatible <code>BufferedImage</code> with the same transparency as <code>image</code> and the specified dimension
+	 *            the reference image from which the transparency of the new
+	 *            image is obtained
+	 * @return a new compatible <code>BufferedImage</code> with the same
+	 *         transparency as <code>image</code> and the specified dimension
 	 */
 	public static BufferedImage createCompatibleImage(BufferedImage image, int width, int height) {
 		return ImageTools.getGraphicsConfiguration().createCompatibleImage(width, height, image.getTransparency());
@@ -418,7 +444,8 @@ public class ImageTools {
 	 *            the width of the new image
 	 * @param height
 	 *            the height of the new image
-	 * @return a new opaque compatible <code>BufferedImage</code> of the specified width and height
+	 * @return a new opaque compatible <code>BufferedImage</code> of the
+	 *         specified width and height
 	 */
 	public static BufferedImage createCompatibleImage(int width, int height) {
 		return ImageTools.getGraphicsConfiguration().createCompatibleImage(width, height);
@@ -433,8 +460,10 @@ public class ImageTools {
 	// *
 	// * @return NA
 	// */
-	// private static BufferedImage createDropShadow(BufferedImage image, int size, Color shadowColor) {
-	// BufferedImage shadow = new BufferedImage(image.getWidth() + (4 * size), image.getHeight() + (4 * size), BufferedImage.TYPE_INT_ARGB);
+	// private static BufferedImage createDropShadow(BufferedImage image, int
+	// size, Color shadowColor) {
+	// BufferedImage shadow = new BufferedImage(image.getWidth() + (4 * size),
+	// image.getHeight() + (4 * size), BufferedImage.TYPE_INT_ARGB);
 	//
 	// Graphics2D g2 = shadow.createGraphics();
 	// g2.drawImage(image, size * 2, size * 2, null);
@@ -445,8 +474,10 @@ public class ImageTools {
 	//
 	// g2.dispose();
 	//
-	// shadow = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(size, true).filter(shadow, null);
-	// shadow = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(size, false).filter(shadow, null);
+	// shadow = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(size,
+	// true).filter(shadow, null);
+	// shadow = GaussianBlurConvolveOp.getGaussianBlurConvolveOp(size,
+	// false).filter(shadow, null);
 	//
 	// return shadow;
 	// }
@@ -461,8 +492,10 @@ public class ImageTools {
 	// *
 	// * @return image with shadow
 	// */
-	// public static BufferedImage createDropShadow(Image imageB, boolean fastRendering, int shadowSize, float shadowOpacity) {
-	// return ImageTools.createDropShadow(imageB, fastRendering, shadowSize, shadowOpacity, Color.BLACK);
+	// public static BufferedImage createDropShadow(Image imageB, boolean
+	// fastRendering, int shadowSize, float shadowOpacity) {
+	// return ImageTools.createDropShadow(imageB, fastRendering, shadowSize,
+	// shadowOpacity, Color.BLACK);
 	// }
 
 	// /**
@@ -476,7 +509,8 @@ public class ImageTools {
 	// *
 	// * @return image with shadow
 	// */
-	// public static BufferedImage createDropShadow(Image imageB, boolean fastRendering, int shadowSize, float shadowOpacity, Color shadowColor) {
+	// public static BufferedImage createDropShadow(Image imageB, boolean
+	// fastRendering, int shadowSize, float shadowOpacity, Color shadowColor) {
 	// BufferedImage imageA = ImageTools.toBufferedImage(imageB);
 	// int w = imageA.getWidth();
 	// int h = imageA.getHeight();
@@ -486,7 +520,8 @@ public class ImageTools {
 	// if (!fastRendering) {
 	// image0 = ImageTools.createDropShadow(imageA, shadowSize, shadowColor);
 	// } else {
-	// ShadowRenderer renderer = new ShadowRenderer(shadowSize / 2, 1.0f, shadowColor);
+	// ShadowRenderer renderer = new ShadowRenderer(shadowSize / 2, 1.0f,
+	// shadowColor);
 	// image0 = renderer.createShadow(imageA);
 	// }
 	//
@@ -498,9 +533,11 @@ public class ImageTools {
 	// g2.setComposite(AlphaComposite.SrcOver.derive(shadowOpacity));
 	//
 	// if (!fastRendering) {
-	// g2.drawImage(image0, (x - (shadowSize * 2)) + 5, (y - (shadowSize * 2)) + 5, null);
+	// g2.drawImage(image0, (x - (shadowSize * 2)) + 5, (y - (shadowSize * 2)) +
+	// 5, null);
 	// } else {
-	// g2.drawImage(image0, (x - (shadowSize / 2)) + 5, (y - (shadowSize / 2)) + 5, null);
+	// g2.drawImage(image0, (x - (shadowSize / 2)) + 5, (y - (shadowSize / 2)) +
+	// 5, null);
 	// }
 	//
 	// g2.setComposite(c);
@@ -519,13 +556,16 @@ public class ImageTools {
 	// *
 	// * @return image with shadow
 	// */
-	// public static BufferedImage createDropShadow(Image image, int shadowSize, float shadowOpacity) {
-	// return ImageTools.createDropShadow(image, true, shadowSize, shadowOpacity);
+	// public static BufferedImage createDropShadow(Image image, int shadowSize,
+	// float shadowOpacity) {
+	// return ImageTools.createDropShadow(image, true, shadowSize,
+	// shadowOpacity);
 	// }
 
 	/**
 	 * <p>
-	 * Returns a new translucent compatible image of the specified width and height.
+	 * Returns a new translucent compatible image of the specified width and
+	 * height.
 	 * </p>
 	 *
 	 * @see #createCompatibleImage(java.awt.image.BufferedImage)
@@ -537,14 +577,16 @@ public class ImageTools {
 	 *            the width of the new image
 	 * @param height
 	 *            the height of the new image
-	 * @return a new translucent compatible <code>BufferedImage</code> of the specified width and height
+	 * @return a new translucent compatible <code>BufferedImage</code> of the
+	 *         specified width and height
 	 */
 	public static BufferedImage createCompatibleTranslucentImage(int width, int height) {
 		return ImageTools.getGraphicsConfiguration().createCompatibleImage(width, height, Transparency.TRANSLUCENT);
 	}
 
 	/**
-	 * creates a new image with given width and height and given pixel colors (single array)
+	 * creates a new image with given width and height and given pixel colors
+	 * (single array)
 	 *
 	 * @param w
 	 *            : int : width
@@ -561,12 +603,16 @@ public class ImageTools {
 
 	/**
 	 * <p>
-	 * Returns a thumbnail of a source image. <code>newSize</code> defines the length of the longest dimension of the thumbnail. The other dimension is then computed according to
-	 * the dimensions ratio of the original picture.
+	 * Returns a thumbnail of a source image. <code>newSize</code> defines the
+	 * length of the longest dimension of the thumbnail. The other dimension is
+	 * then computed according to the dimensions ratio of the original picture.
 	 * </p>
 	 * <p>
-	 * This method offers a good trade-off between speed and quality. The result looks better than {@link #createThumbnailFast(java.awt.image.BufferedImage, int)} when the new size
-	 * is less than half the longest dimension of the source image, yet the rendering speed is almost similar.
+	 * This method offers a good trade-off between speed and quality. The result
+	 * looks better than
+	 * {@link #createThumbnailFast(java.awt.image.BufferedImage, int)} when the
+	 * new size is less than half the longest dimension of the source image, yet
+	 * the rendering speed is almost similar.
 	 * </p>
 	 *
 	 * @see #createThumbnailFast(java.awt.image.BufferedImage, int, int)
@@ -576,9 +622,11 @@ public class ImageTools {
 	 *            the source image
 	 * @param newSize
 	 *            the length of the largest dimension of the thumbnail
-	 * @return a new compatible <code>BufferedImage</code> containing a thumbnail of <code>image</code>
+	 * @return a new compatible <code>BufferedImage</code> containing a
+	 *         thumbnail of <code>image</code>
 	 * @throws IllegalArgumentException
-	 *             if <code>newSize</code> is larger than the largest dimension of <code>image</code> or &lt;= 0
+	 *             if <code>newSize</code> is larger than the largest dimension
+	 *             of <code>image</code> or &lt;= 0
 	 */
 	public static BufferedImage createThumbnail(BufferedImage image, int newSize) {
 		int width = image.getWidth();
@@ -635,8 +683,11 @@ public class ImageTools {
 	 * Returns a thumbnail of a source image.
 	 * </p>
 	 * <p>
-	 * This method offers a good trade-off between speed and quality. The result looks better than {@link #createThumbnailFast(java.awt.image.BufferedImage, int)} when the new size
-	 * is less than half the longest dimension of the source image, yet the rendering speed is almost similar.
+	 * This method offers a good trade-off between speed and quality. The result
+	 * looks better than
+	 * {@link #createThumbnailFast(java.awt.image.BufferedImage, int)} when the
+	 * new size is less than half the longest dimension of the source image, yet
+	 * the rendering speed is almost similar.
 	 * </p>
 	 *
 	 * @see #createThumbnailFast(java.awt.image.BufferedImage, int)
@@ -648,10 +699,12 @@ public class ImageTools {
 	 *            the width of the thumbnail
 	 * @param newHeight
 	 *            the height of the thumbnail
-	 * @return a new compatible <code>BufferedImage</code> containing a thumbnail of <code>image</code>
+	 * @return a new compatible <code>BufferedImage</code> containing a
+	 *         thumbnail of <code>image</code>
 	 * @throws IllegalArgumentException
-	 *             if <code>newWidth</code> is larger than the width of <code>image</code> or if code>newHeight</code> is larger than the height of
-	 *             <code>image or if one the dimensions is
+	 *             if <code>newWidth</code> is larger than the width of
+	 *             <code>image</code> or if code>newHeight</code> is larger than
+	 *             the height of <code>image or if one the dimensions is
 	 *             not &gt; 0</code>
 	 */
 	public static BufferedImage createThumbnail(BufferedImage image, int newWidth, int newHeight) {
@@ -659,7 +712,8 @@ public class ImageTools {
 		int height = image.getHeight();
 
 		if (newWidth >= width || newHeight >= height) {
-			throw new IllegalArgumentException("newWidth and newHeight cannot" + " be greater than the image" + " dimensions");
+			throw new IllegalArgumentException(
+					"newWidth and newHeight cannot" + " be greater than the image" + " dimensions");
 		} else if (newWidth <= 0 || newHeight <= 0) {
 			throw new IllegalArgumentException("newWidth and newHeight must" + " be greater than 0");
 		}
@@ -695,12 +749,17 @@ public class ImageTools {
 
 	/**
 	 * <p>
-	 * Returns a thumbnail of a source image. <code>newSize</code> defines the length of the longest dimension of the thumbnail. The other dimension is then computed according to
-	 * the dimensions ratio of the original picture.
+	 * Returns a thumbnail of a source image. <code>newSize</code> defines the
+	 * length of the longest dimension of the thumbnail. The other dimension is
+	 * then computed according to the dimensions ratio of the original picture.
 	 * </p>
 	 * <p>
-	 * This method favors speed over quality. When the new size is less than half the longest dimension of the source image, {@link #createThumbnail(BufferedImage, int)} or
-	 * {@link #createThumbnail(BufferedImage, int, int)} should be used instead to ensure the quality of the result without sacrificing too much performance.
+	 * This method favors speed over quality. When the new size is less than
+	 * half the longest dimension of the source image,
+	 * {@link #createThumbnail(BufferedImage, int)} or
+	 * {@link #createThumbnail(BufferedImage, int, int)} should be used instead
+	 * to ensure the quality of the result without sacrificing too much
+	 * performance.
 	 * </p>
 	 *
 	 * @see #createThumbnailFast(java.awt.image.BufferedImage, int, int)
@@ -710,9 +769,11 @@ public class ImageTools {
 	 *            the source image
 	 * @param newSize
 	 *            the length of the largest dimension of the thumbnail
-	 * @return a new compatible <code>BufferedImage</code> containing a thumbnail of <code>image</code>
+	 * @return a new compatible <code>BufferedImage</code> containing a
+	 *         thumbnail of <code>image</code>
 	 * @throws IllegalArgumentException
-	 *             if <code>newSize</code> is larger than the largest dimension of <code>image</code> or &lt;= 0
+	 *             if <code>newSize</code> is larger than the largest dimension
+	 *             of <code>image</code> or &lt;= 0
 	 */
 	public static BufferedImage createThumbnailFast(BufferedImage image, int newSize) {
 		float ratio;
@@ -755,8 +816,12 @@ public class ImageTools {
 	 * Returns a thumbnail of a source image.
 	 * </p>
 	 * <p>
-	 * This method favors speed over quality. When the new size is less than half the longest dimension of the source image, {@link #createThumbnail(BufferedImage, int)} or
-	 * {@link #createThumbnail(BufferedImage, int, int)} should be used instead to ensure the quality of the result without sacrificing too much performance.
+	 * This method favors speed over quality. When the new size is less than
+	 * half the longest dimension of the source image,
+	 * {@link #createThumbnail(BufferedImage, int)} or
+	 * {@link #createThumbnail(BufferedImage, int, int)} should be used instead
+	 * to ensure the quality of the result without sacrificing too much
+	 * performance.
 	 * </p>
 	 *
 	 * @see #createThumbnailFast(java.awt.image.BufferedImage, int)
@@ -768,14 +833,18 @@ public class ImageTools {
 	 *            the width of the thumbnail
 	 * @param newHeight
 	 *            the height of the thumbnail
-	 * @return a new compatible <code>BufferedImage</code> containing a thumbnail of <code>image</code>
+	 * @return a new compatible <code>BufferedImage</code> containing a
+	 *         thumbnail of <code>image</code>
 	 * @throws IllegalArgumentException
-	 *             if <code>newWidth</code> is larger than the width of <code>image</code> or if code>newHeight</code> is larger than the height of <code>image</code> or if one of
-	 *             the dimensions is &lt;= 0
+	 *             if <code>newWidth</code> is larger than the width of
+	 *             <code>image</code> or if code>newHeight</code> is larger than
+	 *             the height of <code>image</code> or if one of the dimensions
+	 *             is &lt;= 0
 	 */
 	public static BufferedImage createThumbnailFast(BufferedImage image, int newWidth, int newHeight) {
 		if (newWidth >= image.getWidth() || newHeight >= image.getHeight()) {
-			throw new IllegalArgumentException("newWidth and newHeight cannot" + " be greater than the image" + " dimensions");
+			throw new IllegalArgumentException(
+					"newWidth and newHeight cannot" + " be greater than the image" + " dimensions");
 		} else if (newWidth <= 0 || newHeight <= 0) {
 			throw new IllegalArgumentException("newWidth and newHeight must" + " be greater than 0");
 		}
@@ -846,8 +915,11 @@ public class ImageTools {
 	// *
 	// * @throws RuntimeException : on exception
 	// */
-	// public static BufferedImage emboss(final Image image) throws RuntimeException {
-	// FilteredImageSource fis = new FilteredImageSource(ImageTools.toMemoryImageSource(image), new EmbossFilter());
+	// public static BufferedImage emboss(final Image image) throws
+	// RuntimeException {
+	// FilteredImageSource fis = new
+	// FilteredImageSource(ImageTools.toMemoryImageSource(image), new
+	// EmbossFilter());
 	//
 	// return ImageTools.toBufferedImage(new Canvas().createImage(fis));
 	// }
@@ -909,7 +981,8 @@ public class ImageTools {
 	 * @param image
 	 *            : Image : source image
 	 * @param flip
-	 *            : int : parameter : FLIP_VERTICALLY, FLIP_HORIZONTALLY or FLIP_VERTICALLY|FLIP_HORIZONTALLY
+	 *            : int : parameter : FLIP_VERTICALLY, FLIP_HORIZONTALLY or
+	 *            FLIP_VERTICALLY|FLIP_HORIZONTALLY
 	 *
 	 * @return : BufferedImage : flipped image
 	 */
@@ -956,17 +1029,19 @@ public class ImageTools {
 	 * @return : BufferedImage : filtered image
 	 */
 	public static BufferedImage getBlue(final Image image) {
-		return ImageTools.toBufferedImage(Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(image.getSource(), new RGBImageFilter() {
-			@Override
-			public int filterRGB(final int x, int y, final int rgb) {
-				y = -1;
+		return ImageTools.toBufferedImage(Toolkit.getDefaultToolkit()
+				.createImage(new FilteredImageSource(image.getSource(), new RGBImageFilter() {
+					@Override
+					public int filterRGB(final int x, int y, final int rgb) {
+						y = -1;
 
-				// if (x == -1) {
-				// The pixel value is from the image's color table rather than the image itself
-				// }
-				return rgb & 0xff0000ff;
-			}
-		})));
+						// if (x == -1) {
+						// The pixel value is from the image's color table
+						// rather than the image itself
+						// }
+						return rgb & 0xff0000ff;
+					}
+				})));
 	}
 
 	/**
@@ -1011,17 +1086,19 @@ public class ImageTools {
 	 * @return : BufferedImage : filtered image
 	 */
 	public static BufferedImage getGreen(final Image image) {
-		return ImageTools.toBufferedImage(Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(image.getSource(), new RGBImageFilter() {
-			@Override
-			public int filterRGB(final int x, int y, final int rgb) {
-				y = -1;
+		return ImageTools.toBufferedImage(Toolkit.getDefaultToolkit()
+				.createImage(new FilteredImageSource(image.getSource(), new RGBImageFilter() {
+					@Override
+					public int filterRGB(final int x, int y, final int rgb) {
+						y = -1;
 
-				// if (x == -1) {
-				// The pixel value is from the image's color table rather than the image itself
-				// }
-				return rgb & 0xff00ff00;
-			}
-		})));
+						// if (x == -1) {
+						// The pixel value is from the image's color table
+						// rather than the image itself
+						// }
+						return rgb & 0xff00ff00;
+					}
+				})));
 	}
 
 	/**
@@ -1097,8 +1174,11 @@ public class ImageTools {
 
 	/**
 	 * <p>
-	 * Returns an array of pixels, stored as integers, from a <code>BufferedImage</code>. The pixels are grabbed from a rectangular area defined by a location and two dimensions.
-	 * Calling this method on an image of type different from <code>BufferedImage.TYPE_INT_ARGB</code> and <code>BufferedImage.TYPE_INT_RGB</code> will unmanage the image.
+	 * Returns an array of pixels, stored as integers, from a
+	 * <code>BufferedImage</code>. The pixels are grabbed from a rectangular
+	 * area defined by a location and two dimensions. Calling this method on an
+	 * image of type different from <code>BufferedImage.TYPE_INT_ARGB</code> and
+	 * <code>BufferedImage.TYPE_INT_RGB</code> will unmanage the image.
 	 * </p>
 	 *
 	 * @param img
@@ -1113,7 +1193,8 @@ public class ImageTools {
 	 *            the height of the rectangle of pixels to grab
 	 * @param pixels
 	 *            a pre-allocated array of pixels of size w*h; can be null
-	 * @return <code>pixels</code> if non-null, a new array of integers otherwise
+	 * @return <code>pixels</code> if non-null, a new array of integers
+	 *         otherwise
 	 * @throws IllegalArgumentException
 	 *             is <code>pixels</code> is non-null and of length &lt; w*h
 	 */
@@ -1195,17 +1276,19 @@ public class ImageTools {
 	 * @return : BufferedImage : filtered image
 	 */
 	public static BufferedImage getRed(final Image image) {
-		return ImageTools.toBufferedImage(Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(image.getSource(), new RGBImageFilter() {
-			@Override
-			public int filterRGB(final int x, int y, final int rgb) {
-				y = -1;
+		return ImageTools.toBufferedImage(Toolkit.getDefaultToolkit()
+				.createImage(new FilteredImageSource(image.getSource(), new RGBImageFilter() {
+					@Override
+					public int filterRGB(final int x, int y, final int rgb) {
+						y = -1;
 
-				// if (x == -1) {
-				// The pixel value is from the image's color table rather than the image itself
-				// }
-				return rgb & 0xffff0000;
-			}
-		})));
+						// if (x == -1) {
+						// The pixel value is from the image's color table
+						// rather than the image itself
+						// }
+						return rgb & 0xffff0000;
+					}
+				})));
 	}
 
 	/**
@@ -1284,7 +1367,8 @@ public class ImageTools {
 	 *
 	 * @return : BufferedImage : scaled image (sometimes a BufferedImage)
 	 */
-	public static BufferedImage getScaledInstance(final BufferedImage source, final double factor, GraphicsConfiguration gc) {
+	public static BufferedImage getScaledInstance(final BufferedImage source, final double factor,
+			GraphicsConfiguration gc) {
 		if (gc == null) {
 			gc = ImageTools.getDefaultGraphicsConfiguration();
 		}
@@ -1326,7 +1410,8 @@ public class ImageTools {
 	 *
 	 * @return : BufferedImage : scaled image
 	 */
-	public static BufferedImage getScaledInstance(final BufferedImage image, final int width, final int height, GraphicsConfiguration gc) {
+	public static BufferedImage getScaledInstance(final BufferedImage image, final int width, final int height,
+			GraphicsConfiguration gc) {
 		if (gc == null) {
 			gc = ImageTools.getDefaultGraphicsConfiguration();
 		}
@@ -1351,8 +1436,10 @@ public class ImageTools {
 	 *
 	 * @see java.awt.RenderingHints
 	 */
-	public static BufferedImage getScaledInstance2D(final BufferedImage source, final double factor, final Object interpolationHint) {
-		return ImageTools.getScaledInstance2D(source, factor, interpolationHint, ImageTools.getDefaultGraphicsConfiguration());
+	public static BufferedImage getScaledInstance2D(final BufferedImage source, final double factor,
+			final Object interpolationHint) {
+		return ImageTools.getScaledInstance2D(source, factor, interpolationHint,
+				ImageTools.getDefaultGraphicsConfiguration());
 	}
 
 	/**
@@ -1371,7 +1458,8 @@ public class ImageTools {
 	 *
 	 * @see java.awt.RenderingHints
 	 */
-	public static BufferedImage getScaledInstance2D(final BufferedImage source, final double factor, final Object interpolationHint, GraphicsConfiguration gc) {
+	public static BufferedImage getScaledInstance2D(final BufferedImage source, final double factor,
+			final Object interpolationHint, GraphicsConfiguration gc) {
 		if (gc == null) {
 			gc = ImageTools.getDefaultGraphicsConfiguration();
 		}
@@ -1392,7 +1480,8 @@ public class ImageTools {
 	 * @param factor
 	 *            : double : scale factor (1.0 does not scale)
 	 * @param hint
-	 *            : int : scale hint Image.SCALE_DEFAULT, Image.SCALE_FAST, Image.SCALE_SMOOTH or Image.SCALE_AREA_AVERAGING
+	 *            : int : scale hint Image.SCALE_DEFAULT, Image.SCALE_FAST,
+	 *            Image.SCALE_SMOOTH or Image.SCALE_AREA_AVERAGING
 	 *
 	 * @return : BufferedImage : scaled image
 	 */
@@ -1523,7 +1612,8 @@ public class ImageTools {
 
 	/**
 	 * <p>
-	 * Returns a new compatible image from a URL. The image is loaded from the specified location and then turned, if necessary into a compatible image.
+	 * Returns a new compatible image from a URL. The image is loaded from the
+	 * specified location and then turned, if necessary into a compatible image.
 	 * </p>
 	 *
 	 * @see #createCompatibleImage(java.awt.image.BufferedImage)
@@ -1533,7 +1623,8 @@ public class ImageTools {
 	 * @see #toCompatibleImage(java.awt.image.BufferedImage)
 	 * @param resource
 	 *            the URL of the picture to load as a compatible image
-	 * @return a new translucent compatible <code>BufferedImage</code> of the specified width and height
+	 * @return a new translucent compatible <code>BufferedImage</code> of the
+	 *         specified width and height
 	 * @throws java.io.IOException
 	 *             if the image cannot be read or loaded
 	 */
@@ -1730,7 +1821,8 @@ public class ImageTools {
 	 */
 	public static BufferedImage replaceTransparency(final Image image, final Color backgroundColor) {
 		BufferedImage biForeground = ImageTools.toBufferedImage(image);
-		BufferedImage biBackground = ImageTools.newBufferedImage(biForeground.getWidth(), biForeground.getHeight(), backgroundColor);
+		BufferedImage biBackground = ImageTools.newBufferedImage(biForeground.getWidth(), biForeground.getHeight(),
+				backgroundColor);
 		Graphics2D g2d = biBackground.createGraphics();
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		g2d.drawImage(biForeground, 0, 0, null);
@@ -1822,8 +1914,10 @@ public class ImageTools {
 
 	/**
 	 * <p>
-	 * Writes a rectangular area of pixels in the destination <code>BufferedImage</code>. Calling this method on an image of type different from
-	 * <code>BufferedImage.TYPE_INT_ARGB</code> and <code>BufferedImage.TYPE_INT_RGB</code> will unmanage the image.
+	 * Writes a rectangular area of pixels in the destination
+	 * <code>BufferedImage</code>. Calling this method on an image of type
+	 * different from <code>BufferedImage.TYPE_INT_ARGB</code> and
+	 * <code>BufferedImage.TYPE_INT_RGB</code> will unmanage the image.
 	 * </p>
 	 *
 	 * @param img
@@ -2003,7 +2097,8 @@ public class ImageTools {
 	}
 
 	/**
-	 * calls {@link #toAcceleratedVolatileImage(BufferedImage)} with default configuration
+	 * calls {@link #toAcceleratedVolatileImage(BufferedImage)} with default
+	 * configuration
 	 *
 	 * @param image
 	 * @return
@@ -2024,7 +2119,8 @@ public class ImageTools {
 			gc = ImageTools.getDefaultGraphicsConfiguration();
 		}
 
-		VolatileImage vimage = ImageTools.createVolatileImage(source.getWidth(), source.getHeight(), Transparency.OPAQUE);
+		VolatileImage vimage = ImageTools.createVolatileImage(source.getWidth(), source.getHeight(),
+				Transparency.OPAQUE);
 		Graphics2D g = vimage.createGraphics();
 		g.drawImage(source, null, 0, 0);
 		g.dispose();
@@ -2049,10 +2145,12 @@ public class ImageTools {
 		ImageTools.loadImage(image);
 
 		// Determine if the image has transparent pixels; for this method's
-		// implementation, see e661 Determining If an Image Has Transparent Pixels
+		// implementation, see e661 Determining If an Image Has Transparent
+		// Pixels
 		boolean hasAlpha = ImageTools.hasAlpha(image);
 
-		// Create a buffered image with a format that's compatible with the screen
+		// Create a buffered image with a format that's compatible with the
+		// screen
 		BufferedImage bimage = null;
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
@@ -2168,8 +2266,11 @@ public class ImageTools {
 	 * @param image
 	 *            : Image : image
 	 * @param type
-	 *            : int : image type, use Image. ..., TYPE_INT_RGB, TYPE_INT_ARGB, TYPE_INT_ARGB_PRE, TYPE_INT_BGR, TYPE_3BYTE_BGR, TYPE_4BYTE_ABGR, TYPE_4BYTE_ABGR_PRE,
-	 *            TYPE_BYTE_GRAY, TYPE_USHORT_GRAY, TYPE_BYTE_BINARY, TYPE_BYTE_INDEXED, TYPE_USHORT_565_RGB or TYPE_USHORT_555_RGB
+	 *            : int : image type, use Image. ..., TYPE_INT_RGB,
+	 *            TYPE_INT_ARGB, TYPE_INT_ARGB_PRE, TYPE_INT_BGR,
+	 *            TYPE_3BYTE_BGR, TYPE_4BYTE_ABGR, TYPE_4BYTE_ABGR_PRE,
+	 *            TYPE_BYTE_GRAY, TYPE_USHORT_GRAY, TYPE_BYTE_BINARY,
+	 *            TYPE_BYTE_INDEXED, TYPE_USHORT_565_RGB or TYPE_USHORT_555_RGB
 	 *
 	 * @return : BufferedImage : buffered image
 	 */
@@ -2194,8 +2295,9 @@ public class ImageTools {
 
 	/**
 	 * <p>
-	 * Return a new compatible image that contains a copy of the specified image. This method ensures an image is compatible with the hardware, and therefore optimized for fast
-	 * blitting operations.
+	 * Return a new compatible image that contains a copy of the specified
+	 * image. This method ensures an image is compatible with the hardware, and
+	 * therefore optimized for fast blitting operations.
 	 * </p>
 	 *
 	 * @see #createCompatibleImage(java.awt.image.BufferedImage)
@@ -2205,14 +2307,16 @@ public class ImageTools {
 	 * @see #loadCompatibleImage(java.net.URL)
 	 * @param image
 	 *            the image to copy into a new compatible image
-	 * @return a new compatible copy, with the same width and height and transparency and content, of <code>image</code>
+	 * @return a new compatible copy, with the same width and height and
+	 *         transparency and content, of <code>image</code>
 	 */
 	public static BufferedImage toCompatibleImage(BufferedImage image) {
 		if (image.getColorModel().equals(ImageTools.getGraphicsConfiguration().getColorModel())) {
 			return image;
 		}
 
-		BufferedImage compatibleImage = ImageTools.getGraphicsConfiguration().createCompatibleImage(image.getWidth(), image.getHeight(), image.getTransparency());
+		BufferedImage compatibleImage = ImageTools.getGraphicsConfiguration().createCompatibleImage(image.getWidth(),
+				image.getHeight(), image.getTransparency());
 		Graphics g = compatibleImage.getGraphics();
 		g.drawImage(image, 0, 0, null);
 		g.dispose();
@@ -2298,7 +2402,8 @@ public class ImageTools {
 	 * replaces the black color in an RGB image by transparency
 	 *
 	 * @param image
-	 *            : Image : source image (normally an RGB image but can by an RGBA image)
+	 *            : Image : source image (normally an RGB image but can by an
+	 *            RGBA image)
 	 *
 	 * @return : BufferedImage : image with transparency
 	 */
@@ -2310,7 +2415,8 @@ public class ImageTools {
 	 * replaces given color in an RGB image by transparency
 	 *
 	 * @param image
-	 *            : Image : source image (normally an RGB image but can by an RGBA image)
+	 *            : Image : source image (normally an RGB image but can by an
+	 *            RGBA image)
 	 * @param source
 	 *            : Color : color to remove
 	 *
@@ -2324,7 +2430,8 @@ public class ImageTools {
 	 * replaces given color in an RGB image by transparency
 	 *
 	 * @param image
-	 *            : Image : source image (normally an RGB image but can by an RGBA image)
+	 *            : Image : source image (normally an RGB image but can by an
+	 *            RGBA image)
 	 * @param source
 	 *            : Color : color to remove
 	 * @param range
@@ -2340,7 +2447,8 @@ public class ImageTools {
 	 * replaces given color in an RGB image by transparency
 	 *
 	 * @param image
-	 *            : Image : source image (normally an RGB image but can by an RGBA image)
+	 *            : Image : source image (normally an RGB image but can by an
+	 *            RGBA image)
 	 * @param range
 	 *            : int : range
 	 *
@@ -2413,15 +2521,9 @@ public class ImageTools {
 		int height = h * (all.size() / cols) + (all.size() % cols == 0 ? 0 : 1);
 		BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		Graphics g = result.getGraphics();
-		int x = 0;
-		int y = 0;
-		for (BufferedImage bi : all) {
-			g.drawImage(bi, x, y, null);
-			x += w;
-			if (x > width) {
-				x = 0;
-				y += h;
-			}
+		for (int i = 0; i < all.size(); i++) {
+			BufferedImage bi = all.get(i);
+			g.drawImage(bi, i / cols * w, i % cols * h, null);
 		}
 		return result;
 	}
@@ -2430,10 +2532,12 @@ public class ImageTools {
 	// // GraphicsConfiguration gc =
 	// // sun.awt.image.BufferedImageGraphicsConfig.getConfig(image);// Sun
 	// // proprietary API
-	// GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+	// GraphicsConfiguration gc =
+	// GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 	// int w = image.getWidth();
 	// int h = image.getHeight();
-	// BufferedImage result = gc.createCompatibleImage(w, h, Transparency.TRANSLUCENT);
+	// BufferedImage result = gc.createCompatibleImage(w, h,
+	// Transparency.TRANSLUCENT);
 	// Graphics2D g2 = result.createGraphics();
 	// g2.drawRenderedImage(image, null);
 	// g2.dispose();
