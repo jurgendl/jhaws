@@ -127,8 +127,7 @@ public class FfmpegTool implements MediaCte {
 		}
 	}
 
-	public Duration duration(FilePath file) {
-		FfprobeType info = info(file);
+	public Duration duration(FfprobeType info) {
 		return Duration.ofSeconds(info.getFormat().getDuration().longValue());
 	}
 
@@ -145,6 +144,11 @@ public class FfmpegTool implements MediaCte {
 		// wh=2: 2x2=4: parts=4+2=6: 2/6=1/3, 3/6=1/2, 4/6=2/3, 5/6
 		// wh=3: 3x3=9: parts=9+2=11: 2/11, 3/11 ... 9/11, 10/11
 		// wh=4: 4x4=16: parts=16+2=18: 2/18, 3/18 ... 16/18, 17/18
+		if (duration == null) {
+			FfprobeType info = info(video);
+			duration = Duration.ofSeconds(info.getFormat().getDuration().longValue());
+			frames = frames(video(info));
+		}
 		long seconds = duration.getSeconds();
 		boolean one = seconds < 6 || frames < 180 || pow == null || pow == SplashPow._1;
 		int wh = one || pow == null ? 1 : Integer.parseInt(pow.name().substring(1));
@@ -263,7 +267,7 @@ public class FfmpegTool implements MediaCte {
 		return output;
 	}
 
-	public void remux(Function<Cfg, Consumer<String>> listener, FilePath parentDir, FilePath input, FilePath output) {
+	public void remux(Function<Cfg, Consumer<String>> listener, FilePath input, FilePath output) {
 		Cfg cfg = new Cfg();
 		cfg.input = input;
 		cfg.output = output;
@@ -286,7 +290,7 @@ public class FfmpegTool implements MediaCte {
 		List<String> command = command(cfg);
 		Lines lines = new Lines();
 		try {
-			lines = call(command, true, listener.apply(cfg));
+			lines = call(command, true, listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
 			exception = ex;
 		}
@@ -301,7 +305,7 @@ public class FfmpegTool implements MediaCte {
 		}
 		if (needsFixing.is()) {
 			command = command(cfg);
-			lines = call(command, true, listener.apply(cfg));
+			lines = call(command, true, listener == null ? null : listener.apply(cfg));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -628,17 +632,17 @@ public class FfmpegTool implements MediaCte {
 
 	protected Lines call(List<String> command, boolean log, Consumer<String> listener) {
 		Lines lines = new Lines();
-		Consumer<String> c = log ? lines.andThen(new FfmpegDebug()) : lines;
+		Consumer<String> consumers = log ? lines.andThen(new FfmpegDebug()) : lines;
 		if (listener != null) {
-			c = c.andThen(listener);
+			consumers = consumers.andThen(listener);
 		}
 		if (log) {
-			logger.info(".. :: {}", join(command));
+			logger.info("start - {}", join(command));
 		}
 		long start = System.currentTimeMillis();
-		Processes.callProcess(true, command, null, new FfmpegDebug());
+		Processes.callProcess(true, command, null, consumers);
 		if (log) {
-			logger.info("{} :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
+			logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
 		}
 		return lines;
 	}
@@ -661,5 +665,9 @@ public class FfmpegTool implements MediaCte {
 
 	protected String command(FilePath f) {
 		return "\"" + f.getAbsolutePath() + "\"";
+	}
+
+	public long frames(StreamType videostreaminfo) {
+		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0 : videostreaminfo.getNbFrames().longValue();
 	}
 }
