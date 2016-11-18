@@ -1,6 +1,5 @@
 package org.jhaws.common.io.media.ffmpeg;
 
-import static org.jhaws.common.io.console.Processes.callProcess;
 import static org.jhaws.common.lang.CollectionUtils8.join;
 import static org.jhaws.common.lang.DateTime8.printUpToSeconds;
 
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileExistsException;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.io.media.MediaCte;
@@ -30,16 +30,13 @@ public class FfmpegTool implements MediaCte {
 	protected static class FfmpegDebug implements Consumer<String> {
 		@Override
 		public void accept(String t) {
-			logger_ffmpeg.debug("{}", t);
+			logger.debug("{}", t);
 		}
 	}
 
-	protected static final Logger logger_ffmpeg = LoggerFactory.getLogger("ffmpeg");
+	protected static final Logger logger = LoggerFactory.getLogger("ffmpeg");
 
-	protected static final Logger logger_ffprobe = LoggerFactory.getLogger("ffprobe");
-
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
-			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -50,12 +47,8 @@ public class FfmpegTool implements MediaCte {
 	/** dxva2, qsv, nvenc */
 	public synchronized List<String> getHwAccel() {
 		if (hwAccel == null) {
-			Lines lines = new Lines();
-			Consumer<String> c = lines.andThen(new FfmpegDebug());
-			List<String> command = Arrays.asList("\"" + getFfmpeg().getAbsolutePath() + "\"", "-hwaccels",
-					"-hide_banner", "-y");
-			logger_ffmpeg.info("{}", join(command));
-			callProcess(true, command, null, c);
+			List<String> command = Arrays.asList("\"" + getFfmpeg().getAbsolutePath() + "\"", "-hwaccels", "-hide_banner", "-y");
+			Lines lines = call(command, false);
 			hwAccel = lines.lines();
 			hwAccel.remove("Hardware acceleration methods:");
 
@@ -79,10 +72,9 @@ public class FfmpegTool implements MediaCte {
 			command.add("-preset");
 			command.add("default");
 			command.add("\"" + o.getAbsolutePath() + "\"");
-			logger_ffmpeg.info("{}", join(command));
+			logger.info("{}", join(command));
 			try {
-				lines = new Lines();
-				callProcess(true, command, null, lines);
+				lines = call(command, false);
 				if (!hwAccel.contains("nvenc"))
 					hwAccel.add("nvenc");
 				// if (!hwAccel.contains("nvdec"))
@@ -121,14 +113,12 @@ public class FfmpegTool implements MediaCte {
 			// command.add("-sexagesimal");
 			command.add("-i");
 			command.add("\"" + input.getAbsolutePath() + "\"");
-			logger_ffprobe.info("{}", join(command));
-			Lines lines = new Lines();
-			callProcess(true, command, null, lines);
+			Lines lines = call(command, false);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
-			logger_ffprobe.info("{}", xml);
+			logger.info("{}", xml);
 			return unmarshall(xml);
 		} catch (RuntimeException ex) {
-			logger_ffprobe.error("{}", ex);
+			logger.error("{}", ex);
 			return null;
 		}
 	}
@@ -200,17 +190,13 @@ public class FfmpegTool implements MediaCte {
 				command.add("-frames");
 				command.add("1");
 				command.add("-vf");
-				command.add("\"select=not(mod(n\\," + (frames / parts) + ")),scale=iw/" + wh + ":ih/" + wh + ",tile="
-						+ wh + "x" + wh + "\"");
+				command.add("\"select=not(mod(n\\," + (frames / parts) + ")),scale=iw/" + wh + ":ih/" + wh + ",tile=" + wh + "x" + wh + "\"");
 			}
 			command.add("\"" + splashFile.getAbsolutePath() + "\"");
-			logger_ffmpeg.info("{}", join(command));
-			long start = System.currentTimeMillis();
-			callProcess(true, command, vid.getParentPath(), new FfmpegDebug());
-			logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
+			call(command, true);
 			return splashFile.exists();
 		} catch (Exception ex) {
-			logger_ffmpeg.error("{}", ex);
+			logger.error("{}", ex);
 			return false;
 		}
 	}
@@ -232,7 +218,6 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public FilePath cut(FilePath input, String suffix, String from, String length) {
-		FilePath parentDir = input.getParentPath();
 		FilePath output = input.changeExtension(suffix).appendExtension(MP4);
 		try {
 			List<String> command = new ArrayList<>();
@@ -256,19 +241,16 @@ public class FfmpegTool implements MediaCte {
 			command.add("-t");
 			command.add(length);
 			command.add("\"" + output.getAbsolutePath() + "\"");
-			logger_ffmpeg.info("{}", join(command));
-			long start = System.currentTimeMillis();
-			callProcess(true, command, parentDir, new FfmpegDebug());
-			logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
+			call(command, true);
 			if (output.exists() && output.getFileSize() > 500) {
-				logger_ffmpeg.info("done {}", output);
+				logger.info("done {}", output);
 			} else {
-				logger_ffmpeg.error("error {}", output);
+				logger.error("error {}", output);
 				output.deleteIfExists();
 				output = null;
 			}
 		} catch (Exception ex) {
-			logger_ffmpeg.error("error {}", input, ex);
+			logger.error("error {}", input, ex);
 			if (output != null) {
 				output.deleteIfExists();
 			}
@@ -283,15 +265,11 @@ public class FfmpegTool implements MediaCte {
 		cfg.output = output;
 		cfg.info = info(input);
 		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
-		StreamType videostreaminfo = cfg.info.getStreams().getStream().stream()
-				.filter(stream -> "video".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
-		StreamType audiostreaminfo = cfg.info.getStreams().getStream().stream()
-				.filter(stream -> "audio".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
-		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000)
-				: videostreaminfo.getBitRate() / 1000;
+		StreamType videostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "video".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
+		StreamType audiostreaminfo = cfg.info.getStreams().getStream().stream().filter(stream -> "audio".equalsIgnoreCase(stream.getCodecType())).findAny().orElse(null);
+		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
 		cfg.vt = videostreaminfo.getCodecName();
-		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
-				: audiostreaminfo.getBitRate() / 1000;
+		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
 		cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
 		cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
 		cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
@@ -302,10 +280,9 @@ public class FfmpegTool implements MediaCte {
 		cfg.fixes.fixDiv2 = false;
 		RuntimeException exception = null;
 		List<String> command = command(cfg);
-		logger_ffmpeg.info("{}", join(command));
 		Lines lines = new Lines();
 		try {
-			callProcess(true, command, parentDir, lines.andThen(new FfmpegDebug()).andThen(listener.get()));
+			lines = call(command, true, listener.get());
 		} catch (RuntimeException ex) {
 			exception = ex;
 		}
@@ -320,9 +297,7 @@ public class FfmpegTool implements MediaCte {
 		}
 		if (needsFixing.is()) {
 			command = command(cfg);
-			logger_ffmpeg.info("{}", join(command));
-			lines = new Lines();
-			callProcess(true, command, parentDir, lines.andThen(new FfmpegDebug()).andThen(listener.get()));
+			lines = call(command, true, listener.get());
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -595,10 +570,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("-movflags");
 			command.add("+faststart");
 			command.add("\"" + out.getAbsolutePath() + "\"");
-			logger_ffmpeg.info("{}", join(command));
-			long start = System.currentTimeMillis();
-			callProcess(true, command, null, new FfmpegDebug());
-			logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
+			call(command, true);
 			return true;
 		} catch (RuntimeException ex) {
 			out.delete();
@@ -634,9 +606,27 @@ public class FfmpegTool implements MediaCte {
 		command.add("-pix_fmt");
 		command.add("yuv420p");
 		command.add("\"" + out.getAbsolutePath() + "\"");
-		logger_ffmpeg.info("{}", join(command));
+		call(command, true);
+	}
+
+	protected Lines call(List<String> command, boolean log) {
+		return call(command, log, null);
+	}
+
+	protected Lines call(List<String> command, boolean log, Consumer<String> listener) {
+		Lines lines = new Lines();
+		Consumer<String> c = log ? lines.andThen(new FfmpegDebug()) : lines;
+		if (listener != null) {
+			c = c.andThen(listener);
+		}
+		if (log) {
+			logger.info(".. :: {}", join(command));
+		}
 		long start = System.currentTimeMillis();
-		callProcess(true, command, null, new FfmpegDebug());
-		logger_ffmpeg.info("{}s {}", (System.currentTimeMillis() - start) / 1000, join(command));
+		Processes.callProcess(true, command, null, new FfmpegDebug());
+		if (log) {
+			logger.info("{} :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
+		}
+		return lines;
 	}
 }
