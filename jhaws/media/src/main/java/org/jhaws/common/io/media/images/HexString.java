@@ -1,4 +1,4 @@
-package org.swingeasy.imaging;
+package org.jhaws.common.io.media.images;
 
 import java.math.BigInteger;
 
