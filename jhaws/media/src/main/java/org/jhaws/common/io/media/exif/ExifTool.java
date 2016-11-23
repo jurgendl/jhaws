@@ -288,10 +288,33 @@ public class ExifTool implements MediaCte {
 		}
 	}
 
+	public void comment(String exifExe, FilePath path, String comment) {
+		if (path.notExists() || new FilePath(exifExe).notExists()) {
+			throw new IllegalArgumentException();
+		}
+		List<String> command = Arrays.asList(exifExe, "-Comment=\"" + comment + "\"", path.getAbsolutePath());
+		String jc = join(command);
+		logger.trace("{}", jc);
+		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		path.getParentPath().child(path.getFileNameString() + "_original").deleteIfExists();
+	}
+
+	public String comment(String exifExe, FilePath path) {
+		if (path.notExists() || new FilePath(exifExe).notExists()) {
+			throw new IllegalArgumentException();
+		}
+		List<String> command = Arrays.asList(exifExe, "-Comment", path.getAbsolutePath());
+		String jc = join(command);
+		logger.trace("{}", jc);
+		return callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
+				.filter(l -> l.startsWith("Comment")).map(l -> l.split(":")[1].trim()).findFirst().orElse(null);
+	}
+
 	public ExifInfo exifInfo(String exifExe, FilePath path) {
 		return exifInfo(exifExe, path, new ExifInfoImpl());
 	}
 
+	// -X = xml
 	public ExifInfo exifInfo(String exifExe, FilePath path, ExifInfo exifinfo) {
 		if (path.notExists() || new FilePath(exifExe).notExists()) {
 			throw new IllegalArgumentException();
@@ -300,22 +323,29 @@ public class ExifTool implements MediaCte {
 		logger.trace("exif {}", path);
 
 		try {
-			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path) || qtFilter.accept(path)) {
+			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path)
+					|| qtFilter.accept(path)) {
 				List<String> command = Arrays.asList(exifExe, "-q", path.getAbsolutePath());
 				String jc = join(command);
 				logger.trace("{}", jc);
 
-				List<String> lines = callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
+				List<String> lines = callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
+						.collect(collectList());
 
-				exifinfo.setW(Integer.parseInt(splite(lines.parallelStream().filter(s -> s.startsWith(IW)).findFirst().orElse(TREMAZ))));
-				exifinfo.setH(Integer.parseInt(splite(lines.parallelStream().filter(s -> s.startsWith(IH)).findFirst().orElse(TREMAZ))));
+				exifinfo.setW(Integer.parseInt(
+						splite(lines.parallelStream().filter(s -> s.startsWith(IW)).findFirst().orElse(TREMAZ))));
+				exifinfo.setH(Integer.parseInt(
+						splite(lines.parallelStream().filter(s -> s.startsWith(IH)).findFirst().orElse(TREMAZ))));
 				if (!exifinfo.isWHKnown()) {
-					exifinfo.setW(Integer.parseInt(splite(lines.parallelStream().filter(s -> s.startsWith(W)).findFirst().orElse(TREMAZ))));
-					exifinfo.setH(Integer.parseInt(splite(lines.parallelStream().filter(s -> s.startsWith(H)).findFirst().orElse(TREMAZ))));
+					exifinfo.setW(Integer.parseInt(
+							splite(lines.parallelStream().filter(s -> s.startsWith(W)).findFirst().orElse(TREMAZ))));
+					exifinfo.setH(Integer.parseInt(
+							splite(lines.parallelStream().filter(s -> s.startsWith(H)).findFirst().orElse(TREMAZ))));
 				}
 
 				if (videoFilter.accept(path) || html5Videofilter.accept(path) || qtFilter.accept(path)) {
-					exifinfo.setMimetype(splite(lines.parallelStream().filter(s -> s.startsWith(MIME1)).findFirst().orElse(TREMAW)));
+					exifinfo.setMimetype(
+							splite(lines.parallelStream().filter(s -> s.startsWith(MIME1)).findFirst().orElse(TREMAW)));
 					if (isBlank(exifinfo.getMimetype())) {
 						exifinfo.setMimetype("video/" + path.getExtension().toLowerCase()//
 								.replace(FLV, "flash")//
@@ -327,56 +357,73 @@ public class ExifTool implements MediaCte {
 								.replace("m2v", "mpeg"));//
 					}
 
-					exifinfo.setDuration(splite(lines.parallelStream().filter(s -> s.startsWith(DURATION1)).findFirst().orElse(TREMAW)));
+					exifinfo.setDuration(splite(
+							lines.parallelStream().filter(s -> s.startsWith(DURATION1)).findFirst().orElse(TREMAW)));
 					if (isBlank(exifinfo.getDuration())) {
-						exifinfo.setDuration(splite(lines.parallelStream().filter(s -> s.startsWith(DURATION2)).findFirst().orElse(TREMAW)));
+						exifinfo.setDuration(splite(lines.parallelStream().filter(s -> s.startsWith(DURATION2))
+								.findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getDuration())) {
-						exifinfo.setDuration(splite(lines.parallelStream().filter(s -> s.startsWith(DURATION3)).findFirst().orElse(TREMAW)));
+						exifinfo.setDuration(splite(lines.parallelStream().filter(s -> s.startsWith(DURATION3))
+								.findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getDuration())) {
-						exifinfo.setDuration(splite(lines.parallelStream().filter(s -> s.startsWith(DURATION4)).findFirst().orElse(TREMAW)));
+						exifinfo.setDuration(splite(lines.parallelStream().filter(s -> s.startsWith(DURATION4))
+								.findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getDuration())) {
 						exifinfo.setDuration(UNKNOWN);
 					}
 
-					exifinfo.setVideo(splite(lines.parallelStream().filter(s -> s.startsWith(VIDEO1)).findFirst().orElse(TREMAW)));
+					exifinfo.setVideo(splite(
+							lines.parallelStream().filter(s -> s.startsWith(VIDEO1)).findFirst().orElse(TREMAW)));
 					if (isBlank(exifinfo.getVideo()) || exifinfo.getVideo().equals(".")) {
-						exifinfo.setVideo(splite(lines.parallelStream().filter(s -> s.startsWith(VIDEO3)).findFirst().orElse(TREMAW)));
+						exifinfo.setVideo(splite(
+								lines.parallelStream().filter(s -> s.startsWith(VIDEO3)).findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getVideo()) || exifinfo.getVideo().equals(".")) {
-						exifinfo.setVideo(splite(lines.parallelStream().filter(s -> s.startsWith(VIDEO2)).findFirst().orElse(TREMAW)));
+						exifinfo.setVideo(splite(
+								lines.parallelStream().filter(s -> s.startsWith(VIDEO2)).findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getVideo()) || exifinfo.getVideo().equals(".")) {
-						exifinfo.setVideo(splite(lines.parallelStream().filter(s -> s.startsWith(VIDEO4)).findFirst().orElse(TREMAW)));
+						exifinfo.setVideo(splite(
+								lines.parallelStream().filter(s -> s.startsWith(VIDEO4)).findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getVideo()) || exifinfo.getVideo().equals(".")) {
 						exifinfo.setVideo(UNKNOWN);
 					}
 
-					exifinfo.setAudio(splite(lines.parallelStream().filter(s -> s.startsWith(AUDIO1)).findFirst().orElse(TREMAW)));
+					exifinfo.setAudio(splite(
+							lines.parallelStream().filter(s -> s.startsWith(AUDIO1)).findFirst().orElse(TREMAW)));
 					if (isBlank(exifinfo.getAudio()) || exifinfo.getAudio().equals(".")) {
-						exifinfo.setAudio(splite(lines.parallelStream().filter(s -> s.startsWith(AUDIO3)).findFirst().orElse(TREMAW)));
+						exifinfo.setAudio(splite(
+								lines.parallelStream().filter(s -> s.startsWith(AUDIO3)).findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getAudio()) || exifinfo.getAudio().equals(".")) {
-						exifinfo.setAudio(splite(lines.parallelStream().filter(s -> s.startsWith(AUDIO2)).findFirst().orElse(TREMAW)));
+						exifinfo.setAudio(splite(
+								lines.parallelStream().filter(s -> s.startsWith(AUDIO2)).findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getAudio()) || exifinfo.getAudio().equals(".")) {
-						exifinfo.setAudio(splite(lines.parallelStream().filter(s -> s.startsWith(AUDIO4)).findFirst().orElse(TREMAW)));
+						exifinfo.setAudio(splite(
+								lines.parallelStream().filter(s -> s.startsWith(AUDIO4)).findFirst().orElse(TREMAW)));
 					}
 					if (isBlank(exifinfo.getAudio()) || exifinfo.getAudio().equals(".")) {
 						exifinfo.setAudio(UNKNOWN);
 					}
 
-					exifinfo.setVfr(Double.parseDouble(splite(lines.parallelStream().filter(s -> s.startsWith(VFR1)).findFirst().orElse(TREMAZ))));
+					exifinfo.setVfr(Double.parseDouble(
+							splite(lines.parallelStream().filter(s -> s.startsWith(VFR1)).findFirst().orElse(TREMAZ))));
 					if (exifinfo.getVfr() == 0.0) {
-						exifinfo.setVfr(Double.parseDouble(splite(lines.parallelStream().filter(s -> s.startsWith(VFR2)).findFirst().orElse(TREMAZ)).replaceAll("fps", "")));
+						exifinfo.setVfr(Double.parseDouble(splite(
+								lines.parallelStream().filter(s -> s.startsWith(VFR2)).findFirst().orElse(TREMAZ))
+										.replaceAll("fps", "")));
 					}
 
-					exifinfo.setBitrate(splite(lines.parallelStream().filter(s -> s.startsWith(AVGBITRATE1)).findFirst().orElse(TREMAZ)));
+					exifinfo.setBitrate(splite(
+							lines.parallelStream().filter(s -> s.startsWith(AVGBITRATE1)).findFirst().orElse(TREMAZ)));
 					if ("0".equals(exifinfo.getBitrate())) {
-						exifinfo.setBitrate(splite(lines.parallelStream().filter(s -> s.startsWith(AVGBITRATE2)).findFirst().orElse(TREMAZ)));
+						exifinfo.setBitrate(splite(lines.parallelStream().filter(s -> s.startsWith(AVGBITRATE2))
+								.findFirst().orElse(TREMAZ)));
 					}
 				}
 
