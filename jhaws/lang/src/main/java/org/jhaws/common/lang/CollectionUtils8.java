@@ -1079,7 +1079,7 @@ public interface CollectionUtils8 {
 	}
 
 	public static <T> String join(Stream<T> stream, String delimiter) {
-		return stream.map(Object::toString).filter(StringUtils::isNotBlank).collect(Collectors.joining(delimiter));
+		return stream.map(String::valueOf).filter(StringUtils::isNotBlank).collect(Collectors.joining(delimiter));
 	}
 
 	public static Stream<String> split(String string, String delimiter) {
