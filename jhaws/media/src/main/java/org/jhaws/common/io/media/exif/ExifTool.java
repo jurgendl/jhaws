@@ -307,7 +307,31 @@ public class ExifTool implements MediaCte {
 		String jc = join(command);
 		logger.trace("{}", jc);
 		return callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
-				.filter(l -> l.startsWith("Comment")).map(l -> l.split(":")[1].trim()).findFirst().orElse(null);
+				.filter(l -> l.toLowerCase().startsWith("comment")).map(l -> l.split(":")[1].trim()).findFirst()
+				.orElse(null);
+	}
+
+	public void program(String exifExe, FilePath path, String program) {
+		if (path.notExists() || new FilePath(exifExe).notExists()) {
+			throw new IllegalArgumentException();
+		}
+		List<String> command = Arrays.asList(exifExe, "-Software=\"" + program + "\"", path.getAbsolutePath());
+		String jc = join(command);
+		logger.trace("{}", jc);
+		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		path.getParentPath().child(path.getFileNameString() + "_original").deleteIfExists();
+	}
+
+	public String program(String exifExe, FilePath path) {
+		if (path.notExists() || new FilePath(exifExe).notExists()) {
+			return null;
+		}
+		List<String> command = Arrays.asList(exifExe, "-Software", path.getAbsolutePath());
+		String jc = join(command);
+		logger.trace("{}", jc);
+		return callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
+				.filter(l -> l.toLowerCase().contains("software")).map(l -> l.split(":")[1].trim()).findFirst()
+				.orElse(null);
 	}
 
 	public ExifInfo exifInfo(String exifExe, FilePath path) {
