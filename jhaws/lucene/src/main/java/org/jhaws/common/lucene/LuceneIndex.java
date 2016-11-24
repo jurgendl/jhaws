@@ -251,7 +251,7 @@ public class LuceneIndex {
 		}
 	}
 
-	protected IndexWriter getIndexWriter() {
+	protected synchronized IndexWriter getIndexWriter() {
 		activity = System.currentTimeMillis();
 		fixDocVersion();
 		return optional(indexWriter, this::createIndexWriter);
