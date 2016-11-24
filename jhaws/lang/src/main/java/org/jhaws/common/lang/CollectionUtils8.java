@@ -446,7 +446,7 @@ public interface CollectionUtils8 {
 	 * BinaryOperator<V> binaryOperator = (k, v) -> k;
 	 */
 	public static <V> BinaryOperator<V> acceptDuplicateKeys() {
-		return keepFirst();
+		return keepLast();
 	}
 
 	/**
@@ -553,8 +553,8 @@ public interface CollectionUtils8 {
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
 		Function<Entry<K, V>, K> keyMapper = CollectionUtils8.<K, V>keyMapper();
 		Function<Entry<K, V>, V> valueMapper = CollectionUtils8.<K, V>valueMapper();
-		BinaryOperator<V> keepFirst = CollectionUtils8.<V>keepFirst();
-		Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, keepFirst, mapSupplier);
+		BinaryOperator<V> rejectDuplicateKeys = CollectionUtils8.<V>rejectDuplicateKeys();
+		Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, rejectDuplicateKeys, mapSupplier);
 		Map<K, V> map = stream.collect(c);
 		return map;
 	}
@@ -825,7 +825,27 @@ public interface CollectionUtils8 {
 	}
 
 	public static <T> List<T> toList(Collection<T> collection) {
-		return stream(collection).collect(collectList());
+		return toList(true, collection);
+	}
+
+	public static <T> List<T> toList(boolean copy, Collection<T> collection) {
+		return !copy && collection instanceof List ? (List<T>) collection : stream(collection).collect(collectList());
+	}
+
+	public static <K, V> Map<K, V> toMap(Map<K, V> map) {
+		return toMap(true, map);
+	}
+
+	public static <K, V> Map<K, V> toMap(boolean copy, Map<K, V> map) {
+		return !copy /* && map instanceof Map */ ? (Map<K, V>) map : stream(map).collect(collectMap(Entry::getKey, Entry::getValue));
+	}
+
+	public static <K, V> SortedMap<K, V> toSortedMap(Map<K, V> map) {
+		return toSortedMap(true, map);
+	}
+
+	public static <K, V> SortedMap<K, V> toSortedMap(boolean copy, Map<K, V> map) {
+		return !copy && map instanceof SortedMap ? (SortedMap<K, V>) map : stream(map).collect(collectSortedMap(Entry::getKey, Entry::getValue));
 	}
 
 	@SafeVarargs
@@ -834,7 +854,11 @@ public interface CollectionUtils8 {
 	}
 
 	public static <T> Set<T> toSet(Collection<T> collection) {
-		return stream(collection).collect(collectSet());
+		return toSet(true, collection);
+	}
+
+	public static <T> Set<T> toSet(boolean copy, Collection<T> collection) {
+		return !copy && collection instanceof Set ? (Set<T>) collection : stream(collection).collect(collectSet());
 	}
 
 	@SafeVarargs
@@ -842,8 +866,12 @@ public interface CollectionUtils8 {
 		return streamArray(array).collect(collectSet());
 	}
 
-	public static <T> Set<T> toSortedSet(Collection<T> collection) {
-		return stream(collection).collect(collectSortedSet());
+	public static <T> SortedSet<T> toSortedSet(Collection<T> collection) {
+		return toSortedSet(true, collection);
+	}
+
+	public static <T> SortedSet<T> toSortedSet(boolean copy, Collection<T> collection) {
+		return !copy && collection instanceof SortedSet ? (SortedSet<T>) collection : stream(collection).collect(collectSortedSet());
 	}
 
 	@SafeVarargs
@@ -1111,7 +1139,7 @@ public interface CollectionUtils8 {
 	}
 
 	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
-		return collectMap(keyMapper, valueMapper, keepFirst());
+		return collectMap(keyMapper, valueMapper, rejectDuplicateKeys());
 	}
 
 	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
@@ -1123,7 +1151,23 @@ public interface CollectionUtils8 {
 	}
 
 	public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper) {
-		return collectMap(keyMapper, keepFirst());
+		return collectMap(keyMapper, rejectDuplicateKeys());
+	}
+
+	public static <T, K, V> Collector<T, ?, SortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
+		return collectSortedMap(keyMapper, valueMapper, rejectDuplicateKeys());
+	}
+
+	public static <T, K, V> Collector<T, ?, SortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
+		return Collectors.toMap(keyMapper, valueMapper, duplicateValues, TreeMap::new);
+	}
+
+	public static <K, V> Collector<V, ?, SortedMap<K, V>> collectSortedMap(Function<V, K> keyMapper, BinaryOperator<V> duplicateValues) {
+		return collectSortedMap(keyMapper, self(), duplicateValues);
+	}
+
+	public static <K, V> Collector<V, ?, SortedMap<K, V>> collectSortedMap(Function<V, K> keyMapper) {
+		return collectSortedMap(keyMapper, rejectDuplicateKeys());
 	}
 
 	public static <T extends Comparable<? super T>> Comparator<T> natural() {
@@ -1505,5 +1549,53 @@ public interface CollectionUtils8 {
 
 	public static <T> Comparator<T> comparatorFor(BiFunction<T, T, Integer> method) {
 		return method::apply;
+	}
+
+	public static <T> Collection<T> toUnmodifiableCollection(Collection<T> collection) {
+		return Collections.unmodifiableCollection(toList(true, collection));
+	}
+
+	public static <T> List<T> toUnmodifiableList(Collection<T> collection) {
+		return Collections.unmodifiableList(toList(true, collection));
+	}
+
+	public static <K, V> Map<K, V> toUnmodifiableMap(Map<K, V> map) {
+		return Collections.unmodifiableMap(toMap(true, map));
+	}
+
+	public static <T> Set<T> toUnmodifiableSet(Collection<T> collection) {
+		return Collections.unmodifiableSet(toSet(true, collection));
+	}
+
+	public static <K, V> SortedMap<K, V> toUnmodifiableSortedMap(SortedMap<K, V> map) {
+		return Collections.unmodifiableSortedMap(toSortedMap(true, map));
+	}
+
+	public static <T> SortedSet<T> toUnmodifiableSortedSet(Collection<T> collection) {
+		return Collections.unmodifiableSortedSet(toSortedSet(true, collection));
+	}
+
+	public static <T> Collection<T> toSynchronizedCollection(Collection<T> collection) {
+		return Collections.synchronizedCollection(toList(true, collection));
+	}
+
+	public static <T> List<T> toSynchronizedList(Collection<T> collection) {
+		return Collections.synchronizedList(toList(true, collection));
+	}
+
+	public static <K, V> Map<K, V> toSynchronizedMap(Map<K, V> map) {
+		return Collections.synchronizedMap(toMap(true, map));
+	}
+
+	public static <T> Set<T> toSynchronizedSet(Collection<T> collection) {
+		return Collections.synchronizedSet(toSet(true, collection));
+	}
+
+	public static <K, V> SortedMap<K, V> toSynchronizedSortedMap(SortedMap<K, V> map) {
+		return Collections.synchronizedSortedMap(toSortedMap(true, map));
+	}
+
+	public static <T> SortedSet<T> toSynchronizedSortedSet(Collection<T> collection) {
+		return Collections.synchronizedSortedSet(toSortedSet(true, collection));
 	}
 }
