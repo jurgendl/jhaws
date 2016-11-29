@@ -82,8 +82,12 @@ public class Pool<M> {
 	protected String name;
 
 	public Pool(String name) {
+		this(name, Runtime.getRuntime().availableProcessors());
+	}
+
+	public Pool(String name, int nr) {
 		this.name = name;
-		this.nr = Runtime.getRuntime().availableProcessors();
+		this.nr = nr;
 	}
 
 	public Task<M> addJob(Runnable runnable) {
