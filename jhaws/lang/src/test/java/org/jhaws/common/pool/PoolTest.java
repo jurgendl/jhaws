@@ -1,84 +1,55 @@
 package org.jhaws.common.pool;
 
-import java.lang.reflect.Method;
+import java.util.Date;
 
 import org.jhaws.common.lang.RunIndefinitely;
-import org.jhaws.common.lang.functions.ERunnable;
-
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.Proxy;
-import javassist.util.proxy.ProxyFactory;
 
 public class PoolTest {
 	public static void main(String[] args) {
 		try {
-			Pool<Object> pool = new Pool<>("test", 2);
-			TestService t = proxy(pool, TestService.class, new TestServiceImpl());
+			Pool<Object> pool = new Pool<>("test", 1);
+			TestServiceImpl t = PooledService.pool(pool, TestServiceImpl.class, new TestServiceImpl());
 			for (int i = 0; i < 10; i++) {
-				t.doSomething(i);
-				t.doSomethingElse(i);
+				final int ii = i;
+				new Thread(() -> t.doSomethingFast(ii)).start();
+				new Thread(() -> t.doSomethingPooled(ii)).start();
 			}
-			System.out.println("added");
 			new Thread((RunIndefinitely) () -> Long.MAX_VALUE).start();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	public @interface Pooled {
-		//
-	}
-
-	protected static <T> T proxy(Pool<Object> pool, Class<T> controllerType, T subject) throws Exception {
-		ProxyFactory proxyFactory = new ProxyFactory();
-		if (controllerType.isInterface()) {
-			proxyFactory.setInterfaces(new Class[] { controllerType });
-		} else {
-			proxyFactory.setSuperclass(controllerType);
+	public static void test(int o) {
+		System.out.println(new Date() + ":start:" + o);
+		try {
+			Thread.sleep(5000l);
+		} catch (InterruptedException ex) {
+			//
 		}
-		@SuppressWarnings("unchecked")
-		T p = (T) proxyFactory.createClass().newInstance();
-		Proxy.class.cast(p).setHandler(new MethodHandler() {
-			@Override
-			public Object invoke(Object _this, Method method, Method proceed, Object[] args) throws Exception {
-				if (method.getAnnotation(Pooled.class) == null) {
-					return method.invoke(subject, args);
-				}
-				pool.addJob((ERunnable) () -> method.invoke(subject, args));
-				return null;
-			}
-		});
-		return p;
+		System.out.println(new Date() + ":end:" + o);
 	}
 
-	public static interface TestService {
+	public static class TestServiceImpl {
 		@Pooled
-		public void doSomething(Object o);
-
-		public void doSomethingElse(Object o);
-	}
-
-	public static class TestServiceImpl implements TestService {
-		@Override
-		public void doSomething(Object o) {
-			System.out.println("doSomething:start:" + o);
+		public void doSomethingPooled(Object o) {
+			System.out.println(new Date() + ":doSomethingPooled:start:" + o);
 			try {
 				Thread.sleep(5000l);
 			} catch (InterruptedException ex) {
 				//
 			}
-			System.out.println("doSomething:end:" + o);
+			System.out.println(new Date() + ":doSomethingPooled:end:" + o);
 		}
 
-		@Override
-		public void doSomethingElse(Object o) {
-			System.out.println("doSomethingElse:start:" + o);
+		public void doSomethingFast(Object o) {
+			System.out.println(new Date() + ":doSomethingFast:start:" + o);
 			try {
 				Thread.sleep(5000l);
 			} catch (InterruptedException ex) {
 				//
 			}
-			System.out.println("doSomethingElse:end:" + o);
+			System.out.println(new Date() + ":doSomethingFast:end:" + o);
 		}
 	}
 }

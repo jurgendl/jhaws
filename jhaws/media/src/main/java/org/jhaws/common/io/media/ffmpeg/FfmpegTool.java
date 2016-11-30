@@ -26,6 +26,7 @@ import org.jhaws.common.io.media.images.ImageTools;
 import org.jhaws.common.lang.BooleanValue;
 import org.jhaws.common.lang.DateTime8;
 import org.jhaws.common.lang.functions.EFunction;
+import org.jhaws.common.pool.Pooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +44,7 @@ public class FfmpegTool implements MediaCte {
 
 	protected static final Logger logger = LoggerFactory.getLogger("ffmpeg");
 
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
-			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -197,8 +197,7 @@ public class FfmpegTool implements MediaCte {
 				command.add("1");
 				command.add("-qscale:v");
 				command.add("15");// good=1-35=bad, preferred range 2-5
-				FilePath seperate = splashFile.appendExtension(String.valueOf(i))
-						.appendExtension(splashFile.getExtension());
+				FilePath seperate = splashFile.appendExtension(String.valueOf(i)).appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
 				silentcall(command);
@@ -206,10 +205,8 @@ public class FfmpegTool implements MediaCte {
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
 			} else {
-				BufferedImage bio = ImageTools.tile(
-						seperates.stream().map((EFunction<FilePath, BufferedImage>) ImageTools::read)
-								.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()),
-						wh);
+				BufferedImage bio = ImageTools.tile(seperates.stream().map((EFunction<FilePath, BufferedImage>) ImageTools::read)
+						.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()), wh);
 				ImageTools.write(bio, splashFile);
 			}
 			seperates.stream().forEach(FilePath::deleteIfExists);
@@ -334,19 +331,18 @@ public class FfmpegTool implements MediaCte {
 		return output;
 	}
 
-	public void remux(Function<Cfg, Consumer<String>> listener, FilePath input, FilePath output) {
-		Cfg cfg = new Cfg();
+	@Pooled
+	public void remux(Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output) {
+		RemuxCfg cfg = new RemuxCfg();
 		cfg.input = input;
 		cfg.output = output;
 		cfg.info = info(input);
 		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
 		StreamType videostreaminfo = video(cfg.info);
 		StreamType audiostreaminfo = audio(cfg.info);
-		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000)
-				: videostreaminfo.getBitRate() / 1000;
+		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
 		cfg.vt = videostreaminfo.getCodecName();
-		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
-				: audiostreaminfo.getBitRate() / 1000;
+		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
 		cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
 		cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
 		cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
@@ -381,7 +377,7 @@ public class FfmpegTool implements MediaCte {
 		}
 	}
 
-	protected void handle(Cfg cfg, Lines lines, BooleanValue needsFixing, BooleanValue resetException) {
+	protected void handle(RemuxCfg cfg, Lines lines, BooleanValue needsFixing, BooleanValue resetException) {
 		if (lines.lines().stream().anyMatch(s -> s.startsWith("x264 [error]: high profile doesn't support"))) {
 			needsFixing.set(true);
 			cfg.fixes.fixNotHighProfile = false;
@@ -412,14 +408,14 @@ public class FfmpegTool implements MediaCte {
 		// }
 	}
 
-	protected static class CfgFixes {
+	protected static class RemuxFixes {
 		boolean fixNotHighProfile;
 		boolean fixAudioRate;
 		boolean fixAudioStrict;
 		boolean fixDiv2;
 	}
 
-	public static class Cfg {
+	public static class RemuxCfg {
 		String at;
 		int ar;
 		String vt;
@@ -433,7 +429,7 @@ public class FfmpegTool implements MediaCte {
 		boolean acopy;
 		int[] wh;
 		FilePath output;
-		CfgFixes fixes = new CfgFixes();
+		RemuxFixes fixes = new RemuxFixes();
 
 		public int getVr() {
 			return this.vr;
@@ -444,7 +440,7 @@ public class FfmpegTool implements MediaCte {
 		}
 	}
 
-	protected List<String> command(Cfg cfg) {
+	protected List<String> command(RemuxCfg cfg) {
 		List<String> accel = getHwAccel();
 		List<String> command = new ArrayList<>();
 		{
@@ -729,13 +725,11 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public List<StreamType> videos(FfprobeType finfo) {
-		return finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType()))
-				.collect(Collectors.toList());
+		return finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	public List<StreamType> audios(FfprobeType finfo) {
-		return finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType()))
-				.collect(Collectors.toList());
+		return finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	protected String command(FilePath f) {
@@ -743,7 +737,6 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public long frames(StreamType videostreaminfo) {
-		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0
-				: videostreaminfo.getNbFrames().longValue();
+		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0 : videostreaminfo.getNbFrames().longValue();
 	}
 }
