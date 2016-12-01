@@ -1618,4 +1618,9 @@ public interface CollectionUtils8 {
 	public static <T> SortedSet<T> toSynchronizedSortedSet(Collection<T> collection) {
 		return Collections.synchronizedSortedSet(toSortedSet(true, collection));
 	}
+
+	public static <T> Stream<KeyValue<Integer, T>> index(Stream<T> stream) {
+		IntegerValue index = new IntegerValue(-1);
+		return stream.map(t -> new KeyValue<Integer, T>(index.add().get(), t));
+	}
 }

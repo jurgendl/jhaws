@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.jhaws.common.lang.CollectionUtils8.Opt;
 import org.jhaws.common.lang.functions.EConsumer;
@@ -51,6 +52,7 @@ public class Collections8Test {
 		start = System.currentTimeMillis();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test1() {
 		Collection<String> c = Arrays.asList("v1", "v2", "v3");
@@ -211,5 +213,10 @@ public class Collections8Test {
 		pn.setNaam(n);
 		n.setNaam("naam");
 		Assert.assertEquals(n.getNaam(), opt.get(TNaam::getNaam));
+	}
+
+	@Test
+	public void index() {
+		CollectionUtils8.index(IntStream.range(0, 26).mapToObj(i -> (char) ('A' + i))).forEach(System.out::println);
 	}
 }
