@@ -1100,6 +1100,10 @@ public interface CollectionUtils8 {
 		return streamArray(string.split(delimiter));
 	}
 
+	public static String joining(Stream<String> stream, String delimiter) {
+		return stream.collect(Collectors.joining(delimiter));
+	}
+
 	/**
 	 * stackoverflow.com/questions/24010109/java-8-stream-reverse-order
 	 */
