@@ -155,7 +155,7 @@ public interface CollectionUtils8 {
 		}
 	}
 
-	public static interface Opt<T> {
+	public static interface Opt<T> extends Supplier<T> {
 		/** default vorig type */
 		<X> Opt<X> opt(Function<T, X> getter);
 
@@ -165,17 +165,18 @@ public interface CollectionUtils8 {
 		}
 
 		/** ga verder eager */
-		<X> Opt<X> eager(Function<T, X> getter);
+		<X> OptEager<X> eager(Function<T, X> getter);
 
 		/** ga verder reusable = lazy */
-		<X> Opt<X> reusable(Function<T, X> getter);
+		<X> OptReusable<T, X> reusable(Function<T, X> getter);
 
 		/** ga verder reusable = lazy */
-		default <X> Opt<X> lazy(Function<T, X> getter) {
+		default <X> OptReusable<T, X> lazy(Function<T, X> getter) {
 			return reusable(getter);
 		};
 
 		/** geeft waarde terug */
+		@Override
 		T get();
 
 		/** voert {@link #opt(Function)} uit en dan {@link #get()} */
@@ -195,23 +196,27 @@ public interface CollectionUtils8 {
 			return Optional.ofNullable(get()).orElse(value);
 		}
 
+		default T or(Opt<T> supplier) {
+			return or(supplier.get());
+		}
+
 		/** default eager */
 		public static <T> Opt<T> optional(T value) {
 			return eager(value);
 		}
 
 		/** start eager */
-		public static <T> Opt<T> eager(T value) {
+		public static <T> OptEager<T> eager(T value) {
 			return new OptEager<>(value);
 		}
 
 		/** start reusable = lazy */
-		public static <T> Opt<T> reusable(T value) {
+		public static <T> OptReusable<?, T> reusable(T value) {
 			return new OptReusable<>(value);
 		}
 
 		/** start reusable = lazy */
-		public static <T> Opt<T> lazy(T value) {
+		public static <T> OptReusable<?, T> lazy(T value) {
 			return reusable(value);
 		}
 
@@ -231,17 +236,17 @@ public interface CollectionUtils8 {
 		}
 
 		@Override
-		public <P> Opt<P> opt(Function<T, P> get) {
+		public <P> OptEager<P> opt(Function<T, P> get) {
 			return eager(get);
 		}
 
 		@Override
-		public <P> Opt<P> eager(Function<T, P> get) {
+		public <P> OptEager<P> eager(Function<T, P> get) {
 			return new OptEager<>(value == null ? null : get.apply(value));
 		}
 
 		@Override
-		public <P> Opt<P> reusable(Function<T, P> get) {
+		public <P> OptReusable<T, P> reusable(Function<T, P> get) {
 			return new OptReusable<>(get()).opt(get);
 		}
 
@@ -291,23 +296,19 @@ public interface CollectionUtils8 {
 		}
 
 		@Override
-		public <X> Opt<X> opt(Function<T, X> get) {
+		public <X> OptReusable<T, X> opt(Function<T, X> get) {
 			return reusable(get);
 		}
 
 		@Override
-		public <X> Opt<X> eager(Function<T, X> get) {
+		public <X> OptEager<X> eager(Function<T, X> get) {
 			return new OptEager<>(get()).opt(get);
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public <X> Opt<X> reusable(Function<T, X> get) {
+		public <X> OptReusable<T, X> reusable(Function<T, X> get) {
 			return new OptReusable<>((OptReusable<T, X>) this, get);
-		}
-
-		<X> X gett(@SuppressWarnings("unchecked") Function<T, X>... getters) {
-			return streamArray(getters).map(g -> get(g)).filter(notNull()).findFirst().orElse(null);
 		}
 
 		@Override
@@ -461,8 +462,21 @@ public interface CollectionUtils8 {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T[] array(T item) {
-		return (T[]) new Object[] { item };
+	public static <T> T[] array(T item, T... items) {
+		if (item == null && (items == null || items.length == 0)) {
+			return (T[]) new Object[0];
+		}
+		if (items == null || items.length == 0) {
+			return (T[]) new Object[] { item };
+		}
+		if (item == null) {
+			return items;
+		}
+		int length = items.length;
+		T[] newarray = Arrays.copyOf(items, 1 + length);
+		newarray[0] = item;
+		System.arraycopy(items, 0, newarray, 1, length);
+		return newarray;
 	}
 
 	public static <T> T[] array(Class<T> componentType, Collection<T> collection) {
@@ -1444,8 +1458,7 @@ public interface CollectionUtils8 {
 	public static <T> Comparator<T> comparator(Function<T, ?> compare, Function<T, ?>... compareAdditional) {
 		return (t1, t2) -> {
 			CompareToBuilder cb = new CompareToBuilder();
-			cb.append(compare.apply(t1), compare.apply(t2));
-			streamArray(compareAdditional).forEach(compareThisEl -> cb.append(compareThisEl.apply(t1), compareThisEl.apply(t2)));
+			streamArray(array(compare, compareAdditional)).forEach(compareThisEl -> cb.append(compareThisEl.apply(t1), compareThisEl.apply(t2)));
 			return cb.toComparison();
 		};
 	}
@@ -1536,6 +1549,9 @@ public interface CollectionUtils8 {
 	@SafeVarargs
 	public static <T> BiFunction<T, T, Integer> bifunction(Function<T, ?>... methods) {
 		return (a, b) -> {
+			if (methods == null || methods.length == 0) {
+				return 0;
+			}
 			CompareToBuilder ctb = new CompareToBuilder();
 			Arrays.asList(methods).forEach(g -> ctb.append(g.apply(a), g.apply(b)));
 			return ctb.toComparison();
