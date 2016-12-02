@@ -201,7 +201,7 @@ public class FfmpegTool implements MediaCte {
 						.appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
-				silentcall(command);
+				Lines silentcall = silentcall(command);
 			}
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
@@ -633,6 +633,7 @@ public class FfmpegTool implements MediaCte {
 		if (output.exists()) {
 			throw new UncheckedIOException(new FileExistsException(output.getAbsolutePath()));
 		}
+		Lines lines = null;
 		try {
 			List<String> command = new ArrayList<>();
 			command.add(command(getFfmpeg()));
@@ -648,18 +649,22 @@ public class FfmpegTool implements MediaCte {
 			command.add("copy");
 			command.add("-strict");
 			command.add("experimental");
-			command.add("-map");
-			command.add("0:v:0");
-			command.add("-map");
-			command.add("0:a:0");
+			// command.add("-map");
+			// command.add("0:v:0");
+			// command.add("-map");
+			// command.add("0:a:0");
 			command.add("-shortest");
 			command.add("-movflags");
 			command.add("+faststart");
 			command.add(command(output));
-			call(command);
+			lines = call(command);
 			return true;
 		} catch (RuntimeException ex) {
-			output.delete();
+			logger.error("", ex);
+			if (lines != null) {
+				lines.lines().forEach(l -> logger.error("{}", l));
+			}
+			output.deleteIfExists();
 			throw ex;
 		}
 	}
