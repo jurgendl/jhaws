@@ -11,7 +11,7 @@ public class MetaPool extends Pool<PoolMeta> {
 	}
 
 	@Override
-	public org.jhaws.common.pool.Pool.Task<PoolMeta> addJob(Runnable runnable, PoolMeta meta) {
+	public org.jhaws.common.pool.Task<PoolMeta> addJob(Runnable runnable, PoolMeta meta) {
 		meta.enqueued = System.currentTimeMillis();
 		return super.addJob(runnable, meta);
 	}
