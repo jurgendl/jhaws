@@ -66,7 +66,8 @@ public class Pool<M> {
 	public synchronized void afterPropertiesSet() {
 		if (threadPoolExecutor != null)
 			throw new UnsupportedOperationException("past creation");
-		threadPoolExecutor = new ThreadPoolExecutor(nr, nr, 0L, TimeUnit.MILLISECONDS, (BlockingQueue<Runnable>) (BlockingQueue) getQueue(), getThreadFactory()) {
+		threadPoolExecutor = new ThreadPoolExecutor(nr, nr, 0L, TimeUnit.MILLISECONDS,
+				(BlockingQueue<Runnable>) (BlockingQueue) getQueue(), getThreadFactory()) {
 			@Override
 			protected <U> FutureTask<U> newTaskFor(Callable<U> callable) {
 				return new Task(getCompleted(), Job.class.cast(callable));
@@ -87,6 +88,9 @@ public class Pool<M> {
 			protected void afterExecute(Runnable r, Throwable t) {
 				super.afterExecute(r, t);
 				Pool.this.afterExecute(Task.class.cast(r).getCallable());
+				if (t != null) {
+					t.printStackTrace();
+				}
 			}
 		};
 	}

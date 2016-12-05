@@ -15,6 +15,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileExistsException;
+import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
@@ -44,7 +45,8 @@ public class FfmpegTool implements MediaCte {
 
 	protected static final Logger logger = LoggerFactory.getLogger("ffmpeg");
 
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
+			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -197,7 +199,8 @@ public class FfmpegTool implements MediaCte {
 				command.add("1");
 				command.add("-qscale:v");
 				command.add("15");// good=1-35=bad, preferred range 2-5
-				FilePath seperate = splashFile.appendExtension(String.valueOf(i)).appendExtension(splashFile.getExtension());
+				FilePath seperate = splashFile.appendExtension(String.valueOf(i))
+						.appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
 				Lines silentcall = silentcall(command);
@@ -205,8 +208,10 @@ public class FfmpegTool implements MediaCte {
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
 			} else {
-				BufferedImage bio = ImageTools.tile(seperates.stream().map((EFunction<FilePath, BufferedImage>) ImageTools::read)
-						.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()), wh);
+				BufferedImage bio = ImageTools.tile(
+						seperates.stream().map((EFunction<FilePath, BufferedImage>) ImageTools::read)
+								.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()),
+						wh);
 				ImageTools.write(bio, splashFile);
 			}
 			seperates.stream().forEach(FilePath::deleteIfExists);
@@ -290,7 +295,17 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public FilePath cut(FilePath input, String suffix, String from, String length) {
-		FilePath output = input.changeExtension(suffix).appendExtension(MP4);
+		FilePath output = input.getParentPath().child(input.getShortFileName());
+		if (StringUtils.isNotBlank(suffix)) {
+			output = output.appendExtension(suffix);
+		}
+		if (StringUtils.countMatches(from, ":") == 2) {
+			output = output.appendExtension(
+					from.replaceFirst(":", "h").replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
+		} else {
+			output = output.appendExtension(from.replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
+		}
+		output = output.appendExtension(MP4);
 		try {
 			List<String> command = new ArrayList<>();
 			command.add(command(getFfmpeg()));
@@ -340,9 +355,11 @@ public class FfmpegTool implements MediaCte {
 		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
 		StreamType videostreaminfo = video(cfg.info);
 		StreamType audiostreaminfo = audio(cfg.info);
-		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
+		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000)
+				: videostreaminfo.getBitRate() / 1000;
 		cfg.vt = videostreaminfo.getCodecName();
-		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
+		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
+				: audiostreaminfo.getBitRate() / 1000;
 		cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
 		cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
 		cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
@@ -730,11 +747,13 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public List<StreamType> videos(FfprobeType finfo) {
-		return finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+		return finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType()))
+				.collect(Collectors.toList());
 	}
 
 	public List<StreamType> audios(FfprobeType finfo) {
-		return finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+		return finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType()))
+				.collect(Collectors.toList());
 	}
 
 	protected String command(FilePath f) {
@@ -742,6 +761,7 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public long frames(StreamType videostreaminfo) {
-		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0 : videostreaminfo.getNbFrames().longValue();
+		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0
+				: videostreaminfo.getNbFrames().longValue();
 	}
 }
