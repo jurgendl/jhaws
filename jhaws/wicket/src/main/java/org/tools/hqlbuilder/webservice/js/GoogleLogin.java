@@ -15,20 +15,22 @@ import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 public class GoogleLogin {
 	public static final String VALIDATION_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
-	public static CachingUrlResourceReference JS_PLATFORM = new CachingUrlResourceReference(URI.create("http://apis.google.com/js/platform.js"), "google-platform");
+	public static CachingUrlResourceReference JS_PLATFORM = new CachingUrlResourceReference(
+			URI.create("http://apis.google.com/js/platform.js"), "google-platform");
 
 	public static void init(WicketApplication app) {
 		try {
 			// load application key
 			Properties p = new Properties();
-			try (FileInputStream inStream = new FileInputStream(System.getProperty("user.home") + "/google.app.client_id.properties")) {
+			try (FileInputStream inStream = new FileInputStream(
+					System.getProperty("user.home") + "/google.app.client_id.properties")) {
 				p.load(inStream);
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);
 			}
 			app.setGoogleSigninClientId(p.getProperty("google.app.client_id"));
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			// ex.printStackTrace();
 		}
 	}
 }

@@ -203,6 +203,7 @@ public class FfmpegTool implements MediaCte {
 						.appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
+				@SuppressWarnings("unused")
 				Lines silentcall = silentcall(command);
 			}
 			if (seperates.size() == 1) {

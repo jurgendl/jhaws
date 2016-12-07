@@ -71,6 +71,24 @@ public class ExifTool implements MediaCte {
 
 	private static final Logger logger = LoggerFactory.getLogger("exif");
 
+	protected FilePath exif;
+
+	public ExifTool() {
+		super();
+	}
+
+	public ExifTool(FilePath exif) {
+		this.exif = exif;
+	}
+
+	public FilePath getExif() {
+		return this.exif;
+	}
+
+	public void setExif(FilePath exif) {
+		this.exif = exif;
+	}
+
 	private String splite(String s) {
 		return s.substring(s.indexOf(":") + 1).trim();
 	}
@@ -288,22 +306,22 @@ public class ExifTool implements MediaCte {
 		}
 	}
 
-	public void comment(String exifExe, FilePath path, String comment) {
-		if (path.notExists() || new FilePath(exifExe).notExists()) {
+	public void comment(FilePath path, String comment) {
+		if (path.notExists() || exif.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(exifExe, "-Comment=\"" + comment + "\"", path.getAbsolutePath());
+		List<String> command = Arrays.asList(command(exif), "-Comment=\"" + comment + "\"", path.getAbsolutePath());
 		String jc = join(command);
 		logger.trace("{}", jc);
 		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
 		path.getParentPath().child(path.getFileNameString() + "_original").deleteIfExists();
 	}
 
-	public String comment(String exifExe, FilePath path) {
-		if (path.notExists() || new FilePath(exifExe).notExists()) {
+	public String comment(FilePath path) {
+		if (path.notExists() || exif.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(exifExe, "-Comment", path.getAbsolutePath());
+		List<String> command = Arrays.asList(command(exif), "-Comment", path.getAbsolutePath());
 		String jc = join(command);
 		logger.trace("{}", jc);
 		return callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
@@ -311,22 +329,22 @@ public class ExifTool implements MediaCte {
 				.orElse(null);
 	}
 
-	public void program(String exifExe, FilePath path, String program) {
-		if (path.notExists() || new FilePath(exifExe).notExists()) {
+	public void program(FilePath path, String program) {
+		if (path.notExists() || exif.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(exifExe, "-Software=\"" + program + "\"", path.getAbsolutePath());
+		List<String> command = Arrays.asList(command(exif), "-Software=\"" + program + "\"", path.getAbsolutePath());
 		String jc = join(command);
 		logger.trace("{}", jc);
 		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
 		path.getParentPath().child(path.getFileNameString() + "_original").deleteIfExists();
 	}
 
-	public String program(String exifExe, FilePath path) {
-		if (path.notExists() || new FilePath(exifExe).notExists()) {
+	public String program(FilePath path) {
+		if (path.notExists() || exif.notExists()) {
 			return null;
 		}
-		List<String> command = Arrays.asList(exifExe, "-Software", path.getAbsolutePath());
+		List<String> command = Arrays.asList(command(exif), "-Software", path.getAbsolutePath());
 		String jc = join(command);
 		logger.trace("{}", jc);
 		return callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
@@ -334,13 +352,13 @@ public class ExifTool implements MediaCte {
 				.orElse(null);
 	}
 
-	public ExifInfo exifInfo(String exifExe, FilePath path) {
-		return exifInfo(exifExe, path, new ExifInfoImpl());
+	public ExifInfo exifInfo(FilePath path) {
+		return exifInfo(path, new ExifInfoImpl());
 	}
 
 	// -X = xml
-	public ExifInfo exifInfo(String exifExe, FilePath path, ExifInfo exifinfo) {
-		if (path.notExists() || new FilePath(exifExe).notExists()) {
+	public ExifInfo exifInfo(FilePath path, ExifInfo exifinfo) {
+		if (path.notExists() || exif.notExists()) {
 			throw new IllegalArgumentException();
 		}
 
@@ -349,7 +367,7 @@ public class ExifTool implements MediaCte {
 		try {
 			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path)
 					|| qtFilter.accept(path)) {
-				List<String> command = Arrays.asList(exifExe, "-q", path.getAbsolutePath());
+				List<String> command = Arrays.asList(command(exif), "-q", path.getAbsolutePath());
 				String jc = join(command);
 				logger.trace("{}", jc);
 
@@ -486,4 +504,9 @@ public class ExifTool implements MediaCte {
 		}
 		return duration;
 	}
+
+	protected String command(FilePath f) {
+		return "\"" + f.getAbsolutePath() + "\"";
+	}
+
 }
