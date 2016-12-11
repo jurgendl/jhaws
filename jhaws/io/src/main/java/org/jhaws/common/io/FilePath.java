@@ -3082,7 +3082,6 @@ public class FilePath implements Path, Externalizable {
 		byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
 		int read;
 		try (ZipOutputStream zout = new ZipOutputStream(newBufferedOutputStream())) {
-			int count = 0;
 			for (FilePath file : files) {
 				if (file.isDirectory()) {
 					continue;
@@ -3095,7 +3094,6 @@ public class FilePath implements Path, Externalizable {
 					fin.close();
 				}
 				zout.closeEntry();
-				count++;
 			}
 			zout.close();
 		}
