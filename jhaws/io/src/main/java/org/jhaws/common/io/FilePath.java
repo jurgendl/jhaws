@@ -300,8 +300,7 @@ public class FilePath implements Path, Externalizable {
 			}
 
 			public ExtensionFilter(List<String> ext) {
-				this();
-				this.ext.addAll(ext);
+				this.ext = ext;
 			}
 
 			public ExtensionFilter(String... ext) {
