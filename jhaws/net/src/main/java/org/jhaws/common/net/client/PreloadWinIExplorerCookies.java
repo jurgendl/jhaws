@@ -11,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Deprecated
-@SuppressWarnings("deprecation")
 public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(PreloadWinIExplorerCookies.class);
 
-	protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
+	protected static final boolean windows = (System.getProperty("os.name") != null)
+			&& System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-2$
 
 	private HashSet<String> domainsLoaded = new HashSet<>();
 
@@ -50,7 +50,8 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 
 	/**
 	 *
-	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+	 *      java.util.Date)
 	 */
 	@Override
 	public void beforeClearExpired(CookieStore store, Date date) {
@@ -115,7 +116,8 @@ public class PreloadWinIExplorerCookies implements CookieStoreInterceptor {
 				cookie.setPath(cpath);
 
 				store.addCookie(cookie);
-				PreloadWinIExplorerCookies.logger.info("loadIExplorerCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
+				PreloadWinIExplorerCookies.logger
+						.info("loadIExplorerCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
 			}
 		} catch (Exception ex) {
 			PreloadWinIExplorerCookies.logger.error(ExceptionUtils.getStackTrace(ex));

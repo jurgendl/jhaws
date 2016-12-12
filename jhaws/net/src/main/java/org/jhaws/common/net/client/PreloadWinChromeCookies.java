@@ -17,11 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Deprecated
-@SuppressWarnings("deprecation")
 public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(PreloadWinChromeCookies.class);
 
-	protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
+	protected static final boolean windows = (System.getProperty("os.name") != null)
+			&& System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-2$
 
 	private static final boolean driver;
 
@@ -77,7 +77,8 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 
 	/**
 	 *
-	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+	 *      java.util.Date)
 	 */
 	@Override
 	public void beforeClearExpired(CookieStore store, Date date) {
@@ -103,11 +104,12 @@ public class PreloadWinChromeCookies implements CookieStoreInterceptor {
 
 			this.domainsLoaded.add(domain);
 
-			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(), "Local Settings/Application Data/Google/Chrome/User Data/Default");
+			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(),
+					"Local Settings/Application Data/Google/Chrome/User Data/Default");
 			IOFile ff3c = new IOFile(ffr, "Cookies");
 			String url = "jdbc:sqlite:/" + ff3c.getAbsolutePath().replace('\\', '/');
-			String query = "select name, value, host_key, path, expires_utc from cookies where host_key like '" + domain + "%' or host_key like '." + domain
-					+ "%' or host_key like 'www." + domain + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
+			String query = "select name, value, host_key, path, expires_utc from cookies where host_key like '" + domain
+					+ "%' or host_key like '." + domain + "%' or host_key like 'www." + domain + "%'"; //$NON-NLS-2$ //$NON-NLS-3$
 			Connection con = DriverManager.getConnection(url, null, null);
 			// con.setReadOnly(true);
 			con.setAutoCommit(false);

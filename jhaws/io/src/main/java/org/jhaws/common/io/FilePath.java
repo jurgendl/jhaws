@@ -249,7 +249,7 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public abstract static class Comparators implements Comparator<FilePath>, Serializable {
+	public static class Comparators implements Comparator<FilePath>, Serializable {
 		private static final long serialVersionUID = 8900331112954086720L;
 
 		public static class LastModifiedTimeComparator extends Comparators {
@@ -268,6 +268,45 @@ public class FilePath implements Path, Externalizable {
 			public int compare(FilePath o1, FilePath o2) {
 				return new CompareToBuilder().append(o1.getFileSize(), o2.getFileSize()).toComparison();
 			}
+		}
+
+		protected Comparators[] comparators;
+
+		protected boolean invers;
+
+		@SafeVarargs
+		public Comparators(boolean invers, Comparators... filters) {
+			this.comparators = filters.length == 0 ? new Comparators[] { this } : filters;
+			this.invers = invers;
+		}
+
+		@SafeVarargs
+		public Comparators(Comparators... filters) {
+			this(false, filters);
+		}
+
+		@Override
+		public int compare(FilePath o1, FilePath o2) {
+			int index = 0;
+			for (Comparators comparator : this.comparators) {
+				index = comparator.compare(o1, o1);
+				if (index != 0) {
+					break;
+				}
+			}
+			return this.invers ? -index : index;
+		}
+
+		public void invers(boolean invers) {
+			this.invers = invers;
+		}
+
+		public void invers() {
+			this.invers = true;
+		}
+
+		public Comparators and(Comparators comparator) {
+			return new Comparators(this, comparator);
 		}
 	}
 
@@ -296,15 +335,15 @@ public class FilePath implements Path, Externalizable {
 			protected List<String> ext;
 
 			public ExtensionFilter() {
-				ext = new ArrayList<>();
+				setExt(null);
 			}
 
 			public ExtensionFilter(List<String> ext) {
-				this.ext = ext;
+				setExt(ext);
 			}
 
 			public ExtensionFilter(String... ext) {
-				this(Arrays.asList(ext));
+				setExt(Arrays.asList(ext));
 			}
 
 			@Override
@@ -318,21 +357,21 @@ public class FilePath implements Path, Externalizable {
 			}
 
 			public void setExt(List<String> ext) {
-				this.ext = ext;
+				this.ext = ext.stream().map(String::toLowerCase).collect(Collectors.toList());
 			}
 
 			public Filters add(String _ext) {
-				this.ext.add(_ext);
+				this.ext.add(_ext.toLowerCase());
 				return this;
 			}
 
 			public Filters remove(String _ext) {
-				this.ext.remove(_ext);
+				this.ext.remove(_ext.toLowerCase());
 				return this;
 			}
 
 			public Filters add(Filters.ExtensionFilter otherFilter) {
-				this.ext.addAll(otherFilter.ext);
+				otherFilter.ext.stream().map(String::toLowerCase).forEach(ext::add);
 				return this;
 			}
 
@@ -352,6 +391,16 @@ public class FilePath implements Path, Externalizable {
 
 			public WebImageFilter() {
 				super("jpg", "jpeg", "png", "gif", "webp");
+			}
+		}
+
+		public static class ImageFilter extends Filters.ExtensionFilter {
+			private static final long serialVersionUID = -7187067174649487315L;
+
+			public ImageFilter() {
+				super("jpg", "jpeg", "bmp", "tiff", "tif", "pix", "png", "gif", "jp2", "tga", "pcx", "pnm", "ppm",
+						"pbm", "pgm", "ras", "iff", "raw", "jpe", "wmf", "svg", "jpm", "emf", "rla", "jif", "dpx",
+						"dcx", "pic", "ico");
 			}
 		}
 

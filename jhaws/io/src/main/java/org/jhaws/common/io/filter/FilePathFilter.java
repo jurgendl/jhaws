@@ -11,7 +11,6 @@ import java.io.File;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class FilePathFilter extends RegexFileFilter {
 	/**
 	 * Creates a new FilePathFilter object.

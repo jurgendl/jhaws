@@ -4,7 +4,6 @@ package org.jhaws.common.io;
  * IOCopyListener
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public interface IOCopyListener {
 	/**
 	 * copyFailed

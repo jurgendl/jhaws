@@ -21,11 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Deprecated
-@SuppressWarnings("deprecation")
 public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(PreloadWinFirefoxCookies.class);
 
-	protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
+	protected static final boolean windows = (System.getProperty("os.name") != null)
+			&& System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-2$
 
 	private static final boolean driver;
 
@@ -81,7 +81,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 
 	/**
 	 *
-	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore, java.util.Date)
+	 * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
+	 *      java.util.Date)
 	 */
 	@Override
 	public void beforeClearExpired(CookieStore store, Date date) {
@@ -108,7 +109,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 			this.domainsLoaded.add(domain);
 
 			final Set<Cookie> cookies = new HashSet<>();
-			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(), "Application Data/Mozilla/Firefox");
+			IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(),
+					"Application Data/Mozilla/Firefox");
 			IOFile ini = new IOFile(ffr, "profiles.ini");
 			PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - IOFile ini=" + ini); //$NON-NLS-1$
 
@@ -123,7 +125,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 				try (BufferedReader ffcr = new BufferedReader(new InputStreamReader(new FileInputStream(ff2c)))) {
 
 					while ((line = ffcr.readLine()) != null) {
-						if (line.startsWith(domain) || line.startsWith("." + domain) || line.startsWith("www." + domain)) {
+						if (line.startsWith(domain) || line.startsWith("." + domain)
+								|| line.startsWith("www." + domain)) {
 							String[] cookie_info_part = line.split("\t");
 							String ckey = cookie_info_part[5];
 							String cvalue = cookie_info_part[6];
@@ -139,7 +142,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 							cookie.setExpiryDate(expires);
 
 							cookies.add(cookie);
-							PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
+							PreloadWinFirefoxCookies.logger
+									.info("loadFirefoxCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
 						}
 					}
 
@@ -153,7 +157,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 					String url = "jdbc:sqlite:/" + ff3c.getAbsolutePath().replace('\\', '/');
 					PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - String url=" + url);
 
-					String query = "select name, value, host, path, expiry from moz_cookies where host like '" + domain + "%' or host like '." + domain + "%' or host like 'www." //$NON-NLS-3$
+					String query = "select name, value, host, path, expiry from moz_cookies where host like '" + domain
+							+ "%' or host like '." + domain + "%' or host like 'www." //$NON-NLS-2$
 							+ domain + "%'"; //$NON-NLS-1$
 					PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - String query=" + query); //$NON-NLS-1$
 
@@ -178,7 +183,8 @@ public class PreloadWinFirefoxCookies implements CookieStoreInterceptor {
 						cookie.setExpiryDate(expires);
 
 						cookies.add(cookie);
-						PreloadWinFirefoxCookies.logger.info("loadFirefoxCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
+						PreloadWinFirefoxCookies.logger
+								.info("loadFirefoxCookiesWin(String) - BasicClientCookie cookie=" + cookie); //$NON-NLS-1$
 					}
 				} catch (Exception e) {
 					throw new RuntimeException(e);

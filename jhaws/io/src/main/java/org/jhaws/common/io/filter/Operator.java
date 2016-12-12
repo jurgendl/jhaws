@@ -11,7 +11,6 @@ import java.io.File;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public abstract class Operator {
 	/**
 	 * filter1 AND filter2 AND filter3 AND ...
@@ -49,7 +48,8 @@ public abstract class Operator {
 	 *
 	 * @return AbstractFileFilter
 	 */
-	public static final AbstractFileFilter and(String description, AbstractFileFilter filter1, AbstractFileFilter filter2) {
+	public static final AbstractFileFilter and(String description, AbstractFileFilter filter1,
+			AbstractFileFilter filter2) {
 		return and(description, new AbstractFileFilter[] { filter1, filter2 });
 	}
 
@@ -65,7 +65,8 @@ public abstract class Operator {
 	 *
 	 * @return AbstractFileFilter
 	 */
-	public static final AbstractFileFilter or(String description, AbstractFileFilter filter1, AbstractFileFilter filter2) {
+	public static final AbstractFileFilter or(String description, AbstractFileFilter filter1,
+			AbstractFileFilter filter2) {
 		return or(description, new AbstractFileFilter[] { filter1, filter2 });
 	}
 

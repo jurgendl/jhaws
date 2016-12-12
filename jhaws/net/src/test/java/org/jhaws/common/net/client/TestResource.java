@@ -41,6 +41,7 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 @Path(TestResource.PATH)
+@SuppressWarnings("unused")
 public class TestResource /* extends RestResource */ {
 	public static final String GET_MATRIXBEAN = "getmatrixbean";
 
@@ -172,7 +173,8 @@ public class TestResource /* extends RestResource */ {
 					if (MediaType.APPLICATION_OCTET_STREAM_TYPE.getSubtype().equals(p.getMediaType().getSubtype())) {
 						String fileName = getFileName(p.getHeaders());
 						list.add(fileName);
-						content.put(fileName, p.getBody(new javax.ws.rs.core.GenericType<byte[]>() {}));
+						content.put(fileName, p.getBody(new javax.ws.rs.core.GenericType<byte[]>() {
+						}));
 					} else {
 						list.add(p.getBodyAsString());
 					}
@@ -185,7 +187,8 @@ public class TestResource /* extends RestResource */ {
 	}
 
 	/**
-	 * header sample { Content-Type=[image/png], Content-Disposition=[form-data; name="file"; filename="filename.extension"] }
+	 * header sample { Content-Type=[image/png], Content-Disposition=[form-data;
+	 * name="file"; filename="filename.extension"] }
 	 **/
 	// get uploaded filename, is there a easy way in RESTEasy?
 	private String getFileName(MultivaluedMap<String, String> header) {

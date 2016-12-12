@@ -9,7 +9,6 @@ package org.jhaws.common.io.filter;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class MediaFileFilter extends Operator.OrFileFilter {
 	/**
 	 * Creates a new MediaFileFilter object.

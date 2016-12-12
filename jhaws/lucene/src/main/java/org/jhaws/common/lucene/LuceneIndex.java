@@ -699,7 +699,6 @@ public class LuceneIndex {
 
 	protected List<String> tokenizePhrase(String phrase) throws IOException {
 		List<String> tokens = new ArrayList<String>();
-		@SuppressWarnings("resource")
 		TokenStream stream = getSearchAnalyzer().tokenStream("someField", new StringReader(phrase));
 		stream.reset();
 		while (stream.incrementToken())

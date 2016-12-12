@@ -6,7 +6,8 @@ import java.io.FilenameFilter;
 
 /**
  * General abstract file filter.<br>
- * Extends, implements javax.swing.filechooser.FileFilter, java.io.FileFilter and java.io.FilenameFilter. Supports chaining with AND, OR, NOT.<br>
+ * Extends, implements javax.swing.filechooser.FileFilter, java.io.FileFilter
+ * and java.io.FilenameFilter. Supports chaining with AND, OR, NOT.<br>
  * <br>
  * <br>
  * <b><u>version history</u></b><br>
@@ -23,8 +24,8 @@ import java.io.FilenameFilter;
  * @see javax.swing.filechooser.FileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
-public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFilter implements FileFilter, FilenameFilter {
+public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFilter
+		implements FileFilter, FilenameFilter {
 	/**
 	 * na
 	 *

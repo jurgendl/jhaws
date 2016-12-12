@@ -12,7 +12,6 @@ import java.util.Date;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class FileDateFilter extends AbstractFileFilter {
 	/** date */
 	private Date date;

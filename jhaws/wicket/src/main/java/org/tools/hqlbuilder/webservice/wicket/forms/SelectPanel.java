@@ -19,7 +19,8 @@ import org.apache.wicket.model.util.ListModel;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.components.DefaultOptionRenderer;
 
-public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S extends AbstractSelectSettings<S>> extends DefaultFormRowPanel<T, C, S> {
+public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S extends AbstractSelectSettings<S>>
+		extends DefaultFormRowPanel<T, C, S> {
 	private static final long serialVersionUID = -6781073146798103698L;
 
 	public static final String OPTIONS_CONTAINER_ID = "optionsContainer";
@@ -35,14 +36,15 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
 	protected IOptionRenderer<T> renderer;
 
 	@SuppressWarnings("unchecked")
-	public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<List<T>> choices) {
+	public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings,
+			IOptionRenderer<T> renderer, IModel<List<T>> choices) {
 		super(model, propertyPath, formSettings, componentSettings);
 		this.choices = new IModel[] { choices };
 		this.renderer = fallback(renderer);
 	}
 
-	public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<List<T>>[] choices,
-			IModel<String>[] groupLabels) {
+	public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings,
+			IOptionRenderer<T> renderer, IModel<List<T>>[] choices, IModel<String>[] groupLabels) {
 		super(model, propertyPath, formSettings, componentSettings);
 		this.choices = choices;
 		this.renderer = fallback(renderer);
@@ -74,8 +76,8 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
 			WebMarkupContainer optgroupWebcontainer = new WebMarkupContainer(optgroupRepeater.newChildId());
 			optgroupWebcontainer.setRenderBodyOnly(true);
 			optgroupRepeater.add(optgroupWebcontainer);
-			@SuppressWarnings("null")
-			SelectOptions<T> options = createSelectOptions(OPTIONS_CONTAINER_ID, new ListModel<>(Collections.singletonList((T) null)));
+			SelectOptions<T> options = createSelectOptions(OPTIONS_CONTAINER_ID,
+					new ListModel<>(Collections.singletonList((T) null)));
 			optgroupWebcontainer.add(options);
 		}
 
@@ -119,7 +121,8 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
 		return options;
 	}
 
-	protected SelectOption<T> createSelectOption(final String text, final IModel<? extends T> optModel, final String textF) {
+	protected SelectOption<T> createSelectOption(final String text, final IModel<? extends T> optModel,
+			final String textF) {
 		SelectOption<T> selectOption = new SelectOption<T>(OPTION_ID, optModel) {
 			private static final long serialVersionUID = 6450521870585988265L;
 

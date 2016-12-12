@@ -5,11 +5,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * checks if a filename succeeds or fails with a regular expression, this expression can contain special strings like #-number# , where 'number' is a signed integer, this string
- * will be replaced by a signed integer with the value of the lenght of the filename String minus the value of 'number'<br>
+ * checks if a filename succeeds or fails with a regular expression, this
+ * expression can contain special strings like #-number# , where 'number' is a
+ * signed integer, this string will be replaced by a signed integer with the
+ * value of the lenght of the filename String minus the value of 'number'<br>
  * <br>
  * for example: [^$]{#-6#}.class<br>
- * will let filenames pass that end with .class and don't contain $ in the filename and pathname<br>
+ * will let filenames pass that end with .class and don't contain $ in the
+ * filename and pathname<br>
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
@@ -17,7 +20,6 @@ import java.util.regex.Pattern;
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
-@SuppressWarnings("deprecation")
 public class RegexFileFilter extends AbstractFileFilter {
 	/** case (in)sensitive? */
 	private Case caseSensitive;
@@ -109,7 +111,8 @@ public class RegexFileFilter extends AbstractFileFilter {
 	}
 
 	/**
-	 * used by function {@link #replaceSpecialBlocksInRegex(String, int)} for each number
+	 * used by function {@link #replaceSpecialBlocksInRegex(String, int)} for
+	 * each number
 	 *
 	 * @param _regex
 	 *            : String : regex
@@ -135,7 +138,8 @@ public class RegexFileFilter extends AbstractFileFilter {
 	}
 
 	/**
-	 * replaces patters like <i>#-length#</i> by <i>length_of_string - length</i>
+	 * replaces patters like <i>#-length#</i> by <i>length_of_string -
+	 * length</i>
 	 *
 	 * @param _regex
 	 *            : String : regex
