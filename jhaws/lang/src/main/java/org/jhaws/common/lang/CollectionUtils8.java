@@ -1659,4 +1659,8 @@ public interface CollectionUtils8 {
 		IntegerValue index = new IntegerValue(-1);
 		return stream.map(t -> new KeyValue<Integer, T>(index.add().get(), t));
 	}
+
+	public static <T> Map<T, Long> countBy(Stream<T> stream) {
+		return stream.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+	}
 }
