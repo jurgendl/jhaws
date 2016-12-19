@@ -54,6 +54,22 @@ public class FfmpegTool implements MediaCte {
 
 	protected List<String> hwAccel = null;
 
+	public FfmpegTool() {
+		super();
+	}
+
+	public FfmpegTool(FilePath root) {
+		if (root.child("ffmpeg.exe").exists()) {
+			ffmpeg = root.child("ffmpeg.exe");
+			ffprobe = root.child("ffprobe.exe");
+		} else if (root.child("bin").child("ffmpeg.exe").exists()) {
+			ffmpeg = root.child("bin").child("ffmpeg.exe");
+			ffprobe = root.child("bin").child("ffprobe.exe");
+		} else {
+
+		}
+	}
+
 	/** dxva2, qsv, nvenc */
 	public synchronized List<String> getHwAccel() {
 		if (hwAccel == null) {
@@ -61,38 +77,74 @@ public class FfmpegTool implements MediaCte {
 			Lines lines = silentcall(command);
 			hwAccel = lines.lines();
 			hwAccel.remove("Hardware acceleration methods:");
-
-			// ffmpeg -i input -c:v h264_nvenc -profile high444p -pixel_format
-			// yuv444p -preset default output.mp4
-			FilePath input = FilePath.createDefaultTempFile("mp4");
-			input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("ffmpeg/test.mp4"));
-			FilePath output = FilePath.createDefaultTempFile("mp4");
-			command = new ArrayList<>();
-			command.add(command(getFfmpeg()));
-			command.add("-hide_banner");
-			command.add("-y");
-			command.add("-i");
-			command.add(command(input));
-			command.add("-c:v");
-			command.add("h264_nvenc");
-			command.add("-profile");
-			command.add("high444p");
-			command.add("-pixel_format");
-			command.add("yuv444p");
-			command.add("-preset");
-			command.add("default");
-			command.add(command(output));
-			logger.info("{}", join(command));
-			try {
-				lines = silentcall(command);
-				if (!hwAccel.contains("nvenc"))
-					hwAccel.add("nvenc");
-				// if (!hwAccel.contains("nvdec"))
-				// hwAccel.add("nvdec");
-			} catch (Exception ex) {
-				if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load nvcuda.dll"))) {
-					hwAccel.remove("nvenc");
-					hwAccel.remove("nvdec");
+			{
+				// ffmpeg -i input -c:v h264_nvenc -profile high444p
+				// -pixel_format
+				// yuv444p -preset default output.mp4
+				FilePath input = FilePath.createDefaultTempFile("mp4");
+				input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("ffmpeg/test.mp4"));
+				FilePath output = FilePath.createDefaultTempFile("mp4");
+				command = new ArrayList<>();
+				command.add(command(getFfmpeg()));
+				command.add("-hide_banner");
+				command.add("-y");
+				command.add("-i");
+				command.add(command(input));
+				command.add("-c:v");
+				command.add("h264_nvenc");
+				command.add("-profile");
+				command.add("high444p");
+				command.add("-pixel_format");
+				command.add("yuv444p");
+				command.add("-preset");
+				command.add("default");
+				command.add(command(output));
+				logger.info("{}", join(command));
+				try {
+					lines = silentcall(command);
+					if (!hwAccel.contains("nvenc")) {
+						hwAccel.add("nvenc");
+					}
+					// if (!hwAccel.contains("nvdec"))
+					// hwAccel.add("nvdec");
+				} catch (Exception ex) {
+					// if (lines.lines().stream().anyMatch(s ->
+					// s.contains("Cannot load nvcuda.dll"))) {
+					// hwAccel.remove("nvenc");
+					// hwAccel.remove("nvdec");
+					// }
+				}
+			}
+			if (hwAccel.contains("cuvid")) {
+				// ffmpeg -i input -c:v h264_nvenc -profile high444p
+				// -pixel_format
+				// yuv444p -preset default output.mp4
+				FilePath input = FilePath.createDefaultTempFile("mp4");
+				input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("ffmpeg/test.mp4"));
+				FilePath output = FilePath.createDefaultTempFile("mp4");
+				command = new ArrayList<>();
+				command.add(command(getFfmpeg()));
+				command.add("-hide_banner");
+				command.add("-y");
+				command.add("-i");
+				command.add(command(input));
+				command.add("-c:v");
+				command.add("h264_cuvid");
+				command.add("-profile");
+				command.add("high444p");
+				command.add("-pixel_format");
+				command.add("yuv444p");
+				command.add("-preset");
+				command.add("default");
+				command.add(command(output));
+				logger.info("{}", join(command));
+				try {
+					lines = silentcall(command);
+					if (!hwAccel.contains("cuvid")) {
+						hwAccel.add("cuvid");
+					}
+				} catch (Exception ex) {
+					hwAccel.remove("cuvid");
 				}
 			}
 		}
@@ -348,27 +400,9 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	@Pooled
-	public void remux(Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output) {
-		RemuxCfg cfg = new RemuxCfg();
-		cfg.input = input;
-		cfg.output = output;
-		cfg.info = info(input);
-		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
-		StreamType videostreaminfo = video(cfg.info);
-		StreamType audiostreaminfo = audio(cfg.info);
-		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000)
-				: videostreaminfo.getBitRate() / 1000;
-		cfg.vt = videostreaminfo.getCodecName();
-		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
-				: audiostreaminfo.getBitRate() / 1000;
-		cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
-		cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
-		cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
-		cfg.acopy = cfg.at != null && (cfg.at.contains(MP3) || cfg.at.contains(AAC)) && !cfg.at.contains(MONO);
-		cfg.fixes.fixNotHighProfile = true;
-		cfg.fixes.fixAudioRate = false;
-		cfg.fixes.fixAudioStrict = false;
-		cfg.fixes.fixDiv2 = false;
+	public RemuxCfg remux(Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output,
+			Consumer<RemuxCfg> cfgEdit) {
+		RemuxCfg cfg = config(input, output, cfgEdit);
 		RuntimeException exception = null;
 		List<String> command = command(cfg);
 		Lines lines = new Lines();
@@ -393,6 +427,34 @@ public class FfmpegTool implements MediaCte {
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
 		}
+		return cfg;
+	}
+
+	private RemuxCfg config(FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+		RemuxCfg cfg = new RemuxCfg();
+		cfg.input = input;
+		cfg.output = output;
+		cfg.info = info(input);
+		cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
+		StreamType videostreaminfo = video(cfg.info);
+		StreamType audiostreaminfo = audio(cfg.info);
+		cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000)
+				: videostreaminfo.getBitRate() / 1000;
+		cfg.vt = videostreaminfo.getCodecName();
+		cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
+				: audiostreaminfo.getBitRate() / 1000;
+		cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
+		cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
+		cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
+		cfg.acopy = cfg.at != null && (cfg.at.contains(MP3) || cfg.at.contains(AAC)) && !cfg.at.contains(MONO);
+		cfg.fixes.fixNotHighProfile = true;
+		cfg.fixes.fixAudioRate = false;
+		cfg.fixes.fixAudioStrict = false;
+		cfg.fixes.fixDiv2 = false;
+		if (cfgEdit != null) {
+			cfgEdit.accept(cfg);
+		}
+		return cfg;
 	}
 
 	protected void handle(RemuxCfg cfg, Lines lines, BooleanValue needsFixing, BooleanValue resetException) {
@@ -448,6 +510,7 @@ public class FfmpegTool implements MediaCte {
 		int[] wh;
 		FilePath output;
 		RemuxFixes fixes = new RemuxFixes();
+		List<List<String>> commands = new ArrayList<>();
 
 		public int getVr() {
 			return this.vr;
@@ -456,11 +519,33 @@ public class FfmpegTool implements MediaCte {
 		public int getTvr() {
 			return this.tvr;
 		}
+
+		@Override
+		public String toString() {
+			StringBuilder builder = new StringBuilder();
+			builder.append("RemuxCfg [");
+			if (this.at != null) {
+				builder.append("at=").append(this.at).append(", ");
+			}
+			builder.append("ar=").append(this.ar).append(", ");
+			if (this.vt != null) {
+				builder.append("vt=").append(this.vt).append(", ");
+			}
+			builder.append("vr=").append(this.vr).append(", tvr=").append(this.tvr).append(", hq=").append(this.hq)
+					.append(", ");
+			builder.append("vcopy=").append(this.vcopy).append(", acopy=").append(this.acopy).append(", ");
+			if (this.wh != null) {
+				builder.append("wh=").append(Arrays.toString(this.wh)).append(", ");
+			}
+			builder.append("]");
+			return builder.toString();
+		}
 	}
 
 	protected List<String> command(RemuxCfg cfg) {
 		List<String> accel = getHwAccel();
 		List<String> command = new ArrayList<>();
+		cfg.commands.add(command);
 		{
 			command.add(command(getFfmpeg()));
 			command.add("-hide_banner");
@@ -515,6 +600,8 @@ public class FfmpegTool implements MediaCte {
 				// No NVENC capable devices found
 				// -profile high444p -pixel_format yuv444p
 				// -pix_fmt nv12
+			} else if (accel.contains("cuvid")) {
+				command.add("h264_cuvid");
 			} else if (accel.contains("qsv")) {
 				// h264_qsv (intel onboard vid HW accel)
 				command.add("h264_qsv");
