@@ -400,9 +400,9 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	@Pooled
-	public RemuxCfg remux(Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output,
-			Consumer<RemuxCfg> cfgEdit) {
-		RemuxCfg cfg = config(input, output, cfgEdit);
+	public RemuxCfg remux(RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener, FilePath input,
+			FilePath output, Consumer<RemuxCfg> cfgEdit) {
+		RemuxCfg cfg = config(defaults, input, output, cfgEdit);
 		RuntimeException exception = null;
 		List<String> command = command(cfg);
 		Lines lines = new Lines();
@@ -430,8 +430,10 @@ public class FfmpegTool implements MediaCte {
 		return cfg;
 	}
 
-	private RemuxCfg config(FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+	private RemuxCfg config(RemuxDefaultsCfg defaults, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
 		RemuxCfg cfg = new RemuxCfg();
+		if (defaults != null)
+			cfg.defaults = defaults;
 		cfg.input = input;
 		cfg.output = output;
 		cfg.info = info(input);
@@ -495,6 +497,20 @@ public class FfmpegTool implements MediaCte {
 		boolean fixDiv2;
 	}
 
+	public static class RemuxDefaultsCfg {
+		// HQ 18-23-28 LQ
+		int cfrHQ = 20;
+		int cfrLQ = 23;
+		int vidRateHQ = 3000;
+		int vidRateLQ = 1000;
+		String presetHQ = "slow";
+		String presetLQ = "medium";
+		List<String> tune = Arrays.asList("film", "zerolatency");
+		int qmin = 10;
+		int qmax = 51;
+		int qdiff = 4;
+	}
+
 	public static class RemuxCfg {
 		String at;
 		int ar;
@@ -511,6 +527,7 @@ public class FfmpegTool implements MediaCte {
 		FilePath output;
 		RemuxFixes fixes = new RemuxFixes();
 		List<List<String>> commands = new ArrayList<>();
+		RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
 
 		public int getVr() {
 			return this.vr;
@@ -537,6 +554,7 @@ public class FfmpegTool implements MediaCte {
 			if (this.wh != null) {
 				builder.append("wh=").append(Arrays.toString(this.wh)).append(", ");
 			}
+			builder.append("defaults=").append(this.defaults).append(", ");
 			builder.append("]");
 			return builder.toString();
 		}
@@ -584,10 +602,10 @@ public class FfmpegTool implements MediaCte {
 			command.add("-i");
 			command.add(command(cfg.input));
 		}
-		{
+		cfg.defaults.tune.forEach(tune -> {
 			command.add("-tune");
-			command.add("film");
-		}
+			command.add(tune);
+		});
 		if (cfg.vcopy) {
 			command.add("-vcodec");
 			command.add("copy");
@@ -622,10 +640,6 @@ public class FfmpegTool implements MediaCte {
 			// command.add(String.valueOf(Runtime.getRuntime().availableProcessors()
 			// / 2));
 		}
-		{
-			command.add("-tune");
-			command.add("zerolatency");
-		}
 		if (!cfg.vcopy && cfg.fixes.fixNotHighProfile) {
 			command.add("-profile:v");
 			command.add("high");
@@ -634,9 +648,10 @@ public class FfmpegTool implements MediaCte {
 		}
 		if (!cfg.vcopy) {
 			command.add("-preset");
-			command.add(cfg.hq ? "slow" : "medium");
+			command.add(cfg.hq ? cfg.defaults.presetHQ : cfg.defaults.presetLQ);
 			command.add("-crf");
-			command.add(cfg.hq ? "20" : "23"); // HQ 18-23-28 LQ
+			// HQ 18-23-28 LQ
+			command.add("" + (cfg.hq ? cfg.defaults.cfrHQ : cfg.defaults.cfrLQ));
 			command.add("-b:v");
 			// ...What_bitrate_should_I_use...
 			int newVidRate = -1;
@@ -659,19 +674,19 @@ public class FfmpegTool implements MediaCte {
 					newVidRate = cfg.vr;
 				} else {
 					if (cfg.hq) {
-						newVidRate = 3000;
+						newVidRate = cfg.defaults.vidRateHQ;
 					} else {
-						newVidRate = 1000;
+						newVidRate = cfg.defaults.vidRateLQ;
 					}
 				}
 			}
 			command.add(newVidRate + "k");
 			command.add("-qmin");
-			command.add("10");
+			command.add(String.valueOf(cfg.defaults.qmin));
 			command.add("-qmax");
-			command.add("51");
+			command.add(String.valueOf(cfg.defaults.qmax));
 			command.add("-qdiff");
-			command.add("4");
+			command.add(String.valueOf(cfg.defaults.qdiff));
 		}
 		{
 			command.add("-movflags");
