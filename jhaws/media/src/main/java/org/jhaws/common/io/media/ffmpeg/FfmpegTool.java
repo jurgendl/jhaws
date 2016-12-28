@@ -495,6 +495,38 @@ public class FfmpegTool implements MediaCte {
 		boolean fixAudioRate;
 		boolean fixAudioStrict;
 		boolean fixDiv2;
+
+		public boolean isFixNotHighProfile() {
+			return this.fixNotHighProfile;
+		}
+
+		public void setFixNotHighProfile(boolean fixNotHighProfile) {
+			this.fixNotHighProfile = fixNotHighProfile;
+		}
+
+		public boolean isFixAudioRate() {
+			return this.fixAudioRate;
+		}
+
+		public void setFixAudioRate(boolean fixAudioRate) {
+			this.fixAudioRate = fixAudioRate;
+		}
+
+		public boolean isFixAudioStrict() {
+			return this.fixAudioStrict;
+		}
+
+		public void setFixAudioStrict(boolean fixAudioStrict) {
+			this.fixAudioStrict = fixAudioStrict;
+		}
+
+		public boolean isFixDiv2() {
+			return this.fixDiv2;
+		}
+
+		public void setFixDiv2(boolean fixDiv2) {
+			this.fixDiv2 = fixDiv2;
+		}
 	}
 
 	public static class RemuxDefaultsCfg {
@@ -509,6 +541,86 @@ public class FfmpegTool implements MediaCte {
 		int qmin = 10;
 		int qmax = 51;
 		int qdiff = 4;
+
+		public int getCfrHQ() {
+			return this.cfrHQ;
+		}
+
+		public void setCfrHQ(int cfrHQ) {
+			this.cfrHQ = cfrHQ;
+		}
+
+		public int getCfrLQ() {
+			return this.cfrLQ;
+		}
+
+		public void setCfrLQ(int cfrLQ) {
+			this.cfrLQ = cfrLQ;
+		}
+
+		public int getVidRateHQ() {
+			return this.vidRateHQ;
+		}
+
+		public void setVidRateHQ(int vidRateHQ) {
+			this.vidRateHQ = vidRateHQ;
+		}
+
+		public int getVidRateLQ() {
+			return this.vidRateLQ;
+		}
+
+		public void setVidRateLQ(int vidRateLQ) {
+			this.vidRateLQ = vidRateLQ;
+		}
+
+		public String getPresetHQ() {
+			return this.presetHQ;
+		}
+
+		public void setPresetHQ(String presetHQ) {
+			this.presetHQ = presetHQ;
+		}
+
+		public String getPresetLQ() {
+			return this.presetLQ;
+		}
+
+		public void setPresetLQ(String presetLQ) {
+			this.presetLQ = presetLQ;
+		}
+
+		public List<String> getTune() {
+			return this.tune;
+		}
+
+		public void setTune(List<String> tune) {
+			this.tune = tune;
+		}
+
+		public int getQmin() {
+			return this.qmin;
+		}
+
+		public void setQmin(int qmin) {
+			this.qmin = qmin;
+		}
+
+		public int getQmax() {
+			return this.qmax;
+		}
+
+		public void setQmax(int qmax) {
+			this.qmax = qmax;
+		}
+
+		public int getQdiff() {
+			return this.qdiff;
+		}
+
+		public void setQdiff(int qdiff) {
+			this.qdiff = qdiff;
+		}
 	}
 
 	public static class RemuxCfg {
@@ -557,6 +669,126 @@ public class FfmpegTool implements MediaCte {
 			builder.append("defaults=").append(this.defaults).append(", ");
 			builder.append("]");
 			return builder.toString();
+		}
+
+		public String getAt() {
+			return this.at;
+		}
+
+		public void setAt(String at) {
+			this.at = at;
+		}
+
+		public int getAr() {
+			return this.ar;
+		}
+
+		public void setAr(int ar) {
+			this.ar = ar;
+		}
+
+		public String getVt() {
+			return this.vt;
+		}
+
+		public void setVt(String vt) {
+			this.vt = vt;
+		}
+
+		public boolean isHq() {
+			return this.hq;
+		}
+
+		public void setHq(boolean hq) {
+			this.hq = hq;
+		}
+
+		public FfprobeType getInfo() {
+			return this.info;
+		}
+
+		public void setInfo(FfprobeType info) {
+			this.info = info;
+		}
+
+		public FilePath getParentDir() {
+			return this.parentDir;
+		}
+
+		public void setParentDir(FilePath parentDir) {
+			this.parentDir = parentDir;
+		}
+
+		public FilePath getInput() {
+			return this.input;
+		}
+
+		public void setInput(FilePath input) {
+			this.input = input;
+		}
+
+		public boolean isVcopy() {
+			return this.vcopy;
+		}
+
+		public void setVcopy(boolean vcopy) {
+			this.vcopy = vcopy;
+		}
+
+		public boolean isAcopy() {
+			return this.acopy;
+		}
+
+		public void setAcopy(boolean acopy) {
+			this.acopy = acopy;
+		}
+
+		public int[] getWh() {
+			return this.wh;
+		}
+
+		public void setWh(int[] wh) {
+			this.wh = wh;
+		}
+
+		public FilePath getOutput() {
+			return this.output;
+		}
+
+		public void setOutput(FilePath output) {
+			this.output = output;
+		}
+
+		public RemuxFixes getFixes() {
+			return this.fixes;
+		}
+
+		public void setFixes(RemuxFixes fixes) {
+			this.fixes = fixes;
+		}
+
+		public List<List<String>> getCommands() {
+			return this.commands;
+		}
+
+		public void setCommands(List<List<String>> commands) {
+			this.commands = commands;
+		}
+
+		public RemuxDefaultsCfg getDefaults() {
+			return this.defaults;
+		}
+
+		public void setDefaults(RemuxDefaultsCfg defaults) {
+			this.defaults = defaults;
+		}
+
+		public void setVr(int vr) {
+			this.vr = vr;
+		}
+
+		public void setTvr(int tvr) {
+			this.tvr = tvr;
 		}
 	}
 
