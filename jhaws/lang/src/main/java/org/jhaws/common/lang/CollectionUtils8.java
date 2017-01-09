@@ -1120,6 +1120,9 @@ public interface CollectionUtils8 {
 	}
 
 	/**
+	 * !!!!!!!!!!! terminates source stream !!!!!!!!!!! <br>
+	 * !!!!!!!!!!! cannot be used on endless streams !!!!!!!!!!!
+	 * 
 	 * stackoverflow.com/questions/24010109/java-8-stream-reverse-order
 	 */
 	@SuppressWarnings("unchecked")
