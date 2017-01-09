@@ -569,14 +569,19 @@ public interface CollectionUtils8 {
 	}
 
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream) {
-		return map(stream, CollectionUtils8.<K, V>newMap());
+		return map(stream, CollectionUtils8.<K, V>newLinkedMap());
 	}
 
 	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
+		BinaryOperator<V> keepLast = CollectionUtils8.<V>keepLast();
+		return map(stream, mapSupplier, keepLast);
+	}
+
+	public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier,
+			BinaryOperator<V> choice) {
 		Function<Entry<K, V>, K> keyMapper = CollectionUtils8.<K, V>keyMapper();
 		Function<Entry<K, V>, V> valueMapper = CollectionUtils8.<K, V>valueMapper();
-		BinaryOperator<V> rejectDuplicateKeys = CollectionUtils8.<V>rejectDuplicateKeys();
-		Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, rejectDuplicateKeys,
+		Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, choice,
 				mapSupplier);
 		Map<K, V> map = stream.collect(c);
 		return map;
@@ -1172,6 +1177,12 @@ public interface CollectionUtils8 {
 	@SafeVarargs
 	public static <K, V> Stream<Entry<K, V>> streamMaps(Map<K, V>... maps) {
 		return Stream.of(maps).map(Map::entrySet).flatMap(Collection::stream);
+	}
+
+	@SafeVarargs
+	public static <K, V> Stream<Entry<K, V>> streamMapsUnique(Map<K, V>... maps) {
+		return stream(
+				streamMaps(maps).collect(Collectors.toMap(Entry::getKey, Entry::getValue, keepLast(), newLinkedMap())));
 	}
 
 	public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper,
