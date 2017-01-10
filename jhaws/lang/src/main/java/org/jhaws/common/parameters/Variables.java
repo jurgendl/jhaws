@@ -42,8 +42,10 @@ public class Variables<T> {
 
 	protected void init(Class<T> c) {
 		type = c;
-		vars = Arrays.stream(c.getDeclaredFields()).filter(field -> field.getDeclaredAnnotation(Parameter.class) != null)
-				.map(field -> new Variable<>(field, field.getDeclaredAnnotation(Parameter.class))).collect(Collectors.toList());
+		vars = Arrays.stream(c.getDeclaredFields())
+				.filter(field -> field.getDeclaredAnnotation(Parameter.class) != null)
+				.map(field -> new Variable<>(field, field.getDeclaredAnnotation(Parameter.class)))
+				.collect(Collectors.toList());
 	}
 
 	public Variables<T> parameters(String... args) {
@@ -52,7 +54,8 @@ public class Variables<T> {
 			Queue<String> queue = Arrays.stream(args).collect(Collectors.toCollection(LinkedList::new));
 			Variable<?> currentVariable = null;
 			while (!queue.isEmpty()) {
-				String value = queue.remove();
+				String q = queue.remove();
+				String value = q.contains("=") ? q.substring(0, q.indexOf("=")) : q;
 				Variable<?> variable = vars.stream().filter(var -> var.name(value)).findFirst().orElse(null);
 				if (variable != null) {
 					variable.found();
@@ -61,6 +64,9 @@ public class Variables<T> {
 					if (currentVariable == null)
 						throw new PVException("parameter not processed: " + value);
 					currentVariable.add(value);
+				}
+				if (q.contains("=")) {
+					currentVariable.add(q.substring(1 + q.indexOf("=")));
 				}
 			}
 		} catch (PVException ex) {
@@ -77,9 +83,11 @@ public class Variables<T> {
 
 	public Variables<T> log() {
 		if (parameters != null)
-			IntStream.range(0, parameters.length).mapToObj(i -> (i + 1) + ": " + parameters[i]).forEach(System.out::println);
+			IntStream.range(0, parameters.length).mapToObj(i -> (i + 1) + ": " + parameters[i])
+					.forEach(System.out::println);
 		if (vars != null)
-			IntStream.range(0, vars.size()).mapToObj(i -> "parameter " + (i + 1) + ": " + vars.get(i)).forEach(System.out::println);
+			IntStream.range(0, vars.size()).mapToObj(i -> "parameter " + (i + 1) + ": " + vars.get(i))
+					.forEach(System.out::println);
 		return this;
 	}
 
@@ -118,7 +126,8 @@ public class Variables<T> {
 	@SuppressWarnings("unchecked")
 	public static <T> Variables<T> loadConfig(Class<T> type, File file) {
 		try (FileInputStream in = new FileInputStream(file)) {
-			Variables<T> vars = (Variables<T>) (JAXBContext.newInstance(Variables.class, type).createUnmarshaller().unmarshal(in));
+			Variables<T> vars = (Variables<T>) (JAXBContext.newInstance(Variables.class, type).createUnmarshaller()
+					.unmarshal(in));
 			vars.init(type);
 			return vars;
 		} catch (JAXBException | IOException ex) {
