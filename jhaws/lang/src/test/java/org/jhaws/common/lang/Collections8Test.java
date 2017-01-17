@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -225,5 +226,18 @@ public class Collections8Test {
 	@Test
 	public void index() {
 		CollectionUtils8.index(IntStream.range(0, 26).mapToObj(i -> (char) ('A' + i))).forEach(System.out::println);
+	}
+
+	@Test
+	public void testFlatMaps() {
+		LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
+		map1.put("2", "2");
+		map1.put("3", "3");
+		LinkedHashMap<String, String> map2 = new LinkedHashMap<>();
+		map2.put("1", "1");
+		map2.put("2", "B");
+		CollectionUtils8.streamMaps(map1, map2).forEach(System.out::println);
+		System.out.println("---------------");
+		CollectionUtils8.streamMapsUnique(map1, map2).forEach(System.out::println);
 	}
 }
