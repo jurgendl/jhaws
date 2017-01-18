@@ -451,6 +451,12 @@ public class FfmpegTool implements MediaCte {
 				: audiostreaminfo.getBitRate() / 1000;
 		cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
 		cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
+		try {
+			String[] fps = videostreaminfo.getRFrameRate().split("/");
+			cfg.fps = (int) Math.round((float) Integer.parseInt(fps[0]) / Integer.parseInt(fps[1]));
+		} catch (Exception ex) {
+			//
+		}
 		cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
 		cfg.acopy = cfg.at != null && (cfg.at.contains(MP3) || cfg.at.contains(AAC)) && !cfg.at.contains(MONO);
 		cfg.fixes.fixNotHighProfile = true;
@@ -545,6 +551,10 @@ public class FfmpegTool implements MediaCte {
 		int qmin = 10;
 		int qmax = 51;
 		int qdiff = 4;
+		/* LQ 1-4 HQ */
+		float vidRateQHQ = 2.7f;
+		float vidRateQLQ = 2.2f;
+		float vidRateQ = 0.7f;
 		boolean twopass = false;
 
 		public int getCfrHQ() {
@@ -627,12 +637,36 @@ public class FfmpegTool implements MediaCte {
 			this.qdiff = qdiff;
 		}
 
+		public float getVidRateQHQ() {
+			return this.vidRateQHQ;
+		}
+
+		public void setVidRateQHQ(float vidRateQHQ) {
+			this.vidRateQHQ = vidRateQHQ;
+		}
+
 		public boolean isTwopass() {
 			return this.twopass;
 		}
 
 		public void setTwopass(boolean twopass) {
 			this.twopass = twopass;
+		}
+
+		public float getVidRateQLQ() {
+			return this.vidRateQLQ;
+		}
+
+		public void setVidRateQLQ(float vidRateQLQ) {
+			this.vidRateQLQ = vidRateQLQ;
+		}
+
+		public float getVidRateQ() {
+			return this.vidRateQ;
+		}
+
+		public void setVidRateQ(float vidRateQ) {
+			this.vidRateQ = vidRateQ;
 		}
 	}
 
@@ -649,18 +683,11 @@ public class FfmpegTool implements MediaCte {
 		boolean vcopy;
 		boolean acopy;
 		int[] wh;
+		Integer fps;
 		FilePath output;
 		RemuxFixes fixes = new RemuxFixes();
 		List<List<String>> commands = new ArrayList<>();
 		RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
-
-		public int getVr() {
-			return this.vr;
-		}
-
-		public int getTvr() {
-			return this.tvr;
-		}
 
 		@Override
 		public String toString() {
@@ -679,9 +706,20 @@ public class FfmpegTool implements MediaCte {
 			if (this.wh != null) {
 				builder.append("wh=").append(Arrays.toString(this.wh)).append(", ");
 			}
+			if (this.fps != null) {
+				builder.append("fps=").append(fps).append(", ");
+			}
 			builder.append("defaults=").append(this.defaults).append(", ");
 			builder.append("]");
 			return builder.toString();
+		}
+
+		public int getVr() {
+			return this.vr;
+		}
+
+		public int getTvr() {
+			return this.tvr;
 		}
 
 		public String getAt() {
@@ -803,6 +841,14 @@ public class FfmpegTool implements MediaCte {
 		public void setTvr(int tvr) {
 			this.tvr = tvr;
 		}
+
+		public Integer getFps() {
+			return this.fps;
+		}
+
+		public void setFps(Integer fps) {
+			this.fps = fps;
+		}
 	}
 
 	protected List<String> command(int pass, RemuxCfg cfg) {
@@ -901,7 +947,8 @@ public class FfmpegTool implements MediaCte {
 			// ...What_bitrate_should_I_use...
 			int newVidRate = -1;
 			if (cfg.wh != null) {
-				newVidRate = (int) (2.5 /* LQ 1-4 HQ */ * cfg.wh[0] + cfg.wh[1] * 24 /* fps */ * .7 / 1000);
+				newVidRate = (int) ((cfg.hq ? cfg.defaults.vidRateQHQ : cfg.defaults.vidRateQLQ) * cfg.wh[0]
+						+ cfg.wh[1] * (cfg.getFps() == null ? 24 : cfg.getFps()) * cfg.defaults.vidRateQ / 1000);
 				if (cfg.vr != -1) {
 					if (newVidRate > cfg.vr) {
 						newVidRate = cfg.vr;
@@ -944,27 +991,27 @@ public class FfmpegTool implements MediaCte {
 		if (pass == 1) {
 			command.add("-an");
 		} else {
-			if (cfg.ar > 0) {
-				if (cfg.acopy) {
-					command.add("-acodec");
-					command.add("copy");
-				} else {
-					// command.add("-strict");
-					// command.add("experimental");
-					command.add("-c:a");
-					// command.add(AAC);
-					command.add(MP3C);
-					if (cfg.fixes.fixAudioRate) {
-						// muxing mp3 at 11025hz is not supported
-						command.add("-ar");
-						command.add("44100");
-					}
-					if (cfg.fixes.fixAudioStrict) {
-						command.add("-strict");
-						command.add("-1");
-					}
+		if (cfg.ar > 0) {
+			if (cfg.acopy) {
+				command.add("-acodec");
+				command.add("copy");
+			} else {
+				// command.add("-strict");
+				// command.add("experimental");
+				command.add("-c:a");
+				// command.add(AAC);
+				command.add(MP3C);
+				if (cfg.fixes.fixAudioRate) {
+					// muxing mp3 at 11025hz is not supported
+					command.add("-ar");
+					command.add("44100");
+				}
+				if (cfg.fixes.fixAudioStrict) {
+					command.add("-strict");
+					command.add("-1");
 				}
 			}
+		}
 		}
 		if (cfg.fixes.fixDiv2) {
 			command.add("-pix_fmt");
@@ -977,7 +1024,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("mp4");
 			command.add("NUL");
 		} else {
-			command.add(command(cfg.output));
+		command.add(command(cfg.output));
 		}
 		return command;
 	}
