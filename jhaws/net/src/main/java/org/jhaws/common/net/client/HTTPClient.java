@@ -375,9 +375,8 @@ public class HTTPClient implements Closeable {
 			req = builder.build();
 		} else if (post.getAttachments().size() > 0) {
 			MultipartEntityBuilder mb = MultipartEntityBuilder.create();
-			mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);// STRICT,
-																// BROWSER_COMPATIBLE,
-																// RFC6532
+			// STRICT, BROWSER_COMPATIBLE, RFC6532
+			mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 			post.getAttachments().entrySet()
 					.forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
 			post.getFormValues().entrySet().forEach(
@@ -576,6 +575,7 @@ public class HTTPClient implements Closeable {
 	protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
 		if (params != null && params.getAccept() != null) {
 			req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+			req.setHeader(HttpHeaders.ACCEPT_ENCODING, "x-compress; x-zip");
 		}
 	}
 
