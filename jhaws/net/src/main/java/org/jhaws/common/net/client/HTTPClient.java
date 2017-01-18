@@ -37,6 +37,7 @@ import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -71,17 +72,37 @@ import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.net.NetHelper;
 
 /**
- * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/
- *      apache/http/examples/client/
- * @see http://stackoverflow.com/questions/10146692/how-do-i-write-to-an-
- *      outputstream-using-defaulthttpclient
+ * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/-apache/http/examples/client/
+ * @see http://stackoverflow.com/questions/10146692/how-do-i-write-to-an--outputstream-using-defaulthttpclient
  * @see https://hc.apache.org/
- * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient-
- *      tutorial.pdf
- * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced
- *      .html
+ * @see https://hc.apache.org/httpcomponents-client-ga/tutorial/pdf/httpclient--tutorial.pdf
+ * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced-.html
  */
 public class HTTPClient implements Closeable {
+	/**
+	 * Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0
+	 */
+	public static final String FIREFOX = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0";
+
+	/**
+	 * Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
+	 * Gecko) Chrome/54.0.2840.99 Safari/537.36
+	 */
+	public static final String CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36";
+
+	/**
+	 * Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0;
+	 * SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media
+	 * Center PC 6.0; .NET4.0C; .NET4.0E)
+	 */
+	public static final String IEXPLORER = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)";
+
+	/**
+	 * Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D)
+	 * AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30
+	 */
+	public static final String ANDROID_S3 = "Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
+
 	protected String charSet = StringUtils.UTF8;
 
 	protected transient CloseableHttpClient httpClient;
@@ -99,13 +120,25 @@ public class HTTPClient implements Closeable {
 
 	protected transient Security security;
 
-	protected String userAgent = HTTPClientDefaults.CHROME;
+	protected String userAgent = CHROME;
 
 	protected org.apache.http.client.CookieStore cookieStore;
 
 	protected HttpClientConnectionManager connectionManager;
 
 	protected transient long downloaded;
+
+	protected String acceptLanguage = "en, en-gb;q=0.9";
+
+	private final boolean compressed;
+
+	public HTTPClient() {
+		this(true);
+	}
+
+	public HTTPClient(boolean compressed) {
+		this.compressed = compressed;
+	}
 
 	public String getUserAgent() {
 		return userAgent;
@@ -115,25 +148,26 @@ public class HTTPClient implements Closeable {
 		this.userAgent = userAgent;
 	}
 
-	protected RequestConfig getRequestConfig() {
+	@SuppressWarnings("deprecation")
+	public RequestConfig getRequestConfig() {
 		if (requestConfig == null) {
-			requestConfig = RequestConfig.custom()//
-					.setContentCompressionEnabled(true)//
+			Builder requestConfigBuilder = RequestConfig.custom()//
 					.setMaxRedirects(5)//
 					.setCircularRedirectsAllowed(false)//
-					.setConnectionRequestTimeout(HTTPClientDefaults.TIMEOUT)//
-					.setConnectTimeout(HTTPClientDefaults.TIMEOUT)//
-					.setExpectContinueEnabled(HTTPClientDefaults.EXPECT_CONTINUE)//
+					.setConnectionRequestTimeout(5000)//
+					.setConnectTimeout(5000)//
+					.setExpectContinueEnabled(true)//
 					.setRedirectsEnabled(true)//
-					.setCookieSpec(HTTPClientDefaults.BROWSER_COMPATIBILITY)//
-					.build();
+					.setCookieSpec(org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY);
+			requestConfigBuilder = requestConfigBuilder.setContentCompressionEnabled(compressed);
+			requestConfig = requestConfigBuilder.build();
 		}
 		return requestConfig;
 	}
 
 	private ThreadLocal<List<URI>> chain;
 
-	protected RedirectStrategy getRedirectStrategy() {
+	public RedirectStrategy getRedirectStrategy() {
 		if (redirectStrategy == null) {
 			redirectStrategy = new LaxRedirectStrategy() {
 				@Override
@@ -176,15 +210,17 @@ public class HTTPClient implements Closeable {
 		return redirectStrategy;
 	}
 
-	protected CloseableHttpClient getHttpClient() {
+	public CloseableHttpClient getHttpClient() {
 		if (httpClient == null) {
-			httpClient = HttpClientBuilder.create()//
+			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()//
 					.setDefaultCookieStore(getCookieStore()) //
 					.setUserAgent(getUserAgent())//
 					.setRedirectStrategy(getRedirectStrategy())//
 					.setDefaultRequestConfig(getRequestConfig())//
-					.setConnectionManager(getConnectionManager())//
-					.build();//
+					.setConnectionManager(getConnectionManager());
+			if (!compressed)
+				httpClientBuilder = httpClientBuilder.disableContentCompression();
+			httpClient = httpClientBuilder.build();//
 		}
 		return httpClient;
 	}
@@ -314,7 +350,7 @@ public class HTTPClient implements Closeable {
 		}
 		response.setCharset(charSet);
 		try {
-			response.setDate(parseDate(httpResponse.getFirstHeader(HTTPClientDefaults.DATE).getValue()));
+			response.setDate(parseDate(httpResponse.getFirstHeader("Date").getValue()));
 		} catch (ParseException ex) {
 			//
 		}
@@ -457,7 +493,7 @@ public class HTTPClient implements Closeable {
 	}
 
 	public Response submit(Form form) {
-		return HTTPClientDefaults.POST.equalsIgnoreCase(form.getMethod()) ? post(form) : get(form);
+		return "POST".equalsIgnoreCase(form.getMethod()) ? post(form) : get(form);
 	}
 
 	public Response post(Form form) {
@@ -562,20 +598,25 @@ public class HTTPClient implements Closeable {
 	protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params,
 			HttpUriRequest req) {
 		if (user != null && pass != null) {
-			req.setHeader(HTTPClientDefaults.PARAM_PREEMPTIVE_AUTHENTICATION, String.valueOf(Boolean.TRUE));
+			req.setHeader("http.authentication.preemptive", String.valueOf(Boolean.TRUE));
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params,
 			HttpUriRequest req) {
-		req.setHeader(HTTPClientDefaults.PARAM_SINGLE_COOKIE_HEADER,
-				String.valueOf(HTTPClientDefaults.SINGLE_COOKIE_HEADER));
+		req.setHeader(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER,
+				String.valueOf(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER));
 	}
 
 	protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-		if (params != null && params.getAccept() != null) {
+		if (params != null && StringUtils.isNotBlank(params.getAccept())) {
 			req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
-			req.setHeader(HttpHeaders.ACCEPT_ENCODING, "x-compress; x-zip");
+		}
+		if (StringUtils.isNotBlank(acceptLanguage)) {
+			req.setHeader(HttpHeaders.ACCEPT_LANGUAGE, acceptLanguage);
+		} else {
+			req.removeHeaders(HttpHeaders.ACCEPT_LANGUAGE);
 		}
 	}
 
@@ -592,8 +633,9 @@ public class HTTPClient implements Closeable {
 	}
 
 	public org.apache.http.client.CookieStore getCookieStore() {
-		if (cookieStore == null)
+		if (cookieStore == null) {
 			cookieStore = new org.jhaws.common.net.client.CookieStore();
+		}
 		return this.cookieStore;
 	}
 
@@ -615,5 +657,13 @@ public class HTTPClient implements Closeable {
 
 	public void setConnectionManager(HttpClientConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
+	}
+
+	public String getAcceptLanguage() {
+		return this.acceptLanguage;
+	}
+
+	public void setAcceptLanguage(String acceptLanguage) {
+		this.acceptLanguage = acceptLanguage;
 	}
 }

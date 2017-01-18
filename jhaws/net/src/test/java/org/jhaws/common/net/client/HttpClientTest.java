@@ -19,9 +19,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @see http://www.mastertheboss.com/jboss-frameworks/resteasy/resteasy-tutorial -part-two-web-parameters
+ * @see http://www.mastertheboss.com/jboss-frameworks/resteasy/resteasy-tutorial
+ *      -part-two-web-parameters
  * @see https://dzone.com/articles/how-test-rest-api-junit
- * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy- reference-guide-en-US.pdf
+ * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy-
+ *      reference-guide-en-US.pdf
  * @see http://www.baeldung.com/httpclient-multipart-upload
  */
 public class HttpClientTest {
@@ -68,7 +70,8 @@ public class HttpClientTest {
 	public void test_getBody() {
 		try {
 			URI uri = getBase().path(TestResource.GET_BODY).build();
-			TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
+			TestBody rec = xmlMarshalling.unmarshall(TestBody.class,
+					server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
 			TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetRequest(uri)).getContent());
 			Assert.assertEquals(rec, hcr);
 		} catch (Exception e) {
@@ -93,7 +96,8 @@ public class HttpClientTest {
 	@Test
 	public void test_getWithQuery() {
 		try {
-			URI uri = getBase().path(TestResource.GET_WITH_QUERY).queryParam(TestResource.QUERY_PARAM, "queryValue").build();
+			URI uri = getBase().path(TestResource.GET_WITH_QUERY).queryParam(TestResource.QUERY_PARAM, "queryValue")
+					.build();
 			String rec = server.resteasyClient.target(uri).request().get(String.class);
 			String hcr = hc.get(new GetRequest(uri)).getContentString();
 			Assert.assertEquals(rec, hcr);
@@ -174,7 +178,7 @@ public class HttpClientTest {
 	public void test_post() {
 		URI uri = getBase().path(TestResource.POST).build();
 		Form form = new Form("formid");
-		form.setMethod(HTTPClientDefaults.POST);
+		form.setMethod("POST");
 		form.setUrl(uri);
 		String value = "formValue";
 		form.setValue(TestResource.FORM_PARAM, value);
@@ -191,7 +195,7 @@ public class HttpClientTest {
 		tmp.write(bytes);
 		f.setFile(tmp);
 		form.addInputElements(f.getName(), f);
-		form.setMethod(HTTPClientDefaults.POST);
+		form.setMethod("POST");
 		form.setUrl(uri);
 		String value = "formValue";
 		form.setValue(TestResource.FORM_PARAM, value);
@@ -226,7 +230,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_matrix_1() {
-		URI uri = getBase().path(TestResource.MATRIX_PATH).matrixParam("key1", "value1a").matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
+		URI uri = getBase().path(TestResource.MATRIX_PATH).matrixParam("key1", "value1a").matrixParam("key1", "value1b")
+				.matrixParam("key2", "value2").build();
 		GetRequest get = new GetRequest(uri);
 		System.out.println(uri);
 		System.out.println(hc.get(get).getContentString());
@@ -234,7 +239,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_matrix_2() {
-		URI uri = getBase().path(TestResource.GET_MATRIXBEAN).matrixParam("key1", "value1a").matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
+		URI uri = getBase().path(TestResource.GET_MATRIXBEAN).matrixParam("key1", "value1a")
+				.matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
 		GetRequest get = new GetRequest(uri);
 		System.out.println(uri);
 		System.out.println(hc.get(get).getContentString());
@@ -242,7 +248,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_matrix_3() {
-		URI uri = getBase().path(TestResource.GET_MATRIXBEANI).matrixParam("key1", "value1a").matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
+		URI uri = getBase().path(TestResource.GET_MATRIXBEANI).matrixParam("key1", "value1a")
+				.matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
 		GetRequest get = new GetRequest(uri);
 		System.out.println(uri);
 		System.out.println(hc.get(get).getContentString());

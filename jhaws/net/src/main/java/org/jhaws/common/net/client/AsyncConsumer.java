@@ -14,7 +14,7 @@ public class AsyncConsumer extends AsyncByteConsumer<OutputStream> {
 	protected final OutputStream out;
 
 	public AsyncConsumer(OutputStream out) {
-		super(HTTPClientDefaults.BUFF_LEN);
+		super(1024 * 16);
 		this.out = out;
 	}
 
@@ -49,7 +49,7 @@ public class AsyncConsumer extends AsyncByteConsumer<OutputStream> {
 		int totalWritten = 0;
 		byte[] buf = null;
 		while (totalWritten < len) {
-			int bytesToWrite = Math.min(len - totalWritten, HTTPClientDefaults.BUFF_LEN);
+			int bytesToWrite = Math.min(len - totalWritten, 1024 * 16);
 			if (buf == null || buf.length < bytesToWrite) {
 				buf = new byte[bytesToWrite];
 			}
