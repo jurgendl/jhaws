@@ -73,6 +73,7 @@ import org.jhaws.common.net.NetHelper;
  * http test server: http://httpbin.org/
  * 
  * @see http://httpbin.org/
+ * @see http://www.baeldung.com/httpclient-4-basic-authentication
  * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/-apache/http/examples/client/
  * @see http://stackoverflow.com/questions/10146692/how-do-i-write-to-an--outputstream-using-defaulthttpclient
  * @see https://hc.apache.org/
