@@ -66,8 +66,6 @@ import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.security.SecureMe;
-import org.jhaws.common.io.security.Security;
 import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.net.NetHelper;
 
@@ -114,11 +112,7 @@ public class HTTPClient implements Closeable {
 
     protected transient RedirectStrategy redirectStrategy;
 
-    protected transient String user;
-
-    protected transient byte[] pass;
-
-    protected transient Security security;
+    private transient List<HTTPClientAuth> authentication = new ArrayList<>();
 
     protected String userAgent = CHROME;
 
@@ -131,6 +125,10 @@ public class HTTPClient implements Closeable {
     protected String acceptLanguage = "en, en-gb;q=0.9";
 
     private final boolean compressed;
+
+    private transient CredentialsProvider defaultCredentialsProvider;
+
+    private transient CredentialsProvider preemptiveCredentialsProvider;
 
     public HTTPClient() {
         this(true);
@@ -213,14 +211,15 @@ public class HTTPClient implements Closeable {
                     .setUserAgent(getUserAgent())//
                     .setRedirectStrategy(getRedirectStrategy())//
                     .setDefaultRequestConfig(getRequestConfig())//
-                    .setConnectionManager(getConnectionManager());
-            if (!compressed) httpClientBuilder = httpClientBuilder.disableContentCompression();
+                    .setConnectionManager(getConnectionManager())//
+                    .setDefaultCredentialsProvider(getDefaultCredentialsProvider());
+            if (!compressed) httpClientBuilder.disableContentCompression();
             httpClient = httpClientBuilder.build();//
         }
         return httpClient;
     }
 
-    private HttpClientConnectionManager getConnectionManager() {
+    protected HttpClientConnectionManager getConnectionManager() {
         if (connectionManager == null) {
             // replaces ThreadSafeClientConnManager
             PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager();
@@ -270,23 +269,17 @@ public class HTTPClient implements Closeable {
         };
 
         URI uri = req.getURI();
-        HttpClientContext context = HttpClientContext.create();
         HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+        HttpClientContext context = HttpClientContext.create();
 
-        if (user != null && pass != null) {
-            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                    new UsernamePasswordCredentials(user, getPass()));
-            context.setCredentialsProvider(credentialsProvider);
-        } else {
-            CredentialsProvider credentialsProvider = new SystemDefaultCredentialsProvider();
-            context.setCredentialsProvider(credentialsProvider);
+        CredentialsProvider preemptiveCP = getPreemptiveCredentialsProvider();
+        if (preemptiveCP != null) {
+            context.setCredentialsProvider(preemptiveCP);
+            AuthCache authCache = new BasicAuthCache();
+            BasicScheme basicAuth = new BasicScheme();
+            authCache.put(targetHost, basicAuth);
+            context.setAuthCache(authCache);
         }
-
-        AuthCache authCache = new BasicAuthCache();
-        BasicScheme basicAuth = new BasicScheme();
-        authCache.put(targetHost, basicAuth);
-        context.setAuthCache(authCache);
 
         Response response = null;
         try (CloseableHttpResponse httpResponse = getHttpClient().execute(targetHost, req, context)) {
@@ -444,41 +437,6 @@ public class HTTPClient implements Closeable {
         return new HttpTrace(trace.getUri());
     }
 
-    protected String getPass() {
-        try {
-            return getSecurity().decrypt(pass);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public HTTPClient resetAuthentication() {
-        this.user = null;
-        this.pass = null;
-        this.security = null;
-        return this;
-    }
-
-    public void setAuthentication(String user, String pass) {
-        this.user = user;
-        try {
-            this.pass = getSecurity().encrypt(pass);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected Security getSecurity() {
-        if (security == null) {
-            try {
-                security = new org.jhaws.common.io.security.SecureMeBC();
-            } catch (Exception ignore) {
-                security = new SecureMe();
-            }
-        }
-        return security;
-    }
-
     public Response submit(Form form) {
         return "POST".equalsIgnoreCase(form.getMethod()) ? post(form) : get(form);
     }
@@ -550,7 +508,7 @@ public class HTTPClient implements Closeable {
         // }
         redirectStrategy = null;
         requestConfig = null;
-        resetAuthentication();
+        authentication.clear();
     }
 
     // public void execute(AbstractRequest<? extends AbstractRequest<?>> params,
@@ -579,22 +537,21 @@ public class HTTPClient implements Closeable {
     }
 
     protected void prepareRequest(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-        prepareRequest_prememptiveAuthentication(params, req);
+        // prepareRequest_prememptiveAuthentication(params, req);
         prepareRequest_singleCookieHeader(params, req);
         prepareRequest_accept(params, req);
         prepareRequest_additionalHeaders(params, req);
     }
 
-    protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-        if (user != null && pass != null) {
-            req.setHeader("http.authentication.preemptive", String.valueOf(Boolean.TRUE));
-        }
-    }
+    // protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+    // if (user != null && pass != null) {
+    // req.setHeader("http.authentication.preemptive", String.valueOf(Boolean.TRUE));
+    // }
+    // }
 
     @SuppressWarnings("deprecation")
     protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-        req.setHeader(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER,
-                String.valueOf(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER));
+        req.setHeader(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER, Boolean.TRUE.toString());
     }
 
     protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
@@ -616,10 +573,6 @@ public class HTTPClient implements Closeable {
                     .filter(h -> h.getValue() != null)
                     .forEach(h -> req.setHeader(h.getKey(), String.valueOf(h.getValue())));
         }
-    }
-
-    protected String getUser() {
-        return user;
     }
 
     public org.apache.http.client.CookieStore getCookieStore() {
@@ -655,5 +608,74 @@ public class HTTPClient implements Closeable {
 
     public void setAcceptLanguage(String acceptLanguage) {
         this.acceptLanguage = acceptLanguage;
+    }
+
+    public void addAuthentication(HTTPClientAuth httpClientAuth) {
+        authentication.add(httpClientAuth);
+    }
+
+    public HTTPClient resetAuthentication() {
+        authentication.clear();
+        return this;
+    }
+
+    protected CredentialsProvider getDefaultCredentialsProvider() {
+        if (defaultCredentialsProvider == null && !authentication.isEmpty()) {
+            boolean init = false;
+            defaultCredentialsProvider = new BasicCredentialsProvider();
+            for (HTTPClientAuth auth : authentication) {
+                if (auth.isPreemptive()) {
+                    continue;
+                }
+                init = true;
+                AuthScope authscope;
+                if (StringUtils.isNotBlank(auth.getRealm()) && StringUtils.isNotBlank(auth.getScheme())) {
+                    authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm(), auth.getScheme());
+                } else if (StringUtils.isNotBlank(auth.getRealm())) {
+                    authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm());
+                } else {
+                    authscope = new AuthScope(auth.getHost(), auth.getPort());
+                }
+                defaultCredentialsProvider.setCredentials(authscope, new UsernamePasswordCredentials(auth.getUser(), auth.getPass()));
+            }
+            if (!init) {
+                defaultCredentialsProvider = new SystemDefaultCredentialsProvider();
+            }
+        }
+        return this.defaultCredentialsProvider;
+    }
+
+    public void setDefaultCredentialsProvider(CredentialsProvider credentialsProvider) {
+        this.defaultCredentialsProvider = credentialsProvider;
+    }
+
+    protected CredentialsProvider getPreemptiveCredentialsProvider() {
+        if (preemptiveCredentialsProvider == null && !authentication.isEmpty()) {
+            boolean init = false;
+            preemptiveCredentialsProvider = new BasicCredentialsProvider();
+            for (HTTPClientAuth auth : authentication) {
+                if (!auth.isPreemptive()) {
+                    continue;
+                }
+                init = true;
+                AuthScope authscope;
+                if (StringUtils.isNotBlank(auth.getRealm()) && StringUtils.isNotBlank(auth.getScheme())) {
+                    authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm(), auth.getScheme());
+                } else if (StringUtils.isNotBlank(auth.getRealm())) {
+                    authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm());
+                } else {
+                    authscope = new AuthScope(auth.getHost(), auth.getPort());
+                }
+                preemptiveCredentialsProvider.setCredentials(authscope, new UsernamePasswordCredentials(auth.getUser(), auth.getPass()));
+            }
+            if (!init) {
+                preemptiveCredentialsProvider = null;
+            }
+        }
+        return this.preemptiveCredentialsProvider;
+    }
+
+    public void setPreemptiveCredentialsProvider(CredentialsProvider credentialsProvider) {
+        this.preemptiveCredentialsProvider = credentialsProvider;
     }
 }
