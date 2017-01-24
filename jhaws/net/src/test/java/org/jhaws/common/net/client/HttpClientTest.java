@@ -13,259 +13,291 @@ import javax.ws.rs.core.UriBuilder;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.lang.StringUtils;
+import org.jhaws.common.net.resteasy.client.RestEasyClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @see http://www.mastertheboss.com/jboss-frameworks/resteasy/resteasy-tutorial
- *      -part-two-web-parameters
+ * @see http://www.mastertheboss.com/jboss-frameworks/resteasy/resteasy-tutorial -part-two-web-parameters
  * @see https://dzone.com/articles/how-test-rest-api-junit
- * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy-
- *      reference-guide-en-US.pdf
+ * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy- reference-guide-en-US.pdf
  * @see http://www.baeldung.com/httpclient-multipart-upload
  */
 public class HttpClientTest {
-	private static TestRestServer server;
+    private static TestRestServer server;
 
-	private static HTTPClient hc;
+    private static HTTPClient hc;
 
-	private static TestResource testResource;
+    private static TestResource testResource;
 
-	private static JAXBMarshalling xmlMarshalling;
+    private static JAXBMarshalling xmlMarshalling;
 
-	private UriBuilder getBase() {
-		return UriBuilder.fromPath(server.baseUri()).path(TestResource.PATH);
-	}
+    private static TestResourceI proxy;
 
-	@BeforeClass
-	public static void beforeClass() throws Exception {
-		hc = new HTTPClient();
-		testResource = new TestResource();
-		server = TestRestServer.create(testResource);
-		xmlMarshalling = new JAXBMarshalling(TestBody.class);
-	}
+    private UriBuilder getBase() {
+        return UriBuilder.fromPath(server.baseUri()).path(TestResourceI.PATH);
+    }
 
-	@AfterClass
-	public static void afterClass() throws Exception {
-		server.close();
-		hc.close();
-	}
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        try {
+            hc = new HTTPClient();
+            testResource = new TestResource();
+            server = TestRestServer.create(testResource);
+            xmlMarshalling = new JAXBMarshalling(TestBody.class);
+            proxy = new RestEasyClient<>(server.baseUri(), TestResourceI.class).proxy();
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+            throw ex;
+        }
+    }
 
-	@Test
-	public void test_get() {
-		try {
-			URI uri = getBase().path(TestResource.GET).build();
-			String rec = server.resteasyClient.target(uri).request().get(String.class);
-			String hcr = hc.get(new GetRequest(uri)).getContentString();
-			Assert.assertEquals(rec, hcr);
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-			Assert.fail(String.valueOf(e));
-		}
-	}
+    @AfterClass
+    public static void afterClass() throws Exception {
+        try {
+            server.close();
+        } catch (Exception ex) {
+            //
+        }
+        try {
+            hc.close();
+        } catch (Exception ex) {
+            //
+        }
+    }
 
-	@Test
-	public void test_getBody() {
-		try {
-			URI uri = getBase().path(TestResource.GET_BODY).build();
-			TestBody rec = xmlMarshalling.unmarshall(TestBody.class,
-					server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
-			TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetRequest(uri)).getContent());
-			Assert.assertEquals(rec, hcr);
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-			Assert.fail(String.valueOf(e));
-		}
-	}
+    @Test
+    public void test_get() {
+        try {
+            URI uri = getBase().path(TestResourceI.GET).build();
+            String rec = server.resteasyClient.target(uri).request().get(String.class);
+            String hcr = hc.get(new GetRequest(uri)).getContentString();
+            Assert.assertEquals(rec, hcr);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            Assert.fail(String.valueOf(e));
+        }
+    }
 
-	@Test
-	public void test_getWithParams() {
-		try {
-			URI uri = getBase().path(TestResource.GET_WITH_PARAMS).build("pathValue");
-			String rec = server.resteasyClient.target(uri).request().get(String.class);
-			String hcr = hc.get(new GetRequest(uri)).getContentString();
-			Assert.assertEquals(rec, hcr);
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-			Assert.fail(String.valueOf(e));
-		}
-	}
+    @Test
+    public void test_getBody() {
+        try {
+            URI uri = getBase().path(TestResourceI.GET_BODY).build();
+            TestBody rec = xmlMarshalling.unmarshall(TestBody.class, server.resteasyClient.target(uri).request().get(String.class), StringUtils.UTF8);
+            TestBody hcr = xmlMarshalling.unmarshall(TestBody.class, hc.get(new GetRequest(uri)).getContent());
+            Assert.assertEquals(rec, hcr);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            Assert.fail(String.valueOf(e));
+        }
+    }
 
-	@Test
-	public void test_getWithQuery() {
-		try {
-			URI uri = getBase().path(TestResource.GET_WITH_QUERY).queryParam(TestResource.QUERY_PARAM, "queryValue")
-					.build();
-			String rec = server.resteasyClient.target(uri).request().get(String.class);
-			String hcr = hc.get(new GetRequest(uri)).getContentString();
-			Assert.assertEquals(rec, hcr);
-		} catch (Exception e) {
-			e.printStackTrace(System.out);
-			Assert.fail(String.valueOf(e));
-		}
-	}
+    @Test
+    public void test_getWithParams() {
+        try {
+            URI uri = getBase().path(TestResourceI.GET_WITH_PARAMS).build("pathValue");
+            String rec = server.resteasyClient.target(uri).request().get(String.class);
+            String hcr = hc.get(new GetRequest(uri)).getContentString();
+            Assert.assertEquals(rec, hcr);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            Assert.fail(String.valueOf(e));
+        }
+    }
 
-	@Test
-	public void test_delete() {
-		URI uri = getBase().path(TestResource.DELETE).build("deleteId");
-		server.resteasyClient.target(uri).request().delete();
-		String rec = String.class.cast(testResource.delete);
-		testResource.delete = null;
-		hc.delete(new DeleteRequest(uri));
-		String hcr = String.class.cast(testResource.delete);
-		Assert.assertEquals(rec, hcr);
-	}
+    @Test
+    public void test_getWithQuery() {
+        try {
+            URI uri = getBase().path(TestResourceI.GET_WITH_QUERY).queryParam(TestResourceI.QUERY_PARAM, "queryValue").build();
+            String rec = server.resteasyClient.target(uri).request().get(String.class);
+            String hcr = hc.get(new GetRequest(uri)).getContentString();
+            Assert.assertEquals(rec, hcr);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            Assert.fail(String.valueOf(e));
+        }
+    }
 
-	@Test
-	public void test_put() {
-		URI uri = getBase().path(TestResource.PUT).build("putId");
-		TestBody entity = new TestBody("putBody");
-		Entity<TestBody> xmle = Entity.xml(entity);
-		System.out.println(xmle);
-		server.resteasyClient.target(uri).request().put(xmle);
-		String rec1 = String.class.cast(testResource.put);
-		TestBody rec2 = TestBody.class.cast(testResource.putBody);
-		testResource.put = null;
-		testResource.putBody = null;
-		String xml = xmlMarshalling.marshall(entity, StringUtils.UTF8);
-		System.out.println(xml);
-		hc.put(new PutRequest(uri, xml, MediaType.TEXT_XML));
-		String hcr1 = String.class.cast(testResource.put);
-		TestBody hcr2 = TestBody.class.cast(testResource.putBody);
-		Assert.assertEquals(rec1, hcr1);
-		Assert.assertEquals(rec2, hcr2);
-	}
+    @Test
+    public void test_delete() {
+        URI uri = getBase().path(TestResourceI.DELETE).build("deleteId");
+        server.resteasyClient.target(uri).request().delete();
+        String rec = String.class.cast(testResource.delete);
+        testResource.delete = null;
+        hc.delete(new DeleteRequest(uri));
+        String hcr = String.class.cast(testResource.delete);
+        Assert.assertEquals(rec, hcr);
+    }
 
-	@Test
-	public void test_head() {
-		URI uri = getBase().path(TestResource.GET).build();
+    @Test
+    public void test_put() {
+        URI uri = getBase().path(TestResourceI.PUT).build("putId");
+        TestBody entity = new TestBody("putBody");
+        Entity<TestBody> xmle = Entity.xml(entity);
+        System.out.println(xmle);
+        server.resteasyClient.target(uri).request().put(xmle);
+        String rec1 = String.class.cast(testResource.put);
+        TestBody rec2 = TestBody.class.cast(testResource.putBody);
+        testResource.put = null;
+        testResource.putBody = null;
+        String xml = xmlMarshalling.marshall(entity, StringUtils.UTF8);
+        System.out.println(xml);
+        hc.put(new PutRequest(uri, xml, MediaType.TEXT_XML));
+        String hcr1 = String.class.cast(testResource.put);
+        TestBody hcr2 = TestBody.class.cast(testResource.putBody);
+        Assert.assertEquals(rec1, hcr1);
+        Assert.assertEquals(rec2, hcr2);
+    }
 
-		Map<String, List<Object>> mg1 = new TreeMap<>(hc.get(new GetRequest(uri)).getHeaders());
-		javax.ws.rs.core.Response response = server.resteasyClient.target(uri).request().get();
-		Map<String, List<Object>> mg2 = new TreeMap<>(response.getHeaders());
-		response.close();
+    @Test
+    public void test_head() {
+        URI uri = getBase().path(TestResourceI.GET).build();
 
-		Response head = hc.head(new HeadRequest(uri));
-		Assert.assertNull(head.getContent());
+        Map<String, List<Object>> mg1 = new TreeMap<>(hc.get(new GetRequest(uri)).getHeaders());
+        javax.ws.rs.core.Response response = server.resteasyClient.target(uri).request().get();
+        Map<String, List<Object>> mg2 = new TreeMap<>(response.getHeaders());
+        response.close();
 
-		Map<String, List<Object>> mh1 = new TreeMap<>(head.getHeaders());
-		response = server.resteasyClient.target(uri).request().head();
-		Map<String, List<Object>> mh2 = new TreeMap<>(response.getHeaders());
-		response.close();
+        Response head = hc.head(new HeadRequest(uri));
+        Assert.assertNull(head.getContent());
 
-		// transfer-encoding=[chunked] missing in other
-		mg1.remove("transfer-encoding");
-		mg2.remove("transfer-encoding");
+        Map<String, List<Object>> mh1 = new TreeMap<>(head.getHeaders());
+        response = server.resteasyClient.target(uri).request().head();
+        Map<String, List<Object>> mh2 = new TreeMap<>(response.getHeaders());
+        response.close();
 
-		Assert.assertEquals(mg2, mh2);
-		Assert.assertEquals(mg1, mh1);
-		Assert.assertEquals(mh1, mh2);
-	}
+        // transfer-encoding=[chunked] missing in other
+        mg1.remove("transfer-encoding");
+        mg2.remove("transfer-encoding");
 
-	@Test
-	public void test_form() {
-		try (HTTPClient hcl = new HTTPClient()) {
-			Form form = hcl.get(new GetRequest("http://www.google.com")).getForms().get(0);
-			form.setValue("q", "java");
-			form.setValue("source", "hp");
-			Assert.assertEquals(200, hcl.submit(form).getStatusCode());
-		}
-	}
+        Assert.assertEquals(mg2, mh2);
+        Assert.assertEquals(mg1, mh1);
+        Assert.assertEquals(mh1, mh2);
+    }
 
-	@Test
-	public void test_post() {
-		URI uri = getBase().path(TestResource.POST).build();
-		Form form = new Form("formid");
-		form.setMethod("POST");
-		form.setUrl(uri);
-		String value = "formValue";
-		form.setValue(TestResource.FORM_PARAM, value);
-		Assert.assertEquals(value, hc.submit(form).getContentString());
-	}
+    @Test
+    public void test_form() {
+        try (HTTPClient hcl = new HTTPClient()) {
+            Form form = hcl.get(new GetRequest("http://www.google.com")).getForms().get(0);
+            form.setValue("q", "java");
+            form.setValue("source", "hp");
+            Assert.assertEquals(200, hcl.submit(form).getStatusCode());
+        }
+    }
 
-	@Test
-	public void test_post_multi() {
-		URI uri = getBase().path(TestResource.POST_MULTI).build();
-		Form form = new Form("formid");
-		FileInput f = new FileInput("fileinput");
-		FilePath tmp = FilePath.createDefaultTempFile();
-		String bytes = "newTmpFile";
-		tmp.write(bytes);
-		f.setFile(tmp);
-		form.addInputElements(f.getName(), f);
-		form.setMethod("POST");
-		form.setUrl(uri);
-		String value = "formValue";
-		form.setValue(TestResource.FORM_PARAM, value);
-		Assert.assertEquals(bytes, hc.submit(form).getContentString());
-	}
+    @Test
+    public void test_post() {
+        URI uri = getBase().path(TestResourceI.POST).build();
+        Form form = new Form("formid");
+        form.setMethod("POST");
+        form.setUrl(uri);
+        String value = "formValue";
+        form.setValue(TestResourceI.FORM_PARAM, value);
+        Assert.assertEquals(value, hc.submit(form).getContentString());
+    }
 
-	@Test
-	public void test_stream_out() {
-		URI uri = getBase().path(TestResource.STREAM_OUT).build();
-		GetRequest get = new GetRequest(uri);
+    @Test
+    public void test_post_multi() {
+        URI uri = getBase().path(TestResourceI.POST_MULTI).build();
+        Form form = new Form("formid");
+        FileInput f = new FileInput("fileinput");
+        FilePath tmp = FilePath.createDefaultTempFile();
+        String bytes = "newTmpFile";
+        tmp.write(bytes);
+        f.setFile(tmp);
+        form.addInputElements(f.getName(), f);
+        form.setMethod("POST");
+        form.setUrl(uri);
+        String value = "formValue";
+        form.setValue(TestResourceI.FORM_PARAM, value);
+        Assert.assertEquals(bytes, hc.submit(form).getContentString());
+    }
 
-		FilePath tmp1 = FilePath.getTempDirectory().child("hctest_1_.txt");
-		tmp1.deleteIfExists();
-		tmp1.write(hc.get(get).getContent());
+    @Test
+    public void test_stream_out() {
+        URI uri = getBase().path(TestResourceI.STREAM_OUT).build();
+        GetRequest get = new GetRequest(uri);
 
-		FilePath tmp2 = FilePath.getTempDirectory().child("hctest_2_.txt");
-		tmp2.deleteIfExists();
-		hc.execute(get, hc.createGet(get), tmp2.newBufferedOutputStream());
+        FilePath tmp1 = FilePath.getTempDirectory().child("hctest_1_.txt");
+        tmp1.deleteIfExists();
+        tmp1.write(hc.get(get).getContent());
 
-		Assert.assertEquals(tmp1.getFileSize(), tmp2.getFileSize());
-		Assert.assertEquals(tmp1.readAll(), tmp2.readAll());
-	}
+        FilePath tmp2 = FilePath.getTempDirectory().child("hctest_2_.txt");
+        tmp2.deleteIfExists();
+        hc.execute(get, hc.createGet(get), tmp2.newBufferedOutputStream());
 
-	@Test
-	public void test_stream_in() {
-		URI uri = getBase().path(TestResource.STREAM_IN).build();
-		PostRequest post = new PostRequest(uri);
-		post.addHeader("filename", "hctest_3_.txt");
-		post.setStream(() -> new ByteArrayInputStream("file text data".getBytes()));
-		hc.execute(post, hc.createPost(post));
-	}
+        Assert.assertEquals(tmp1.getFileSize(), tmp2.getFileSize());
+        Assert.assertEquals(tmp1.readAll(), tmp2.readAll());
+    }
 
-	@Test
-	public void test_matrix_1() {
-		URI uri = getBase().path(TestResource.MATRIX_PATH).matrixParam("key1", "value1a").matrixParam("key1", "value1b")
-				.matrixParam("key2", "value2").build();
-		GetRequest get = new GetRequest(uri);
-		System.out.println(uri);
-		System.out.println(hc.get(get).getContentString());
-	}
+    @Test
+    public void test_stream_in() {
+        URI uri = getBase().path(TestResourceI.STREAM_IN).build();
+        PostRequest post = new PostRequest(uri);
+        post.addHeader("filename", "hctest_3_.txt");
+        post.setStream(() -> new ByteArrayInputStream("file text data".getBytes()));
+        hc.execute(post, hc.createPost(post));
+    }
 
-	@Test
-	public void test_matrix_2() {
-		URI uri = getBase().path(TestResource.GET_MATRIXBEAN).matrixParam("key1", "value1a")
-				.matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
-		GetRequest get = new GetRequest(uri);
-		System.out.println(uri);
-		System.out.println(hc.get(get).getContentString());
-	}
+    @Test
+    public void test_matrix_1() {
+        URI uri = getBase().path(TestResourceI.MATRIX_PATH)
+                .matrixParam("key1", "value1a")
+                .matrixParam("key1", "value1b")
+                .matrixParam("key2", "value2")
+                .build();
+        GetRequest get = new GetRequest(uri);
+        System.out.println(uri);
+        System.out.println(hc.get(get).getContentString());
+    }
 
-	@Test
-	public void test_matrix_3() {
-		URI uri = getBase().path(TestResource.GET_MATRIXBEANI).matrixParam("key1", "value1a")
-				.matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
-		GetRequest get = new GetRequest(uri);
-		System.out.println(uri);
-		System.out.println(hc.get(get).getContentString());
-	}
+    // @Test
+    // public void test_matrix_2() {
+    // URI uri = getBase().path(TestResource.GET_MATRIXBEAN)
+    // .matrixParam("key1", "value1a")
+    // .matrixParam("key1", "value1b")
+    // .matrixParam("key2", "value2")
+    // .build();
+    // GetRequest get = new GetRequest(uri);
+    // System.out.println(uri);
+    // System.out.println(hc.get(get).getContentString());
+    // }
 
-	@Test
-	public void test_headers_info() {
-		URI uri = getBase().path(TestResource.GET_HEADERINFO).build();
-		GetRequest get = new GetRequest(uri);
-		System.out.println(hc.get(get).getContentString());
-	}
+    // @Test
+    // public void test_matrix_3() {
+    // URI uri = getBase().path(TestResource.GET_MATRIXBEANI)
+    // .matrixParam("key1", "value1a")
+    // .matrixParam("key1", "value1b")
+    // .matrixParam("key2", "value2")
+    // .build();
+    // GetRequest get = new GetRequest(uri);
+    // System.out.println(uri);
+    // System.out.println(hc.get(get).getContentString());
+    // }
 
-	@Test
-	public void test_cookie_info() {
-		URI uri = getBase().path(TestResource.GET_COOKIEINFO).build();
-		GetRequest get = new GetRequest(uri);
-		System.out.println(hc.get(get).getContentString());
-	}
+    // @Test
+    // public void test_headers_info() {
+    // URI uri = getBase().path(TestResourceI.GET_HEADERINFO).build();
+    // GetRequest get = new GetRequest(uri);
+    // System.out.println(hc.get(get).getContentString());
+    // }
+
+    @Test
+    public void test_cookie_info() {
+        URI uri = getBase().path(TestResourceI.GET_COOKIEINFO).build();
+        GetRequest get = new GetRequest(uri);
+        System.out.println(hc.get(get).getContentString());
+    }
+
+    @Test
+    public void test_client_get() {
+        try {
+            Assert.assertEquals(testResource.get(), proxy.get());
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+            Assert.fail(String.valueOf(e));
+        }
+    }
 }
