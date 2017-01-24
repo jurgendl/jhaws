@@ -991,27 +991,27 @@ public class FfmpegTool implements MediaCte {
 		if (pass == 1) {
 			command.add("-an");
 		} else {
-		if (cfg.ar > 0) {
-			if (cfg.acopy) {
-				command.add("-acodec");
-				command.add("copy");
-			} else {
-				// command.add("-strict");
-				// command.add("experimental");
-				command.add("-c:a");
-				// command.add(AAC);
-				command.add(MP3C);
-				if (cfg.fixes.fixAudioRate) {
-					// muxing mp3 at 11025hz is not supported
-					command.add("-ar");
-					command.add("44100");
-				}
-				if (cfg.fixes.fixAudioStrict) {
-					command.add("-strict");
-					command.add("-1");
+			if (cfg.ar > 0) {
+				if (cfg.acopy) {
+					command.add("-acodec");
+					command.add("copy");
+				} else {
+					// command.add("-strict");
+					// command.add("experimental");
+					command.add("-c:a");
+					// command.add(AAC);
+					command.add(MP3C);
+					if (cfg.fixes.fixAudioRate) {
+						// muxing mp3 at 11025hz is not supported
+						command.add("-ar");
+						command.add("44100");
+					}
+					if (cfg.fixes.fixAudioStrict) {
+						command.add("-strict");
+						command.add("-1");
+					}
 				}
 			}
-		}
 		}
 		if (cfg.fixes.fixDiv2) {
 			command.add("-pix_fmt");
@@ -1024,7 +1024,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("mp4");
 			command.add("NUL");
 		} else {
-		command.add(command(cfg.output));
+			command.add(command(cfg.output));
 		}
 		return command;
 	}
@@ -1072,19 +1072,25 @@ public class FfmpegTool implements MediaCte {
 		}
 	}
 
-	public void slideshow(int seconds, String images, FilePath output) {
+	public void slideshow(Integer secondsPerFrame, Integer framesPerSecond, String images, FilePath output,
+			Consumer<String> listener) {
 		// In this example each image will have a duration of 5 seconds (the
 		// inverse of 1/5 frames per second). The video stream will have a frame
 		// rate of 30 fps by duplicating the
 		// frames accordingly:
 		// ffmpeg -framerate 1/5 -i img%03d.png -c:v libx264 -r 30 -pix_fmt
 		// yuv420p out.mp4
+		// -start_number
 		List<String> command = new ArrayList<>();
 		command.add(command(getFfmpeg()));
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-framerate");
-		command.add("1/" + seconds);
+		if (secondsPerFrame != null) {
+			command.add("1/" + secondsPerFrame);
+		} else {
+			command.add("" + framesPerSecond);
+		}
 		command.add("-i");
 		command.add(images);
 		command.add("-movflags");
@@ -1096,11 +1102,17 @@ public class FfmpegTool implements MediaCte {
 		command.add("-tune");
 		command.add("zerolatency");
 		command.add("-r");
-		command.add("1");
+		if (secondsPerFrame != null) {
+			command.add("1");
+		} else {
+			command.add("" + framesPerSecond);
+		}
 		command.add("-pix_fmt");
 		command.add("yuv420p");
+		command.add("-vf");
+		command.add("\"scale=trunc(iw/2)*2:trunc(ih/2)*2\"");
 		command.add(command(output));
-		call(output.getParentPath(), command);
+		call(output.getParentPath(), command, true, listener);
 	}
 
 	protected Lines call(FilePath dir, List<String> command) {
