@@ -473,7 +473,7 @@ public class HTTPClient implements Closeable {
         try {
             return get(url.toURI());
         } catch (URISyntaxException ex) {
-            throw new IllegalArgumentException("" + url);
+            throw new IllegalArgumentException(String.valueOf(url));
         }
     }
 
@@ -538,22 +538,15 @@ public class HTTPClient implements Closeable {
     }
 
     protected void prepareRequest(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-        // prepareRequest_prememptiveAuthentication(params, req);
-        prepareRequest_singleCookieHeader(params, req);
+        // prepareRequest_singleCookieHeader(params, req);
         prepareRequest_accept(params, req);
         prepareRequest_additionalHeaders(params, req);
     }
 
-    // protected void prepareRequest_prememptiveAuthentication(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-    // if (user != null && pass != null) {
-    // req.setHeader("http.authentication.preemptive", String.valueOf(Boolean.TRUE));
+    // @SuppressWarnings("deprecation")
+    // protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
+    // req.setHeader(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER, Boolean.TRUE.toString());
     // }
-    // }
-
-    @SuppressWarnings("deprecation")
-    protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
-        req.setHeader(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER, Boolean.TRUE.toString());
-    }
 
     protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
         if (params != null && StringUtils.isNotBlank(params.getAccept())) {
