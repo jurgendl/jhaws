@@ -1072,8 +1072,8 @@ public class FfmpegTool implements MediaCte {
 		}
 	}
 
-	public void slideshow(Integer secondsPerFrame, Integer framesPerSecond, String images, FilePath output,
-			Consumer<String> listener) {
+	public void slideshow(Integer secondsPerFrame, Integer framesPerSecondIn, Integer framesPerSecondOut, String images,
+			FilePath output, Consumer<String> listener) {
 		// In this example each image will have a duration of 5 seconds (the
 		// inverse of 1/5 frames per second). The video stream will have a frame
 		// rate of 30 fps by duplicating the
@@ -1088,8 +1088,8 @@ public class FfmpegTool implements MediaCte {
 		command.add("-framerate");
 		if (secondsPerFrame != null) {
 			command.add("1/" + secondsPerFrame);
-		} else if (framesPerSecond != null) {
-			command.add("" + framesPerSecond);
+		} else if (framesPerSecondIn != null) {
+			command.add("" + framesPerSecondIn);
 		}
 		command.add("-i");
 		command.add(images);
@@ -1102,11 +1102,13 @@ public class FfmpegTool implements MediaCte {
 		command.add("-tune");
 		command.add("zerolatency");
 		command.add("-vf");
-		if (secondsPerFrame != null) {
-			command.add("\"fps=1,format=yuv420p\",\"scale=trunc(iw/2)*2:trunc(ih/2)*2\"");
-		} else if (framesPerSecond != null) {
-			command.add("\"fps=" + framesPerSecond + ",format=yuv420p\",\"scale=trunc(iw/2)*2:trunc(ih/2)*2\"");
+		if (framesPerSecondOut == null) {
+			if (secondsPerFrame != null)
+				framesPerSecondOut = 1;
+			else if (framesPerSecondIn != null)
+				framesPerSecondOut = framesPerSecondIn;
 		}
+		command.add("\"fps=" + framesPerSecondOut + ",format=yuv420p\",\"scale=trunc(iw/2)*2:trunc(ih/2)*2\"");
 		command.add("-crf");
 		command.add("15");// HQ 18-23-28 LQ
 		command.add(command(output));

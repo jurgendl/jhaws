@@ -38,7 +38,9 @@ public class FfmpegToolTest {
 	@Test
 	public void test2() {
 		try {
-			int fps = 25;
+			int repeat = 10;
+			Integer fpsI = 30;
+			int fpsO = 30;
 			// runtime config VM arguments -Dsld=
 			FilePath h = new FilePath(System.getProperty("sld"));
 			FilePath sourcedir = h.child("sources").createDirectoryIfNotExists();
@@ -49,7 +51,8 @@ public class FfmpegToolTest {
 			int nr = sources.size();
 			if (nr == 0)
 				return;
-			int repeat = 10;
+			if (fpsI == null)
+				fpsI = nr;
 			int index = 0;
 			int sindex = 0;
 			for (int i = 0; i < nr * repeat; i++) {
@@ -73,7 +76,7 @@ public class FfmpegToolTest {
 					sindex = 0;
 				}
 			}
-			t.slideshow(null, fps, tmp.getAbsolutePath() + "/imgs_%04d.png",
+			t.slideshow(null, fpsI, fpsO, tmp.getAbsolutePath() + "/imgs_%04d.png",
 					h.child("output").createDirectoryIfNotExists().child("test.mp4"), System.out::println);
 		} catch (RuntimeException ex) {
 			ex.printStackTrace();
