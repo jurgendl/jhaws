@@ -1101,6 +1101,10 @@ public class FfmpegTool implements MediaCte {
 		command.add("film");
 		command.add("-tune");
 		command.add("zerolatency");
+		command.add("-profile:v");
+		command.add("high");
+		command.add("-level");
+		command.add("4.2");
 		command.add("-vf");
 		if (framesPerSecondOut == null) {
 			if (secondsPerFrame != null)
