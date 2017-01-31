@@ -32,6 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FfmpegTool implements MediaCte {
+    private static final String FIX_DIV2 = "scale=trunc(iw/2)*2:trunc(ih/2)*2";
+
+    private static final String FORMAT_YUV420P = "format=yuv420p";
+
     private static final String VIDEO = "video";
 
     private static final String AUDIO = "audio";
@@ -403,7 +407,7 @@ public class FfmpegTool implements MediaCte {
             Consumer<RemuxCfg> cfgEdit) {
         RemuxCfg cfg = config(defaults, input, output, cfgEdit);
         RuntimeException exception = null;
-        List<String> command = cfg.defaults.isTwopass() ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
+        List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
         Lines lines = new Lines();
         try {
             lines = call(input != null ? input.getParentPath() : output.getParentPath(), command, true,
@@ -421,13 +425,13 @@ public class FfmpegTool implements MediaCte {
             throw exception;
         }
         if (needsFixing.is()) {
-            command = cfg.defaults.isTwopass() ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
+            command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
             lines = call(input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
         }
         if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
             throw new UncheckedIOException(new IOException("Conversion failed"));
         }
-        if (cfg.defaults.isTwopass()) {
+        if (cfg.defaults.twopass) {
             command = command(2, cfg);
             lines = call(input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
         }
@@ -439,24 +443,26 @@ public class FfmpegTool implements MediaCte {
         if (defaults != null) cfg.defaults = defaults;
         cfg.output = output;
         if (input != null) {
-            cfg.input = input;
-            cfg.info = info(input);
-            cfg.hq = input.getFileSize() > 100 * 1024 * 1024;
-            StreamType videostreaminfo = video(cfg.info);
-            StreamType audiostreaminfo = audio(cfg.info);
-            cfg.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
-            cfg.vt = videostreaminfo.getCodecName();
-            cfg.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
-            cfg.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
-            cfg.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
+            cfg.input = new RemuxInput();
+            cfg.input.input = input;
+            cfg.input.info = info(input);
+            cfg.input.hq = input.getFileSize() > 100 * 1024 * 1024;
+            StreamType videostreaminfo = video(cfg.input.info);
+            StreamType audiostreaminfo = audio(cfg.input.info);
+            cfg.input.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.input.info.getFormat().getBitRate() / 1000)
+                    : videostreaminfo.getBitRate() / 1000;
+            cfg.input.vt = videostreaminfo.getCodecName();
+            cfg.input.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
+            cfg.input.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
+            cfg.input.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
             try {
                 String[] fps = videostreaminfo.getRFrameRate().split("/");
-                cfg.fps = (int) Math.round((float) Integer.parseInt(fps[0]) / Integer.parseInt(fps[1]));
+                cfg.input.fps = (int) Math.round((float) Integer.parseInt(fps[0]) / Integer.parseInt(fps[1]));
             } catch (Exception ex) {
                 //
             }
-            cfg.vcopy = cfg.vt.contains(AVC) || cfg.vt.contains(H264);
-            cfg.acopy = cfg.at != null && (cfg.at.contains(MP3) || cfg.at.contains(AAC)) && !cfg.at.contains(MONO);
+            cfg.input.vcopy = cfg.input.vt.contains(AVC) || cfg.input.vt.contains(H264);
+            cfg.input.acopy = cfg.input.at != null && (cfg.input.at.contains(MP3) || cfg.input.at.contains(AAC)) && !cfg.input.at.contains(MONO);
         }
         {
             cfg.fixes.fixNotHighProfile = true;
@@ -501,255 +507,195 @@ public class FfmpegTool implements MediaCte {
         // }
     }
 
-    protected static class RemuxFixes {
-        boolean fixNotHighProfile;
+    public static class RemuxFixes {
+        public boolean fixNotHighProfile;
 
-        boolean fixAudioRate;
+        public boolean fixAudioRate;
 
-        boolean fixAudioStrict;
+        public boolean fixAudioStrict;
 
-        boolean fixDiv2;
+        public boolean fixDiv2;
 
-        public boolean isFixNotHighProfile() {
-            return this.fixNotHighProfile;
-        }
-
-        public void setFixNotHighProfile(boolean fixNotHighProfile) {
-            this.fixNotHighProfile = fixNotHighProfile;
-        }
-
-        public boolean isFixAudioRate() {
-            return this.fixAudioRate;
-        }
-
-        public void setFixAudioRate(boolean fixAudioRate) {
-            this.fixAudioRate = fixAudioRate;
-        }
-
-        public boolean isFixAudioStrict() {
-            return this.fixAudioStrict;
-        }
-
-        public void setFixAudioStrict(boolean fixAudioStrict) {
-            this.fixAudioStrict = fixAudioStrict;
-        }
-
-        public boolean isFixDiv2() {
-            return this.fixDiv2;
-        }
-
-        public void setFixDiv2(boolean fixDiv2) {
-            this.fixDiv2 = fixDiv2;
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("[fixNotHighProfile=");
+            builder.append(this.fixNotHighProfile);
+            builder.append(", fixAudioRate=");
+            builder.append(this.fixAudioRate);
+            builder.append(", fixAudioStrict=");
+            builder.append(this.fixAudioStrict);
+            builder.append(", fixDiv2=");
+            builder.append(this.fixDiv2);
+            builder.append("]");
+            return builder.toString();
         }
     }
 
     public static class RemuxDefaultsCfg {
         // HQ 18-23-28 LQ
-        int cfrHQ = 20;
+        public int cfrHQ = 20;
 
-        int cfrLQ = 23;
+        public int cfrLQ = 23;
 
-        int vidRateHQ = 3000;
+        public int vidRateHQ = 3000;
 
-        int vidRateLQ = 1000;
+        public int vidRateLQ = 1000;
 
-        String presetHQ = "slow";
+        public String presetHQ = "slow";
 
-        String presetLQ = "medium";
+        public String presetLQ = "medium";
 
-        List<String> tune = Arrays.asList("film", "zerolatency");
+        final public List<String> tune = new ArrayList<>(Arrays.asList("film", "zerolatency"));
 
-        int qmin = 10;
+        public int qmin = 10;
 
-        int qmax = 51;
+        public int qmax = 51;
 
-        int qdiff = 4;
+        public int qdiff = 4;
 
         /* LQ 1-4 HQ */
-        float vidRateQHQ = 2.7f;
+        public float vidRateQHQ = 2.7f;
 
-        float vidRateQLQ = 2.2f;
+        public float vidRateQLQ = 2.2f;
 
-        float vidRateQ = 0.7f;
+        public float vidRateQ = 0.7f;
 
-        boolean twopass = false;
-
-        public int getCfrHQ() {
-            return this.cfrHQ;
-        }
-
-        public void setCfrHQ(int cfrHQ) {
-            this.cfrHQ = cfrHQ;
-        }
-
-        public int getCfrLQ() {
-            return this.cfrLQ;
-        }
-
-        public void setCfrLQ(int cfrLQ) {
-            this.cfrLQ = cfrLQ;
-        }
-
-        public int getVidRateHQ() {
-            return this.vidRateHQ;
-        }
-
-        public void setVidRateHQ(int vidRateHQ) {
-            this.vidRateHQ = vidRateHQ;
-        }
-
-        public int getVidRateLQ() {
-            return this.vidRateLQ;
-        }
-
-        public void setVidRateLQ(int vidRateLQ) {
-            this.vidRateLQ = vidRateLQ;
-        }
-
-        public String getPresetHQ() {
-            return this.presetHQ;
-        }
-
-        public void setPresetHQ(String presetHQ) {
-            this.presetHQ = presetHQ;
-        }
-
-        public String getPresetLQ() {
-            return this.presetLQ;
-        }
-
-        public void setPresetLQ(String presetLQ) {
-            this.presetLQ = presetLQ;
-        }
-
-        public List<String> getTune() {
-            return this.tune;
-        }
-
-        public void setTune(List<String> tune) {
-            this.tune = tune;
-        }
-
-        public int getQmin() {
-            return this.qmin;
-        }
-
-        public void setQmin(int qmin) {
-            this.qmin = qmin;
-        }
-
-        public int getQmax() {
-            return this.qmax;
-        }
-
-        public void setQmax(int qmax) {
-            this.qmax = qmax;
-        }
-
-        public int getQdiff() {
-            return this.qdiff;
-        }
-
-        public void setQdiff(int qdiff) {
-            this.qdiff = qdiff;
-        }
-
-        public float getVidRateQHQ() {
-            return this.vidRateQHQ;
-        }
-
-        public void setVidRateQHQ(float vidRateQHQ) {
-            this.vidRateQHQ = vidRateQHQ;
-        }
-
-        public boolean isTwopass() {
-            return this.twopass;
-        }
-
-        public void setTwopass(boolean twopass) {
-            this.twopass = twopass;
-        }
-
-        public float getVidRateQLQ() {
-            return this.vidRateQLQ;
-        }
-
-        public void setVidRateQLQ(float vidRateQLQ) {
-            this.vidRateQLQ = vidRateQLQ;
-        }
-
-        public float getVidRateQ() {
-            return this.vidRateQ;
-        }
-
-        public void setVidRateQ(float vidRateQ) {
-            this.vidRateQ = vidRateQ;
-        }
-    }
-
-    public static class SlideshowCfg {
-        Integer secondsPerFrame;
-
-        Integer framesPerSecondIn;
-
-        Integer framesPerSecondOut;
-
-        String images;
-
-        public Integer getSecondsPerFrame() {
-            return this.secondsPerFrame;
-        }
-
-        public void setSecondsPerFrame(Integer secondsPerFrame) {
-            this.secondsPerFrame = secondsPerFrame;
-        }
-
-        public Integer getFramesPerSecondIn() {
-            return this.framesPerSecondIn;
-        }
-
-        public void setFramesPerSecondIn(Integer framesPerSecondIn) {
-            this.framesPerSecondIn = framesPerSecondIn;
-        }
-
-        public Integer getFramesPerSecondOut() {
-            return this.framesPerSecondOut;
-        }
-
-        public void setFramesPerSecondOut(Integer framesPerSecondOut) {
-            this.framesPerSecondOut = framesPerSecondOut;
-        }
-
-        public String getImages() {
-            return this.images;
-        }
-
-        public void setImages(String images) {
-            this.images = images;
-        }
+        public boolean twopass = false;
 
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            builder.append("SlideshowCfg [");
+            builder.append("[cfrHQ=");
+            builder.append(this.cfrHQ);
+            builder.append(", cfrLQ=");
+            builder.append(this.cfrLQ);
+            builder.append(", vidRateHQ=");
+            builder.append(this.vidRateHQ);
+            builder.append(", vidRateLQ=");
+            builder.append(this.vidRateLQ);
+            builder.append(", ");
+            if (this.presetHQ != null) {
+                builder.append("presetHQ=");
+                builder.append(this.presetHQ);
+                builder.append(", ");
+            }
+            if (this.presetLQ != null) {
+                builder.append("presetLQ=");
+                builder.append(this.presetLQ);
+                builder.append(", ");
+            }
+            if (this.tune != null) {
+                builder.append("tune=");
+                builder.append(this.tune);
+                builder.append(", ");
+            }
+            builder.append("qmin=");
+            builder.append(this.qmin);
+            builder.append(", qmax=");
+            builder.append(this.qmax);
+            builder.append(", qdiff=");
+            builder.append(this.qdiff);
+            builder.append(", vidRateQHQ=");
+            builder.append(this.vidRateQHQ);
+            builder.append(", vidRateQLQ=");
+            builder.append(this.vidRateQLQ);
+            builder.append(", vidRateQ=");
+            builder.append(this.vidRateQ);
+            builder.append(", twopass=");
+            builder.append(this.twopass);
+            builder.append("]");
+            return builder.toString();
+        }
+    }
+
+    public static class SlideshowCfg {
+        public Integer secondsPerFrame;
+
+        public Integer framesPerSecondIn;
+
+        public Integer framesPerSecondOut;
+
+        public String images;
+
+        public FilePath input;
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("[");
+            builder.append("input=");
+            builder.append(this.input);
+            builder.append(", ");
+            builder.append("images=");
+            builder.append(this.images);
             if (this.secondsPerFrame != null) {
+                builder.append(", ");
                 builder.append("secondsPerFrame=");
                 builder.append(this.secondsPerFrame);
-                builder.append(", ");
             }
             if (this.framesPerSecondIn != null) {
+                builder.append(", ");
                 builder.append("framesPerSecondIn=");
                 builder.append(this.framesPerSecondIn);
-                builder.append(", ");
             }
             if (this.framesPerSecondOut != null) {
+                builder.append(", ");
                 builder.append("framesPerSecondOut=");
                 builder.append(this.framesPerSecondOut);
-                builder.append(", ");
             }
-            if (this.images != null) {
-                builder.append("images=");
-                builder.append(this.images);
+            builder.append("]");
+            return builder.toString();
+        }
+    }
+
+    public static class RemuxInput {
+        public FilePath input;
+
+        public FfprobeType info;
+
+        public boolean hq;
+
+        public String vt;
+
+        public int vr;
+
+        // FIXME
+        public int tvr;
+
+        public String at;
+
+        public int ar;
+
+        public int[] wh;
+
+        public boolean vcopy;
+
+        public boolean acopy;
+
+        Integer fps;
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("[");
+            if (this.at != null) {
+                builder.append(", at=").append(this.at);
+            }
+            builder.append(", ar=").append(this.ar);
+            if (this.vt != null) {
+                builder.append(", vt=").append(this.vt);
+            }
+            builder.append(", vr=").append(this.vr);
+            builder.append(", tvr=").append(this.tvr);
+            builder.append(", hq=").append(this.hq);
+            builder.append(", vcopy=").append(this.vcopy);
+            builder.append(", acopy=").append(this.acopy);
+            if (this.wh != null) {
+                builder.append(", wh=").append(Arrays.toString(this.wh));
+            }
+            if (this.fps != null) {
+                builder.append(", fps=").append(fps);
             }
             builder.append("]");
             return builder.toString();
@@ -757,213 +703,44 @@ public class FfmpegTool implements MediaCte {
     }
 
     public static class RemuxCfg {
-        String at;
+        public RemuxInput input;
 
-        int ar;
+        public FilePath output;
 
-        String vt;
+        public final RemuxFixes fixes = new RemuxFixes();
 
-        int vr;
+        public final List<List<String>> commands = new ArrayList<>();
 
-        int tvr;
+        public RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
 
-        boolean hq;
+        public SlideshowCfg slideshowCfg;
 
-        FfprobeType info;
+        public Boolean vcopy;
 
-        FilePath parentDir;
+        public Boolean acopy;
 
-        FilePath input;
-
-        boolean vcopy;
-
-        boolean acopy;
-
-        int[] wh;
-
-        Integer fps;
-
-        FilePath output;
-
-        RemuxFixes fixes = new RemuxFixes();
-
-        List<List<String>> commands = new ArrayList<>();
-
-        RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
-
-        SlideshowCfg slideshowCfg;
+        public Boolean hq;
 
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
-            builder.append("RemuxCfg [");
-            builder.append("slideshowCfg=").append(this.slideshowCfg).append(", ");
-            if (this.at != null) {
-                builder.append("at=").append(this.at).append(", ");
-            }
-            builder.append("ar=").append(this.ar).append(", ");
-            if (this.vt != null) {
-                builder.append("vt=").append(this.vt).append(", ");
-            }
-            builder.append("vr=").append(this.vr).append(", tvr=").append(this.tvr).append(", hq=").append(this.hq).append(", ");
-            builder.append("vcopy=").append(this.vcopy).append(", acopy=").append(this.acopy).append(", ");
-            if (this.wh != null) {
-                builder.append("wh=").append(Arrays.toString(this.wh)).append(", ");
-            }
-            if (this.fps != null) {
-                builder.append("fps=").append(fps).append(", ");
-            }
-            builder.append("defaults=").append(this.defaults).append(", ");
+            builder.append("[");
+            builder.append("vcopy=").append(this.vcopy);
+            builder.append(", acopy=").append(this.acopy);
+            builder.append(", acopy=").append(this.acopy);
+            builder.append(", hq=").append(this.hq);
+            if (slideshowCfg != null) builder.append(", slideshowCfg=").append(this.slideshowCfg);
+            if (input != null) builder.append(", info=").append(this.input);
             builder.append("]");
             return builder.toString();
-        }
-
-        public int getVr() {
-            return this.vr;
-        }
-
-        public int getTvr() {
-            return this.tvr;
-        }
-
-        public String getAt() {
-            return this.at;
-        }
-
-        public void setAt(String at) {
-            this.at = at;
-        }
-
-        public int getAr() {
-            return this.ar;
-        }
-
-        public void setAr(int ar) {
-            this.ar = ar;
-        }
-
-        public String getVt() {
-            return this.vt;
-        }
-
-        public void setVt(String vt) {
-            this.vt = vt;
-        }
-
-        public boolean isHq() {
-            return this.hq;
-        }
-
-        public void setHq(boolean hq) {
-            this.hq = hq;
-        }
-
-        public FfprobeType getInfo() {
-            return this.info;
-        }
-
-        public void setInfo(FfprobeType info) {
-            this.info = info;
-        }
-
-        public FilePath getParentDir() {
-            return this.parentDir;
-        }
-
-        public void setParentDir(FilePath parentDir) {
-            this.parentDir = parentDir;
-        }
-
-        public FilePath getInput() {
-            return this.input;
-        }
-
-        public void setInput(FilePath input) {
-            this.input = input;
-        }
-
-        public boolean isVcopy() {
-            return this.vcopy;
-        }
-
-        public void setVcopy(boolean vcopy) {
-            this.vcopy = vcopy;
-        }
-
-        public boolean isAcopy() {
-            return this.acopy;
-        }
-
-        public void setAcopy(boolean acopy) {
-            this.acopy = acopy;
-        }
-
-        public int[] getWh() {
-            return this.wh;
-        }
-
-        public void setWh(int[] wh) {
-            this.wh = wh;
-        }
-
-        public FilePath getOutput() {
-            return this.output;
-        }
-
-        public void setOutput(FilePath output) {
-            this.output = output;
-        }
-
-        public RemuxFixes getFixes() {
-            return this.fixes;
-        }
-
-        public void setFixes(RemuxFixes fixes) {
-            this.fixes = fixes;
-        }
-
-        public List<List<String>> getCommands() {
-            return this.commands;
-        }
-
-        public void setCommands(List<List<String>> commands) {
-            this.commands = commands;
-        }
-
-        public RemuxDefaultsCfg getDefaults() {
-            return this.defaults;
-        }
-
-        public void setDefaults(RemuxDefaultsCfg defaults) {
-            this.defaults = defaults;
-        }
-
-        public void setVr(int vr) {
-            this.vr = vr;
-        }
-
-        public void setTvr(int tvr) {
-            this.tvr = tvr;
-        }
-
-        public Integer getFps() {
-            return this.fps;
-        }
-
-        public void setFps(Integer fps) {
-            this.fps = fps;
-        }
-
-        public SlideshowCfg getSlideshowCfg() {
-            return this.slideshowCfg;
-        }
-
-        public void setSlideshowCfg(SlideshowCfg slideshowCfg) {
-            this.slideshowCfg = slideshowCfg;
         }
     }
 
     protected List<String> command(int pass, RemuxCfg cfg) {
+        if (cfg.acopy == null) cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
+        if (cfg.vcopy == null) cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
+        if (cfg.hq == null) cfg.hq = cfg.input != null ? cfg.input.hq : true;
+
         List<String> accel = getHwAccel();
         List<String> command = new ArrayList<>();
         cfg.commands.add(command);
@@ -1001,18 +778,18 @@ public class FfmpegTool implements MediaCte {
         // // command.add("1");
         // }
         // }
-        if (cfg.getSlideshowCfg() != null) {
+        if (cfg.slideshowCfg != null) {
             command.add("-framerate");
-            if (cfg.getSlideshowCfg().getSecondsPerFrame() != null) {
-                command.add("1/" + cfg.getSlideshowCfg().getSecondsPerFrame());
-            } else if (cfg.getSlideshowCfg().getFramesPerSecondIn() != null) {
-                command.add("" + cfg.getSlideshowCfg().getFramesPerSecondIn());
+            if (cfg.slideshowCfg.secondsPerFrame != null) {
+                command.add("1/" + cfg.slideshowCfg.secondsPerFrame);
+            } else if (cfg.slideshowCfg.framesPerSecondIn != null) {
+                command.add("" + cfg.slideshowCfg.framesPerSecondIn);
             }
             command.add("-i");
-            command.add("\"" + cfg.input.getAbsolutePath() + "/" + cfg.getSlideshowCfg().getImages() + "\"");
+            command.add("\"" + cfg.slideshowCfg.input.getAbsolutePath() + "/" + cfg.slideshowCfg.images + "\"");
         } else {
             command.add("-i");
-            command.add(command(cfg.input));
+            command.add(command(cfg.input.input));
         }
         cfg.defaults.tune.forEach(tune -> {
             command.add("-tune");
@@ -1048,9 +825,7 @@ public class FfmpegTool implements MediaCte {
         }
         {
             command.add("-threads");
-            command.add("2");
-            // command.add(String.valueOf(Runtime.getRuntime().availableProcessors()
-            // / 2));
+            command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 2)));
         }
         if (!cfg.vcopy && cfg.fixes.fixNotHighProfile) {
             command.add("-profile:v");
@@ -1064,28 +839,28 @@ public class FfmpegTool implements MediaCte {
             command.add("-crf");
             // HQ 18-23-28 LQ
             command.add("" + (cfg.hq ? cfg.defaults.cfrHQ : cfg.defaults.cfrLQ));
-            if (cfg.getSlideshowCfg() == null) {
+            if (cfg.input != null) {
                 command.add("-b:v");
                 // ...What_bitrate_should_I_use...
                 int newVidRate = -1;
-                if (cfg.wh != null) {
-                    newVidRate = (int) ((cfg.hq ? cfg.defaults.vidRateQHQ : cfg.defaults.vidRateQLQ) * cfg.wh[0]
-                            + cfg.wh[1] * (cfg.getFps() == null ? 24 : cfg.getFps()) * cfg.defaults.vidRateQ / 1000);
-                    if (cfg.vr != -1) {
-                        if (newVidRate > cfg.vr) {
-                            newVidRate = cfg.vr;
+                if (cfg.input.wh != null) {
+                    newVidRate = (int) ((cfg.hq ? cfg.defaults.vidRateQHQ : cfg.defaults.vidRateQLQ) * cfg.input.wh[0]
+                            + cfg.input.wh[1] * (cfg.input.fps == null ? 24 : cfg.input.fps) * cfg.defaults.vidRateQ / 1000);
+                    if (cfg.input.vr != -1) {
+                        if (newVidRate > cfg.input.vr) {
+                            newVidRate = cfg.input.vr;
                         } else {
-                            if (3000 < cfg.vr && newVidRate < 2500) {
+                            if (3000 < cfg.input.vr && newVidRate < 2500) {
                                 newVidRate *= 1.25;
                             }
-                            if (cfg.vr < 1000 && 1500 < newVidRate) {
+                            if (cfg.input.vr < 1000 && 1500 < newVidRate) {
                                 newVidRate *= 0.75;
                             }
                         }
                     }
                 } else {
-                    if (cfg.vr != -1) {
-                        newVidRate = cfg.vr;
+                    if (cfg.input.vr != -1) {
+                        newVidRate = cfg.input.vr;
                     } else {
                         if (cfg.hq) {
                             newVidRate = cfg.defaults.vidRateHQ;
@@ -1107,49 +882,58 @@ public class FfmpegTool implements MediaCte {
             command.add("-movflags");
             command.add("+faststart");
         }
-        if (pass == 1 || pass == 2) {
-            command.add("-pass");
-            command.add(String.valueOf(pass));
+        if (cfg.input != null) {
+            if (pass == 1 || pass == 2) {
+                command.add("-pass");
+                command.add(String.valueOf(pass));
+            }
         }
-        if (pass == 1) {
-            command.add("-an");
-        } else {
-            if (cfg.ar > 0) {
-                if (cfg.acopy) {
-                    command.add("-acodec");
-                    command.add("copy");
-                } else {
-                    // command.add("-strict");
-                    // command.add("experimental");
-                    command.add("-c:a");
-                    // command.add(AAC);
-                    command.add(MP3C);
-                    if (cfg.fixes.fixAudioRate) {
-                        // muxing mp3 at 11025hz is not supported
-                        command.add("-ar");
-                        command.add("44100");
-                    }
-                    if (cfg.fixes.fixAudioStrict) {
-                        command.add("-strict");
-                        command.add("-1");
+        if (cfg.input != null) {
+            if (pass == 1) {
+                command.add("-an");
+            } else {
+                if (cfg.input.ar > 0) {
+                    if (cfg.acopy) {
+                        command.add("-acodec");
+                        command.add("copy");
+                    } else {
+                        // command.add("-strict");
+                        // command.add("experimental");
+                        command.add("-c:a");
+                        // command.add(AAC);
+                        command.add(MP3C);
+                        if (cfg.fixes.fixAudioRate) {
+                            // muxing mp3 at 11025hz is not supported
+                            command.add("-ar");
+                            command.add("44100");
+                        }
+                        if (cfg.fixes.fixAudioStrict) {
+                            command.add("-strict");
+                            command.add("-1");
+                        }
                     }
                 }
             }
         }
-        if (cfg.getSlideshowCfg() != null) {
-            if (cfg.getSlideshowCfg().getFramesPerSecondOut() == null) {
-                if (cfg.getSlideshowCfg().getSecondsPerFrame() != null)
-                    cfg.getSlideshowCfg().setFramesPerSecondOut(1);
-                else if (cfg.getSlideshowCfg().getFramesPerSecondIn() != null)
-                    cfg.getSlideshowCfg().setFramesPerSecondOut(cfg.getSlideshowCfg().getFramesPerSecondIn());
+        if (cfg.slideshowCfg != null) {
+            if (cfg.slideshowCfg.framesPerSecondOut == null) {
+                if (cfg.slideshowCfg.secondsPerFrame != null) {
+                    cfg.slideshowCfg.framesPerSecondOut = 1;
+                } else if (cfg.slideshowCfg.framesPerSecondIn != null) {
+                    cfg.slideshowCfg.framesPerSecondOut = cfg.slideshowCfg.framesPerSecondIn;
+                }
             }
             command.add("-vf");
-            command.add("\"fps=" + cfg.getSlideshowCfg().getFramesPerSecondOut() + ",format=yuv420p,scale=trunc(iw/2)*2:trunc(ih/2)*2\"");
+            if (cfg.fixes.fixDiv2) {
+                command.add(escape(and("fps=" + cfg.slideshowCfg.framesPerSecondOut, FORMAT_YUV420P)));
+            } else {
+                command.add(escape(and("fps=" + cfg.slideshowCfg.framesPerSecondOut, FORMAT_YUV420P, FIX_DIV2)));
+            }
         } else if (cfg.fixes.fixDiv2) {
             command.add("-vf");
-            command.add("\"format=yuv420p,scale=trunc(iw/2)*2:trunc(ih/2)*2\"");
+            command.add(escape(and(FORMAT_YUV420P, FIX_DIV2)));
         }
-        if (pass == 1) {
+        if (cfg.input != null && pass == 1) {
             command.add("-f");
             command.add("mp4");
             command.add("NUL");
@@ -1248,18 +1032,15 @@ public class FfmpegTool implements MediaCte {
         // command.forEach(System.out::println);
         // call(output.getParentPath(), command, true, listener);
         RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
-        defaults.setCfrHQ(15);
+        defaults.cfrHQ = 15;
         remux(defaults, cfg -> listener, null, output, cfg -> {
-            cfg.setInput(input);
-            cfg.setHq(true);
-            cfg.getFixes().setFixDiv2(true);
-            cfg.getFixes().setFixNotHighProfile(true);
-            SlideshowCfg slideshowCfg = new SlideshowCfg();
-            slideshowCfg.setFramesPerSecondIn(framesPerSecondIn);
-            slideshowCfg.setFramesPerSecondOut(framesPerSecondOut);
-            slideshowCfg.setImages(images);
-            slideshowCfg.setSecondsPerFrame(secondsPerFrame);
-            cfg.setSlideshowCfg(slideshowCfg);
+            cfg.fixes.fixNotHighProfile = true;
+            cfg.slideshowCfg = new SlideshowCfg();
+            cfg.slideshowCfg.input = input;
+            cfg.slideshowCfg.framesPerSecondIn = framesPerSecondIn;
+            cfg.slideshowCfg.framesPerSecondOut = framesPerSecondOut;
+            cfg.slideshowCfg.images = images;
+            cfg.slideshowCfg.secondsPerFrame = secondsPerFrame;
         });
     }
 
@@ -1305,7 +1086,15 @@ public class FfmpegTool implements MediaCte {
     }
 
     protected String command(FilePath f) {
-        return "\"" + f.getAbsolutePath() + "\"";
+        return escape(f.getAbsolutePath());
+    }
+
+    protected String escape(String string) {
+        return "\"" + string + "\"";
+    }
+
+    protected String and(String... strings) {
+        return Arrays.stream(strings).collect(Collectors.joining(","));
     }
 
     public long frames(StreamType videostreaminfo) {

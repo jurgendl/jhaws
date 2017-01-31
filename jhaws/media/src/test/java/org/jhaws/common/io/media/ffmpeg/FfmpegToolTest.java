@@ -26,7 +26,7 @@ public class FfmpegToolTest {
             input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("hevc.mp4"));
             FilePath output = FilePath.createDefaultTempFile("mp4");
             RemuxDefaultsCfg def = new RemuxDefaultsCfg();
-            def.setTwopass(true);
+            def.twopass = true;
             RemuxCfg cfg = t.remux(def, null, input, output, null);
             cfg.commands.forEach(System.out::println);
         } catch (RuntimeException ex) {
