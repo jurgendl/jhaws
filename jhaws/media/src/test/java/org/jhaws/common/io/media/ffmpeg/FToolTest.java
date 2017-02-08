@@ -86,11 +86,21 @@ public class FToolTest {
     public void test3() {
         try {
             FilePath input = new FilePath(System.getProperty("test3"));
-            FilePath output = input.appendExtension("mp4");
+            FilePath outputa = input.appendExtension("a.mp4");
+            outputa.deleteIfExists();
+            FilePath outputb = input.appendExtension("b.mp4");
+            outputb.deleteIfExists();
             RemuxDefaultsCfg def = new RemuxDefaultsCfg();
-            def.twopass = true;
-            RemuxCfg cfg = t.remux(def, x -> System.out::println, input, output, null);
+            RemuxCfg cfg = t.remux(def, x -> System.out::println, input, outputa, null);
             cfg.commands.forEach(System.out::println);
+            def.twopass = true;
+            cfg = t.remux(def, x -> System.out::println, input, outputb, null);
+            cfg.commands.forEach(System.out::println);
+            System.out.println();
+            System.out.println(outputa.getAbsolutePath() + " > " + FilePath.getHumanReadableByteCount(input.getFileSize(), 2) + " > "
+                    + FilePath.getHumanReadableByteCount(outputa.getFileSize(), 2));
+            System.out.println(outputb.getAbsolutePath() + " > " + FilePath.getHumanReadableByteCount(input.getFileSize(), 2) + " > "
+                    + FilePath.getHumanReadableByteCount(outputb.getFileSize(), 2));
         } catch (RuntimeException ex) {
             ex.printStackTrace(System.out);
             throw ex;

@@ -5,6 +5,7 @@ import static org.jhaws.common.lang.CollectionUtils8.join;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -405,6 +406,11 @@ public class FfmpegTool implements MediaCte {
     @Pooled
     public RemuxCfg remux(RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output,
             Consumer<RemuxCfg> cfgEdit) {
+        try {
+            output.checkNotExists();
+        } catch (FileAlreadyExistsException ex) {
+            throw new UncheckedIOException(ex);
+        }
         RemuxCfg cfg = config(defaults, input, output, cfgEdit);
         RuntimeException exception = null;
         List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
@@ -434,6 +440,10 @@ public class FfmpegTool implements MediaCte {
         if (cfg.defaults.twopass) {
             command = command(2, cfg);
             lines = call(input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+            input.getParentPath().child("ffmpeg2pass-0.log").deleteIfExists();
+            input.getParentPath().child("ffmpeg2pass-0.log.mbtree").deleteIfExists();
+            output.getParentPath().child("ffmpeg2pass-0.log").deleteIfExists();
+            output.getParentPath().child("ffmpeg2pass-0.log.mbtree").deleteIfExists();
         }
         return cfg;
     }
@@ -534,7 +544,7 @@ public class FfmpegTool implements MediaCte {
 
     public static class RemuxDefaultsCfg {
         // HQ 18-23-28 LQ
-        public int cfrHQ = 20;
+        public int cfrHQ = 18;
 
         public int cfrLQ = 23;
 
@@ -735,6 +745,8 @@ public class FfmpegTool implements MediaCte {
     }
 
     protected List<String> command(int pass, RemuxCfg cfg) {
+        if (cfg.slideshowCfg != null && cfg.defaults.twopass) throw new IllegalArgumentException();
+
         if (cfg.acopy == null) cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
         if (cfg.vcopy == null) cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
         if (cfg.acopy && cfg.vcopy) cfg.vcopy = false;
@@ -909,6 +921,9 @@ public class FfmpegTool implements MediaCte {
             command.add("-f");
             command.add("mp4");
             command.add("NUL");
+            // command.add("&&");
+            // command.add("\\");
+            // add second pass command
         } else {
             command.add(command(cfg.output));
         }
