@@ -9,7 +9,7 @@ import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxDefaultsCfg;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class FfmpegToolTest {
+public class FToolTest {
     static FfmpegTool t;
 
     @BeforeClass
@@ -27,10 +27,10 @@ public class FfmpegToolTest {
             FilePath output = FilePath.createDefaultTempFile("mp4");
             RemuxDefaultsCfg def = new RemuxDefaultsCfg();
             def.twopass = true;
-            RemuxCfg cfg = t.remux(def, null, input, output, null);
+            RemuxCfg cfg = t.remux(def, x -> System.out::println, input, output, null);
             cfg.commands.forEach(System.out::println);
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.out);
             throw ex;
         }
     }
@@ -77,7 +77,22 @@ public class FfmpegToolTest {
             t.slideshow(null, fpsI, fpsO, new FilePath(tmp.getAbsolutePath()), "imgs_%04d.png",
                     h.child("output").createDirectoryIfNotExists().child("test.mp4"), System.out::println);
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.out);
+            throw ex;
+        }
+    }
+
+    @Test
+    public void test3() {
+        try {
+            FilePath input = new FilePath(System.getProperty("test3"));
+            FilePath output = input.appendExtension("mp4");
+            RemuxDefaultsCfg def = new RemuxDefaultsCfg();
+            def.twopass = true;
+            RemuxCfg cfg = t.remux(def, x -> System.out::println, input, output, null);
+            cfg.commands.forEach(System.out::println);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace(System.out);
             throw ex;
         }
     }

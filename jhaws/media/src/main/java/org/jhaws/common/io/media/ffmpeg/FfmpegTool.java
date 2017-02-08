@@ -721,13 +721,15 @@ public class FfmpegTool implements MediaCte {
 
         public Boolean hq;
 
+        public int vidrate = -1;
+
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
             builder.append("[");
             builder.append("vcopy=").append(this.vcopy);
             builder.append(", acopy=").append(this.acopy);
-            builder.append(", acopy=").append(this.acopy);
+            builder.append(", vidrate=").append(this.vidrate);
             builder.append(", hq=").append(this.hq);
             if (slideshowCfg != null) builder.append(", slideshowCfg=").append(this.slideshowCfg);
             if (input != null) builder.append(", info=").append(this.input);
@@ -739,6 +741,7 @@ public class FfmpegTool implements MediaCte {
     protected List<String> command(int pass, RemuxCfg cfg) {
         if (cfg.acopy == null) cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
         if (cfg.vcopy == null) cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
+        if (cfg.acopy && cfg.vcopy) cfg.vcopy = false;
         if (cfg.hq == null) cfg.hq = cfg.input != null ? cfg.input.hq : true;
 
         List<String> accel = getHwAccel();
@@ -841,34 +844,7 @@ public class FfmpegTool implements MediaCte {
             command.add("" + (cfg.hq ? cfg.defaults.cfrHQ : cfg.defaults.cfrLQ));
             if (cfg.input != null) {
                 command.add("-b:v");
-                // ...What_bitrate_should_I_use...
-                int newVidRate = -1;
-                if (cfg.input.wh != null) {
-                    newVidRate = (int) ((cfg.hq ? cfg.defaults.vidRateQHQ : cfg.defaults.vidRateQLQ) * cfg.input.wh[0]
-                            + cfg.input.wh[1] * (cfg.input.fps == null ? 24 : cfg.input.fps) * cfg.defaults.vidRateQ / 1000);
-                    if (cfg.input.vr != -1) {
-                        if (newVidRate > cfg.input.vr) {
-                            newVidRate = cfg.input.vr;
-                        } else {
-                            if (3000 < cfg.input.vr && newVidRate < 2500) {
-                                newVidRate *= 1.25;
-                            }
-                            if (cfg.input.vr < 1000 && 1500 < newVidRate) {
-                                newVidRate *= 0.75;
-                            }
-                        }
-                    }
-                } else {
-                    if (cfg.input.vr != -1) {
-                        newVidRate = cfg.input.vr;
-                    } else {
-                        if (cfg.hq) {
-                            newVidRate = cfg.defaults.vidRateHQ;
-                        } else {
-                            newVidRate = cfg.defaults.vidRateLQ;
-                        }
-                    }
-                }
+                int newVidRate = vidrate(cfg);
                 command.add(newVidRate + "k");
             }
             command.add("-qmin");
@@ -941,6 +917,38 @@ public class FfmpegTool implements MediaCte {
             command.add(command(cfg.output));
         }
         return command;
+    }
+
+    protected int vidrate(RemuxCfg cfg) {
+        if (cfg.vidrate > 0) return cfg.vidrate;
+        // ...What_bitrate_should_I_use...
+        if (cfg.input.wh != null) {
+            cfg.vidrate = (int) ((cfg.hq ? cfg.defaults.vidRateQHQ : cfg.defaults.vidRateQLQ) * cfg.input.wh[0]
+                    + cfg.input.wh[1] * (cfg.input.fps == null ? 24 : cfg.input.fps) * cfg.defaults.vidRateQ / 1000);
+            if (cfg.input.vr != -1) {
+                if (cfg.vidrate > cfg.input.vr) {
+                    cfg.vidrate = cfg.input.vr;
+                } else {
+                    if (3000 < cfg.input.vr && cfg.vidrate < 2500) {
+                        cfg.vidrate *= 1.25;
+                    }
+                    if (cfg.input.vr < 1000 && 1500 < cfg.vidrate) {
+                        cfg.vidrate *= 0.75;
+                    }
+                }
+            }
+        } else {
+            if (cfg.input.vr != -1) {
+                cfg.vidrate = cfg.input.vr;
+            } else {
+                if (cfg.hq) {
+                    cfg.vidrate = cfg.defaults.vidRateHQ;
+                } else {
+                    cfg.vidrate = cfg.defaults.vidRateLQ;
+                }
+            }
+        }
+        return cfg.vidrate;
     }
 
     public boolean merge(FilePath video, FilePath audio, FilePath output) {
