@@ -660,9 +660,6 @@ public class FfmpegTool implements MediaCte {
 
         public int vr;
 
-        // FIXME
-        public int tvr;
-
         public String at;
 
         public int ar;
@@ -687,7 +684,6 @@ public class FfmpegTool implements MediaCte {
                 builder.append(", vt=").append(this.vt);
             }
             builder.append(", vr=").append(this.vr);
-            builder.append(", tvr=").append(this.tvr);
             builder.append(", hq=").append(this.hq);
             builder.append(", vcopy=").append(this.vcopy);
             builder.append(", acopy=").append(this.acopy);
