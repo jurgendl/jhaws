@@ -559,20 +559,21 @@ public interface CollectionUtils8 {
         return map(false, entries);
     }
 
-    public static <K, V> Map<K, V> map(boolean parallel, Collection<Map.Entry<K, V>> entries) {
+    public static <K, V> Map<K, V> map(boolean parallel, Collection<? extends Map.Entry<K, V>> entries) {
         return map(stream(parallel, entries));
     }
 
-    public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream) {
+    public static <K, V> Map<K, V> map(Stream<? extends Map.Entry<K, V>> stream) {
         return map(stream, CollectionUtils8.<K, V> newLinkedMap());
     }
 
-    public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
+    public static <K, V> Map<K, V> map(Stream<? extends Map.Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
         BinaryOperator<V> keepLast = CollectionUtils8.<V> keepLast();
         return map(stream, mapSupplier, keepLast);
     }
 
-    public static <K, V> Map<K, V> map(Stream<Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier, BinaryOperator<V> choice) {
+    public static <K, V> Map<K, V> map(Stream<? extends Map.Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier,
+            BinaryOperator<V> choice) {
         Function<Entry<K, V>, K> keyMapper = CollectionUtils8.<K, V> keyMapper();
         Function<Entry<K, V>, V> valueMapper = CollectionUtils8.<K, V> valueMapper();
         Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, choice, mapSupplier);
