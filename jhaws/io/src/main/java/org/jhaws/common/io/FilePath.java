@@ -3196,10 +3196,12 @@ public class FilePath implements Path, Externalizable {
     }
 
     /**
-     * on Windows only
+     * on Windows only, returns lowercase extension if not
      */
     public String getFileTypeName() {
-        String ext = getExtension().toLowerCase();
+        String ext = getExtension();
+        if (ext == null) return null;
+        ext = ext.toLowerCase();
         try {
             String value = WinRegistry.getRegValue("HKEY_CLASSES_ROOT\\" + Utils.WIN_FILE_EXTS.get(ext), null, "REG_SZ", false).get(0);
             if (value.startsWith("[") && value.endsWith("]")) {
