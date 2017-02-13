@@ -542,4 +542,13 @@ public class FilePathTest {
         ClassLoader cl = URLClassLoader.newInstance(new URL[] { zip.toUrl() });
         System.out.println(FilePath.of(cl, fn).getAbsolutePath());
     }
+
+    // @Test
+    // public void testOpen() {
+    // String fn = "FilePathTest_" + System.currentTimeMillis() + ".txt";
+    // FilePath tmp = FilePath.getTempDirectory().child(fn);
+    // System.out.println(tmp.getAbsolutePath());
+    // tmp.write(fn);
+    // tmp.open();
+    // }
 }

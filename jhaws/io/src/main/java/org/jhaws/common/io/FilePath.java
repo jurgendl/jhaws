@@ -2285,11 +2285,32 @@ public class FilePath implements Path, Externalizable {
         return Files.notExists(this.getPath(), options);
     }
 
-    public FilePath openOnJava() {
+    public FilePath _openOnJava() {
         try {
             Desktop.getDesktop().open(this.toFile());
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
+        }
+        return this;
+    }
+
+    /**
+     * on Windows only
+     */
+    public FilePath _openOnOS(String... parameters) {
+        try {
+            Utils.open(toFile(), parameters);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+        return this;
+    }
+
+    public FilePath open(String... parameters) {
+        try {
+            _openOnOS(parameters);
+        } catch (Exception ex) {
+            _openOnJava();
         }
         return this;
     }
@@ -3150,17 +3171,6 @@ public class FilePath implements Path, Externalizable {
                 zout.closeEntry();
                 zout.close();
             }
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
-
-    /**
-     * on Windows only
-     */
-    public void openOnOS(String... parameters) {
-        try {
-            Utils.open(toFile(), parameters);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
