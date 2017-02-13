@@ -113,6 +113,7 @@ import org.jhaws.common.io.FilePath.Visitors.CopyAllFilesVisitor;
 import org.jhaws.common.io.FilePath.Visitors.MoveAllFilesVisitor;
 import org.jhaws.common.io.Utils.OSGroup;
 import org.jhaws.common.io.win.WinRegistry;
+import org.jhaws.common.lang.Value;
 
 /**
  * @since 1.8
@@ -196,50 +197,68 @@ public class FilePath implements Path, Externalizable {
         return null;
     }
 
-    /**
-     * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
-     */
-    public static Path path(String path, URL url, URI uri, Class<?> root, ClassLoader classLoader) {
-        if (path.startsWith("/")) {
+    public static URL url(String path, Class<?> root, ClassLoader classLoader) {
+        return url(path, null, root, new Value<>(classLoader));
+    }
+
+    private static URL url(String path, URL url, Class<?> root, Value<ClassLoader> classLoader) {
+        if (path != null && path.startsWith("/")) {
             path = path.substring(1);
         }
         if (root == null) {
             root = FilePath.class;
         }
-        if (classLoader == null) {
-            classLoader = root.getClassLoader();
+        if (classLoader.get() == null) {
+            classLoader.set(root.getClassLoader());
         }
-        if (url == null) {
-            url = classLoader.getResource("/" + path);
+        if (url == null && path != null) {
+            url = classLoader.get().getResource("/" + path);
         }
-        if (url == null) {
-            url = classLoader.getResource(path);
+        if (url == null && path != null) {
+            url = classLoader.get().getResource(path);
         }
-        if (url == null) {
-            throw new UncheckedIOException(new FileNotFoundException("resource not found: " + path));
-        }
+        return url;
+    }
+
+    public static URI uri(URL url) {
+        return uri(url, null);
+    }
+
+    private static URI uri(URL url, URI uri) {
         if (uri == null) {
             try {
                 uri = url.toURI();
             } catch (URISyntaxException ex) {
-                throw new UncheckedIOException(new IOException("resource not found: " + path, ex));
+                throw new UncheckedIOException(new IOException("resource not found: " + url, ex));
             }
         }
-        String scheme = uri.getScheme();
+        return uri;
+    }
+
+    /**
+     * path (then class or classloader is required) or url or uri required
+     * 
+     * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
+     */
+    public static Path path(String _path, URL _url, URI _uri, Class<?> _root, ClassLoader _classLoader) {
+        Value<ClassLoader> __classLoader = new Value<>(_classLoader);
+        _url = url(_path, _url, _root, __classLoader);
+        _uri = uri(_url, _uri);
+        String scheme = _uri.getScheme();
         if (scheme.equals("file")) {
-            return Paths.get(uri);
+            return Paths.get(_uri);
         }
         if (!scheme.equals("jar")) {
-            throw new UnsupportedOperationException("Cannot convert to Path: " + uri);
+            throw new UnsupportedOperationException("Cannot convert to Path: " + _uri);
         }
-        String s = uri.toASCIIString();
+        String s = _uri.toASCIIString();
         int separator = s.indexOf("!/");
         String entryName = s.substring(separator + 2);
         URI fileURI = URI.create(s.substring(0, separator));
         FileSystem fs;
         try {
             try {
-                fs = FileSystems.newFileSystem(fileURI, Collections.<String, Object> emptyMap(), classLoader);
+                fs = FileSystems.newFileSystem(fileURI, Collections.<String, Object> emptyMap(), __classLoader.get());
             } catch (java.nio.file.FileSystemAlreadyExistsException ex) {
                 fs = FileSystems.getFileSystem(fileURI);
             }
@@ -1215,8 +1234,8 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(classLoader, relativePath);
     }
 
-    public static FilePath of(Class<?> root, String resource) {
-        return new FilePath(root, resource);
+    public static FilePath of(Class<?> root, String relativePath) {
+        return new FilePath(root, relativePath);
     }
 
     protected static <T> T notNull(T o) {

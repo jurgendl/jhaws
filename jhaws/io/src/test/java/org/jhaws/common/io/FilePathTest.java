@@ -526,21 +526,105 @@ public class FilePathTest {
     }
 
     @Test
-    public void testResource1() {
-        System.out.println(new FilePath("FilePath.txt").getAbsolutePath());
-    }
-
-    @Test
-    public void testResource2() {
-        String fn = "FilePathTest_" + System.currentTimeMillis() + ".txt";
-        FilePath tmp = FilePath.getTempDirectory().child(fn);
-        System.out.println(tmp.getAbsolutePath());
-        tmp.write(fn);
-        FilePath zip = tmp.appendExtension("zip");
-        System.out.println(zip.getAbsolutePath());
-        zip.zip(tmp);
-        ClassLoader cl = URLClassLoader.newInstance(new URL[] { zip.toUrl() });
-        System.out.println(FilePath.of(cl, fn).getAbsolutePath());
+    public void testResource() {
+        {
+            String path = "FilePath.txt";
+            {
+                FilePath filePath = new FilePath(path);
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePathTest.class, path);
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of((Class<?>) null, path);
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePathTest.class.getClassLoader(), path);
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of((ClassLoader) null, path);
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.url(path, (Class<?>) null, (ClassLoader) null));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.uri(FilePath.url(path, (Class<?>) null, (ClassLoader) null)));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.url(path, FilePathTest.class, (ClassLoader) null));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.url(path, FilePathTest.class, FilePathTest.class.getClassLoader()));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.uri(FilePath.url(path, FilePathTest.class, (ClassLoader) null)));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.url(path, (Class<?>) null, FilePathTest.class.getClassLoader()));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.uri(FilePath.url(path, (Class<?>) null, FilePathTest.class.getClassLoader())));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.url(path, FilePathTest.class, FilePathTest.class.getClassLoader()));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.uri(FilePath.url(path, FilePathTest.class, FilePathTest.class.getClassLoader())));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+        }
+        {
+            String path = "FilePathTest_" + System.currentTimeMillis() + ".txt";
+            FilePath tmp = FilePath.getTempDirectory().child(path);
+            System.out.println(tmp.getAbsolutePath());
+            tmp.write(path);
+            FilePath zip = tmp.appendExtension("zip");
+            System.out.println(zip.getAbsolutePath());
+            zip.zip(tmp);
+            ClassLoader classLoader = URLClassLoader.newInstance(new URL[] { zip.toUrl() });
+            {
+                FilePath filePath = FilePath.of(classLoader, path);
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.url(path, null, classLoader));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+            {
+                FilePath filePath = FilePath.of(FilePath.uri(FilePath.url(path, null, classLoader)));
+                System.out.println(filePath.getAbsolutePath());
+                Assert.assertNotNull(filePath.getAbsolutePath());
+            }
+        }
     }
 
     // @Test
