@@ -196,6 +196,59 @@ public class FilePath implements Path, Externalizable {
         return null;
     }
 
+    /**
+     * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
+     */
+    public static Path path(String path, URL url, URI uri, Class<?> root, ClassLoader classLoader) {
+        if (path.startsWith("/")) {
+            path = path.substring(1);
+        }
+        if (root == null) {
+            root = FilePath.class;
+        }
+        if (classLoader == null) {
+            classLoader = root.getClassLoader();
+        }
+        if (url == null) {
+            url = classLoader.getResource("/" + path);
+        }
+        if (url == null) {
+            url = classLoader.getResource(path);
+        }
+        if (url == null) {
+            throw new UncheckedIOException(new FileNotFoundException("resource not found: " + path));
+        }
+        if (uri == null) {
+            try {
+                uri = url.toURI();
+            } catch (URISyntaxException ex) {
+                throw new UncheckedIOException(new IOException("resource not found: " + path, ex));
+            }
+        }
+        String scheme = uri.getScheme();
+        if (scheme.equals("file")) {
+            return Paths.get(uri);
+        }
+        if (!scheme.equals("jar")) {
+            throw new UnsupportedOperationException("Cannot convert to Path: " + uri);
+        }
+        String s = uri.toASCIIString();
+        int separator = s.indexOf("!/");
+        String entryName = s.substring(separator + 2);
+        URI fileURI = URI.create(s.substring(0, separator));
+        FileSystem fs;
+        try {
+            try {
+                fs = FileSystems.newFileSystem(fileURI, Collections.<String, Object> emptyMap(), classLoader);
+            } catch (java.nio.file.FileSystemAlreadyExistsException ex) {
+                fs = FileSystems.getFileSystem(fileURI);
+            }
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+        return fs.getPath(entryName);
+    }
+
     public static class FilePathWatcher {
         protected boolean enabled = true;
 
@@ -1158,32 +1211,12 @@ public class FilePath implements Path, Externalizable {
         return new FilePath(url);
     }
 
-    public static FilePath of(Class<?> c, String resource) {
-        return new FilePath(c, resource);
+    public static FilePath of(ClassLoader classLoader, String relativePath) {
+        return new FilePath(classLoader, relativePath);
     }
 
-    /**
-     * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a -classpath-resource
-     */
-    public static Path path(URI uri) {
-        String scheme = uri.getScheme();
-        if (scheme.equals("file")) {
-            return Paths.get(uri);
-        }
-        if (!scheme.equals("jar")) {
-            throw new UnsupportedOperationException("Cannot convert to Path: " + uri);
-        }
-        String s = uri.toString();
-        int separator = s.indexOf("!/");
-        String entryName = s.substring(separator + 2);
-        URI fileURI = URI.create(s.substring(0, separator));
-        FileSystem fs;
-        try {
-            fs = FileSystems.newFileSystem(fileURI, Collections.<String, Object> emptyMap());
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-        return fs.getPath(entryName);
+    public static FilePath of(Class<?> root, String resource) {
+        return new FilePath(root, resource);
     }
 
     protected static <T> T notNull(T o) {
@@ -1197,11 +1230,20 @@ public class FilePath implements Path, Externalizable {
         this.path = Paths.get(CURRENT_FILE_PATH).toAbsolutePath().normalize();
     }
 
-    public FilePath(Class<?> root, String relativePath) throws UncheckedIOException {
-        this(root.getClassLoader()
-                .getResource((root.getPackage() == null ? ""
-                        : root.getPackage().getName().replace(getFileExtensionSeperatorChar(), '/') + (relativePath.startsWith("/") ? "" : '/'))
-                        + relativePath));
+    public FilePath(Class<?> root, String relativePath) {
+        this(path(relativePath, null, null, root, null));
+    }
+
+    public FilePath(ClassLoader classLoader, String relativePath) {
+        this(path(relativePath, null, null, null, classLoader));
+    }
+
+    public FilePath(URI uri) {
+        this(path(null, null, uri, null, null));
+    }
+
+    public FilePath(URL url) {
+        this(path(null, url, null, null, null));
     }
 
     public FilePath(File file) {
@@ -1222,18 +1264,6 @@ public class FilePath implements Path, Externalizable {
 
     public FilePath(String dir, String... file) {
         this.path = file == null || file.length == 0 ? Paths.get(notNull(dir)) : Paths.get(notNull(dir), notNull(file));
-    }
-
-    public FilePath(URI uri) {
-        this.path = path(notNull(uri));
-    }
-
-    public FilePath(URL url) {
-        try {
-            this.path = path(notNull(url).toURI());
-        } catch (URISyntaxException ex) {
-            throw new UncheckedIOException(new IOException(ex));
-        }
     }
 
     public FilePath addExtension(String extension) {
@@ -3072,48 +3102,56 @@ public class FilePath implements Path, Externalizable {
     /**
      * write files into this zip, overwrites
      */
-    public void zip(FilePath... files) throws IOException {
-        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
-        int read;
-        try (ZipOutputStream zout = new ZipOutputStream(newBufferedOutputStream())) {
-            for (FilePath file : files) {
-                if (file.isDirectory()) {
-                    continue;
-                }
-                zout.putNextEntry(new ZipEntry(file.getName()));
-                try (InputStream fin = file.newBufferedInputStream()) {
-                    while ((read = fin.read(buffer)) > 0) {
-                        zout.write(buffer, 0, read);
+    public void zip(FilePath... files) {
+        try {
+            byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
+            int read;
+            try (ZipOutputStream zout = new ZipOutputStream(newBufferedOutputStream())) {
+                for (FilePath file : files) {
+                    if (file.isDirectory()) {
+                        continue;
                     }
-                    fin.close();
+                    zout.putNextEntry(new ZipEntry(file.getName()));
+                    try (InputStream fin = file.newBufferedInputStream()) {
+                        while ((read = fin.read(buffer)) > 0) {
+                            zout.write(buffer, 0, read);
+                        }
+                        fin.close();
+                    }
+                    zout.closeEntry();
                 }
-                zout.closeEntry();
+                zout.close();
             }
-            zout.close();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
     }
 
     /**
      * write single file/data=byte[] into this zip, overwrites
      */
-    public void zip(String entryname, byte[] data) throws IOException {
+    public void zip(String entryname, byte[] data) {
         zip(entryname, new ByteArrayInputStream(data));
     }
 
     /**
      * write single file/data=InputStream into this zip, overwrites
      */
-    public void zip(String entryname, InputStream in) throws IOException {
-        byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
-        int read;
-        try (ZipOutputStream zout = new ZipOutputStream(newOutputStream())) {
-            zout.putNextEntry(new ZipEntry(entryname));
-            while ((read = in.read(buffer)) > 0) {
-                zout.write(buffer, 0, read);
+    public void zip(String entryname, InputStream in) {
+        try {
+            byte[] buffer = new byte[Utils.DEFAULT_BUFFER_LEN];
+            int read;
+            try (ZipOutputStream zout = new ZipOutputStream(newOutputStream())) {
+                zout.putNextEntry(new ZipEntry(entryname));
+                while ((read = in.read(buffer)) > 0) {
+                    zout.write(buffer, 0, read);
+                }
+                in.close();
+                zout.closeEntry();
+                zout.close();
             }
-            in.close();
-            zout.closeEntry();
-            zout.close();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
         }
     }
 
