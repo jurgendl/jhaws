@@ -103,6 +103,8 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.IOUtils;
@@ -119,14 +121,13 @@ import org.jhaws.common.lang.Value;
  * @since 1.8
  * @see http://andreinc.net/
  */
+@SuppressWarnings("serial")
 public class FilePath implements Path, Externalizable {
     public static final String CURRENT_FILE_PATH = ".";
 
     public static final String PROPERTIES = "properties";
 
     public static final String XML = "xml";
-
-    protected static ExtensionIconFinder grabber = new org.jhaws.common.io.SystemIcon();
 
     protected static Random RND = new Random(System.currentTimeMillis());
 
@@ -201,7 +202,7 @@ public class FilePath implements Path, Externalizable {
         return url(path, null, root, new Value<>(classLoader));
     }
 
-    private static URL url(String path, URL url, Class<?> root, Value<ClassLoader> classLoader) {
+    protected static URL url(String path, URL url, Class<?> root, Value<ClassLoader> classLoader) {
         if (path != null && path.startsWith("/")) {
             path = path.substring(1);
         }
@@ -224,7 +225,7 @@ public class FilePath implements Path, Externalizable {
         return uri(url, null);
     }
 
-    private static URI uri(URL url, URI uri) {
+    protected static URI uri(URL url, URI uri) {
         if (uri == null) {
             try {
                 uri = url.toURI();
@@ -267,6 +268,32 @@ public class FilePath implements Path, Externalizable {
         }
         return fs.getPath(entryName);
     }
+
+    public static Icon getSystemIcon(final FilePath f) {
+        if (f == null) {
+            return null;
+        }
+        String ext = f.getExtension();
+        if (!f.isDirectory() && iconMap.containsKey(ext)) {
+            return iconMap.get(ext);
+        }
+        try {
+            Icon icon = fsv.getSystemIcon(f.toFile());
+            if (!f.isDirectory()) {
+                iconMap.put(ext, icon);
+            }
+            return icon;
+        } catch (final NullPointerException ex) {
+            if (f.isDirectory()) {
+                return UIManager.getIcon("FileView.directoryIcon"); //$NON-NLS-1$
+            }
+            return UIManager.getIcon("FileView.fileIcon"); //$NON-NLS-1$
+        }
+    }
+
+    protected static FileSystemView fsv = FileSystemView.getFileSystemView();
+
+    protected static HashMap<String, Icon> iconMap = new HashMap<>();
 
     public static class FilePathWatcher {
         protected boolean enabled = true;
@@ -323,11 +350,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static class Comparators implements Comparator<FilePath>, Serializable {
-        private static final long serialVersionUID = 8900331112954086720L;
-
         public static class LastModifiedTimeComparator extends Comparators {
-            private static final long serialVersionUID = 6476737426344812503L;
-
             @Override
             public int compare(FilePath o1, FilePath o2) {
                 return new CompareToBuilder().append(o1.getLastModifiedTime(), o2.getLastModifiedTime()).toComparison();
@@ -335,8 +358,6 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class SizeComparator extends Comparators {
-            private static final long serialVersionUID = 1515835061656115678L;
-
             @Override
             public int compare(FilePath o1, FilePath o2) {
                 return new CompareToBuilder().append(o1.getFileSize(), o2.getFileSize()).toComparison();
@@ -384,11 +405,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static class Filters implements DirectoryStream.Filter<Path>, Serializable, Predicate<Path> {
-        private static final long serialVersionUID = 8537116661747478884L;
-
         public static class PredicateDelegate extends Filters {
-            private static final long serialVersionUID = -6114632909752594855L;
-
             protected final Predicate<Path> predicate;
 
             public PredicateDelegate(Predicate<Path> predicate) {
@@ -403,8 +420,6 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class ExtensionFilter extends Filters implements Iterable<String> {
-            private static final long serialVersionUID = -3873046181234664986L;
-
             protected List<String> ext;
 
             public ExtensionFilter() {
@@ -460,16 +475,12 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class WebImageFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = 2945116770811812757L;
-
             public WebImageFilter() {
                 super("jpg", "jpeg", "png", "gif", "webp");
             }
         }
 
         public static class ImageFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = -7187067174649487315L;
-
             public ImageFilter() {
                 super("jpg", "jpeg", "bmp", "tiff", "tif", "pix", "png", "gif", "jp2", "tga", "pcx", "pnm", "ppm", "pbm", "pgm", "ras", "iff", "raw",
                         "jpe", "wmf", "svg", "jpm", "emf", "rla", "jif", "dpx", "dcx", "pic", "ico");
@@ -477,56 +488,42 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class VideoFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = -7739502555496394554L;
-
             public VideoFilter() {
                 super("flv", "webm", "mp4", "m4v", "mpg", "mpeg", "mpe", "mpv", "wmv", "avi", "mov", "qt", "asf", "rm", "divx", "mkv");
             }
         }
 
         public static class Html5VideoFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = -7433598725949137242L;
-
             public Html5VideoFilter() {
                 super("flv", "webm", "mp4");
             }
         }
 
         public static class QuickTimeVideoFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = -2262172528663217508L;
-
             public QuickTimeVideoFilter() {
                 super("mov", "3gp", "3g2", "m2v");
             }
         }
 
         public static class FlashVideoFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = 4338488348271169459L;
-
             public FlashVideoFilter() {
                 super("flv");
             }
         }
 
         public static class ShockwaveVideoFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = 5719384120325522164L;
-
             public ShockwaveVideoFilter() {
                 super("sfw");
             }
         }
 
         public static class IIOImageFilter extends Filters.ExtensionFilter {
-            private static final long serialVersionUID = 5142335960151096949L;
-
             public IIOImageFilter() {
                 super(javax.imageio.ImageIO.getReaderFormatNames());
             }
         }
 
         public static final class AcceptAllFilter extends Filters {
-            private static final long serialVersionUID = 5836187025061354523L;
-
             @Override
             public boolean accept(Path entry) {
                 return true;
@@ -534,8 +531,6 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class CompatibleFilter extends Filters {
-            private static final long serialVersionUID = 7805492934831683710L;
-
             protected java.io.FileFilter fileFilter;
 
             public CompatibleFilter(java.io.FileFilter fileFilter) {
@@ -549,8 +544,6 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class DirectoryFilter extends Filters {
-            private static final long serialVersionUID = 5397816998252297502L;
-
             @Override
             public boolean accept(Path entry) {
                 return Files.isDirectory(getPath(entry));
@@ -558,8 +551,6 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class FileFilter extends Filters {
-            private static final long serialVersionUID = 6174016893380146941L;
-
             @Override
             public boolean accept(Path entry) {
                 return Files.isRegularFile(getPath(entry));
@@ -622,8 +613,6 @@ public class FilePath implements Path, Externalizable {
     }
 
     public abstract static class Iterators implements Serializable {
-        private static final long serialVersionUID = 6762741764613317464L;
-
         public static class FileByteIterator implements Iterator<Byte>, Closeable {
             protected transient final FilePath path;
 
@@ -873,11 +862,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static class Visitors extends SimpleFileVisitor<Path> implements Serializable {
-        private static final long serialVersionUID = 7414917192031528908L;
-
         public static class DeleteAllFilesVisitor extends Visitors {
-            private static final long serialVersionUID = 5288444763948803482L;
-
             protected boolean ifExists = false;
 
             public DeleteAllFilesVisitor() {
@@ -910,24 +895,18 @@ public class FilePath implements Path, Externalizable {
         }
 
         public static class CopyAllFilesVisitor extends MoveOrCopyAllFilesVisitor {
-            private static final long serialVersionUID = -2602269065839902682L;
-
             public CopyAllFilesVisitor(Path source, Path target) {
                 super(false, source, target);
             }
         }
 
         public static class MoveAllFilesVisitor extends MoveOrCopyAllFilesVisitor {
-            private static final long serialVersionUID = 8655910973146980405L;
-
             public MoveAllFilesVisitor(Path source, Path target) {
                 super(true, source, target);
             }
         }
 
         protected static class MoveOrCopyAllFilesVisitor extends Visitors {
-            private static final long serialVersionUID = -3550396212952077422L;
-
             protected FilePath source;
 
             protected FilePath target;
@@ -1564,11 +1543,11 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static class FindDuplicateMeta {
-        private final FilePath file;
+        protected final FilePath file;
 
-        private final Long length;
+        protected final Long length;
 
-        private Long check;
+        protected Long check;
 
         public FindDuplicateMeta(FilePath file) {
             this.file = file;
@@ -1626,9 +1605,9 @@ public class FilePath implements Path, Externalizable {
     }
 
     public static class FindDuplicateData {
-        private final List<FindDuplicateMeta> files = new ArrayList<>();
+        protected final List<FindDuplicateMeta> files = new ArrayList<>();
 
-        private final Map<String, List<FilePath>> duplicates = new HashMap<>();
+        protected final Map<String, List<FilePath>> duplicates = new HashMap<>();
 
         public boolean add(FilePath file) {
             FindDuplicateMeta meta = new FindDuplicateMeta(file);
@@ -1889,7 +1868,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Icon getLargeIcon() {
-        return grabber.getLargeIcon(this);
+        return getSystemIcon(this);
     }
 
     public BasicFileAttributes getAttributes() {
@@ -2005,8 +1984,19 @@ public class FilePath implements Path, Externalizable {
         return getShortFileName(this);
     }
 
+    @SuppressWarnings("restriction")
     public Icon getSmallIcon() {
-        return grabber.getSmallIcon(this);
+        try {
+            sun.awt.shell.ShellFolder sf;
+            try {
+                sf = sun.awt.shell.ShellFolder.getShellFolder(toFile());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            return new ImageIcon(sf.getIcon(true));
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     /**
@@ -2539,7 +2529,7 @@ public class FilePath implements Path, Externalizable {
         return resolveSiblingPath(other);
     }
 
-    private Path resolveSiblingPath(String other) {
+    protected Path resolveSiblingPath(String other) {
         return new FilePath(this.getPath().resolveSibling(other));
     }
 
@@ -2974,7 +2964,7 @@ public class FilePath implements Path, Externalizable {
         return this;
     }
 
-    private void streamChildrenForDeletion(Path f) {
+    protected void streamChildrenForDeletion(Path f) {
         FilePath filePath = of(f);
         if (filePath.isDirectory()) {
             if (filePath.streamChildren().count() == 0) {
@@ -3026,7 +3016,7 @@ public class FilePath implements Path, Externalizable {
         return _process(isGroup, groupBuilder == null ? t -> t : groupBuilder, acceptGroup == null ? x -> true : acceptGroup, whenAccept);
     }
 
-    private FilePath _process(Predicate<String> isGroup, UnaryOperator<String> groupBuilder, Predicate<String> acceptGroup,
+    protected FilePath _process(Predicate<String> isGroup, UnaryOperator<String> groupBuilder, Predicate<String> acceptGroup,
             BiConsumer<String, String> whenAccept) {
         String[] group = new String[1];
         readAllLines().stream().filter(StringUtils::isNotBlank).forEach(l -> {
