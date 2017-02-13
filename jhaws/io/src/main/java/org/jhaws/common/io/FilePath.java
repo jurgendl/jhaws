@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.AccessDeniedException;
@@ -2874,6 +2875,14 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public FilePath writeTo(FilePath target, CopyOption... options) {
+        return copyTo(target, options);
+    }
+
+    public FilePath writeFrom(FilePath source, CopyOption... options) {
+        return copyFrom(source, options);
+    }
+
     public FilePath write(boolean lastNewLine, Iterable<? extends CharSequence> lines, Charset charset, OpenOption... options) {
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(newOutputStream(options), charset.newEncoder()))) {
             Iterator<? extends CharSequence> it = lines.iterator();
@@ -3204,5 +3213,63 @@ public class FilePath implements Path, Externalizable {
         } catch (Exception ex) {
             return ext;
         }
+    }
+
+    public FileChannel openFileChannel(OpenOption... options) {
+        try {
+            return FileChannel.open(getPath(), options);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    public FilePath nioCopy(FilePath target) {
+        return nioCopy(target, true);
+    }
+
+    public FilePath nioCopy(FilePath target, boolean blocks) {
+        try (FileChannel inChannel = openFileChannel(); FileChannel outChannel = target.openFileChannel()) {
+            if (blocks) {
+                // magic number for Windows, 64Mb - 32Kb)
+                int maxCount = (64 * 1024 * 1024) - (32 * 1024);
+                long size = inChannel.size();
+                long position = 0;
+                while (position < size) {
+                    position += inChannel.transferTo(position, maxCount, outChannel);
+                }
+            } else {
+                inChannel.transferTo(0, inChannel.size(), outChannel);
+            }
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+        return target;
+    }
+
+    /**
+     * windows only
+     * 
+     * @see http://stackoverflow.com/questions/1646425/cmd-command-to-delete-files-and-put-them-into-recycle-bin
+     * @see https://github.com/npocmaka/batch.scripts/blob/master/hybrids/jscript/deleteJS.bat
+     * @see http://stackoverflow.com/questions/615948/how-do-i-run-a-batch-file-from-my-java-application
+     */
+    public boolean recycle() {
+        if (notExists()) {
+            return false;
+        }
+        FilePath deleteJSBat = getTempDirectory().child("deleteJS.bat");
+        if (deleteJSBat.notExists()) {
+            FilePath source = FilePath.of(FilePath.class, "deleteJS/deleteJS.bat");
+            source.writeTo(deleteJSBat);
+        }
+        try {
+            Process p = Runtime.getRuntime().exec(new String[] { "cmd", "/c", "call", deleteJSBat.getAbsolutePath(), getAbsolutePath() });
+            p.waitFor();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        } catch (InterruptedException ex) {
+            //
+        }
+        return notExists();
     }
 }

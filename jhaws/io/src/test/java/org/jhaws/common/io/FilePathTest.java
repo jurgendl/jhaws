@@ -635,4 +635,15 @@ public class FilePathTest {
     // tmp.write(fn);
     // tmp.open();
     // }
+
+    @Test
+    public void testRecycle() {
+        String path = "FilePathTest_" + System.currentTimeMillis() + ".txt";
+        FilePath tmp = FilePath.getTempDirectory().child(path);
+        System.out.println(tmp.getAbsolutePath());
+        tmp.write(path);
+        Assert.assertTrue(tmp.exists());
+        tmp.recycle();
+        Assert.assertFalse(tmp.exists());
+    }
 }
