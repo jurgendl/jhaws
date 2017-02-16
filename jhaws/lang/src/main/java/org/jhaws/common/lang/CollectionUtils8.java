@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NavigableMap;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -29,6 +30,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -152,6 +154,39 @@ public interface CollectionUtils8 {
         public Path next() {
             this.path = this.path.getParent();
             return this.path;
+        }
+    }
+
+    public static class ProjectionIterator<T> implements Iterator<T> {
+        protected T current;
+
+        protected T next;
+
+        protected Function<T, T> projection;
+
+        public ProjectionIterator(T object, boolean include, Function<T, T> projection) {
+            this.current = object;
+            this.projection = projection;
+            if (include) next = current;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (next == null) {
+                next = projection.apply(current);
+            }
+            return next != null;
+        }
+
+        @Override
+        public T next() {
+            hasNext();
+            if (next == null) {
+                throw new NoSuchElementException();
+            }
+            current = next;
+            next = null;
+            return current;
         }
     }
 
@@ -1629,5 +1664,53 @@ public interface CollectionUtils8 {
 
     public static <T> Map<T, Long> countBy(Stream<T> stream) {
         return stream.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+    }
+
+    /**
+     * @see http://stackoverflow.com/questions/26403319/skip-last-x-elements-in-streamt
+     */
+    public static <T> Stream<T> skip(Stream<T> s, int first, int last) {
+        if (last <= 0 && first <= 0) {
+            return s;
+        }
+        if (last <= 0) {
+            return s.skip(first);
+        }
+        if (first > 0) {
+            s = s.skip(first);
+        }
+        ArrayDeque<T> pending = new ArrayDeque<T>(last + 1);
+        Spliterator<T> src = s.spliterator();
+        return StreamSupport.stream(new Spliterator<T>() {
+            @Override
+            public boolean tryAdvance(Consumer<? super T> action) {
+                while (pending.size() <= last && src.tryAdvance(pending::add))
+                    ;
+                if (pending.size() > last) {
+                    action.accept(pending.remove());
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public Spliterator<T> trySplit() {
+                return null;
+            }
+
+            @Override
+            public long estimateSize() {
+                return src.estimateSize() - last;
+            }
+
+            @Override
+            public int characteristics() {
+                return src.characteristics();
+            }
+        }, false);
+    }
+
+    public static <T> Stream<T> skip(Integer first, Integer last, Stream<T> s) {
+        return skip(s, first == null ? 0 : first, last == null ? 0 : last);
     }
 }
