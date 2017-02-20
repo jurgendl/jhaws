@@ -19,6 +19,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.PreDestroy;
 
@@ -44,7 +45,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -361,25 +361,19 @@ public class HTTPClient implements Closeable {
         return execute(put, createPut(put));
     }
 
-    public HttpPut createPut(PutRequest put) {
-        HttpPut req = new HttpPut(put.getUri());
-
-        HttpEntity body = null;
-
+    public HttpUriRequest createPut(PutRequest put) {
+        RequestBuilder builder = RequestBuilder.put().setUri(put.getUri());
         if (put.getBody() != null) {
-            body = new StringEntity(put.getBody(), ContentType.create(put.getMime(), charSet));
+            builder.setEntity(new StringEntity(put.getBody(), ContentType.create(put.getMime(), charSet)));
         }
-
         if (!put.getFormValues().isEmpty()) {
-            if (body != null) {
-                throw new IllegalArgumentException("multiple bodies");
-            }
-            // FIXME
+            put.getFormValues().entrySet().stream().forEach(entry -> {
+                entry.getValue().stream().filter(Objects::nonNull).forEach(value -> {
+                    builder.addParameter(entry.getKey(), value);
+                });
+            });
         }
-
-        if (body != null) {
-            req.setEntity(body);
-        }
+        HttpUriRequest req = builder.build();
         return req;
     }
 
@@ -551,6 +545,9 @@ public class HTTPClient implements Closeable {
     protected void prepareRequest_accept(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
         if (params != null && StringUtils.isNotBlank(params.getAccept())) {
             req.setHeader(HttpHeaders.ACCEPT, params.getAccept());
+        }
+        if (params != null && StringUtils.isNotBlank(params.getAcceptEncoding())) {
+            req.setHeader(HttpHeaders.ACCEPT_ENCODING, params.getAcceptEncoding());
         }
         if (StringUtils.isNotBlank(acceptLanguage)) {
             req.setHeader(HttpHeaders.ACCEPT_LANGUAGE, acceptLanguage);

@@ -3194,13 +3194,13 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    /**
-     * on Windows only, returns lowercase extension if not
-     */
+    protected static final Map<String, String> FILE_TYPES = new HashMap<>();
+
     public String getFileTypeName() {
         String ext = getExtension();
         if (ext == null) return null;
         ext = ext.toLowerCase();
+        if (FILE_TYPES.containsKey(ext)) return FILE_TYPES.get(ext);
         try {
             String value = WinRegistry.getRegValue("HKEY_CLASSES_ROOT\\" + Utils.WIN_FILE_EXTS.get(ext), null, "REG_SZ", false).get(0);
             if (value.startsWith("[") && value.endsWith("]")) {
@@ -3209,9 +3209,20 @@ public class FilePath implements Path, Externalizable {
             if ("(value not set)".equals(value)) {
                 value = null;
             }
+            FILE_TYPES.put(ext, value);
             return value.toString();
         } catch (Exception ex) {
-            return ext;
+            try {
+                if (exists()) {
+                    String systemTypeDescription = FileSystemView.getFileSystemView().getSystemTypeDescription(toFile());
+                    if (StringUtils.isNotBlank(systemTypeDescription)) return systemTypeDescription;
+                }
+                String type = FileSystemView.getFileSystemView().getSystemTypeDescription(createDefaultTempFile(ext).toFile()).toString();
+                FILE_TYPES.put(ext, type);
+                return type;
+            } catch (Exception ex2) {
+                return ext;
+            }
         }
     }
 
