@@ -125,11 +125,11 @@ public class HTTPClient implements Closeable {
 
     protected String acceptLanguage = "en, en-gb;q=0.9";
 
-    private final boolean compressed;
+    protected final boolean compressed;
 
-    private transient CredentialsProvider defaultCredentialsProvider;
+    protected transient CredentialsProvider defaultCredentialsProvider;
 
-    private transient CredentialsProvider preemptiveCredentialsProvider;
+    protected transient CredentialsProvider preemptiveCredentialsProvider;
 
     public HTTPClient() {
         this(true);
@@ -571,6 +571,10 @@ public class HTTPClient implements Closeable {
             cookieStore = new org.jhaws.common.net.client.CookieStore();
         }
         return this.cookieStore;
+    }
+
+    public org.jhaws.common.net.client.CookieStore getCustomCookieStore() {
+        return org.jhaws.common.net.client.CookieStore.class.cast(getCookieStore());
     }
 
     public void setCookieStore(org.apache.http.client.CookieStore cookieStore) {
