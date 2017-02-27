@@ -412,8 +412,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     public CookieStore serialize(OutputStream out) throws IOException {
         try (ObjectOutputStream encoder = new ObjectOutputStream(out)) {
             encoder.writeObject(this);
-            encoder.close();
-
             return this;
         }
     }
@@ -430,7 +428,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
     public void writeExternal(ObjectOutput out) throws IOException {
         Cookie[] cookies = this.getCookies().toArray(new Cookie[0]);
         out.writeInt(cookies.length);
-
         for (Cookie c : cookies) {
             out.writeObject(new SerializableCookie(c));
         }
@@ -448,16 +445,11 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
     public CookieStore xmlserialize(OutputStream out) {
         try (XMLEncoder encoder = new XMLEncoder(out)) {
-
             Cookie[] cookies = this.getCookies().toArray(new Cookie[0]);
             encoder.writeObject(cookies.length);
-
             for (Cookie c : cookies) {
                 encoder.writeObject(new SerializableCookie(c));
             }
-
-            encoder.close();
-
             return this;
         }
     }
