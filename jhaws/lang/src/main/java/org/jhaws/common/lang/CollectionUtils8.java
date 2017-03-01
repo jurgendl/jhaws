@@ -69,6 +69,7 @@ import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+// TODO https://www.techempower.com/blog/2016/10/19/efficient-multiple-stream-concatenation-in-java/
 /**
  * @see java.util.stream.Stream
  * @see java.util.stream.StreamSupport
