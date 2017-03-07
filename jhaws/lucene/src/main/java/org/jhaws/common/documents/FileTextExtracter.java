@@ -1,5 +1,6 @@
 package org.jhaws.common.documents;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -24,7 +25,8 @@ public interface FileTextExtracter {
 	}
 
 	default void extract(FilePath file, FilePath target) throws IOException {
-		extract(file.newBufferedInputStream(), target);
+		BufferedInputStream in = file.newBufferedInputStream();
+        extract(in, target);
 	}
 
 	void extract(InputStream stream, FilePath target) throws IOException;
