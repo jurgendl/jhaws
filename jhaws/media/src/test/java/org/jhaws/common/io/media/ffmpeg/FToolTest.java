@@ -15,16 +15,16 @@ public class FToolTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         FilePath f = new FilePath(System.getenv("FFMPEG"));
-        t = new FfmpegTool(f.child("ffmpeg.exe"), f.child("ffprobe.exe"));
+        t = new FfmpegTool(f.child("bin/ffmpeg.exe"), f.child("bin/ffprobe.exe"));
     }
 
     @Test
     public void test1() {
         try {
             System.out.println(t.getHwAccel());
-            FilePath input = FilePath.createDefaultTempFile("mp4");
+            FilePath input = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".hevc.mp4");
             input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("hevc.mp4"));
-            FilePath output = FilePath.createDefaultTempFile("mp4");
+            FilePath output = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".mp4");
             RemuxDefaultsCfg def = new RemuxDefaultsCfg();
             def.twopass = true;
             RemuxCfg cfg = t.remux(def, x -> System.out::println, input, output, null);
