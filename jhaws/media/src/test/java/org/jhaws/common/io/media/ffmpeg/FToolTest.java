@@ -15,7 +15,7 @@ public class FToolTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         FilePath f = new FilePath(System.getenv("FFMPEG"));
-        t = new FfmpegTool(f);
+        t = new FfmpegTool(f.child("ffmpeg.exe"), f.child("ffprobe.exe"));
     }
 
     @Test

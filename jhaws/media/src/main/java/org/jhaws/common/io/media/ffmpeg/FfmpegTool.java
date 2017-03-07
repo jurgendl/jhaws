@@ -32,6 +32,11 @@ import org.jhaws.common.pool.Pooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @see https://ffmpeg.org/
+ * @see https://ffmpeg.zeranoe.com/builds/
+ * @see https://trac.ffmpeg.org/
+ */
 public class FfmpegTool implements MediaCte {
     private static final String FIX_DIV2 = "scale=trunc(iw/2)*2:trunc(ih/2)*2";
 
@@ -63,17 +68,19 @@ public class FfmpegTool implements MediaCte {
         super();
     }
 
-    public FfmpegTool(FilePath root) {
-        if (root.child("ffmpeg.exe").exists()) {
-            ffmpeg = root.child("ffmpeg.exe");
-            ffprobe = root.child("ffprobe.exe");
-        } else if (root.child("bin").child("ffmpeg.exe").exists()) {
-            ffmpeg = root.child("bin").child("ffmpeg.exe");
-            ffprobe = root.child("bin").child("ffprobe.exe");
-        } else {
-            ffmpeg = root;
-            ffmpeg = root.getParentPath().child("ffprobe.exe");
-        }
+    public FfmpegTool(FilePath ffmpeg, FilePath ffprobe) {
+        this.ffmpeg = ffmpeg;
+        this.ffprobe = ffprobe;
+        // if (root.child("ffmpeg.exe").exists()) {
+        // ffmpeg = root.child("ffmpeg.exe");
+        // ffprobe = root.child("ffprobe.exe");
+        // } else if (root.child("bin").child("ffmpeg.exe").exists()) {
+        // ffmpeg = root.child("bin").child("ffmpeg.exe");
+        // ffprobe = root.child("bin").child("ffprobe.exe");
+        // } else {
+        // ffmpeg = root;
+        // ffmpeg = root.getParentPath().child("ffprobe.exe");
+        // }
     }
 
     /** dxva2, qsv, nvenc */
