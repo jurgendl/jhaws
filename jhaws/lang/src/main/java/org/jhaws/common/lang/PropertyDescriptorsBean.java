@@ -5,7 +5,7 @@ import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Collections.unmodifiableMap;
 import static org.jhaws.common.lang.CollectionUtils8.collectMap;
-import static org.jhaws.common.lang.CollectionUtils8.notNull;
+import static org.jhaws.common.lang.CollectionUtils8.isNotNull;
 import static org.jhaws.common.lang.CollectionUtils8.stream;
 import static org.jhaws.common.lang.CollectionUtils8.streamArray;
 import static org.jhaws.common.lang.CollectionUtils8.streamMaps;
@@ -39,7 +39,7 @@ public class PropertyDescriptorsBean {
 			set.putAll(streamArray(true, methods).filter(mf).filter(m -> m.getName().matches("^set.+")).filter(m -> Void.TYPE.isAssignableFrom(m.getReturnType()))
 					.filter(m -> m.getParameterTypes().length == 1).collect(collectMap(this::setKey)));
 		});
-		this.propertyDescriptors = unmodifiableMap(streamMaps(get, is).map(this::create).filter(notNull()).collect(collectMap(PropertyDescriptor::getName)));
+		this.propertyDescriptors = unmodifiableMap(streamMaps(get, is).map(this::create).filter(isNotNull()).collect(collectMap(PropertyDescriptor::getName)));
 	}
 
 	private String getKey(Method m) {

@@ -292,7 +292,7 @@ public interface CollectionUtils8 {
 
         @Override
         public <X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters) {
-            return streamArray(getters).map(g -> get(g)).filter(notNull()).findFirst().orElse(null);
+            return streamArray(getters).map(g -> get(g)).filter(isNotBlankAndNotNull()).findFirst().orElse(null);
         }
     }
 
@@ -352,7 +352,7 @@ public interface CollectionUtils8 {
 
         @Override
         public <X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters) {
-            return streamArray(getters).map(g -> get(g)).filter(notNull()).findFirst().orElse(null);
+            return streamArray(getters).map(g -> get(g)).filter(isNotBlankAndNotNull()).findFirst().orElse(null);
         }
     }
 
@@ -986,7 +986,23 @@ public interface CollectionUtils8 {
         return t.negate();
     }
 
-    public static <T> Predicate<T> notNull() {
+    public static <T> Predicate<T> isNotBlankAndNotNull() {
+        return t -> t instanceof String ? isNotBlank().test(String.class.cast(t)) : isNotNull().test(t);
+    }
+
+    public static <T> Predicate<T> isBlankOrNull() {
+        return t -> t instanceof String ? isBlank().test(String.class.cast(t)) : isNull().test(t);
+    }
+
+    public static Predicate<String> isNotBlank() {
+        return org.apache.commons.lang3.StringUtils::isNotBlank;
+    }
+
+    public static Predicate<String> isBlank() {
+        return org.apache.commons.lang3.StringUtils::isBlank;
+    }
+
+    public static <T> Predicate<T> isNotNull() {
         return Objects::nonNull;
     }
 
@@ -1070,16 +1086,24 @@ public interface CollectionUtils8 {
         return x -> false;
     }
 
-    public static <X, Y> BiPredicate<X, Y> alwaysToo() {
+    public static <X> Predicate<X> never(boolean b) {
+        return x -> !b;
+    }
+
+    public static <X, Y> BiPredicate<X, Y> always2() {
         return (x, y) -> true;
     }
 
-    public static <X, Y> BiPredicate<X, Y> alwaysToo(boolean b) {
+    public static <X, Y> BiPredicate<X, Y> always2(boolean b) {
         return (x, y) -> b;
     }
 
-    public static <X, Y> BiPredicate<X, Y> neverToo() {
+    public static <X, Y> BiPredicate<X, Y> never2() {
         return (x, y) -> false;
+    }
+
+    public static <X, Y> BiPredicate<X, Y> never2(boolean b) {
+        return (x, y) -> !b;
     }
 
     public static IntStream streamp(String text) {
@@ -1182,11 +1206,11 @@ public interface CollectionUtils8 {
     }
 
     public static <K, V> Function<Entry<K, V>, V> valueMapper() {
-        return e -> e.getValue();
+        return Entry::getValue;
     }
 
     public static <K, V> Function<Entry<K, V>, K> keyMapper() {
-        return e -> e.getKey();
+        return Entry::getKey;
     }
 
     public static Stream<String> regex(String text, String regex) {
