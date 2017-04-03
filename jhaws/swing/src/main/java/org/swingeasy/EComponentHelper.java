@@ -114,12 +114,12 @@ public class EComponentHelper {
     }
 
     public static String removeHtml(String s) {
-        return s.replaceAll("&nbsp;", " ")
-                .replaceAll("<br>", "\n")
-                .replaceAll("<br/>", "\n")
-                .replaceAll("<html>", "")
-                .replaceAll("</html>", "")
-                .replaceAll("<body>", "")
-                .replaceAll("</body>", "");
+        return s.replace("&nbsp;", " ")
+                .replace("<br>", "\n")
+                .replace("<br/>", "\n")
+                .replace("<html>", "")
+                .replace("</html>", "")
+                .replace("<body>", "")
+                .replace("</body>", "");
     }
 }

@@ -35,8 +35,7 @@ public class ETableCsvExporter<T> extends ETableExporterImpl<T> {
                         if (Number.class.isAssignableFrom(table.getHeaders().getColumnClass(column))) {
                             writer.write(stringValue);
                         } else {
-                            stringValue = stringValue.replaceAll(this.text, this.text + this.text).replaceAll(this.seperator,
-                                    this.escape + this.seperator);
+                            stringValue = stringValue.replace(this.text, this.text + this.text).replace(this.seperator, this.escape + this.seperator);
                             writer.write(this.text);
                             writer.write(stringValue);
                             writer.write(this.text);

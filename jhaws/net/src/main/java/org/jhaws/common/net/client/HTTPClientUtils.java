@@ -138,7 +138,7 @@ public class HTTPClientUtils {
                 urib.setScheme(m.group(schemeGr));
             }
             String path = Arrays.stream(m.group(pathsGr).split("/")).map(t -> t + "/").collect(Collectors.joining());
-            String file = Optional.of(m.group(fileGr)).orElse("").replaceAll("&amp;", "&");
+            String file = Optional.of(m.group(fileGr)).orElse("").replace("&amp;", "&");
             String matrix = "";
             if (hasMatrixParameters && StringUtils.isNotBlank(m.group(paramsstartGr))) {
                 matrix = ";" + Arrays.stream(m.group(paramsGr).split(";"))

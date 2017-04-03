@@ -34,8 +34,7 @@ public class EListCsvExporter<T> extends EListExporterImpl<T> {
                     if (Number.class.isAssignableFrom(record.get().getClass())) {
                         writer.write(stringValue);
                     } else {
-                        stringValue = stringValue.replaceAll(this.text, this.text + this.text).replaceAll(this.seperator,
-                                this.escape + this.seperator);
+                        stringValue = stringValue.replace(this.text, this.text + this.text).replace(this.seperator, this.escape + this.seperator);
                         writer.write(this.text);
                         writer.write(stringValue);
                         writer.write(this.text);

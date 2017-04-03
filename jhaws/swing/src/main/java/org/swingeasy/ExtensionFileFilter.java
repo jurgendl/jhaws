@@ -62,7 +62,7 @@ public class ExtensionFileFilter extends FileFilter {
         }
 
         for (String extension : extensions) {
-            String _extension = extension.replaceAll("\\[", "").replaceAll("\\]", "");
+            String _extension = extension.replace("[", "").replace("]", "");
             if (f.getName().toLowerCase().endsWith("." + _extension.toLowerCase())) {
                 return true;
             }

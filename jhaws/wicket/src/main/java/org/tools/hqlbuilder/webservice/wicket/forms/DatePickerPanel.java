@@ -36,83 +36,85 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel {
-	private static final long serialVersionUID = -5807168584242557542L;
+    private static final long serialVersionUID = -5807168584242557542L;
 
-	public static final String DATE_FORMAT = "dateFormat";
+    public static final String DATE_FORMAT = "dateFormat";
 
-	public static final String APPEND_TEXT = "appendText";
+    public static final String APPEND_TEXT = "appendText";
 
-	protected String dateFormat;
+    protected String dateFormat;
 
-	protected String dateFormatClient;
+    protected String dateFormatClient;
 
-	protected Converter<X, Date> dateConverter;
+    protected Converter<X, Date> dateConverter;
 
-	public DatePickerPanel(IModel<?> model, Date propertyPath, FormSettings formSettings, AbstractFormElementSettings componentSettings) {
-		super(model, propertyPath, formSettings, componentSettings);
-		this.dateConverter = null;
-	}
+    public DatePickerPanel(IModel<?> model, Date propertyPath, FormSettings formSettings, AbstractFormElementSettings componentSettings) {
+        super(model, propertyPath, formSettings, componentSettings);
+        this.dateConverter = null;
+    }
 
-	public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings, AbstractFormElementSettings componentSettings) {
-		super(model, propertyPath, formSettings, componentSettings);
-		this.dateConverter = dateConverter;
-	}
+    public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings,
+            AbstractFormElementSettings componentSettings) {
+        super(model, propertyPath, formSettings, componentSettings);
+        this.dateConverter = dateConverter;
+    }
 
-	@Override
-	public IModel<Date> getValueModel() {
-		if (dateConverter == null) {
-			return super.getValueModel();
-		}
-		IModel<X> backingModel = new PropertyModel<>(getDefaultModel(), getPropertyName());
-		return new ModelConverter<>(backingModel, dateConverter);
-	}
+    @Override
+    public IModel<Date> getValueModel() {
+        if (dateConverter == null) {
+            return super.getValueModel();
+        }
+        IModel<X> backingModel = new PropertyModel<>(getDefaultModel(), getPropertyName());
+        return new ModelConverter<>(backingModel, dateConverter);
+    }
 
-	@Override
-	protected FormComponent createComponent(IModel model, Class valueType) {
-		Locale locale = getLocale();
-		Options options = new Options();
-		dateFormat = dateformat(locale);
-		dateFormatClient = dateFormat.toLowerCase().replaceAll("yy", "y").replaceAll("yy", "y");
-		options.set(DATE_FORMAT, Options.asString(dateFormatClient));
-		// options.set(APPEND_TEXT, Options.asString(new SimpleDateFormat(dateFormat, locale).format(new Date())));
-		AjaxDatePicker ajaxDatePicker = new AjaxDatePicker(VALUE, model, dateFormat, options) {
-			private static final long serialVersionUID = 7118431260383127661L;
+    @Override
+    protected FormComponent createComponent(IModel model, Class valueType) {
+        Locale locale = getLocale();
+        Options options = new Options();
+        dateFormat = dateformat(locale);
+        dateFormatClient = dateFormat.toLowerCase().replace("yy", "y").replace("yy", "y");
+        options.set(DATE_FORMAT, Options.asString(dateFormatClient));
+        // options.set(APPEND_TEXT, Options.asString(new SimpleDateFormat(dateFormat, locale).format(new Date())));
+        AjaxDatePicker ajaxDatePicker = new AjaxDatePicker(VALUE, model, dateFormat, options) {
+            private static final long serialVersionUID = 7118431260383127661L;
 
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				onFormComponentTag(tag);
-			}
-		};
-		ajaxDatePicker.add(new CssClassNameAppender(PrimeUI.puiinputtext));
-		return ajaxDatePicker;
-	}
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                onFormComponentTag(tag);
+            }
+        };
+        ajaxDatePicker.add(new CssClassNameAppender(PrimeUI.puiinputtext));
+        return ajaxDatePicker;
+    }
 
-	public static String dateformat(Locale locale) {
-		return LocaleUtils.getLocaleDatePattern(locale, DateFormat.SHORT);
-	}
+    public static String dateformat(Locale locale) {
+        return LocaleUtils.getLocaleDatePattern(locale, DateFormat.SHORT);
+    }
 
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-		setOutputMarkupId(true);
-	}
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        setOutputMarkupId(true);
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		response.render(JavaScriptHeaderItem.forReference(JQueryDatePicker.DATEPICKER_JS));
-		response.render(CssHeaderItem.forReference(JQueryDatePicker.DATEPICKER_CSS));
-		response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
-		response.render(JavaScriptHeaderItem.forReference(JQueryDatePicker.i18n(getLocale())));
-		response.render(OnLoadHeaderItem.forScript(JQueryDatePicker.initJavaScript((DatePicker) getComponent(), "js_" + getComponent().getMarkupId())));
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        response.render(JavaScriptHeaderItem.forReference(JQueryDatePicker.DATEPICKER_JS));
+        response.render(CssHeaderItem.forReference(JQueryDatePicker.DATEPICKER_CSS));
+        response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
+        response.render(JavaScriptHeaderItem.forReference(JQueryDatePicker.i18n(getLocale())));
+        response.render(
+                OnLoadHeaderItem.forScript(JQueryDatePicker.initJavaScript((DatePicker) getComponent(), "js_" + getComponent().getMarkupId())));
+    }
 
-	@Override
-	protected void setupPlaceholder(ComponentTag tag) {
-		tag.getAttributes().put(PLACEHOLDER, getPlaceholderText() + " <" + new SimpleDateFormat(dateFormat, getLocale()).format(new Date()) + ">");
-	}
+    @Override
+    protected void setupPlaceholder(ComponentTag tag) {
+        tag.getAttributes().put(PLACEHOLDER, getPlaceholderText() + " <" + new SimpleDateFormat(dateFormat, getLocale()).format(new Date()) + ">");
+    }
 }

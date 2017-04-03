@@ -463,7 +463,7 @@ public class HexString {
      * @return : String : hex string without spaces
      */
     public static String removeSpaces(final String source) {
-        return source.replaceAll(" ", "").replaceAll("\r", "").replaceAll("\n", ""); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+        return source.replace(" ", "").replace("\r", "").replace("\n", ""); //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     }
 
     /**

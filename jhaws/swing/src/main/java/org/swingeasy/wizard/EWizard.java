@@ -427,8 +427,8 @@ public class EWizard extends JPanel implements EComponentI {
 
         WizardPage page = wizardPages.get(wizardPage);
         getLblTitle().setText(page.getTitle());
-        getLblDescription().setText(
-                "<html><p>" + page.getDescription().replaceAll("\r\n", "<br>").replaceAll("\n", "<br>").replaceAll("\r", "<br>") + "</p></html>");
+        getLblDescription()
+                .setText("<html><p>" + page.getDescription().replace("\r\n", "<br>").replace("\n", "<br>").replace("\r", "<br>") + "</p></html>");
 
         getBtnBack().setEnabled(0 < wizardPage);
         getBtnNext().setEnabled(wizardPage < wizardPages.size() - 1 && wizardPages.get(wizardPage + 1).validate());
