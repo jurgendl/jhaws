@@ -15,7 +15,7 @@ public class EntryList implements Iterable<Entry> {
 	@SuppressWarnings("unchecked")
 	public List<Entry> getEntry() {
 		if (entry == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return entry;
 	}

@@ -18,7 +18,7 @@ public class SvnStatus extends SvnRootBean implements Iterable<ChangeList> {
 	@SuppressWarnings("unchecked")
 	public List<ChangeList> getChangelist() {
 		if (changelist == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return changelist;
 	}

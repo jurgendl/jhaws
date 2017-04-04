@@ -16,7 +16,7 @@ public class SvnList extends SvnRootBean implements Iterable<EntryList> {
 	@SuppressWarnings("unchecked")
 	public List<EntryList> getList() {
 		if (list == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return list;
 	}

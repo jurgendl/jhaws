@@ -16,7 +16,7 @@ public class SvnLog extends SvnRootBean implements Iterable<LogEntry> {
 	@SuppressWarnings("unchecked")
 	public List<LogEntry> getLogentry() {
 		if (logentry == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return logentry;
 	}

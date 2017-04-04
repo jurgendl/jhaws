@@ -1585,19 +1585,16 @@ public interface CollectionUtils8 {
         return map.entrySet().stream().filter(entry -> entry.getKey().test(in)).map(Map.Entry::getValue).findFirst().orElse(null);
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> List<T> emptyList() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
-    @SuppressWarnings("unchecked")
     public static <T, U> Map<T, U> emptyMap() {
-        return Collections.EMPTY_MAP;
+        return Collections.emptyMap();
     }
 
-    @SuppressWarnings("unchecked")
     public static <T> Set<T> emptySet() {
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     public static String toString(IntStream s) {

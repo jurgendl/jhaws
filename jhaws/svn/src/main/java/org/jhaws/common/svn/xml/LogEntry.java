@@ -25,7 +25,7 @@ public class LogEntry extends Commit implements Iterable<Path> {
 	@SuppressWarnings("unchecked")
 	public List<Path> getPath() {
 		if (path == null) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 		return path;
 	}
