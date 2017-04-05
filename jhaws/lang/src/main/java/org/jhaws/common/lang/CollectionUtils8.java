@@ -1353,6 +1353,11 @@ public interface CollectionUtils8 {
 		return (T[]) collection.toArray();
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> T[] toArray(Stream<T> stream, Class<T> type) {
+		return stream.toArray(size -> (T[]) Array.newInstance(type, size));
+	}
+
 	public static <T> Stream<T> flatMapCollections(Collection<Collection<T>> collectionOfCollections) {
 		return flatMapStreams(collectionOfCollections.stream().map(Collection::stream));
 	}
@@ -1790,5 +1795,13 @@ public interface CollectionUtils8 {
 
 	public static <T> Stream<T> skip(Integer first, Integer last, Stream<T> s) {
 		return skip(s, first == null ? 0 : first, last == null ? 0 : last);
+	}
+
+	public static <T> T merge(List<T> list, int index, T object, BinaryOperator<T> operate) {
+		return list.set(index, operate.apply(list.get(index), object));
+	}
+
+	public static String append(List<String> list, int index, String string, String seperator) {
+		return merge(list, index, string, (a, b) -> StringUtils.isBlank(a) ? b : a + seperator + b);
 	}
 }
