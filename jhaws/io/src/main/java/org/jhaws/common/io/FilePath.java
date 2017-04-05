@@ -2919,6 +2919,15 @@ public class FilePath implements Path, Externalizable {
         return write(true, lines, getCharSet(), options);
     }
 
+    public FilePath write(Stream<String> lines, Charset charset, OpenOption... options) {
+        Iterable<String> tmp = () -> lines.iterator();
+        return write((Iterable<? extends CharSequence>) tmp, options);
+    }
+
+    public FilePath write(Stream<String> lines, OpenOption... options) {
+        return write(lines, getCharSet(), options);
+    }
+
     public FilePath write(String text, Charset charset, OpenOption... options) {
         try {
             return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? getCharSet() : charset), options));
