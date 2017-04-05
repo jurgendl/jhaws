@@ -1179,7 +1179,10 @@ public interface CollectionUtils8 {
 	}
 
 	public static <T> String join(Stream<T> stream, String delimiter, boolean skipBlanks) {
-		return stream.map(String::valueOf).filter(StringUtils::isNotBlank).collect(Collectors.joining(delimiter));
+		Stream<String> _stream = stream.map(String::valueOf);
+		if (skipBlanks)
+			_stream = _stream.filter(StringUtils::isNotBlank);
+		return _stream.collect(Collectors.joining(delimiter));
 	}
 
 	public static Stream<String> split(String string, String delimiter) {
