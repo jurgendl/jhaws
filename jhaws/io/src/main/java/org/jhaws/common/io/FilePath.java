@@ -1225,6 +1225,8 @@ public class FilePath implements Path, Externalizable {
 
     protected transient Path path;
 
+    protected transient Charset charSet;
+
     public FilePath() {
         this.path = Paths.get(CURRENT_FILE_PATH).toAbsolutePath().normalize();
     }
@@ -1796,10 +1798,6 @@ public class FilePath implements Path, Externalizable {
         return getHumanReadableByteCount(getFileSize(), 3);
     }
 
-    public Charset getDefaultCharset() {
-        return Charset.defaultCharset();
-    }
-
     public String getExtension() {
         return getExtension(this.getPath());
     }
@@ -2068,7 +2066,18 @@ public class FilePath implements Path, Externalizable {
 
     public Iterators.FileLineIterator lines() {
         return new Iterators.FileLineIterator(this);
-        // return Files.lines(this.getPath());
+    }
+
+    public Stream<String> stream() {
+        return stream(getCharSet());
+    }
+
+    public Stream<String> stream(Charset charSet) {
+        try {
+            return Files.lines(this.getPath(), charSet);
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
     }
 
     public List<FilePath> list() {
@@ -2183,7 +2192,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public BufferedReader newBufferedReader() {
-        return this.newBufferedReader(this.getDefaultCharset());
+        return this.newBufferedReader(getCharSet());
     }
 
     public BufferedReader newBufferedReader(Charset charset) {
@@ -2203,7 +2212,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public BufferedWriter newBufferedWriter(OpenOption... options) {
-        return this.newBufferedWriter(this.getDefaultCharset(), options);
+        return this.newBufferedWriter(getCharSet(), options);
     }
 
     public SeekableByteChannel newReadableByteChannel() {
@@ -2351,7 +2360,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String readAll() {
-        return this.readAll(this.getDefaultCharset());
+        return this.readAll(getCharSet());
     }
 
     public String readAll(Charset charset) {
@@ -2371,7 +2380,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public String readAllText() {
-        return readAllText(getDefaultCharset());
+        return readAllText(getCharSet());
     }
 
     public String readAllText(Charset charset) {
@@ -2391,7 +2400,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<String> readAllLines() {
-        return this.readAllLines(this.getDefaultCharset());
+        return this.readAllLines(getCharSet());
     }
 
     public List<String> readAllLines(Charset charset) {
@@ -2403,7 +2412,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public Stream<String> streamContentString() {
-        return this.streamContentString(this.getDefaultCharset());
+        return this.streamContentString(getCharSet());
     }
 
     public Stream<String> streamContentString(Charset charset) {
@@ -2809,7 +2818,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath writeNew(Iterable<? extends CharSequence> lines) {
-        return writeNew(lines, this.getDefaultCharset());
+        return writeNew(lines, getCharSet());
     }
 
     public FilePath writeNew(String text, Charset charset) {
@@ -2817,7 +2826,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath writeNew(String text) {
-        return writeNew(text, this.getDefaultCharset());
+        return writeNew(text, getCharSet());
     }
 
     public FilePath writeAppend(byte... bytes) {
@@ -2833,7 +2842,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath writeAppend(Iterable<? extends CharSequence> lines) {
-        return writeAppend(lines, this.getDefaultCharset());
+        return writeAppend(lines, getCharSet());
     }
 
     public FilePath writeAppend(String text, Charset charset) {
@@ -2841,7 +2850,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath writeAppend(CharSequence text) {
-        return writeAppend(text, this.getDefaultCharset());
+        return writeAppend(text, getCharSet());
     }
 
     public FilePath writeAppend(CharSequence text, Charset charset) {
@@ -2849,7 +2858,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath writeAppend(String text) {
-        return writeAppend(text, this.getDefaultCharset());
+        return writeAppend(text, getCharSet());
     }
 
     public FilePath write(byte[] bytes, OpenOption... options) {
@@ -2899,31 +2908,31 @@ public class FilePath implements Path, Externalizable {
     }
 
     public FilePath write(boolean lastNewLine, Iterable<? extends CharSequence> lines, OpenOption... options) {
-        return write(lastNewLine, lines, this.getDefaultCharset(), options);
+        return write(lastNewLine, lines, getCharSet(), options);
     }
 
     public FilePath write(Iterable<? extends CharSequence> lines, Charset charset, OpenOption... options) {
-        return write(true, lines, this.getDefaultCharset(), options);
+        return write(true, lines, getCharSet(), options);
     }
 
     public FilePath write(Iterable<? extends CharSequence> lines, OpenOption... options) {
-        return write(true, lines, this.getDefaultCharset(), options);
+        return write(true, lines, getCharSet(), options);
     }
 
     public FilePath write(String text, Charset charset, OpenOption... options) {
         try {
-            return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? this.getDefaultCharset() : charset), options));
+            return new FilePath(Files.write(this.getPath(), text.getBytes(charset == null ? getCharSet() : charset), options));
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
     }
 
     public FilePath write(CharSequence text, OpenOption... options) {
-        return this.write(text, this.getDefaultCharset(), options);
+        return this.write(text, getCharSet(), options);
     }
 
     public FilePath write(String text, OpenOption... options) {
-        return this.write(text, this.getDefaultCharset(), options);
+        return this.write(text, getCharSet(), options);
     }
 
     public FilePath write(CharSequence text, Charset charSet, OpenOption... options) {
@@ -3282,5 +3291,16 @@ public class FilePath implements Path, Externalizable {
             //
         }
         return notExists();
+    }
+
+    public Charset getCharSet() {
+        if (charSet == null) {
+            return Charset.defaultCharset();
+        }
+        return this.charSet;
+    }
+
+    public void setCharSet(Charset charSet) {
+        this.charSet = charSet;
     }
 }
