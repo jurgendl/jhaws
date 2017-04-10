@@ -3,7 +3,6 @@ package org.jhaws.common.lang;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Node<T> extends Value<T> implements Iterable<Node<T>> {
     private static final long serialVersionUID = -970998500165039417L;
@@ -49,7 +48,8 @@ public class Node<T> extends Value<T> implements Iterable<Node<T>> {
 
     @Override
     public String toString() {
-        if (children.isEmpty()) return super.toString();
-        return super.toString() + "\n\t" + children.stream().map(Node::getValue).map(Object::toString).collect(Collectors.joining("\n\t"));
+        return super.toString();
+        // if (children.isEmpty()) return super.toString();
+        // return super.toString() + "\n\t" + children.stream().map(Node::getValue).map(Object::toString).collect(Collectors.joining("\n\t"));
     }
 }
