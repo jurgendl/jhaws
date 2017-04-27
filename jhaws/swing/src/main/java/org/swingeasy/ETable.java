@@ -1023,7 +1023,8 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
     public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
         Component c = this.super_prepareRenderer(renderer, rowIndex, vColIndex);
         if (c instanceof JLabel) {
-            String text = JLabel.class.cast(c).getText();
+            String text = getRecordAtVisualRow(rowIndex).getTooltip(vColIndex);
+            // String text = JLabel.class.cast(c).getText();
             JLabel.class.cast(c).setToolTipText(StringUtils.isNotBlank(text) ? text : null);
         }
         return c;
