@@ -911,11 +911,15 @@ public class UIUtils {
         super();
     }
 
-    public static void bringToFront(final Window w) {
-        java.awt.EventQueue.invokeLater(() -> {
+    public static void bringToFront(Window w) {
+        runOnEDT(() -> {
             w.toFront();
             w.repaint();
         });
+    }
+
+    public static void show(Window w) {
+        runOnEDT(() -> w.setVisible(true));
     }
 
     public static void runOnEDT(Runnable run) {

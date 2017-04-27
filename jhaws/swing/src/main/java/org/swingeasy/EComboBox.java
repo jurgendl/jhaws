@@ -257,6 +257,11 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
         return (EComboBoxRecord) getSelectedItem();
     }
 
+    public T getSelectedValue() {
+        EComboBoxRecord<T> selectedRecord = getSelectedRecord();
+        return selectedRecord == null ? null : selectedRecord.get();
+    }
+
     /**
      * JDOC
      *
