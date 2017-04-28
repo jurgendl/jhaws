@@ -707,7 +707,7 @@ public class UIUtils {
         ToolTipManager sharedInstance = ToolTipManager.sharedInstance();
         sharedInstance.setReshowDelay(10);
         sharedInstance.setInitialDelay(10);
-        sharedInstance.setDismissDelay(60 * 000);
+        sharedInstance.setDismissDelay(60 * 1000);
     }
 
     /**
