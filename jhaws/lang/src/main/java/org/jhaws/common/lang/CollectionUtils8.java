@@ -263,6 +263,22 @@ public interface CollectionUtils8 {
         }
 
         <X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters);
+
+        default boolean isNull() {
+            return CollectionUtils8.isNull().test(get());
+        }
+
+        default boolean isBlankOrNull() {
+            return CollectionUtils8.isBlankOrNull().test(get());
+        }
+
+        default boolean isNotNull() {
+            return CollectionUtils8.isNotNull().test(get());
+        }
+
+        default boolean isNotBlankAndNotNull() {
+            return CollectionUtils8.isNotBlankAndNotNull().test(get());
+        }
     }
 
     static class OptEager<T> implements Opt<T> {
@@ -294,7 +310,7 @@ public interface CollectionUtils8 {
 
         @Override
         public <X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters) {
-            return streamArray(getters).map(g -> get(g)).filter(isNotBlankAndNotNull()).findFirst().orElse(null);
+            return streamArray(getters).map(g -> get(g)).filter(CollectionUtils8.isNotBlankAndNotNull()).findFirst().orElse(null);
         }
     }
 
@@ -354,7 +370,7 @@ public interface CollectionUtils8 {
 
         @Override
         public <X> X first(@SuppressWarnings("unchecked") Function<T, X>... getters) {
-            return streamArray(getters).map(g -> get(g)).filter(isNotBlankAndNotNull()).findFirst().orElse(null);
+            return streamArray(getters).map(g -> get(g)).filter(CollectionUtils8.isNotBlankAndNotNull()).findFirst().orElse(null);
         }
     }
 
