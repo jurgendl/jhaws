@@ -257,4 +257,14 @@ public class Collections8Test {
         Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9), CollectionUtils8
                 .stream(new ProjectionIterator<Integer>(0, false, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
     }
+
+    @Test
+    public void testArrayMerge() {
+        String[] a1 = { "a", "b", "c" };
+        String[] a2 = { "d", "e", "f" };
+        String a3 = "g";
+        Assert.assertArrayEquals(new String[] { "a", "b", "c", "d", "e", "f" }, CollectionUtils8.array(a1, a2));
+        Assert.assertArrayEquals(new String[] { "a", "b", "c", "g" }, CollectionUtils8.array(a1, a3));
+        Assert.assertArrayEquals(new String[] { "g", "a", "b", "c" }, CollectionUtils8.array(a3, a1));
+    }
 }

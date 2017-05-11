@@ -530,9 +530,44 @@ public interface CollectionUtils8 {
             return items;
         }
         int length = items.length;
-        T[] newarray = Arrays.copyOf(items, 1 + length);
+        T[] newarray = Arrays.copyOf(items, 1 + length); // FIXME cheaper operation
         newarray[0] = item;
         System.arraycopy(items, 0, newarray, 1, length);
+        return newarray;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] array(T[] items, T item) {
+        if (item == null && (items == null || items.length == 0)) {
+            return (T[]) new Object[0];
+        }
+        if (items == null || items.length == 0) {
+            return (T[]) new Object[] { item };
+        }
+        if (item == null) {
+            return items;
+        }
+        int length = items.length;
+        T[] newarray = Arrays.copyOf(items, 1 + length);
+        newarray[newarray.length - 1] = item;
+        return newarray;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T[] array(T[] items1, T[] items2) {
+        if ((items1 == null || items1.length == 0) && (items2 == null || items2.length == 0)) {
+            return (T[]) new Object[0];
+        }
+        if (items1 == null || items1.length == 0) {
+            return items2;
+        }
+        if (items2 == null || items2.length == 0) {
+            return items1;
+        }
+        int length1 = items1.length;
+        int length2 = items2.length;
+        T[] newarray = Arrays.copyOf(items1, length1 + length2);
+        System.arraycopy(items2, 0, newarray, length1, length2);
         return newarray;
     }
 
@@ -1238,7 +1273,11 @@ public interface CollectionUtils8 {
     }
 
     public static <T> T[] copy(T[] array) {
-        return Arrays.copyOf(array, array.length);
+        return copy(array, array.length);
+    }
+
+    public static <T> T[] copy(T[] array, int length) {
+        return Arrays.copyOf(array, length);
     }
 
     @SafeVarargs
@@ -1801,5 +1840,56 @@ public interface CollectionUtils8 {
     @SafeVarargs
     public static <T> T firstNotNull(T... o) {
         return streamArray(o).filter(isNotNull()).findFirst().orElse(null);
+    }
+
+    public static <T> List<T> copy(List<T> list, int maxSize) {
+        if (list.size() <= maxSize) return list;
+        return list.stream().limit(maxSize).collect(collectList());
+    }
+
+    public static <T> List<T> listLI(List<T> list, T item) {
+        list.add(item);
+        return list;
+    }
+
+    public static <T> List<T> listIL(T item, List<T> list) {
+        list.add(0, item);
+        return list;
+    }
+
+    public static <T> List<T> listLL(List<T> list1, List<T> list2) {
+        list1.addAll(list2);
+        return list1;
+    }
+
+    public static <T> List<T> listCLI(List<T> list, T item) {
+        List<T> tmp = new ArrayList<>();
+        tmp.addAll(list);
+        tmp.add(item);
+        return tmp;
+    }
+
+    public static <T> List<T> listCIL(T item, List<T> list) {
+        List<T> tmp = new ArrayList<>();
+        tmp.add(item);
+        tmp.addAll(list);
+        return tmp;
+    }
+
+    public static <T> List<T> listCLL(List<T> list1, List<T> list2) {
+        List<T> tmp = new ArrayList<>();
+        tmp.addAll(list1);
+        tmp.addAll(list2);
+        return tmp;
+    }
+
+    public static <R, K, V> List<R> flatten(Collection<R> records, Function<R, K> toKey, Function<R, V> toValue, BinaryOperator<V> mergeValue,
+            BiFunction<K, V, R> mergeToRecord) {
+        Map<K, List<R>> map = records.stream().collect(Collectors.groupingBy(toKey));
+        return map.entrySet().stream().map(entry -> {
+            return new KeyValue<>(entry.getKey(), entry.getValue().stream().map(toValue).reduce(mergeValue).get());
+        }).map(entry -> {
+            return mergeToRecord.apply(entry.getKey(), entry.getValue());
+        }).collect(Collectors.toList());
     }
 }
