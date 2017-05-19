@@ -1892,4 +1892,8 @@ public interface CollectionUtils8 {
             return mergeToRecord.apply(entry.getKey(), entry.getValue());
         }).collect(Collectors.toList());
     }
+
+    public static <T> Collector<T, ?, Map<T, Long>> groupingByCount() {
+        return Collectors.groupingBy(Function.identity(), Collectors.counting());
+    }
 }
