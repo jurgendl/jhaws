@@ -3,25 +3,27 @@ package org.jhaws.common.lang;
 import java.util.Map;
 
 public interface ValueMap<K, N extends Number> extends Map<K, N> {
-	default void add(K key) {
-		N value = get(key);
-		if (value == null) {
-			put(key, one());
-		} else {
-			put(key, add(value, one()));
-		}
-	}
+    default N add(K key) {
+        N value = get(key);
+        if (value == null) {
+            value = one();
+        } else {
+            value = add(value, one());
+        }
+        return put(key, value);
+    }
 
-	default void add(K key, N number) {
-		N value = get(key);
-		if (value == null) {
-			put(key, number);
-		} else {
-			put(key, add(value, number));
-		}
-	}
+    default N add(K key, N number) {
+        N value = get(key);
+        if (value == null) {
+            value = number;
+        } else {
+            value = add(value, number);
+        }
+        return put(key, value);
+    }
 
-	abstract N add(N n1, N n2);
+    abstract N add(N n1, N n2);
 
-	abstract N one();
+    abstract N one();
 }
