@@ -10,7 +10,8 @@ public interface ValueMap<K, N extends Number> extends Map<K, N> {
         } else {
             value = add(value, one());
         }
-        return put(key, value);
+        put(key, value);
+        return value;
     }
 
     default N add(K key, N number) {
@@ -20,7 +21,8 @@ public interface ValueMap<K, N extends Number> extends Map<K, N> {
         } else {
             value = add(value, number);
         }
-        return put(key, value);
+        put(key, value);
+        return value;
     }
 
     abstract N add(N n1, N n2);
