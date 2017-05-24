@@ -68,7 +68,8 @@ public class JAXBMarshalling {
         @Override
         protected Unmarshaller initialValue() {
             try {
-                return jaxbContext.createUnmarshaller();
+                Unmarshaller u = jaxbContext.createUnmarshaller();
+                return u;
             } catch (JAXBException ex) {
                 throw new RuntimeException(ex);
             }
@@ -119,6 +120,9 @@ public class JAXBMarshalling {
             try {
                 Marshaller m = jaxbContext.createMarshaller();
                 if (formatOutput) m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+                // m.setProperty(Marshaller.JAXB_FRAGMENT, true);
+                // m.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "");
+                // m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
                 return m;
             } catch (JAXBException ex) {
                 throw new RuntimeException(ex);
