@@ -1218,7 +1218,7 @@ public interface CollectionUtils8 {
 
 	public static <T, U> BiConsumer<T, U> biconsume() {
 		return (x, y) -> {
-			//
+			return;
 		};
 	}
 
@@ -1456,6 +1456,32 @@ public interface CollectionUtils8 {
 	 */
 	public static <T> Collection<T> intersection(Collection<T> c1, Collection<T> c2) {
 		return c1.stream().filter(c2::contains).collect(collectList());
+	}
+
+	/**
+	 * @see https://stackoverflow.com/questions/42214519/java-intersection-of-multiple-collections-using-stream-lambdas
+	 */
+	public static <T, S extends Collection<T>> Collector<S, ?, Set<T>> intersecting() {
+		class IntersectAcc {
+			Set<T> result;
+
+			void accept(S s) {
+				if (result == null)
+					result = new HashSet<>(s);
+				else
+					result.retainAll(s);
+			}
+
+			IntersectAcc combine(IntersectAcc other) {
+				if (result == null)
+					return other;
+				if (other.result != null)
+					result.retainAll(other.result);
+				return this;
+			}
+		}
+		return Collector.of(IntersectAcc::new, IntersectAcc::accept, IntersectAcc::combine,
+				acc -> acc.result == null ? Collections.emptySet() : acc.result, Collector.Characteristics.UNORDERED);
 	}
 
 	/**
