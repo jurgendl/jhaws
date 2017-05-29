@@ -6,3 +6,4 @@ org.jhaws.common.documents.PdfFileTextExtracter
 org.jhaws.common.documents.RtfFileTextExtracter
 org.jhaws.common.documents.TxtFileTextExtracter
 org.jhaws.common.documents.OdfFileTextExtracter
+org.jhaws.common.documents.HtmlFileTextExtracter
