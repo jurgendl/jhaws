@@ -20,7 +20,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -139,25 +141,28 @@ public class JAXBMarshalling {
     }
 
     @SuppressWarnings("rawtypes")
-    public static JAXBContext getJaxbContext(Class[] atLeastOneClass) {
-        return getJaxbContext(atLeastOneClass[0],
+    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Class[] atLeastOneClass) {
+        return getJaxbContext(accept, atLeastOneClass[0],
                 Arrays.stream(atLeastOneClass).skip(1).collect(Collectors.toList()).toArray(new Class[atLeastOneClass.length - 1]));
     }
 
     @SuppressWarnings("rawtypes")
-    public static JAXBContext getJaxbContext(Class atLeastOneClass, Class... dtoClasses) {
+    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Class atLeastOneClass, Class... dtoClasses) {
         try {
             List<Class<?>> tmp = new ArrayList<>();
             tmp.add(atLeastOneClass);
-            for (Class<?> c : dtoClasses)
+            for (Class<?> c : dtoClasses) {
                 tmp.add(c);
-            return JAXBContext.newInstance(tmp.toArray(new Class[tmp.size()]));
+            }
+            Stream<Class<?>> stream = tmp.stream();
+            if (accept != null) stream = stream.filter(accept);
+            return JAXBContext.newInstance(stream.toArray(size -> new Class[size]));
         } catch (JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public static List<Class<?>> getJaxbClasses(Package atLeastOnePackage, Package... packages) {
+    public static List<Class<?>> getJaxbClasses(Predicate<Class<?>> accept, Package atLeastOnePackage, Package... packages) {
         // @XmlType(factoryClass=ObjectFactory.class, factoryMethod="createBean")
         List<Package> _packages = new ArrayList<>();
         _packages.add(atLeastOnePackage);
@@ -170,23 +175,23 @@ public class JAXBMarshalling {
         TypeFilter typeFilter = (metadataReader, metadataReaderFactory) -> f1.match(metadataReader, metadataReaderFactory)
                 || f2.match(metadataReader, metadataReaderFactory);
         scanner.addIncludeFilter(typeFilter);
-        return _packages//
+        Stream<Class<?>> stream = _packages//
                 .stream()//
                 .map(p -> scanner.findCandidateComponents(p.getName()))//
                 .map(Collection::stream)//
                 .flatMap(Function.identity())//
-                .map((EFunction<BeanDefinition, Class<?>>) bd -> Class.forName(bd.getBeanClassName()))//
-                .collect(Collectors.toList())//
-        ;
+                .map((EFunction<BeanDefinition, Class<?>>) bd -> Class.forName(bd.getBeanClassName()));
+        if (accept != null) stream = stream.filter(accept);
+        return stream.collect(Collectors.toList());
     }
 
-    public static JAXBContext getJaxbContext(Package[] atLeastOnePackage) {
-        return getJaxbContext(atLeastOnePackage[0],
+    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Package[] atLeastOnePackage) {
+        return getJaxbContext(accept, atLeastOnePackage[0],
                 Arrays.stream(atLeastOnePackage).skip(1).collect(Collectors.toList()).toArray(new Package[atLeastOnePackage.length - 1]));
     }
 
-    public static JAXBContext getJaxbContext(Package atLeastOnePackage, Package... packages) {
-        List<Class<?>> classesToBeBound = getJaxbClasses(atLeastOnePackage, packages);
+    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Package atLeastOnePackage, Package... packages) {
+        List<Class<?>> classesToBeBound = getJaxbClasses(accept, atLeastOnePackage, packages);
         try {
             return JAXBContext.newInstance(classesToBeBound.toArray(new Class[classesToBeBound.size()]));
         } catch (JAXBException ex) {
@@ -194,14 +199,14 @@ public class JAXBMarshalling {
         }
     }
 
-    public JAXBMarshalling(String defaultNamesSpace, Package atLeastOnePackage, Package... packages) {
+    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Package atLeastOnePackage, Package... packages) {
         this.defaultNameSpace = defaultNamesSpace;
-        jaxbContext = getJaxbContext(atLeastOnePackage, packages);
+        jaxbContext = getJaxbContext(accept, atLeastOnePackage, packages);
     }
 
-    public JAXBMarshalling(String defaultNamesSpace, Package[] atLeastOnePackage) {
+    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Package[] atLeastOnePackage) {
         this.defaultNameSpace = defaultNamesSpace;
-        this.jaxbContext = getJaxbContext(atLeastOnePackage);
+        this.jaxbContext = getJaxbContext(accept, atLeastOnePackage);
     }
 
     public JAXBMarshalling(String defaultNamesSpace, String tremaSeperatedPackages) {
@@ -210,23 +215,23 @@ public class JAXBMarshalling {
     }
 
     @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(String defaultNamesSpace, Class atLeastOneClass, Class... dtoClasses) {
+    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Class atLeastOneClass, Class... dtoClasses) {
         this.defaultNameSpace = defaultNamesSpace;
-        this.jaxbContext = getJaxbContext(atLeastOneClass, dtoClasses);
+        this.jaxbContext = getJaxbContext(accept, atLeastOneClass, dtoClasses);
     }
 
     @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(String defaultNamesSpace, Class[] atLeastOneClass) {
+    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Class[] atLeastOneClass) {
         this.defaultNameSpace = defaultNamesSpace;
-        this.jaxbContext = getJaxbContext(atLeastOneClass);
+        this.jaxbContext = getJaxbContext(accept, atLeastOneClass);
     }
 
-    public JAXBMarshalling(Package atLeastOnePackage, Package... packages) {
-        this((String) null, atLeastOnePackage, packages);
+    public JAXBMarshalling(Predicate<Class<?>> accept, Package atLeastOnePackage, Package... packages) {
+        this(accept, (String) null, atLeastOnePackage, packages);
     }
 
-    public JAXBMarshalling(Package[] atLeastOnePackage) {
-        this((String) null, atLeastOnePackage);
+    public JAXBMarshalling(Predicate<Class<?>> accept, Package[] atLeastOnePackage) {
+        this(accept, (String) null, atLeastOnePackage);
     }
 
     public JAXBMarshalling(String tremaSeperatedPackages) {
@@ -234,13 +239,13 @@ public class JAXBMarshalling {
     }
 
     @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(Class atLeastOneClass, Class... dtoClasses) {
-        this((String) null, atLeastOneClass, dtoClasses);
+    public JAXBMarshalling(Predicate<Class<?>> accept, Class atLeastOneClass, Class... dtoClasses) {
+        this(accept, (String) null, atLeastOneClass, dtoClasses);
     }
 
     @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(Class[] atLeastOneClass) {
-        this((String) null, atLeastOneClass);
+    public JAXBMarshalling(Predicate<Class<?>> accept, Class[] atLeastOneClass) {
+        this(accept, (String) null, atLeastOneClass);
     }
 
     public <DTO> void marshall(DTO dto, OutputStream out) {

@@ -46,7 +46,7 @@ public class HttpClientTest {
             hc = new HTTPClient();
             testResource = new TestResource();
             server = TestRestServer.create(testResource);
-            xmlMarshalling = new JAXBMarshalling(TestBody.class);
+            xmlMarshalling = new JAXBMarshalling(null, TestBody.class);
             proxy = new RestEasyClient<>(server.baseUri(), TestResourceI.class).proxy();
         } catch (RuntimeException ex) {
             ex.printStackTrace();
