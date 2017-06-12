@@ -27,7 +27,7 @@
         <!-- versions -->
         <version.junit>4.12</version.junit>
         <version.lucene>4.10.4</version.lucene><!-- 5.5.3 --><!-- 6.2.1 -->
-        <version.poi>3.15</version.poi>
+        <version.poi>3.16</version.poi>
         <version.commons.codec>1.10</version.commons.codec>
     </properties>
     <dependencyManagement>
