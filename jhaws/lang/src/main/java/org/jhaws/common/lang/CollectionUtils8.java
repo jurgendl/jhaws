@@ -1925,7 +1925,59 @@ public interface CollectionUtils8 {
         }).collect(Collectors.toList());
     }
 
-    public static <T> Collector<T, ?, Map<T, Long>> groupingByCount() {
+    public static <T> Collector<T, ?, Map<T, Integer>> groupingByCount() {
+        return Collectors.groupingBy(Function.identity(), Collectors.reducing(0, e -> 1, Integer::sum));
+    }
+
+    public static <T> Collector<T, ?, Map<T, Long>> groupingByCountMany() {
         return Collectors.groupingBy(Function.identity(), Collectors.counting());
+    }
+
+    public static Comparator<Float> ascFloat() {
+        return (a, b) -> new CompareToBuilder().append(a, b).toComparison();
+    }
+
+    public static Comparator<Float> descFloat() {
+        return (a, b) -> -new CompareToBuilder().append(a, b).toComparison();
+    }
+
+    public static Comparator<Double> ascDouble() {
+        return (a, b) -> new CompareToBuilder().append(a, b).toComparison();
+    }
+
+    public static Comparator<Double> descDouble() {
+        return (a, b) -> -new CompareToBuilder().append(a, b).toComparison();
+    }
+
+    public static Comparator<Byte> ascByte() {
+        return (a, b) -> a - b;
+    }
+
+    public static Comparator<Byte> descByte() {
+        return (a, b) -> b - a;
+    }
+
+    public static Comparator<Short> ascShort() {
+        return (a, b) -> a - b;
+    }
+
+    public static Comparator<Short> descShort() {
+        return (a, b) -> b - a;
+    }
+
+    public static Comparator<Integer> ascInt() {
+        return (a, b) -> a - b;
+    }
+
+    public static Comparator<Integer> descInt() {
+        return (a, b) -> b - a;
+    }
+
+    public static Comparator<Long> ascLong() {
+        return (a, b) -> new CompareToBuilder().append(a, b).toComparison();
+    }
+
+    public static Comparator<Long> descLong() {
+        return (a, b) -> -new CompareToBuilder().append(a, b).toComparison();
     }
 }
