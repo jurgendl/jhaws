@@ -1,5 +1,7 @@
 package org.jhaws.common.lang;
 
+import java.util.stream.LongStream;
+
 public interface LongValueMap<K> extends ValueMap<K, Long> {
     @Override
     default public Long add(Long n1, Long n2) {
@@ -14,5 +16,9 @@ public interface LongValueMap<K> extends ValueMap<K, Long> {
     @Override
     default public Long zero() {
         return 0l;
+    }
+
+    default public LongStream stream() {
+        return values().stream().mapToLong(i -> i);
     }
 }

@@ -1,9 +1,11 @@
 package org.jhaws.common.lang;
 
-import java.util.Map;
+import java.util.Comparator;
+import java.util.List;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
-public interface ValueMap<K, N extends Number> extends Map<K, N> {
+public interface ValueMap<K, N extends Number> extends EnhancedMap<K, N> {
     default N add(K key) {
         N value = get(key);
         if (value == null) {
@@ -43,4 +45,8 @@ public interface ValueMap<K, N extends Number> extends Map<K, N> {
     abstract N one();
 
     abstract N zero();
+
+    default List<K> sorted(Comparator<N> order) {
+        return entrySet().stream().sorted((a, b) -> order.compare(a.getValue(), b.getValue())).map(Entry::getKey).collect(Collectors.toList());
+    }
 }

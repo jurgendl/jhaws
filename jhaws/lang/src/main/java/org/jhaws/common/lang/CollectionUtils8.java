@@ -669,13 +669,11 @@ public interface CollectionUtils8 {
         return map(stream, mapSupplier, keepLast);
     }
 
-    public static <K, V> Map<K, V> map(Stream<? extends Map.Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier,
-            BinaryOperator<V> choice) {
+    public static <K, V, M extends Map<K, V>> M map(Stream<? extends Map.Entry<K, V>> stream, Supplier<M> mapSupplier, BinaryOperator<V> choice) {
         Function<Entry<K, V>, K> keyMapper = CollectionUtils8.<K, V> keyMapper();
         Function<Entry<K, V>, V> valueMapper = CollectionUtils8.<K, V> valueMapper();
-        Collector<Entry<K, V>, ?, ? extends Map<K, V>> c = Collectors.toMap(keyMapper, valueMapper, choice, mapSupplier);
-        Map<K, V> map = stream.collect(c);
-        return map;
+        Collector<Entry<K, V>, ?, M> c = Collectors.toMap(keyMapper, valueMapper, choice, mapSupplier);
+        return stream.collect(c);
     }
 
     public static <K, V> Supplier<Map<K, V>> newLinkedMap() {
@@ -1979,5 +1977,10 @@ public interface CollectionUtils8 {
 
     public static Comparator<Long> descLong() {
         return (a, b) -> -new CompareToBuilder().append(a, b).toComparison();
+    }
+
+    public static <K, V> LinkedHashMap<K, V> sortByValue(Map<K, V> map, Comparator<V> comparator) {
+        return map.entrySet().stream().sorted(Map.Entry.comparingByValue(comparator)).collect(
+                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 }

@@ -1,5 +1,7 @@
 package org.jhaws.common.lang;
 
+import java.util.stream.DoubleStream;
+
 public interface DoubleValueMap<K> extends ValueMap<K, Double> {
     @Override
     default public Double add(Double n1, Double n2) {
@@ -14,5 +16,9 @@ public interface DoubleValueMap<K> extends ValueMap<K, Double> {
     @Override
     default public Double zero() {
         return 0d;
+    }
+
+    default public DoubleStream stream() {
+        return values().stream().mapToDouble(i -> i);
     }
 }

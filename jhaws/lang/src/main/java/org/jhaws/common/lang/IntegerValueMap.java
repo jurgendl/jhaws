@@ -1,5 +1,7 @@
 package org.jhaws.common.lang;
 
+import java.util.stream.IntStream;
+
 public interface IntegerValueMap<K> extends ValueMap<K, Integer> {
     @Override
     default public Integer add(Integer n1, Integer n2) {
@@ -14,5 +16,9 @@ public interface IntegerValueMap<K> extends ValueMap<K, Integer> {
     @Override
     default public Integer zero() {
         return 0;
+    }
+
+    default public IntStream stream() {
+        return values().stream().mapToInt(i -> i);
     }
 }
