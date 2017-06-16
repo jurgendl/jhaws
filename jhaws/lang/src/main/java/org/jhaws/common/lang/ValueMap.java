@@ -1,6 +1,7 @@
 package org.jhaws.common.lang;
 
 import java.util.Map;
+import java.util.function.UnaryOperator;
 
 public interface ValueMap<K, N extends Number> extends Map<K, N> {
     default N add(K key) {
@@ -10,6 +11,18 @@ public interface ValueMap<K, N extends Number> extends Map<K, N> {
         } else {
             value = add(value, one());
         }
+        put(key, value);
+        return value;
+    }
+
+    default void operateAll(UnaryOperator<N> operation) {
+        keySet().forEach(key -> operate(key, operation));
+    }
+
+    default N operate(K key, UnaryOperator<N> operation) {
+        N value = get(key);
+        value = operation.apply(value);
+        if (value == null) value = zero();
         put(key, value);
         return value;
     }
@@ -28,4 +41,6 @@ public interface ValueMap<K, N extends Number> extends Map<K, N> {
     abstract N add(N n1, N n2);
 
     abstract N one();
+
+    abstract N zero();
 }
