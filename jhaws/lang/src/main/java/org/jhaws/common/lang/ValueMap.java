@@ -15,7 +15,7 @@ public interface ValueMap<K, N extends Number> extends Map<K, N> {
         return value;
     }
 
-    default void operateAll(UnaryOperator<N> operation) {
+    default void operate(UnaryOperator<N> operation) {
         keySet().forEach(key -> operate(key, operation));
     }
 
