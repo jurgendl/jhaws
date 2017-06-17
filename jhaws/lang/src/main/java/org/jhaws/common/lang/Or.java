@@ -4,77 +4,83 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class Or<T> implements Predicate<T> {
-    static public <T> Or<T> or(@SuppressWarnings("unchecked") T... options) {
-        return new Or<T>(options);
-    }
+	static public <T> Or<T> or(@SuppressWarnings("unchecked") T... options) {
+		return new Or<T>(options);
+	}
 
-    static public <T> Or<T> or(List<T> options) {
-        return new Or<T>(options);
-    }
+	static public Or<Integer> range(int from, int endInclusive) {
+		return new Or<Integer>(
+				IntStream.range(from, endInclusive + 1).boxed().toArray(i -> new Integer[endInclusive - from + 1]));
+	}
 
-    @SuppressWarnings("unchecked")
-    static public <X> Or<X> cast(Object o) {
-        return (Or<X>) o;
-    }
+	static public <T> Or<T> or(List<T> options) {
+		return new Or<T>(options);
+	}
 
-    protected List<T> or;
+	@SuppressWarnings("unchecked")
+	static public <X> Or<X> cast(Object o) {
+		return (Or<X>) o;
+	}
 
-    public Or() {
-        super();
-    }
+	protected List<T> or;
 
-    public Or(@SuppressWarnings("unchecked") T... or) {
-        this.or = new ArrayList<T>(Arrays.asList(or));
-    }
+	public Or() {
+		super();
+	}
 
-    public Or(List<T> or) {
-        this.or = or;
-    }
+	public Or(@SuppressWarnings("unchecked") T... or) {
+		this.or = new ArrayList<T>(Arrays.asList(or));
+	}
 
-    public List<T> getOr() {
-        return this.or;
-    }
+	public Or(List<T> or) {
+		this.or = or;
+	}
 
-    public void setOr(List<T> or) {
-        this.or = or;
-    }
+	public List<T> getOr() {
+		return this.or;
+	}
 
-    public Or<T> add(T t) {
-        return or(t);
-    }
+	public void setOr(List<T> or) {
+		this.or = or;
+	}
 
-    public Or<T> or(T t) {
-        if (or == null)
-            or = new ArrayList<T>(Arrays.asList(t));
-        else
-            or.add(t);
-        return this;
-    }
+	public Or<T> add(T t) {
+		return or(t);
+	}
 
-    @Override
-    public String toString() {
-        return or.toString().replace(", ", "|").replace("[", "").replace("]", "");
-    }
+	public Or<T> or(T t) {
+		if (or == null)
+			or = new ArrayList<T>(Arrays.asList(t));
+		else
+			or.add(t);
+		return this;
+	}
 
-    @Override
-    public boolean test(T t) {
-        return or.contains(t);
-    }
+	@Override
+	public String toString() {
+		return or.toString().replace(", ", "|").replace("[", "").replace("]", "");
+	}
 
-    public List<T> all() {
-        return or;
-    }
+	@Override
+	public boolean test(T t) {
+		return or.contains(t);
+	}
 
-    public T first() {
-        return or.get(0);
-    }
+	public List<T> all() {
+		return or;
+	}
 
-    public boolean empty() {
-        return or.isEmpty();
-    }
+	public T first() {
+		return or.get(0);
+	}
+
+	public boolean empty() {
+		return or.isEmpty();
+	}
 }
