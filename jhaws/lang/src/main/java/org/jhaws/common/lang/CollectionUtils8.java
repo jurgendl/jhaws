@@ -1664,6 +1664,10 @@ public interface CollectionUtils8 {
         return stream(map).collect(collectMap(mapKey(), e -> valueMapper.apply(e.getValue())));
     }
 
+    public static <K, V, T> Map<T, V> mapKey(Map<K, V> map, Function<K, T> keyMapper) {
+        return stream(map).collect(collectMap(e -> keyMapper.apply(e.getKey()), mapValue()));
+    }
+
     public static <T> Comparator<T> comparatorCaseInsensitive(Function<T, String> compare) {
         Comparators.CaseInsensitiveComparator comparator = new Comparators.CaseInsensitiveComparator();
         return (t1, t2) -> {
