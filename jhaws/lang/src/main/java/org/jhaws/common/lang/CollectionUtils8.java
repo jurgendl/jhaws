@@ -1987,4 +1987,8 @@ public interface CollectionUtils8 {
         return map.entrySet().stream().sorted(Map.Entry.comparingByValue(comparator)).collect(
                 Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
+
+    public static <T> List<T> repeat(int times, T object) {
+        return IntStream.range(0, times).mapToObj(i -> object).collect(Collectors.toList());
+    }
 }
