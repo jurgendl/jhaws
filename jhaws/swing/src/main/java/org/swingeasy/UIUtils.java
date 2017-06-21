@@ -300,12 +300,13 @@ public class UIUtils {
      * put window on bottomright, the size of the window must be set<br>
      * TODO check on multi-monitor setup
      */
-    public static void bottomRight(Window w) {
+    public static <W extends Window> W bottomRight(W frame) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final Rectangle bounds = ge.getMaximumWindowBounds(); // native window bounds
-        int x = (int) bounds.getMaxX() - w.getWidth();
-        int y = (int) bounds.getMaxY() - w.getHeight();
-        w.setLocation(x, y);
+        int x = (int) bounds.getMaxX() - frame.getWidth();
+        int y = (int) bounds.getMaxY() - frame.getHeight();
+        frame.setLocation(x, y);
+        return frame;
     }
 
     public static String bytesToHex(byte[] bytes) {
@@ -331,8 +332,9 @@ public class UIUtils {
     /**
      * center window on screen
      */
-    public static void center(Window w) {
-        w.setLocationRelativeTo(null);
+    public static <W extends Window> W center(W frame) {
+        frame.setLocationRelativeTo(null);
+        return frame;
     }
 
     /**
@@ -554,8 +556,9 @@ public class UIUtils {
         return new MoveMouseListener(target);
     }
 
-    public static void maximize(Frame f) {
-        f.setExtendedState(f.getExtendedState() | Frame.MAXIMIZED_BOTH);
+    public static <W extends Frame> W maximize(W frame) {
+        frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
+        return frame;
     }
 
     /**
@@ -671,8 +674,9 @@ public class UIUtils {
     /**
      * center window on top of component
      */
-    public static void relative(Window w, Component c) {
-        w.setLocationRelativeTo(c);
+    public static <W extends Window> W relative(W frame, Component c) {
+        frame.setLocationRelativeTo(c);
+        return frame;
     }
 
     /**
@@ -680,8 +684,9 @@ public class UIUtils {
      *
      * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
      */
-    public static void rounded(Window w) {
-        UIUtils.rounded(w, 20);
+    public static <W extends Window> W rounded(W frame) {
+        UIUtils.rounded(frame, 20);
+        return frame;
     }
 
     /**
@@ -689,15 +694,16 @@ public class UIUtils {
      *
      * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
      */
-    public static void rounded(Window w, float arc) {
+    public static <W extends Window> W rounded(W frame, float arc) {
         if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.PERPIXEL_TRANSPARENT)) {
             try {
-                Shape shape = new RoundRectangle2D.Float(0, 0, w.getWidth(), w.getHeight(), arc, arc);
-                AWTUtilitiesWrapper.setWindowShape(w, shape);
+                Shape shape = new RoundRectangle2D.Float(0, 0, frame.getWidth(), frame.getHeight(), arc, arc);
+                AWTUtilitiesWrapper.setWindowShape(frame, shape);
             } catch (Exception ex) {
                 UIUtils.log(ex);
             }
         }
+        return frame;
     }
 
     /**
@@ -807,14 +813,15 @@ public class UIUtils {
      *
      * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
      */
-    public static void shaped(Window w, Shape shape) {
+    public static <W extends Window> W shaped(W frame, Shape shape) {
         if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.PERPIXEL_TRANSPARENT)) {
             try {
-                AWTUtilitiesWrapper.setWindowShape(w, shape);
+                AWTUtilitiesWrapper.setWindowShape(frame, shape);
             } catch (Exception ex) {
                 UIUtils.log(ex);
             }
         }
+        return frame;
     }
 
     /**
@@ -834,7 +841,7 @@ public class UIUtils {
     /**
      * toggle visibility of window
      */
-    public static void toggleVisibility(final Window frame) {
+    public static <W extends Window> W toggleVisibility(W frame) {
         frame.setVisible(!frame.isVisible());
         if (frame.isVisible()) {
             if (frame instanceof JFrame) {
@@ -843,6 +850,7 @@ public class UIUtils {
             frame.toFront();
             frame.repaint();
         }
+        return frame;
     }
 
     public static void toHex(char[] hexChars, int v, int j) {
@@ -911,15 +919,17 @@ public class UIUtils {
         super();
     }
 
-    public static void bringToFront(Window w) {
+    public static <W extends Window> W bringToFront(W frame) {
         runOnEDT(() -> {
-            w.toFront();
-            w.repaint();
+            frame.toFront();
+            frame.repaint();
         });
+        return frame;
     }
 
-    public static void show(Window w) {
-        runOnEDT(() -> w.setVisible(true));
+    public static <W extends Window> W show(W frame) {
+        runOnEDT(() -> frame.setVisible(true));
+        return frame;
     }
 
     public static void runOnEDT(Runnable run) {
@@ -928,5 +938,32 @@ public class UIUtils {
         } else {
             SwingUtilities.invokeLater(run);
         }
+    }
+
+    public static <W extends Window> W alwaysOnTop(W frame) {
+        frame.setAlwaysOnTop(true);
+        return frame;
+    }
+
+    public static JFrame setup(JFrame f) {
+        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        return f;
+    }
+
+    public static JFrame pack(JFrame f) {
+        f.pack();
+        return f;
+    }
+
+    public static JFrame lock(JFrame f) {
+        f.setResizable(false);
+        return f;
+    }
+
+    public static JFrame packCenterLock(JFrame f) {
+        pack(f);
+        center(f);
+        lock(f);
+        return f;
     }
 }

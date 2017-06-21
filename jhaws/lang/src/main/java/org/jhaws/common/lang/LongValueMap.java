@@ -18,7 +18,7 @@ public interface LongValueMap<K> extends ValueMap<K, Long> {
         return 0l;
     }
 
-    default public LongStream stream() {
+    default public LongStream streamN() {
         return values().stream().mapToLong(i -> i);
     }
 }

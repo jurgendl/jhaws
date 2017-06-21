@@ -18,7 +18,7 @@ public interface IntegerValueMap<K> extends ValueMap<K, Integer> {
         return 0;
     }
 
-    default public IntStream stream() {
+    default public IntStream streamN() {
         return values().stream().mapToInt(i -> i);
     }
 }

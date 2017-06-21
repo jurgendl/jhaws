@@ -29,6 +29,10 @@ public interface ValueMap<K, N extends Number> extends EnhancedMap<K, N> {
         return value;
     }
 
+    default N add(Entry<K, N> entry) {
+        return add(entry.getKey(), entry.getValue());
+    }
+
     default N add(K key, N number) {
         N value = get(key);
         if (value == null) {
