@@ -33,8 +33,15 @@ public class PassGen {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(specialpass());
-		System.out.println(pass());
+		System.out.println("\n\nspecial characters:");
+		for (int i = 0; i < 5; i++)
+			System.out.println(specialpass());
+		System.out.println("\n\nalphanumeric:");
+		for (int i = 0; i < 5; i++)
+			System.out.println(pass());
+		System.out.println("\n\nOracle:");
+		for (int i = 0; i < 5; i++)
+			System.out.println(pass(30, "#_$(^", PassType.lowercase, PassType.uppercase, PassType.numbers));
 	}
 
 	public static String specialpass(int length) {
@@ -54,9 +61,18 @@ public class PassGen {
 	}
 
 	public static String pass(int length, PassType type, PassType... types) {
+		return pass(length, (String) null, type, types);
+	}
+
+	public static String pass(int length, String chars, PassType type, PassType... types) {
 		EnumSet<PassType> t = EnumSet.of(type, types);
 		List<String> list = new ArrayList<>();
 		String S = "";
+		if (chars != null && chars.length() > 0) {
+			list.add(RandomStringUtils.random(1, 0, 0, false, false, chars.toCharArray(), random));
+			length -= 1;
+			S += chars;
+		}
 		if (t.contains(PassType.numbers)) {
 			list.add(RandomStringUtils.random(1, 0, 0, false, false, CHARS_NR, random));
 			length -= 1;
