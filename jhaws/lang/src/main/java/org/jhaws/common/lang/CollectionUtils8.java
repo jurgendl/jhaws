@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -22,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.NavigableMap;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,13 +32,10 @@ import java.util.SortedSet;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.Stack;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -483,7 +478,7 @@ public interface CollectionUtils8 {
 
     public static class ListCollector<T> extends CustomCollector<T, List<T>, List<T>> {
         public ListCollector() {
-            setSupplier(ArrayList::new);
+            setSupplier(newList());
             BiConsumer<List<T>, T> accumulator0 = elementsListAccumulator();
             setAccumulator(accumulator0);
             setCombiner(elementsListCombiner(accumulator0));
@@ -652,19 +647,19 @@ public interface CollectionUtils8 {
         return size == 0 ? null : dd.get(size - 1);
     }
 
-    public static <K, V> Map<K, V> map(Collection<Map.Entry<K, V>> entries) {
+    public static <K, V> EnhancedMap<K, V> map(Collection<Map.Entry<K, V>> entries) {
         return map(false, entries);
     }
 
-    public static <K, V> Map<K, V> map(boolean parallel, Collection<? extends Map.Entry<K, V>> entries) {
+    public static <K, V> EnhancedMap<K, V> map(boolean parallel, Collection<? extends Map.Entry<K, V>> entries) {
         return map(stream(parallel, entries));
     }
 
-    public static <K, V> Map<K, V> map(Stream<? extends Map.Entry<K, V>> stream) {
+    public static <K, V> EnhancedMap<K, V> map(Stream<? extends Map.Entry<K, V>> stream) {
         return map(stream, CollectionUtils8.<K, V> newLinkedMap());
     }
 
-    public static <K, V> Map<K, V> map(Stream<? extends Map.Entry<K, V>> stream, Supplier<? extends Map<K, V>> mapSupplier) {
+    public static <K, V, M extends Map<K, V>> M map(Stream<? extends Map.Entry<K, V>> stream, Supplier<M> mapSupplier) {
         BinaryOperator<V> keepLast = CollectionUtils8.<V> keepLast();
         return map(stream, mapSupplier, keepLast);
     }
@@ -676,23 +671,27 @@ public interface CollectionUtils8 {
         return stream.collect(c);
     }
 
-    public static <K, V> Supplier<Map<K, V>> newLinkedMap() {
-        return LinkedHashMap::new;
+    public static <K, V> Supplier<EnhancedLinkedHashMap<K, V>> newLinkedMap() {
+        return EnhancedLinkedHashMap::new;
     }
 
-    public static <K, V> Supplier<? extends Map<K, V>> newMap() {
-        return HashMap::new;
+    public static <K, V> Supplier<EnhancedMap<K, V>> newMap() {
+        return EnhancedHashMap::new;
     }
 
-    public static <K, V> Supplier<? extends NavigableMap<K, V>> newNavigableMap() {
-        return TreeMap::new;
+    public static <K, V> Supplier<EnhancedSortedMap<K, V>> newSortedMap() {
+        return EnhancedTreeMap::new;
     }
 
-    public static <K, V> Supplier<? extends ConcurrentNavigableMap<K, V>> newConcurrentNavigableMap() {
+    public static <K, V> Supplier<EnhancedTreeMap<K, V>> newNavigableMap() {
+        return EnhancedTreeMap::new;
+    }
+
+    public static <K, V> Supplier<ConcurrentSkipListMap<K, V>> newConcurrentNavigableMap() {
         return ConcurrentSkipListMap::new;
     }
 
-    public static <K, V> Supplier<? extends ConcurrentMap<K, V>> newConcurrentMap() {
+    public static <K, V> Supplier<ConcurrentHashMap<K, V>> newConcurrentMap() {
         return ConcurrentHashMap::new;
     }
 
@@ -766,13 +765,6 @@ public interface CollectionUtils8 {
 
     public static <T> Collector<T, ?, SortedSet<T>> collectSortedSet() {
         return toCollector(newSortedSet());
-    }
-
-    /**
-     * Supplier<SortedMap<K, V>> mapSupplier = TreeMap::new;
-     */
-    public static <K, V> Supplier<SortedMap<K, V>> newSortedMap() {
-        return TreeMap::new;
     }
 
     public static <T extends Comparable<? super T>> List<T> sort(Collection<T> collection) {
@@ -1296,37 +1288,37 @@ public interface CollectionUtils8 {
         return stream(streamMaps(maps).collect(Collectors.toMap(Entry::getKey, Entry::getValue, keepLast(), newLinkedMap())));
     }
 
-    public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
+    public static <T, K, V> Collector<T, ?, EnhancedMap<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
         return collectMap(keyMapper, valueMapper, rejectDuplicateKeys());
     }
 
-    public static <T, K, V> Collector<T, ?, Map<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
+    public static <T, K, V> Collector<T, ?, EnhancedMap<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
             BinaryOperator<V> duplicateValues) {
-        return Collectors.toMap(keyMapper, valueMapper, duplicateValues);
+        return Collectors.toMap(keyMapper, valueMapper, duplicateValues, newMap());
     }
 
-    public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper, BinaryOperator<V> duplicateValues) {
+    public static <K, V> Collector<V, ?, EnhancedMap<K, V>> collectMap(Function<V, K> keyMapper, BinaryOperator<V> duplicateValues) {
         return collectMap(keyMapper, self(), duplicateValues);
     }
 
-    public static <K, V> Collector<V, ?, Map<K, V>> collectMap(Function<V, K> keyMapper) {
+    public static <K, V> Collector<V, ?, EnhancedMap<K, V>> collectMap(Function<V, K> keyMapper) {
         return collectMap(keyMapper, rejectDuplicateKeys());
     }
 
-    public static <T, K, V> Collector<T, ?, SortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
+    public static <T, K, V> Collector<T, ?, EnhancedSortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
         return collectSortedMap(keyMapper, valueMapper, rejectDuplicateKeys());
     }
 
-    public static <T, K, V> Collector<T, ?, SortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
+    public static <T, K, V> Collector<T, ?, EnhancedSortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
             BinaryOperator<V> duplicateValues) {
-        return Collectors.toMap(keyMapper, valueMapper, duplicateValues, TreeMap::new);
+        return Collectors.toMap(keyMapper, valueMapper, duplicateValues, newSortedMap());
     }
 
-    public static <K, V> Collector<V, ?, SortedMap<K, V>> collectSortedMap(Function<V, K> keyMapper, BinaryOperator<V> duplicateValues) {
+    public static <K, V> Collector<V, ?, EnhancedSortedMap<K, V>> collectSortedMap(Function<V, K> keyMapper, BinaryOperator<V> duplicateValues) {
         return collectSortedMap(keyMapper, self(), duplicateValues);
     }
 
-    public static <K, V> Collector<V, ?, SortedMap<K, V>> collectSortedMap(Function<V, K> keyMapper) {
+    public static <K, V> Collector<V, ?, EnhancedSortedMap<K, V>> collectSortedMap(Function<V, K> keyMapper) {
         return collectSortedMap(keyMapper, rejectDuplicateKeys());
     }
 
@@ -1676,12 +1668,13 @@ public interface CollectionUtils8 {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static Map<String, List<String>> groupByValue(Properties properties) {
+    public static EnhancedMap<String, List<String>> groupByValue(Properties properties) {
         return groupByValue((Map<String, String>) (Map) properties);
     }
 
-    public static <K, V> Map<V, List<K>> groupByValue(Map<K, V> map) {
-        return stream(map.entrySet()).collect(Collectors.groupingBy(e -> e.getValue(), Collectors.mapping(e -> e.getKey(), Collectors.toList())));
+    public static <K, V> EnhancedMap<V, List<K>> groupByValue(Map<K, V> map) {
+        return stream(map.entrySet())
+                .collect(Collectors.groupingBy(e -> e.getValue(), newMap(), Collectors.mapping(e -> e.getKey(), Collectors.toList())));
     }
 
     @SuppressWarnings("unchecked")
@@ -1927,12 +1920,12 @@ public interface CollectionUtils8 {
         }).collect(Collectors.toList());
     }
 
-    public static <T> Collector<T, ?, Map<T, Integer>> groupingByCount() {
-        return Collectors.groupingBy(Function.identity(), Collectors.reducing(0, e -> 1, Integer::sum));
+    public static <T> Collector<T, ?, EnhancedMap<T, Integer>> groupingByCount() {
+        return Collectors.groupingBy(id(), newMap(), Collectors.reducing(0, e -> 1, Integer::sum));
     }
 
-    public static <T> Collector<T, ?, Map<T, Long>> groupingByCountMany() {
-        return Collectors.groupingBy(Function.identity(), Collectors.counting());
+    public static <T> Collector<T, ?, EnhancedMap<T, Long>> groupingByCountMany() {
+        return Collectors.groupingBy(id(), newMap(), Collectors.counting());
     }
 
     public static Comparator<Float> ascFloat() {
