@@ -209,7 +209,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         }
     }
 
-    protected class SearchHighlightPainter extends ETextAreaFillHighlightPainter {
+    protected class SearchHighlightPainter extends ETextComponentFillHighlightPainter {
         public SearchHighlightPainter() {
             super(new Color(245, 225, 145));
         }
@@ -219,7 +219,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
 
     protected final List<ValueChangeListener<String>> valueChangeListeners = new ArrayList<>();
 
-    protected ETextAreaHighlightPainter highlightPainter;
+    protected ETextComponentHighlightPainter highlightPainter;
 
     protected String lastSearch = null;
 
@@ -246,7 +246,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         addKeyListener(listener);
     }
 
-    public Highlighter.Highlight addHighlight(int from, int to, ETextAreaHighlightPainter painter) throws BadLocationException {
+    public Highlighter.Highlight addHighlight(int from, int to, ETextComponentHighlightPainter painter) throws BadLocationException {
         return (Highlighter.Highlight) getHighlighter().addHighlight(from, to, painter);
     }
 
@@ -344,7 +344,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         return "txt";
     }
 
-    public ETextAreaHighlightPainter getHighlightPainter() {
+    public ETextComponentHighlightPainter getHighlightPainter() {
         if (highlightPainter == null) {
             highlightPainter = new SearchHighlightPainter();
         }
@@ -490,7 +490,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         this.removeHighlights(getHighlightPainter());
     }
 
-    public void removeHighlights(ETextAreaHighlightPainter painter) {
+    public void removeHighlights(ETextComponentHighlightPainter painter) {
         Highlighter hilite = getHighlighter();
         for (Highlight hi : hilite.getHighlights()) {
             if (hi.getPainter().equals(painter)) {
@@ -549,7 +549,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         this.fireCaretUpdate();
     }
 
-    public void setHighlightPainter(ETextAreaHighlightPainter highlightPainter) {
+    public void setHighlightPainter(ETextComponentHighlightPainter highlightPainter) {
         this.highlightPainter = highlightPainter;
     }
 

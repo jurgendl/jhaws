@@ -8,20 +8,20 @@ import java.awt.Stroke;
 /**
  * @see javax.swing.text.html.HTMLEditorKit.NavigateLinkAction.FocusHighlightPainter
  */
-public class ETextAreaBorderHighlightPainter extends ETextAreaAbstractHighlightPainter {
+public class ETextComponentBorderHighlightPainter extends ETextComponentAbstractHighlightPainter {
     protected Color color;
 
     protected Stroke stroke;
 
     protected int offset = 1;
 
-    public ETextAreaBorderHighlightPainter(Color color) {
+    public ETextComponentBorderHighlightPainter(Color color) {
         this.color = color;
     }
 
     /**
      * 
-     * @see org.swingeasy.ETextAreaHighlightPainter#getColor()
+     * @see org.swingeasy.ETextComponentHighlightPainter#getColor()
      */
     @Override
     public Color getColor() {
@@ -38,7 +38,7 @@ public class ETextAreaBorderHighlightPainter extends ETextAreaAbstractHighlightP
 
     /**
      * 
-     * @see org.swingeasy.ETextAreaAbstractHighlightPainter#paintHighlight(java.awt.Graphics2D, java.awt.Rectangle)
+     * @see org.swingeasy.ETextComponentAbstractHighlightPainter#paintHighlight(java.awt.Graphics2D, java.awt.Rectangle)
      */
     @Override
     protected void paintHighlight(Graphics2D g2d, Rectangle alloc) {
@@ -56,7 +56,7 @@ public class ETextAreaBorderHighlightPainter extends ETextAreaAbstractHighlightP
 
     /**
      * 
-     * @see org.swingeasy.ETextAreaHighlightPainter#setColor(java.awt.Color)
+     * @see org.swingeasy.ETextComponentHighlightPainter#setColor(java.awt.Color)
      */
     @Override
     public void setColor(Color color) {

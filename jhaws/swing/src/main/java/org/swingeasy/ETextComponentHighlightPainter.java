@@ -7,7 +7,7 @@ import javax.swing.text.Highlighter.HighlightPainter;
 /**
  * @author Jurgen
  */
-public interface ETextAreaHighlightPainter extends HighlightPainter {
+public interface ETextComponentHighlightPainter extends HighlightPainter {
     public Color getColor();
 
     public void setColor(Color color);

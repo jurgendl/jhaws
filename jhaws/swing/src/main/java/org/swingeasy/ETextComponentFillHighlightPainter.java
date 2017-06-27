@@ -9,20 +9,20 @@ import java.awt.Rectangle;
 /**
  * @author Jurgen
  */
-public class ETextAreaFillHighlightPainter extends ETextAreaAbstractHighlightPainter {
+public class ETextComponentFillHighlightPainter extends ETextComponentAbstractHighlightPainter {
     protected Color color;
 
     protected Color gradientColor;
 
     protected boolean verticalGradient = false;
 
-    public ETextAreaFillHighlightPainter(Color color) {
+    public ETextComponentFillHighlightPainter(Color color) {
         setColor(color);
     }
 
     /**
      * 
-     * @see org.swingeasy.ETextAreaHighlightPainter#getColor()
+     * @see org.swingeasy.ETextComponentHighlightPainter#getColor()
      */
     @Override
     public Color getColor() {
@@ -39,7 +39,7 @@ public class ETextAreaFillHighlightPainter extends ETextAreaAbstractHighlightPai
 
     /**
      * 
-     * @see org.swingeasy.ETextAreaAbstractHighlightPainter#paintHighlight(java.awt.Graphics2D, java.awt.Rectangle)
+     * @see org.swingeasy.ETextComponentAbstractHighlightPainter#paintHighlight(java.awt.Graphics2D, java.awt.Rectangle)
      */
     @Override
     protected void paintHighlight(Graphics2D g2d, Rectangle alloc) {
@@ -70,7 +70,7 @@ public class ETextAreaFillHighlightPainter extends ETextAreaAbstractHighlightPai
 
     /**
      * 
-     * @see org.swingeasy.ETextAreaHighlightPainter#setColor(java.awt.Color)
+     * @see org.swingeasy.ETextComponentHighlightPainter#setColor(java.awt.Color)
      */
     @Override
     public void setColor(Color color) {

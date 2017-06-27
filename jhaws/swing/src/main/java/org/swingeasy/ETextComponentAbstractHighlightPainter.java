@@ -16,8 +16,8 @@ import javax.swing.text.View;
 /**
  * @author Jurgen
  */
-public abstract class ETextAreaAbstractHighlightPainter extends LayeredHighlighter.LayerPainter implements ETextAreaHighlightPainter {
-    public ETextAreaAbstractHighlightPainter() {
+public abstract class ETextComponentAbstractHighlightPainter extends LayeredHighlighter.LayerPainter implements ETextComponentHighlightPainter {
+    public ETextComponentAbstractHighlightPainter() {
         super();
     }
 
