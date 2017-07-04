@@ -17,12 +17,14 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -56,6 +58,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
@@ -300,13 +303,13 @@ public class UIUtils {
      * put window on bottomright, the size of the window must be set<br>
      * TODO check on multi-monitor setup
      */
-    public static <W extends Window> W bottomRight(W frame) {
+    public static <F extends Window> F bottomRight(F f) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final Rectangle bounds = ge.getMaximumWindowBounds(); // native window bounds
-        int x = (int) bounds.getMaxX() - frame.getWidth();
-        int y = (int) bounds.getMaxY() - frame.getHeight();
-        frame.setLocation(x, y);
-        return frame;
+        int x = (int) bounds.getMaxX() - f.getWidth();
+        int y = (int) bounds.getMaxY() - f.getHeight();
+        f.setLocation(x, y);
+        return f;
     }
 
     public static String bytesToHex(byte[] bytes) {
@@ -332,9 +335,9 @@ public class UIUtils {
     /**
      * center window on screen
      */
-    public static <W extends Window> W center(W frame) {
-        frame.setLocationRelativeTo(null);
-        return frame;
+    public static <F extends Window> F center(F f) {
+        f.setLocationRelativeTo(null);
+        return f;
     }
 
     /**
@@ -556,9 +559,9 @@ public class UIUtils {
         return new MoveMouseListener(target);
     }
 
-    public static <W extends Frame> W maximize(W frame) {
-        frame.setExtendedState(frame.getExtendedState() | Frame.MAXIMIZED_BOTH);
-        return frame;
+    public static <F extends Frame> F maximize(F f) {
+        f.setExtendedState(f.getExtendedState() | Frame.MAXIMIZED_BOTH);
+        return f;
     }
 
     /**
@@ -674,9 +677,9 @@ public class UIUtils {
     /**
      * center window on top of component
      */
-    public static <W extends Window> W relative(W frame, Component c) {
-        frame.setLocationRelativeTo(c);
-        return frame;
+    public static <F extends Window> F relative(F f, Component c) {
+        f.setLocationRelativeTo(c);
+        return f;
     }
 
     /**
@@ -684,9 +687,9 @@ public class UIUtils {
      *
      * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
      */
-    public static <W extends Window> W rounded(W frame) {
-        UIUtils.rounded(frame, 20);
-        return frame;
+    public static <F extends Window> F rounded(F f) {
+        UIUtils.rounded(f, 20);
+        return f;
     }
 
     /**
@@ -694,16 +697,16 @@ public class UIUtils {
      *
      * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
      */
-    public static <W extends Window> W rounded(W frame, float arc) {
+    public static <F extends Window> F rounded(F f, float arc) {
         if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.PERPIXEL_TRANSPARENT)) {
             try {
-                Shape shape = new RoundRectangle2D.Float(0, 0, frame.getWidth(), frame.getHeight(), arc, arc);
-                AWTUtilitiesWrapper.setWindowShape(frame, shape);
+                Shape shape = new RoundRectangle2D.Float(0, 0, f.getWidth(), f.getHeight(), arc, arc);
+                AWTUtilitiesWrapper.setWindowShape(f, shape);
             } catch (Exception ex) {
                 UIUtils.log(ex);
             }
         }
-        return frame;
+        return f;
     }
 
     /**
@@ -813,15 +816,15 @@ public class UIUtils {
      *
      * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
      */
-    public static <W extends Window> W shaped(W frame, Shape shape) {
+    public static <F extends Window> F shaped(F f, Shape shape) {
         if (AWTUtilitiesWrapper.isTranslucencySupported(AWTUtilitiesWrapper.PERPIXEL_TRANSPARENT)) {
             try {
-                AWTUtilitiesWrapper.setWindowShape(frame, shape);
+                AWTUtilitiesWrapper.setWindowShape(f, shape);
             } catch (Exception ex) {
                 UIUtils.log(ex);
             }
         }
-        return frame;
+        return f;
     }
 
     /**
@@ -841,16 +844,16 @@ public class UIUtils {
     /**
      * toggle visibility of window
      */
-    public static <W extends Window> W toggleVisibility(W frame) {
-        frame.setVisible(!frame.isVisible());
-        if (frame.isVisible()) {
-            if (frame instanceof JFrame) {
-                JFrame.class.cast(frame).setState(Frame.NORMAL);
+    public static <F extends Window> F toggleVisibility(F f) {
+        f.setVisible(!f.isVisible());
+        if (f.isVisible()) {
+            if (f instanceof JFrame) {
+                JFrame.class.cast(f).setState(Frame.NORMAL);
             }
-            frame.toFront();
-            frame.repaint();
+            f.toFront();
+            f.repaint();
         }
-        return frame;
+        return f;
     }
 
     public static void toHex(char[] hexChars, int v, int j) {
@@ -863,8 +866,9 @@ public class UIUtils {
      *
      * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
      */
-    public static void translucent(Window w) {
-        UIUtils.translucent(w, .93f);
+    public static <F extends Window> F translucent(F f) {
+        UIUtils.translucent(f, .93f);
+        return f;
     }
 
     /**
@@ -919,17 +923,17 @@ public class UIUtils {
         super();
     }
 
-    public static <W extends Window> W bringToFront(W frame) {
+    public static <F extends Window> F bringToFront(F f) {
         runOnEDT(() -> {
-            frame.toFront();
-            frame.repaint();
+            f.toFront();
+            f.repaint();
         });
-        return frame;
+        return f;
     }
 
-    public static <W extends Window> W show(W frame) {
-        runOnEDT(() -> frame.setVisible(true));
-        return frame;
+    public static <F extends Window> F show(F f) {
+        runOnEDT(() -> f.setVisible(true));
+        return f;
     }
 
     public static void runOnEDT(Runnable run) {
@@ -940,30 +944,119 @@ public class UIUtils {
         }
     }
 
-    public static <W extends Window> W alwaysOnTop(W frame) {
-        frame.setAlwaysOnTop(true);
-        return frame;
+    public static <F extends Window> F alwaysOnTop(F f) {
+        f.setAlwaysOnTop(true);
+        return f;
     }
 
-    public static JFrame setup(JFrame f) {
+    public static <F extends JFrame> F setup(F f) {
         f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         return f;
     }
 
-    public static JFrame pack(JFrame f) {
+    public static <F extends JFrame> F pack(F f) {
         f.pack();
         return f;
     }
 
-    public static JFrame lock(JFrame f) {
+    public static <F extends JFrame> F lock(F f) {
         f.setResizable(false);
         return f;
     }
 
-    public static JFrame packCenterLock(JFrame f) {
+    public static <F extends Frame> F undecorate(F f) {
+        f.setUndecorated(true);
+        return f;
+    }
+
+    public static <F extends JFrame> F packCenterLock(F f) {
         pack(f);
         center(f);
         lock(f);
         return f;
+    }
+
+    public static Fader fading(int initialDelay, int delay, JFrame f, int minimum) {
+        return new Fader(initialDelay, delay, f, minimum);
+    }
+
+    public static class Fader implements ActionListener, MouseListener, WindowFocusListener {
+        private Timer timer;
+
+        private JFrame f;
+
+        private int alpha = 100;
+
+        private int minimum;
+
+        private boolean initial = true;
+
+        public Fader(int initialDelay, int delay, JFrame f, int minimum) {
+            this.f = f;
+            this.minimum = minimum;
+            timer = new Timer(delay, this);
+            timer.setInitialDelay(initialDelay);
+            UIUtils.translucent(f, minimum / 100f);
+            f.getContentPane().getComponent(0).addMouseListener(this);
+            f.addWindowFocusListener(this);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int newalpha = Math.max(minimum, alpha - 1);
+            if (alpha != newalpha) {
+                alpha = newalpha;
+                UIUtils.translucent(f, alpha / 100f);
+            } else {
+                timer.stop();
+            }
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            // System.out.println("exit");
+            timer.start();
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+            // System.out.println("enter");
+            timer.stop();
+            alpha = 100;
+            UIUtils.translucent(f, 1f);
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            //
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            //
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            //
+        }
+
+        @Override
+        public void windowLostFocus(WindowEvent e) {
+            // System.out.println("unfocused");
+            timer.start();
+        }
+
+        @Override
+        public void windowGainedFocus(WindowEvent e) {
+            if (initial) {
+                initial = false;
+                return;
+            }
+            // System.out.println("focused");
+            timer.stop();
+            alpha = 100;
+            UIUtils.translucent(f, 1f);
+        }
     }
 }
