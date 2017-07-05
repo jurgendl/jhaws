@@ -74,7 +74,7 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
     }
 
     protected void init(ETextFieldConfig config) {
-        setColumns(cfg.getColumns());
+        if (cfg.getColumns() > 0) setColumns(cfg.getColumns());
 
         setEditable(config.isEnabled());
 

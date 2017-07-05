@@ -13,6 +13,8 @@ public class EFormattedTextFieldConfig extends EComponentConfig<EFormattedTextFi
 
     protected DefaultFormatter other;
 
+    protected int columns = 0;
+
     public EFormattedTextFieldConfig(DefaultFormatter factory) {
         other = factory;
     }
@@ -31,6 +33,16 @@ public class EFormattedTextFieldConfig extends EComponentConfig<EFormattedTextFi
     public EFormattedTextFieldConfig setFactory(EFormatBuilder factory) {
         lockCheck();
         this.factory = factory;
+        return this;
+    }
+
+    public int getColumns() {
+        return this.columns;
+    }
+
+    public EFormattedTextFieldConfig setColumns(int columns) {
+        lockCheck();
+        this.columns = columns;
         return this;
     }
 }

@@ -62,6 +62,8 @@ public class EFormattedTextField<T> extends JFormattedTextField implements EComp
     }
 
     protected void init(EFormattedTextFieldConfig config) {
+        if (cfg.getColumns() > 0) setColumns(cfg.getColumns());
+
         if (config.isTooltips()) {
             ToolTipManager.sharedInstance().registerComponent(this);
         }
