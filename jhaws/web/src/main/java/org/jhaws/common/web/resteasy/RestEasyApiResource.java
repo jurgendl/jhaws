@@ -210,6 +210,9 @@ public class RestEasyApiResource implements RestResource {
 
         sb.append("<h1>").append("REST interface overview").append("</h1>");
 
+        String contextUri = uriInfo.getBaseUri().toString();
+        if (contextUri.endsWith("/")) contextUri = contextUri.substring(0, contextUri.length() - 1);
+
         for (ResourceDescription resource : descriptions) {
             sb.append("<h2>").append(resource.basePath).append("</h2>");
             sb.append("<ul>");
@@ -217,7 +220,7 @@ public class RestEasyApiResource implements RestResource {
             for (MethodDescription method : resource.calls) {
                 sb.append("<li> ").append(method.method).append(" ");
                 sb.append("<a href='");
-                String url = uriInfo.getBaseUri() + (method.fullPath.startsWith("/") ? method.fullPath : "/" + method.fullPath);
+                String url = contextUri + (method.fullPath.startsWith("/") ? method.fullPath : "/" + method.fullPath);
                 sb.append(url).append("'>").append(method.fullPath).append("</a>");
                 sb.append(" : ");
                 if (method.consumes != null) {
