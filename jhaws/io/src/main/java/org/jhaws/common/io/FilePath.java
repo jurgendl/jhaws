@@ -228,6 +228,9 @@ public class FilePath implements Path, Externalizable {
 
     protected static URI uri(URL url, URI uri) {
         if (uri == null) {
+            if (url == null) {
+                throw new UncheckedIOException(new IOException("resource not found: null"));
+            }
             try {
                 uri = url.toURI();
             } catch (URISyntaxException ex) {
