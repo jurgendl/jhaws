@@ -96,13 +96,18 @@ public class FlowPlayerPanel extends Panel {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.render(CssHeaderItem.forCSS(
-				"a[href=\"http://flowplayer.org\"] { display: none !important; } .fp-embed { display: none !important; } .fp-fullscreen { opacity: .1 !important; }",
-				"fphl"));
+		// response.render(CssHeaderItem.forCSS(
+		// ". a[href=\"http://flowplayer.org\"] { display: none !important; } ",
+		// "fphl"));
 		response.render(CssHeaderItem.forReference(FlowPlayer.SKIN_CSS));
 		response.render(JavaScriptHeaderItem.forReference(FlowPlayer.JS));
-		response.render(OnDomReadyHeaderItem.forScript(";$('.customflowplayer').flowplayer({swf:'" + FlowPlayer.url()
-				+ "'" + (config.getSplash() ? ",splash:true" : "") + (config.getLoop() ? ",loop:true" : "") + "});"));
+		response.render(OnDomReadyHeaderItem.forScript(";$('.customflowplayer').flowplayer(" + //
+				"{"//
+				+ "swf:'" + FlowPlayer.url() + "'" + //
+				(config.getSplash() ? "," + "splash:true" : "") + //
+				(config.getLoop() ? "," + "loop:true" : "") + //
+				"}" + //
+				");"));
 		if (config.getLoop())
 			response.render(CssHeaderItem.forCSS(
 					".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }",
