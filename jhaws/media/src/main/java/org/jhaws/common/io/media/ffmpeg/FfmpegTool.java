@@ -993,6 +993,11 @@ public class FfmpegTool implements MediaCte {
 		if (output.exists()) {
 			throw new UncheckedIOException(new FileExistsException(output.getAbsolutePath()));
 		}
+		if (!"mp4".equals(video.getExtension())) {
+			FilePath tmp = video.appendExtension("mp4");
+			remux(new RemuxDefaultsCfg(), null, video, tmp, null);
+			video = tmp;
+		}
 		StreamType a = audio(info(audio));
 		Lines lines = null;
 		try {
