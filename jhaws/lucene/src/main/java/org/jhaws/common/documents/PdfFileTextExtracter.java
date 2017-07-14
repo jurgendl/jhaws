@@ -11,6 +11,7 @@ import java.util.Arrays;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.console.Processes;
 
+// alternate: https://pdfbox.apache.org/
 public class PdfFileTextExtracter implements FileTextExtracter {
 	private FilePath xpdfexe;
 
@@ -45,7 +46,8 @@ public class PdfFileTextExtracter implements FileTextExtracter {
 	}
 
 	public static FilePath xpdf(String version) throws MalformedURLException, IOException {
-		FilePath xpdf = new FilePath(System.getProperty("user.home")).child("xpdfbin-win-" + version).createDirectoryIfNotExists();
+		FilePath xpdf = new FilePath(System.getProperty("user.home")).child("xpdfbin-win-" + version)
+				.createDirectoryIfNotExists();
 		FilePath xpdfzip = xpdf.child("xpdfbin-win-" + version + ".zip");
 		if (xpdfzip.notExists()) {
 			// http://www.foolabs.com/xpdf/

@@ -19,14 +19,21 @@ public interface FileTextExtracter {
 	}
 
 	default String extract(FilePath file) throws IOException {
+		return extract(file, true);
+	}
+
+	default String extract(FilePath file, boolean writeToFile) throws IOException {
 		FilePath target = file.appendExtension("txt");
 		extract(file, target);
-		return target.readAll();
+		String text = target.readAll();
+		if (!writeToFile)
+			target.delete();
+		return text;
 	}
 
 	default void extract(FilePath file, FilePath target) throws IOException {
 		BufferedInputStream in = file.newBufferedInputStream();
-        extract(in, target);
+		extract(in, target);
 	}
 
 	void extract(InputStream stream, FilePath target) throws IOException;
