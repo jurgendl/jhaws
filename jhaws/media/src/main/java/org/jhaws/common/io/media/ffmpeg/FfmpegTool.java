@@ -71,16 +71,20 @@ public class FfmpegTool implements MediaCte {
 	public FfmpegTool(FilePath ffmpeg, FilePath ffprobe) {
 		this.ffmpeg = ffmpeg;
 		this.ffprobe = ffprobe;
-		// if (root.child("ffmpeg.exe").exists()) {
-		// ffmpeg = root.child("ffmpeg.exe");
-		// ffprobe = root.child("ffprobe.exe");
-		// } else if (root.child("bin").child("ffmpeg.exe").exists()) {
-		// ffmpeg = root.child("bin").child("ffmpeg.exe");
-		// ffprobe = root.child("bin").child("ffprobe.exe");
-		// } else {
-		// ffmpeg = root;
-		// ffmpeg = root.getParentPath().child("ffprobe.exe");
-		// }
+	}
+
+	public FfmpegTool(String r) {
+		FilePath root = new FilePath(r);
+		if (root.child("ffmpeg.exe").exists()) {
+			ffmpeg = root.child("ffmpeg.exe");
+			ffprobe = root.child("ffprobe.exe");
+		} else if (root.child("bin").child("ffmpeg.exe").exists()) {
+			ffmpeg = root.child("bin").child("ffmpeg.exe");
+			ffprobe = root.child("bin").child("ffprobe.exe");
+		} else {
+			ffmpeg = root;
+			ffmpeg = root.getParentPath().child("ffprobe.exe");
+		}
 	}
 
 	/** dxva2, qsv, nvenc */
@@ -989,6 +993,7 @@ public class FfmpegTool implements MediaCte {
 		if (output.exists()) {
 			throw new UncheckedIOException(new FileExistsException(output.getAbsolutePath()));
 		}
+		StreamType a = audio(info(audio));
 		Lines lines = null;
 		try {
 			List<String> command = new ArrayList<>();
@@ -1002,13 +1007,16 @@ public class FfmpegTool implements MediaCte {
 			command.add("-c:v");
 			command.add("copy");
 			command.add("-c:a");
-			command.add("copy");
+			if ("opus".equals(a.getCodecName()))
+				command.add(MP3C);
+			else
+				command.add("copy");
 			command.add("-strict");
 			command.add("experimental");
-			// command.add("-map");
-			// command.add("0:v:0");
-			// command.add("-map");
-			// command.add("0:a:0");
+			command.add("-map");
+			command.add("0:v:0");
+			command.add("-map");
+			command.add("1:a:0");
 			command.add("-shortest");
 			command.add("-movflags");
 			command.add("+faststart");
