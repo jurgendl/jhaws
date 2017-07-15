@@ -1085,56 +1085,16 @@ public class FilePath implements Path, Externalizable {
 	 * @return : String : converted name
 	 */
 	public static String legalize(String filename, final OSGroup os) {
-		filename = new FilePath(filename).getName();
-		while (filename.substring(0, 1).compareTo(getFileExtensionSeperator()) == 0) {
-			filename = filename.substring(1, filename.length());
-		}
-		char[] c = new char[0];
-		if (os == OSGroup.Dos) {
-			String[] parts = filename.split("\\" + getFileExtensionSeperator());
-			if (parts.length == 1) {
-				if (filename.substring(filename.length() - 1, filename.length())
-						.compareTo(getFileExtensionSeperator()) != 0) {
-					filename = filename + getFileExtensionSeperator();
-				}
-
-				filename = filename + "ext";
-			}
-			if (parts.length > 2) {
-				filename = parts[0] + getFileExtensionSeperator() + parts[parts.length - 1];
-			}
-			parts = filename.split("\\" + getFileExtensionSeperator());
-			if (parts[0].length() > 8) {
-				parts[0] = parts[0].substring(0, 8);
-			}
-			if (parts[1].length() > 3) {
-				parts[1] = parts[1].substring(0, 3);
-			}
-			filename = parts[0] + getFileExtensionSeperator() + parts[1];
-			c = Utils.legal(os);
-		}
-		if (os == OSGroup.Windows) {
-			c = Utils.legal(os);
-		}
-		if (os == OSGroup.Nix) {
-			c = Utils.legal(os);
-		}
-		if (c.length == 0) {
-			throw new UncheckedIOException(new IOException("characters for OS not found"));
-		}
-		char[] fn = filename.toCharArray();
-		for (int i = 0; i < fn.length; i++) {
-			boolean chk = false;
-			for (int j = 0; (j < c.length) && !chk; j++) {
-				if (fn[i] == c[j]) {
-					chk = true;
+		StringBuilder sb = new StringBuilder();
+		char[] legal = Utils.legal(os);
+		for (char cc : filename.toCharArray()) {
+			for (char c : legal) {
+				if (c == cc) {
+					sb.append(c);
 				}
 			}
-			if (!chk) {
-				fn[i] = '_';
-			}
 		}
-		return new String(fn);
+		return sb.toString();
 	}
 
 	protected static FilePath newFileIndex(Path parent, String outFileName, String extension) {
