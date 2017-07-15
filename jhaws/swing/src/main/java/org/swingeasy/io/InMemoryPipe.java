@@ -1,4 +1,4 @@
-package org.swingeasy;
+package org.swingeasy.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,7 +9,7 @@ import java.io.OutputStream;
 /**
  * @author Jurgen
  */
-public class InMemoryStream implements Stream {
+public class InMemoryPipe implements Pipe {
     protected boolean closed = false;
 
     protected ByteArrayOutputStream out = new ByteArrayOutputStream(1024 * 8) {
@@ -45,7 +45,7 @@ public class InMemoryStream implements Stream {
 
     /**
      * 
-     * @see org.swingeasy.Stream#getInputStream()
+     * @see org.swingeasy.io.Pipe#getInputStream()
      */
     @Override
     public InputStream getInputStream() {
@@ -57,7 +57,7 @@ public class InMemoryStream implements Stream {
 
     /**
      * 
-     * @see org.swingeasy.Stream#getOutputStream()
+     * @see org.swingeasy.io.Pipe#getOutputStream()
      */
     @Override
     public OutputStream getOutputStream() {
