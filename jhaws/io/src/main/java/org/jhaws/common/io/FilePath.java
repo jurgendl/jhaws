@@ -1259,6 +1259,8 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath addExtension(String extension) {
+		if (StringUtils.isBlank(extension))
+			return this;
 		return this.getParent() == null ? new FilePath(this.getFullFileName() + getFileExtensionSeperator() + extension)
 				: new FilePath(this.getParent(), this.getFullFileName() + getFileExtensionSeperator() + extension);
 	}
@@ -3232,8 +3234,14 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
+	/**
+	 * Windows only
+	 */
 	protected static final Map<String, String> FILE_TYPES = new HashMap<>();
 
+	/**
+	 * Windows only
+	 */
 	public String getFileTypeName() {
 		String ext = getExtension();
 		if (ext == null)
@@ -3336,7 +3344,19 @@ public class FilePath implements Path, Externalizable {
 		return this.charSet;
 	}
 
+	public Charset guessCharSet() {
+		throw new UnsupportedOperationException("not implemented");
+	}
+
 	public void setCharSet(Charset charSet) {
 		this.charSet = charSet;
+	}
+
+	public FilePath prefix(String string) {
+		return getParentPath().child(string + getShortFileName()).addExtension(getExtension());
+	}
+
+	public FilePath suffix(String string) {
+		return getParentPath().child(getShortFileName() + string).addExtension(getExtension());
 	}
 }
