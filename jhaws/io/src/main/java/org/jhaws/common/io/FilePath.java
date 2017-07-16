@@ -2173,7 +2173,14 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath moveTo(Path target, CopyOption... options) {
+		if (isDirectory()) {
+			throw new UncheckedIOException(new IOException("not a file"));
+		}
 		try {
+			Path real = getPath(target);
+			if (Files.isDirectory(real)) {
+				target = getPath(new FilePath(real).child(getFileNameString()));
+			}
 			return new FilePath(Files.move(this.getPath(), getPath(target), options));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -3358,5 +3365,17 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath suffix(String string) {
 		return getParentPath().child(getShortFileName() + string).addExtension(getExtension());
+	}
+
+	/**
+	 * Windows only
+	 */
+	public FilePath explore() {
+		try {
+			Runtime.getRuntime().exec("explorer.exe /select,\"" + getAbsolutePath() + "\"");
+		} catch (IOException ex) {
+			//
+		}
+		return this;
 	}
 }

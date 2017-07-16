@@ -91,7 +91,8 @@ public class FfmpegTool implements MediaCte {
 	public synchronized List<String> getHwAccel() {
 		if (hwAccel == null) {
 			List<String> command = Arrays.asList(command(getFfmpeg()), "-hwaccels", "-hide_banner", "-y");
-			Lines lines = silentcall(FilePath.getTempDirectory(), command);
+			Lines lines = new Lines();
+			silentcall(lines, FilePath.getTempDirectory(), command);
 			hwAccel = lines.lines();
 			hwAccel.remove("Hardware acceleration methods:");
 			{
@@ -118,7 +119,7 @@ public class FfmpegTool implements MediaCte {
 				command.add(command(output));
 				logger.info("{}", join(command, false));
 				try {
-					lines = silentcall(FilePath.getTempDirectory(), command);
+					silentcall(lines, FilePath.getTempDirectory(), command);
 					if (!hwAccel.contains("nvenc")) {
 						hwAccel.add("nvenc");
 					}
@@ -156,7 +157,8 @@ public class FfmpegTool implements MediaCte {
 				command.add(command(output));
 				logger.info("{}", join(command, false));
 				try {
-					lines = silentcall(FilePath.getTempDirectory(), command);
+					lines = new Lines();
+					silentcall(lines, FilePath.getTempDirectory(), command);
 					if (!hwAccel.contains("cuvid")) {
 						hwAccel.add("cuvid");
 					}
@@ -192,7 +194,8 @@ public class FfmpegTool implements MediaCte {
 			// command.add("-sexagesimal");
 			command.add("-i");
 			command.add(command(input));
-			Lines lines = silentcall(input.getParentPath(), command);
+			Lines lines = new Lines();
+			silentcall(lines, input.getParentPath(), command);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
 			logger.info("{}", xml);
 			return unmarshall(xml);
@@ -272,8 +275,7 @@ public class FfmpegTool implements MediaCte {
 						.appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
-				@SuppressWarnings("unused")
-				Lines silentcall = silentcall(video.getParentPath(), command);
+				silentcall(new Lines(), video.getParentPath(), command);
 			}
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
@@ -398,7 +400,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("-t");
 			command.add(length);
 			command.add(command(output));
-			call(input.getParentPath(), command);
+			call(new Lines(), input.getParentPath(), command);
 			if (output.exists() && output.getFileSize() > 500) {
 				logger.info("done {}", output);
 			} else {
@@ -429,7 +431,7 @@ public class FfmpegTool implements MediaCte {
 		List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 		Lines lines = new Lines();
 		try {
-			lines = call(input != null ? input.getParentPath() : output.getParentPath(), command, true,
+			call(lines, input != null ? input.getParentPath() : output.getParentPath(), command, true,
 					listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
 			exception = ex;
@@ -445,14 +447,16 @@ public class FfmpegTool implements MediaCte {
 		}
 		if (needsFixing.is()) {
 			command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
-			lines = call(input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			lines = new Lines();
+			call(lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
 		}
 		if (cfg.defaults.twopass) {
 			command = command(2, cfg);
-			lines = call(input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			lines = new Lines();
+			call(lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 			input.getParentPath().child("ffmpeg2pass-0.log").deleteIfExists();
 			input.getParentPath().child("ffmpeg2pass-0.log.mbtree").deleteIfExists();
 			output.getParentPath().child("ffmpeg2pass-0.log").deleteIfExists();
@@ -523,6 +527,11 @@ public class FfmpegTool implements MediaCte {
 		if (lines.lines().stream().anyMatch(s -> s.contains("not divisible by 2"))) {
 			needsFixing.set(true);
 			cfg.fixes.fixDiv2 = true;
+		}
+		if (lines.lines().stream()
+				.anyMatch(s -> s.contains("No device available for encoder (device type qsv for codec h264_qsv)"))) {
+			hwAccel.remove("qsv");
+			needsFixing.set(true);
 		}
 		// Cannot load nvcuda.dll
 		// if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load
@@ -836,17 +845,21 @@ public class FfmpegTool implements MediaCte {
 			command.add("-c:v");
 			// ...HWAccelIntro...
 			if (accel.contains("nvenc")) {
+				logger.debug("choosing HW accell h264_nvenc: " + accel);
 				// h264_nvenc (nvidia HW accel)
 				command.add("h264_nvenc");
 				// No NVENC capable devices found
 				// -profile high444p -pixel_format yuv444p
 				// -pix_fmt nv12
 			} else if (accel.contains("cuvid")) {
+				logger.debug("choosing HW accell h264_cuvid: " + accel);
 				command.add("h264_cuvid");
 			} else if (accel.contains("qsv")) {
 				// h264_qsv (intel onboard vid HW accel)
+				logger.debug("choosing HW accell h264_qsv: " + accel);
 				command.add("h264_qsv");
 			} else if (accel.contains("dxva2")) {
+				logger.debug("choosing HW accell h264_dxva2: " + accel);
 				command.add("h264_dxva2");
 			} else {
 				command.add("libx264");
@@ -999,7 +1012,7 @@ public class FfmpegTool implements MediaCte {
 			video = tmp;
 		}
 		StreamType a = audio(info(audio));
-		Lines lines = null;
+		Lines lines = new Lines();
 		try {
 			List<String> command = new ArrayList<>();
 			command.add(command(getFfmpeg()));
@@ -1026,7 +1039,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("-movflags");
 			command.add("+faststart");
 			command.add(command(output));
-			lines = call(output.getParentPath(), command);
+			call(lines, output.getParentPath(), command);
 			return true;
 		} catch (RuntimeException ex) {
 			logger.error("", ex);
@@ -1098,16 +1111,17 @@ public class FfmpegTool implements MediaCte {
 		});
 	}
 
-	protected Lines call(FilePath dir, List<String> command) {
-		return call(dir, command, true, null);
+	protected Lines call(Lines lines, FilePath dir, List<String> command) {
+		return call(lines, dir, command, true, null);
 	}
 
-	protected Lines silentcall(FilePath dir, List<String> command) {
-		return call(dir, command, false, null);
+	protected Lines silentcall(Lines lines, FilePath dir, List<String> command) {
+		return call(lines, dir, command, false, null);
 	}
 
-	protected Lines call(FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
-		Lines lines = new Lines();
+	protected Lines call(Lines lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
+		if (lines == null)
+			lines = new Lines();
 		Consumer<String> consumers = log ? lines.andThen(new FfmpegDebug()) : lines;
 		if (listener != null) {
 			consumers = consumers.andThen(listener);
