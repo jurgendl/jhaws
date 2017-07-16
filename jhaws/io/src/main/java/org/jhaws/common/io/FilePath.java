@@ -1799,6 +1799,18 @@ public class FilePath implements Path, Externalizable {
 		return streamChildren().map(c -> new FilePath(c)).collect(Collectors.toList());
 	}
 
+	public List<FilePath> getFiles() {
+		return getChildren();
+	}
+
+	public long getFileCount() {
+		try {
+			return Files.list(getPath()).count();
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
 	public String getHumanReadableByteCount() {
 		return getHumanReadableByteCount(getFileSize(), 3);
 	}
