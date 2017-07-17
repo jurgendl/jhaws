@@ -2184,19 +2184,20 @@ public class FilePath implements Path, Externalizable {
 		return moveTo(target, options);
 	}
 
-	public FilePath moveTo(Path target, CopyOption... options) {
-		if (isDirectory()) {
-			throw new UncheckedIOException(new IOException("not a file"));
-		}
+	private static FilePath move(Path from, Path to, CopyOption... options) {
 		try {
-			Path real = getPath(target);
-			if (Files.isDirectory(real)) {
-				target = getPath(new FilePath(real).child(getFileNameString()));
-			}
-			return new FilePath(Files.move(this.getPath(), getPath(target), options));
+			return new FilePath(Files.move(getPath(from), getPath(to), options));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
+	}
+
+	public FilePath moveTo(Path target, CopyOption... options) {
+		FilePath targetPath = new FilePath(target);
+		if (this.isFile() && targetPath.isDirectory()) {
+			return move(this, targetPath.child(getFileNameString()));
+		}
+		return move(this, targetPath, options);
 	}
 
 	public FilePath copyAllTo(Path target) {
