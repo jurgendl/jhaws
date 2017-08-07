@@ -1421,6 +1421,10 @@ public class FilePath implements Path, Externalizable {
 		return this.checksum(new CRC32());
 	}
 
+	/**
+	 * iterative create directories that do not exists, does not fail when
+	 * directories already exists
+	 */
 	public FilePath createDirectories(FileAttribute<?>... attrs) {
 		try {
 			return new FilePath(Files.createDirectories(this.getPath(), attrs));
