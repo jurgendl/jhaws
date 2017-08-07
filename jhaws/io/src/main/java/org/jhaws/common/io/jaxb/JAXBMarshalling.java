@@ -58,331 +58,380 @@ import org.xml.sax.helpers.XMLFilterImpl;
  * @see http://blog.bdoughan.com/2010/08/jaxb-namespaces.html
  */
 public class JAXBMarshalling {
-    protected final JAXBContext jaxbContext;
+	protected final JAXBContext jaxbContext;
 
-    protected final String defaultNameSpace;
+	protected final String defaultNameSpace;
 
-    protected String charSet = StringUtils.UTF8;
+	protected String charSet = StringUtils.UTF8;
 
-    protected boolean formatOutput = true;
+	protected boolean formatOutput = true;
 
-    protected ThreadLocal<Unmarshaller> threadLocalUnmarshaller = new ThreadLocal<Unmarshaller>() {
-        @Override
-        protected Unmarshaller initialValue() {
-            try {
-                Unmarshaller u = jaxbContext.createUnmarshaller();
-                return u;
-            } catch (JAXBException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-    };
+	protected ThreadLocal<Unmarshaller> threadLocalUnmarshaller = new ThreadLocal<Unmarshaller>() {
+		@Override
+		protected Unmarshaller initialValue() {
+			try {
+				Unmarshaller u = jaxbContext.createUnmarshaller();
+				return u;
+			} catch (JAXBException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+	};
 
-    protected ThreadLocal<XMLFilter> threadLocalXMLFilter = new ThreadLocal<XMLFilter>() {
-        @Override
-        protected XMLFilter initialValue() {
-            if (defaultNameSpace == null) return null;
-            XMLFilter filter = new XMLFilterImpl() {
-                @Override
-                public void endElement(String uri, String localName, String qName) throws SAXException {
-                    super.endElement(defaultNameSpace, localName, qName);
-                }
+	protected ThreadLocal<XMLFilter> threadLocalXMLFilter = new ThreadLocal<XMLFilter>() {
+		@Override
+		protected XMLFilter initialValue() {
+			if (defaultNameSpace == null)
+				return null;
+			XMLFilter filter = new XMLFilterImpl() {
+				@Override
+				public void endElement(String uri, String localName, String qName) throws SAXException {
+					super.endElement(defaultNameSpace, localName, qName);
+				}
 
-                @Override
-                public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-                    super.startElement(defaultNameSpace, localName, qName, atts);
-                }
-            };
-            SAXParserFactory spf = SAXParserFactory.newInstance();
-            try {
-                SAXParser sp = spf.newSAXParser();
-                XMLReader xr = sp.getXMLReader();
-                filter.setParent(xr);
-            } catch (ParserConfigurationException | SAXException ex) {
-                throw new RuntimeException(ex);
-            }
-            return filter;
-        }
-    };
+				@Override
+				public void startElement(String uri, String localName, String qName, Attributes atts)
+						throws SAXException {
+					super.startElement(defaultNameSpace, localName, qName, atts);
+				}
+			};
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+			try {
+				SAXParser sp = spf.newSAXParser();
+				XMLReader xr = sp.getXMLReader();
+				filter.setParent(xr);
+			} catch (ParserConfigurationException | SAXException ex) {
+				throw new RuntimeException(ex);
+			}
+			return filter;
+		}
+	};
 
-    protected ThreadLocal<UnmarshallerHandler> threadLocalUnmarshallerHandler = new ThreadLocal<UnmarshallerHandler>() {
-        @Override
-        protected UnmarshallerHandler initialValue() {
-            if (defaultNameSpace == null) return null;
-            UnmarshallerHandler unmarshallerHandler = threadLocalUnmarshaller.get().getUnmarshallerHandler();
-            XMLFilter xmlFilter = threadLocalXMLFilter.get();
-            xmlFilter.setContentHandler(unmarshallerHandler);
-            return unmarshallerHandler;
-        }
-    };
+	protected ThreadLocal<UnmarshallerHandler> threadLocalUnmarshallerHandler = new ThreadLocal<UnmarshallerHandler>() {
+		@Override
+		protected UnmarshallerHandler initialValue() {
+			if (defaultNameSpace == null)
+				return null;
+			UnmarshallerHandler unmarshallerHandler = threadLocalUnmarshaller.get().getUnmarshallerHandler();
+			XMLFilter xmlFilter = threadLocalXMLFilter.get();
+			xmlFilter.setContentHandler(unmarshallerHandler);
+			return unmarshallerHandler;
+		}
+	};
 
-    protected ThreadLocal<Marshaller> threadLocalMarshaller = new ThreadLocal<Marshaller>() {
-        @Override
-        protected Marshaller initialValue() {
-            try {
-                Marshaller m = jaxbContext.createMarshaller();
-                if (formatOutput) m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                // m.setProperty(Marshaller.JAXB_FRAGMENT, true);
-                // m.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION, "");
-                // m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-                return m;
-            } catch (JAXBException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-    };
+	protected ThreadLocal<Marshaller> threadLocalMarshaller = new ThreadLocal<Marshaller>() {
+		@Override
+		protected Marshaller initialValue() {
+			try {
+				Marshaller m = jaxbContext.createMarshaller();
+				if (formatOutput)
+					m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+				// m.setProperty(Marshaller.JAXB_FRAGMENT, true);
+				// m.setProperty(Marshaller.JAXB_NO_NAMESPACE_SCHEMA_LOCATION,
+				// "");
+				// m.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+				return m;
+			} catch (JAXBException ex) {
+				throw new RuntimeException(ex);
+			}
+		}
+	};
 
-    public static JAXBContext getJaxbContext(String tremaSeperatedPackages) {
-        try {
-            return JAXBContext.newInstance(tremaSeperatedPackages);
-        } catch (JAXBException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+	public static JAXBContext getJaxbContext(String tremaSeperatedPackages) {
+		try {
+			return JAXBContext.newInstance(tremaSeperatedPackages);
+		} catch (JAXBException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
-    @SuppressWarnings("rawtypes")
-    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Class[] atLeastOneClass) {
-        return getJaxbContext(accept, atLeastOneClass[0],
-                Arrays.stream(atLeastOneClass).skip(1).collect(Collectors.toList()).toArray(new Class[atLeastOneClass.length - 1]));
-    }
+	@SuppressWarnings("rawtypes")
+	public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Class[] atLeastOneClass) {
+		return getJaxbContext(accept, atLeastOneClass[0], Arrays.stream(atLeastOneClass).skip(1)
+				.collect(Collectors.toList()).toArray(new Class[atLeastOneClass.length - 1]));
+	}
 
-    @SuppressWarnings("rawtypes")
-    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Class atLeastOneClass, Class... dtoClasses) {
-        try {
-            List<Class<?>> tmp = new ArrayList<>();
-            tmp.add(atLeastOneClass);
-            for (Class<?> c : dtoClasses) {
-                tmp.add(c);
-            }
-            Stream<Class<?>> stream = tmp.stream();
-            if (accept != null) stream = stream.filter(accept);
-            return JAXBContext.newInstance(stream.toArray(size -> new Class[size]));
-        } catch (JAXBException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+	@SuppressWarnings("rawtypes")
+	public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Class atLeastOneClass, Class... dtoClasses) {
+		try {
+			List<Class<?>> tmp = new ArrayList<>();
+			tmp.add(atLeastOneClass);
+			for (Class<?> c : dtoClasses) {
+				tmp.add(c);
+			}
+			Stream<Class<?>> stream = tmp.stream();
+			if (accept != null)
+				stream = stream.filter(accept);
+			return JAXBContext.newInstance(stream.toArray(size -> new Class[size]));
+		} catch (JAXBException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
-    public static List<Class<?>> getJaxbClasses(Predicate<Class<?>> accept, Package atLeastOnePackage, Package... packages) {
-        // @XmlType(factoryClass=ObjectFactory.class, factoryMethod="createBean")
-        List<Package> _packages = new ArrayList<>();
-        _packages.add(atLeastOnePackage);
-        for (Package p : packages) {
-            _packages.add(p);
-        }
-        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
-        AnnotationTypeFilter f1 = new AnnotationTypeFilter(XmlRootElement.class);
-        AnnotationTypeFilter f2 = new AnnotationTypeFilter(XmlType.class);
-        TypeFilter typeFilter = (metadataReader, metadataReaderFactory) -> f1.match(metadataReader, metadataReaderFactory)
-                || f2.match(metadataReader, metadataReaderFactory);
-        scanner.addIncludeFilter(typeFilter);
-        Stream<Class<?>> stream = _packages//
-                .stream()//
-                .map(p -> scanner.findCandidateComponents(p.getName()))//
-                .map(Collection::stream)//
-                .flatMap(Function.identity())//
-                .map((EFunction<BeanDefinition, Class<?>>) bd -> Class.forName(bd.getBeanClassName()));
-        if (accept != null) stream = stream.filter(accept);
-        return stream.collect(Collectors.toList());
-    }
+	public static List<Class<?>> getJaxbClasses(Predicate<Class<?>> accept, Package atLeastOnePackage,
+			Package... packages) {
+		// @XmlType(factoryClass=ObjectFactory.class,
+		// factoryMethod="createBean")
+		List<Package> _packages = new ArrayList<>();
+		_packages.add(atLeastOnePackage);
+		for (Package p : packages) {
+			_packages.add(p);
+		}
+		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+		AnnotationTypeFilter f1 = new AnnotationTypeFilter(XmlRootElement.class);
+		AnnotationTypeFilter f2 = new AnnotationTypeFilter(XmlType.class);
+		TypeFilter typeFilter = (metadataReader,
+				metadataReaderFactory) -> f1.match(metadataReader, metadataReaderFactory)
+						|| f2.match(metadataReader, metadataReaderFactory);
+		scanner.addIncludeFilter(typeFilter);
+		Stream<Class<?>> stream = _packages//
+				.stream()//
+				.map(p -> scanner.findCandidateComponents(p.getName()))//
+				.map(Collection::stream)//
+				.flatMap(Function.identity())//
+				.map((EFunction<BeanDefinition, Class<?>>) bd -> Class.forName(bd.getBeanClassName()));
+		if (accept != null)
+			stream = stream.filter(accept);
+		return stream.collect(Collectors.toList());
+	}
 
-    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Package[] atLeastOnePackage) {
-        return getJaxbContext(accept, atLeastOnePackage[0],
-                Arrays.stream(atLeastOnePackage).skip(1).collect(Collectors.toList()).toArray(new Package[atLeastOnePackage.length - 1]));
-    }
+	public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Package[] atLeastOnePackage) {
+		return getJaxbContext(accept, atLeastOnePackage[0], Arrays.stream(atLeastOnePackage).skip(1)
+				.collect(Collectors.toList()).toArray(new Package[atLeastOnePackage.length - 1]));
+	}
 
-    public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Package atLeastOnePackage, Package... packages) {
-        List<Class<?>> classesToBeBound = getJaxbClasses(accept, atLeastOnePackage, packages);
-        try {
-            return JAXBContext.newInstance(classesToBeBound.toArray(new Class[classesToBeBound.size()]));
-        } catch (JAXBException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+	public static JAXBContext getJaxbContext(Predicate<Class<?>> accept, Package atLeastOnePackage,
+			Package... packages) {
+		List<Class<?>> classesToBeBound = getJaxbClasses(accept, atLeastOnePackage, packages);
+		try {
+			return JAXBContext.newInstance(classesToBeBound.toArray(new Class[classesToBeBound.size()]));
+		} catch (JAXBException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
-    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Package atLeastOnePackage, Package... packages) {
-        this.defaultNameSpace = defaultNamesSpace;
-        jaxbContext = getJaxbContext(accept, atLeastOnePackage, packages);
-    }
+	public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Package atLeastOnePackage,
+			Package... packages) {
+		this.defaultNameSpace = defaultNamesSpace;
+		jaxbContext = getJaxbContext(accept, atLeastOnePackage, packages);
+	}
 
-    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Package[] atLeastOnePackage) {
-        this.defaultNameSpace = defaultNamesSpace;
-        this.jaxbContext = getJaxbContext(accept, atLeastOnePackage);
-    }
+	public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Package[] atLeastOnePackage) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(accept, atLeastOnePackage);
+	}
 
-    public JAXBMarshalling(String defaultNamesSpace, String tremaSeperatedPackages) {
-        this.defaultNameSpace = defaultNamesSpace;
-        this.jaxbContext = getJaxbContext(tremaSeperatedPackages);
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Class atLeastOneClass,
+			Class... dtoClasses) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(accept, atLeastOneClass, dtoClasses);
+	}
 
-    @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Class atLeastOneClass, Class... dtoClasses) {
-        this.defaultNameSpace = defaultNamesSpace;
-        this.jaxbContext = getJaxbContext(accept, atLeastOneClass, dtoClasses);
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Class[] atLeastOneClass) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(accept, atLeastOneClass);
+	}
 
-    @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(Predicate<Class<?>> accept, String defaultNamesSpace, Class[] atLeastOneClass) {
-        this.defaultNameSpace = defaultNamesSpace;
-        this.jaxbContext = getJaxbContext(accept, atLeastOneClass);
-    }
+	public JAXBMarshalling(Predicate<Class<?>> accept, Package atLeastOnePackage, Package... packages) {
+		this(accept, (String) null, atLeastOnePackage, packages);
+	}
 
-    public JAXBMarshalling(Predicate<Class<?>> accept, Package atLeastOnePackage, Package... packages) {
-        this(accept, (String) null, atLeastOnePackage, packages);
-    }
+	public JAXBMarshalling(Predicate<Class<?>> accept, Package[] atLeastOnePackage) {
+		this(accept, (String) null, atLeastOnePackage);
+	}
 
-    public JAXBMarshalling(Predicate<Class<?>> accept, Package[] atLeastOnePackage) {
-        this(accept, (String) null, atLeastOnePackage);
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(Predicate<Class<?>> accept, Class atLeastOneClass, Class... dtoClasses) {
+		this(accept, (String) null, atLeastOneClass, dtoClasses);
+	}
 
-    public JAXBMarshalling(String tremaSeperatedPackages) {
-        this((String) null, tremaSeperatedPackages);
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(Predicate<Class<?>> accept, Class[] atLeastOneClass) {
+		this(accept, (String) null, atLeastOneClass);
+	}
 
-    @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(Predicate<Class<?>> accept, Class atLeastOneClass, Class... dtoClasses) {
-        this(accept, (String) null, atLeastOneClass, dtoClasses);
-    }
+	public JAXBMarshalling(String tremaSeperatedPackages) {
+		this((String) null, tremaSeperatedPackages);
+	}
 
-    @SuppressWarnings("rawtypes")
-    public JAXBMarshalling(Predicate<Class<?>> accept, Class[] atLeastOneClass) {
-        this(accept, (String) null, atLeastOneClass);
-    }
+	public JAXBMarshalling(String defaultNamesSpace, String tremaSeperatedPackages) {
+		this.defaultNameSpace = defaultNamesSpace;
+		this.jaxbContext = getJaxbContext(tremaSeperatedPackages);
+	}
 
-    public <DTO> void marshall(DTO dto, OutputStream out) {
-        try {
-            threadLocalMarshaller.get().marshal(dto, out);
-        } catch (JAXBException ex) {
-            throw new RuntimeException(ex);
-        } finally {
-            try {
-                out.close();
-            } catch (NullPointerException | IOException ex) {
-                //
-            }
-        }
-    }
+	public JAXBMarshalling(String defaultNamesSpace, Package atLeastOnePackage, Package... packages) {
+		this((Predicate<Class<?>>) null, defaultNamesSpace, atLeastOnePackage, packages);
+	}
 
-    public <DTO> void marshall(DTO dto, File xml) {
-        try {
-            marshall(dto, new BufferedOutputStream(new FileOutputStream(xml)));
-        } catch (FileNotFoundException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
+	public JAXBMarshalling(String defaultNamesSpace, Package[] atLeastOnePackage) {
+		this((Predicate<Class<?>>) null, defaultNamesSpace, atLeastOnePackage);
+	}
 
-    public <DTO> void marshall(DTO dto, Path xml) {
-        try {
-            marshall(dto, Files.newOutputStream(FilePath.getPath(xml)));
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(String defaultNamesSpace, Class atLeastOneClass, Class... dtoClasses) {
+		this((Predicate<Class<?>>) null, defaultNamesSpace, atLeastOneClass, dtoClasses);
+	}
 
-    public <DTO> String marshall(DTO dto) {
-        return marshall(dto, charSet);
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(String defaultNamesSpace, Class[] atLeastOneClass) {
+		this((Predicate<Class<?>>) null, defaultNamesSpace, atLeastOneClass);
+	}
 
-    public <DTO> String marshall(DTO dto, String charset) {
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            marshall(dto, out);
-            out.flush();
-            return new String(out.toByteArray(), charset);
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
+	public JAXBMarshalling(Package atLeastOnePackage, Package... packages) {
+		this((Predicate<Class<?>>) null, atLeastOnePackage, packages);
+	}
 
-    public <DTO> DTO unmarshall(Class<DTO> type, File xml) {
-        try {
-            return unmarshall(type, new BufferedInputStream(new FileInputStream(xml)));
-        } catch (FileNotFoundException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
+	public JAXBMarshalling(Package[] atLeastOnePackage) {
+		this((Predicate<Class<?>>) null, atLeastOnePackage);
+	}
 
-    public <DTO> DTO unmarshall(Class<DTO> type, Path xml) {
-        try {
-            return unmarshall(type, Files.newInputStream(FilePath.getPath(xml)));
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(Class atLeastOneClass, Class... dtoClasses) {
+		this((Predicate<Class<?>>) null, atLeastOneClass, dtoClasses);
+	}
 
-    public <DTO> DTO unmarshall(Class<DTO> type, byte[] xml) {
-        return unmarshall(type, new ByteArrayInputStream(xml));
-    }
+	@SuppressWarnings("rawtypes")
+	public JAXBMarshalling(Class[] atLeastOneClass) {
+		this((Predicate<Class<?>>) null, atLeastOneClass);
+	}
 
-    public <DTO> DTO unmarshall(Class<DTO> type, String xml) {
-        try {
-            return unmarshall(type, xml.getBytes(charSet));
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+	public <DTO> void marshall(DTO dto, OutputStream out) {
+		try {
+			threadLocalMarshaller.get().marshal(dto, out);
+		} catch (JAXBException ex) {
+			throw new RuntimeException(ex);
+		} finally {
+			try {
+				out.close();
+			} catch (NullPointerException | IOException ex) {
+				//
+			}
+		}
+	}
 
-    public <DTO> DTO unmarshall(Class<DTO> type, String xml, String charset) {
-        try {
-            return unmarshall(type, xml.getBytes(charset));
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+	public <DTO> void marshall(DTO dto, File xml) {
+		try {
+			marshall(dto, new BufferedOutputStream(new FileOutputStream(xml)));
+		} catch (FileNotFoundException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
 
-    public <DTO> DTO unmarshall(Class<DTO> type, InputStream xml) {
-        try {
-            Object unmarshalled;
-            if (defaultNameSpace == null) {
-                Unmarshaller unmarshaller = threadLocalUnmarshaller.get();
-                unmarshalled = unmarshaller.unmarshal(new StreamSource(xml), type).getValue();
-            } else {
-                XMLFilter xmlFilter = threadLocalXMLFilter.get();
-                UnmarshallerHandler unmarshallerHandler = threadLocalUnmarshallerHandler.get();
-                InputSource is = new InputSource(xml);
-                xmlFilter.parse(is);
-                unmarshalled = unmarshallerHandler.getResult();
-            }
-            if (unmarshalled instanceof JAXBElement) {
-                // xml is soap message => JAXBElement wrapper
-                unmarshalled = JAXBElement.class.cast(unmarshalled).getValue();
-            }
-            // xml is jaxb marshalled message
-            @SuppressWarnings("unchecked")
-            DTO dto = (DTO) unmarshalled;
-            return dto;
-        } catch (JAXBException | IOException | SAXException ex) {
-            throw new RuntimeException(ex);
-        } finally {
-            try {
-                xml.close();
-            } catch (NullPointerException | IOException ex) {
-                //
-            }
-        }
-    }
+	public <DTO> void marshall(DTO dto, Path xml) {
+		try {
+			marshall(dto, Files.newOutputStream(FilePath.getPath(xml)));
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
 
-    public String getCharSet() {
-        return this.charSet;
-    }
+	public <DTO> String marshall(DTO dto) {
+		return marshall(dto, charSet);
+	}
 
-    public void setCharSet(String charSet) {
-        this.charSet = charSet;
-    }
+	public <DTO> String marshall(DTO dto, String charset) {
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			marshall(dto, out);
+			out.flush();
+			return new String(out.toByteArray(), charset);
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
 
-    public boolean isFormatOutput() {
-        return this.formatOutput;
-    }
+	public <DTO> DTO unmarshall(Class<DTO> type, File xml) {
+		try {
+			return unmarshall(type, new BufferedInputStream(new FileInputStream(xml)));
+		} catch (FileNotFoundException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
 
-    public void setFormatOutput(boolean formatOutput) {
-        this.formatOutput = formatOutput;
-    }
+	public <DTO> DTO unmarshall(Class<DTO> type, Path xml) {
+		try {
+			return unmarshall(type, Files.newInputStream(FilePath.getPath(xml)));
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
 
-    public JAXBContext getJaxbContext() {
-        return this.jaxbContext;
-    }
+	public <DTO> DTO unmarshall(Class<DTO> type, byte[] xml) {
+		return unmarshall(type, new ByteArrayInputStream(xml));
+	}
 
-    public String getDefaultNameSpace() {
-        return this.defaultNameSpace;
-    }
+	public <DTO> DTO unmarshall(Class<DTO> type, String xml) {
+		try {
+			return unmarshall(type, xml.getBytes(charSet));
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public <DTO> DTO unmarshall(Class<DTO> type, String xml, String charset) {
+		try {
+			return unmarshall(type, xml.getBytes(charset));
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public <DTO> DTO unmarshall(Class<DTO> type, InputStream xml) {
+		try {
+			Object unmarshalled;
+			if (defaultNameSpace == null) {
+				Unmarshaller unmarshaller = threadLocalUnmarshaller.get();
+				unmarshalled = unmarshaller.unmarshal(new StreamSource(xml), type).getValue();
+			} else {
+				XMLFilter xmlFilter = threadLocalXMLFilter.get();
+				UnmarshallerHandler unmarshallerHandler = threadLocalUnmarshallerHandler.get();
+				InputSource is = new InputSource(xml);
+				xmlFilter.parse(is);
+				unmarshalled = unmarshallerHandler.getResult();
+			}
+			if (unmarshalled instanceof JAXBElement) {
+				// xml is soap message => JAXBElement wrapper
+				unmarshalled = JAXBElement.class.cast(unmarshalled).getValue();
+			}
+			// xml is jaxb marshalled message
+			@SuppressWarnings("unchecked")
+			DTO dto = (DTO) unmarshalled;
+			return dto;
+		} catch (JAXBException | IOException | SAXException ex) {
+			throw new RuntimeException(ex);
+		} finally {
+			try {
+				xml.close();
+			} catch (NullPointerException | IOException ex) {
+				//
+			}
+		}
+	}
+
+	public String getCharSet() {
+		return this.charSet;
+	}
+
+	public void setCharSet(String charSet) {
+		this.charSet = charSet;
+	}
+
+	public boolean isFormatOutput() {
+		return this.formatOutput;
+	}
+
+	public void setFormatOutput(boolean formatOutput) {
+		this.formatOutput = formatOutput;
+	}
+
+	public JAXBContext getJaxbContext() {
+		return this.jaxbContext;
+	}
+
+	public String getDefaultNameSpace() {
+		return this.defaultNameSpace;
+	}
 }
