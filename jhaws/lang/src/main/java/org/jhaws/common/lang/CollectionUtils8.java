@@ -1388,11 +1388,11 @@ public interface CollectionUtils8 {
         return stream.toArray(size -> (T[]) Array.newInstance(type, size));
     }
 
-    public static <T> Stream<T> flatMapCollections(Collection<Collection<T>> collectionOfCollections) {
+    public static <T> Stream<T> flatMapCollections(Collection<? extends Collection<T>> collectionOfCollections) {
         return flatMapStreams(collectionOfCollections.stream().map(Collection::stream));
     }
 
-    public static <T> Stream<T> flatMap(Stream<Collection<T>> streamOfCollections) {
+    public static <T> Stream<T> flatMap(Stream<? extends Collection<T>> streamOfCollections) {
         return flatMapStreams(streamOfCollections.map(Collection::stream));
     }
 

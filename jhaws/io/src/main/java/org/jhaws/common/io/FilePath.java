@@ -1468,7 +1468,7 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath createLinkFrom(Path existing) {
 		try {
-			return new FilePath(Files.createLink(this.getPath(), existing));
+			return new FilePath(Files.createLink(this.getPath(), getPath(existing)));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -1476,7 +1476,7 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath createLinkTo(Path link) {
 		try {
-			return new FilePath(Files.createLink(link, this.getPath()));
+			return new FilePath(Files.createLink(getPath(link), this.getPath()));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -1484,7 +1484,7 @@ public class FilePath implements Path, Externalizable {
 
 	public Path createSymbolicLinkFrom(Path link, FileAttribute<?>... attrs) {
 		try {
-			return new FilePath(Files.createSymbolicLink(link, this.getPath(), attrs));
+			return new FilePath(Files.createSymbolicLink(getPath(link), this.getPath(), attrs));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

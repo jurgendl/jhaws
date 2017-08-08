@@ -669,4 +669,14 @@ public class FilePathTest {
 		d.createDirectories();
 		Assert.assertTrue(d.exists());
 	}
+
+	@Test
+	public void testLink() {
+		FilePath d1 = FilePath.getTempDirectory().child("dir" + System.currentTimeMillis() + "-1");
+		d1.createDirectoryIfNotExists();
+		FilePath d2 = FilePath.getTempDirectory().child("dir" + System.currentTimeMillis() + "-2");
+		d2.createSymbolicLinkFrom(d1);
+		System.out.println(d1);
+		System.out.println(d2);
+	}
 }
