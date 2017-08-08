@@ -245,4 +245,10 @@ public interface StringUtils {
         }
         return count;
     }
+
+    public static String ucLeading(String string) {
+        if (string == null || string.length() == 0) return string;
+        if (string.length() == 1) return String.valueOf(Character.toUpperCase(string.charAt(0)));
+        return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+    }
 }
