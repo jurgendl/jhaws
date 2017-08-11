@@ -1,6 +1,7 @@
 package org.jhaws.common.lang;
 
 import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -250,5 +251,26 @@ public interface StringUtils {
         if (string == null || string.length() == 0) return string;
         if (string.length() == 1) return String.valueOf(Character.toUpperCase(string.charAt(0)));
         return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+    }
+
+    public static List<String> splitKeepDelimiter(String delimiter, String input) {
+        return Arrays.asList(input.split(//
+                "(?i)" // case insensitive
+                        + "((?<="//
+                        + delimiter//
+                        + ")|(?="//
+                        + delimiter//
+                        + "))"//
+        ));
+    }
+
+    public static List<String> splitHtmlTagKeepDelimiter(String tag, String input) {
+        return splitHtmlTagKeepDelimiter(tag, 100, input);
+    }
+
+    public static List<String> splitHtmlTagKeepDelimiter(String tag, int max, String input) {
+        // max: could not use "+?" because of "Look-behind group does not have an obvious maximum length near index NR"
+        String tagRegex = "(<" + tag + ">(.{0," + max + "})</" + tag + ">)";
+        return splitKeepDelimiter(tagRegex, input);
     }
 }
