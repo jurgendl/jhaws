@@ -21,4 +21,8 @@ public interface IntegerValueMap<K> extends ValueMap<K, Integer> {
     default public IntStream streamN() {
         return values().stream().mapToInt(i -> i);
     }
+
+    default Integer sum() {
+        return streamN().sum();
+    }
 }

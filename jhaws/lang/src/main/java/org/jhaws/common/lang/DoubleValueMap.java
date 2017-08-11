@@ -21,4 +21,8 @@ public interface DoubleValueMap<K> extends ValueMap<K, Double> {
     default public DoubleStream streamN() {
         return values().stream().mapToDouble(i -> i);
     }
+
+    default Double sum() {
+        return streamN().sum();
+    }
 }
