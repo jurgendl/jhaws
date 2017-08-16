@@ -1,7 +1,6 @@
 package org.jhaws.common.lang;
 
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -65,16 +64,16 @@ public interface ValueMap<K, N extends Number> extends EnhancedMap<K, N> {
         return entrySet().stream().sorted((a, b) -> order.compare(a.getValue(), b.getValue())).map(Entry::getKey).collect(Collectors.toList());
     }
 
-    default LinkedHashMap<K, N> sortedMap() {
+    default EnhancedLinkedHashMap<K, N> sortedMap() {
         return sortedMap((n1, n2) -> new CompareToBuilder().append(n1, n2).toComparison());
     }
 
-    default LinkedHashMap<K, N> sortedMapInvers() {
+    default EnhancedLinkedHashMap<K, N> sortedMapInvers() {
         return sortedMap((n1, n2) -> -new CompareToBuilder().append(n1, n2).toComparison());
     }
 
-    default LinkedHashMap<K, N> sortedMap(Comparator<N> order) {
+    default EnhancedLinkedHashMap<K, N> sortedMap(Comparator<N> order) {
         return entrySet().stream().sorted((a, b) -> order.compare(a.getValue(), b.getValue())).collect(
-                Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> a, LinkedHashMap::new));
+                Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> a, EnhancedLinkedHashMap::new));
     }
 }
