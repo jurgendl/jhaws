@@ -294,7 +294,7 @@ public class JAXBMarshalling {
             throw new RuntimeException(ex);
         } finally {
             try {
-                out.close();
+                out.flush();
             } catch (NullPointerException | IOException ex) {
                 //
             }
@@ -308,7 +308,7 @@ public class JAXBMarshalling {
             throw new RuntimeException(ex);
         } finally {
             try {
-                out.close();
+                out.flush();
             } catch (NullPointerException | IOException ex) {
                 //
             }
