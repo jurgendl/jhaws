@@ -206,7 +206,7 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public Duration duration(FfprobeType info) {
-		return Duration.ofSeconds(info.getFormat().getDuration().longValue());
+		return info == null ? null : Duration.ofSeconds(info.getFormat().getDuration().longValue());
 	}
 
 	public static enum SplashPow {
@@ -1138,21 +1138,23 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	public StreamType video(FfprobeType finfo) {
-		return videos(finfo).stream().findAny().orElse(null);
+		return finfo == null ? null : videos(finfo).stream().findAny().orElse(null);
 	}
 
 	public StreamType audio(FfprobeType finfo) {
-		return audios(finfo).stream().findAny().orElse(null);
+		return finfo == null ? null : audios(finfo).stream().findAny().orElse(null);
 	}
 
 	public List<StreamType> videos(FfprobeType finfo) {
-		return finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType()))
-				.collect(Collectors.toList());
+		return finfo == null ? null
+				: finfo.getStreams().getStream().stream()
+						.filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	public List<StreamType> audios(FfprobeType finfo) {
-		return finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType()))
-				.collect(Collectors.toList());
+		return finfo == null ? null
+				: finfo.getStreams().getStream().stream()
+						.filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	protected String command(FilePath f) {
