@@ -6,6 +6,8 @@ import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.ToolTipManager;
 import javax.swing.event.DocumentEvent;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,6 +32,19 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
     public void addDocumentKeyListener(DocumentKeyListener listener) {
         getDocument().addDocumentListener(listener);
         addKeyListener(listener);
+    }
+
+    public void setDocumentFilter(DocumentFilter filter) {
+        getAbstractDocument().setDocumentFilter(filter);
+    }
+
+    /** normally an {@link ETextFieldValidator} */
+    public DocumentFilter getDocumentFilter() {
+        return getAbstractDocument().getDocumentFilter();
+    }
+
+    public AbstractDocument getAbstractDocument() {
+        return AbstractDocument.class.cast(getDocument());
     }
 
     /**
@@ -106,6 +121,10 @@ public class ETextField extends JTextField implements EComponentI, HasValue<Stri
 
         if (config.getText() != null) {
             setText(config.getText());
+        }
+
+        if (config.getFilterInput() != null || config.getTextValidator() != null) {
+            setDocumentFilter(new ETextFieldValidator().setFilterInput(config.getFilterInput()).setTextValidator(config.getTextValidator()));
         }
     }
 
