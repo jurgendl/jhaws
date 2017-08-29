@@ -171,6 +171,10 @@ public interface StringUtils {
         return "(" + "?<!" + notA + ")" + groupRegex(b);
     }
 
+    public static String regexNot(String notA) {
+        return "!" + notA;
+    }
+
     public static String regexMultipleOr(String... x) {
         String r = x[0];
         for (int i = 1; i < x.length; i++) {

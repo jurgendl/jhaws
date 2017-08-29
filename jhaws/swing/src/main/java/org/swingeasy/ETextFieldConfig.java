@@ -1,5 +1,8 @@
 package org.swingeasy;
 
+import java.util.function.Function;
+import java.util.function.Predicate;
+
 /**
  * @author Jurgen
  */
@@ -11,6 +14,10 @@ public class ETextFieldConfig extends EComponentConfig<ETextFieldConfig> {
     protected boolean selectAllOnFocus = false;
 
     protected String text = null;
+
+    protected Function<String, String> filterInput = null;
+
+    protected Predicate<String> textValidator = null;
 
     public ETextFieldConfig() {
         super();
@@ -75,6 +82,50 @@ public class ETextFieldConfig extends EComponentConfig<ETextFieldConfig> {
     public ETextFieldConfig setText(String text) {
         lockCheck();
         this.text = text;
+        return this;
+    }
+
+    public Function<String, String> getFilterInput() {
+        return this.filterInput;
+    }
+
+    public ETextFieldConfig setFilterInput(Function<String, String> filterInput) {
+        lockCheck();
+        this.filterInput = filterInput;
+        return this;
+    }
+
+    public Predicate<String> getTextValidator() {
+        return this.textValidator;
+    }
+
+    public ETextFieldConfig setTextValidator(Predicate<String> textValidator) {
+        lockCheck();
+        this.textValidator = textValidator;
+        return this;
+    }
+
+    public ETextFieldConfig removeRegexFromInput(String regexFilter) {
+        lockCheck();
+        this.filterInput = s -> s.replaceAll(regexFilter, "");
+        return this;
+    }
+
+    public ETextFieldConfig regexValidateText(String regexFilter) {
+        lockCheck();
+        this.textValidator = s -> s == null || s.equals("") || s.matches(regexFilter);
+        return this;
+    }
+
+    public ETextFieldConfig filterInput(Function<String, String> filterInput) {
+        lockCheck();
+        this.filterInput = filterInput;
+        return this;
+    }
+
+    public ETextFieldConfig validateText(Predicate<String> textValidator) {
+        lockCheck();
+        this.textValidator = textValidator;
         return this;
     }
 }
