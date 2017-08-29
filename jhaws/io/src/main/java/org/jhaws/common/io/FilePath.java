@@ -3023,6 +3023,10 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
+	public FilePath getCanonicalFilePath() {
+		return new FilePath(getCanonicalPath());
+	}
+
 	public FilePath deleteEmptyDirectories() {
 		if (exists() && isDirectory()) {
 			streamChildrenForDeletion(this);

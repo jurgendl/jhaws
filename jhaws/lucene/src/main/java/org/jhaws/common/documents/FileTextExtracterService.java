@@ -18,6 +18,10 @@ public class FileTextExtracterService {
 				fileTextExtracter -> new ExtensionFilter(fileTextExtracter.accepts()));
 	}
 
+	public boolean supports(FilePath file) {
+		return fileTextExtractersMap.keySet().stream().filter(ex -> ex.accept(file)).findAny().isPresent();
+	}
+
 	public FileTextExtracter getFileTextExtracter(FilePath file) {
 		return CollectionUtils8.getMapValue(fileTextExtractersMap, file);
 	}
