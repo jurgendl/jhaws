@@ -4,7 +4,8 @@ import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lucene.imaging.ImageIndexer;
 
 public class ImageIndexerTest {
-    public static void main(String[] args) {
-        new ImageIndexer().findDuplicates(new FilePath("C:/tmp/dubsindex"), new FilePath("C:/tmp/dubs"), new FilePath("C:/tmp/dubsreport.txt"),5.0);
-    }
+	public static void main(String[] args) {
+		new ImageIndexer().findDuplicates(new FilePath("d:/tmp/dubsindex"), new FilePath("F:/bbs/aaaaaaaaaa"),
+				new FilePath("d:/tmp/dubsreport.txt"), 6.0);
+	}
 }
