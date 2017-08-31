@@ -21,3 +21,5 @@ pom.xml.releaseBackup
 org.eclipse.wst.common.component
 org.eclipse.wst.common.project.facet.core.xml
 
+/jhaws/lucene5/.settings/org.eclipse.m2e.core.prefs
+/jhaws/lucene5/.settings/org.eclipse.jdt.ui.prefs

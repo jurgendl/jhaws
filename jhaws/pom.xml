@@ -54,6 +54,7 @@
 		<module>web</module>
 		<module>wicket</module>
 		<module>lucene</module>
+		<module>lucene5</module>
 		<module>svn</module>
 		<module>swing</module>
 		<module>media</module>
