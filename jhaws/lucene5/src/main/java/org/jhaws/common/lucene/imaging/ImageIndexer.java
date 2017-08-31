@@ -38,10 +38,10 @@ import net.semanticmetadata.lire.utils.FileUtils;
 // http://blog.thedigitalgroup.com/rajendras/2015/06/19/lire-lucene-image-retrieval/
 public class ImageIndexer {
     public static void main(String[] args) {
-        new ImageIndexer().findDuplicates(new FilePath(args[0]), new FilePath(args[1]), new FilePath(args[2]));
+        new ImageIndexer().findDuplicates(new FilePath(args[0]), new FilePath(args[1]), new FilePath(args[2]),Double.parseDouble(args[3]));
     }
 
-    public void findDuplicates(FilePath index, FilePath root, FilePath report) {
+    public void findDuplicates(FilePath index, FilePath root, FilePath report,Double max) {
         try {
             index.deleteAllIfExists();
             List<String> images = FileUtils.getAllImages(root.toFile(), false);
@@ -84,17 +84,21 @@ public class ImageIndexer {
                 BufferedImage img = ImageIO.read(new FilePath(imageFilePath).toFile());
                 ImageSearchHits hits = searcher.search(img, ir);
                 for (int i = 0; i < hits.length(); i++) {
-                    if (hits.score(i) > 5) continue;
                     String fileName = ir.document(hits.documentID(i)).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+                    double score = hits.score(i);
+                    if (score > max) {
+                        done.add(fileName);
+                    	continue;
+                    }
                     if (imageFilePath.equals(fileName)) continue;
-                    System.out.println(hits.score(i) + ": \t" + fileName);
-                    done.add(fileName);
-                    out.write(imageFilePath + "\t" + hits.score(i) + "\t" + fileName + "\n");
+                    System.out.println(score + ": \t" + fileName);
+                    out.write(imageFilePath + "\t" + score + "\t" + fileName + "\n");
                 }
                 System.out.println();
                 out.flush();
             }
             out.close();
+            System.out.println("============================= done ============================= ");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
