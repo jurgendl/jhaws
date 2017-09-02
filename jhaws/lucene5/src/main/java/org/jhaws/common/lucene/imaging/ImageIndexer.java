@@ -22,7 +22,7 @@ import org.jhaws.common.io.FilePath;
 import net.semanticmetadata.lire.builders.DocumentBuilder;
 import net.semanticmetadata.lire.builders.GlobalDocumentBuilder;
 import net.semanticmetadata.lire.builders.GlobalDocumentBuilder.HashingMode;
-import net.semanticmetadata.lire.imageanalysis.features.global.CEDD;
+import net.semanticmetadata.lire.imageanalysis.features.GlobalFeature;
 import net.semanticmetadata.lire.searchers.GenericFastImageSearcher;
 import net.semanticmetadata.lire.searchers.ImageSearchHits;
 import net.semanticmetadata.lire.searchers.ImageSearcher;
@@ -39,19 +39,29 @@ import net.semanticmetadata.lire.utils.FileUtils;
 // https://github.com/aoldemeier/image-similarity-with-lire/blob/master/src/main/java/de/mayflower/samplecode/SimilaritySearchWithLIRE/SimilaritySearchWithLIRE.java
 // https://www.researchgate.net/publication/221573372_Lire_lucene_image_retrieval_an_extensible_java_CBIR_library
 public class ImageIndexer {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		new ImageIndexer().findDuplicates(new FilePath(args[0]), new FilePath(args[1]), new FilePath(args[2]),
-				Double.parseDouble(args[3]));
+		try {
+			new ImageIndexer().findDuplicates(new FilePath(args[0]), new FilePath(args[1]), new FilePath(args[2]),
+					Double.parseDouble(args[3]), (Class<? extends GlobalFeature>) Class
+							.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[4]));
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
 	}
 
-	public void findDuplicates(FilePath index, FilePath root, FilePath report, Double max) {
+	public void findDuplicates(FilePath index, FilePath root, FilePath report, Double max,
+			Class<? extends GlobalFeature> feature) {
 		try {
 			index.deleteAllIfExists();
 			List<String> images = FileUtils.getAllImages(root.toFile(), false);
 			if (images == null)
 				images = Collections.<String>emptyList();
 			GlobalDocumentBuilder globalDocumentBuilder = new GlobalDocumentBuilder(false, HashingMode.None, false);
-			globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);
+			globalDocumentBuilder.addExtractor(feature);
+			// globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);
 			// globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
 			// globalDocumentBuilder
 			// .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.ColorLayout.class);
@@ -90,7 +100,7 @@ public class ImageIndexer {
 			System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
 			System.out.println();
 			IndexReader ir = DirectoryReader.open(FSDirectory.open(index.getPath()));
-			ImageSearcher searcher = new GenericFastImageSearcher(100, CEDD.class, true, ir);
+			ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
 			BufferedWriter out = report.newBufferedWriter(Charset.forName("utf8"));
 			// List<String> done = new ArrayList<>();
 			x = 0;
