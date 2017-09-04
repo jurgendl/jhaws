@@ -67,7 +67,7 @@ public class ImageIndexer {
         try {
             List<String> images = FileUtils.getAllImages(root.toFile(), false);
             if (images == null) images = Collections.<String> emptyList();
-            if (index != null) index.deleteAllIfExists();
+            if (index != null) index.delete();
             GlobalDocumentBuilder globalDocumentBuilder = new GlobalDocumentBuilder(false, HashingMode.None, false);
             globalDocumentBuilder.addExtractor(feature);
             // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);

@@ -45,7 +45,7 @@ public class FToolTest {
             FilePath h = new FilePath(System.getProperty("sld"));
             FilePath sourcedir = h.child("sources");
             FilePath tmp = h.child("tmp");
-            tmp.deleteAllIfExists();
+            tmp.delete();
             tmp.createDirectoryIfNotExists();
             List<FilePath> sources = sourcedir.list().stream().sorted().collect(Collectors.toList());
             int nr = sources.size();
@@ -87,9 +87,9 @@ public class FToolTest {
         try {
             FilePath input = new FilePath(System.getProperty("test3"));
             FilePath outputa = input.appendExtension("a.mp4");
-            outputa.deleteIfExists();
+            outputa.delete();
             FilePath outputb = input.appendExtension("b.mp4");
-            outputb.deleteIfExists();
+            outputb.delete();
             RemuxDefaultsCfg def = new RemuxDefaultsCfg();
             RemuxCfg cfg = t.remux(def, x -> System.out::println, input, outputa, null);
             cfg.commands.forEach(System.out::println);

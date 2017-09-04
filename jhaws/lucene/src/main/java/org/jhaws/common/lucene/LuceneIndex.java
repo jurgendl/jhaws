@@ -116,7 +116,7 @@ public class LuceneIndex {
     // protected long writeLockTimeout = 10000l;
 
     public LuceneIndex() {
-        this(FilePath.createDefaultTempDirectory("" + System.currentTimeMillis()));
+        this(FilePath.createTempDirectory("" + System.currentTimeMillis()));
     }
 
     public LuceneIndex(FilePath dir) {
@@ -143,7 +143,7 @@ public class LuceneIndex {
                 throw new UncheckedIOException(ex);
             }
         }
-        new FilePath(dir, WRITE_LOCK).deleteIfExists();
+        new FilePath(dir, WRITE_LOCK).delete();
         MMapDirectory mMapDirectory;
         try {
             mMapDirectory = new MMapDirectory(dir.toFile()/* ,new SimpleFSLockFactory() */);

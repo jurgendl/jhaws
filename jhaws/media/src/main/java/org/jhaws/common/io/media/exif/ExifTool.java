@@ -314,7 +314,7 @@ public class ExifTool implements MediaCte {
 		String jc = join(command, false);
 		logger.trace("{}", jc);
 		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
-		path.getParentPath().child(path.getFileNameString() + "_original").deleteIfExists();
+		path.getParentPath().child(path.getFileNameString() + "_original").delete();
 	}
 
 	public String comment(FilePath path) {
@@ -337,7 +337,7 @@ public class ExifTool implements MediaCte {
 		String jc = join(command, false);
 		logger.trace("{}", jc);
 		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
-		path.getParentPath().child(path.getFileNameString() + "_original").deleteIfExists();
+		path.getParentPath().child(path.getFileNameString() + "_original").delete();
 	}
 
 	public String program(FilePath path) {

@@ -880,7 +880,7 @@ public class FilePath implements Path, Externalizable {
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
                 if (this.ifExists) {
-                    Files.deleteIfExists(dir);
+                    Files.delete(dir);
                 } else {
                     Files.delete(dir);
                 }
@@ -890,7 +890,7 @@ public class FilePath implements Path, Externalizable {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 if (this.ifExists) {
-                    Files.deleteIfExists(file);
+                    Files.delete(file);
                 } else {
                     Files.delete(file);
                 }
@@ -952,7 +952,11 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public static FilePath createDefaultTempDirectory(String prefix, FileAttribute<?>... attrs) {
+    public static FilePath createTempDirectory() {
+        return createTempDirectory("" + System.currentTimeMillis());
+    }
+
+    public static FilePath createTempDirectory(String prefix, FileAttribute<?>... attrs) {
         try {
             return new FilePath(Files.createTempDirectory(prefix, attrs));
         } catch (IOException ex) {
@@ -960,15 +964,15 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public static FilePath createDefaultTempFile(FileAttribute<?>... attrs) {
-        return createDefaultTempFile(System.currentTimeMillis() + "-" + RND.nextLong(), null, attrs);
+    public static FilePath createTempFile(FileAttribute<?>... attrs) {
+        return createTempFile(System.currentTimeMillis() + "-" + RND.nextLong(), null, attrs);
     }
 
-    public static FilePath createDefaultTempFile(String extension, FileAttribute<?>... attrs) {
-        return createDefaultTempFile(null, extension, attrs);
+    public static FilePath createTempFile(String extension, FileAttribute<?>... attrs) {
+        return createTempFile(null, extension, attrs);
     }
 
-    public static FilePath createDefaultTempFile(String prefix, String extension, FileAttribute<?>... attrs) {
+    public static FilePath createTempFile(String prefix, String extension, FileAttribute<?>... attrs) {
         try {
             return new FilePath(Files.createTempFile(prefix == null ? null : prefix + "-",
                     extension == null ? "" : getFileExtensionSeperator() + extension, attrs));
@@ -1471,48 +1475,6 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public FilePath createTempDirectory(String prefix, FileAttribute<?>... attrs) {
-        try {
-            return new FilePath(Files.createTempDirectory(this.getPath(), prefix, attrs));
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
-
-    public FilePath createTempFile(String prefix, FileAttribute<?>... attrs) {
-        return this.createTempFile(prefix, null, attrs);
-    }
-
-    public FilePath createTempFile(String prefix, String extension, FileAttribute<?>... attrs) {
-        try {
-            return new FilePath(
-                    Files.createTempFile(this.getPath(), prefix + "-", extension == null ? "" : getFileExtensionSeperator() + extension, attrs));
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
-
-    public FilePath delete() {
-        try {
-            Files.delete(this.getPath());
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-        return this;
-    }
-
-    public FilePath deleteAll() {
-        return this.walkFileTree(new Visitors.DeleteAllFilesVisitor(false));
-    }
-
-    public boolean deleteAllIfExists() {
-        if (!this.exists()) {
-            return false;
-        }
-        this.walkFileTree(new Visitors.DeleteAllFilesVisitor(true));
-        return true;
-    }
-
     public Collection<FilePath>[] deleteDuplicates() {
         return deleteDuplicates(true);
     }
@@ -1626,14 +1588,6 @@ public class FilePath implements Path, Externalizable {
             throw new UncheckedIOException(ex);
         }
         return data.getDuplicates();
-    }
-
-    public boolean deleteIfExists() {
-        try {
-            return Files.deleteIfExists(this.getPath());
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
     }
 
     /**
@@ -3034,6 +2988,10 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public boolean isNotEmpty() {
+        return (isFile() && getFileSize() > 0) || (isDirectory() && getChildren().size() > 0);
+    }
+
     public boolean isEmpty() {
         return (isFile() && getFileSize() == 0) || (isDirectory() && getChildren().size() == 0);
     }
@@ -3241,7 +3199,7 @@ public class FilePath implements Path, Externalizable {
                     String systemTypeDescription = FileSystemView.getFileSystemView().getSystemTypeDescription(toFile());
                     if (StringUtils.isNotBlank(systemTypeDescription)) return systemTypeDescription;
                 }
-                String type = FileSystemView.getFileSystemView().getSystemTypeDescription(createDefaultTempFile(ext).toFile()).toString();
+                String type = FileSystemView.getFileSystemView().getSystemTypeDescription(createTempFile(ext).toFile()).toString();
                 FILE_TYPES.put(ext, type);
                 return type;
             } catch (Exception ex2) {
@@ -3341,5 +3299,43 @@ public class FilePath implements Path, Externalizable {
             //
         }
         return this;
+    }
+
+    private static boolean delete(Path path, boolean throwException) {
+        if (Files.notExists(path) && !throwException) {
+            return false;
+        }
+        if (Files.isDirectory(path) && !Files.isSymbolicLink(path) && !throwException) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+                stream.forEach(subPath -> delete(subPath, throwException));
+            } catch (IOException ex) {
+                if (throwException) {
+                    throw new UncheckedIOException(ex);
+                }
+                System.err.println("failed to delete: ");
+            }
+        }
+        try {
+            Files.delete(path);
+            return true;
+        } catch (IOException ex) {
+            if (throwException) {
+                throw new UncheckedIOException(ex);
+            }
+            System.err.println("failed to delete: " + path + " :: " + ex);
+            return false;
+        }
+    }
+
+    public boolean delete() {
+        return deleteSilently();
+    }
+
+    public boolean deleteSilently() {
+        return delete(getPath(), false);
+    }
+
+    public boolean deleteThrowException() {
+        return delete(getPath(), true);
     }
 }
