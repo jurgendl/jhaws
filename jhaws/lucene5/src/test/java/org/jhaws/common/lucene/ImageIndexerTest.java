@@ -12,6 +12,7 @@ public class ImageIndexerTest {
     public static void main(String[] args) {
         SortedSet<ImageSimilarity> results = new ImageIndexer().findDuplicates(new FilePath("c:/tmp/dubsindex"), new FilePath("c:/tmp/dubs"),
                 new FilePath("c:/tmp/dubsreport.txt"), 5.0, CEDD.class);
+        results = new ImageIndexer().findDuplicates(null, new FilePath("c:/tmp/dubs"), null, null, null);
         System.out.println("=========================");
         results.forEach(System.out::print);
     }

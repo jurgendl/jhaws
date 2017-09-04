@@ -63,6 +63,8 @@ public class ImageIndexer {
 
     public SortedSet<ImageSimilarity> findDuplicates(FilePath index, FilePath root, FilePath report, Double max,
             Class<? extends GlobalFeature> feature) {
+        if (feature == null) feature = net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class;
+        if (max == null) max = 5.0;
         SortedSet<ImageSimilarity> results = new TreeSet<>();
         try {
             List<String> images = FileUtils.getAllImages(root.toFile(), false);
