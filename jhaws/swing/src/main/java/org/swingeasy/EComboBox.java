@@ -35,7 +35,7 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     protected class MouseValueScroller implements MouseWheelListener {
         @Override
         public synchronized void mouseWheelMoved(MouseWheelEvent e) {
-            if (!isEnabled() || !isEditable()) return;
+            if (!isEnabled()) return;
             int currentSelected = getSelectedIndex();
             final boolean nullFound = getModel().getElementAt(0) == null;
             if (currentSelected == -1) {
