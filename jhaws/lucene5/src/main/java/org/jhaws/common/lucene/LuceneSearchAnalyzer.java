@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.core.KeywordTokenizer;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -16,6 +16,7 @@ import org.apache.lucene.analysis.miscellaneous.HyphenatedWordsFilter;
 import org.apache.lucene.analysis.miscellaneous.LengthFilter;
 import org.apache.lucene.analysis.standard.ClassicFilter;
 import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.FilteringTokenFilter;
@@ -35,16 +36,10 @@ public class LuceneSearchAnalyzer extends Analyzer {
         this.defaultStopSet = defaultStopSet;
     }
 
-    // @Override
-    // protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
-    // Tokenizer source = new StandardTokenizer(reader);
-    // return new TokenStreamComponents(source, addFilters(source));
-    // }
-
-    // FIXME
     @Override
-    protected TokenStreamComponents createComponents(String fieldName) {
-        return new TokenStreamComponents(new KeywordTokenizer());
+    protected TokenStreamComponents createComponents(String fieldName/* , Reader reader */) {
+        Tokenizer source = new StandardTokenizer(/* reader */);
+        return new TokenStreamComponents(source, addFilters(source));
     }
 
     protected TokenStream addFilters(TokenStream tf) {

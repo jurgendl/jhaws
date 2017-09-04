@@ -2,6 +2,7 @@ package org.jhaws.common.lucene;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.core.LowerCaseFilter;
 import org.apache.lucene.analysis.core.StopFilter;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
@@ -24,16 +25,10 @@ public class LuceneIndexAnalyzer extends Analyzer {
         this.defaultStopSet = defaultStopSet;
     }
 
-    // @Override
-    // protected TokenStreamComponents createComponents(String fieldName, Reader reader) {
-    // Tokenizer source = new StandardTokenizer(reader);
-    // return new TokenStreamComponents(source, addFilters(source));
-    // }
-
-    // FIXME
     @Override
-    protected TokenStreamComponents createComponents(String fieldName) {
-        return new TokenStreamComponents(new StandardTokenizer());
+    protected TokenStreamComponents createComponents(String fieldName/* , Reader reader */) {
+        Tokenizer source = new StandardTokenizer(/* reader */);
+        return new TokenStreamComponents(source, addFilters(source));
     }
 
     protected TokenStream addFilters(TokenStream tf) {

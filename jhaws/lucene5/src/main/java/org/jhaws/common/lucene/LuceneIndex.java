@@ -112,7 +112,11 @@ public class LuceneIndex {
 
     protected int maxBatchSize = 1000;
 
-    protected long writeLockTimeout = 10000l;
+    // protected long writeLockTimeout = 10000l;
+
+    public LuceneIndex() {
+        this(FilePath.createDefaultTempDirectory("" + System.currentTimeMillis()));
+    }
 
     public LuceneIndex(FilePath dir) {
         this.dir = dir;
@@ -254,7 +258,7 @@ public class LuceneIndex {
     }
 
     protected IndexWriterConfig createIndexWriterConfig() {
-        return indexWriterConfig = new IndexWriterConfig(getIndexAnalyzer()).setWriteLockTimeout(writeLockTimeout);
+        return indexWriterConfig = new IndexWriterConfig(getIndexAnalyzer())/* .setWriteLockTimeout(writeLockTimeout) */;
     }
 
     protected IndexWriterConfig getIndexWriterConfig() {
@@ -452,10 +456,10 @@ public class LuceneIndex {
         return collector.topDocs();
     }
 
-    public BooleanQuery searchAllQuery() {
-        BooleanQuery query = new BooleanQuery();
+    public BooleanQuery.Builder searchAllQuery() {
+        BooleanQuery.Builder query = new BooleanQuery.Builder();
         query.add(new MatchAllDocsQuery(), BooleanClause.Occur.MUST);
-        query.add(keyValueQuery(LuceneIndex.LUCENE_METADATA, LuceneIndex.LUCENE_METADATA), BooleanClause.Occur.MUST_NOT);
+        keyValueQuery(query, LuceneIndex.LUCENE_METADATA, LuceneIndex.LUCENE_METADATA, BooleanClause.Occur.MUST_NOT);
         return query;
     }
 
@@ -476,13 +480,16 @@ public class LuceneIndex {
         }
     }
 
-    public BooleanQuery keyValueQuery(BooleanQuery booleanQuery, String key, String value) {
-        booleanQuery.add(new TermQuery(new Term(key, value)), MUST);
-        return booleanQuery;
+    public BooleanQuery.Builder keyValueQuery(BooleanQuery.Builder booleanQuery, String key, String value) {
+        return keyValueQuery(booleanQuery, key, value, MUST);
+    }
+
+    public BooleanQuery.Builder keyValueQuery(BooleanQuery.Builder booleanQuery, String key, String value, BooleanClause.Occur occur) {
+        return booleanQuery.add(new TermQuery(new Term(key, value)), occur);
     }
 
     public BooleanQuery keyValueQuery(String key, String value) {
-        return keyValueQuery(new BooleanQuery(), key, value);
+        return keyValueQuery(new BooleanQuery.Builder(), key, value).build();
     }
 
     public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy, Comparator<Document> comparator, Consumer<Document> after) {
@@ -601,13 +608,13 @@ public class LuceneIndex {
         this.autoCloseWaitEnabled = autoCloseWaitEnabled;
     }
 
-    public long getWriteLockTimeout() {
-        return this.writeLockTimeout;
-    }
+    // public long getWriteLockTimeout() {
+    // return this.writeLockTimeout;
+    // }
 
-    public void setWriteLockTimeout(long writeLockTimeout) {
-        this.writeLockTimeout = writeLockTimeout;
-    }
+    // public void setWriteLockTimeout(long writeLockTimeout) {
+    // this.writeLockTimeout = writeLockTimeout;
+    // }
 
     public void setIndex(Directory index) {
         this.index = index;
@@ -634,9 +641,10 @@ public class LuceneIndex {
     }
 
     public Query buildQuery(String phrase, String defaultField) {
-        return buildQuery(phrase, defaultField);
+        return buildQuery(phrase, new ArrayList<>(), defaultField);
     }
 
+    @SuppressWarnings("deprecation")
     public Query buildQuery(String phrase, List<String> fields, String defaultField) {
         List<String> tokens;
         try {
