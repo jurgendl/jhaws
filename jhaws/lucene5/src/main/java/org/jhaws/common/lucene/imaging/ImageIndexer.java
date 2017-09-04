@@ -46,9 +46,14 @@ public class ImageIndexer {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         try {
-            new ImageIndexer().findDuplicates("null".equals(args[0]) ? null : new FilePath(args[0]), new FilePath(args[1]),
-                    "null".equals(args[2]) ? null : new FilePath(args[2]), Double.parseDouble(args[3]),
-                    (Class<? extends GlobalFeature>) Class.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[4]));
+            new ImageIndexer().findDuplicates(//
+                    "null".equals(args[0]) ? null : new FilePath(args[0]), //
+                    new FilePath(args[1]), //
+                    "null".equals(args[2]) ? null : new FilePath(args[2]), //
+                    "null".equals(args[3]) ? 5.0 : Double.parseDouble(args[3]), //
+                    (Class<? extends GlobalFeature>) Class
+                            .forName("net.semanticmetadata.lire.imageanalysis.features.global." + ("null".equals(args[4]) ? "FCTH" : args[4]))//
+            );
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         } catch (ClassNotFoundException ex) {

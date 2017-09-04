@@ -19,7 +19,7 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
 
     public ImageSimilarity(String a, String b, double similarity) {
         this();
-        if (a.compareTo(b) > 0) {
+        if (a.compareTo(b) < 0) {
             this.a = a;
             this.b = b;
         } else {
