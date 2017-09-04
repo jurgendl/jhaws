@@ -50,10 +50,10 @@ public class FilePathTest {
             } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof FileAlreadyExistsException);
             }
-            fp.deleteThrowException();
+            fp.delete(true);
             Assert.assertFalse(fp.exists());
             try {
-                fp.deleteThrowException();
+                fp.delete(true);
                 Assert.fail("NoSuchFileException");
             } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof NoSuchFileException);
@@ -76,7 +76,7 @@ public class FilePathTest {
                 Assert.assertTrue(ex.getCause() instanceof FileAlreadyExistsException);
             }
             try {
-                fp.deleteThrowException();
+                fp.delete(true);
                 Assert.fail("DirectoryNotEmptyException");
             } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof DirectoryNotEmptyException);
@@ -84,7 +84,7 @@ public class FilePathTest {
             fp.delete();
             Assert.assertFalse(fp.exists());
             try {
-                fp.deleteThrowException();
+                fp.delete(true);
                 Assert.fail("NoSuchFileException");
             } catch (UncheckedIOException ex) {
                 Assert.assertTrue(ex.getCause() instanceof NoSuchFileException);

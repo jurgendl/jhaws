@@ -3302,17 +3302,19 @@ public class FilePath implements Path, Externalizable {
     }
 
     private static boolean delete(Path path, boolean throwException) {
-        if (Files.notExists(path) && !throwException) {
-            return false;
-        }
-        if (Files.isDirectory(path) && !Files.isSymbolicLink(path) && !throwException) {
-            try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-                stream.forEach(subPath -> delete(subPath, throwException));
-            } catch (IOException ex) {
-                if (throwException) {
-                    throw new UncheckedIOException(ex);
+        if (!throwException) {
+            if (Files.notExists(path)) {
+                return false;
+            }
+            if (Files.isDirectory(path) && !Files.isSymbolicLink(path)) {
+                try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+                    stream.forEach(subPath -> delete(subPath, throwException));
+                } catch (IOException ex) {
+                    if (throwException) {
+                        throw new UncheckedIOException(ex);
+                    }
+                    System.err.println("failed to delete: " + path + " :: " + ex);
                 }
-                System.err.println("failed to delete: ");
             }
         }
         try {
@@ -3328,14 +3330,10 @@ public class FilePath implements Path, Externalizable {
     }
 
     public boolean delete() {
-        return deleteSilently();
-    }
-
-    public boolean deleteSilently() {
         return delete(getPath(), false);
     }
 
-    public boolean deleteThrowException() {
-        return delete(getPath(), true);
+    public boolean delete(boolean throwExceptions) {
+        return delete(getPath(), throwExceptions);
     }
 }
