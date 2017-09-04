@@ -18,7 +18,9 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.BaseDirectory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.jhaws.common.io.FilePath;
 
 import net.semanticmetadata.lire.builders.DocumentBuilder;
@@ -44,7 +46,8 @@ public class ImageIndexer {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         try {
-            new ImageIndexer().findDuplicates(new FilePath(args[0]), new FilePath(args[1]), new FilePath(args[2]), Double.parseDouble(args[3]),
+            new ImageIndexer().findDuplicates("null".equals(args[0]) ? null : new FilePath(args[0]), new FilePath(args[1]),
+                    "null".equals(args[2]) ? null : new FilePath(args[2]), Double.parseDouble(args[3]),
                     (Class<? extends GlobalFeature>) Class.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[4]));
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
@@ -59,7 +62,7 @@ public class ImageIndexer {
         try {
             List<String> images = FileUtils.getAllImages(root.toFile(), false);
             if (images == null) images = Collections.<String> emptyList();
-            index.deleteAllIfExists();
+            if (index != null) index.deleteAllIfExists();
             GlobalDocumentBuilder globalDocumentBuilder = new GlobalDocumentBuilder(false, HashingMode.None, false);
             globalDocumentBuilder.addExtractor(feature);
             // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);
@@ -77,18 +80,30 @@ public class ImageIndexer {
             // globalDocumentBuilder
             // .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.joint.JointHistogram.class);
             IndexWriterConfig conf = new IndexWriterConfig(new WhitespaceAnalyzer());
-            FSDirectory fsDir = FSDirectory.open(index.getPath());
+            BaseDirectory fsDir;
+            if (index == null) {
+                fsDir = new RAMDirectory();
+            } else {
+                fsDir = FSDirectory.open(index.getPath());
+            }
             IndexWriter iw = new IndexWriter(fsDir, conf);
+            Document tmpDoc = new Document();
+            iw.addDocument(tmpDoc);
+            iw.deleteAll();
+            iw.commit();
+            BufferedWriter out = report == null ? null : report.newBufferedWriter(Charset.forName("utf8"));
             int x = 0;
             long start0 = System.currentTimeMillis();
             for (Iterator<String> it = images.iterator(); it.hasNext();) {
                 String imageFilePath = it.next();
                 System.out.println("Indexing " + imageFilePath);
                 long start = System.currentTimeMillis();
+                BufferedImage img = null;
                 try {
-                    BufferedImage img = ImageIO.read(new FileInputStream(imageFilePath));
+                    img = ImageIO.read(new FileInputStream(imageFilePath));
                     Document document = globalDocumentBuilder.createDocument(img, imageFilePath);
                     iw.addDocument(document);
+                    iw.commit();
                 } catch (Exception e) {
                     System.err.println("Error reading image or indexing it. " + imageFilePath);
                     e.printStackTrace();
@@ -96,42 +111,36 @@ public class ImageIndexer {
                 x++;
                 System.out.println("" + x + "/" + images.size() + " - " + new FilePath(imageFilePath).getHumanReadableByteCount() + " - "
                         + (System.currentTimeMillis() - start));
+                if (img != null) {
+                    System.out.println("Searching duplicates of " + imageFilePath);
+                    IndexReader ir = DirectoryReader.open(iw);
+                    ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
+                    ImageSearchHits hits = searcher.search(img, ir);
+                    for (int i = 0; i < hits.length(); i++) {
+                        String fileName = ir.document(hits.documentID(i)).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+                        double score = hits.score(i);
+                        if (score > max) {
+                            continue;
+                        }
+                        if (imageFilePath.equals(fileName)) {
+                            continue;
+                        }
+                        System.out.println(score + ": \t" + fileName);
+                        if (out != null) out.write(imageFilePath + "\t" + score + "\t" + fileName + "\r\n");
+                        results.add(new ImageSimilarity(imageFilePath, fileName, score));
+                    }
+                    System.out.println();
+                    if (out != null) out.flush();
+                    ir.close();
+                }
             }
             iw.close();
             System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
             System.out.println();
-            IndexReader ir = DirectoryReader.open(fsDir);
-            ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
-            BufferedWriter out = report == null ? null : report.newBufferedWriter(Charset.forName("utf8"));
-            x = 0;
-            for (Iterator<String> it = images.iterator(); it.hasNext();) {
-                String imageFilePath = it.next();
-                System.out.println("Searching duplicates of " + imageFilePath);
-                BufferedImage img = ImageIO.read(new FilePath(imageFilePath).toFile());
-                ImageSearchHits hits = searcher.search(img, ir);
-                for (int i = 0; i < hits.length(); i++) {
-                    String fileName = ir.document(hits.documentID(i)).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-                    double score = hits.score(i);
-                    if (score > max) {
-                        continue;
-                    }
-                    if (imageFilePath.equals(fileName)) {
-                        continue;
-                    }
-                    System.out.println(score + ": \t" + fileName);
-                    if (out != null) out.write(imageFilePath + "\t" + score + "\t" + fileName + "\r\n");
-                    results.add(new ImageSimilarity(imageFilePath, fileName, score));
-                }
-                System.out.println();
-                if (out != null) out.flush();
-                x++;
-                System.out.println("" + x + "/" + images.size());
-            }
             if (out != null) out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            index.deleteAllIfExists();
             System.out.println("============================= done ============================= ");
         }
         return results;
