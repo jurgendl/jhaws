@@ -7,6 +7,8 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.imageio.ImageIO;
 
@@ -51,7 +53,9 @@ public class ImageIndexer {
         }
     }
 
-    public void findDuplicates(FilePath index, FilePath root, FilePath report, Double max, Class<? extends GlobalFeature> feature) {
+    public SortedSet<ImageSimilarity> findDuplicates(FilePath index, FilePath root, FilePath report, Double max,
+            Class<? extends GlobalFeature> feature) {
+        SortedSet<ImageSimilarity> results = new TreeSet<>();
         try {
             List<String> images = FileUtils.getAllImages(root.toFile(), false);
             if (images == null) images = Collections.<String> emptyList();
@@ -73,7 +77,8 @@ public class ImageIndexer {
             // globalDocumentBuilder
             // .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.joint.JointHistogram.class);
             IndexWriterConfig conf = new IndexWriterConfig(new WhitespaceAnalyzer());
-            IndexWriter iw = new IndexWriter(FSDirectory.open(index.getPath()), conf);
+            FSDirectory fsDir = FSDirectory.open(index.getPath());
+            IndexWriter iw = new IndexWriter(fsDir, conf);
             int x = 0;
             long start0 = System.currentTimeMillis();
             for (Iterator<String> it = images.iterator(); it.hasNext();) {
@@ -95,19 +100,12 @@ public class ImageIndexer {
             iw.close();
             System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
             System.out.println();
-            IndexReader ir = DirectoryReader.open(FSDirectory.open(index.getPath()));
+            IndexReader ir = DirectoryReader.open(fsDir);
             ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
-            BufferedWriter out = report.newBufferedWriter(Charset.forName("utf8"));
-            // List<String> done = new ArrayList<>();
+            BufferedWriter out = report == null ? null : report.newBufferedWriter(Charset.forName("utf8"));
             x = 0;
             for (Iterator<String> it = images.iterator(); it.hasNext();) {
                 String imageFilePath = it.next();
-                // if (done.contains(imageFilePath)) {
-                // x++;
-                // System.out.println("" + x + "/" + images.size());
-                // continue;
-                // }
-                // done.add(imageFilePath);
                 System.out.println("Searching duplicates of " + imageFilePath);
                 BufferedImage img = ImageIO.read(new FilePath(imageFilePath).toFile());
                 ImageSearchHits hits = searcher.search(img, ir);
@@ -115,25 +113,27 @@ public class ImageIndexer {
                     String fileName = ir.document(hits.documentID(i)).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
                     double score = hits.score(i);
                     if (score > max) {
-                        // done.add(fileName);
                         continue;
                     }
                     if (imageFilePath.equals(fileName)) {
                         continue;
                     }
                     System.out.println(score + ": \t" + fileName);
-                    out.write(imageFilePath + "\t" + score + "\t" + fileName + "\r\n");
+                    if (out != null) out.write(imageFilePath + "\t" + score + "\t" + fileName + "\r\n");
+                    results.add(new ImageSimilarity(imageFilePath, fileName, score));
                 }
                 System.out.println();
-                out.flush();
+                if (out != null) out.flush();
                 x++;
                 System.out.println("" + x + "/" + images.size());
             }
-            out.close();
+            if (out != null) out.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
+            index.deleteAllIfExists();
             System.out.println("============================= done ============================= ");
         }
+        return results;
     }
 }
