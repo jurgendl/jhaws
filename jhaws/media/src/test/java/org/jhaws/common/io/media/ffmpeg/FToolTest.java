@@ -97,10 +97,10 @@ public class FToolTest {
             cfg = t.remux(def, x -> System.out::println, input, outputb, null);
             cfg.commands.forEach(System.out::println);
             System.out.println();
-            System.out.println(outputa.getAbsolutePath() + " > " + FilePath.getHumanReadableByteCount(input.getFileSize(), 2) + " > "
-                    + FilePath.getHumanReadableByteCount(outputa.getFileSize(), 2));
-            System.out.println(outputb.getAbsolutePath() + " > " + FilePath.getHumanReadableByteCount(input.getFileSize(), 2) + " > "
-                    + FilePath.getHumanReadableByteCount(outputb.getFileSize(), 2));
+            System.out.println(outputa.getAbsolutePath() + " > " + FilePath.getHumanReadableFileSize(input.getFileSize(), 2) + " > "
+                    + FilePath.getHumanReadableFileSize(outputa.getFileSize(), 2));
+            System.out.println(outputb.getAbsolutePath() + " > " + FilePath.getHumanReadableFileSize(input.getFileSize(), 2) + " > "
+                    + FilePath.getHumanReadableFileSize(outputb.getFileSize(), 2));
         } catch (RuntimeException ex) {
             ex.printStackTrace(System.out);
             throw ex;

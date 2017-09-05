@@ -445,7 +445,7 @@ public class FilePathTest {
             try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
                 out.write(bytes);
             }
-            Assert.assertEquals("5 B", tmp.getHumanReadableByteCount());
+            Assert.assertEquals("5 B", tmp.getHumanReadableFileSize());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
@@ -460,7 +460,7 @@ public class FilePathTest {
             try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
                 out.write(bytes);
             }
-            Assert.assertEquals("1 KiB", tmp.getHumanReadableByteCount());
+            Assert.assertEquals("1 KiB", tmp.getHumanReadableFileSize());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
@@ -475,7 +475,7 @@ public class FilePathTest {
             try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
                 out.write(bytes);
             }
-            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "5 KiB", tmp.getHumanReadableByteCount());
+            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "5 KiB", tmp.getHumanReadableFileSize());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
@@ -490,7 +490,7 @@ public class FilePathTest {
             try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
                 out.write(bytes);
             }
-            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "25 KiB", tmp.getHumanReadableByteCount());
+            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "25 KiB", tmp.getHumanReadableFileSize());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
@@ -505,7 +505,7 @@ public class FilePathTest {
             try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
                 out.write(bytes);
             }
-            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "125 KiB", tmp.getHumanReadableByteCount());
+            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "125 KiB", tmp.getHumanReadableFileSize());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));
@@ -520,7 +520,7 @@ public class FilePathTest {
             try (BufferedOutputStream out = tmp.newBufferedOutputStream()) {
                 out.write(bytes);
             }
-            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "062 KiB", tmp.getHumanReadableByteCount());
+            Assert.assertEquals("1" + G11n.getDecimalFormatSymbols().getDecimalSeparator() + "062 KiB", tmp.getHumanReadableFileSize());
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail(String.valueOf(ex));

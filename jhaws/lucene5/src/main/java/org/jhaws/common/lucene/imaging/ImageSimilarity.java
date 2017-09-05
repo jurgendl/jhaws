@@ -2,29 +2,56 @@ package org.jhaws.common.lucene.imaging;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang.builder.CompareToBuilder;
 
+@XmlRootElement(name = "image-similarity")
 public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity> {
     private static final long serialVersionUID = 3511643000528919430L;
 
+    @XmlAttribute
     public String a;
 
+    @XmlAttribute
     public String b;
 
+    @XmlAttribute(name = "a-wh")
+    public int[] aWH;
+
+    @XmlAttribute(name = "b-wh")
+    public int[] bWH;
+
+    @XmlAttribute(name = "a-size")
+    public long aSize;
+
+    @XmlAttribute(name = "b-size")
+    public long bSize;
+
+    @XmlAttribute
     public double similarity;
 
     public ImageSimilarity() {
         super();
     }
 
-    public ImageSimilarity(String a, String b, double similarity) {
+    public ImageSimilarity(String a, String b, double similarity, int[] aWH, int[] bWH, long aSize, long bSize) {
         this();
         if (a.compareTo(b) < 0) {
             this.a = a;
             this.b = b;
+            this.aWH = aWH;
+            this.bWH = bWH;
+            this.aSize = aSize;
+            this.bSize = bSize;
         } else {
             this.a = b;
             this.b = a;
+            this.aWH = bWH;
+            this.bWH = aWH;
+            this.aSize = bSize;
+            this.bSize = aSize;
         }
         this.similarity = similarity;
     }
@@ -84,6 +111,38 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
 
     @Override
     public String toString() {
-        return a + "\t" + similarity + "\t" + b + "\r\n";
+        return a + "\t" + similarity + "\t" + b + "\t" + aWH[0] + "x" + aWH[1] + "\t" + bWH[0] + "x" + bWH[1] + "\t" + aSize + "\t" + bSize + "\r\n";
+    }
+
+    public int[] getaWH() {
+        return this.aWH;
+    }
+
+    public void setaWH(int[] aWH) {
+        this.aWH = aWH;
+    }
+
+    public int[] getbWH() {
+        return this.bWH;
+    }
+
+    public void setbWH(int[] bWH) {
+        this.bWH = bWH;
+    }
+
+    public long getaSize() {
+        return this.aSize;
+    }
+
+    public void setaSize(long aSize) {
+        this.aSize = aSize;
+    }
+
+    public long getbSize() {
+        return this.bSize;
+    }
+
+    public void setbSize(long bSize) {
+        this.bSize = bSize;
     }
 }

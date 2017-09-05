@@ -981,7 +981,7 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public static String getHumanReadableByteCount(long bytes, int maxDigits) {
+    public static String getHumanReadableFileSize(long bytes, int maxDigits) {
         int unit = 1024;
         if (bytes < unit) return bytes + " " + SIZE_UNIT;
         int exp = (int) (Math.log(bytes) / Math.log(unit));
@@ -1732,8 +1732,8 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
-    public String getHumanReadableByteCount() {
-        return getHumanReadableByteCount(getFileSize(), 3);
+    public String getHumanReadableFileSize() {
+        return getHumanReadableFileSize(getFileSize(), 3);
     }
 
     public String getExtension() {

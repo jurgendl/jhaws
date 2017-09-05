@@ -1,12 +1,12 @@
 package org.jhaws.common.lucene.imaging;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -22,6 +22,7 @@ import org.apache.lucene.store.BaseDirectory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.io.jaxb.JAXBMarshalling;
 
 import net.semanticmetadata.lire.builders.DocumentBuilder;
 import net.semanticmetadata.lire.builders.GlobalDocumentBuilder;
@@ -43,6 +44,8 @@ import net.semanticmetadata.lire.utils.FileUtils;
 // https://github.com/aoldemeier/image-similarity-with-lire/blob/master/src/main/java/de/mayflower/samplecode/SimilaritySearchWithLIRE/SimilaritySearchWithLIRE.java
 // https://www.researchgate.net/publication/221573372_Lire_lucene_image_retrieval_an_extensible_java_CBIR_library
 public class ImageIndexer {
+    private static JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(ImageSimilarities.class);
+
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         try {
@@ -61,11 +64,13 @@ public class ImageIndexer {
         }
     }
 
-    public SortedSet<ImageSimilarity> findDuplicates(FilePath index, FilePath root, FilePath report, Double max,
-            Class<? extends GlobalFeature> feature) {
+    public ImageSimilarities findDuplicates(FilePath index, FilePath root, FilePath report, Double max, Class<? extends GlobalFeature> feature) {
+        ImageSimilarities sim = new ImageSimilarities();
         if (feature == null) feature = net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class;
         if (max == null) max = 5.0;
         SortedSet<ImageSimilarity> results = new TreeSet<>();
+        Map<String, int[]> wh = new HashMap<>();
+        Map<String, Long> size = new HashMap<>();
         try {
             List<String> images = FileUtils.getAllImages(root.toFile(), false);
             if (images == null) images = Collections.<String> emptyList();
@@ -98,7 +103,6 @@ public class ImageIndexer {
             iw.addDocument(tmpDoc);
             iw.deleteAll();
             iw.commit();
-            BufferedWriter out = report == null ? null : report.newBufferedWriter(Charset.forName("utf8"));
             int x = 0;
             long start0 = System.currentTimeMillis();
             for (Iterator<String> it = images.iterator(); it.hasNext();) {
@@ -108,6 +112,8 @@ public class ImageIndexer {
                 BufferedImage img = null;
                 try {
                     img = ImageIO.read(new FileInputStream(imageFilePath));
+                    wh.put(imageFilePath, new int[] { img.getWidth(), img.getHeight() });
+                    size.put(imageFilePath, new FilePath(imageFilePath).getFileSize());
                     Document document = globalDocumentBuilder.createDocument(img, imageFilePath);
                     iw.addDocument(document);
                     iw.commit();
@@ -116,7 +122,7 @@ public class ImageIndexer {
                     e.printStackTrace();
                 }
                 x++;
-                System.out.println("" + x + "/" + images.size() + " - " + new FilePath(imageFilePath).getHumanReadableByteCount() + " - "
+                System.out.println("" + x + "/" + images.size() + " - " + new FilePath(imageFilePath).getHumanReadableFileSize() + " - "
                         + (System.currentTimeMillis() - start));
                 if (img != null) {
                     System.out.println("Searching duplicates of " + imageFilePath);
@@ -133,23 +139,25 @@ public class ImageIndexer {
                             continue;
                         }
                         System.out.println(score + ": \t" + fileName);
-                        if (out != null) out.write(imageFilePath + "\t" + score + "\t" + fileName + "\r\n");
-                        results.add(new ImageSimilarity(imageFilePath, fileName, score));
+                        results.add(new ImageSimilarity(imageFilePath, fileName, score, wh.get(imageFilePath), wh.get(fileName),
+                                size.get(imageFilePath), size.get(fileName)));
                     }
                     System.out.println();
-                    if (out != null) out.flush();
                     ir.close();
                 }
             }
             iw.close();
             System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
             System.out.println();
-            if (out != null) out.close();
+            sim.getImageSimilarities().addAll(results);
+            if (report != null) {
+                jaxbMarshalling.marshall(sim, report);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
             System.out.println("============================= done ============================= ");
         }
-        return results;
+        return sim;
     }
 }
