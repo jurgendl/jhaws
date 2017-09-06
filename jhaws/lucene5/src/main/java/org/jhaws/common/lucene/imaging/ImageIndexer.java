@@ -139,8 +139,10 @@ public class ImageIndexer {
                             continue;
                         }
                         System.out.println(score + ": \t" + fileName);
-                        results.add(new ImageSimilarity(imageFilePath, fileName, score, wh.get(imageFilePath), wh.get(fileName),
-                                size.get(imageFilePath), size.get(fileName)));
+                        ImageSimilarity e = new ImageSimilarity(imageFilePath, fileName, score, wh.get(imageFilePath), wh.get(fileName),
+                                size.get(imageFilePath), size.get(fileName));
+                        System.out.println(e);
+                        System.out.println(results.add(e));
                     }
                     System.out.println();
                     ir.close();

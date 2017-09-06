@@ -106,7 +106,7 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
 
     @Override
     public int compareTo(ImageSimilarity o) {
-        return new CompareToBuilder().append(similarity, o.similarity).toComparison();
+        return new CompareToBuilder().append(similarity, o.similarity).append(a, o.a).append(b, o.b).toComparison();
     }
 
     @Override
