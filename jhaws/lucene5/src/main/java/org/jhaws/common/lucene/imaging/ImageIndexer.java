@@ -154,6 +154,8 @@ public class ImageIndexer {
             sim.getImageSimilarities().addAll(results);
             if (report != null) {
                 jaxbMarshalling.marshall(sim, report);
+                System.out.println("-------------------------------------------------");
+                System.out.println(report.readAll());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
