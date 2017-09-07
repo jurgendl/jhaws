@@ -11,23 +11,23 @@ import org.jhaws.common.io.console.Processes.Lines;
 
 // http://www.sentex.net/~mwandel/jhead/
 public class JHeadTool {
-    protected FilePath jhead;
+	protected FilePath jhead;
 
-    public FilePath getJhead() {
-        return this.jhead;
-    }
+	public FilePath getJhead() {
+		return this.jhead;
+	}
 
-    public void setJhead(FilePath jhead) {
-        this.jhead = jhead;
-    }
+	public void setJhead(FilePath jhead) {
+		this.jhead = jhead;
+	}
 
-    protected String command(FilePath f) {
-        return "\"" + f.getAbsolutePath() + "\"";
-    }
+	protected String command(FilePath f) {
+		return "\"" + f.getAbsolutePath() + "\"";
+	}
 
-    public void fix(FilePath image) {
-        List<String> command = Arrays.asList(command(jhead), "-autorot", "-v", image.getAbsolutePath());
-        System.out.println(command.stream().collect(Collectors.joining(" ")));
-        callProcess(false, command, jhead.getParentPath(), new Lines()).lines().forEach(System.out::println);
-    }
+	public void fix(FilePath image) {
+		List<String> command = Arrays.asList(command(jhead), "-autorot", "-v", command(image));
+		System.out.println(command.stream().collect(Collectors.joining(" ")));
+		callProcess(false, command, jhead.getParentPath(), new Lines()).lines().forEach(System.out::println);
+	}
 }
