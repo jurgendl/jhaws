@@ -432,7 +432,8 @@ public class ExifTool implements MediaCte {
 		try {
 			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path)
 					|| qtFilter.accept(path)) {
-				List<String> command = Arrays.asList(command(exif), "-q", "-json", path.getAbsolutePath());
+				List<String> command = Arrays.asList(command(exif), "-charset", "utf8", "-q", "-json",
+						path.getAbsolutePath());
 				String jc = join(command, false);
 				logger.trace("{}", jc);
 
@@ -475,7 +476,7 @@ public class ExifTool implements MediaCte {
 						vfr = exifinfo.value(AVGBITRATE2);
 					}
 					if (StringUtils.isNotBlank(vfr)) {
-						exifinfo.setVfr(Double.parseDouble(vfr.replace("fps", "").trim()));
+						exifinfo.setVfr(Double.parseDouble(vfr.replace("Mbps", "").replace("fps", "").trim()));
 					}
 				}
 
