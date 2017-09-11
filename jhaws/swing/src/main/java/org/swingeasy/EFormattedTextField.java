@@ -124,4 +124,9 @@ public class EFormattedTextField<T> extends JFormattedTextField implements EComp
             this.setFormat(this.factory.build(l));
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public T getObjectValue() {
+        return (T) super.getValue();
+    }
 }
