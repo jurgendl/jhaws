@@ -9,8 +9,10 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -426,6 +428,9 @@ public class ExifTool implements MediaCte {
 		if (path.notExists() || exif.notExists()) {
 			throw new IllegalArgumentException();
 		}
+		if (exifinfo == null) {
+			exifinfo = new ExifInfoImpl();
+		}
 
 		logger.trace("exif {}", path);
 
@@ -443,7 +448,9 @@ public class ExifTool implements MediaCte {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> tmp = (Map<String, Object>) ((Map<String, Object>) JavaScript
 						.eval(lines.stream().collect(Collectors.joining()))).values().iterator().next();
-				tmp.keySet().forEach(k -> exifinfo.getAll().put(k, tmp.get(k).toString()));
+				TreeMap<String, String> all = new TreeMap<String, String>();
+				tmp.keySet().forEach(k -> all.put(k, tmp.get(k).toString()));
+				exifinfo.setAll(new LinkedHashMap<>(all));
 
 				exifinfo.setW(Integer.parseInt(exifinfo.values("0", IW, W)));
 				exifinfo.setH(Integer.parseInt(exifinfo.values("0", IH, H)));
