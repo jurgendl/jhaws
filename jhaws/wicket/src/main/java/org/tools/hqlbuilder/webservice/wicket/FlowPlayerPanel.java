@@ -58,7 +58,7 @@ public class FlowPlayerPanel extends Panel {
 			}
 		} else {
 			flowplayer.add(new CssClassNameRemover("is-splash"));
-			if (_config.getW() != 0 && _config.getH() != 0) {
+			if (_config.getW() != null && _config.getH() != null && _config.getW() != 0 && _config.getH() != 0) {
 				flowplayer.add(new AttributeModifier("style", ";background-size:cover;background-position-x:center"
 				// + ";max-width:" + _config.getW() + "px"
 				// + ";max-height:" + _config.getH() + "px"
@@ -74,7 +74,7 @@ public class FlowPlayerPanel extends Panel {
 		WebMarkupContainer videosource = new WebMarkupContainer("videosource");
 		videocontainer.add(videosource);
 
-		if (_config.getW() != 0 && _config.getH() != 0) {
+		if (_config.getW() != null && _config.getH() != null && _config.getW() != 0 && _config.getH() != 0) {
 			videocontainer.add(new AttributeModifier("width", _config.getW()));
 			videocontainer.add(new AttributeModifier("height", _config.getH()));
 			videosource.add(new AttributeModifier("width", _config.getW()));
