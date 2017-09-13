@@ -8,12 +8,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.FloatPoint;
-import org.apache.lucene.document.IntPoint;
-import org.apache.lucene.document.LongPoint;
+import org.apache.lucene.document.LegacyDoubleField;
+import org.apache.lucene.document.LegacyFloatField;
+import org.apache.lucene.document.LegacyIntField;
+import org.apache.lucene.document.LegacyLongField;
 import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexableField;
 import org.jhaws.common.lang.ClassUtils;
@@ -60,7 +61,7 @@ public abstract class LuceneDocumentBuilder<T> {
                     continue;
                 }
                 IndexField anno = entry.getAnnotation(IndexField.class);
-                // Store store = anno.store() ? Field.Store.YES : Field.Store.NO;
+                Store store = anno.store() ? Field.Store.YES : Field.Store.NO;
                 String name = anno.value();
                 if (StringUtils.isBlank(name)) name = entry.getName();
                 Class<?> fieldType = entry.getType();
@@ -85,29 +86,29 @@ public abstract class LuceneDocumentBuilder<T> {
                     }
                     d.add(new Field(name, s, indexFieldType));
                 } else if (Boolean.class.isAssignableFrom(fieldType)) {
-                    d.add(new IntPoint(name, Boolean.TRUE.equals(v) ? 1 : 0/* , store */));
+                    d.add(new LegacyIntField(name, Boolean.TRUE.equals(v) ? 1 : 0, store));
                 } else if (Number.class.isAssignableFrom(fieldType)) {
                     if (v instanceof Long) {
-                        d.add(new LongPoint(name, Long.class.cast(v)/* , store */));
+                        d.add(new LegacyLongField(name, Long.class.cast(v), store));
                     } else if (v instanceof Integer) {
-                        d.add(new IntPoint(name, Integer.class.cast(v)/* , store */));
+                        d.add(new LegacyIntField(name, Integer.class.cast(v), store));
                     } else if (v instanceof Float) {
-                        d.add(new FloatPoint(name, Float.class.cast(v)/* , store */));
+                        d.add(new LegacyFloatField(name, Float.class.cast(v), store));
                     } else if (v instanceof Double) {
-                        d.add(new DoublePoint(name, Double.class.cast(v)/* , store */));
+                        d.add(new LegacyDoubleField(name, Double.class.cast(v), store));
                     } else if (v instanceof Short) {
-                        d.add(new IntPoint(name, Short.class.cast(v).intValue()/* , store */));
+                        d.add(new LegacyIntField(name, Short.class.cast(v).intValue(), store));
                     } else if (v instanceof Byte) {
-                        d.add(new IntPoint(name, Byte.class.cast(v).intValue()/* , store */));
+                        d.add(new LegacyIntField(name, Byte.class.cast(v).intValue(), store));
                     } else {
                         throw new UnsupportedOperationException();
                     }
                 } else if (Date.class.isAssignableFrom(fieldType)) {
-                    d.add(new LongPoint(name, Date.class.cast(v).getTime()/* , store */));
+                    d.add(new LegacyLongField(name, Date.class.cast(v).getTime(), store));
                 } else if (ChronoLocalDateTime.class.isAssignableFrom(fieldType)) {
-                    d.add(new LongPoint(name, DateTime8.toDate(ChronoLocalDateTime.class.cast(v)).getTime()/* , store */));
+                    d.add(new LegacyLongField(name, DateTime8.toDate(ChronoLocalDateTime.class.cast(v)).getTime(), store));
                 } else if (ChronoLocalDate.class.isAssignableFrom(fieldType)) {
-                    d.add(new LongPoint(name, DateTime8.toDate(ChronoLocalDate.class.cast(v)).getTime()/* , store */));
+                    d.add(new LegacyLongField(name, DateTime8.toDate(ChronoLocalDate.class.cast(v)).getTime(), store));
                 } else {
                     throw new UnsupportedOperationException(String.valueOf(fieldType));
                 }

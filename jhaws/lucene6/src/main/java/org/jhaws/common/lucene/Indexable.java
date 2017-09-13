@@ -7,8 +7,8 @@ import java.util.Date;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.IntPoint;
-import org.apache.lucene.document.LongPoint;
+import org.apache.lucene.document.LegacyIntField;
+import org.apache.lucene.document.LegacyLongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.Term;
 
@@ -20,8 +20,8 @@ public interface Indexable<T> {
     public default Document indexable() {
         Document d = new Document();
         if (getUuid() != null) d.add(new StringField(LuceneIndex.DOC_UUID, getUuid(), Field.Store.YES));
-        if (getVersion() != null) d.add(new IntPoint(LuceneIndex.DOC_VERSION, getVersion()/* , Field.Store.YES */));
-        d.add(new LongPoint(LuceneIndex.DOC_LASTMOD, Date.from(getLastmodified().toInstant(ZoneOffset.ofHours(0))).getTime()/* , Field.Store.YES */));
+        if (getVersion() != null) d.add(new LegacyIntField(LuceneIndex.DOC_VERSION, getVersion(), Field.Store.YES));
+        d.add(new LegacyLongField(LuceneIndex.DOC_LASTMOD, Date.from(getLastmodified().toInstant(ZoneOffset.ofHours(0))).getTime(), Field.Store.YES));
         return d;
     }
 
