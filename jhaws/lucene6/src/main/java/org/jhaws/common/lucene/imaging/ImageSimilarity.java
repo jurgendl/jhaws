@@ -32,11 +32,14 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
     @XmlAttribute
     public double similarity;
 
+    @XmlAttribute
+    public String similarityType;
+
     public ImageSimilarity() {
         super();
     }
 
-    public ImageSimilarity(String a, String b, double similarity, int[] aWH, int[] bWH, long aSize, long bSize) {
+    public ImageSimilarity(String a, String b, double similarity, int[] aWH, int[] bWH, long aSize, long bSize, String similarityType) {
         this();
         if (a.compareTo(b) < 0) {
             this.a = a;
@@ -54,6 +57,7 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
             this.bSize = aSize;
         }
         this.similarity = similarity;
+        this.similarityType = similarityType;
     }
 
     public String getA() {
@@ -144,5 +148,13 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
 
     public void setbSize(long bSize) {
         this.bSize = bSize;
+    }
+
+    public String getSimilarityType() {
+        return this.similarityType;
+    }
+
+    public void setSimilarityType(String similarityType) {
+        this.similarityType = similarityType;
     }
 }

@@ -2,6 +2,9 @@ package org.jhaws.common.lucene.imaging;
 
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,18 +68,31 @@ public class ImageIndexer {
     }
 
     public ImageSimilarities findDuplicates(FilePath index, FilePath root, FilePath report, Double max, Class<? extends GlobalFeature> feature) {
+        return findDuplicatesExt(index, root, report, max, feature == null ? null : Arrays.asList(feature));
+    }
+
+    public ImageSimilarities findDuplicatesExt(FilePath index, FilePath root, FilePath report, Double max,
+            List<Class<? extends GlobalFeature>> features) {
         ImageSimilarities sim = new ImageSimilarities();
-        if (feature == null) feature = net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class;
+        if (features == null) features = Arrays.asList(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
         if (max == null) max = 5.0;
         SortedSet<ImageSimilarity> results = new TreeSet<>();
         Map<String, int[]> wh = new HashMap<>();
         Map<String, Long> size = new HashMap<>();
+        Map<Class<? extends GlobalFeature>, String> names = new HashMap<>();
+        features.forEach(feature -> {
+            try {
+                names.put(feature, feature.newInstance().getFeatureName().toString());
+            } catch (Exception ex) {
+                names.put(feature, feature.getName());
+            }
+        });
         try {
             List<String> images = FileUtils.getAllImages(root.toFile(), false);
             if (images == null) images = Collections.<String> emptyList();
             if (index != null) index.delete();
             GlobalDocumentBuilder globalDocumentBuilder = new GlobalDocumentBuilder(false, HashingMode.None, false);
-            globalDocumentBuilder.addExtractor(feature);
+            features.forEach(globalDocumentBuilder::addExtractor);
             // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);
             // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
             // globalDocumentBuilder
@@ -125,26 +141,35 @@ public class ImageIndexer {
                 System.out.println("" + x + "/" + images.size() + " - " + new FilePath(imageFilePath).getHumanReadableFileSize() + " - "
                         + (System.currentTimeMillis() - start));
                 if (img != null) {
+                    BufferedImage _img = img;
+                    Double _max = max;
                     System.out.println("Searching duplicates of " + imageFilePath);
                     IndexReader ir = DirectoryReader.open(iw);
-                    ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
-                    ImageSearchHits hits = searcher.search(img, ir);
-                    for (int i = 0; i < hits.length(); i++) {
-                        String fileName = ir.document(hits.documentID(i)).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-                        double score = hits.score(i);
-                        if (score > max) {
-                            continue;
+                    features.forEach(feature -> {
+                        try {
+                            System.out.println("method " + names.get(feature));
+                            ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
+                            ImageSearchHits hits = searcher.search(_img, ir);
+                            for (int i = 0; i < hits.length(); i++) {
+                                String fileName = ir.document(hits.documentID(i)).getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+                                double score = hits.score(i);
+                                if (score > _max) {
+                                    continue;
+                                }
+                                if (imageFilePath.equals(fileName)) {
+                                    continue;
+                                }
+                                System.out.println(score + ": \t" + fileName);
+                                ImageSimilarity e = new ImageSimilarity(imageFilePath, fileName, score, wh.get(imageFilePath), wh.get(fileName),
+                                        size.get(imageFilePath), size.get(fileName), names.get(feature));
+                                System.out.println(e);
+                                System.out.println(results.add(e));
+                            }
+                            System.out.println();
+                        } catch (IOException ex) {
+                            throw new UncheckedIOException(ex);
                         }
-                        if (imageFilePath.equals(fileName)) {
-                            continue;
-                        }
-                        System.out.println(score + ": \t" + fileName);
-                        ImageSimilarity e = new ImageSimilarity(imageFilePath, fileName, score, wh.get(imageFilePath), wh.get(fileName),
-                                size.get(imageFilePath), size.get(fileName));
-                        System.out.println(e);
-                        System.out.println(results.add(e));
-                    }
-                    System.out.println();
+                    });
                     ir.close();
                 }
             }

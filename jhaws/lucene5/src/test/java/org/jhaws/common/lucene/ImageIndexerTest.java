@@ -1,20 +1,33 @@
 package org.jhaws.common.lucene;
 
+import java.util.Arrays;
+
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lucene.imaging.ImageIndexer;
 import org.jhaws.common.lucene.imaging.ImageSimilarities;
+import org.junit.Test;
 
 import net.semanticmetadata.lire.imageanalysis.features.global.CEDD;
+import net.semanticmetadata.lire.imageanalysis.features.global.FCTH;
 
 public class ImageIndexerTest {
-    public static void main(String[] args) {
-        FilePath xml = new FilePath("c:/tmp/dubsreport.xml");
+    @Test
+    public void test() {
+        FilePath tmp = FilePath.createTempDirectory();
+        FilePath xml = tmp.child("dubsreport.xml");
+        new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_0.jpg").writeTo(tmp.child("lucene_0.jpg"));
+        new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_1.jpg").writeTo(tmp.child("lucene_1.jpg"));
+        new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_2.png").writeTo(tmp.child("lucene_2.png"));
+        new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_3.jpg").writeTo(tmp.child("lucene_3.jpg"));
+        new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_4.jpg").writeTo(tmp.child("lucene_4.jpg"));
         ImageSimilarities results;
-        results = new ImageIndexer().findDuplicates(new FilePath("c:/tmp/dubsindex"), new FilePath("c:/tmp/dir/var"), xml, 5.0, CEDD.class);
-        results = new ImageIndexer().findDuplicates(null, new FilePath("c:/tmp/dir/var"), xml, null, null);
+        results = new ImageIndexer().findDuplicatesExt(tmp.child("dubsindex"), tmp, xml, 5.0, Arrays.asList(CEDD.class, FCTH.class));
         System.out.println("=========================");
         results.forEach(System.out::print);
         System.out.println("=========================");
-        System.out.println(xml.readAll());
+        results = new ImageIndexer().findDuplicates(null, tmp, xml, null, null);
+        System.out.println("=========================");
+        results.forEach(System.out::print);
+        System.out.println("=========================");
     }
 }
