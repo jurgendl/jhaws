@@ -6,9 +6,9 @@
         <version>4.0.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>jhaws-lucene5</artifactId>
-    <name>lucene5</name>
-    <description>lucene5</description>
+    <artifactId>jhaws-lucene6</artifactId>
+    <name>lucene6</name>
+    <description>lucene6</description>
     <properties>
         <targetJdk>1.8</targetJdk>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.junit>4.12</version.junit>
-        <version.lucene>5.5.4</version.lucene>
+        <version.lucene>6.6.0</version.lucene>
     </properties>
     <dependencyManagement>
         <dependencies>
