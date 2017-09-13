@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,13 +53,20 @@ public class ImageIndexer {
     @SuppressWarnings("unchecked")
     public static void main(String[] args) {
         try {
-            new ImageIndexer().findDuplicates(//
+            List<Class<? extends GlobalFeature>> f = new ArrayList<>();
+            if (args.length > 4) {
+                for (int i = 4; i < args.length; i++) {
+                    if ("null".equals(args[i])) {
+                        f.add((Class<? extends GlobalFeature>) Class.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[i]));
+                    }
+                }
+            }
+            new ImageIndexer().findDuplicatesExt(//
                     "null".equals(args[0]) ? null : new FilePath(args[0]), //
                     new FilePath(args[1]), //
                     "null".equals(args[2]) ? null : new FilePath(args[2]), //
                     "null".equals(args[3]) ? 5.0 : Double.parseDouble(args[3]), //
-                    (Class<? extends GlobalFeature>) Class
-                            .forName("net.semanticmetadata.lire.imageanalysis.features.global." + ("null".equals(args[4]) ? "FCTH" : args[4]))//
+                    f.isEmpty() ? null : f//
             );
         } catch (NumberFormatException ex) {
             ex.printStackTrace();

@@ -25,7 +25,11 @@ public class ImageIndexerTest {
         System.out.println("=========================");
         results.forEach(System.out::print);
         System.out.println("=========================");
-        results = new ImageIndexer().findDuplicates(null, tmp, xml, null, null);
+        results = new ImageIndexer().findDuplicates(null, tmp, xml, null, CEDD.class);
+        System.out.println("=========================");
+        results.forEach(System.out::print);
+        System.out.println("=========================");
+        results = new ImageIndexer().findDuplicates(null, tmp, xml, null, FCTH.class);
         System.out.println("=========================");
         results.forEach(System.out::print);
         System.out.println("=========================");
