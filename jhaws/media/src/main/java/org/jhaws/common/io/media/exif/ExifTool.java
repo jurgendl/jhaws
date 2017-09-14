@@ -483,7 +483,8 @@ public class ExifTool implements MediaCte {
 						vfr = exifinfo.value(AVGBITRATE2);
 					}
 					if (StringUtils.isNotBlank(vfr)) {
-						exifinfo.setVfr(Double.parseDouble(vfr.replace("Mbps", "").replace("fps", "").trim()));
+						exifinfo.setVfr(Double
+								.parseDouble(vfr.replace("Mbps", "").replace("kbps", "").replace("fps", "").trim()));
 					}
 				}
 
