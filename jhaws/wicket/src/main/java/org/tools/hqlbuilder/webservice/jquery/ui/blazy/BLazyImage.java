@@ -71,10 +71,11 @@ public class BLazyImage extends Image {
 		adjustTag(tag);
 	}
 
+	public static final String EMPTY_IMAGE_SRC = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+
 	public static ComponentTag adjustTag(ComponentTag tag) {
 		tag.getAttributes().put(BLazy.BLAZY_SRC, tag.getAttributes().getString(ExternalImage.SRC));
-		tag.getAttributes().put(ExternalImage.SRC,
-				"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==");
+		tag.getAttributes().put(ExternalImage.SRC, EMPTY_IMAGE_SRC);
 		return tag;
 	}
 
