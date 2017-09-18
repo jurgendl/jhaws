@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.SortedMap;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +26,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
+import org.jhaws.common.lang.EnhancedTreeMap;
 
 import net.semanticmetadata.lire.builders.DocumentBuilder;
 import net.semanticmetadata.lire.builders.GlobalDocumentBuilder;
@@ -84,7 +84,7 @@ public class ImageIndexer {
         ImageSimilarities sim = new ImageSimilarities();
         if (features == null) features = Arrays.asList(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
         if (max == null) max = 5.0;
-        SortedSet<ImageSimilarity> results = new TreeSet<>();
+        SortedMap<ImageSimilarity, ImageSimilarity> results = new EnhancedTreeMap<>();
         Map<String, int[]> wh = new HashMap<>();
         Map<String, Long> size = new HashMap<>();
         Map<Class<? extends GlobalFeature>, String> names = new HashMap<>();
@@ -170,8 +170,14 @@ public class ImageIndexer {
                                 System.out.println(score + ": \t" + fileName);
                                 ImageSimilarity e = new ImageSimilarity(imageFilePath, fileName, score, wh.get(imageFilePath), wh.get(fileName),
                                         size.get(imageFilePath), size.get(fileName), names.get(feature));
-                                System.out.println(e);
-                                System.out.println(results.add(e));
+                                if (results.containsKey(e)) {
+                                    ImageSimilarity exist = results.get(e);
+                                    exist.getSimilarityDefs().add(e.getSimilarityDefs().get(0));
+                                    System.out.println(exist);
+                                } else {
+                                    System.out.println(e);
+                                    results.put(e, e);
+                                }
                             }
                             System.out.println();
                         } catch (IOException ex) {
@@ -184,7 +190,7 @@ public class ImageIndexer {
             iw.close();
             System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
             System.out.println();
-            sim.getImageSimilarities().addAll(results);
+            sim.getImageSimilarities().addAll(results.keySet());
             if (report != null) {
                 jaxbMarshalling.marshall(sim, report);
                 System.out.println("-------------------------------------------------");

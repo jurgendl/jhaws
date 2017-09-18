@@ -1,6 +1,8 @@
 package org.jhaws.common.lucene.imaging;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,11 +31,7 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
     @XmlAttribute(name = "b-size")
     public long bSize;
 
-    @XmlAttribute
-    public double similarity;
-
-    @XmlAttribute
-    public String similarityType;
+    public List<ImageSimilarityDef> similarityDefs;
 
     public ImageSimilarity() {
         super();
@@ -56,8 +54,8 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
             this.aSize = bSize;
             this.bSize = aSize;
         }
-        this.similarity = similarity;
-        this.similarityType = similarityType;
+        this.similarityDefs = new ArrayList<>();
+        this.similarityDefs.add(new ImageSimilarityDef(similarityType, similarity));
     }
 
     public String getA() {
@@ -74,14 +72,6 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
 
     public void setB(String b) {
         this.b = b;
-    }
-
-    public double getSimilarity() {
-        return this.similarity;
-    }
-
-    public void setSimilarity(double similarity) {
-        this.similarity = similarity;
     }
 
     @Override
@@ -110,12 +100,13 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
 
     @Override
     public int compareTo(ImageSimilarity o) {
-        return new CompareToBuilder().append(similarity, o.similarity).append(a, o.a).append(b, o.b).toComparison();
+        return new CompareToBuilder().append(a, o.a).append(b, o.b).toComparison();
     }
 
     @Override
     public String toString() {
-        return a + "\t" + similarity + "\t" + b + "\t" + aWH[0] + "x" + aWH[1] + "\t" + bWH[0] + "x" + bWH[1] + "\t" + aSize + "\t" + bSize + "\r\n";
+        return a + "\t" + similarityDefs + "\t" + b + "\t" + aWH[0] + "x" + aWH[1] + "\t" + bWH[0] + "x" + bWH[1] + "\t" + aSize + "\t" + bSize
+                + "\r\n";
     }
 
     public int[] getaWH() {
@@ -150,11 +141,11 @@ public class ImageSimilarity implements Serializable, Comparable<ImageSimilarity
         this.bSize = bSize;
     }
 
-    public String getSimilarityType() {
-        return this.similarityType;
+    public List<ImageSimilarityDef> getSimilarityDefs() {
+        return this.similarityDefs;
     }
 
-    public void setSimilarityType(String similarityType) {
-        this.similarityType = similarityType;
+    public void setSimilarityDefs(List<ImageSimilarityDef> similarityDefs) {
+        this.similarityDefs = similarityDefs;
     }
 }
