@@ -8,6 +8,7 @@ import org.jhaws.common.lucene.imaging.ImageSimilarities;
 import org.junit.Test;
 
 import net.semanticmetadata.lire.imageanalysis.features.global.CEDD;
+import net.semanticmetadata.lire.imageanalysis.features.global.EdgeHistogram;
 import net.semanticmetadata.lire.imageanalysis.features.global.FCTH;
 
 public class ImageIndexerTest {
@@ -20,16 +21,10 @@ public class ImageIndexerTest {
         new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_2.png").writeTo(tmp.child("lucene_2.png"));
         new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_3.jpg").writeTo(tmp.child("lucene_3.jpg"));
         new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_4.jpg").writeTo(tmp.child("lucene_4.jpg"));
+        new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_5.gif").writeTo(tmp.child("lucene_5.gif"));
         ImageSimilarities results;
-        results = new ImageIndexer().findDuplicatesExt(tmp.child("dubsindex"), tmp, xml, 5.0, Arrays.asList(CEDD.class, FCTH.class));
-        System.out.println("=========================");
-        results.forEach(System.out::print);
-        System.out.println("=========================");
-        results = new ImageIndexer().findDuplicates(null, tmp, xml, null, CEDD.class);
-        System.out.println("=========================");
-        results.forEach(System.out::print);
-        System.out.println("=========================");
-        results = new ImageIndexer().findDuplicates(null, tmp, xml, null, FCTH.class);
+        results = new ImageIndexer().findDuplicatesExt(tmp.child("dubsindex"), tmp, xml, 5.0,
+                Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class));
         System.out.println("=========================");
         results.forEach(System.out::print);
         System.out.println("=========================");

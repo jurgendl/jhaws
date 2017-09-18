@@ -172,8 +172,10 @@ public class ImageIndexer {
                                         size.get(imageFilePath), size.get(fileName), names.get(feature));
                                 if (results.containsKey(e)) {
                                     ImageSimilarity exist = results.get(e);
-                                    exist.getSimilarityDefs().add(e.getSimilarityDefs().get(0));
+                                    results.remove(e);
+                                    exist.addSimilarity(names.get(feature), score);
                                     System.out.println(exist);
+                                    results.put(exist, exist);
                                 } else {
                                     System.out.println(e);
                                     results.put(e, e);
