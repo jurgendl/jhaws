@@ -2,6 +2,7 @@ package org.jhaws.common.math;
 
 import java.util.Arrays;
 
+import org.jhaws.common.math.Graph.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -74,5 +75,29 @@ public class MathUtilsTest {
     @Test
     public void testIsLoop8() {
         Assert.assertFalse(MathUtils.hasLoopFloyd(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7)));
+    }
+
+    @Test
+    public void testGraph() {
+        Graph<String> g = new Graph<>();
+        for (int i = 1; i <= 7; i++) {
+            g.add(new Vertex<>("" + (i * 10)));
+        }
+        g.addEdge(1 - 1, 3 - 1);
+        g.addEdge(2 - 1, 1 - 1);
+        g.addEdge(2 - 1, 3 - 1);
+        g.addEdge(2 - 1, 6 - 1);
+        g.addEdge(2 - 1, 5 - 1);
+        g.addEdge(3 - 1, 6 - 1);
+        g.addEdge(4 - 1, 1 - 1);
+        g.addEdge(4 - 1, 2 - 1);
+        g.addEdge(5 - 1, 7 - 1);
+        g.addEdge(6 - 1, 7 - 1);
+        Assert.assertEquals(
+                Arrays.asList(g.vertex(4 - 1), g.vertex(1 - 1), g.vertex(2 - 1), g.vertex(3 - 1), g.vertex(6 - 1), g.vertex(5 - 1), g.vertex(7 - 1)),
+                g.breathFirst(g.vertex(4 - 1)));
+        Assert.assertEquals(
+                Arrays.asList(g.vertex(4 - 1), g.vertex(2 - 1), g.vertex(5 - 1), g.vertex(7 - 1), g.vertex(6 - 1), g.vertex(3 - 1), g.vertex(1 - 1)),
+                g.depthFirst(g.vertex(4 - 1)));
     }
 }
