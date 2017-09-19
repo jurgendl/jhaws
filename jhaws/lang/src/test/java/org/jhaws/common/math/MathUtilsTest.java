@@ -2,7 +2,7 @@ package org.jhaws.common.math;
 
 import java.util.Arrays;
 
-import org.jhaws.common.math.Graph.Vertex;
+import org.jhaws.common.math.Graph.Node;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -81,7 +81,7 @@ public class MathUtilsTest {
     public void testGraph() {
         Graph<String> g = new Graph<>();
         for (int i = 1; i <= 7; i++) {
-            g.add(new Vertex<>("" + (i * 10)));
+            g.add(new Node<>("" + (i * 10)));
         }
         g.addEdge(1 - 1, 3 - 1);
         g.addEdge(2 - 1, 1 - 1);

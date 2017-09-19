@@ -66,6 +66,7 @@ import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+// http://infotechgems.blogspot.be/2011/11/java-collections-performance-time.html
 // TODO https://www.techempower.com/blog/2016/10/19/efficient-multiple-stream-concatenation-in-java/
 /**
  * @see java.util.stream.Stream
