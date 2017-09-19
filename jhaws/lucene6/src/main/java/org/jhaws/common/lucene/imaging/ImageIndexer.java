@@ -56,6 +56,7 @@ public class ImageIndexer {
             List<Class<? extends GlobalFeature>> f = new ArrayList<>();
             if (args.length > 4) {
                 for (int i = 4; i < args.length; i++) {
+                	System.out.println("**"+args[i]+"**");
                     if ("null".equals(args[i])) {
                         f.add((Class<? extends GlobalFeature>) Class.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[i]));
                     }
