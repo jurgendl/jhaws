@@ -24,7 +24,7 @@ public class Graph<T, N extends Number> implements Serializable {
 
     protected List<Edge<T, N>> edges = new ArrayList<>();
 
-    public int add(Node<T> node) {
+    public int addNode(Node<T> node) {
         nodes.add(node);
         return nodes.size() - 1;
     }
@@ -34,7 +34,7 @@ public class Graph<T, N extends Number> implements Serializable {
         return nodes.size() - 1;
     }
 
-    public int add(Node<T>[] newNodes) {
+    public int addNodes(Node<T>[] newNodes) {
         for (int i = 0; i < newNodes.length; i++) {
             nodes.add(newNodes[i]);
         }
@@ -43,16 +43,22 @@ public class Graph<T, N extends Number> implements Serializable {
 
     public Edge<T, N> addEdge(int from, int to) {
         Edge<T, N> edge = new Edge<>(node(from), node(to));
-        add(edge);
+        addEdge(edge);
         return edge;
     }
 
-    public int add(Edge<T, N> edge) {
+    public int addEdge(Edge<T, N> edge) {
         edges.add(edge);
         return edges.size() - 1;
     }
 
-    public int add(Edge<T, N>[] newEdges) {
+    public Edge<T, N> addEdge(Node<T> from, Node<T> to) {
+        Edge<T, N> edge = new Edge<>(from, to);
+        edges.add(edge);
+        return edge;
+    }
+
+    public int addEdges(Edge<T, N>[] newEdges) {
         for (int i = 0; i < newEdges.length; i++) {
             edges.add(newEdges[i]);
         }

@@ -13,7 +13,7 @@ public class GraphTest {
     public void breathFirst() {
         Graph<Integer, Integer> g = new Graph<>();
         for (int i = 1; i <= 7; i++) {
-            g.add(new Node<>(i));
+            g.addNode(new Node<>(i));
         }
         g.addEdge(0, 2);
         g.addEdge(1, 0);
@@ -32,7 +32,7 @@ public class GraphTest {
     public void depthFirst() {
         Graph<Integer, Integer> g = new Graph<>();
         for (int i = 1; i <= 7; i++) {
-            g.add(new Node<>(i));
+            g.addNode(new Node<>(i));
         }
         g.addEdge(0, 2);
         g.addEdge(1, 0);
