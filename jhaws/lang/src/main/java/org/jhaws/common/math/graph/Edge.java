@@ -1,11 +1,15 @@
 package org.jhaws.common.math.graph;
 
-public class Edge<T> {
+import java.io.Serializable;
+
+public class Edge<T, N extends Number> implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     protected Node<T> from;
 
     protected Node<T> to;
 
-    protected Double weight;
+    protected N weight;
 
     public Edge(Node<T> from, Node<T> to) {
         super();
@@ -48,7 +52,7 @@ public class Edge<T> {
         if (this == obj) return true;
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
-        Edge<?> other = (Edge<?>) obj;
+        Edge<?, ?> other = (Edge<?, ?>) obj;
         if (this.from == null) {
             if (other.from != null) return false;
         } else if (!this.from.equals(other.from)) return false;
@@ -58,11 +62,16 @@ public class Edge<T> {
         return true;
     }
 
-    public Double getWeight() {
+    public N getWeight() {
         return this.weight;
     }
 
-    public void setWeight(Double weight) {
+    public void setWeight(N weight) {
         this.weight = weight;
+    }
+
+    public Edge<T, N> weight(N weight) {
+        this.weight = weight;
+        return this;
     }
 }
