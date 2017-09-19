@@ -167,16 +167,16 @@ public class Graph<T, N extends Number> implements Serializable {
             return true;
         }
         if (w1 instanceof Double && w2 instanceof Double) {
-            return ((double) w1 < (double) w2);
+            return ((Double) w1 < (Double) w2);
         }
         if (w1 instanceof Float && w2 instanceof Float) {
-            return ((float) w1 < (float) w2);
+            return ((Float) w1 < (Float) w2);
         }
         if (w1 instanceof Long && w2 instanceof Long) {
-            return ((long) w1 < (long) w2);
+            return ((Long) w1 < (Long) w2);
         }
         if (w1 instanceof Integer && w2 instanceof Integer) {
-            return ((int) w1 < (int) w2);
+            return ((Integer) w1 < (Integer) w2);
         }
         throw new UnsupportedOperationException();
     }
