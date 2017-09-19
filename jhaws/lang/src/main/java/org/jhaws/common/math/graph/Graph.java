@@ -202,7 +202,7 @@ public class Graph<T, N extends Number> implements Serializable {
     }
 
     // http://www.geeksforgeeks.org/dynamic-programming-set-16-floyd-warshall-algorithm/
-    public Map<Pair<Node<T>>, N> fwi() {
+    public Map<Pair<Node<T>>, N> wfi() {
         int v = v();
         SortedMap<Pair<Node<T>>, N> dist = new TreeMap<>();
         int i, j, k;

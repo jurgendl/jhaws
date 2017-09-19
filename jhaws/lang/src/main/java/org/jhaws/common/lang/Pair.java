@@ -10,6 +10,10 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 public class Pair<P> extends KeyValue<P, P> implements Comparable<Pair<P>> {
     private static final long serialVersionUID = 2133551453748910250L;
 
+    public static <P> Pair<P> pair(P key, P value) {
+        return new Pair<>(key, value);
+    }
+
     public Pair() {
         super();
     }
@@ -33,5 +37,10 @@ public class Pair<P> extends KeyValue<P, P> implements Comparable<Pair<P>> {
     @Override
     public int compareTo(Pair<P> o) {
         return new CompareToBuilder().append(key, o.key).append(value, o.value).toComparison();
+    }
+
+    @Override
+    public String toString() {
+        return "(" + key + ", " + value + ")";
     }
 }

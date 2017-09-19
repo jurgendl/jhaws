@@ -1,5 +1,7 @@
 package org.jhaws.common.math.graph;
 
+import static org.jhaws.common.lang.Pair.pair;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,14 +57,20 @@ public class GraphTest {
         g.addEdge(1, 2).weight(3);
         g.addEdge(2, 3).weight(1);
         g.addEdge(0, 3).weight(1);
-        Map<Pair<Node<Integer>>, Integer> w = g.fwi();
+        Map<Pair<Node<Integer>>, Integer> w = g.wfi();
         Map<Pair<Node<Integer>>, Integer> c = new HashMap<>();
-        c.put(new Pair<Node<Integer>>(g.node(0), g.node(1)), 5);
-        c.put(new Pair<Node<Integer>>(g.node(0), g.node(2)), 8);
-        c.put(new Pair<Node<Integer>>(g.node(0), g.node(3)), 1);
-        c.put(new Pair<Node<Integer>>(g.node(1), g.node(2)), 3);
-        c.put(new Pair<Node<Integer>>(g.node(1), g.node(3)), 4);
-        c.put(new Pair<Node<Integer>>(g.node(2), g.node(3)), 1);
+        c.put(pair(g.node(0), g.node(1)), 5);
+        c.put(pair(g.node(0), g.node(2)), 8);
+        c.put(pair(g.node(0), g.node(3)), 1);
+        c.put(pair(g.node(1), g.node(2)), 3);
+        c.put(pair(g.node(1), g.node(3)), 4);
+        c.put(pair(g.node(2), g.node(3)), 1);
         Assert.assertEquals(c, w);
+    }
+
+    @Test
+    public void bf() {
+        // Bellman-Ford
+        // http://www.geeksforgeeks.org/dynamic-programming-set-23-bellman-ford-algorithm/
     }
 }
