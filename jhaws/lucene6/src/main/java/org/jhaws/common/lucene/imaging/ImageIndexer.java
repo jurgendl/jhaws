@@ -57,11 +57,12 @@ public class ImageIndexer {
             if (args.length > 4) {
                 for (int i = 4; i < args.length; i++) {
                 	System.out.println("**"+args[i]+"**");
-                    if ("null".equals(args[i])) {
+                    if (!"null".equals(args[i])) {
                         f.add((Class<? extends GlobalFeature>) Class.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[i]));
                     }
                 }
             }
+            System.out.println(f);
             new ImageIndexer().findDuplicatesExt(//
                     "null".equals(args[0]) ? null : new FilePath(args[0]), //
                     new FilePath(args[1]), //
@@ -83,7 +84,9 @@ public class ImageIndexer {
     public ImageSimilarities findDuplicatesExt(FilePath index, FilePath root, FilePath report, Double max,
             List<Class<? extends GlobalFeature>> features) {
         ImageSimilarities sim = new ImageSimilarities();
+        System.out.println(features);
         if (features == null) features = Arrays.asList(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
+        System.out.println(features);
         if (max == null) max = 5.0;
         SortedMap<ImageSimilarity, ImageSimilarity> results = new EnhancedTreeMap<>();
         Map<String, int[]> wh = new HashMap<>();
