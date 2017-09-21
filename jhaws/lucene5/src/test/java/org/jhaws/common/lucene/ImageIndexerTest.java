@@ -8,8 +8,12 @@ import org.jhaws.common.lucene.imaging.ImageSimilarities;
 import org.junit.Test;
 
 import net.semanticmetadata.lire.imageanalysis.features.global.CEDD;
+import net.semanticmetadata.lire.imageanalysis.features.global.ColorLayout;
 import net.semanticmetadata.lire.imageanalysis.features.global.EdgeHistogram;
 import net.semanticmetadata.lire.imageanalysis.features.global.FCTH;
+import net.semanticmetadata.lire.imageanalysis.features.global.Gabor;
+import net.semanticmetadata.lire.imageanalysis.features.global.ScalableColor;
+import net.semanticmetadata.lire.imageanalysis.features.global.Tamura;
 
 public class ImageIndexerTest {
 	@Test
@@ -23,8 +27,8 @@ public class ImageIndexerTest {
 		new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_4.jpg").writeTo(tmp.child("lucene_4.jpg"));
 		new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_5.gif").writeTo(tmp.child("lucene_5.gif"));
 		ImageSimilarities results;
-		results = new ImageIndexer().findDuplicatesExt(tmp.child("dubsindex"), tmp, xml, 5.0,
-				Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class));
+		results = new ImageIndexer().findDuplicatesExt(tmp.child("dubsindex"), tmp, xml, 5.0, Arrays.asList(CEDD.class,
+				FCTH.class, EdgeHistogram.class, ColorLayout.class, ScalableColor.class, Tamura.class, Gabor.class));
 		System.out.println("=========================");
 		results.forEach(System.out::print);
 		System.out.println("=========================");
@@ -34,7 +38,8 @@ public class ImageIndexerTest {
 		FilePath p = new FilePath(args[0]);
 		FilePath xml = p.child("dubsreport.xml");
 		ImageSimilarities results = new ImageIndexer().findDuplicatesExt(p.child("dubsindex"), p, xml, 5.0,
-				Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class));
+				Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class, ColorLayout.class, ScalableColor.class,
+						Tamura.class, Gabor.class));
 		System.out.println("=========================");
 		results.forEach(System.out::print);
 		System.out.println("=========================");
