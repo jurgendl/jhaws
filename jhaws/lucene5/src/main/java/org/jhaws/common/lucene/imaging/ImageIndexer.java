@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 
 import javax.imageio.ImageIO;
 
@@ -26,7 +25,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
-import org.jhaws.common.lang.EnhancedTreeMap;
+import org.jhaws.common.lang.EnhancedHashMap;
 
 import net.semanticmetadata.lire.builders.DocumentBuilder;
 import net.semanticmetadata.lire.builders.GlobalDocumentBuilder;
@@ -86,11 +85,13 @@ public class ImageIndexer {
 	public ImageSimilarities findDuplicatesExt(FilePath index, FilePath root, FilePath report, Double max,
 			List<Class<? extends GlobalFeature>> features) {
 		ImageSimilarities sim = new ImageSimilarities();
+		System.out.println(features);
 		if (features == null)
 			features = Arrays.asList(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
+		System.out.println(features);
 		if (max == null)
 			max = 5.0;
-		SortedMap<ImageSimilarity, ImageSimilarity> results = new EnhancedTreeMap<>();
+		EnhancedHashMap<ImageSimilarity, ImageSimilarity> results = new EnhancedHashMap<>();
 		Map<String, int[]> wh = new HashMap<>();
 		Map<String, Long> size = new HashMap<>();
 		Map<Class<? extends GlobalFeature>, String> names = new HashMap<>();
@@ -203,7 +204,7 @@ public class ImageIndexer {
 			iw.close();
 			System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
 			System.out.println();
-			sim.getImageSimilarities().addAll(results.keySet());
+			results.keySet().stream().sorted().forEach(sim.getImageSimilarities()::add);
 			if (report != null) {
 				jaxbMarshalling.marshall(sim, report);
 				System.out.println("-------------------------------------------------");

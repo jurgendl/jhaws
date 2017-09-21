@@ -29,4 +29,14 @@ public class ImageIndexerTest {
         results.forEach(System.out::print);
         System.out.println("=========================");
     }
+    
+	public static void main(String[] args) {
+		FilePath p = new FilePath(args[0]);
+		FilePath xml = p.child("dubsreport.xml");
+		ImageSimilarities results = new ImageIndexer().findDuplicatesExt(p.child("dubsindex"), p, xml, 5.0,
+				Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class));
+		System.out.println("=========================");
+		results.forEach(System.out::print);
+		System.out.println("=========================");
+	}
 }
