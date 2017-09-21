@@ -18,85 +18,107 @@ import org.tools.hqlbuilder.webservice.wicket.components.ExternalImage;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 public class BLazyImage extends Image {
-	private static final long serialVersionUID = 2477527041537407931L;
+    private static final long serialVersionUID = 2477527041537407931L;
 
-	protected IModel<?> url;
+    protected IModel<?> url;
 
-	public BLazyImage(String id, IResource imageResource) {
-		super(id, imageResource);
-		adjustImage(this);
-	}
+    protected Integer width;
 
-	public BLazyImage(String id, ResourceReference resourceReference) {
-		super(id, resourceReference);
-		adjustImage(this);
-	}
+    protected Integer height;
 
-	public BLazyImage(String id, ResourceReference resourceReference, PageParameters resourceParameters) {
-		super(id, resourceReference, resourceParameters);
-		adjustImage(this);
-	}
+    public BLazyImage(String id, IResource imageResource) {
+        super(id, imageResource);
+        adjustImage(this);
+    }
 
-	public BLazyImage(String id) {
-		super(id);
-		adjustImage(this);
-	}
+    public BLazyImage(String id, ResourceReference resourceReference) {
+        super(id, resourceReference);
+        adjustImage(this);
+    }
 
-	public BLazyImage(String id, IModel<?> url) {
-		this(id);
-		this.url = url;
-	}
+    public BLazyImage(String id, ResourceReference resourceReference, PageParameters resourceParameters) {
+        super(id, resourceReference, resourceParameters);
+        adjustImage(this);
+    }
 
-	public BLazyImage(String id, URL url) {
-		this(id, Model.of(url));
-	}
+    public BLazyImage(String id) {
+        super(id);
+        adjustImage(this);
+    }
 
-	public BLazyImage(String id, URI uri) {
-		this(id, Model.of(uri));
-	}
+    public BLazyImage(String id, IModel<?> url) {
+        this(id);
+        this.url = url;
+    }
 
-	public BLazyImage(String id, String path) {
-		this(id, Model.of(path));
-	}
+    public BLazyImage(String id, URL url) {
+        this(id, Model.of(url));
+    }
 
-	public static Image adjustImage(Image image) {
-		image.add(new CssClassNameAppender(BLazy.BLAZY_CLASS));
-		return image;
-	}
+    public BLazyImage(String id, URI uri) {
+        this(id, Model.of(uri));
+    }
 
-	@Override
-	protected void onComponentTag(ComponentTag tag) {
-		super.onComponentTag(tag);
-		tag.put(ExternalImage.SRC, url == null || url.getObject() == null ? null : url.getObject().toString());
-		adjustTag(tag);
-	}
+    public BLazyImage(String id, String path) {
+        this(id, Model.of(path));
+    }
 
-	public static final String EMPTY_IMAGE_SRC = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+    public static Image adjustImage(Image image) {
+        image.add(new CssClassNameAppender(BLazy.BLAZY_CLASS));
+        return image;
+    }
 
-	public static ComponentTag adjustTag(ComponentTag tag) {
-		tag.getAttributes().put(BLazy.BLAZY_SRC, tag.getAttributes().getString(ExternalImage.SRC));
-		tag.getAttributes().put(ExternalImage.SRC, EMPTY_IMAGE_SRC);
-		return tag;
-	}
+    @Override
+    protected void onComponentTag(ComponentTag tag) {
+        super.onComponentTag(tag);
+        tag.put(ExternalImage.SRC, url == null || url.getObject() == null ? null : url.getObject().toString());
+        adjustTag(tag);
+        if (width != null) tag.getAttributes().put("width", width);
+        if (height != null) tag.getAttributes().put("height", height);
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		adjustResponse(response);
-	}
+    public static final String EMPTY_IMAGE_SRC = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
-	public static IHeaderResponse adjustResponse(IHeaderResponse response) {
-		response.render(JavaScriptHeaderItem.forReference(BLazy.BLAZY_JS));
-		response.render(BLazy.BLAZY_FACTORY_JS);
-		response.render(CssHeaderItem.forReference(BLazy.BLAZY_CSS));
-		return response;
-	}
+    public static ComponentTag adjustTag(ComponentTag tag) {
+        tag.getAttributes().put(BLazy.BLAZY_SRC, tag.getAttributes().getString(ExternalImage.SRC));
+        tag.getAttributes().put(ExternalImage.SRC, EMPTY_IMAGE_SRC);
+        return tag;
+    }
 
-	@Override
-	protected boolean getStatelessHint() {
-		return url != null || super.getStatelessHint();
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        adjustResponse(response);
+    }
+
+    public static IHeaderResponse adjustResponse(IHeaderResponse response) {
+        response.render(JavaScriptHeaderItem.forReference(BLazy.BLAZY_JS));
+        response.render(BLazy.BLAZY_FACTORY_JS);
+        response.render(CssHeaderItem.forReference(BLazy.BLAZY_CSS));
+        return response;
+    }
+
+    @Override
+    protected boolean getStatelessHint() {
+        return url != null || super.getStatelessHint();
+    }
+
+    public Integer getWidth() {
+        return this.width;
+    }
+
+    public void setWidth(Integer width) {
+        this.width = width;
+    }
+
+    public Integer getHeight() {
+        return this.height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
 }
