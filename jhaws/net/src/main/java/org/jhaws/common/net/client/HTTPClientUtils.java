@@ -146,7 +146,7 @@ public class HTTPClientUtils {
                         .map((String[] kva) -> (encodeSimple(kva[0]) + "=" + encodeSimple(kva[1])))
                         .collect(Collectors.joining(";"));
             }
-            urib.setPath(path + file + matrix);
+            urib.setPath(("/".equals(path) ? "" : path) + file + matrix);
             if (hasQueryParameters && StringUtils.isNotBlank(m.group(paramsstartGr))) {
                 Arrays.stream(m.group(paramsGr).split("&")).map(kv -> kv.split("=")).forEach((String[] kva) -> urib.addParameter(kva[0], kva[1]));
             }

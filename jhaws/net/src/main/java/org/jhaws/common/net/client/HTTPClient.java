@@ -152,7 +152,7 @@ public class HTTPClient implements Closeable {
         if (requestConfig == null) {
             Builder requestConfigBuilder = RequestConfig.custom()//
                     .setMaxRedirects(5)//
-                    .setCircularRedirectsAllowed(false)//
+                    .setCircularRedirectsAllowed(true)//
                     .setConnectionRequestTimeout(5000)//
                     .setConnectTimeout(5000)//
                     .setExpectContinueEnabled(true)//
