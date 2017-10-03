@@ -28,7 +28,7 @@ import org.htmlcleaner.XmlSerializer;
 import org.jhaws.common.lang.IntegerValue;
 import org.jhaws.common.lang.StringUtils;
 
-public class Response implements Serializable {
+public class Response extends InputStream implements Serializable {
 	private static final long serialVersionUID = 1806430557697629499L;
 
 	public static Response deserialize(InputStream in) throws IOException {
@@ -121,6 +121,8 @@ public class Response implements Serializable {
 
 	public void setContent(byte[] content) {
 		this.content = content;
+		this.pos = 0;
+		this.count = content.length;
 	}
 
 	public List<Form> getForms() {
@@ -164,7 +166,8 @@ public class Response implements Serializable {
 			chain.stream().forEach(c -> builder.append("chain:").append(i.add()).append("=").append(c).append("\n"));
 		}
 		if (this.headers != null)
-			headers.entrySet().stream().forEach(e -> builder.append("header:").append(e.getKey()).append("=").append(e.getValue()).append("\n"));
+			headers.entrySet().stream().forEach(
+					e -> builder.append("header:").append(e.getKey()).append("=").append(e.getValue()).append("\n"));
 		if (this.locale != null)
 			builder.append("locale=").append(this.locale).append("\n");
 		builder.append("contentLength=").append(this.contentLength).append("\n");
@@ -307,4 +310,67 @@ public class Response implements Serializable {
 	public void setStatusText(String statusText) {
 		this.statusText = statusText;
 	}
+
+	protected int pos;
+
+	protected int count;
+
+	protected int mark = 0;
+
+	@Override
+	public int read() throws IOException {
+		return (pos < count) ? (content[pos++] & 0xff) : -1;
+	}
+
+	@Override
+	public void close() throws IOException {
+		//
+	}
+
+	public synchronized int available() {
+		return count - pos;
+	}
+
+	public void mark(int readAheadLimit) {
+		mark = pos;
+	}
+
+	public boolean markSupported() {
+		return true;
+	}
+
+	public synchronized int read(byte b[], int off, int len) {
+		if (b == null) {
+			throw new NullPointerException();
+		} else if (off < 0 || len < 0 || len > b.length - off) {
+			throw new IndexOutOfBoundsException();
+		}
+		if (pos >= count) {
+			return -1;
+		}
+		int avail = count - pos;
+		if (len > avail) {
+			len = avail;
+		}
+		if (len <= 0) {
+			return 0;
+		}
+		System.arraycopy(content, pos, b, off, len);
+		pos += len;
+		return len;
+	}
+
+	public synchronized void reset() {
+		pos = mark;
+	}
+
+	public synchronized long skip(long n) {
+		long k = count - pos;
+		if (n < k) {
+			k = n < 0 ? 0 : n;
+		}
+		pos += k;
+		return k;
+	}
+
 }
