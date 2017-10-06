@@ -545,8 +545,8 @@ public interface CollectionUtils8 {
             return items;
         }
         int length = items.length;
-        T[] newarray = Arrays.copyOf(items, 1 + length); // FIXME cheaper
-                                                         // operation
+        // FIXME cheaper // operation
+        T[] newarray = Arrays.copyOf(items, 1 + length);
         newarray[0] = item;
         System.arraycopy(items, 0, newarray, 1, length);
         return newarray;
@@ -757,7 +757,7 @@ public interface CollectionUtils8 {
     }
 
     public static <T> Collector<T, ?, List<T>> collectList() {
-        return Collectors.toList();
+        return toCollector(newList());
     }
 
     public static <T, C extends Collection<T>> Collector<T, ?, C> collection(Supplier<C> newCollection) {
@@ -1183,8 +1183,11 @@ public interface CollectionUtils8 {
     }
 
     public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
-        return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(
-                collectList());
+        return values.stream()
+                .parallel()
+                .filter(containedIn(keys))
+                .map(value -> new Pair<>(keys.get(keys.indexOf(value)), value))
+                .collect(collectList());
     }
 
     public static <T> T optional(T value, Supplier<T> orElse) {
