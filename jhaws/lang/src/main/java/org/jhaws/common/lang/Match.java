@@ -3,25 +3,27 @@ package org.jhaws.common.lang;
 import java.util.List;
 
 public interface Match {
-	public String group();
+    public String group();
 
-	public String group(int group);
+    public String get();
 
-	public String group(String name);
+    public String group(int group);
 
-	public int groupCount();
+    public String group(String name);
 
-	public int start();
+    public int groupCount();
 
-	public int start(int group);
+    public int start();
 
-	public int start(String name);
+    public int start(int group);
 
-	public int end();
+    public int start(String name);
 
-	public int end(int group);
+    public int end();
 
-	public int end(String name);
+    public int end(int group);
 
-	public List<String> groups();
+    public int end(String name);
+
+    public List<String> groups();
 }
