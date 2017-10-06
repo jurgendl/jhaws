@@ -115,6 +115,18 @@ public interface CollectionUtils8 {
             this.matcher = pattern.matcher(text);
         }
 
+        public RegexIterator(String text, Pattern regex) {
+            this.pattern = regex;
+            this.regex = regex.toString();
+            this.matcher = pattern.matcher(text);
+        }
+
+        public RegexIterator(Pattern regex, String text) {
+            this.pattern = regex;
+            this.regex = regex.toString();
+            this.matcher = pattern.matcher(text);
+        }
+
         @Override
         public boolean hasNext() {
             if (hasNext == null) {
@@ -1171,11 +1183,8 @@ public interface CollectionUtils8 {
     }
 
     public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
-        return values.stream()
-                .parallel()
-                .filter(containedIn(keys))
-                .map(value -> new Pair<>(keys.get(keys.indexOf(value)), value))
-                .collect(collectList());
+        return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(
+                collectList());
     }
 
     public static <T> T optional(T value, Supplier<T> orElse) {
@@ -1984,5 +1993,9 @@ public interface CollectionUtils8 {
 
     public static <T> List<T> repeat(int times, T object) {
         return IntStream.range(0, times).mapToObj(i -> object).collect(Collectors.toList());
+    }
+
+    public static <T> Stream<T> stream(Optional<T> optional) {
+        return optional.isPresent() ? Stream.of(optional.get()) : Stream.empty();
     }
 }
