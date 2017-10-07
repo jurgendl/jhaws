@@ -398,7 +398,7 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 
 /* ======================== feedback ======================== */
 
-.feedbackPanel.ui-state-error{
+.feedbackPanel.ui-state-error {
 	background-color: transparent;
 	border: none;
 	list-style-type: none;
@@ -407,22 +407,46 @@ a[href$=jpg], a[href$=jpeg], a[href$=jpe], a[href$=png], a[href$=gif], a[href$=b
 	padding: 2px 3px 2px 3px;
 }
 .feedbackPanel .feedbackPanelFATAL {
-	color: #b94a48;
+	color: #D8000C;
+	background-color: #FFBABA;
+}
+.feedbackPanel .feedbackPanelFATAL:before {
+    content: '\e80d';
 }
 .feedbackPanel .feedbackPanelERROR {
-	color: #b94a48;
+	color: #D8000C;
+	background-color: #FFBABA;
+}
+.feedbackPanel .feedbackPanelERROR:before {
+    content: '\e80d';
 }
 .feedbackPanel .feedbackPanelWARNING {
-	color: rgb(185, 150, 72);
+	color: #FEEFB3;
+	background-color: #FEEFB3;
+}
+.feedbackPanel .feedbackPanelWARNING:before {
+    content: '\e801';
 }
 .feedbackPanel .feedbackPanelINFO {
-	color: rgb(72, 185, 75);
+	color: #00529B;
+	background-color: #BDE5F8;
+}
+.feedbackPanel .feedbackPanelINFO:before {
+	content: '\e809';
 }
 .feedbackPanel .feedbackPanelSUCCESS {
-	color: rgb(72, 185, 75);
+	color: #4F8A10;
+	background-color: #DFF2BF;
+}
+.feedbackPanel .feedbackPanelSUCCESS:before {
+	content: '\e80c';
 }
 .feedbackPanel .feedbackPanelDEBUG {
-	color: rgb(72, 185, 75);
+	color: #00529B;
+	background-color: #BDE5F8;
+}
+.feedbackPanel .feedbackPanelDEBUG:before {
+	content: '\e809';
 }
 
 /* ======================== tables ======================== */
