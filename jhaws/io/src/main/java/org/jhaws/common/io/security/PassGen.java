@@ -49,7 +49,7 @@ public class PassGen {
 	}
 
 	public static String specialpass() {
-		return specialpass(20);
+		return specialpass(16);
 	}
 
 	public static String pass(int length) {
