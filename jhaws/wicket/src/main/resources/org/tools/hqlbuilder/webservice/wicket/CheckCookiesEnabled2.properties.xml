@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="nocookies">This site uses cookies, do you want to</entry>
+	<entry key="allowcookies">allow cookies</entry>
+	<entry key="disallowcookies">disallow cookies</entry>
+	<entry key="cookiesfull"><![CDATA[
+		<h2>What are cookies?</h2>
+			<p>Cookies are small text files containing a string of characters that can be placed on your computer or mobile device that uniquely identify your browser or device. What are cookies used for?</p>
+			<p>Cookies allow a site or services to know if your computer or device has visited that site or service before. Cookies can then be used to help understand how the site or service is being used, help you navigate between pages efficiently, help remember your preferences, and generally improve your browsing experience. Cookies can also help ensure marketing you see online is more relevant to you and your interests.</p>
+		<h2>What types of cookies does this site use?</h2>
+			<div>There are generally four categories of cookies: "Strictly Necessary," "Performance," "Functionality," and "Targeting."</div>
+			<div>This site uses "Strictly Necessary," "Performance," and "Functionality," cookies.</div>
+			<div>You can find out more about each cookie category below.</div>
+			<ul>
+				<li>Strictly Necessary Cookies: These cookies are essential, as they enable you to move around the Service and use its features, such as accessing logged in or secure areas.
+				<li>Performance Cookies: These cookies collect information about how you have used the Service, for example, information related to the unique username you have provided, so that less strain is placed on our backend infrastructure. These cookies may also be used to allow us to know that you have logged in so that we can serve you fresher content than a user who has never logged in. We also use cookies to track aggregate Service usage and experiment with new features and changes on the Service. The information collected is used to improve how the Service works.
+				<li>Functionality Cookies: These cookies allow us to remember how you're logged in, whether you chose to no longer see advertisements, whether you made an edit to an article on the Service while logged out, when you logged in or out, the state or history of Service tools you've used. These cookies also allow us to tailor the Service to provide enhanced features and content for you and to remember how you've customized the Service in other ways, such as customizing the toolbars we offer in the right column of every page. The information these cookies collect may be anonymous, and they are not used to track your browsing activity on other sites or services.
+				<li>Targeting Cookies: advertising partners or other third party partners may use these types of cookies to deliver advertising that is relevant to your interests. These cookies can remember that your device has visited a site or service, and may also be able to track your device's browsing activity on other sites or services other than wikiHow. This information may be shared with organizations outside wikiHow, such as advertisers and/or advertising networks to deliver the advertising, and to help measure the effectiveness of an advertising campaign, or other business partners for the purpose of providing aggregate Service usage statistics and aggregate Service testing.
+			</ul>
+		<h2>How long will cookies stay on my device?</h2>
+			<p>The length of time a cookie will stay on your computer or mobile device depends on whether it is a "persistent" or "session" cookie. Session cookies will only stay on your device until you stop browsing. Persistent cookies stay on your computer or mobile device until they expire or are deleted.</p>
+		<h2>First and third party cookies</h2>
+			<p>First-party cookies are cookies that belong to this site, third-party cookies are cookies that another party places on your device through our Service. Third-party cookies may be placed on your device by someone providing a service for this site, for example to help us understand how our service is being used. Third-party cookies may also be placed on your device by our business partners so that they can use them to advertise products and services to you elsewhere on the Internet.</p>
+		<h2>How to control and delete cookies</h2>
+			<p>If you want to delete cookies follow the instructions at <a href="http://www.wikihow.com/Clear-Your-Browser%27s-Cookies">wikiHow: Clear Your Browser's Cookies</a>. If you wish to disable your browser from receiving cookies follow the instructions at <a href="http://www.wikihow.com/Disable-Cookies">wikiHow: Disable Cookies</a>. Note that if you set your browser to disable cookies, you may not be able to access certain parts of our Service and other parts of our Service may not work properly. You can find out more information cookie settings at third-party information sites, such as <a href="http://www.allaboutcookies.org">AllAboutCookies</a>.</p>
+	]]></entry>
+</properties>
