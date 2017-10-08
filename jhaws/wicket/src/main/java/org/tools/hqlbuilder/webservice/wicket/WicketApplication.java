@@ -156,7 +156,8 @@ public class WicketApplication extends WebApplication {
 		// gather browser info
 		if (this.isGatherBrowserInfo()) {
 			this.getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
-			// => ((WebClientInfo)WebRequestCycle.get().getClientInfo()).getProperties().isJavaEnabled()
+			// =>
+			// ((WebClientInfo)WebRequestCycle.get().getClientInfo()).getProperties().isJavaEnabled()
 		}
 
 		// markup settings
@@ -180,22 +181,27 @@ public class WicketApplication extends WebApplication {
 		// getDebugSettings().setOutputComponentPath(inDevelopment);
 
 		// resource settings
-		this.getResourceSettings().setCachingStrategy(new FilenameWithVersionResourceCachingStrategy(new MessageDigestResourceVersion()));
+		this.getResourceSettings()
+				.setCachingStrategy(new FilenameWithVersionResourceCachingStrategy(new MessageDigestResourceVersion()));
 		this.getResourceSettings().setUseMinifiedResources(deployed);
 		this.getResourceSettings().setEncodeJSessionId(deployed);
-		this.getResourceSettings().setDefaultCacheDuration(StringUtils.isNotBlank(this.cacheDuration)
-				? ("none".equals(this.cacheDuration) ? Duration.NONE : Duration.valueOf(this.cacheDuration)) : (inDevelopment ? Duration.NONE : WebResponse.MAX_CACHE_DURATION));
+		this.getResourceSettings()
+				.setDefaultCacheDuration(StringUtils.isNotBlank(this.cacheDuration)
+						? ("none".equals(this.cacheDuration) ? Duration.NONE : Duration.valueOf(this.cacheDuration))
+						: (inDevelopment ? Duration.NONE : WebResponse.MAX_CACHE_DURATION));
 
 		if (deployed) {
 			// minify your resources on deploy
-			// getResourceSettings().setJavaScriptCompressor(new GoogleClosureJavaScriptCompressor(CompilationLevel.SIMPLE_OPTIMIZATIONS));
+			// getResourceSettings().setJavaScriptCompressor(new
+			// GoogleClosureJavaScriptCompressor(CompilationLevel.SIMPLE_OPTIMIZATIONS));
 			// getResourceSettings().setCssCompressor(new YuiCssCompressor());
 		}
 
 		// library resources
 		this.setJavaScriptLibrarySettings(new WicketResourceReferences());
 
-		// to put javascript down on the page (DefaultWebPage.html must contain wicket:id='footer-bucket'
+		// to put javascript down on the page (DefaultWebPage.html must contain
+		// wicket:id='footer-bucket'
 		this.setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
 
 		// store
@@ -220,7 +226,8 @@ public class WicketApplication extends WebApplication {
 				PrimeUI.PRIME_UI_JS, //
 				PrimeUI.PRIME_UI_FACTORY_JS);//
 
-		// jsr bean validation: special models can implement IPropertyResolver to return the propertyname
+		// jsr bean validation: special models can implement IPropertyResolver
+		// to return the propertyname
 		BeanValidationConfiguration beanValidationConfiguration = new BeanValidationConfiguration();
 		beanValidationConfiguration.configure(this);
 		beanValidationConfiguration.add(component -> {
@@ -241,10 +248,14 @@ public class WicketApplication extends WebApplication {
 		this.getMarkupSettings().setDefaultAfterDisabledLink("");
 
 		// exceptions
-		this.getExceptionSettings().setUnexpectedExceptionDisplay(inDevelopment ? IExceptionSettings.SHOW_EXCEPTION_PAGE : IExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
+		this.getExceptionSettings().setUnexpectedExceptionDisplay(
+				inDevelopment ? IExceptionSettings.SHOW_EXCEPTION_PAGE : IExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
 		/*
-		 * getApplicationSettings().setPageExpiredErrorPage(MyExpiredPage.class); getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class);
-		 * getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.class);
+		 * getApplicationSettings().setPageExpiredErrorPage(MyExpiredPage.class)
+		 * ;
+		 * getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class
+		 * ); getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.
+		 * class);
 		 */
 
 		// http://wicketguide.comsysto.com/guide/chapter19.html#chapter19_4
@@ -255,6 +266,7 @@ public class WicketApplication extends WebApplication {
 			guard.addPattern("+*.flv");
 			guard.addPattern("+*.ogg");
 			guard.addPattern("+*.webm");
+			guard.addPattern("+*.map");
 		}
 	}
 
@@ -264,7 +276,8 @@ public class WicketApplication extends WebApplication {
 				this.setPageManagerProvider(new DefaultPageManagerProvider(this) {
 					@Override
 					protected IDataStore newDataStore() {
-						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(), new PageNumberEvictionStrategy(20));
+						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(),
+								new PageNumberEvictionStrategy(20));
 					}
 				});
 			} else {
@@ -275,7 +288,8 @@ public class WicketApplication extends WebApplication {
 				this.setPageManagerProvider(new DefaultPageManagerProvider(this) {
 					@Override
 					protected IDataStore newDataStore() {
-						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(), new PageNumberEvictionStrategy(20));
+						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(),
+								new PageNumberEvictionStrategy(20));
 					}
 				});
 			} // no else
@@ -311,10 +325,12 @@ public class WicketApplication extends WebApplication {
 		for (Field field : WicketIconsRoot.class.getFields()) {
 			try {
 				final String name = String.valueOf(field.get(WicketIconsRoot.class));
-				PackageResourceReference reference = new VirtualPackageResourceReference(WicketCSSRoot.class, cssImages + name, WicketIconsRoot.class, name);
+				PackageResourceReference reference = new VirtualPackageResourceReference(WicketCSSRoot.class,
+						cssImages + name, WicketIconsRoot.class, name);
 				this.getSharedResources().add(cssImages + name, reference.getResource());
 				this.mountResource(cssImages + name, reference);
-				WicketApplication.logger.info("mounting image: " + WicketRoot.class.getCanonicalName() + ": " + cssImages + name);
+				WicketApplication.logger
+						.info("mounting image: " + WicketRoot.class.getCanonicalName() + ": " + cssImages + name);
 			} catch (Exception ex) {
 				WicketApplication.logger.error("{}", ex);
 			}
@@ -332,8 +348,9 @@ public class WicketApplication extends WebApplication {
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 		final AnnotationTypeFilter mountedPageFilter = new AnnotationTypeFilter(MountedPage.class);
 		final AssignableTypeFilter webPageFilter = new AssignableTypeFilter(WebPage.class);
-		TypeFilter TypeFilter = (metadataReader, metadataReaderFactory) -> mountedPageFilter.match(metadataReader, metadataReaderFactory)
-				&& webPageFilter.match(metadataReader, metadataReaderFactory);
+		TypeFilter TypeFilter = (metadataReader,
+				metadataReaderFactory) -> mountedPageFilter.match(metadataReader, metadataReaderFactory)
+						&& webPageFilter.match(metadataReader, metadataReaderFactory);
 		scanner.addIncludeFilter(TypeFilter);
 		List<String> paths = new ArrayList<>();
 		for (BeanDefinition bd : scanner.findCandidateComponents(WicketRoot.class.getPackage().getName())) {
@@ -384,7 +401,8 @@ public class WicketApplication extends WebApplication {
 	}
 
 	/**
-	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request, org.apache.wicket.request.Response)
+	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
+	 *      org.apache.wicket.request.Response)
 	 */
 	@Override
 	final public Session newSession(Request request, Response response) {
@@ -442,7 +460,8 @@ public class WicketApplication extends WebApplication {
 
 	public static WebApplicationContext getWebApplicationContext() {
 		if (webApplicationContext == null)
-			webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(get().getServletContext());
+			webApplicationContext = WebApplicationContextUtils
+					.getRequiredWebApplicationContext(get().getServletContext());
 		return webApplicationContext;
 	}
 
