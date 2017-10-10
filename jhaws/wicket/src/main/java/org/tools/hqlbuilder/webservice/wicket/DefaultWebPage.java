@@ -1,5 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.devutils.debugbar.DebugBar;
@@ -18,7 +20,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tools.hqlbuilder.webservice.css.WicketCSSRoot;
 import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.jquery.ui.jqueryuithemes.JQueryUIThemes;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
@@ -47,11 +48,13 @@ public class DefaultWebPage extends WebPage {
 		add(new Label("page.title", getString("page.title")));
 
 		// shortcut icon
-		this.add(new WebMarkupContainer("shortcutIcon").add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
+		this.add(new WebMarkupContainer("shortcutIcon")
+				.add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
 				.setVisible(StringUtils.isNotBlank(WicketApplication.get().getShortcutIcon())));
 
 		// wicket/ajax debug bars
-		this.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig() ? new DebugBar("debug") : new EmptyPanel("debug").setVisible(false));
+		this.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig()
+				? new DebugBar("debug") : new EmptyPanel("debug").setVisible(false));
 
 		// check if javascript is enabled
 		this.add(new CheckJavaScriptEnabled());
@@ -78,20 +81,30 @@ public class DefaultWebPage extends WebPage {
 
 		// add google meta tags
 		add(new WebMarkupContainer("meta_google_signin_scope"));
-		add(new WebMarkupContainer("meta_google_signin_client_id").add(new AttributeModifier("content", WicketApplication.get().getGoogleSigninClientId())));
+		add(new WebMarkupContainer("meta_google_signin_client_id")
+				.add(new AttributeModifier("content", WicketApplication.get().getGoogleSigninClientId())));
 	}
 
 	protected void addDefaultResources(IHeaderResponse response) {
-		response.render(CssHeaderItem.forReference(WicketCSSRoot.CLEARFIX));
-		response.render(CssHeaderItem.forReference(WicketCSSRoot.NORMALIZE));
-		response.render(CssHeaderItem.forReference(WicketCSSRoot.GENERAL));
+		Arrays.stream(WicketApplication.get().CSS_BUNDLE_ITEMS).forEach(css -> {
+			System.out.println(css);
+			response.render(CssHeaderItem.forReference(css));
+		});
+		// response.render(CssHeaderItem.forReference(WicketCSSRoot.CLEARFIX));
+		// response.render(CssHeaderItem.forReference(WicketCSSRoot.NORMALIZE));
+		// response.render(CssHeaderItem.forReference(WicketCSSRoot.GENERAL));
+
+		Arrays.stream(WicketApplication.get().JS_BUNDLE_ITEMS).forEach(js -> {
+			System.out.println(js);
+			response.render(JavaScriptHeaderItem.forReference(js));
+		});
+		// response.render(JavaScriptHeaderItem.forReference(JQueryUI.getJQueryUIReference()));
 
 		// FIXME
 		// response.render(JavaScriptHeaderItem.forReference(Scrollator.SCROLLATOR_JS));
 		// response.render(CssHeaderItem.forReference(Scrollator.SCROLLATOR_CSS));
 		// response.render(OnDomReadyHeaderItem.forScript(Scrollator.SCROLLATOR_FACTORY_JS));
 
-		response.render(JavaScriptHeaderItem.forReference(JQueryUI.getJQueryUIReference()));
 		// response.render(JavaScriptHeaderItem.forReference(Velocity.VELOCITY_JS));
 
 		response.render(JavaScriptHeaderItem.forReference(WicketJSRoot.GENERAL));
@@ -180,9 +193,11 @@ public class DefaultWebPage extends WebPage {
 	protected void statelessCheck() {
 		if (this.getStatelessHint() && WicketApplication.get().usesDevelopmentConfig()) {
 			this.visitChildren((component, arg1) -> {
-				DefaultWebPage.this.logger.trace("Component " + component.getClass().getName() + " with id " + component.getId());
+				DefaultWebPage.this.logger
+						.trace("Component " + component.getClass().getName() + " with id " + component.getId());
 				if (!component.isStateless()) {
-					DefaultWebPage.this.logger.warn("Component " + component.getClass().getName() + " with id " + component.getId() + " is not stateless");
+					DefaultWebPage.this.logger.warn("Component " + component.getClass().getName() + " with id "
+							+ component.getId() + " is not stateless");
 				}
 			});
 		}

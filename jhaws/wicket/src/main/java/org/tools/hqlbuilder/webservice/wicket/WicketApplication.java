@@ -28,6 +28,8 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
@@ -52,7 +54,6 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.js.GoogleLogin;
-import org.tools.hqlbuilder.webservice.js.WicketJSRoot;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.htmlcompressor.HtmlCompressingMarkupFactory;
 import org.wicketstuff.logback.ConfiguratorPage;
@@ -212,19 +213,7 @@ public class WicketApplication extends WebApplication {
 			this.getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
 		}
 
-		// styling bundle
-		this.getResourceBundles().addCssBundle(WicketCSSRoot.class, "basebundle.css", //
-				WicketCSSRoot.CLEARFIX, //
-				WicketCSSRoot.NORMALIZE, //
-				WicketCSSRoot.GENERAL);//
-
-		// jquery & prime bundle
-		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "jquery+ui.js", //
-				JQuery.getJQueryReference(), //
-				JQueryUI.getJQueryUIReference(), //
-				JQueryUI.JQUERY_UI_FACTORY_JS, //
-				PrimeUI.PRIME_UI_JS, //
-				PrimeUI.PRIME_UI_FACTORY_JS);//
+		addBundles();
 
 		// jsr bean validation: special models can implement IPropertyResolver
 		// to return the propertyname
@@ -268,6 +257,38 @@ public class WicketApplication extends WebApplication {
 			guard.addPattern("+*.webm");
 			guard.addPattern("+*.map");
 		}
+	}
+
+	public CssResourceReference[] CSS_BUNDLE_ITEMS;
+
+	// public CssReferenceHeaderItem CSS_BUNDLE;
+
+	// public JavaScriptReferenceHeaderItem JS_BUNDLE;
+
+	public JavaScriptResourceReference[] JS_BUNDLE_ITEMS;
+
+	protected void addBundles() {
+		// styling bundle
+		CSS_BUNDLE_ITEMS = new CssResourceReference[] { //
+				WicketCSSRoot.CLEARFIX, //
+				WicketCSSRoot.NORMALIZE, //
+				WicketCSSRoot.GENERAL//
+		};
+		// CSS_BUNDLE =
+		// this.getResourceBundles().addCssBundle(WicketCSSRoot.class,
+		// "basebundle.css", CSS_BUNDLE_ITEMS);//
+
+		// jquery & prime bundle
+		JS_BUNDLE_ITEMS = new JavaScriptResourceReference[] { //
+				JQuery.getJQueryReference(), //
+				JQueryUI.getJQueryUIReference(), //
+				JQueryUI.JQUERY_UI_FACTORY_JS, //
+				PrimeUI.PRIME_UI_JS, //
+				PrimeUI.PRIME_UI_FACTORY_JS//
+		};
+		// JS_BUNDLE =
+		// this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class,
+		// "jquery+ui.js", JS_BUNDLE_ITEMS);//
 	}
 
 	protected void initStore() {
