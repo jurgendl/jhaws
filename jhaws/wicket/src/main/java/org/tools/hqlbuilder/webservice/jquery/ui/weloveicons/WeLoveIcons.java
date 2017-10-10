@@ -10,6 +10,11 @@ import java.util.regex.Pattern;
 
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 
+// TODO
+// https://useiconic.com/open/
+// https://octicons.github.com/
+// http://www.entypo.com/
+//
 public class WeLoveIcons {
     public static CssResourceReference WE_LOVE_ICONS_CSS = new CssResourceReference(WeLoveIcons.class, "weloveiconfonts.css");
 
@@ -27,7 +32,6 @@ public class WeLoveIcons {
             while ((read = in.read(buffer)) > 0) {
                 out.write(buffer, 0, read);
             }
-            ;
             String html = new String(out.toByteArray());
             String[] type = {
                     "brandico",

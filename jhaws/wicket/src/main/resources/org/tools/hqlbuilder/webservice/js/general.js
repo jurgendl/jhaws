@@ -33,12 +33,15 @@ function anchorDoScroll(dest) {
 	$('html,body').animate({scrollTop:$('a[name='+dest+']').offset().top},1000);/*,'easeInOutCirc'*/
 	console.log("scroll to:"+dest+"->"+$('a[name='+dest+']').offset().top);
 }
+// FIXME
+/*
 function anchorFactory() { // put this in document ready
 	$("a[href^=#]").click(function(e) {
 		e.preventDefault();
 		anchorDoScroll($(this).attr('href').substring(1));
 	});
 }
+*/
 
 function compress(data) {
 	data = data.replace(/([^&=]+=)([^&]*)(.*?)&\1([^&]*)/g, "$1$2,$4$3");
