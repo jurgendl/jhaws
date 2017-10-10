@@ -337,14 +337,10 @@ public class JAXBMarshalling {
 
     public <DTO> void marshall(DTO dto, Path xml) {
         try {
-            marshall(dto, Files.newOutputStream(getPath(xml)));
+            marshall(dto, Files.newOutputStream(xml));
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
-    }
-
-    protected Path getPath(Path xml) {
-        return org.jhaws.common.io.FilePath.getPath(xml);
     }
 
     public <DTO> String marshall(DTO dto) {
@@ -383,7 +379,7 @@ public class JAXBMarshalling {
 
     public <DTO> DTO unmarshall(Class<DTO> type, Path xml) {
         try {
-            return unmarshall(type, Files.newInputStream(getPath(xml)));
+            return unmarshall(type, Files.newInputStream(xml));
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
