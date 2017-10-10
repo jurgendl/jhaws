@@ -7,6 +7,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://eonasdan.github.io/bootstrap-datetimepicker/
 // https://bootstrap-datepicker.readthedocs.io/en/latest/
 // https://uxsolutions.github.io/bootstrap-datepicker/?markup=input&format=&weekStart=&startDate=&endDate=&startView=0&minViewMode=0&maxViewMode=4&todayBtn=false&clearBtn=false&language=en&orientation=auto&multidate=&multidateSeparator=&keyboardNavigation=on&forceParse=on#
+// 1.6.4
 public class BootstrapDatePicker {
     public static final String RESOURCE_I18N_PATH = "locales/";
 
