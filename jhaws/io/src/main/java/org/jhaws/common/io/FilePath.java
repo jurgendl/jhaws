@@ -117,6 +117,8 @@ import org.jhaws.common.io.FilePath.Visitors.MoveAllFilesVisitor;
 import org.jhaws.common.io.Utils.OSGroup;
 import org.jhaws.common.io.win.WinRegistry;
 import org.jhaws.common.lang.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @since 1.8
@@ -124,6 +126,8 @@ import org.jhaws.common.lang.Value;
  */
 @SuppressWarnings("serial")
 public class FilePath implements Path, Externalizable {
+    protected static Logger LOGGER = LoggerFactory.getLogger(FilePath.class);
+
     public static final String CURRENT_FILE_PATH = ".";
 
     public static final String PROPERTIES = "properties";
@@ -217,27 +221,27 @@ public class FilePath implements Path, Externalizable {
             if (url == null) {
                 url = root.getResource(path);
             } else {
-                System.out.println(url);
+                LOGGER.trace("{}", url);
             }
             if (url == null) {
                 url = root.getResource("/" + path);
             } else {
-                System.out.println(url);
+                LOGGER.trace("{}", url);
             }
             if (url == null) {
                 url = classLoader.get().getResource("/" + path);
             } else {
-                System.out.println(url);
+                LOGGER.trace("{}", url);
             }
             if (url == null) {
                 url = classLoader.get().getResource(path);
             } else {
-                System.out.println(url);
+                LOGGER.trace("{}", url);
             }
             if (url == null) {
                 System.err.println(url);
             } else {
-                System.out.println(url);
+                LOGGER.trace("{}", url);
             }
         }
         return url;
@@ -347,7 +351,7 @@ public class FilePath implements Path, Externalizable {
             key = directory.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY,
                     StandardWatchEventKinds.ENTRY_DELETE);
             thread = new Thread(() -> {
-                System.out.println("FilePathWatcher[" + Thread.currentThread() + ":started]");
+                LOGGER.trace("{}", "FilePathWatcher[" + Thread.currentThread() + ":started]");
                 while (enabled) {
                     try {
                         key = watcher.take();
@@ -362,7 +366,7 @@ public class FilePath implements Path, Externalizable {
                     }
                     key.reset();
                 }
-                System.out.println("FilePathWatcher[" + Thread.currentThread() + ":stopped]");
+                LOGGER.trace("{}", "FilePathWatcher[" + Thread.currentThread() + ":stopped]");
             });
             thread.setDaemon(true);
             thread.start();
@@ -950,10 +954,10 @@ public class FilePath implements Path, Externalizable {
                     Files.delete(dir);
                 } catch (java.nio.file.DirectoryNotEmptyException ex) {
                     for (Object o : of(dir).listFiles()) {
-                        System.out.println(o);
+                        LOGGER.trace("{}", o);
                     }
                     for (Object o : of(dir).listDirectories()) {
-                        System.out.println(o);
+                        LOGGER.trace("{}", o);
                     }
                     throw ex;
                 }
