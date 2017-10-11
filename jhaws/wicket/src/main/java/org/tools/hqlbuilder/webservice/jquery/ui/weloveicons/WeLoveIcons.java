@@ -11,10 +11,11 @@ import java.util.regex.Pattern;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 
 // TODO
+// bootstrap
 // https://useiconic.com/open/
 // https://octicons.github.com/
-// http://www.entypo.com/
-//
+// http://www.entypo.com/ (*)
+// https://useiconic.com/open
 public class WeLoveIcons {
     public static CssResourceReference WE_LOVE_ICONS_CSS = new CssResourceReference(WeLoveIcons.class, "weloveiconfonts.css");
 
