@@ -15,5 +15,5 @@ public class BLazy {
 
     public static final CssResourceReference BLAZY_CSS = new CssResourceReference(BLazy.class, "blazy.css");
 
-    public static final OnDomReadyHeaderItem BLAZY_FACTORY_JS = OnDomReadyHeaderItem.forScript("new Blazy({offset:200});");
+    public static final OnDomReadyHeaderItem BLAZY_FACTORY_JS = OnDomReadyHeaderItem.forScript(";new Blazy({offset:200});");
 }
