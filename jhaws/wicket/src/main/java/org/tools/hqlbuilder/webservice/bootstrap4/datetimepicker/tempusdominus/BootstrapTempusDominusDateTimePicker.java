@@ -46,6 +46,9 @@ public class BootstrapTempusDominusDateTimePicker {
         }
         String string = ";$('.tempusdominus').datetimepicker({" + //
                 "locale:'" + locale.getLanguage() + "'" + //
+                ",calendarWeeks:true" + //
+                ",buttons:{showToday:true,showClear:true,showClose:true}" + //
+                ",widgetPositioning:{horizontal:'left',vertical:'bottom'}" + //
                 typeOpt + //
                 ",sideBySide:true" + //
                 (debug ? ",debug:true" : "") + //
