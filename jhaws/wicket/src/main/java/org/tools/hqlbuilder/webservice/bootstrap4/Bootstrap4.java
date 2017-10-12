@@ -6,6 +6,8 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
+// http://getbootstrap.com/
+// https://hackerthemes.com/bootstrap-cheatsheet/
 public class Bootstrap4 {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.js");
 
