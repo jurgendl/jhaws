@@ -16,9 +16,12 @@ https://bootsnipp.com/snippets/nrQWa
 https://bootsnipp.com/snippets/orPaP
 https://bootsnipp.com/snippets/denxZ
 https://bootsnipp.com/snippets/rleW6
+//.fa-spin{-webkit-filter:blur(0);}
+	//http://jsfiddle.net/tagliala/96ULe/3/
+	//https://github.com/FortAwesome/Font-Awesome/issues/671
+http://fontawesome.io/icon/check-circle-o/
+http://fontawesome.io/icon/times-circle-o/
 
-	http://fontawesome.io/icon/check-circle-o/
-		http://fontawesome.io/icon/times-circle-o/
 public class Bootstrap4 {
 	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class,
 			"js/bootstrap.js");
