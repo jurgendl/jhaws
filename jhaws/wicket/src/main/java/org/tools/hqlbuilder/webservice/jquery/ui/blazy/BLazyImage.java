@@ -95,9 +95,9 @@ public class BLazyImage extends Image {
     }
 
     public static IHeaderResponse adjustResponse(IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(BLazy.BLAZY_JS));
-        response.render(BLazy.BLAZY_FACTORY_JS);
-        response.render(CssHeaderItem.forReference(BLazy.BLAZY_CSS));
+        response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
+        response.render(BLazy.FACTORY);
+        response.render(CssHeaderItem.forReference(BLazy.CSS));
         return response;
     }
 

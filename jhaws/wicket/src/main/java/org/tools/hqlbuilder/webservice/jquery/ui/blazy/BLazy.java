@@ -11,9 +11,9 @@ public class BLazy {
 
     public static final String BLAZY_SRC = "data-src";
 
-    public static final JavaScriptResourceReference BLAZY_JS = new JavaScriptResourceReference(BLazy.class, "blazy.js");
+    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BLazy.class, "blazy.js");
 
-    public static final CssResourceReference BLAZY_CSS = new CssResourceReference(BLazy.class, "blazy.css");
+    public static final CssResourceReference CSS = new CssResourceReference(BLazy.class, "blazy.css");
 
-    public static final OnDomReadyHeaderItem BLAZY_FACTORY_JS = OnDomReadyHeaderItem.forScript(";new Blazy({offset:200});");
+    public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem.forScript(";new Blazy({offset:200});");
 }

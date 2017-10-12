@@ -1,8 +1,7 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus;
 
-import java.util.Locale;
-
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
@@ -19,40 +18,13 @@ public class BootstrapTempusDominusDateTimePicker {
     public static final CssResourceReference CSS = new CssResourceReference(BootstrapTempusDominusDateTimePicker.class,
             "css/tempusdominus-bootstrap-4.css");
 
+    public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem
+            .forScript(new FilePath(BootstrapTempusDominusDateTimePicker.class, "js/tempusdominus-bootstrap-4-factory.js").readAll());
+
     static {
         JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
         JS.addJavaScriptResourceReferenceDependency(MomentJs.JS);
         CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
         CSS.addCssResourceReferenceDependency(FontAwesome.CSS);
-    }
-
-    public static enum Type {
-        DATETIME, DATE, TIME;
-    }
-
-    public static OnDomReadyHeaderItem factory(Type type, Locale locale, boolean debug) {
-        String typeOpt = "";
-        switch (type) {
-            case DATE:
-                typeOpt = ",format:'L'";
-                break;
-            case TIME:
-                typeOpt = ",format:'LT'";
-                break;
-            case DATETIME:
-            default:
-                typeOpt = "";
-                break;
-        }
-        String string = ";$('.tempusdominus').datetimepicker({" + //
-                "locale:'" + locale.getLanguage() + "'" + //
-                ",calendarWeeks:true" + //
-                ",buttons:{showToday:true,showClear:true,showClose:true}" + //
-                ",widgetPositioning:{horizontal:'left',vertical:'bottom'}" + //
-                typeOpt + //
-                ",sideBySide:true" + //
-                (debug ? ",debug:true" : "") + //
-                "});";
-        return OnDomReadyHeaderItem.forScript(string);
     }
 }

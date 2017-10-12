@@ -1,7 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.moment;
 
-import java.util.Locale;
-
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -9,6 +7,8 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://github.com/moment/moment/tree/master
 // 2.19.0
 public class MomentJs {
+    public static String PROP_CURRENT_LANGUAGE = "currentLanguage";
+
     public static JavaScriptResourceReference JS = new JavaScriptResourceReference(MomentJs.class, "moment.js");
 
     public static JavaScriptResourceReference JS_LOCALE = new JavaScriptResourceReference(MomentJs.class, "moment-with-locales.js");
@@ -16,9 +16,7 @@ public class MomentJs {
     public static JavaScriptResourceReference JS_I18N = new JavaScriptResourceReference(MomentJs.class, "locales.js")
             .addJavaScriptResourceReferenceDependency(JS);
 
-    public static OnDomReadyHeaderItem factory(Locale locale) {
-        return OnDomReadyHeaderItem.forScript(";moment.locale('" + locale.getLanguage() + "');");
-    }
+    public static OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem.forScript(";moment.locale(" + PROP_CURRENT_LANGUAGE + ");");
 
     // https://codebox.net/pages/moment-date-range-plugin
     // https://github.com/codebox/moment-precise-range/releases
