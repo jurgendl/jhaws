@@ -8,3 +8,6 @@ $('.custom-file-input').on('change', function() {
 	fileName = fileName.substring(from + 1);
 	$(this).next('.form-control-file').addClass('selected').html(fileName);
 });
+
+;
+$('[data-toggle="tooltip"]').tooltip();

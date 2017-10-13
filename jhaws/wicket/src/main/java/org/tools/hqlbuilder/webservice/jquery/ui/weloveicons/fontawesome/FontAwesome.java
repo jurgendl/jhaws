@@ -4,6 +4,7 @@ import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 
 // http://fontawesome.io/get-started/
 // http://fontawesome.io/icons/
+// 4.7
 public class FontAwesome {
-	public static CssResourceReference CSS = new CssResourceReference(FontAwesome.class, "css/font-awesome.css");
+    public static CssResourceReference CSS = new CssResourceReference(FontAwesome.class, "css/font-awesome.css");
 }
