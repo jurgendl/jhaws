@@ -9,6 +9,7 @@ import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
 
 public abstract class DefaultFormActions<T extends Serializable> implements FormActions<T> {
 	private static final long serialVersionUID = 555158530492799693L;
@@ -36,7 +37,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
 	}
 
 	/**
-	 * @see org.tools.hqlbuilder.webservice.wicket.forms.FormActions#afterSubmit(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.markup.html.form.Form,
+	 * @see org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions#afterSubmit(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.markup.html.form.Form,
 	 *      org.apache.wicket.model.IModel)
 	 */
 	@Override
@@ -45,7 +46,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
 	}
 
 	/**
-	 * @see org.tools.hqlbuilder.webservice.wicket.forms.FormActions#afterCancel(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.markup.html.form.Form,
+	 * @see org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions#afterCancel(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.markup.html.form.Form,
 	 *      org.apache.wicket.model.IModel)
 	 */
 	@Override
@@ -55,7 +56,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
 
 	/**
 	 *
-	 * @see org.tools.hqlbuilder.webservice.wicket.forms.FormActions#submitModel(org.apache.wicket.model.IModel)
+	 * @see org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions#submitModel(org.apache.wicket.model.IModel)
 	 */
 	@Override
 	public T submitModel(IModel<T> model) {
@@ -69,7 +70,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
 
 	/**
 	 *
-	 * @see org.tools.hqlbuilder.webservice.wicket.forms.FormActions#submitObject(java.lang.Object)
+	 * @see org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions#submitObject(java.lang.Object)
 	 */
 	@Override
 	public T submitObject(T object) {
@@ -78,7 +79,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
 
 	/**
 	 *
-	 * @see org.tools.hqlbuilder.webservice.wicket.forms.FormActions#loadModel()
+	 * @see org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions#loadModel()
 	 */
 	@Override
 	public IModel<T> loadModel() {
@@ -95,7 +96,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
 
 	/**
 	 *
-	 * @see org.tools.hqlbuilder.webservice.wicket.forms.FormActions#loadObject()
+	 * @see org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions#loadObject()
 	 */
 	@Override
 	public T loadObject() {
@@ -111,7 +112,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
 
 	/**
 	 *
-	 * @see org.tools.hqlbuilder.webservice.wicket.forms.FormActions#forObjectClass()
+	 * @see org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions#forObjectClass()
 	 */
 	@Override
 	public Class<T> forObjectClass() {

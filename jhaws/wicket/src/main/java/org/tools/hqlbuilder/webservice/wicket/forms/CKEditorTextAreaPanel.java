@@ -9,6 +9,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.ckeditor.CKEditor;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 public class CKEditorTextAreaPanel<T extends Serializable> extends DefaultFormRowPanel<T, TextArea<T>, CKEditorTextAreaSettings> {
 	private static final long serialVersionUID = -828874019955093788L;

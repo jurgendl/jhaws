@@ -5,6 +5,7 @@ import static org.tools.hqlbuilder.webservice.wicket.WebHelper.tag;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.IModel;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 public class NumberFieldPanel<N extends Number & Comparable<N>> extends DefaultFormRowPanel<N, NumberTextField<N>, NumberFieldSettings<N>> {
 	private static final long serialVersionUID = -3037822852757814685L;

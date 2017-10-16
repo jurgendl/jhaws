@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 import java.beans.PropertyDescriptor;
 import java.io.Serializable;

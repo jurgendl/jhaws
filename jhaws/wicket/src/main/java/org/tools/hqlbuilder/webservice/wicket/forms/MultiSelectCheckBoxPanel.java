@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 /**
  * @see http://jqueryui.com/button/

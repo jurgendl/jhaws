@@ -15,6 +15,7 @@ import org.apache.wicket.model.PropertyModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.components.DefaultOptionRenderer;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 

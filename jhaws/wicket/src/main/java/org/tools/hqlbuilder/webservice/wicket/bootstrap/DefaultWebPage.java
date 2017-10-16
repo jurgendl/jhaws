@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket;
+package org.tools.hqlbuilder.webservice.wicket.bootstrap;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,14 +34,15 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
+import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 import org.tools.hqlbuilder.webservice.wicket.components.ExternalLink;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameModifier;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings("serial")
-public abstract class DefaultNewWebPage extends WebPage {
-    public DefaultNewWebPage(PageParameters parameters) {
+public abstract class DefaultWebPage extends WebPage {
+    public DefaultWebPage(PageParameters parameters) {
         super(parameters);
         // // html language
         // WebMarkupContainer html = new WebMarkupContainer("html");
@@ -66,7 +67,7 @@ public abstract class DefaultNewWebPage extends WebPage {
         html.add(new CheckJavaScriptEnabled());
 
         // check if cookies are enabled
-        html.add(new CheckCookiesEnabled2());
+        html.add(new CheckCookiesEnabled());
 
         // check if ads are not blocked
         try {
@@ -310,7 +311,7 @@ public abstract class DefaultNewWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
 
-        response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultNewWebPage.class, "DefaultNewWebPage.css")));
+        response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultNewWebPage.css")));
         // response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultNewWebPage.class, "DefaultNewWebPage.js")));
         // response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultNewWebPage.class, "DefaultNewWebPage-factory.js").readAll()));
     }

@@ -18,6 +18,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.components.DefaultOptionRenderer;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S extends AbstractSelectSettings<S>>
 		extends DefaultFormRowPanel<T, C, S> {

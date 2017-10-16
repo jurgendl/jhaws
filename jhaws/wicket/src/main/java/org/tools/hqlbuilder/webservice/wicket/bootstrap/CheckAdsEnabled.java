@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket;
+package org.tools.hqlbuilder.webservice.wicket.bootstrap;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -6,8 +6,10 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 
-public class CheckAdsEnabled2 extends Panel {
+public class CheckAdsEnabled extends Panel {
     private static final long serialVersionUID = -5845042169704523961L;
 
     public static JavaScriptResourceReference JS;
@@ -18,8 +20,8 @@ public class CheckAdsEnabled2 extends Panel {
 
     static {
         try {
-            CheckAdsEnabled2.JS = new JavaScriptResourceReference(CheckAdsEnabled2.class, "CheckAdsEnabled2.js");
-            CheckAdsEnabled2.IMG = new PackageResourceReference(CheckJavaScriptEnabled.class, CheckAdsEnabled2.IMG_NAME) {
+            CheckAdsEnabled.JS = new JavaScriptResourceReference(CheckAdsEnabled.class, "CheckAdsEnabled.js");
+            CheckAdsEnabled.IMG = new PackageResourceReference(CheckJavaScriptEnabled.class, CheckAdsEnabled.IMG_NAME) {
                 private static final long serialVersionUID = 4214735061850976515L;
 
                 @Override
@@ -29,7 +31,7 @@ public class CheckAdsEnabled2 extends Panel {
 
                 @Override
                 public String getName() {
-                    return CheckAdsEnabled2.IMG_NAME;
+                    return CheckAdsEnabled.IMG_NAME;
                 };
 
                 @Override
@@ -47,14 +49,14 @@ public class CheckAdsEnabled2 extends Panel {
         }
     }
 
-    public CheckAdsEnabled2() {
+    public CheckAdsEnabled() {
         super("check.ads.enabled");
         Image image = new Image("check.ads.img") {
             private static final long serialVersionUID = 9061259704592785374L;
 
             @Override
             protected ResourceReference getImageResourceReference() {
-                return CheckAdsEnabled2.IMG;
+                return CheckAdsEnabled.IMG;
             }
         };
         image.setMarkupId(image.getId());
@@ -68,6 +70,6 @@ public class CheckAdsEnabled2 extends Panel {
         if (!this.isEnabledInHierarchy()) {
             return;
         }
-        response.render(JavaScriptHeaderItem.forReference(CheckAdsEnabled2.JS));
+        response.render(JavaScriptHeaderItem.forReference(CheckAdsEnabled.JS));
     }
 }

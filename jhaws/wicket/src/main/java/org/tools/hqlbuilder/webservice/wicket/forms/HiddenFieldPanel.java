@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 public class HiddenFieldPanel<T extends Serializable> extends DefaultFormRowPanel<T, HiddenField<T>, FormElementSettings> {
 	private static final long serialVersionUID = -7993592150932306594L;

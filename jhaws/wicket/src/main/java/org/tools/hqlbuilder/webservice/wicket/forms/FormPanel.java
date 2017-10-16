@@ -24,7 +24,6 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -41,17 +40,16 @@ import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormPanelParent;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.sass.SassResourceReference;
 
 import com.googlecode.wicket.jquery.core.renderer.ITextRenderer;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
-/**
- * @see http://jqueryui.com/button/
- * @see http://wicket.apache.org/guide/guide/forms2.html#forms2_1
- */
-public class FormPanel<T extends Serializable> extends Panel implements FormConstants {
+public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
     // FIXME
     // static {
     // Lambda.registerFinalClassArgumentCreator(URL.class, seed -> {
@@ -69,18 +67,6 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
 
     public static final SassResourceReference FORM_CSS = new SassResourceReference(WicketCSSRoot.class, "form.css");
 
-    protected RepeatingView rowRepeater;
-
-    protected RepeatingView componentRepeater;
-
-    protected FormSettings formSettings;
-
-    protected FormActions<T> formActions;
-
-    protected Form<T> form;
-
-    protected int count = 0;
-
     protected StringBuilder css = new StringBuilder();
 
     protected Set<String> cssClasses = new HashSet<>();
@@ -90,26 +76,7 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
     }
 
     public FormPanel(String id, FormActions<T> formActions, FormSettings formSettings) {
-        super(id);
-        WebHelper.show(this);
-        this.setFormActions(formActions != null ? formActions : new DefaultFormActions<T>() {
-            private static final long serialVersionUID = -6135914559717102175L;
-
-            @Override
-            public Class<T> forObjectClass() {
-                try {
-                    return WebHelper.<T> getImplementation(FormPanel.this, FormPanel.class);
-                } catch (IllegalArgumentException ex) {
-                    throw new IllegalArgumentException("implement FormActions#forObjectClass or set generic type of FormActions<T>");
-                }
-            }
-
-            @Override
-            public String toString() {
-                return "DefaultFormActions";
-            }
-        });
-        this.setFormSettings(formSettings == null ? new FormSettings() : formSettings);
+        super(id, formActions, formSettings);
     }
 
     public <F extends Serializable> AutoCompleteTextFieldPanel<F> addAutoCompleteTextField(F propertyPath,
@@ -525,13 +492,6 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
         return this.form;
     }
 
-    protected FormActions<T> getFormActions() {
-        if (this.formActions == null) {
-            throw new RuntimeException("FormActions required");
-        }
-        return this.formActions;
-    }
-
     /**
      * behind normal form buttons, default invisible, default render body only
      */
@@ -625,10 +585,6 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
         });
     }
 
-    public T proxy() {
-        return WebHelper.proxy(this.getFormActions().forObjectClass());
-    }
-
     protected String renderColumnsCss(boolean showLabel, int columnCount, String labelWidth) {
         if (!this.formSettings.isRenderPocketGrid()) {
             return "";
@@ -686,19 +642,5 @@ public class FormPanel<T extends Serializable> extends Panel implements FormCons
             this.renderColumnsCss(response);
         }
         response.render(CssHeaderItem.forReference(FormPanel.FORM_CSS));
-    }
-
-    public void setFormActions(FormActions<T> formActions) {
-        if (formActions == null) {
-            throw new RuntimeException("FormActions required");
-        }
-        this.formActions = formActions;
-    }
-
-    public void setFormSettings(FormSettings formSettings) {
-        if (formSettings == null) {
-            throw new RuntimeException("FormSettings required");
-        }
-        this.formSettings = formSettings;
     }
 }

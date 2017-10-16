@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import wicket.contrib.tinymce.settings.AutoResizePlugin;
 import wicket.contrib.tinymce.settings.DateTimePlugin;

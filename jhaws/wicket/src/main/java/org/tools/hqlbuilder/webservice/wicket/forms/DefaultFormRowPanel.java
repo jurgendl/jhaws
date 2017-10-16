@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 public abstract class DefaultFormRowPanel<T extends Serializable, C extends FormComponent<T>, S extends AbstractFormElementSettings<S>> extends FormRowPanel<T, T, C, S> {
 	private static final long serialVersionUID = -3609764520190287373L;

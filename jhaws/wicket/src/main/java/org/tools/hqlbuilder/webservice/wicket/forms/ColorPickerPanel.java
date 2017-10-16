@@ -9,6 +9,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.spectrum.Spectrum;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 /**
  * @see http://bgrins.github.io/spectrum

@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.converter.BooleanConverter;
 import org.tools.hqlbuilder.webservice.jquery.ui.tristate.TriState;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 

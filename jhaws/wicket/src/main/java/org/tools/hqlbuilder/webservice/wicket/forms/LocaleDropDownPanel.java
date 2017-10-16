@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.tools.hqlbuilder.webservice.wicket.components.LocalesDropDown;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 public class LocaleDropDownPanel extends FormRowPanel<Locale, Locale, LocalesDropDown, FormElementSettings> {
 	private static final long serialVersionUID = 4721415841417284882L;
