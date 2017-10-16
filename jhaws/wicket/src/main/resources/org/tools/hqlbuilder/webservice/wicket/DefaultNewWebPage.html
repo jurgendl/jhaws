@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- wicket:id="html" -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="" wicket:message="content:page.description">
+<meta name="keywords" content="" wicket:message="content:page.keywords">
+<meta name="author" content="" wicket:message="content:page.author">
+<link rel="shortcut icon" type="image/x-icon" href="" wicket:id="shortcutIcon" />
+<title wicket:id="page.title"></title>
+<meta http-equiv="imagetoolbar" content="no" />
+<meta wicket:id="meta_google_signin_scope" name="google-signin-scope" content="profile email">
+<meta wicket:id="meta_google_signin_client_id" name="google-signin-client_id" content="">
+<wicket:header-items />
+</head>
+<body>
+
+	<wicket:container wicket:id="debug" />
+
+	<span wicket:id="navbar">
+		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+			<a class="navbar-brand" href="#">Brand</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><a class="nav-link" href="#">Home <span class="sr-only">(current)</span>
+					</a></li>
+					<li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+					<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>
+					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false">Dropdown</a>
+						<div class="dropdown-menu" aria-labelledby="dropdown01">
+							<a class="dropdown-item" href="#">Action</a> <a class="dropdown-item" href="#">Another action</a> <a class="dropdown-item" href="#">Something else here</a>
+						</div></li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0">
+					<div class="input-group input-group-sm">
+						<input type="text" class="form-control form-control-sm" placeholder="Search for..."> <span class="input-group-btn">
+							<button class="btn btn-success btn-sm" type="button">Go!</button>
+						</span>
+					</div>
+				</form>
+			</div>
+		</nav>
+	
+		<br />
+		<br />
+		<br />
+	</span>
+
+	<div wicket:id="breadcrumb" class="container">
+		<nav class="breadcrumb">
+			<a class="breadcrumb-item" href="#">Home</a> <a class="breadcrumb-item" href="#">Library</a> <a class="breadcrumb-item" href="#">Data</a> <span class="breadcrumb-item active">Bootstrap</span>
+		</nav>
+	</div>
+
+	<div class="container">
+		<wicket:container wicket:id="check.cookies.enabled" />
+		<wicket:container wicket:id="check.javascript.enabled" />
+		<wicket:container wicket:id="check.ads.enabled" />
+	</div>
+
+	<wicket:child />
+
+	<span wicket:id="statusbar">
+		<br />
+		<br />
+		<br />
+		<footer class="fixed-bottom bg-dark">
+			<div class="container">
+				<span wicket:id="statusbarcontent" class="text-muted"></span>
+			</div>
+		</footer>
+	</span>
+
+	<wicket:container wicket:id="footer-container" />
+</body>
+</html>

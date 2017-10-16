@@ -9,12 +9,15 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // http://getbootstrap.com/
 // https://hackerthemes.com/bootstrap-cheatsheet/
 // https://bootsnipp.com/tags/4.0.0
+//
+//
 // https://bootsnipp.com/snippets/gv6Pe
 // https://bootsnipp.com/snippets/7KGEV
 // https://bootsnipp.com/snippets/nrQWa
 // https://bootsnipp.com/snippets/orPaP
 // https://bootsnipp.com/snippets/denxZ
 // https://bootsnipp.com/snippets/rleW6
+// https://getbootstrap.com/docs/4.0/components/modal/
 public class Bootstrap4 {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.js");
 
