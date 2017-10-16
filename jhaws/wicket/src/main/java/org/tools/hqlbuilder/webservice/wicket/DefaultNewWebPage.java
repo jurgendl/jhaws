@@ -158,6 +158,9 @@ public abstract class DefaultNewWebPage extends WebPage {
                 });
             }
         });
+
+        navbar.add(new WebMarkupContainer("searchbar").setVisible(false));
+
         html.add(navbar);
     }
 
