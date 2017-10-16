@@ -20,26 +20,28 @@
 
 	<span wicket:id="navbar">
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-			<a class="navbar-brand" href="#">Brand</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false"
-				aria-label="Toggle navigation">
+			<a wicket:id="navbarbrandlink" class="navbar-brand" href="#"><span wicket:id="navbarbrandicon"></span>&nbsp;<span wicket:id="navbarbrandlabel"></span></a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsid" aria-controls="navbarsid" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+			<div class="collapse navbar-collapse" id="navbarsid">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a class="nav-link" href="#">Home <span class="sr-only">(current)</span>
-					</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-					<li class="nav-item"><a class="nav-link disabled" href="#">Disabled</a></li>
-					<li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false">Dropdown</a>
-						<div class="dropdown-menu" aria-labelledby="dropdown01">
-							<a class="dropdown-item" href="#">Action</a> <a class="dropdown-item" href="#">Another action</a> <a class="dropdown-item" href="#">Something else here</a>
-						</div></li>
+					<li class="nav-item dropdown" wicket:id="navbaritems">
+						<a wicket:id="navbaritemlink" class="nav-link dropdown-toggle" href="#" id="dropdownid" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span wicket:id="navbaritemicon"></span>&nbsp;
+							<span wicket:id="navbaritemlabel"></span>
+						</a>
+						<div wicket:id="navbardropdown" class="dropdown-menu" aria-labelledby="dropdownid">
+							<span wicket:id="navbardropdownitems">
+								<a wicket:id="navbardropdownitemlink" class="dropdown-item" href="#"><span wicket:id="navbardropdownitemicon"></span>&nbsp;<span wicket:id="navbardropdownitemlabel"></span></a>
+							</span>
+						</div>
+					</li>
 				</ul>
 				<form class="form-inline my-2 my-lg-0">
 					<div class="input-group input-group-sm">
-						<input type="text" class="form-control form-control-sm" placeholder="Search for..."> <span class="input-group-btn">
+						<input type="text" class="form-control form-control-sm" placeholder="Search for...">
+						<span class="input-group-btn">
 							<button class="btn btn-success btn-sm" type="button">Go!</button>
 						</span>
 					</div>

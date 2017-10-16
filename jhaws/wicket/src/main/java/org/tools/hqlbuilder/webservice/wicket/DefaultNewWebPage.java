@@ -1,5 +1,9 @@
 package org.tools.hqlbuilder.webservice.wicket;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
@@ -12,6 +16,9 @@ import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -27,6 +34,10 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
+import org.tools.hqlbuilder.webservice.wicket.components.ExternalLink;
+
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameModifier;
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings("serial")
 public abstract class DefaultNewWebPage extends WebPage {
@@ -90,15 +101,155 @@ public abstract class DefaultNewWebPage extends WebPage {
     }
 
     protected void addNavigationBar(MarkupContainer html, String id) {
-        html.add(new WebMarkupContainer(id));
+        addNavigationBar(html, id, new ArrayList<>());
     }
 
-    protected void addBreadcrumb(MarkupContainer html, String id) {
-        html.add(new WebMarkupContainer(id));
+    protected void addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs) {
+        WebMarkupContainer navbar = new WebMarkupContainer(id);
+
+        ExternalLink navbarbrandlink = new ExternalLink("navbarbrandlink", "#");
+        navbarbrandlink.add(new WebMarkupContainer("navbarbrandicon"));
+        navbarbrandlink.add(new Label("navbarbrandlabel", ""));
+        navbarbrandlink.setVisible(false);
+        navbar.add(navbarbrandlink);
+
+        navbar.add(new ListView<NavBarLink>("navbaritems", navs) {
+            @Override
+            protected void populateItem(ListItem<NavBarLink> item) {
+                // item.add(new CssClassNameAppender("active"));
+                NavBarLink main = item.getModelObject();
+                BookmarkablePageLink<String> link = new BookmarkablePageLink<String>("navbaritemlink", main.getInternalPage(),
+                        main.getInternalPageParameters());
+                WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbaritemicon");
+                if (StringUtils.isNotBlank(main.getIcon())) {
+                    navbaritemicon.add(new CssClassNameModifier(main.getIcon()));
+                }
+                link.add(navbaritemicon);
+                link.add(new Label("navbaritemlabel", main.getLabel()));
+                // link.add(new CssClassNameAppender("disabled"));
+                item.add(link);
+
+                WebMarkupContainer navbardropdown = new WebMarkupContainer("navbardropdown");
+                if (main.getChildLinks().isEmpty()) {
+                    item.add(new CssClassNameRemover("dropdown"));
+                    link.add(new CssClassNameRemover("dropdown-toggle"));
+                    link.add(new AttributeModifier("data-toggle", null));
+                    link.add(new AttributeModifier("aria-haspopup", null));
+                    link.add(new AttributeModifier("aria-expanded", null));
+                    navbardropdown.setVisible(false);
+                }
+                item.add(navbardropdown);
+                navbardropdown.add(new ListView<NavBarLink>("navbardropdownitems", main.getChildLinks()) {
+                    @Override
+                    protected void populateItem(ListItem<NavBarLink> subitem) {
+                        // subitem.add(new CssClassNameAppender("active"));
+                        NavBarLink sub = subitem.getModelObject();
+                        BookmarkablePageLink<String> sublink = new BookmarkablePageLink<String>("navbardropdownitemlink", sub.getInternalPage(),
+                                sub.getInternalPageParameters());
+                        WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbardropdownitemicon");
+                        if (StringUtils.isNotBlank(sub.getIcon())) {
+                            navbaritemicon.add(new CssClassNameModifier(sub.getIcon()));
+                        }
+                        sublink.add(navbaritemicon);
+                        sublink.add(new Label("navbardropdownitemlabel", sub.getLabel()));
+                        // sublink.add(new CssClassNameAppender("disabled"));
+                        subitem.add(sublink);
+                    }
+                });
+            }
+        });
+        html.add(navbar);
     }
 
-    protected void addStatusBar(MarkupContainer html, String id, String contentid) {
-        html.add(new WebMarkupContainer(id).add(new WebMarkupContainer(contentid)));
+    public static class NavBarLink implements Serializable {
+        String externalURL;
+
+        Class<? extends WebPage> internalPage;
+
+        PageParameters internalPageParameters;
+
+        List<NavBarLink> childLinks = new ArrayList<>();
+
+        String icon;
+
+        String label;
+
+        public NavBarLink() {
+            super();
+        }
+
+        public NavBarLink(String label, String icon, String externalURL) {
+            this.label = label;
+            this.icon = icon;
+            this.externalURL = externalURL;
+        }
+
+        public NavBarLink(String label, String icon, Class<? extends WebPage> internalPage, PageParameters internalPageParameters) {
+            this.label = label;
+            this.icon = icon;
+            this.internalPage = internalPage;
+            this.internalPageParameters = internalPageParameters;
+        }
+
+        public String getExternalURL() {
+            return this.externalURL;
+        }
+
+        public void setExternalURL(String externalURL) {
+            this.externalURL = externalURL;
+        }
+
+        public Class<? extends WebPage> getInternalPage() {
+            return this.internalPage;
+        }
+
+        public void setInternalPage(Class<? extends WebPage> internalPage) {
+            this.internalPage = internalPage;
+        }
+
+        public PageParameters getInternalPageParameters() {
+            return this.internalPageParameters;
+        }
+
+        public void setInternalPageParameters(PageParameters internalPageParameters) {
+            this.internalPageParameters = internalPageParameters;
+        }
+
+        public List<NavBarLink> getChildLinks() {
+            return this.childLinks;
+        }
+
+        public void setChildLinks(List<NavBarLink> childLinks) {
+            this.childLinks = childLinks;
+        }
+
+        public String getIcon() {
+            return this.icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public String getLabel() {
+            return this.label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+    }
+
+    protected WebMarkupContainer addBreadcrumb(MarkupContainer html, String id) {
+        WebMarkupContainer breadcrumb = new WebMarkupContainer(id);
+        html.add(breadcrumb);
+        return breadcrumb;
+    }
+
+    protected WebMarkupContainer addStatusBar(MarkupContainer html, String id, String contentid) {
+        WebMarkupContainer content = new WebMarkupContainer(contentid);
+        html.add(new WebMarkupContainer(id).add(content));
+        return content;
     }
 
     abstract protected void addComponents(MarkupContainer html);
