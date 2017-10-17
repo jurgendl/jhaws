@@ -573,3 +573,22 @@ kbd, code {
 .slider.slider-horizontal {
 	width: 100% !important;
 }
+
+.niceimage {
+	border-width:1px;
+	border-style:solid;
+	padding:5px;
+	margin:5px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-radius:3px;
+	border-color:rgba(0,0,0,.3);
+	-webkit-box-shadow:2px 2px 3px 1px rgba(50, 50, 50, 0.5), -1px -1px 1px 0px rgba(50, 50, 50, 0.3);
+	-moz-box-shadow:2px 2px 3px 1px rgba(50, 50, 50, 0.5), -1px -1px 1px 0px rgba(50, 50, 50, 0.3);
+	box-shadow:2px 2px 3px 1px rgba(50, 50, 50, 0.5), -1px -1px 1px 0px rgba(50, 50, 50, 0.3);
+	background-color:rgba(255,255,255,1);
+}
+
+img.niceimage {
+	background-color:rgba(200,200,200,0.8);
+}
