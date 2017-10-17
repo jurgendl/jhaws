@@ -10,10 +10,10 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSettings extends AbstractFormElementSettings<ElementSettings>>
         extends FormRowPanelParent<P, T, C, ElementSettings> {
     public FormRowPanel(IModel<?> model, P propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
-        super(model, propertyPath, formSettings, componentSettings);
+        super(true, model, propertyPath, formSettings, componentSettings);
     }
 
     public FormRowPanel(P propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
-        super(propertyPath, valueModel, formSettings, componentSettings);
+        super(true, propertyPath, valueModel, formSettings, componentSettings);
     }
 }

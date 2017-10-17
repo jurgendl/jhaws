@@ -56,7 +56,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
     protected ElementSettings componentSettings;
 
-    protected FormRowPanelParent(IModel<?> model, P propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
+    protected FormRowPanelParent(boolean bootstrap, IModel<?> model, P propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
         super(FormConstants.FORM_ELEMENT, model);
         if (formSettings == null) {
             throw new NullPointerException("formSettings");
@@ -67,11 +67,14 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         this.formSettings = formSettings;
         this.componentSettings = componentSettings;
         this.propertyPath = propertyPath;
-        WebHelper.show(this);
+        if (bootstrap)
+            WebHelper.hide(this);
+        else
+            WebHelper.show(this);
     }
 
-    public FormRowPanelParent(P propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
-        this(valueModel, propertyPath, formSettings, componentSettings);
+    public FormRowPanelParent(boolean bootstrap, P propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
+        this(bootstrap, valueModel, propertyPath, formSettings, componentSettings);
         this.valueModel = valueModel;
     }
 

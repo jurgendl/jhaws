@@ -50,6 +50,8 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
     protected int count = 0;
 
+    protected boolean bootstrap;
+
     public FormPanelParent(String id, FormActions<T> formActions) {
         this(id, formActions, null);
     }
@@ -308,13 +310,16 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
             this.form.add(formHeader);
 
             WebMarkupContainer formBody = new WebMarkupContainer(FormConstants.FORM_BODY);
+            if (bootstrap) WebHelper.hide(formBody);
             this.form.add(formBody);
 
             WebMarkupContainer formFieldSet = new WebMarkupContainer(FormConstants.FORM_FIELDSET);
+            if (bootstrap) WebHelper.hide(formFieldSet);
             formBody.add(formFieldSet);
             String fieldSetLegend = this.getFormSettings().getFieldSetLegend();
             Label formFieldSetLegend = new Label(FormConstants.FORM_FIELDSET_LEGEND,
                     fieldSetLegend == null ? Model.of("") : new ResourceModel(fieldSetLegend));
+            if (bootstrap) WebHelper.hide(formFieldSetLegend);
             formFieldSet.add(formFieldSetLegend.setVisible(fieldSetLegend != null));
             formFieldSet.add(this.getRowRepeater());
 

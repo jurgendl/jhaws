@@ -10,7 +10,7 @@
 			<span wicket:id="form.body">
 				<fieldset wicket:id="form.fieldset">
 					<legend wicket:id="form.fieldset.legend">[Legend]</legend>
-					<div class="form-group form-row" wicket:id="form.row.repeater">
+					<div class="form-group form-row mb-1" wicket:id="form.row.repeater">
 						<span wicket:id="form.element.repeater">
 							<span wicket:id="form.element"></span>
 						</span>
@@ -23,10 +23,13 @@
 			<span wicket:id="form.actions">
 				<fieldset class="formactions">
 					<div class="form-group form-row">
-						<button class="btn btn-primary btn-sm" wicket:id="form.submit" type="submit" value="[Submit]"><span class="icon submit"></span><wicket:message key="submit.label">submit</wicket:message></button>
-						<button class="btn btn-secondary btn-sm" wicket:id="form.reset" type="reset" value="[Reset]"><span class="icon reset"></span><wicket:message key="reset.label">reset</wicket:message></button>
-						<button class="btn btn-secondary btn-sm" wicket:id="form.cancel" type="button" value="[Cancel]"><span class="icon cancel"></span><wicket:message key="cancel.label">cancel</wicket:message></button>
-						<span wicket:id="form.actions.additional"></span>
+						<div class="col-sm-2"></div>
+						<div class="col-sm-10" style="padding-left: 0px !important; padding-right: 0px !important">
+							<button class="btn btn-primary btn-sm" wicket:id="form.submit" type="submit" value="[Submit]"><span class="fa fa-check"></span>&nbsp;<wicket:message key="submit.label">submit</wicket:message></button>&nbsp;
+							<button class="btn btn-secondary btn-sm" wicket:id="form.reset" type="reset" value="[Reset]"><span class="fa fa-undo"></span>&nbsp;<wicket:message key="reset.label">reset</wicket:message></button>&nbsp;
+							<button class="btn btn-secondary btn-sm" wicket:id="form.cancel" type="button" value="[Cancel]"><span class="fa fa-times"></span>&nbsp;<wicket:message key="cancel.label">cancel</wicket:message></button>&nbsp;
+							<span wicket:id="form.actions.additional"></span>
+						</div>
 					</div>
 				</fieldset>
 			</span>

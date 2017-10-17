@@ -14,6 +14,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
     public FormPanel(String id, FormActions<T> formActions, FormSettings formSettings) {
         super(id, formActions, formSettings);
+        bootstrap = true;
     }
 
     public <PropertyType extends Serializable, ComponentType extends FormComponent<PropertyType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends DefaultFormRowPanel<PropertyType, ComponentType, ElementSettings>> RowPanel addDefaultRow(
