@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormPanelParent;
@@ -28,5 +29,9 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 
     public <F extends Serializable> TextFieldPanel<F> addTextField(F propertyPath, FormElementSettings componentSettings) {
         return this.addDefaultRow(new TextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    }
+
+    public CheckBoxPanel addCheckBox(Boolean propertyPath, CheckBoxSettings componentSettings) {
+        return this.addDefaultRow(new CheckBoxPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 }
