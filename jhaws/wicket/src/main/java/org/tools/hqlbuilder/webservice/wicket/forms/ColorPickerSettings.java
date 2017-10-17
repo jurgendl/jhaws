@@ -2,6 +2,8 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 
 import java.util.List;
 
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+
 /**
  * palette: [<br>
  * ['black', 'white', 'blanchedalmond'],<br>

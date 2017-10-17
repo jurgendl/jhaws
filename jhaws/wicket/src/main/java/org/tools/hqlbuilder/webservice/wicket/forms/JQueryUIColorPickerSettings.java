@@ -2,6 +2,8 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 
 import java.util.Locale;
 
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+
 public class JQueryUIColorPickerSettings extends AbstractFormElementSettings<JQueryUIColorPickerSettings> {
 	private static final long serialVersionUID = 1732670371494903296L;
 

@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.io.Serializable;
 

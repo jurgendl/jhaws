@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import org.apache.wicket.markup.html.panel.Panel;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;

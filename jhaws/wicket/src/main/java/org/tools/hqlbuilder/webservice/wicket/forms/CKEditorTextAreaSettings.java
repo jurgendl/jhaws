@@ -1,6 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
 import org.tools.hqlbuilder.webservice.jquery.ui.ckeditor.CKEditor.CKEType;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 
 /**
  * @see http://docs.ckeditor.com/#!/api/CKEDITOR.config

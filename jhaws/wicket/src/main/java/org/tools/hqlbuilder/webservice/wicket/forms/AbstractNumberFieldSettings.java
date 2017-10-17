@@ -1,5 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+
 public abstract class AbstractNumberFieldSettings<N extends Number & Comparable<N>, T extends AbstractNumberFieldSettings<N, T>> extends AbstractFormElementSettings<T> {
 	private static final long serialVersionUID = 5784680461033564819L;
 

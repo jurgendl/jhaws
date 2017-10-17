@@ -1,5 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+
 public class AutoCompleteTextFieldSettings extends AbstractFormElementSettings<AutoCompleteTextFieldSettings> {
 	private static final long serialVersionUID = 208227230310006451L;
 

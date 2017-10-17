@@ -1,5 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+
 public abstract class AbstractSelectSettings<T extends AbstractSelectSettings<T>> extends AbstractFormElementSettings<T> {
 	private static final long serialVersionUID = -8517376888884835477L;
 

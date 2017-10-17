@@ -1,5 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+
 public class FilePickerSettings extends AbstractFormElementSettings<FilePickerSettings> {
 	private static final long serialVersionUID = -9053664906141038088L;
 

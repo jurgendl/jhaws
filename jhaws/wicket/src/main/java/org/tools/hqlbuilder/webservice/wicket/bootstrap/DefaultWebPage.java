@@ -311,8 +311,8 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
 
-        response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultNewWebPage.css")));
-        // response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultNewWebPage.class, "DefaultNewWebPage.js")));
-        // response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultNewWebPage.class, "DefaultNewWebPage-factory.js").readAll()));
+        response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
+        // response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
+        // response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
     }
 }

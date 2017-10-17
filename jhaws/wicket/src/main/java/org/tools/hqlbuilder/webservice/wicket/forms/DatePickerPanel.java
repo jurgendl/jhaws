@@ -18,6 +18,7 @@ import org.tools.hqlbuilder.webservice.jquery.ui.datepicker.JQueryDatePicker;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.converter.ModelConverter;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import com.googlecode.wicket.jquery.core.Options;

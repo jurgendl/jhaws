@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 import java.io.Serializable;
 
@@ -9,7 +9,6 @@ import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
-import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
 
 public abstract class DefaultFormActions<T extends Serializable> implements FormActions<T> {
 	private static final long serialVersionUID = 555158530492799693L;

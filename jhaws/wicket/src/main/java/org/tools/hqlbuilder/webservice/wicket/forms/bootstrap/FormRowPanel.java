@@ -1,10 +1,7 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
-import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormRowPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
@@ -18,14 +15,5 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
 
     public FormRowPanel(P propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
         super(propertyPath, valueModel, formSettings, componentSettings);
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        if (!this.isEnabledInHierarchy()) {
-            return;
-        }
-        response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_JS));
     }
 }

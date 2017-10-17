@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 public interface FormConstants {
 	public static final String FORM_NOTIFICATION = "formnotification";
