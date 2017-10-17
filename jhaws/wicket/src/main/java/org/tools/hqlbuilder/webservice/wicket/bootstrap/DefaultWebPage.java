@@ -37,8 +37,8 @@ import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwe
 import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 import org.tools.hqlbuilder.webservice.wicket.components.ExternalLink;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameModifier;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
@@ -132,12 +132,13 @@ public abstract class DefaultWebPage extends WebPage {
 
                 WebMarkupContainer navbardropdown = new WebMarkupContainer("navbardropdown");
                 if (main.getChildLinks().isEmpty()) {
-                    item.add(new CssClassNameRemover("dropdown"));
-                    link.add(new CssClassNameRemover("dropdown-toggle"));
-                    link.add(new AttributeModifier("data-toggle", null));
-                    link.add(new AttributeModifier("aria-haspopup", null));
-                    link.add(new AttributeModifier("aria-expanded", null));
                     navbardropdown.setVisible(false);
+                } else {
+                    item.add(new CssClassNameAppender("dropdown"));
+                    link.add(new CssClassNameAppender("dropdown-toggle"));
+                    link.add(new AttributeModifier("data-toggle", "dropdown"));
+                    link.add(new AttributeModifier("aria-haspopup", "true"));
+                    link.add(new AttributeModifier("aria-expanded", "false"));
                 }
                 item.add(navbardropdown);
                 navbardropdown.add(new ListView<NavBarLink>("navbardropdownitems", main.getChildLinks()) {

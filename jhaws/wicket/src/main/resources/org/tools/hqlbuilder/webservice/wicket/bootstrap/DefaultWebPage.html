@@ -27,11 +27,12 @@
 			<div class="collapse navbar-collapse" id="navbarsid">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item dropdown" wicket:id="navbaritems">
-						<a wicket:id="navbaritemlink" class="nav-link dropdown-toggle" href="#" id="dropdownid" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<!-- <a wicket:id="navbaritemlink" class="nav-link dropdown-toggle" href="#" id="dropdownid" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+						<a wicket:id="navbaritemlink" class="nav-link" href="#" id="navbaritemlink"><!-- TODO id/aria-labelledby -->
 							<span wicket:id="navbaritemicon"></span>&nbsp;
 							<span wicket:id="navbaritemlabel"></span>
 						</a>
-						<div wicket:id="navbardropdown" class="dropdown-menu" aria-labelledby="dropdownid">
+						<div wicket:id="navbardropdown" class="dropdown-menu" aria-labelledby="navbaritemlink"><!-- TODO id/aria-labelledby -->
 							<span wicket:id="navbardropdownitems">
 								<a wicket:id="navbardropdownitemlink" class="dropdown-item" href="#"><span wicket:id="navbardropdownitemicon"></span>&nbsp;<span wicket:id="navbardropdownitemlabel"></span></a>
 							</span>
