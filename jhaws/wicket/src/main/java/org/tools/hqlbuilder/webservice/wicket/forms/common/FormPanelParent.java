@@ -9,6 +9,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
@@ -107,6 +108,11 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
         super.renderHead(response);
         if (!this.isEnabledInHierarchy()) {
             return;
+        }
+        if (formSettings.isDisableOnClick()) {
+            String submitId = getFormActionsContainer().get(FORM_SUBMIT).getMarkupId();
+            response.render(OnDomReadyHeaderItem.forScript("$('#" + getForm().getMarkupId() + "').submit(function () { $('#" + submitId
+                    + "').attr('disabled', true); $('#" + submitId + "').addClass('disabled'); return true; });"));
         }
     }
 
@@ -207,14 +213,14 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
      * behind normal form, default invisible, default render body only
      */
     public RepeatingView getFormAdditionalContainer() {
-        return (RepeatingView) this.getForm().get(FormConstants.FORM_ADDITIONAL);
+        return (RepeatingView) this.getForm().get(FormConstants.FORM_ADDITIONAL).setVisible(true);
     }
 
     /**
      * behind normal form buttons, default invisible, default render body only
      */
     public RepeatingView getFormActionsAdditionalContainer() {
-        return (RepeatingView) this.getForm().get(FormConstants.FORM_ACTIONS).get(FormConstants.FORM_ACTIONS_ADDTIONAL);
+        return (RepeatingView) this.getForm().get(FormConstants.FORM_ACTIONS).get(FormConstants.FORM_ACTIONS_ADDTIONAL).setVisible(true);
     }
 
     /**
@@ -408,6 +414,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
                     return "WebMarkupContainer:" + FormConstants.FORM_FOOTER;
                 }
             };
+            if (bootstrap) WebHelper.hide(formFooter);
             this.form.add(formFooter);
 
             switch (getFormSettings().getShowMessages()) {
