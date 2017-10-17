@@ -34,9 +34,9 @@ public class ExternalImage extends Image {
         this(id, Model.of(url));
     }
 
-    public ExternalImage(String id, Model<?> path) {
+    public ExternalImage(String id, IModel<?> path) {
         super(id);
-        url = Model.of(path);
+        url = path;
     }
 
     @Override
