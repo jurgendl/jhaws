@@ -1,5 +1,3 @@
-/* ========================xxx======================== */
-
 /* ======================== fonts ======================== */
 /* https://www.google.com/fonts */
 /* http://fontfabric.com/idealist-sans/ */
@@ -156,46 +154,10 @@ body {
 }
 
 /* ======================== rotation animation ======================== */
-@
--webkit-keyframes rotate {from { -webkit-transform:rotate(0deg);
-	
-}
-
-to {
-	-webkit-transform: rotate(360deg);
-}
-
-}
-@
--moz-keyframes rotate {from { -moz-transform:rotate(0deg);
-	
-}
-
-to {
-	-moz-transform: rotate(360deg);
-}
-
-}
-@
--ms-keyframes rotate {from { -ms-transform:rotate(0deg);
-	
-}
-
-to {
-	-ms-transform: rotate(360deg);
-}
-
-}
-@
--o-keyframes rotate {from { -o-transform:rotate(0deg);
-	
-}
-
-to {
-	-o-transform: rotate(360deg);
-}
-
-}
+@-webkit-keyframes rotate {from { -webkit-transform:rotate(0deg);	}to {	-webkit-transform: rotate(360deg);}}
+@-moz-keyframes rotate {from { -moz-transform:rotate(0deg);}to {	-moz-transform: rotate(360deg);}}
+@-ms-keyframes rotate {from { -ms-transform:rotate(0deg);	}to {	-ms-transform: rotate(360deg);}}
+@-o-keyframes rotate {from { -o-transform:rotate(0deg);	}to {	-o-transform: rotate(360deg);}}
 .rotatingfastest {
 	-webkit-filter: blur(0);
 	-webkit-transform-origin: 50% 50%;

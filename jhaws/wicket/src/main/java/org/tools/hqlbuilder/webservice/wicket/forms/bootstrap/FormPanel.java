@@ -1,9 +1,12 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
@@ -33,5 +36,11 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 
     public CheckBoxPanel addCheckBox(Boolean propertyPath, CheckBoxSettings componentSettings) {
         return this.addDefaultRow(new CheckBoxPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    }
+
+    public <F extends Serializable> RadioButtonsPanel<F> addRadioButtons(F propertyPath, FormElementSettings componentSettings,
+            IModel<List<F>> choices, IChoiceRenderer<F> renderer) {
+        return this.addDefaultRow(
+                new RadioButtonsPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
     }
 }
