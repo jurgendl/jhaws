@@ -554,3 +554,8 @@ kbd, code {
 img.niceimage {
 	background-color:rgba(200,200,200,0.8);
 }
+
+/* boostrap css fix */
+.btn-outline-light:hover {
+	color: black !important;
+}

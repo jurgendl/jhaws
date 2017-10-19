@@ -106,10 +106,11 @@ public abstract class DefaultWebPage extends WebPage {
     }
 
     protected void addNavigationBar(MarkupContainer html, String id) {
-        addNavigationBar(html, id, new ArrayList<>(), false);
+        addNavigationBar(html, id, new ArrayList<>(), false, false, false);
     }
 
-    protected void addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs, boolean searchBar) {
+    protected void addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs, boolean userButton, boolean searchBar,
+            boolean backToTopButton) {
         WebMarkupContainer navbar = new WebMarkupContainer(id);
 
         ExternalLink navbarbrandlink = new ExternalLink("navbarbrandlink", "#");
@@ -165,10 +166,14 @@ public abstract class DefaultWebPage extends WebPage {
             }
         });
 
-        // back to top button
-        navbar.add(new Button("backToTopButton").setVisible(true));
+        // login/logout/user-config menu
+        navbar.add(new Button("userButton").setVisible(userButton));
 
+        // searchbar
         navbar.add(new WebMarkupContainer("searchbar").setVisible(searchBar));
+
+        // back to top button
+        navbar.add(new Button("backToTopButton").setVisible(backToTopButton));
 
         html.add(navbar);
     }
