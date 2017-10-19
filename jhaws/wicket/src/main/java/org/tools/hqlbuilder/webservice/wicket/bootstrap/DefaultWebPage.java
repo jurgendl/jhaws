@@ -51,11 +51,11 @@ public abstract class DefaultWebPage extends WebPage {
         // // html language
         // WebMarkupContainer html = new WebMarkupContainer("html");
         // add(html.add(new AttributeModifier("lang", getSession().getLocale().getLanguage())));
-        addDefaultComponents(this);
-        addComponents(this);
+        addDefaultComponents(parameters, this);
+        addComponents(parameters, this);
     }
 
-    protected void addDefaultComponents(MarkupContainer html) {
+    protected void addDefaultComponents(PageParameters parameters, MarkupContainer html) {
         // title
         html.add(new Label("page.title", getString("page.title")));
 
@@ -269,7 +269,7 @@ public abstract class DefaultWebPage extends WebPage {
         return content;
     }
 
-    abstract protected void addComponents(MarkupContainer html);
+    abstract protected void addComponents(PageParameters parameters, MarkupContainer html);
 
     @Override
     public void renderHead(IHeaderResponse response) {
