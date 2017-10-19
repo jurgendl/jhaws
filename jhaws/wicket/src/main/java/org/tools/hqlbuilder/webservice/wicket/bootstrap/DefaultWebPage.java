@@ -13,9 +13,11 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
+import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -23,6 +25,7 @@ import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.bootstrap4.colorpicker.BootstrapColorPicker;
 import org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus.BootstrapTempusDominusDateTimePicker;
@@ -34,6 +37,7 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
+import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 import org.tools.hqlbuilder.webservice.wicket.components.ExternalLink;
 
@@ -102,10 +106,10 @@ public abstract class DefaultWebPage extends WebPage {
     }
 
     protected void addNavigationBar(MarkupContainer html, String id) {
-        addNavigationBar(html, id, new ArrayList<>());
+        addNavigationBar(html, id, new ArrayList<>(), false);
     }
 
-    protected void addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs) {
+    protected void addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs, boolean searchBar) {
         WebMarkupContainer navbar = new WebMarkupContainer(id);
 
         ExternalLink navbarbrandlink = new ExternalLink("navbarbrandlink", "#");
@@ -161,7 +165,10 @@ public abstract class DefaultWebPage extends WebPage {
             }
         });
 
-        navbar.add(new WebMarkupContainer("searchbar").setVisible(false));
+        // back to top button
+        navbar.add(new Button("backToTopButton").setVisible(true));
+
+        navbar.add(new WebMarkupContainer("searchbar").setVisible(searchBar));
 
         html.add(navbar);
     }
@@ -251,8 +258,8 @@ public abstract class DefaultWebPage extends WebPage {
         return breadcrumb;
     }
 
-    protected WebMarkupContainer addStatusBar(MarkupContainer html, String id, String contentid) {
-        WebMarkupContainer content = new WebMarkupContainer(contentid);
+    protected WebComponent addStatusBar(MarkupContainer html, String id, String contentid) {
+        Label content = new Label(contentid, " ");
         html.add(new WebMarkupContainer(id).add(content));
         return content;
     }
@@ -313,7 +320,7 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
 
         response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
-        // response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
-        // response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
+        response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
     }
 }

@@ -11,7 +11,7 @@ $('.custom-file-input').on('change', function() {
 ; //
 $('[data-toggle="tooltip"]').tooltip();
 
-/* ; //
-$('.disabled').click(function(e){
-    e.preventDefault();
-}); */
+/*
+ * ; // $('.disabled').click(function(e){ e.preventDefault(); });
+ */
+
