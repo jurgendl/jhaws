@@ -16,6 +16,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
 
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
@@ -68,5 +69,13 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
             IModel<List<F>>[] choices, IModel<String>[] groupLabels) {
         return this.addDefaultRow(
                 new ListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
+    }
+
+    public <N extends Number & Comparable<N>> NumberFieldPanel<N> addNumberField(N propertyPath, NumberFieldSettings<N> componentSettings) {
+        return this.addDefaultRow(new NumberFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    }
+
+    public <N extends Number & Comparable<N>> NumberTextFieldPanel<N> addNumberTextField(N propertyPath, NumberFieldSettings<N> componentSettings) {
+        return this.addDefaultRow(new NumberTextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 }

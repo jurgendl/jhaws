@@ -10,6 +10,7 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
 
 public class SliderPanel<N extends Number & Comparable<N>> extends DefaultFormRowPanel<N, RangeTextField<N>, NumberFieldSettings<N>> {
 	private static final long serialVersionUID = 1636673516673656939L;
