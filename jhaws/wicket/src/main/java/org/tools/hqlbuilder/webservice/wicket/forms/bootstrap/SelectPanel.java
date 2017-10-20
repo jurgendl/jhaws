@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -22,10 +22,9 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractSelectSetting
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.renderer.DefaultOptionRenderer;
 
+@SuppressWarnings("serial")
 public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S extends AbstractSelectSettings<S>>
         extends DefaultFormRowPanel<T, C, S> {
-    private static final long serialVersionUID = -6781073146798103698L;
-
     public static final String OPTIONS_CONTAINER_ID = "optionsContainer";
 
     public static final String OPTGROUP_ID = "optgroup";
@@ -86,8 +85,6 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
         for (int i = 0; i < choices.length; i++) {
             final int I = i;
             WebMarkupContainer optgroupWebcontainer = new WebMarkupContainer(optgroupRepeater.newChildId()) {
-                private static final long serialVersionUID = -3644549985638665292L;
-
                 @Override
                 protected void onComponentTag(ComponentTag tag) {
                     super.onComponentTag(tag);
@@ -111,11 +108,9 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
 
     protected SelectOptions<T> createSelectOptions(String id, IModel<List<T>> choicesModel) {
         SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
-            private static final long serialVersionUID = -7724272123559477783L;
-
             @Override
             protected SelectOption<T> newOption(final String text, final IModel<? extends T> optModel) {
-                final String textF = StringUtils.isBlank(text) ? getString("null") : text;
+                final String textF = StringUtils.isBlank(text) ? "..." : text;
                 SelectOption<T> selectOption = createSelectOption(text, optModel, textF);
                 return selectOption;
             }
@@ -125,8 +120,6 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
 
     protected SelectOption<T> createSelectOption(final String text, final IModel<? extends T> optModel, final String textF) {
         SelectOption<T> selectOption = new SelectOption<T>(OPTION_ID, optModel) {
-            private static final long serialVersionUID = 6450521870585988265L;
-
             @Override
             public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
                 replaceComponentTagBody(markupStream, openTag, textF);

@@ -24,10 +24,12 @@ import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.DropDownSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
 import org.tools.hqlbuilder.webservice.wicket.sass.SassResourceReference;
 
 import com.googlecode.wicket.jquery.core.renderer.ITextRenderer;

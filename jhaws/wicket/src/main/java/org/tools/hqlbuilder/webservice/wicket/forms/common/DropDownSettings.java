@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 public class DropDownSettings extends AbstractSelectSettings<DropDownSettings> {
 	private static final long serialVersionUID = 8867358507822882073L;

@@ -4,15 +4,18 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.DropDownSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
 
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
@@ -42,5 +45,28 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
             IModel<List<F>> choices, IChoiceRenderer<F> renderer) {
         return this.addDefaultRow(
                 new RadioButtonsPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
+    }
+
+    public <F extends Serializable> DropDownPanel<F> addDropDown(F propertyPath, DropDownSettings componentSettings, IOptionRenderer<F> renderer,
+            IModel<List<F>> choices) {
+        return this
+                .addDefaultRow(new DropDownPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
+    }
+
+    public <F extends Serializable> DropDownPanel<F> addDropDown(F propertyPath, DropDownSettings componentSettings, IOptionRenderer<F> renderer,
+            IModel<List<F>>[] choices, IModel<String>[] groupLabels) {
+        return this.addDefaultRow(
+                new DropDownPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
+    }
+
+    public <F extends Serializable> ListPanel<F> addList(F propertyPath, ListSettings componentSettings, IOptionRenderer<F> renderer,
+            IModel<List<F>> choices) {
+        return this.addDefaultRow(new ListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
+    }
+
+    public <F extends Serializable> ListPanel<F> addList(F propertyPath, ListSettings componentSettings, IOptionRenderer<F> renderer,
+            IModel<List<F>>[] choices, IModel<String>[] groupLabels) {
+        return this.addDefaultRow(
+                new ListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
     }
 }

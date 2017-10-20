@@ -1,5 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractSelectSettings;
+
 public class MultiListSettings extends AbstractSelectSettings<MultiListSettings> {
 	private static final long serialVersionUID = -7087528702318354068L;
 

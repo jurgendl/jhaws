@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 public class ListSettings extends AbstractSelectSettings<ListSettings> {
 	private static final long serialVersionUID = -6574286191603464915L;
