@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd" xml:lang="en" lang="en">
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
 
-	<div class="container">
+	<div class="fluid-container p-5">
 		<form class="needs-validation" wicket:id="form">
-			<fieldset class="form-group form-row" wicket:id="form.header">
+			<fieldset class="form-group form-row mb-1" wicket:id="form.header">
 				<div wicket:id="allMessagesTop"></div>
 			</fieldset>
 			<span wicket:id="form.body">
@@ -18,13 +18,12 @@
 				</fieldset>
 			</span>
 			<fieldset class="formfooter" wicket:id="form.footer">
-				<div class="form-group form-row" wicket:id="allMessagesBottom"></div>
+				<div class="form-group form-row mb-1" wicket:id="allMessagesBottom"></div>
 			</fieldset>
 			<span wicket:id="form.actions">
 				<fieldset class="formactions">
-					<div class="form-group form-row">
-						<div class="col-sm-3"></div>
-						<div class="col-sm-7" style="padding-left: 0px !important; padding-right: 0px !important">
+					<div class="form-group form-row mb-1">
+						<div class="col-sm-12" style="padding-left: 0px !important; padding-right: 0px !important">
 							<button class="btn btn-primary btn-sm mr-1" wicket:id="form.submit" type="submit" value="[Submit]"><span class="fa fa-check"></span>&nbsp;<wicket:message key="submit.label">submit</wicket:message></button>
 							<button class="btn btn-secondary btn-sm mr-1" wicket:id="form.reset" type="reset" value="[Reset]"><span class="fa fa-undo"></span>&nbsp;<wicket:message key="reset.label">reset</wicket:message></button>
 							<button class="btn btn-secondary btn-sm mr-1" wicket:id="form.cancel" type="button" value="[Cancel]"><span class="fa fa-times"></span>&nbsp;<wicket:message key="cancel.label">cancel</wicket:message></button>
