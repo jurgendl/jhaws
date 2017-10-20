@@ -1,6 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
@@ -8,6 +9,7 @@ import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
+import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.DropDownSettings;
@@ -87,7 +89,14 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 				componentSettings));
 	}
 
-	public void addEmptyField() {
+	public DatePickerPanel<Date> addDatePicker(Date propertyPath, FormElementSettings componentSettings) {
+		return this.addDatePicker(propertyPath, componentSettings, (Converter<Date, Date>) null);
+	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public <F extends Serializable> DatePickerPanel<F> addDatePicker(F propertyPath,
+			FormElementSettings componentSettings, Converter<F, Date> dateConverter) {
+		return this.addDefaultRow((DatePickerPanel) new DatePickerPanel<>(this.getFormModel(), propertyPath,
+				dateConverter, this.getFormSettings(), componentSettings));
 	}
 }
