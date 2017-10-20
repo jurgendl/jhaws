@@ -7,6 +7,8 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+
 @SuppressWarnings("serial")
 public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckBoxSettings> {
 	public static final String CHECKBOXLABEL = "checkboxlabel";
@@ -45,6 +47,8 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
 					tag.getAttributes().put(FOR, getComponent().getMarkupId() + "before");
 				}
 			};
+			if (getLabelClass() != null)
+				label.add(new CssClassNameAppender(getLabelClass()));
 		}
 		return label;
 	}

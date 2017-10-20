@@ -559,3 +559,7 @@ img.niceimage {
 .btn-outline-light:hover {
 	color: black !important;
 }
+
+.form-control-label {
+	text-align: right;
+}

@@ -98,9 +98,19 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
 	protected WebMarkupContainer componentContainer;
 
+	public String getLabelClass() {
+		return null;
+	}
+
+	public String getComponentClass() {
+		return null;
+	}
+
 	public WebMarkupContainer getComponentContainer() {
 		if (componentContainer == null) {
 			componentContainer = new WebMarkupContainer("componentContainer");
+			if (getComponentClass() != null)
+				componentContainer.add(new CssClassNameAppender(getComponentClass()));
 		}
 		return componentContainer;
 	}
@@ -163,6 +173,8 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 					tag.getAttributes().put(FormConstants.TITLE, FormRowPanelParent.this.getLabelModel().getObject());
 				}
 			};
+			if (getLabelClass() != null)
+				label.add(new CssClassNameAppender(getLabelClass()));
 		}
 		return this.label;
 	}
