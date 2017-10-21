@@ -11,6 +11,7 @@ import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.bean.validation.PropertyValidator;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -141,6 +142,10 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 		return this.componentSettings;
 	}
 
+	protected String getFeedbackMessageCSSClass(final FeedbackMessage message) {
+		return "feedbackPanel" + message.getLevelAsString();
+	}
+
 	protected FeedbackPanel getFeedback() {
 		if (this.feedbackPanel == null) {
 			this.feedbackPanel = new FeedbackPanel(FormConstants.FEEDBACK_ID,
@@ -148,6 +153,10 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 				@Override
 				public boolean isVisible() {
 					return super.isVisible() && this.anyMessage();
+				}
+
+				protected String getCSSClass(final FeedbackMessage message) {
+					return getFeedbackMessageCSSClass(message);
 				}
 			};
 			this.feedbackPanel.setOutputMarkupId(true);

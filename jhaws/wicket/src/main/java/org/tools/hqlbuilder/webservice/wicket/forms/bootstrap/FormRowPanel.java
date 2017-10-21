@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
@@ -36,5 +37,23 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
 			return "col-sm-2";
 		}
 		return "col-sm-1";
+	}
+
+	protected String getFeedbackMessageCSSClass(final FeedbackMessage message) {
+		switch (message.getLevel()) {
+		case FeedbackMessage.DEBUG:
+			return "alert alert-info";
+		case FeedbackMessage.INFO:
+			return "alert alert-info";
+		case FeedbackMessage.SUCCESS:
+			return "alert alert-success";
+		case FeedbackMessage.WARNING:
+			return "alert alert-warning";
+		case FeedbackMessage.ERROR:
+			return "alert alert-danger";
+		case FeedbackMessage.FATAL:
+			return "alert alert-danger";
+		}
+		return "alert alert-info";
 	}
 }

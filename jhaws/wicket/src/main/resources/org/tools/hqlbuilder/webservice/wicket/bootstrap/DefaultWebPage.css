@@ -337,45 +337,21 @@ body {
 	color: #D8000C;
 	background-color: #FFBABA;
 }
-
-.feedbackPanel .feedbackPanelERROR:before {
-	content: '\e80d';
-}
-
 .feedbackPanel .feedbackPanelWARNING {
 	color: #FEEFB3;
 	background-color: #FEEFB3;
 }
-
-.feedbackPanel .feedbackPanelWARNING:before {
-	content: '\e801';
-}
-
 .feedbackPanel .feedbackPanelINFO {
 	color: #00529B;
 	background-color: #BDE5F8;
 }
-
-.feedbackPanel .feedbackPanelINFO:before {
-	content: '\e809';
-}
-
 .feedbackPanel .feedbackPanelSUCCESS {
 	color: #4F8A10;
 	background-color: #DFF2BF;
 }
-
-.feedbackPanel .feedbackPanelSUCCESS:before {
-	content: '\e80c';
-}
-
 .feedbackPanel .feedbackPanelDEBUG {
 	color: #00529B;
 	background-color: #BDE5F8;
-}
-
-.feedbackPanel .feedbackPanelDEBUG:before {
-	content: '\e809';
 }
 
 /* ======================== text transformations ======================== */
