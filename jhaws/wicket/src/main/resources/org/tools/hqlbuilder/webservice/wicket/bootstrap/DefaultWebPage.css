@@ -550,16 +550,20 @@ kbd, code {
 	box-shadow:2px 2px 3px 1px rgba(50, 50, 50, 0.5), -1px -1px 1px 0px rgba(50, 50, 50, 0.3);
 	background-color:rgba(255,255,255,1);
 }
-
 img.niceimage {
 	background-color:rgba(200,200,200,0.8);
 }
 
-/* boostrap css fix */
+/* boostrap outline-light button fix */
 .btn-outline-light:hover {
 	color: black !important;
 }
 
 .form-control-label {
 	text-align: right;
+}
+
+/* datepicker width fix */
+.bootstrap-datetimepicker-widget.dropdown-menu {
+	width: auto !important;
 }

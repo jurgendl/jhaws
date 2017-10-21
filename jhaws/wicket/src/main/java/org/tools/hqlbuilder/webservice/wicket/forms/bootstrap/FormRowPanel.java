@@ -19,6 +19,9 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
 	}
 
 	public String getLabelClass() {
+		if (formSettings.getColumns() >= 5) {
+			return "col-sm-1";
+		}
 		return "col-sm-2";
 	}
 
@@ -32,9 +35,6 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
 		if (formSettings.getColumns() == 3) {
 			return "col-sm-2";
 		}
-		if (formSettings.getColumns() == 4) {
-			return "col-sm-1";
-		}
-		return null;
+		return "col-sm-1";
 	}
 }
