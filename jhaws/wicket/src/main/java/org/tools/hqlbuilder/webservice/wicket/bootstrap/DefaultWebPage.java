@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.head.CssHeaderItem;
@@ -258,7 +259,7 @@ public abstract class DefaultWebPage extends WebPage {
         }
     }
 
-    protected WebMarkupContainer addBreadcrumb(MarkupContainer html, String id) {
+    protected Component addBreadcrumb(MarkupContainer html, String id) {
         WebMarkupContainer breadcrumb = new WebMarkupContainer(id);
         html.add(breadcrumb);
         return breadcrumb;
