@@ -108,9 +108,10 @@ public class FlowPlayerPanel extends Panel {
 				(config.getLoop() ? "," + "loop:true" : "") + //
 				"}" + //
 				");"));
-		if (config.getLoop())
+		if (config.getLoop()) {
 			response.render(CssHeaderItem.forCSS(
 					".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }",
 					"flowplayer_hide_play"));
+		}
 	}
 }
