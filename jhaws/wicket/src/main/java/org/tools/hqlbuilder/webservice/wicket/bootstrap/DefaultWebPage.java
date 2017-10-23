@@ -35,7 +35,6 @@ import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
 import org.tools.hqlbuilder.webservice.jquery.ui.blazy.BLazy;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
-import org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
@@ -320,8 +319,9 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));
 
-        response.render(JavaScriptHeaderItem.forReference(TypeAhead.JS));
-        response.render(JavaScriptHeaderItem.forReference(TypeAhead.JS_BLOODHOUND));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
 
         response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));

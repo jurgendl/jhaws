@@ -548,6 +548,11 @@ img.niceimage {
 
 /* tagsinput */
 .bootstrap-tagsinput .badge [data-role="remove"]::after {
-    background-color: rgba(0, 0, 0, 0);
-    font-size: 11px;
+	background-color: rgba(0, 0, 0, 0);
+	font-size: 11px;
+}
+
+/* typeahead */
+.typeahead {
+	z-index: 1051;
 }
