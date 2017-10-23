@@ -1,3 +1,5 @@
+/* ============= DefaultWebPage.css ============= */
+
 /* ======================== fonts ======================== */
 /* https://www.google.com/fonts */
 /* http://fontfabric.com/idealist-sans/ */
@@ -542,4 +544,10 @@ img.niceimage {
 /* datepicker width fix */
 .bootstrap-datetimepicker-widget.dropdown-menu {
 	width: auto !important;
+}
+
+/* tagsinput */
+.bootstrap-tagsinput .badge [data-role="remove"]::after {
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 11px;
 }

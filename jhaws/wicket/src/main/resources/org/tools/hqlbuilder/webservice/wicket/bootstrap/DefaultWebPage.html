@@ -39,18 +39,25 @@
 						</div>
 					</li>
 				</ul>
-				<button wicket:id="userButton" style="width:2rem" class="back-to-top btn btn-sm btn-success"><span class="fa fa-user"></span></button>
-				&nbsp;
-				<form class="form-inline my-2 my-lg-0">
-					<div wicket:id="searchbar" class="input-group input-group-sm">
-						<input type="text" class="form-control form-control-sm" placeholder="Search for...">
-						<span class="input-group-btn">
-							<button class="btn btn-success btn-sm" type="button">Go!</button>
-						</span>
-					</div>
-				</form>
-				&nbsp;
-				<button wicket:id="backToTopButton" style="width:2rem;display:none;cursor:pointer;" class="back-to-top btn btn-sm btn-outline-light" onclick="topFunction()" id="back-to-top" title="Go to top"><span class="fa fa-chevron-up"></span></button>
+				<wicket:enclosure child="userButton">
+					&nbsp;
+					<button wicket:id="userButton" style="width:2rem" class="back-to-top btn btn-sm btn-success"><span class="fa fa-user"></span></button>
+				</wicket:enclosure>
+				<wicket:enclosure child="searchbar">
+					&nbsp;
+					<form class="form-inline my-2 my-lg-0">
+						<div wicket:id="searchbar" class="input-group input-group-sm">
+							<input type="text" class="form-control form-control-sm" placeholder="Search for...">
+							<span class="input-group-btn">
+								<button class="btn btn-success btn-sm" type="button">Go!</button>
+							</span>
+						</div>
+					</form>
+				</wicket:enclosure>
+				<wicket:enclosure child="backToTopButton">
+					&nbsp;
+					<button wicket:id="backToTopButton" style="width:2rem;display:none;cursor:pointer;" class="back-to-top btn btn-sm btn-outline-light" onclick="topFunction()" id="back-to-top" title="Go to top"><span class="fa fa-chevron-up"></span></button>
+				</wicket:enclosure>
 			</div>
 		</nav>
 	
