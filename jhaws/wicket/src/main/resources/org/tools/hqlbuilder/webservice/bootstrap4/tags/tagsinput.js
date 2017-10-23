@@ -333,7 +333,9 @@
           },
           updater: function (text) {
             self.add(this.map[text]);
-            return this.map[text];
+            // IMPORTANT FIX
+            // https://github.com/bootstrap-tagsinput/bootstrap-tagsinput/issues/331
+            return ''; //this.map[text];
           },
           matcher: function (text) {
             return (text.toLowerCase().indexOf(this.query.trim().toLowerCase()) !== -1);
@@ -383,7 +385,8 @@
         }
         self.$input.focus();
       }, self));
-
+// // FIXME
+      //  	//https://github.com/bootstrap-tagsinput/bootstrap-tagsinput/issues/331
         if (self.options.addOnBlur && self.options.freeInput) {
           self.$input.on('focusout', $.proxy(function(event) {
               // HACK: only process on focusout when no typeahead opened, to
@@ -393,6 +396,17 @@
                 self.$input.val('');
               }
           }, self));
+         // // doesn't work
+//        	self.$input.blur($.proxy(function () {
+//        	      self.add(self.$input.val());
+//        	      self.$input.val('');
+//        	    }, self));
+        //  // not tested
+//          if (!self.options.freeInput) {
+//              self.$input.on('focusout', $.proxy(function(event) {
+//                  self.$input.val('');
+//              }, self));
+//          }
         }
 
       // Toggle the 'focus' css class on the container when it has focus
