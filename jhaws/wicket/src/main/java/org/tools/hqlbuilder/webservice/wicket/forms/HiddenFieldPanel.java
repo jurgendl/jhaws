@@ -23,7 +23,7 @@ public class HiddenFieldPanel<T extends Serializable>
 	@Override
 	public FormRowPanel<T, T, HiddenField<T>, FormElementSettings> addComponents() {
 		HiddenField<T> comp = getComponent();
-		this.add(getComponentContainer().add(comp));
+		this.add(comp);
 		return this;
 	}
 
