@@ -9,7 +9,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // http://getbootstrap.com/
 // https://hackerthemes.com/bootstrap-cheatsheet/
 // https://bootsnipp.com/tags/4.0.0
-//
+// 4 beta 2
 //
 // https://bootsnipp.com/snippets/gv6Pe
 // https://bootsnipp.com/snippets/7KGEV
