@@ -556,3 +556,7 @@ img.niceimage {
 .typeahead {
 	z-index: 1051;
 }
+
+.col-form-label {
+	text-align: right;
+}
