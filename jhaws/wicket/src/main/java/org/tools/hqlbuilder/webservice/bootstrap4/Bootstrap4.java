@@ -11,6 +11,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://bootsnipp.com/tags/4.0.0
 // 4 beta 2
 //
+//
 // https://bootsnipp.com/snippets/gv6Pe
 // https://bootsnipp.com/snippets/7KGEV
 // https://bootsnipp.com/snippets/nrQWa
@@ -18,6 +19,9 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://bootsnipp.com/snippets/denxZ
 // https://bootsnipp.com/snippets/rleW6
 // https://getbootstrap.com/docs/4.0/components/modal/
+//
+//
+// http://davidstutz.github.io/bootstrap-multiselect/
 public class Bootstrap4 {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.js");
 
