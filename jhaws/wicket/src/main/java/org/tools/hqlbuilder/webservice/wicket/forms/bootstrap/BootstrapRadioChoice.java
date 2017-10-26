@@ -20,6 +20,8 @@ import org.apache.wicket.util.value.IValueMap;
 public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener {
     protected String buttonCssClass = "btn btn-sm btn-light";
 
+    protected boolean asButtons = false;
+
     public BootstrapRadioChoice(final String id) {
         super(id);
     }
@@ -98,7 +100,9 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
         // The selected value
         final String selected = getValue();
 
-        buffer.append("<span class='btn-group' data-toggle='buttons'>");
+        buffer.append("<span class='btn-group'");
+        if (asButtons) buffer.append(" data-toggle='buttons'");
+        buffer.append(">");
 
         // Loop through choices
         for (int index = 0; index < choices.size(); index++) {
@@ -160,7 +164,7 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
         }
 
         buffer.append("<label class='" + getButtonCssClass());
-        if (isSelected(choice, index, selected)) buffer.append(" active");
+        if (asButtons && isSelected(choice, index, selected)) buffer.append(" active");
         buffer.append(extraLabelAttributes);
         buffer.append("'>");
 
@@ -238,6 +242,19 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
 
     public BootstrapRadioChoice<T> buttonCssClass(String buttonCssClass) {
         this.buttonCssClass = buttonCssClass;
+        return this;
+    }
+
+    public boolean isAsButtons() {
+        return this.asButtons;
+    }
+
+    public void setAsButtons(boolean asButtons) {
+        this.asButtons = asButtons;
+    }
+
+    public BootstrapRadioChoice<T> asButtons(boolean asButtons) {
+        this.asButtons = asButtons;
         return this;
     }
 }

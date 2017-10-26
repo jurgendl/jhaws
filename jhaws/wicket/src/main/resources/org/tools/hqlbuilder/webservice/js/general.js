@@ -138,6 +138,7 @@ jQuery.fn.extend({
 
 /* http://codepen.io/anon/pen/NPZNPq */
 function toggleByRadio(group) {
+	console.log(group);
 	$("[data-group='" + group + "']").addClass("optiontoggle").addClass("hidden");
 	$("input[type='radio'][name='" + group + "']").click(function() { adjustByRadio(group); });
 	adjustByRadio(group);

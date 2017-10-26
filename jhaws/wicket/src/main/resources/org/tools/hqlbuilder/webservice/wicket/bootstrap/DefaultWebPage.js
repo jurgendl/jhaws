@@ -171,3 +171,15 @@ function topFunction() {
     document.body.scrollTop = 0; // For Chrome, Safari and Opera 
     document.documentElement.scrollTop = 0; // For IE and Firefox
 }
+
+/*
+$('.btn-group').on('input', 'change', function() {
+	var radio = $(this);
+	var label = radio.parent('label');
+	if (radio.is(':checked')) {
+		label.addClass('active');
+	} else {
+		label.removeClass('active');
+	}
+});
+*/
