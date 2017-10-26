@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Spliterators;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -73,14 +75,15 @@ public class Processes {
 	}
 
 	@SafeVarargs
-	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, List<String> command, FilePath dir, C consumer, Consumer<String>... consumers)
-			throws UncheckedIOException {
+	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, List<String> command, FilePath dir,
+			C consumer, Consumer<String>... consumers) throws UncheckedIOException {
 		return callProcess(throwExitValue, null, new HashMap<>(), command, dir, null, null, consumer, consumers);
 	}
 
 	@SafeVarargs
-	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, FilePath input, Map<String, String> env, List<String> command, FilePath dir,
-			FilePath outputLog, FilePath errorLog, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
+	public static <C extends Consumer<String>> C callProcess(boolean throwExitValue, FilePath input,
+			Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog, FilePath errorLog,
+			C consumer, Consumer<String>... consumers) throws UncheckedIOException {
 		if (dir == null)
 			logger.debug("> {}", command.stream().collect(Collectors.joining(" ")));
 		else
@@ -132,7 +135,8 @@ public class Processes {
 			allConsumers = consumer;
 			Arrays.stream(consumers).forEach(allConsumers::andThen);
 			try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
-				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false).filter(StringUtils::isNotBlank).forEach(allConsumers);
+				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false)
+						.filter(StringUtils::isNotBlank).forEach(allConsumers);
 			} catch (IOException e1) {
 				throw new UncheckedIOException(e1);
 			}
@@ -163,5 +167,13 @@ public class Processes {
 		public int getExitValue() {
 			return this.exitValue;
 		}
+	}
+
+	public static List<String> split(String command) {
+		List<String> list = new ArrayList<String>();
+		Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(command);
+		while (m.find())
+			list.add(m.group(1).replace("\"", ""));
+		return list;
 	}
 }
