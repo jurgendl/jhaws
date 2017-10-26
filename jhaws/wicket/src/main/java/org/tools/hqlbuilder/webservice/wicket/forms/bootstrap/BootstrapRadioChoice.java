@@ -235,4 +235,9 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
     public void setButtonCssClass(String buttonCssClass) {
         this.buttonCssClass = buttonCssClass;
     }
+
+    public BootstrapRadioChoice<T> buttonCssClass(String buttonCssClass) {
+        this.buttonCssClass = buttonCssClass;
+        return this;
+    }
 }

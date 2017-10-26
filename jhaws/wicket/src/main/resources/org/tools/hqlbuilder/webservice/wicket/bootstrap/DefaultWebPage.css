@@ -554,3 +554,8 @@ img.niceimage {
 .col-form-label {
 	text-align: right;
 }
+
+/* */
+.custom-select[multiple].custom-select-sm {
+	height: calc(1.8125rem + 2px);
+}
