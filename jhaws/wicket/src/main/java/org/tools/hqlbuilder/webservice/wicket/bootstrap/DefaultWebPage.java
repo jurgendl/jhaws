@@ -13,6 +13,7 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -30,6 +31,7 @@ import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.bootstrap4.colorpicker.BootstrapColorPicker;
 import org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus.BootstrapTempusDominusDateTimePicker;
+import org.tools.hqlbuilder.webservice.bootstrap4.multiselect.MultiSelect;
 import org.tools.hqlbuilder.webservice.bootstrap4.slider.BootstrapSlider;
 import org.tools.hqlbuilder.webservice.bootstrap4.tags.BootstrapTags;
 import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
@@ -326,6 +328,10 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
+
+        response.render(CssHeaderItem.forReference(MultiSelect.CSS));
+        response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
+        response.render(OnLoadHeaderItem.forScript(MultiSelect.JS_FACTORY));
 
         response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));

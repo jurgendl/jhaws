@@ -1,6 +1,7 @@
 package org.jhaws.common.lang;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -32,6 +34,7 @@ import java.util.SortedSet;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.Stack;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
@@ -2000,5 +2003,25 @@ public interface CollectionUtils8 {
 
     public static <T> Stream<T> stream(Optional<T> optional) {
         return optional.isPresent() ? Stream.of(optional.get()) : Stream.empty();
+    }
+
+    public static <T extends Serializable> List<T> serializable(List<T> list) {
+        return list instanceof Serializable ? list : new ArrayList<>(list);
+    }
+
+    public static <T extends Serializable> Set<T> serializable(Set<T> set) {
+        return set instanceof Serializable ? set : new HashSet<>(set);
+    }
+
+    public static <T extends Serializable> SortedSet<T> serializable(SortedSet<T> set) {
+        return set instanceof Serializable ? set : new TreeSet<>(set);
+    }
+
+    public static <K extends Serializable, V extends Serializable> Map<K, V> serializable(Map<K, V> set) {
+        return set instanceof Serializable ? set : new HashMap<>(set);
+    }
+
+    public static <K extends Serializable, V extends Serializable> SortedMap<K, V> serializable(SortedMap<K, V> set) {
+        return set instanceof Serializable ? set : new TreeMap<>(set);
     }
 }
