@@ -21,22 +21,22 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
 
 	public String getLabelClass() {
 		if (formSettings.getColumns() >= 5) {
-			return "col-sm-1";
+			return "col-1";
 		}
-		return "col-sm-2";
+		return "col-2";
 	}
 
 	public String getComponentClass() {
 		if (formSettings.getColumns() == 1) {
-			return "col-sm-10";
+			return "col-10";
 		}
 		if (formSettings.getColumns() == 2) {
-			return "col-sm-4";
+			return "col-4";
 		}
 		if (formSettings.getColumns() == 3) {
-			return "col-sm-2";
+			return "col-2";
 		}
-		return "col-sm-1";
+		return "col-1";
 	}
 
 	protected String getFeedbackMessageCSSClass(final FeedbackMessage message) {
