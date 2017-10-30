@@ -11,41 +11,40 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormRowPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 @SuppressWarnings("serial")
-public abstract class DefaultFormRowPanel<T extends Serializable, C extends FormComponent<T>, S extends AbstractFormElementSettings<S>>
-		extends FormRowPanel<T, T, C, S> {
-	public DefaultFormRowPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings) {
-		super(model, propertyPath, formSettings, componentSettings);
-	}
+public abstract class DefaultFormRowPanel<T, C extends FormComponent<T>, S extends AbstractFormElementSettings<S>> extends FormRowPanel<T, T, C, S> {
+    public DefaultFormRowPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings) {
+        super(model, propertyPath, formSettings, componentSettings);
+    }
 
-	@Override
-	public FormRowPanelParent<T, T, C, S> setValueModel(IModel<T> model) {
-		getComponent().setModel(model);
-		return super.setValueModel(model);
-	}
+    @Override
+    public FormRowPanelParent<T, T, C, S> setValueModel(IModel<T> model) {
+        getComponent().setModel(model);
+        return super.setValueModel(model);
+    }
 
-	@Override
-	public IModel<T> getValueModel() {
-		if (valueModel == null) {
-			String property = getPropertyName();
-			valueModel = property == null ? null : new PropertyModel<>(getDefaultModel(), property);
-		}
-		return valueModel;
-	}
+    @Override
+    public IModel<T> getValueModel() {
+        if (valueModel == null) {
+            String property = getPropertyName();
+            valueModel = property == null ? null : new PropertyModel<>(getDefaultModel(), property);
+        }
+        return valueModel;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Class<T> getPropertyType() {
-		if (propertyType == null) {
-			try {
-				this.propertyType = WebHelper.type(propertyPath);
-			} catch (ch.lambdaj.function.argument.ArgumentConversionException ex) {
-				try {
-					this.propertyType = WebHelper.<T>getImplementation(this, DefaultFormRowPanel.class);
-				} catch (IllegalArgumentException ex2) {
-					this.propertyType = (Class<T>) Serializable.class;
-				}
-			}
-		}
-		return this.propertyType;
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<T> getPropertyType() {
+        if (propertyType == null) {
+            try {
+                this.propertyType = WebHelper.type(propertyPath);
+            } catch (ch.lambdaj.function.argument.ArgumentConversionException ex) {
+                try {
+                    this.propertyType = WebHelper.<T> getImplementation(this, DefaultFormRowPanel.class);
+                } catch (IllegalArgumentException ex2) {
+                    this.propertyType = (Class<T>) Serializable.class;
+                }
+            }
+        }
+        return this.propertyType;
+    }
 }
