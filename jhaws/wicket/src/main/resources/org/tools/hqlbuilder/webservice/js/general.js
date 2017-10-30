@@ -153,18 +153,21 @@ function adjustByRadio(group) {
 	$("[data-group='" + group + "'][data-value='" + V + "']").removeClass("hidden");
 }
 
-/* 
+/*
 <label><input type="radio" name="radiogroup" value="radiovalue1">value1</label>
-<label><input type="radio" name="radiogroup" value="radiovalue2">value2</label>
+<label><input type="radio" name="radiogroup" value="radiovalue2" selected>value2</label>
 <div data-group="radiogroup" data-value="radiovalue1">value1</div>
 <div data-group="radiogroup" data-value="radiovalue2">value2</div>
 */
 function factoryHideByRadio(dataGroup) {
-	$("input[name$='"+dataGroup+"']").change(function() { // all input name=x are in group
-		$("[data-group$='"+dataGroup+"']").hide(); // hide adds "style=display:none"
-		$("[data-group$='"+dataGroup+"'][data-value$='"+$(this).val()+"']").show(); // show removes "style=display:none"
-	}) // initialize onchange
-	.change() // set initial blocks hidden and selected shown
+	$("input:radio[name='"+dataGroup+"']").change(function() {
+		var dataValue = $(this).val();
+		console.log(dataGroup+'='+dataValue);
+		$("[data-group='"+dataGroup+"']").hide(); // hide adds "style=display:none"
+		$("[data-group='"+dataGroup+"'][data-value='"+dataValue+"']").show(); // show removes "style=display:none"
+	})
+	// FIXME is called for each radio button in group (last should be initial selected */
+	.change() // set initial blocks hidden and selected shown // https://stackoverflow.com/questions/23723005/uncaught-typeerror-cannot-read-property-tolowercase-of-undefined
 	;
 }
 
