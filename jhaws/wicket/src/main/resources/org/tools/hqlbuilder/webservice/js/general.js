@@ -152,3 +152,19 @@ function adjustByRadio(group) {
 	$("[data-group='" + group + "'][data-value!='" + V + "']").addClass("hidden");
 	$("[data-group='" + group + "'][data-value='" + V + "']").removeClass("hidden");
 }
+
+/* 
+<label><input type="radio" name="radiogroup" value="radiovalue1">value1</label>
+<label><input type="radio" name="radiogroup" value="radiovalue2">value2</label>
+<div data-group="radiogroup" data-value="radiovalue1">value1</div>
+<div data-group="radiogroup" data-value="radiovalue2">value2</div>
+*/
+function factoryHideByRadio(dataGroup) {
+	$("input[name$='"+dataGroup+"']").change(function() { // all input name=x are in group
+		$("[data-group$='"+dataGroup+"']").hide(); // hide adds "style=display:none"
+		$("[data-group$='"+dataGroup+"'][data-value$='"+$(this).val()+"']").show(); // show removes "style=display:none"
+	}) // initialize onchange
+	.change() // set initial blocks hidden and selected shown
+	;
+}
+

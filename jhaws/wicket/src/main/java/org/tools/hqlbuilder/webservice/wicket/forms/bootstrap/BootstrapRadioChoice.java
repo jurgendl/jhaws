@@ -24,38 +24,47 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
 
     public BootstrapRadioChoice(final String id) {
         super(id);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(final String id, final List<? extends T> choices) {
         super(id, choices);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(final String id, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer) {
         super(id, choices, renderer);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(final String id, IModel<T> model, final List<? extends T> choices) {
         super(id, model, choices);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(final String id, IModel<T> model, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer) {
         super(id, model, choices, renderer);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(String id, IModel<? extends List<? extends T>> choices) {
         super(id, choices);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices) {
         super(id, model, choices);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
         super(id, choices, renderer);
+        asButtons = true;
     }
 
     public BootstrapRadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
         super(id, model, choices, renderer);
+        asButtons = true;
     }
 
     @Override
