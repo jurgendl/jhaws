@@ -13,7 +13,6 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -335,7 +334,7 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(CssHeaderItem.forReference(MultiSelect.CSS));
         response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
-        response.render(OnLoadHeaderItem.forScript(MultiSelect.JS_FACTORY));
+        response.render(MultiSelect.JS_FACTORY);
 
         response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));

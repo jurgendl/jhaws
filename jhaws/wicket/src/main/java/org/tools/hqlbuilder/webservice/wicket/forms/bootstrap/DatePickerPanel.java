@@ -5,20 +5,26 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.converter.ModelConverter;
-import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.DatePickerSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormRowPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import com.googlecode.wicket.jquery.core.utils.LocaleUtils;
+
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
+import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel {
@@ -26,13 +32,13 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
 
     protected Converter<X, Date> dateConverter;
 
-    public DatePickerPanel(IModel<?> model, Date propertyPath, FormSettings formSettings, AbstractFormElementSettings componentSettings) {
+    public DatePickerPanel(IModel<?> model, Date propertyPath, FormSettings formSettings, DatePickerSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
         this.dateConverter = null;
     }
 
     public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings,
-            AbstractFormElementSettings componentSettings) {
+            DatePickerSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
         this.dateConverter = dateConverter;
     }
@@ -48,8 +54,19 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
 
     @Override
     protected FormComponent createComponent(IModel model, Class valueType) {
-        Locale locale = getLocale();
-        dateFormat = dateformat(locale);
+        Map<String, String> dateFormats = MomentJs.dateFormats(getLocale());
+        switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
+            case datetime:
+                dateFormat = dateFormats.get("L");
+                break;
+            case time:
+                dateFormat = dateFormats.get("LT");
+                break;
+            default:
+            case date:
+                dateFormat = dateFormats.get("L") + " " + dateFormats.get("LT");
+                break;
+        }
         org.apache.wicket.extensions.markup.html.form.DateTextField textField = new org.apache.wicket.extensions.markup.html.form.DateTextField(VALUE,
                 model, dateFormat) {
             @Override
@@ -65,6 +82,19 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
     public FormRowPanelParent addComponents() {
         this.add(this.getLabel());
         WebMarkupContainer tempusdominuspicker = new WebMarkupContainer("tempusdominuspicker");
+        switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
+            case datetime:
+                tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
+                tempusdominuspicker.add(new CssClassNameAppender("tempusdominusdatetime"));
+                break;
+            case time:
+                tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
+                tempusdominuspicker.add(new CssClassNameAppender("tempusdominustime"));
+                break;
+            default:
+            case date:
+                break;
+        }
         WebMarkupContainer tempusdominuspickergroup = new WebMarkupContainer("tempusdominuspickergroup");
         tempusdominuspicker.add(tempusdominuspickergroup);
         FormComponent _component = getComponent();
@@ -87,5 +117,16 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
         if (this.componentSettings.isShowPlaceholder()) {
             tag.getAttributes().put(PLACEHOLDER, "<" + new SimpleDateFormat(dateFormat, getLocale()).format(new Date()) + ">");
         }
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        // response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
+        // response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
+        // response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
     }
 }

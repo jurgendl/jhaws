@@ -1,6 +1,12 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.moment;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // http://momentjs.com/
@@ -57,4 +63,43 @@ public class MomentJs {
     // public static JavaScriptResourceReference JS_PLUGIN_MSDATE = new JavaScriptResourceReference(MomentJs.class, "moment-msdate.js");
     //
     // public static JavaScriptResourceReference JS_PLUGIN_STRFTIME = new JavaScriptResourceReference(MomentJs.class, "moment-strftime.js");
+
+    private static final Map<String, Map<String, String>> FORMATS = new HashMap<>();
+
+    public static String dateFormat(Locale locale, String format) {
+        Map<String, String> localemap = dateFormats(locale);
+        return localemap.get(format);
+    }
+
+    /**
+     * <pre>
+     * Map<String, String> formats = MomentJs.dateFormats(getLocale());
+     * 
+     * DateFormat dateFormat = new SimpleDateFormat(formats.get("L"));
+     * 
+     * DateFormat timeFormat = new SimpleDateFormat(formats.get("LT"));
+     * 
+     * DateFormat dateTimeFormat = new SimpleDateFormat(formats.get("L") + " " + formats.get("LT"));
+     * </pre>
+     */
+    public static Map<String, String> dateFormats(Locale locale) {
+        Map<String, String> localemap = FORMATS.get(locale.getLanguage());
+        if (localemap == null) {
+            localemap = new HashMap<>();
+            FORMATS.put(locale.getLanguage(), localemap);
+            String string = new FilePath(MomentJs.class, "/locale/nl.js").readAll();
+            int p = string.indexOf("longDateFormat");
+            String script = string.substring(p, 1 + string.indexOf("}", p));
+            System.out.println(script);
+            Map<String, String> _localemap = localemap;
+            Arrays.stream(new String[] { "LT", "LTS", "L", "LL", "LLL", "LLLL" }).forEach(f -> {
+                int p1 = script.indexOf(f + " ");
+                p1 = script.indexOf("'", p1) + 1;
+                int p2 = script.indexOf("'", p1);
+                String momentformat = script.substring(p1, p2);
+                _localemap.put(f, /* new SimpleDateFormat( */momentformat/* ) */);
+            });
+        }
+        return localemap;
+    }
 }

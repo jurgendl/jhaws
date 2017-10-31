@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.multiselect;
 
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
@@ -16,9 +17,10 @@ public class MultiSelect {
 
     public static final CssResourceReference CSS = new CssResourceReference(MultiSelect.class, "css/bootstrap-multiselect.css");
 
-    public static final String JS_FACTORY = new FilePath(MultiSelect.class, "MultiSelect-factory.js").readAll();
+    public static final OnLoadHeaderItem JS_FACTORY = OnLoadHeaderItem.forScript(new FilePath(MultiSelect.class, "MultiSelect-factory.js").readAll());
 
     static {
         JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
+        CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
     }
 }

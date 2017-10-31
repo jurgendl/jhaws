@@ -12,6 +12,7 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.DatePickerSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.DropDownSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormActions;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
@@ -103,12 +104,12 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
         return this.addDefaultRow(new NumberTextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 
-    public DatePickerPanel<Date> addDatePicker(Date propertyPath, FormElementSettings componentSettings) {
+    public DatePickerPanel<Date> addDatePicker(Date propertyPath, DatePickerSettings componentSettings) {
         return this.addDatePicker(propertyPath, componentSettings, (Converter<Date, Date>) null);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public <F extends Serializable> DatePickerPanel<F> addDatePicker(F propertyPath, FormElementSettings componentSettings,
+    public <F extends Serializable> DatePickerPanel<F> addDatePicker(F propertyPath, DatePickerSettings componentSettings,
             Converter<F, Date> dateConverter) {
         return this.addDefaultRow(
                 (DatePickerPanel) new DatePickerPanel<>(this.getFormModel(), propertyPath, dateConverter, this.getFormSettings(), componentSettings));

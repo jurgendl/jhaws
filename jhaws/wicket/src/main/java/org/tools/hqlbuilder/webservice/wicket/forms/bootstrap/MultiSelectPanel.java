@@ -11,16 +11,12 @@ import org.apache.wicket.extensions.markup.html.form.select.SelectOption;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
-import org.tools.hqlbuilder.webservice.bootstrap4.multiselect.MultiSelect;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.MultiSelectSettings;
@@ -161,8 +157,11 @@ public class MultiSelectPanel<T extends Serializable> extends DefaultFormRowPane
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(CssHeaderItem.forReference(MultiSelect.CSS));
-        response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
-        response.render(OnLoadHeaderItem.forScript(MultiSelect.JS_FACTORY));
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        // response.render(CssHeaderItem.forReference(MultiSelect.CSS));
+        // response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
+        // response.render(MultiSelect.JS_FACTORY);
     }
 }
