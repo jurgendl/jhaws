@@ -24,6 +24,7 @@ $('.multiselect').multiselect({
     allSelectedText: 'All selected.',
     enableClickableOptGroups: true,
     enableCollapsibleOptGroups: true,
+    maxHeight: 200,
     templates: { 
         //button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
         ul: '<ul class="pr-2 multiselect-container dropdown-menu"></ul>',

@@ -38,6 +38,7 @@ import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
 import org.tools.hqlbuilder.webservice.jquery.ui.blazy.BLazy;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
+import org.tools.hqlbuilder.webservice.jquery.ui.picturefill.PictureFill;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
@@ -298,6 +299,13 @@ public abstract class DefaultWebPage extends WebPage {
         // response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_CSS));
         // response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_HOVER_CSS));
 
+        response.render(CssHeaderItem.forReference(BLazy.CSS));
+        response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
+        response.render(BLazy.FACTORY);
+
+        response.render(JavaScriptHeaderItem.forReference(PictureFill.JS));
+        response.render(PictureFill.FACTORY);
+
         response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_LOCALE));
         response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_I18N));
         response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_PLUGIN_PRECISE_RANGE));
@@ -310,10 +318,6 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(BootstrapColorPicker.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapColorPicker.JS));
         response.render(BootstrapColorPicker.FACTORY);
-
-        response.render(CssHeaderItem.forReference(BLazy.CSS));
-        response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
-        response.render(BLazy.FACTORY);
 
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_JQUERY));
