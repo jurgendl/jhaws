@@ -38,11 +38,13 @@ public class Bootstrap4 {
 
 	public static final CssResourceReference CSS = new CssResourceReference(Bootstrap4.class, "css/bootstrap.css");
 
-	public static final CssResourceReference CSS_GRID = new CssResourceReference(Bootstrap4.class,
-			"css/bootstrap-grid.css");
-
-	public static final CssResourceReference CSS_REBOOT = new CssResourceReference(Bootstrap4.class,
-			"css/bootstrap-reboot.css");
+	// public static final CssResourceReference CSS_GRID = new
+	// CssResourceReference(Bootstrap4.class,
+	// "css/bootstrap-grid.css");
+	//
+	// public static final CssResourceReference CSS_REBOOT = new
+	// CssResourceReference(Bootstrap4.class,
+	// "css/bootstrap-reboot.css");
 
 	public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem
 			.forScript(new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll());
@@ -51,7 +53,7 @@ public class Bootstrap4 {
 		JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
 		JS_IE10FIX.addJavaScriptResourceReferenceDependency(JS);
 		JS.addJavaScriptResourceReferenceDependency(JS_POPPER);
-		CSS_GRID.addCssResourceReferenceDependency(CSS);
-		CSS_REBOOT.addCssResourceReferenceDependency(CSS);
+		// CSS_GRID.addCssResourceReferenceDependency(CSS);
+		// CSS_REBOOT.addCssResourceReferenceDependency(CSS);
 	}
 }
