@@ -10,6 +10,11 @@ import org.jhaws.common.lang.DeEnCoding;
  * security using BouncyCastle
  */
 public class SecureMeBC implements Security {
+	public SecureMeBC(Seed key) {
+		super();
+		this.key = key;
+	}
+
 	static {
 		BC.provide();
 	}
