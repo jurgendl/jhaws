@@ -10,11 +10,7 @@ public class TypeAhead {
     public static JavaScriptResourceReference JS_BLOODHOUND = new JavaScriptResourceReference(TypeAhead.class, "bloodhound.js");
 
     static {
-        try {
-            JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-        } catch (Exception ex) {
-            //
-        }
+        JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
         JS_BLOODHOUND.addJavaScriptResourceReferenceDependency(JS);
     }
 }

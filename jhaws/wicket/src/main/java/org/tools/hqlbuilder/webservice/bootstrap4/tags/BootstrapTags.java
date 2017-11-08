@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.tags;
 
+import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -9,4 +10,9 @@ public class BootstrapTags {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapTags.class, "tagsinput.js");
 
     public static final CssResourceReference CSS = new CssResourceReference(BootstrapTags.class, "tagsinput.css");
+
+    static {
+        JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
+        CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
+    }
 }

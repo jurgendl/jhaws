@@ -3,51 +3,22 @@ package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.io.FilePath;
+import org.jhaws.common.lang.StringUtils;
+import org.tools.hqlbuilder.webservice.bootstrap4.tags.BootstrapTags;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSettings;
 
 @SuppressWarnings("serial")
 public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<String>, TagItTextFieldSettings> {
-    public static String tagIt(String id, TagItTextFieldSettings tagItTextFieldSettings, IModel<List<String>> choices) {
-        return TagItTextFieldPanel.tagIt(id, tagItTextFieldSettings, TagItTextFieldPanel.tagItChoices(choices));
-    }
-
-    public static String tagIt(String id, TagItTextFieldSettings tagItTextFieldSettings, String choices) {
-        return (";$('#" + id + "').tagIt(" + choices + ", " + tagItTextFieldSettings.getDelay() + ", " + tagItTextFieldSettings.getMinLength() + ", "
-                + tagItTextFieldSettings.isAllowSpaces() + ", " + tagItTextFieldSettings.isCaseSensitive() + ", "
-                + tagItTextFieldSettings.isSingleField() + ", '" + tagItTextFieldSettings.getFieldDelimiter() + "');");
-        // return (";$('#" + id + "').hide().tagit({"//
-        // + "autocomplete:"//
-        // + "{\n"//
-        // + "source:function(request,response){\n"//
-        // + "var availableTags=" + choices + ";\n"//
-        // + "var matcherStr=request.term.replace(new RegExp('\\\\*', 'g'), 'A1B2C3');\n"//
-        // + "matcherStr=matcherStr.replace(/\\W/g, '');\n"//
-        // + "matcherStr=$.ui.autocomplete.escapeRegex(matcherStr);\n"//
-        // + "matcherStr=matcherStr.replace(new RegExp('A1B2C3', 'g'), '.*');\n" //
-        // + "console.log('matcherStr='+matcherStr);\n"//
-        // + "var matcher=new RegExp(matcherStr,'i');\n"//
-        // + "response($.grep(availableTags,function(item){\n"//
-        // + "return matcher.test(item.replace(/\\W/g, ''));\n"//
-        // + "}));\n"//
-        // + "}\n"//
-        // + ",delay:" + tagItTextFieldSettings.getDelay()//
-        // + ",minLength:" + tagItTextFieldSettings.getMinLength()//
-        // + "}"//
-        // + ",allowSpaces:" + tagItTextFieldSettings.isAllowSpaces()//
-        // + ",caseSensitive:" + tagItTextFieldSettings.isCaseSensitive()//
-        // + ",allowDuplicates:false"//
-        // // + ",availableTags:" + availableTags //
-        // + ",singleField:" + tagItTextFieldSettings.isSingleField()//
-        // + ",singleFieldDelimiter:'" + tagItTextFieldSettings.getFieldDelimiter() + "'"//
-        // + "})._hoverable()._focusable();");//
-    }
-
-    public static String tagItChoices(IModel<List<String>> choices) {
+    protected String tagItChoices(IModel<List<String>> choices) {
         StringBuilder availableTags = new StringBuilder("[");
         if (!choices.getObject().isEmpty()) {
             for (String choice : choices.getObject()) {
@@ -85,10 +56,24 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
         if (!this.isEnabledInHierarchy()) {
             return;
         }
-        // response.render(JavaScriptHeaderItem.forReference(TagIt.TAG_IT_FACTORY_JS));
-        // response.render(CssHeaderItem.forReference(TagIt.TAG_IT_CSS));
-        // response.render(CssHeaderItem.forReference(TagIt.TAG_IT_ZEN_CSS));
-        // response.render(OnDomReadyHeaderItem
-        // .forScript(TagItTextFieldPanel.tagIt(this.getComponent().getMarkupId(), this.getComponentSettings(), this.choices)));
+        //
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
+        //
+        response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
+        //
+        if (StringUtils.isNotBlank(getComponentSettings().getRemote())) {
+            response.render(OnDomReadyHeaderItem.forScript(new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-remote-factory.js").readAll()//
+                    .replace("$URL$", getComponentSettings().getRemote())//
+                    .replace("$ID$", getComponent().getMarkupId())//
+            ));
+        } else {
+            response.render(OnDomReadyHeaderItem.forScript(new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-local-factory.js").readAll()//
+                    .replace("$OPTIONS$", tagItChoices(choices))//
+                    .replace("$ID$", getComponent().getMarkupId())//
+            ));
+        }
     }
 }

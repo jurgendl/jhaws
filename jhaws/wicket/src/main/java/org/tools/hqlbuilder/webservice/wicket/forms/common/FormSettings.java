@@ -68,6 +68,8 @@ public class FormSettings implements Serializable {
 
     protected boolean disableOnClick = false;
 
+    protected String formContainerClass;
+
     public FormSettings() {
         super();
     }
@@ -344,7 +346,17 @@ public class FormSettings implements Serializable {
         return this.disableOnClick;
     }
 
-    public void setDisableOnClick(boolean disableOnClick) {
+    public FormSettings setDisableOnClick(boolean disableOnClick) {
         this.disableOnClick = disableOnClick;
+        return this;
+    }
+
+    public String getFormContainerClass() {
+        return this.formContainerClass;
+    }
+
+    public FormSettings setFormContainerClass(String formContainerClass) {
+        this.formContainerClass = formContainerClass;
+        return this;
     }
 }

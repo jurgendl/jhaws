@@ -295,7 +295,12 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
             }
 
             WebHelper.show(this.form);
-            this.add(this.form);
+            WebMarkupContainer formContainer = new WebMarkupContainer(FormConstants.FORM_CONTAINER);
+            if (org.jhaws.common.lang.StringUtils.isNotBlank(formSettings.getFormContainerClass())) {
+                formContainer.add(new AttributeModifier("class", formSettings.getFormContainerClass()));
+            }
+            formContainer.add(form);
+            this.add(formContainer);
 
             WebMarkupContainer formHeader = new WebMarkupContainer(FormConstants.FORM_HEADER) {
                 @Override
