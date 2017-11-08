@@ -69,9 +69,13 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
                     .replace("$URL$", getComponentSettings().getRemote())//
                     .replace("$ID$", getComponent().getMarkupId())//
             ));
-        } else {
+        } else if (choices != null && choices.getObject() != null && !choices.getObject().isEmpty()) {
             response.render(OnDomReadyHeaderItem.forScript(new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-local-factory.js").readAll()//
                     .replace("$OPTIONS$", tagItChoices(choices))//
+                    .replace("$ID$", getComponent().getMarkupId())//
+            ));
+        } else {
+            response.render(OnDomReadyHeaderItem.forScript(new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-factory.js").readAll()//
                     .replace("$ID$", getComponent().getMarkupId())//
             ));
         }

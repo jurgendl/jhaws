@@ -1,0 +1,3 @@
+$('#$ID$').tagsinput({
+	trimValue : true
+});
