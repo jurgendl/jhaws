@@ -1,6 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
-
-import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 public class TagItTextFieldSettings extends AbstractFormElementSettings<TagItTextFieldSettings> {
 	private static final long serialVersionUID = 1098120531336315493L;

@@ -1,19 +1,16 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
+package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.util.List;
 
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
-import org.tools.hqlbuilder.webservice.jquery.ui.tagit.TagIt;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSettings;
 
+@SuppressWarnings("serial")
 public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<String>, TagItTextFieldSettings> {
     public static String tagIt(String id, TagItTextFieldSettings tagItTextFieldSettings, IModel<List<String>> choices) {
         return TagItTextFieldPanel.tagIt(id, tagItTextFieldSettings, TagItTextFieldPanel.tagItChoices(choices));
@@ -62,8 +59,6 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
         return availableTags.toString();
     }
 
-    private static final long serialVersionUID = -3317709333874063112L;
-
     protected IModel<List<String>> choices;
 
     public TagItTextFieldPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, TagItTextFieldSettings componentSettings,
@@ -75,8 +70,6 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
     @Override
     protected TextField<String> createComponent(IModel<String> model, Class<String> valueType) {
         TextField<String> textField = new TextField<String>(FormConstants.VALUE, model, valueType) {
-            private static final long serialVersionUID = 3940638846568679297L;
-
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
@@ -92,10 +85,10 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
         if (!this.isEnabledInHierarchy()) {
             return;
         }
-        response.render(JavaScriptHeaderItem.forReference(TagIt.TAG_IT_FACTORY_JS));
-        response.render(CssHeaderItem.forReference(TagIt.TAG_IT_CSS));
-        response.render(CssHeaderItem.forReference(TagIt.TAG_IT_ZEN_CSS));
-        response.render(OnDomReadyHeaderItem
-                .forScript(TagItTextFieldPanel.tagIt(this.getComponent().getMarkupId(), this.getComponentSettings(), this.choices)));
+        // response.render(JavaScriptHeaderItem.forReference(TagIt.TAG_IT_FACTORY_JS));
+        // response.render(CssHeaderItem.forReference(TagIt.TAG_IT_CSS));
+        // response.render(CssHeaderItem.forReference(TagIt.TAG_IT_ZEN_CSS));
+        // response.render(OnDomReadyHeaderItem
+        // .forScript(TagItTextFieldPanel.tagIt(this.getComponent().getMarkupId(), this.getComponentSettings(), this.choices)));
     }
 }

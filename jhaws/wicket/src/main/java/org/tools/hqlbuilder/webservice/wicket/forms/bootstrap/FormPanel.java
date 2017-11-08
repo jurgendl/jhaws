@@ -21,6 +21,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.MultiSelectSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSettings;
 
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
@@ -115,4 +116,11 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
                 (DatePickerPanel) new DatePickerPanel<>(this.getFormModel(), propertyPath, dateConverter, this.getFormSettings(), componentSettings));
     }
 
+    public <F extends Serializable> HiddenFieldPanel<F> addHidden(F propertyPath) {
+        return this.addDefaultRow(new HiddenFieldPanel<F>(this.getFormModel(), propertyPath));
+    }
+
+    public TagItTextFieldPanel addTagItTextFieldPanel(String propertyPath, TagItTextFieldSettings componentSettings, IModel<List<String>> choices) {
+        return this.addDefaultRow(new TagItTextFieldPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices));
+    }
 }

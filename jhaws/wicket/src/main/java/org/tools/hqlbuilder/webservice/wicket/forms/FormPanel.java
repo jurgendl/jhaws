@@ -31,6 +31,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.sass.SassResourceReference;
 
 import com.googlecode.wicket.jquery.core.renderer.ITextRenderer;
