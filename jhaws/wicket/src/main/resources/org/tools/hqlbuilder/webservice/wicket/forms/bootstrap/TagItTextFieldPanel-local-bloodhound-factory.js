@@ -10,8 +10,13 @@ var source_$ID$ = new Bloodhound({
 source_$ID$.initialize();
 $('#$ID$').tagsinput({
 	trimValue : true,
+	allowDuplicates: false,
+	freeInput: $FREE$,
 	typeahead : {
-		delay : 200,
+		delay : $DELAY$,
+		items : 20,
+		minLength : $MIN$,
+		fitToElement : false,
 		source : source_$ID$.ttAdapter()
 	}
 });

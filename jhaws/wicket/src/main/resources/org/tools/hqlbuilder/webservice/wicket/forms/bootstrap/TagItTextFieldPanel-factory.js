@@ -1,3 +1,5 @@
 $('#$ID$').tagsinput({
-	trimValue : true
+	trimValue : true,
+	allowDuplicates: false,
+	freeInput: $FREE$
 });
