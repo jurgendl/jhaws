@@ -13,6 +13,7 @@ $('#$ID$').tagsinput({
 	trimValue : true,
 	allowDuplicates: false,
 	freeInput: $FREE$,
+	delimiter: '$DELIMITER$',
 	typeaheadjs : {
 		delay : $DELAY$,
 		items : 20,

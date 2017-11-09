@@ -75,6 +75,7 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
 							.replace("$DELAY$", String.valueOf(getComponentSettings().getDelay()))//
 							.replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
 							.replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
+							.replace("$DELIMITER$", String.valueOf(getComponentSettings().getFieldDelimiter()))//
 			));
 		} else if (choices != null && choices.getObject() != null && !choices.getObject().isEmpty()) {
 			response.render(OnDomReadyHeaderItem
@@ -84,12 +85,14 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
 							.replace("$DELAY$", String.valueOf(getComponentSettings().getDelay()))//
 							.replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
 							.replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
+							.replace("$DELIMITER$", String.valueOf(getComponentSettings().getFieldDelimiter()))//
 			));
 		} else {
 			response.render(OnDomReadyHeaderItem
 					.forScript(new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-factory.js").readAll()//
 							.replace("$ID$", getComponent().getMarkupId())//
 							.replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
+							.replace("$DELIMITER$", String.valueOf(getComponentSettings().getFieldDelimiter()))//
 			));
 		}
 	}
