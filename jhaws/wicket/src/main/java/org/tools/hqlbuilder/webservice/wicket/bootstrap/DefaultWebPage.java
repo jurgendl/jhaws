@@ -14,7 +14,6 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
-import org.apache.wicket.markup.html.WebComponent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -269,10 +268,11 @@ public abstract class DefaultWebPage extends WebPage {
 		return breadcrumb;
 	}
 
-	protected WebComponent addStatusBar(MarkupContainer html, String id, String contentid) {
+	protected Component addStatusBar(MarkupContainer html, String id, String contentid) {
 		Label content = new Label(contentid, " ");
-		html.add(new WebMarkupContainer(id).add(content));
-		return content;
+		WebMarkupContainer statusbar = new WebMarkupContainer(id);
+		html.add(statusbar.add(content));
+		return statusbar;
 	}
 
 	abstract protected void addComponents(PageParameters parameters, MarkupContainer html);

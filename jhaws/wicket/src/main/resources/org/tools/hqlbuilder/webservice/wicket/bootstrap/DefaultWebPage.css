@@ -559,8 +559,3 @@ img.niceimage {
 .custom-select[multiple].custom-select-sm {
 	height: calc(1.8125rem + 2px);
 }
-
-/** tagit fix remove pip */
-.bootstrap-tagsinput .badge [data-role="remove"]:after {
-  content: "-" !important;
-}
