@@ -1716,6 +1716,10 @@ public interface CollectionUtils8 {
         return Collections.emptyList();
     }
 
+    public static <T> Stream<T> emptyStream() {
+        return Stream.empty();
+    }
+
     public static <T, U> Map<T, U> emptyMap() {
         return Collections.emptyMap();
     }
