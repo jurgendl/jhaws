@@ -54,7 +54,7 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
                 protected void onComponentTag(ComponentTag tag) {
                     super.onComponentTag(tag);
                     String markupId = getComponent().getMarkupId();
-                    tag.getAttributes().put(FOR, markupId);
+                    // tag.getAttributes().put(FOR, markupId);
                 }
             };
             if (getLabelClass() != null) {
