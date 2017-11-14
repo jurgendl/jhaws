@@ -35,6 +35,8 @@ public interface FormConstants {
 
     public static final String FOR = "for";
 
+    public static final String DISABLED = "disabled";
+
     public static final String FORM_ACTIONS = "form.actions";
 
     public static final String FORM_ACTIONS_ADDTIONAL = "form.actions.additional";
