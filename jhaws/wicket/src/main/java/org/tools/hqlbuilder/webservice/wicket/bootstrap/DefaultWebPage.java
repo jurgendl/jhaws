@@ -463,6 +463,9 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
         response.render(MultiSelect.JS_FACTORY);
 
+        // response.render(JavaScriptHeaderItem.forReference(BootstrapConfirmation.JS));
+        // response.render(OnLoadHeaderItem.forScript(";$('[data-toggle=confirmation]').confirmation({rootSelector:'[data-toggle=confirmation]'});"));
+
         response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
         response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
