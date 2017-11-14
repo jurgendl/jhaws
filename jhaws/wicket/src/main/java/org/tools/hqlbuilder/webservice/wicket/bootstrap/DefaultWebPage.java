@@ -1,8 +1,11 @@
 package org.tools.hqlbuilder.webservice.wicket.bootstrap;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -48,306 +51,420 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameMod
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
-	public DefaultWebPage(PageParameters parameters) {
-		super(parameters);
-		// // html language
-		// WebMarkupContainer html = new WebMarkupContainer("html");
-		// add(html.add(new AttributeModifier("lang",
-		// getSession().getLocale().getLanguage())));
-		addDefaultComponents(parameters, this);
-		addComponents(parameters, this);
-	}
+    public DefaultWebPage(PageParameters parameters) {
+        super(parameters);
+        // // html language
+        // WebMarkupContainer html = new WebMarkupContainer("html");
+        // add(html.add(new AttributeModifier("lang",
+        // getSession().getLocale().getLanguage())));
+        addDefaultComponents(parameters, this);
+        addComponents(parameters, this);
+    }
 
-	protected void addDefaultComponents(PageParameters parameters, MarkupContainer html) {
-		// title
-		html.add(new Label("page.title", getString("page.title")));
+    protected String getPageTitle() {
+        return getString("page.title");
+    }
 
-		// shortcut icon
-		html.add(new WebMarkupContainer("shortcutIcon")
-				.add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
-				.setVisible(StringUtils.isNotBlank(WicketApplication.get().getShortcutIcon())));
+    protected String[] getPageKeywords() {
+        return null;
+    }
 
-		// wicket/ajax debug bars
-		html.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig()
-				? new DebugBar("debug") : new EmptyPanel("debug").setVisible(false));
+    protected String getPageDescription() {
+        return null;
+    }
 
-		// check if javascript is enabled
-		html.add(new CheckJavaScriptEnabled());
+    protected String getPageAuthor() {
+        return null;
+    }
 
-		// check if cookies are enabled
-		html.add(new CheckCookiesEnabled());
+    protected URL getPageAuthorLink() {
+        return null;
+    }
 
-		// check if ads are not blocked
-		try {
-			html.add(new CheckAdsEnabled());
-		} catch (Throwable ex) {
-			html.add(new EmptyPanel("check.ads.enabled").setVisible(false));
-		}
+    /** "Open Graph Reference Documentation _ og_type.pdf" https://developers.facebook.com/docs/reference/opengraph/ */
+    protected String getOgType() {
+        return null;
+    }
 
-		// add header response (javascript) down below on page
-		if (WicketApplication.get().isJavascriptAtBottom()) {
-			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
-		} else {
-			html.add(new EmptyPanel("footer-container").setVisible(false));
-		}
+    protected URL getOgImage() {
+        return null;
+    }
 
-		// meta description
-		html.add(new WebMarkupContainer("meta_description").setVisible(false));
+    protected URL getOgUrl() {
+        return null;
+    }
 
-		// add google meta tags
-		html.add(new WebMarkupContainer("meta_google_signin_scope"));
-		html.add(new WebMarkupContainer("meta_google_signin_client_id")
-				.add(new AttributeModifier("content", WicketApplication.get().getGoogleSigninClientId())));
+    protected void addDefaultComponents(PageParameters parameters, MarkupContainer html) {
+        // http://www.iacquire.com/blog/18-meta-tags-every-webpage-should-have-in-2013
 
-		// navbar
-		addNavigationBar(html, "navbar");
+        // meta tags
+        addMetaTags(html);
 
-		// breadcrumb
-		addBreadcrumb(html, "breadcrumb");
+        // Facebook Open Graph
+        addFacebookOpenGraph(html, true);
 
-		// statusbar
-		addStatusBar(html, "statusbar", "statusbarcontent");
-	}
+        // title
+        html.add(new Label("page.title", getPageTitle()));
 
-	protected void addNavigationBar(MarkupContainer html, String id) {
-		addNavigationBar(html, id, new ArrayList<>(), false, false, false);
-	}
+        // shortcut icon
+        html.add(new WebMarkupContainer("shortcutIcon").add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
+                .setVisible(StringUtils.isNotBlank(WicketApplication.get().getShortcutIcon())));
 
-	protected void addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs, boolean userButton,
-			boolean searchBar, boolean backToTopButton) {
-		WebMarkupContainer navbar = new WebMarkupContainer(id);
+        // wicket/ajax debug bars
+        html.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig() ? new DebugBar("debug")
+                : new EmptyPanel("debug").setVisible(false));
 
-		ExternalLink navbarbrandlink = new ExternalLink("navbarbrandlink", "#");
-		navbarbrandlink.add(new WebMarkupContainer("navbarbrandicon"));
-		navbarbrandlink.add(new Label("navbarbrandlabel", ""));
-		navbarbrandlink.setVisible(false);
-		navbar.add(navbarbrandlink);
+        // check if javascript is enabled
+        html.add(new CheckJavaScriptEnabled());
 
-		navbar.add(new ListView<NavBarLink>("navbaritems", navs) {
-			@Override
-			protected void populateItem(ListItem<NavBarLink> item) {
-				// item.add(new CssClassNameAppender("active"));
-				NavBarLink main = item.getModelObject();
-				BookmarkablePageLink<String> link = new BookmarkablePageLink<String>("navbaritemlink",
-						main.getInternalPage(), main.getInternalPageParameters());
-				WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbaritemicon");
-				if (StringUtils.isNotBlank(main.getIcon())) {
-					navbaritemicon.add(new CssClassNameModifier(main.getIcon()));
-				}
-				link.add(navbaritemicon);
-				link.add(new Label("navbaritemlabel", main.getLabel()));
-				// link.add(new CssClassNameAppender("disabled"));
-				item.add(link);
+        // check if cookies are enabled
+        html.add(new CheckCookiesEnabled());
 
-				WebMarkupContainer navbardropdown = new WebMarkupContainer("navbardropdown");
-				if (main.getChildLinks().isEmpty()) {
-					navbardropdown.setVisible(false);
-				} else {
-					item.add(new CssClassNameAppender("dropdown"));
-					link.add(new CssClassNameAppender("dropdown-toggle"));
-					link.add(new AttributeModifier("data-toggle", "dropdown"));
-					link.add(new AttributeModifier("aria-haspopup", "true"));
-					link.add(new AttributeModifier("aria-expanded", "false"));
-				}
-				item.add(navbardropdown);
-				navbardropdown.add(new ListView<NavBarLink>("navbardropdownitems", main.getChildLinks()) {
-					@Override
-					protected void populateItem(ListItem<NavBarLink> subitem) {
-						// subitem.add(new CssClassNameAppender("active"));
-						NavBarLink sub = subitem.getModelObject();
-						BookmarkablePageLink<String> sublink = new BookmarkablePageLink<String>(
-								"navbardropdownitemlink", sub.getInternalPage(), sub.getInternalPageParameters());
-						WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbardropdownitemicon");
-						if (StringUtils.isNotBlank(sub.getIcon())) {
-							navbaritemicon.add(new CssClassNameModifier(sub.getIcon()));
-						}
-						sublink.add(navbaritemicon);
-						sublink.add(new Label("navbardropdownitemlabel", sub.getLabel()));
-						// sublink.add(new CssClassNameAppender("disabled"));
-						subitem.add(sublink);
-					}
-				});
-			}
-		});
+        // check if ads are not blocked
+        try {
+            html.add(new CheckAdsEnabled());
+        } catch (Throwable ex) {
+            html.add(new EmptyPanel("check.ads.enabled").setVisible(false));
+        }
 
-		// login/logout/user-config menu
-		navbar.add(new Button("userButton").setVisible(userButton));
+        // add header response (javascript) down below on page
+        if (WicketApplication.get().isJavascriptAtBottom()) {
+            html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
+        } else {
+            html.add(new EmptyPanel("footer-container").setVisible(false));
+        }
 
-		// searchbar
-		navbar.add(new WebMarkupContainer("searchbar").setVisible(searchBar));
+        // meta description
+        html.add(new WebMarkupContainer("meta_description").setVisible(false));
 
-		// back to top button
-		navbar.add(new Button("backToTopButton").setVisible(backToTopButton));
+        // add google meta tags
+        html.add(new WebMarkupContainer("meta_google_signin_scope"));
+        html.add(new WebMarkupContainer("meta_google_signin_client_id")
+                .add(new AttributeModifier("content", WicketApplication.get().getGoogleSigninClientId())));
 
-		html.add(navbar);
-	}
+        // navbar
+        addNavigationBar(html, "navbar");
 
-	public static class NavBarLink implements Serializable {
-		String externalURL;
+        // breadcrumb
+        addBreadcrumb(html, "breadcrumb");
 
-		Class<? extends WebPage> internalPage;
+        // statusbar
+        addStatusBar(html, "statusbar", "statusbarcontent");
+    }
 
-		PageParameters internalPageParameters;
+    protected void addMetaTags(MarkupContainer html) {
+        {
+            WebMarkupContainer pageKeywords = new WebMarkupContainer("page.keywords");
+            if (getPageKeywords() != null) {
+                pageKeywords.add(new AttributeModifier("content", Arrays.stream(getPageKeywords()).collect(Collectors.joining(","))));
+            } else {
+                pageKeywords.setVisible(false);
+            }
+            html.add(pageKeywords);
+        }
+        {
+            WebMarkupContainer pageDescription = new WebMarkupContainer("page.description");
+            if (StringUtils.isNotBlank(getPageDescription())) {
+                pageDescription.add(new AttributeModifier("content", getPageDescription()));
+            } else {
+                pageDescription.setVisible(false);
+            }
+            html.add(pageDescription);
+        }
+        {
+            WebMarkupContainer pageAuthor = new WebMarkupContainer("page.author");
+            if (StringUtils.isNotBlank(getPageAuthor())) {
+                pageAuthor.add(new AttributeModifier("content", getPageAuthor()));
+                if (getPageAuthorLink() != null) {
+                    pageAuthor.add(new AttributeModifier("href", getPageAuthorLink().toString()));
+                }
+            } else {
+                pageAuthor.setVisible(false);
+            }
+            html.add(pageAuthor);
+        }
+    }
 
-		List<NavBarLink> childLinks = new ArrayList<>();
+    protected void addFacebookOpenGraph(MarkupContainer html, boolean show) {
+        {
+            WebMarkupContainer ogTitle = new WebMarkupContainer("og.title");
+            if (show && StringUtils.isNotBlank(getPageTitle())) {
+                ogTitle.add(new AttributeModifier("content", getPageTitle()));
+            } else {
+                ogTitle.setVisible(false);
+            }
+            html.add(ogTitle);
+        }
+        {
+            WebMarkupContainer ogType = new WebMarkupContainer("og.type");
+            if (show && StringUtils.isNotBlank(getOgType())) {
+                ogType.add(new AttributeModifier("content", getOgType()));
+            } else {
+                ogType.setVisible(false);
+            }
+            html.add(ogType);
+        }
+        {
+            WebMarkupContainer ogImage = new WebMarkupContainer("og.image");
+            if (show && getOgImage() != null) {
+                ogImage.add(new AttributeModifier("content", getOgImage().toString()));
+            } else {
+                ogImage.setVisible(false);
+            }
+            html.add(ogImage);
+        }
+        {
+            WebMarkupContainer ogUrl = new WebMarkupContainer("og.url");
+            if (show && getOgUrl() != null) {
+                ogUrl.add(new AttributeModifier("content", getOgUrl().toString()));
+            } else {
+                ogUrl.setVisible(false);
+            }
+            html.add(ogUrl);
+        }
+        {
+            WebMarkupContainer ogDescription = new WebMarkupContainer("og.description");
+            if (show && StringUtils.isNotBlank(getPageDescription())) {
+                ogDescription.add(new AttributeModifier("content", getPageDescription()));
+            } else {
+                ogDescription.setVisible(false);
+            }
+            html.add(ogDescription);
+        }
+    }
 
-		String icon;
+    protected void addNavigationBar(MarkupContainer html, String id) {
+        addNavigationBar(html, id, new ArrayList<>(), false, false, false);
+    }
 
-		String label;
+    protected Component addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs, boolean userButton, boolean searchBar,
+            boolean backToTopButton) {
+        WebMarkupContainer navbar = new WebMarkupContainer(id);
 
-		public NavBarLink() {
-			super();
-		}
+        ExternalLink navbarbrandlink = new ExternalLink("navbarbrandlink", "#");
+        navbarbrandlink.add(new WebMarkupContainer("navbarbrandicon"));
+        navbarbrandlink.add(new Label("navbarbrandlabel", ""));
+        navbarbrandlink.setVisible(false);
+        navbar.add(navbarbrandlink);
 
-		public NavBarLink(String label, String icon, String externalURL) {
-			this.label = label;
-			this.icon = icon;
-			this.externalURL = externalURL;
-		}
+        navbar.add(new ListView<NavBarLink>("navbaritems", navs) {
+            @Override
+            protected void populateItem(ListItem<NavBarLink> item) {
+                // item.add(new CssClassNameAppender("active"));
+                NavBarLink main = item.getModelObject();
+                BookmarkablePageLink<String> link = new BookmarkablePageLink<String>("navbaritemlink", main.getInternalPage(),
+                        main.getInternalPageParameters());
+                WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbaritemicon");
+                if (StringUtils.isNotBlank(main.getIcon())) {
+                    navbaritemicon.add(new CssClassNameModifier(main.getIcon()));
+                }
+                link.add(navbaritemicon);
+                link.add(new Label("navbaritemlabel", main.getLabel()));
+                // link.add(new CssClassNameAppender("disabled"));
+                item.add(link);
 
-		public NavBarLink(String label, String icon, Class<? extends WebPage> internalPage,
-				PageParameters internalPageParameters) {
-			this.label = label;
-			this.icon = icon;
-			this.internalPage = internalPage;
-			this.internalPageParameters = internalPageParameters;
-		}
+                WebMarkupContainer navbardropdown = new WebMarkupContainer("navbardropdown");
+                if (main.getChildLinks().isEmpty()) {
+                    navbardropdown.setVisible(false);
+                } else {
+                    item.add(new CssClassNameAppender("dropdown"));
+                    link.add(new CssClassNameAppender("dropdown-toggle"));
+                    link.add(new AttributeModifier("data-toggle", "dropdown"));
+                    link.add(new AttributeModifier("aria-haspopup", "true"));
+                    link.add(new AttributeModifier("aria-expanded", "false"));
+                }
+                item.add(navbardropdown);
+                navbardropdown.add(new ListView<NavBarLink>("navbardropdownitems", main.getChildLinks()) {
+                    @Override
+                    protected void populateItem(ListItem<NavBarLink> subitem) {
+                        // subitem.add(new CssClassNameAppender("active"));
+                        NavBarLink sub = subitem.getModelObject();
+                        BookmarkablePageLink<String> sublink = new BookmarkablePageLink<String>("navbardropdownitemlink", sub.getInternalPage(),
+                                sub.getInternalPageParameters());
+                        WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbardropdownitemicon");
+                        if (StringUtils.isNotBlank(sub.getIcon())) {
+                            navbaritemicon.add(new CssClassNameModifier(sub.getIcon()));
+                        }
+                        sublink.add(navbaritemicon);
+                        sublink.add(new Label("navbardropdownitemlabel", sub.getLabel()));
+                        // sublink.add(new CssClassNameAppender("disabled"));
+                        subitem.add(sublink);
+                    }
+                });
+            }
+        });
 
-		public String getExternalURL() {
-			return this.externalURL;
-		}
+        // login/logout/user-config menu
+        navbar.add(new Button("userButton").setVisible(userButton));
 
-		public void setExternalURL(String externalURL) {
-			this.externalURL = externalURL;
-		}
+        // searchbar
+        navbar.add(new WebMarkupContainer("searchbar").setVisible(searchBar));
 
-		public Class<? extends WebPage> getInternalPage() {
-			return this.internalPage;
-		}
+        // back to top button
+        navbar.add(new Button("backToTopButton").setVisible(backToTopButton));
 
-		public void setInternalPage(Class<? extends WebPage> internalPage) {
-			this.internalPage = internalPage;
-		}
+        html.add(navbar);
 
-		public PageParameters getInternalPageParameters() {
-			return this.internalPageParameters;
-		}
+        return navbar;
+    }
 
-		public void setInternalPageParameters(PageParameters internalPageParameters) {
-			this.internalPageParameters = internalPageParameters;
-		}
+    public static class NavBarLink implements Serializable {
+        String externalURL;
 
-		public List<NavBarLink> getChildLinks() {
-			return this.childLinks;
-		}
+        Class<? extends WebPage> internalPage;
 
-		public void setChildLinks(List<NavBarLink> childLinks) {
-			this.childLinks = childLinks;
-		}
+        PageParameters internalPageParameters;
 
-		public String getIcon() {
-			return this.icon;
-		}
+        List<NavBarLink> childLinks = new ArrayList<>();
 
-		public void setIcon(String icon) {
-			this.icon = icon;
-		}
+        String icon;
 
-		public String getLabel() {
-			return this.label;
-		}
+        String label;
 
-		public void setLabel(String label) {
-			this.label = label;
-		}
-	}
+        public NavBarLink() {
+            super();
+        }
 
-	protected Component addBreadcrumb(MarkupContainer html, String id) {
-		WebMarkupContainer breadcrumb = new WebMarkupContainer(id);
-		html.add(breadcrumb);
-		return breadcrumb;
-	}
+        public NavBarLink(String label, String icon, String externalURL) {
+            this.label = label;
+            this.icon = icon;
+            this.externalURL = externalURL;
+        }
 
-	protected Component addStatusBar(MarkupContainer html, String id, String contentid) {
-		Label content = new Label(contentid, " ");
-		WebMarkupContainer statusbar = new WebMarkupContainer(id);
-		html.add(statusbar.add(content));
-		return statusbar;
-	}
+        public NavBarLink(String label, String icon, Class<? extends WebPage> internalPage, PageParameters internalPageParameters) {
+            this.label = label;
+            this.icon = icon;
+            this.internalPage = internalPage;
+            this.internalPageParameters = internalPageParameters;
+        }
 
-	abstract protected void addComponents(PageParameters parameters, MarkupContainer html);
+        public String getExternalURL() {
+            return this.externalURL;
+        }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
+        public void setExternalURL(String externalURL) {
+            this.externalURL = externalURL;
+        }
 
-		response.render(OnDomReadyHeaderItem
-				.forScript(";var " + MomentJs.PROP_CURRENT_LANGUAGE + "='" + getLocale().getLanguage() + "';"));
+        public Class<? extends WebPage> getInternalPage() {
+            return this.internalPage;
+        }
 
-		response.render(JavaScriptHeaderItem
-				.forReference(JQuery.getJQueryReference()/* JQuery3.JS */));
+        public void setInternalPage(Class<? extends WebPage> internalPage) {
+            this.internalPage = internalPage;
+        }
 
-		response.render(CssHeaderItem.forReference(Bootstrap4.CSS));
-		// response.render(CssHeaderItem.forReference(Bootstrap4.CSS_GRID));
-		// response.render(CssHeaderItem.forReference(Bootstrap4.CSS_REBOOT));
-		response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_POPPER));
-		response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS));
-		response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_IE10FIX));
-		response.render(Bootstrap4.FACTORY);
+        public PageParameters getInternalPageParameters() {
+            return this.internalPageParameters;
+        }
 
-		response.render(CssHeaderItem.forReference(FontAwesome.CSS));
+        public void setInternalPageParameters(PageParameters internalPageParameters) {
+            this.internalPageParameters = internalPageParameters;
+        }
 
-		response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_CSS));
-		// response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_SOCIAL_CSS));
-		// response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_CSS));
-		// response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_HOVER_CSS));
+        public List<NavBarLink> getChildLinks() {
+            return this.childLinks;
+        }
 
-		response.render(CssHeaderItem.forReference(BLazy.CSS));
-		response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
-		response.render(BLazy.FACTORY);
+        public void setChildLinks(List<NavBarLink> childLinks) {
+            this.childLinks = childLinks;
+        }
 
-		response.render(JavaScriptHeaderItem.forReference(PictureFill.JS));
-		response.render(PictureFill.FACTORY);
+        public String getIcon() {
+            return this.icon;
+        }
 
-		response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_LOCALE));
-		response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_I18N));
-		response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_PLUGIN_PRECISE_RANGE));
-		response.render(MomentJs.FACTORY);
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
 
-		response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
-		response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
-		response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
+        public String getLabel() {
+            return this.label;
+        }
 
-		response.render(CssHeaderItem.forReference(BootstrapColorPicker.CSS));
-		response.render(JavaScriptHeaderItem.forReference(BootstrapColorPicker.JS));
-		response.render(BootstrapColorPicker.FACTORY);
+        public void setLabel(String label) {
+            this.label = label;
+        }
+    }
 
-		response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS));
-		response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_JQUERY));
-		response.render(BootstrapTinyMCE.FACTORY);
+    protected Component addBreadcrumb(MarkupContainer html, String id) {
+        WebMarkupContainer breadcrumb = new WebMarkupContainer(id);
+        html.add(breadcrumb);
+        return breadcrumb;
+    }
 
-		response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
-		response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));
+    protected Component addStatusBar(MarkupContainer html, String id, String contentid) {
+        Label content = new Label(contentid, " ");
+        WebMarkupContainer statusbar = new WebMarkupContainer(id);
+        html.add(statusbar.add(content));
+        return statusbar;
+    }
 
-		response.render(
-				JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
-		response.render(JavaScriptHeaderItem
-				.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
-		response.render(
-				JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
+    abstract protected void addComponents(PageParameters parameters, MarkupContainer html);
 
-		response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
-		response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
 
-		response.render(CssHeaderItem.forReference(MultiSelect.CSS));
-		response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
-		response.render(MultiSelect.JS_FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(";var " + MomentJs.PROP_CURRENT_LANGUAGE + "='" + getLocale().getLanguage() + "';"));
 
-		response.render(
-				CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
-		response.render(JavaScriptHeaderItem
-				.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
-		response.render(OnDomReadyHeaderItem
-				.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
-	}
+        response.render(JavaScriptHeaderItem.forReference(JQuery.getJQueryReference()/* JQuery3.JS */));
+
+        response.render(CssHeaderItem.forReference(Bootstrap4.CSS));
+        // response.render(CssHeaderItem.forReference(Bootstrap4.CSS_GRID));
+        // response.render(CssHeaderItem.forReference(Bootstrap4.CSS_REBOOT));
+        response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_POPPER));
+        response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS));
+        response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_IE10FIX));
+        response.render(Bootstrap4.FACTORY);
+
+        response.render(CssHeaderItem.forReference(FontAwesome.CSS));
+
+        response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_CSS));
+        // response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_SOCIAL_CSS));
+        // response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_CSS));
+        // response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_HOVER_CSS));
+
+        response.render(CssHeaderItem.forReference(BLazy.CSS));
+        response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
+        response.render(BLazy.FACTORY);
+
+        response.render(JavaScriptHeaderItem.forReference(PictureFill.JS));
+        response.render(PictureFill.FACTORY);
+
+        response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_LOCALE));
+        response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_I18N));
+        response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_PLUGIN_PRECISE_RANGE));
+        response.render(MomentJs.FACTORY);
+
+        response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
+        response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
+
+        response.render(CssHeaderItem.forReference(BootstrapColorPicker.CSS));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapColorPicker.JS));
+        response.render(BootstrapColorPicker.FACTORY);
+
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_JQUERY));
+        response.render(BootstrapTinyMCE.FACTORY);
+
+        response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));
+
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
+
+        response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
+
+        response.render(CssHeaderItem.forReference(MultiSelect.CSS));
+        response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
+        response.render(MultiSelect.JS_FACTORY);
+
+        response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
+        response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
+    }
 }

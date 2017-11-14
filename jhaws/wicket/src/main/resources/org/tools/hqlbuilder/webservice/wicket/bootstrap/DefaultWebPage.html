@@ -2,23 +2,28 @@
 <!-- wicket:id="html" -->
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="" wicket:message="content:page.description">
-<meta name="keywords" content="" wicket:message="content:page.keywords">
-<meta name="author" content="" wicket:message="content:page.author">
-<link rel="shortcut icon" type="image/x-icon" href="" wicket:id="shortcutIcon" />
-<title wicket:id="page.title"></title>
-<meta http-equiv="imagetoolbar" content="no" />
-<meta wicket:id="meta_google_signin_scope" name="google-signin-scope" content="profile email">
-<meta wicket:id="meta_google_signin_client_id" name="google-signin-client_id" content="">
-<wicket:header-items />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta wicket:id="page.description" name="description" content="">
+	<meta wicket:id="page.keywords" name="keywords" content="">
+	<meta wicket:id="page.author" name="author" content="">
+	<meta wicket:id="og.title" property="og:title" content="">
+	<meta wicket:id="og.type" property="og:type" content="">
+	<meta wicket:id="og.image" property="og:image" content="">
+	<meta wicket:id="og.url" property="og:url" content="">
+	<meta wicket:id="og.description" property="og:description" content="">
+	<link wicket:id="shortcutIcon" rel="shortcut icon" type="image/x-icon" href="" />
+	<title wicket:id="page.title"></title>
+	<meta http-equiv="imagetoolbar" content="no" />
+	<meta wicket:id="meta_google_signin_scope" name="google-signin-scope" content="profile email">
+	<meta wicket:id="meta_google_signin_client_id" name="google-signin-client_id" content="">
+	<wicket:header-items />
 </head>
 <body>
 
 	<wicket:container wicket:id="debug" />
 
-	<span wicket:id="navbar">
+	<div style="padding-top:4rem" wicket:id="navbar">
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
 			<a wicket:id="navbarbrandlink" class="navbar-brand" href="#"><span wicket:id="navbarbrandicon"></span>&nbsp;<span wicket:id="navbarbrandlabel"></span></a>
 			<button class="navbar-toggler btn-sm" type="button" data-toggle="collapse" data-target="#navbarsid" aria-controls="navbarsid" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,15 +65,14 @@
 				</wicket:enclosure>
 			</div>
 		</nav>
-	
-		<br />
-		<br />
-		<br />
-	</span>
+	</div>
 
 	<div wicket:id="breadcrumb" class="container">
 		<nav class="breadcrumb">
-			<a class="breadcrumb-item" href="#">Home</a> <a class="breadcrumb-item" href="#">Library</a> <a class="breadcrumb-item" href="#">Data</a> <span class="breadcrumb-item active">Bootstrap</span>
+			<a class="breadcrumb-item" href="#">A</a>
+			<a class="breadcrumb-item" href="#">B</a>
+			<a class="breadcrumb-item" href="#">C</a>
+			<span class="breadcrumb-item active">D</span>
 		</nav>
 	</div>
 
@@ -80,17 +84,15 @@
 
 	<wicket:child />
 
-	<span wicket:id="statusbar">
-		<br />
-		<br />
-		<br />
+	<div style="padding-top:2rem" wicket:id="statusbar">
 		<footer class="fixed-bottom bg-dark">
 			<div class="container">
 				<span wicket:id="statusbarcontent" class="text-muted"></span>
 			</div>
 		</footer>
-	</span>
+	</div>
 
 	<wicket:container wicket:id="footer-container" />
+
 </body>
 </html>
