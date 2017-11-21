@@ -91,9 +91,9 @@ public class FilePathTest {
             }
             fp.delete();
             fp.delete();
-            fp.createDirectoryIfNotExists();
+            fp.createDirectory();
             Assert.assertTrue(fp.exists());
-            fp.createDirectoryIfNotExists();
+            fp.createDirectory();
             fpp.createFileIfNotExists();
             Assert.assertTrue(fpp.exists());
             fpp.createFileIfNotExists();
@@ -109,7 +109,7 @@ public class FilePathTest {
         String same = "same";
         try {
             FilePath tmpDir = FilePath.createTempDirectory(String.valueOf(System.currentTimeMillis()));
-            FilePath subdir = tmpDir.child("subdir").createDirectories();
+            FilePath subdir = tmpDir.child("subdir").createDirectory();
             FilePath file1 = tmpDir.child("file1");
             try (BufferedWriter out = file1.newBufferedWriter()) {
                 out.write(same);
@@ -204,7 +204,7 @@ public class FilePathTest {
         String same = "same";
         try {
             FilePath tmpDir = FilePath.createTempDirectory(String.valueOf(System.currentTimeMillis()));
-            FilePath subdir = tmpDir.child("subdir").createDirectories();
+            FilePath subdir = tmpDir.child("subdir").createDirectory();
             FilePath file1 = tmpDir.child("file1");
             try (BufferedWriter out = file1.newBufferedWriter()) {
                 out.write(same);
@@ -222,7 +222,7 @@ public class FilePathTest {
             try (BufferedWriter out = file4.newBufferedWriter()) {
                 out.write(same);
             }
-            FilePath subdir2 = subdir.child("subdir2").createDirectories();
+            FilePath subdir2 = subdir.child("subdir2").createDirectory();
             FilePath file5 = subdir2.child("file5");
             try (BufferedWriter out = file5.newBufferedWriter()) {
                 out.write(same);
@@ -653,16 +653,16 @@ public class FilePathTest {
     public void testCreateIfNotExists() {
         FilePath d = FilePath.getTempDirectory().child("dir" + System.currentTimeMillis()).child("dir" + System.currentTimeMillis());
         Assert.assertFalse(d.exists());
-        d.createDirectories();
+        d.createDirectory();
         Assert.assertTrue(d.exists());
-        d.createDirectories();
+        d.createDirectory();
         Assert.assertTrue(d.exists());
     }
 
     @Test
     public void testLink() {
         FilePath d1 = FilePath.getTempDirectory().child("dir" + System.currentTimeMillis() + "-1");
-        d1.createDirectoryIfNotExists();
+        d1.createDirectory();
         FilePath d2 = FilePath.getTempDirectory().child("dir" + System.currentTimeMillis() + "-2");
         d2.createSymbolicLinkFrom(d1);
         System.out.println(d1);

@@ -425,10 +425,20 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
             switch (getFormSettings().getShowMessages()) {
                 case bottom:
                     formHeader.add(new WebMarkupContainer("allMessagesTop").setVisible(false));
-                    formFooter.add(new FeedbackPanel("allMessagesBottom").setEscapeModelStrings(false));
+                    formFooter.add(new FeedbackPanel("allMessagesBottom") {
+                        protected String getCSSClass(org.apache.wicket.feedback.FeedbackMessage message) {
+                            String feedbackCss = getFeedbackCss(message);
+                            return feedbackCss == null ? super.getCSSClass(message) : feedbackCss;
+                        }
+                    }.setEscapeModelStrings(false));
                     break;
                 case top:
-                    formHeader.add(new FeedbackPanel("allMessagesTop").setEscapeModelStrings(false));
+                    formHeader.add(new FeedbackPanel("allMessagesTop") {
+                        protected String getCSSClass(org.apache.wicket.feedback.FeedbackMessage message) {
+                            String feedbackCss = getFeedbackCss(message);
+                            return feedbackCss == null ? super.getCSSClass(message) : feedbackCss;
+                        }
+                    }.setEscapeModelStrings(false));
                     formFooter.add(new WebMarkupContainer("allMessagesBottom").setVisible(false));
                     break;
                 default:
@@ -471,5 +481,9 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
         }
 
         return rowpanel;
+    }
+
+    protected String getFeedbackCss(org.apache.wicket.feedback.FeedbackMessage message) {
+        return null;
     }
 }

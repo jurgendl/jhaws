@@ -24,7 +24,7 @@ public class Pdf2Img {
 		try {
 			IntegerValue iv = new IntegerValue();
 			FilePath pdf = new FilePath(args[0]).checkExists();
-			FilePath dir = new FilePath(args[1]).createDirectoryIfNotExists();
+			FilePath dir = new FilePath(args[1]).createDirectory();
 			// PDFBox
 			try (PDDocument document = PDDocument.load(pdf.toFile())) {
 				getImagesFromPDF(document, img -> {

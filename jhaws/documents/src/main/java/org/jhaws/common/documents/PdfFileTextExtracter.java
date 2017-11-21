@@ -36,7 +36,7 @@ public class PdfFileTextExtracter implements FileTextExtracter {
         if (txt == null) {
             txt = pdf.appendExtension("txt");
         } else {
-            txt.getParentPath().createDirectoryIfNotExists();
+            txt.getParentPath().createDirectory();
         }
         Processes.callProcess(true,
                 Arrays.asList("\"" + xpdfexe.getAbsolutePath() + "\"", "-enc", "Latin1", "-eol", "dos",
@@ -46,7 +46,7 @@ public class PdfFileTextExtracter implements FileTextExtracter {
     }
 
     public static FilePath xpdf(String version) throws MalformedURLException, IOException {
-        FilePath xpdf = new FilePath(System.getProperty("user.home")).child("xpdfbin-win-" + version).createDirectoryIfNotExists();
+        FilePath xpdf = new FilePath(System.getProperty("user.home")).child("xpdfbin-win-" + version).createDirectory();
         FilePath xpdfzip = xpdf.child("xpdfbin-win-" + version + ".zip");
         if (xpdfzip.notExists()) {
             // http://www.foolabs.com/xpdf/

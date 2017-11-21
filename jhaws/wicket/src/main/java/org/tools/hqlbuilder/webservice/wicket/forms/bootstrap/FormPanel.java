@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
+import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
@@ -28,6 +29,32 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
     public FormPanel(String id, FormActions<T> formActions, FormSettings formSettings) {
         super(id, formActions, formSettings);
         bootstrap = true;
+    }
+
+    protected String getFeedbackCss(org.apache.wicket.feedback.FeedbackMessage message) {
+        return "alert alert-" + getFeedbackCssInternal(message) + " mb-1";
+    }
+
+    protected String getFeedbackCssInternal(org.apache.wicket.feedback.FeedbackMessage message) {
+        if (FeedbackMessage.DEBUG == message.getLevel()) {
+            return "debug";
+        }
+        if (FeedbackMessage.INFO == message.getLevel()) {
+            return "info";
+        }
+        if (FeedbackMessage.SUCCESS == message.getLevel()) {
+            return "success";
+        }
+        if (FeedbackMessage.WARNING == message.getLevel()) {
+            return "warning";
+        }
+        if (FeedbackMessage.ERROR == message.getLevel()) {
+            return "error";
+        }
+        if (FeedbackMessage.FATAL == message.getLevel()) {
+            return "error";
+        }
+        return "primary";
     }
 
     public <PropertyType, ComponentType extends FormComponent<PropertyType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends DefaultFormRowPanel<PropertyType, ComponentType, ElementSettings>> RowPanel addDefaultRow(

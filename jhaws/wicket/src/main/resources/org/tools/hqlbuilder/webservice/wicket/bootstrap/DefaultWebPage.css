@@ -317,43 +317,16 @@ body {
 }
 
 /* ======================== feedback ======================== */
-.feedbackPanel.ui-state-error {
-	background-color: transparent;
-	border: none;
-	list-style-type: none;
-	font-size: 0.8em;
+ul.feedbackPanel {
+	width: 100%;
+	padding: 0px;
 	margin: 0px;
-	padding: 2px 3px 2px 3px;
 }
-
-.feedbackPanel .feedbackPanelFATAL {
-	color: #D8000C;
-	background-color: #FFBABA;
+ul.feedbackPanel li.alert {
+	list-style-type: none;
 }
-
-.feedbackPanel .feedbackPanelFATAL:before {
-	content: '\e80d';
-}
-
-.feedbackPanel .feedbackPanelERROR {
-	color: #D8000C;
-	background-color: #FFBABA;
-}
-.feedbackPanel .feedbackPanelWARNING {
-	color: #FEEFB3;
-	background-color: #FEEFB3;
-}
-.feedbackPanel .feedbackPanelINFO {
-	color: #00529B;
-	background-color: #BDE5F8;
-}
-.feedbackPanel .feedbackPanelSUCCESS {
-	color: #4F8A10;
-	background-color: #DFF2BF;
-}
-.feedbackPanel .feedbackPanelDEBUG {
-	color: #00529B;
-	background-color: #BDE5F8;
+ul.feedbackPanel li.alert span.alert {
+	border: none !important;
 }
 
 /* ======================== text transformations ======================== */

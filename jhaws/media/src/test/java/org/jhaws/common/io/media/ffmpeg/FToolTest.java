@@ -46,7 +46,7 @@ public class FToolTest {
             FilePath sourcedir = h.child("sources");
             FilePath tmp = h.child("tmp");
             tmp.delete();
-            tmp.createDirectoryIfNotExists();
+            tmp.createDirectory();
             List<FilePath> sources = sourcedir.list().stream().sorted().collect(Collectors.toList());
             int nr = sources.size();
             if (nr == 0) return;
@@ -75,7 +75,7 @@ public class FToolTest {
                 }
             }
             t.slideshow(null, fpsI, fpsO, new FilePath(tmp.getAbsolutePath()), "imgs_%04d.png",
-                    h.child("output").createDirectoryIfNotExists().child("test.mp4"), System.out::println);
+                    h.child("output").createDirectory().child("test.mp4"), System.out::println);
         } catch (RuntimeException ex) {
             ex.printStackTrace(System.out);
             throw ex;

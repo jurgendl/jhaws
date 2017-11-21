@@ -631,11 +631,11 @@ public class Utils {
 			while ((entry = zin.getNextEntry()) != null) {
 				if (!entry.isDirectory()) {
 					FilePath file = target.child(entry.getName());
-					file.getParentPath().createDirectoryIfNotExists();
+					file.getParentPath().createDirectory();
 					file.copyFrom(zin);
 				} else {
 					FilePath dir = target.child(entry.getName());
-					dir.createDirectoryIfNotExists();
+					dir.createDirectory();
 				}
 			}
 		}

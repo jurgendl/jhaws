@@ -8,9 +8,9 @@ public class SevenZipTest {
 	public void test() {
 		FilePath tmpdir = FilePath.getTempDirectory();
 		SevenZip ws7 = new WinSevenZip();
-		FilePath tmp = tmpdir.child("7ztest").createDirectoryIfNotExists();
+		FilePath tmp = tmpdir.child("7ztest").createDirectory();
 		tmp.child("testfile1.txt").write("testfile1.txt");
-		tmp.child("subdir").createDirectoryIfNotExists().child("testfile2.txt").write("testfile2.txt");
+		tmp.child("subdir").createDirectory().child("testfile2.txt").write("testfile2.txt");
 		FilePath archive = tmpdir.child("7ztestarchive.7z");
 		ws7.compress(archive, null, tmp.getAbsolutePath() + "/*.*");
 		ws7.list(archive, null);
