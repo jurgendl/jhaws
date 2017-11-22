@@ -47,12 +47,13 @@ public class BootstrapConfirmation {
             @Override
             protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
                 super.updateAjaxAttributes(attributes);
+
                 List<IAjaxCallListener> listeners = attributes.getAjaxCallListeners();
                 IAjaxCallListener listener = new AjaxCallListener() {
                     @Override
                     public CharSequence getBeforeHandler(Component component) {
                         return "$.confirm({title:'" + title + "',text:'" + message
-                                + "',modalOptionsBackdrop:'static',modalOptionsKeyboard:false,confirm:function(){console.log(attrs.event);/*attrs.event.target.form.submit();*/},cancel:function(){;}});"
+                                + "',modalOptionsBackdrop:'static',modalOptionsKeyboard:false,confirm:function(){console.log(attrs.event);attrs.event.target.form.submit();},cancel:function(){;}});"
                                 + "attrs.event.preventDefault();";
                     }
                 };
