@@ -499,7 +499,7 @@ img.niceimage {
 	background-color:rgba(200,200,200,0.8);
 }
 
-/* boostrap outline-light button fix */
+/* bootstrap outline-light button fix */
 .btn-outline-light:hover {
 	color: black !important;
 }
@@ -534,3 +534,7 @@ img.niceimage {
 .custom-control-input:disabled ~ .custom-control-indicator {
 	background-color: rgba(166, 209, 255, 0.98) !important;
 }
+
+/* */
+.modal-header .close { margin: 0px !important; padding: 0px !important; }
+.modal-header { display: block !important; }

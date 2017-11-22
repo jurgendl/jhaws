@@ -16,7 +16,8 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 /**
  * https://myclabs.github.io/jquery.confirm/<br>
  * https://github.com/myclabs/jquery.confirm<br>
- * version after 2.7.0
+ * version after 2.7.0 <br>
+ * <style>.modal-header .close { margin: 0px !important; padding: 0px !important; } .modal-header { display: block !important; }</style>
  */
 public class BootstrapConfirmation {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapConfirmation.class, "jquery.confirm.js");
