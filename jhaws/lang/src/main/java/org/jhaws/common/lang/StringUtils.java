@@ -277,4 +277,9 @@ public interface StringUtils {
         String tagRegex = "(<" + tag + ">(.{0," + max + "})</" + tag + ">)";
         return splitKeepDelimiter(tagRegex, input);
     }
+
+    public static String replaceLast(String text, String regex, String replacement) {
+        // https://stackoverflow.com/questions/2282728/java-replacelast
+        return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
+    }
 }

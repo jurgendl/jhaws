@@ -2,6 +2,7 @@ package org.jhaws.common.lang;
 
 import java.io.Serializable;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -67,7 +68,7 @@ public class Value<T> implements Serializable {
     }
 
     public Value<T> setOr(T t, Consumer<T> f) {
-        if (set()) {
+        if (isSet()) {
             f.accept(get());
         } else {
             set(t);
@@ -96,7 +97,11 @@ public class Value<T> implements Serializable {
     }
 
     public boolean isNotSet() {
-        return isNull();
+        return !isSet();
+    }
+
+    public boolean isNotNull() {
+        return !isNull();
     }
 
     public Value<T> setNull() {
@@ -105,7 +110,13 @@ public class Value<T> implements Serializable {
     }
 
     public Value<T> operate(UnaryOperator<T> operation) {
-        value = operation.apply(value);
+        return operate(t -> true, operation);
+    }
+
+    public Value<T> operate(Predicate<T> when, UnaryOperator<T> operation) {
+        if (when.test(value)) {
+            value = operation.apply(value);
+        }
         return this;
     }
 }
