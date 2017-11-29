@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxCfg;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxDefaultsCfg;
+import org.jhaws.common.lang.IntegerValue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -115,15 +116,17 @@ public class FToolTest {
     @Test
     public void test4() {
         try {
-            FilePath sourcedir = new FilePath("c:/tmp").child("loop").createDirectory();
+            FilePath sourcedir = new FilePath("c:/tmp").child("loop").delete().createDirectory();
             {
                 BufferedImage bi = new BufferedImage(1280, 720, BufferedImage.TYPE_INT_RGB);
                 Graphics2D g = (Graphics2D) bi.getGraphics();
                 g.setColor(Color.white);
                 int x = 8;
-                for (int i = 0; i < 60; i++) {
+                for (int i = 1; i <= 60; i++) {
                     g.fillRect((i + x) * x, (i + x) * x, x, x);
-                    ImageIO.write(bi, "png", sourcedir.child((i < 10 ? "0" : "") + i + ".png").newBufferedOutputStream());
+                    String other = (i < 10 ? "0" : "") + i + ".png";
+                    System.out.println(other);
+                    ImageIO.write(bi, "png", sourcedir.child(other).newBufferedOutputStream());
                 }
             }
             FilePath tmp = sourcedir.child("tmp");
@@ -134,14 +137,11 @@ public class FToolTest {
                 int fpsO = 30;
                 tmp.delete();
                 tmp.createDirectory();
-                List<FilePath> sources = sourcedir.list().stream().sorted().collect(Collectors.toList());
-                int nr = sources.size();
-                if (nr == 0) return;
-                if (fpsI == null) fpsI = nr;
-                int index = 0;
-                int sindex = 0;
-                for (int i = 0; i < nr * repeat; i++) {
-                    for (int j = 0; j < repeat; j++) {
+                List<FilePath> sources = sourcedir.list().stream().filter(FilePath::isFile).sorted().collect(Collectors.toList());
+                IntegerValue idx = new IntegerValue(1);
+                for (int i = 0; i < repeat; i++) {
+                    sources.forEach(fp -> {
+                        int index = idx.get();
                         String ii = "";
                         if (index < 1000) {
                             ii = "0" + ii;
@@ -153,13 +153,12 @@ public class FToolTest {
                             ii = "0" + ii;
                         }
                         ii = ii + index;
-                        sources.get(sindex).copyTo(tmp.child("imgs_" + ii + ".png"));
-                    }
-                    index++;
-                    sindex++;
-                    if (sindex >= nr) {
-                        sindex = 0;
-                    }
+                        FilePath cccc = tmp.child("imgs_" + ii + ".png");
+                        System.out.println(fp);
+                        System.out.println(cccc);
+                        fp.copyTo(cccc);
+                        idx.add();
+                    });
                 }
                 t.slideshow(null, fpsI, fpsO, tmp, "imgs_%04d.png", single, System.out::println);
             }

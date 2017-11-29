@@ -768,11 +768,13 @@ public class FfmpegTool implements MediaCte {
 
     protected List<String> command(int pass, RemuxCfg cfg) {
         if (cfg.slideshowCfg != null && cfg.defaults.twopass) throw new IllegalArgumentException();
-
+        if (cfg.repeat != null && cfg.repeat <= 1) cfg.repeat = null;
         if (cfg.acopy == null) cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
         if (cfg.vcopy == null) cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
         if (cfg.acopy && cfg.vcopy) cfg.vcopy = false;
         if (cfg.hq == null) cfg.hq = cfg.input != null ? cfg.input.hq : true;
+        if (cfg.repeat != null) cfg.vcopy = false;
+        if (cfg.repeat != null) cfg.acopy = false;
 
         List<String> accel = getHwAccel();
         List<String> command = new ArrayList<>();
