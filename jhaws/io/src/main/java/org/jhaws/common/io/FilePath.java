@@ -2035,6 +2035,7 @@ public class FilePath implements Path, Externalizable {
     }
 
     public List<FilePath> list(boolean iterate, DirectoryStream.Filter<? super Path> filter) {
+        if (notExists()) return Collections.emptyList();
         Deque<FilePath> stack = new ArrayDeque<>();
         List<FilePath> files = new LinkedList<>();
         stack.push(this);
