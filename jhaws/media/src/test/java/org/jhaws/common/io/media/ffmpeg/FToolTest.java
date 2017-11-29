@@ -1,7 +1,12 @@
 package org.jhaws.common.io.media.ffmpeg;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.imageio.ImageIO;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxCfg;
@@ -74,8 +79,8 @@ public class FToolTest {
                     sindex = 0;
                 }
             }
-            t.slideshow(null, fpsI, fpsO, new FilePath(tmp.getAbsolutePath()), "imgs_%04d.png",
-                    h.child("output").createDirectory().child("test.mp4"), System.out::println);
+            t.slideshow(null, fpsI, fpsO, new FilePath(tmp.getAbsolutePath()), "imgs_%04d.png", h.child("output").createDirectory().child("test.mp4"),
+                    System.out::println);
         } catch (RuntimeException ex) {
             ex.printStackTrace(System.out);
             throw ex;
@@ -104,6 +109,65 @@ public class FToolTest {
         } catch (RuntimeException ex) {
             ex.printStackTrace(System.out);
             throw ex;
+        }
+    }
+
+    @Test
+    public void test4() {
+        try {
+            FilePath sourcedir = new FilePath("c:/tmp").child("loop").createDirectory();
+            {
+                BufferedImage bi = new BufferedImage(1280, 720, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = (Graphics2D) bi.getGraphics();
+                g.setColor(Color.white);
+                int x = 8;
+                for (int i = 0; i < 60; i++) {
+                    g.fillRect((i + x) * x, (i + x) * x, x, x);
+                    ImageIO.write(bi, "png", sourcedir.child((i < 10 ? "0" : "") + i + ".png").newBufferedOutputStream());
+                }
+            }
+            FilePath tmp = sourcedir.child("tmp");
+            FilePath single = tmp.child("test.mp4");
+            {
+                int repeat = 1;
+                Integer fpsI = 30;
+                int fpsO = 30;
+                tmp.delete();
+                tmp.createDirectory();
+                List<FilePath> sources = sourcedir.list().stream().sorted().collect(Collectors.toList());
+                int nr = sources.size();
+                if (nr == 0) return;
+                if (fpsI == null) fpsI = nr;
+                int index = 0;
+                int sindex = 0;
+                for (int i = 0; i < nr * repeat; i++) {
+                    for (int j = 0; j < repeat; j++) {
+                        String ii = "";
+                        if (index < 1000) {
+                            ii = "0" + ii;
+                        }
+                        if (index < 100) {
+                            ii = "0" + ii;
+                        }
+                        if (index < 10) {
+                            ii = "0" + ii;
+                        }
+                        ii = ii + index;
+                        sources.get(sindex).copyTo(tmp.child("imgs_" + ii + ".png"));
+                    }
+                    index++;
+                    sindex++;
+                    if (sindex >= nr) {
+                        sindex = 0;
+                    }
+                }
+                t.slideshow(null, fpsI, fpsO, tmp, "imgs_%04d.png", single, System.out::println);
+            }
+            {
+                t.loop(single, 10, single.appendExtension(".multiple.mp4"), System.out::println);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
         }
     }
 }
