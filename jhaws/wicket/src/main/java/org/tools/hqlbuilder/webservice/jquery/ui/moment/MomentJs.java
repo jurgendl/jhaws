@@ -28,7 +28,7 @@ public class MomentJs {
     // https://github.com/codebox/moment-precise-range/releases
     // 1.2.4
     public static JavaScriptResourceReference JS_PLUGIN_PRECISE_RANGE = new JavaScriptResourceReference(MomentJs.class,
-            "plugins/preciserange/moment-precise-range.js");
+            "plugins/preciserange/moment-precise-range.js").addJavaScriptResourceReferenceDependency(JS);
 
     // public static JavaScriptResourceReference JS_PLUGIN_JAVA_DATE_FORMAT = new JavaScriptResourceReference(MomentJs.class,
     // "moment-jdateformatparser.js");

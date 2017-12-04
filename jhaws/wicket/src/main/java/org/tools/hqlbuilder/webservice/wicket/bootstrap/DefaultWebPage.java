@@ -82,8 +82,7 @@ public abstract class DefaultWebPage extends WebPage {
 	}
 
 	/**
-	 * "Open Graph Reference Documentation _ og_type.pdf"
-	 * https://developers.facebook.com/docs/reference/opengraph/
+     * "Open Graph Reference Documentation _ og_type.pdf" https://developers.facebook.com/docs/reference/opengraph/
 	 */
 	protected String getOgType(PageParameters parameters) {
 		return null;
@@ -110,13 +109,12 @@ public abstract class DefaultWebPage extends WebPage {
 		html.add(new Label("page.title", getPageTitle(parameters)));
 
 		// shortcut icon
-		html.add(new WebMarkupContainer("shortcutIcon")
-				.add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
+        html.add(new WebMarkupContainer("shortcutIcon").add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
 				.setVisible(StringUtils.isNotBlank(WicketApplication.get().getShortcutIcon())));
 
 		// wicket/ajax debug bars
-		html.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig()
-				? new DebugBar("debug") : new EmptyPanel("debug").setVisible(false));
+        html.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig() ? new DebugBar("debug")
+                : new EmptyPanel("debug").setVisible(false));
 
 		// check if javascript is enabled
 		html.add(new CheckJavaScriptEnabled());
@@ -257,8 +255,8 @@ public abstract class DefaultWebPage extends WebPage {
 			protected void populateItem(ListItem<NavBarLink> item) {
 				// item.add(new CssClassNameAppender("active"));
 				NavBarLink main = item.getModelObject();
-				BookmarkablePageLink<String> link = new BookmarkablePageLink<String>("navbaritemlink",
-						main.getInternalPage(), main.getInternalPageParameters());
+                BookmarkablePageLink<String> link = new BookmarkablePageLink<String>("navbaritemlink", main.getInternalPage(),
+                        main.getInternalPageParameters());
 				WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbaritemicon");
 				if (StringUtils.isNotBlank(main.getIcon())) {
 					navbaritemicon.add(new CssClassNameModifier(main.getIcon()));
@@ -284,8 +282,8 @@ public abstract class DefaultWebPage extends WebPage {
 					protected void populateItem(ListItem<NavBarLink> subitem) {
 						// subitem.add(new CssClassNameAppender("active"));
 						NavBarLink sub = subitem.getModelObject();
-						BookmarkablePageLink<String> sublink = new BookmarkablePageLink<String>(
-								"navbardropdownitemlink", sub.getInternalPage(), sub.getInternalPageParameters());
+                        BookmarkablePageLink<String> sublink = new BookmarkablePageLink<String>("navbardropdownitemlink", sub.getInternalPage(),
+                                sub.getInternalPageParameters());
 						WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbardropdownitemicon");
 						if (StringUtils.isNotBlank(sub.getIcon())) {
 							navbaritemicon.add(new CssClassNameModifier(sub.getIcon()));
@@ -336,8 +334,7 @@ public abstract class DefaultWebPage extends WebPage {
 			this.externalURL = externalURL;
 		}
 
-		public NavBarLink(String label, String icon, Class<? extends WebPage> internalPage,
-				PageParameters internalPageParameters) {
+        public NavBarLink(String label, String icon, Class<? extends WebPage> internalPage, PageParameters internalPageParameters) {
 			this.label = label;
 			this.icon = icon;
 			this.internalPage = internalPage;
@@ -412,11 +409,9 @@ public abstract class DefaultWebPage extends WebPage {
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 
-		response.render(OnDomReadyHeaderItem
-				.forScript(";var " + MomentJs.PROP_CURRENT_LANGUAGE + "='" + getLocale().getLanguage() + "';"));
+        response.render(OnDomReadyHeaderItem.forScript(";var " + MomentJs.PROP_CURRENT_LANGUAGE + "='" + getLocale().getLanguage() + "';"));
 
-		response.render(JavaScriptHeaderItem
-				.forReference(JQuery.getJQueryReference()/* JQuery3.JS */));
+        response.render(JavaScriptHeaderItem.forReference(JQuery.getJQueryReference()/* JQuery3.JS */));
 
 		response.render(CssHeaderItem.forReference(Bootstrap4.CSS));
 		// response.render(CssHeaderItem.forReference(Bootstrap4.CSS_GRID));
@@ -440,6 +435,7 @@ public abstract class DefaultWebPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(PictureFill.JS));
 		response.render(PictureFill.FACTORY);
 
+        response.render(JavaScriptHeaderItem.forReference(MomentJs.JS));
 		response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_LOCALE));
 		response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_I18N));
 		response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_PLUGIN_PRECISE_RANGE));
@@ -460,12 +456,9 @@ public abstract class DefaultWebPage extends WebPage {
 		response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
 		response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));
 
-		response.render(
-				JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
-		response.render(JavaScriptHeaderItem
-				.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
-		response.render(
-				JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
+        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
 
 		response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
 		response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
@@ -477,11 +470,8 @@ public abstract class DefaultWebPage extends WebPage {
 		// response.render(JavaScriptHeaderItem.forReference(BootstrapConfirmation.JS));
 		// response.render(OnLoadHeaderItem.forScript(";$('[data-toggle=confirmation]').confirmation({rootSelector:'[data-toggle=confirmation]'});"));
 
-		response.render(
-				CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
-		response.render(JavaScriptHeaderItem
-				.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
-		response.render(OnDomReadyHeaderItem
-				.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
+        response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
+        response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
 	}
 }
