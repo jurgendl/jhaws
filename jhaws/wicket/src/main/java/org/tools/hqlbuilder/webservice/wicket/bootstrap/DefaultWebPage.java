@@ -61,23 +61,23 @@ public abstract class DefaultWebPage extends WebPage {
 		addComponents(parameters, this);
 	}
 
-	protected String getPageTitle() {
+	protected String getPageTitle(PageParameters parameters) {
 		return getString("page.title");
 	}
 
-	protected String[] getPageKeywords() {
+	protected String[] getPageKeywords(PageParameters parameters) {
 		return null;
 	}
 
-	protected String getPageDescription() {
+	protected String getPageDescription(PageParameters parameters) {
 		return null;
 	}
 
-	protected String getPageAuthor() {
+	protected String getPageAuthor(PageParameters parameters) {
 		return null;
 	}
 
-	protected URL getPageAuthorLink() {
+	protected URL getPageAuthorLink(PageParameters parameters) {
 		return null;
 	}
 
@@ -85,15 +85,15 @@ public abstract class DefaultWebPage extends WebPage {
 	 * "Open Graph Reference Documentation _ og_type.pdf"
 	 * https://developers.facebook.com/docs/reference/opengraph/
 	 */
-	protected String getOgType() {
+	protected String getOgType(PageParameters parameters) {
 		return null;
 	}
 
-	protected URL getOgImage() {
+	protected URL getOgImage(PageParameters parameters) {
 		return null;
 	}
 
-	protected URL getOgUrl() {
+	protected URL getOgUrl(PageParameters parameters) {
 		return null;
 	}
 
@@ -101,13 +101,13 @@ public abstract class DefaultWebPage extends WebPage {
 		// http://www.iacquire.com/blog/18-meta-tags-every-webpage-should-have-in-2013
 
 		// meta tags
-		addMetaTags(html);
+		addMetaTags(parameters, html);
 
 		// Facebook Open Graph
-		addFacebookOpenGraph(html, true);
+		addFacebookOpenGraph(parameters, html, true);
 
 		// title
-		html.add(new Label("page.title", getPageTitle()));
+		html.add(new Label("page.title", getPageTitle(parameters)));
 
 		// shortcut icon
 		html.add(new WebMarkupContainer("shortcutIcon")
@@ -147,21 +147,21 @@ public abstract class DefaultWebPage extends WebPage {
 				.add(new AttributeModifier("content", WicketApplication.get().getGoogleSigninClientId())));
 
 		// navbar
-		addNavigationBar(html, "navbar");
+		addNavigationBar(parameters, html, "navbar");
 
 		// breadcrumb
-		addBreadcrumb(html, "breadcrumb");
+		addBreadcrumb(parameters, html, "breadcrumb");
 
 		// statusbar
-		addStatusBar(html, "statusbar", "statusbarcontent");
+		addStatusBar(parameters, html, "statusbar", "statusbarcontent");
 	}
 
-	protected void addMetaTags(MarkupContainer html) {
+	protected void addMetaTags(PageParameters parameters, MarkupContainer html) {
 		{
 			WebMarkupContainer pageKeywords = new WebMarkupContainer("page.keywords");
-			if (getPageKeywords() != null) {
+			if (getPageKeywords(parameters) != null) {
 				pageKeywords.add(new AttributeModifier("content",
-						Arrays.stream(getPageKeywords()).collect(Collectors.joining(","))));
+						Arrays.stream(getPageKeywords(parameters)).collect(Collectors.joining(","))));
 			} else {
 				pageKeywords.setVisible(false);
 			}
@@ -169,8 +169,8 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer pageDescription = new WebMarkupContainer("page.description");
-			if (StringUtils.isNotBlank(getPageDescription())) {
-				pageDescription.add(new AttributeModifier("content", getPageDescription()));
+			if (StringUtils.isNotBlank(getPageDescription(parameters))) {
+				pageDescription.add(new AttributeModifier("content", getPageDescription(parameters)));
 			} else {
 				pageDescription.setVisible(false);
 			}
@@ -178,10 +178,10 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer pageAuthor = new WebMarkupContainer("page.author");
-			if (StringUtils.isNotBlank(getPageAuthor())) {
-				pageAuthor.add(new AttributeModifier("content", getPageAuthor()));
-				if (getPageAuthorLink() != null) {
-					pageAuthor.add(new AttributeModifier("href", getPageAuthorLink().toString()));
+			if (StringUtils.isNotBlank(getPageAuthor(parameters))) {
+				pageAuthor.add(new AttributeModifier("content", getPageAuthor(parameters)));
+				if (getPageAuthorLink(parameters) != null) {
+					pageAuthor.add(new AttributeModifier("href", getPageAuthorLink(parameters).toString()));
 				}
 			} else {
 				pageAuthor.setVisible(false);
@@ -190,11 +190,11 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 	}
 
-	protected void addFacebookOpenGraph(MarkupContainer html, boolean show) {
+	protected void addFacebookOpenGraph(PageParameters parameters, MarkupContainer html, boolean show) {
 		{
 			WebMarkupContainer ogTitle = new WebMarkupContainer("og.title");
-			if (show && StringUtils.isNotBlank(getPageTitle())) {
-				ogTitle.add(new AttributeModifier("content", getPageTitle()));
+			if (show && StringUtils.isNotBlank(getPageTitle(parameters))) {
+				ogTitle.add(new AttributeModifier("content", getPageTitle(parameters)));
 			} else {
 				ogTitle.setVisible(false);
 			}
@@ -202,8 +202,8 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogType = new WebMarkupContainer("og.type");
-			if (show && StringUtils.isNotBlank(getOgType())) {
-				ogType.add(new AttributeModifier("content", getOgType()));
+			if (show && StringUtils.isNotBlank(getOgType(parameters))) {
+				ogType.add(new AttributeModifier("content", getOgType(parameters)));
 			} else {
 				ogType.setVisible(false);
 			}
@@ -211,8 +211,8 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogImage = new WebMarkupContainer("og.image");
-			if (show && getOgImage() != null) {
-				ogImage.add(new AttributeModifier("content", getOgImage().toString()));
+			if (show && getOgImage(parameters) != null) {
+				ogImage.add(new AttributeModifier("content", getOgImage(parameters).toString()));
 			} else {
 				ogImage.setVisible(false);
 			}
@@ -220,8 +220,8 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogUrl = new WebMarkupContainer("og.url");
-			if (show && getOgUrl() != null) {
-				ogUrl.add(new AttributeModifier("content", getOgUrl().toString()));
+			if (show && getOgUrl(parameters) != null) {
+				ogUrl.add(new AttributeModifier("content", getOgUrl(parameters).toString()));
 			} else {
 				ogUrl.setVisible(false);
 			}
@@ -229,8 +229,8 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogDescription = new WebMarkupContainer("og.description");
-			if (show && StringUtils.isNotBlank(getPageDescription())) {
-				ogDescription.add(new AttributeModifier("content", getPageDescription()));
+			if (show && StringUtils.isNotBlank(getPageDescription(parameters))) {
+				ogDescription.add(new AttributeModifier("content", getPageDescription(parameters)));
 			} else {
 				ogDescription.setVisible(false);
 			}
@@ -238,12 +238,12 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 	}
 
-	protected void addNavigationBar(MarkupContainer html, String id) {
-		addNavigationBar(html, id, new ArrayList<>(), false, false, false);
+	protected void addNavigationBar(PageParameters parameters, MarkupContainer html, String id) {
+		addNavigationBar(parameters, html, id, new ArrayList<>(), false, false, false);
 	}
 
-	protected Component addNavigationBar(MarkupContainer html, String id, List<NavBarLink> navs, boolean userButton,
-			boolean searchBar, boolean backToTopButton) {
+	protected Component addNavigationBar(PageParameters parameters, MarkupContainer html, String id,
+			List<NavBarLink> navs, boolean userButton, boolean searchBar, boolean backToTopButton) {
 		WebMarkupContainer navbar = new WebMarkupContainer(id);
 
 		ExternalLink navbarbrandlink = new ExternalLink("navbarbrandlink", "#");
@@ -393,13 +393,13 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 	}
 
-	protected Component addBreadcrumb(MarkupContainer html, String id) {
+	protected Component addBreadcrumb(PageParameters parameters, MarkupContainer html, String id) {
 		WebMarkupContainer breadcrumb = new WebMarkupContainer(id);
 		html.add(breadcrumb);
 		return breadcrumb;
 	}
 
-	protected Component addStatusBar(MarkupContainer html, String id, String contentid) {
+	protected Component addStatusBar(PageParameters parameters, MarkupContainer html, String id, String contentid) {
 		Label content = new Label(contentid, " ");
 		WebMarkupContainer statusbar = new WebMarkupContainer(id);
 		html.add(statusbar.add(content));
