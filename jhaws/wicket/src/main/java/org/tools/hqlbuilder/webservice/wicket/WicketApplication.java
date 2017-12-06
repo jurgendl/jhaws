@@ -253,6 +253,7 @@ public class WicketApplication extends WebApplication {
             guard.addPattern("+*.ogg");
             guard.addPattern("+*.webm");
             guard.addPattern("+*.map");
+            guard.addPattern("+*.tag");
         }
     }
 

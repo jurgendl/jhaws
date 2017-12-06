@@ -2326,6 +2326,10 @@ public class FilePath implements Path, Externalizable {
         }
     }
 
+    public byte[] readFully() {
+        return readAllBytes();
+    }
+
     public byte[] readAllBytes() {
         try {
             return Files.readAllBytes(this.getPath());
