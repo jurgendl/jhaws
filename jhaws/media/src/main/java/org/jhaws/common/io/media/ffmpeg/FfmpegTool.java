@@ -536,7 +536,7 @@ public class FfmpegTool implements MediaCte {
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("InitializeEncoder failed: invalid param (8)"))) {
 			needsFixing.set(true);
-			cfg.fixes.fixNotHighProfile = true;
+			cfg.fixes.fixNotHighProfile = false;
 		}
 		// Cannot load nvcuda.dll
 		// if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load
