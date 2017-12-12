@@ -26,9 +26,9 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.resteasy>3.0.17.Final</version.resteasy>
-        <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs><!-- version 3.0.17.Final does not exists -->
-        <version.jackson>2.4.1</version.jackson><!-- 2.6.3 // 2.7.x gives problemns -->
-        <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problemns -->
+        <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs><!-- version 3.0.17.Final does not exists // 3.1.4.Final -->
+        <version.jackson>2.6.3</version.jackson><!-- 2.4.1 // 2.6.3 // 2.7.x gives problems -->
+        <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problems -->
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -210,13 +210,16 @@
             <artifactId>resteasy-json-p-provider</artifactId>
             <version>${version.resteasy}</version>
         </dependency> -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jackson-provider</artifactId>
             <version>${version.resteasy}</version>
+        </dependency> -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson2-provider</artifactId>
+            <version>${version.resteasy}</version>
         </dependency>
-        <!-- <dependency> <groupId>org.jboss.resteasy</groupId> <artifactId>resteasy-jackson2-provider</artifactId> <version>${version.resteasy}</version> 
-            </dependency> -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jettison-provider</artifactId>

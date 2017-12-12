@@ -239,9 +239,9 @@ public class FilePath implements Path, Externalizable {
                 LOGGER.trace("{}", url);
             }
             if (url == null) {
-                System.err.println(url);
+                LOGGER.error("url not resolved={}", url);
             } else {
-                LOGGER.trace("{}", url);
+                LOGGER.trace("url={}", url);
             }
         }
         return url;
