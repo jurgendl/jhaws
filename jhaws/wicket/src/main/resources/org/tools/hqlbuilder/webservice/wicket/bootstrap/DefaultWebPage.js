@@ -159,11 +159,14 @@ function adjustByRadio(group) {
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        document.getElementById("back-to-top").style.display = "block";
-    } else {
-        document.getElementById("back-to-top").style.display = "none";
-    }
+	var upper = document.getElementById("back-to-top");
+	if(upper) {
+	    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+	    	upper.style.display = "block";
+	    } else {
+	    	upper.style.display = "none";
+	    }
+	}
 }
 
 // When the user clicks on the button, scroll to the top of the document
