@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.tables;
+package org.tools.hqlbuilder.webservice.wicket.tables.common;
 
 import java.io.Serializable;
 import java.util.Iterator;

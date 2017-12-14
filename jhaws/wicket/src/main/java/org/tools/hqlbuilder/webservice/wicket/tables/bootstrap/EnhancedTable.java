@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.tables;
+package org.tools.hqlbuilder.webservice.wicket.tables.bootstrap;
 
 import static org.tools.hqlbuilder.webservice.wicket.WebHelper.name;
 
@@ -25,12 +25,12 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tools.hqlbuilder.webservice.wicket.tables.Table.ActionsPanel;
-import org.tools.hqlbuilder.webservice.wicket.tables.Table.BooleanColumn;
-import org.tools.hqlbuilder.webservice.wicket.tables.Table.EmailColumn;
-import org.tools.hqlbuilder.webservice.wicket.tables.Table.URIColumn;
-import org.tools.hqlbuilder.webservice.wicket.tables.Table.URLColumn;
-import org.tools.hqlbuilder.webservice.wicket.tables.Table.URLStringColumn;
+import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.Table.ActionsPanel;
+import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.Table.BooleanColumn;
+import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.Table.EmailColumn;
+import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.Table.URIColumn;
+import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.Table.URLColumn;
+import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.Table.URLStringColumn;
 import org.tools.hqlbuilder.webservice.wicket.tables.common.DataProvider;
 
 @SuppressWarnings("serial")

@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.tables;
+package org.tools.hqlbuilder.webservice.wicket.tables.bootstrap;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
