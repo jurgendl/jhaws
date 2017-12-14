@@ -3,6 +3,15 @@ package org.tools.hqlbuilder.webservice.bootstrap4.notify;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
+// [data-notify="progressbar"] {
+// margin-bottom: 0px;
+// position: absolute;
+// bottom: 0px;
+// left: 0px;
+// width: 100%;
+// height: 5px;
+// }
+//
 /// *
 // $.notify({
 // icon: 'glyphicon glyphicon-warning-sign',
