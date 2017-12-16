@@ -429,7 +429,7 @@ ul.feedbackPanel li.alert span.alert {
 	content: "Kies bestand";
 }
 
-/**/
+/* */
 ul.nested, ul.nested ul {
 	list-style: none;
 }
@@ -438,22 +438,23 @@ ul.nested li {
 	margin-bottom: .05rem;
 }
 
-/**/
+/* */
 kbd, code {
 	padding: .1em .6em;
 }
 
-/**/
+/* */
 .roundedborder {
 	border-radius: 50%;
 }
 
-/**/
+/* */
 .sq-1 {
 	width: 1rem;
 	height: 1rem;
 }
 
+/* */
 .btn-icon {
 	padding: 0.15rem 0.3rem;
 }
@@ -481,6 +482,7 @@ kbd, code {
 	width: 100% !important;
 }
 
+/* */
 .niceimage {
 	border-width:1px;
 	border-style:solid;
@@ -520,6 +522,7 @@ img.niceimage {
 	z-index: 1051;
 }
 
+/* */
 .form-control-label,
 .col-form-label {
 	text-align: right;
@@ -548,3 +551,8 @@ img.niceimage {
 	width: 100%;
 	height: 5px;
 }
+
+/* bootstrap; smaller navbar toggle btn */
+.navbar-toggler {
+	font-size: 0.75rem !important;
+}	
