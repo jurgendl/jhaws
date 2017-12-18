@@ -23,6 +23,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.MultiSelectSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.TextFieldSettings;
 
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
@@ -79,7 +80,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	public <F extends Serializable> TextFieldPanel<F> addTextField(F propertyPath,
-			FormElementSettings componentSettings) {
+			TextFieldSettings componentSettings) {
 		return this.addDefaultRow(
 				new TextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
