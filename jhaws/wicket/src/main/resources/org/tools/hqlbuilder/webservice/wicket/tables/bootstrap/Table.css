@@ -1,0 +1,20 @@
+.wicket_orderNone:not(.unsortable):before, .wicket_orderDown:before, .wicket_orderUp:before {
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	margin-right: .25rem;
+}
+.wicket_orderNone:not(.unsortable):before {
+	content: "\f0dc";
+}
+.wicket_orderDown:before {
+	content: "\f15d";
+}
+.wicket_orderUp:before {
+	content: "\f15e";
+}
+.wicket_orderNone:not(.unsortable) div, .wicket_orderDown div, .wicket_orderUp div {
+	display: inline-block;
+}

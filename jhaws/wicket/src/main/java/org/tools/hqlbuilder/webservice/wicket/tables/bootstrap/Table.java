@@ -55,9 +55,8 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.string.Strings;
-import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.jquery.ui.tablesorter.TableSorter;
-import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
+import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 import org.tools.hqlbuilder.webservice.wicket.components.CheckBoxPanel;
@@ -70,13 +69,12 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 /**
- * @see https ://www.packtpub.com/article/apache-wicket-displaying-data-using-datatable
+ * @see https://www.packtpub.com/article/apache-wicket-displaying-data-using-datatable
  * @see http://wicketinaction.com/2008/10/building-a-listeditor-form-component/
  */
+@SuppressWarnings("serial")
 public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<T, String> {
     public static abstract class ActionsPanel<T extends Serializable> extends Panel {
-        private static final long serialVersionUID = -5249593513368522879L;
-
         public ActionsPanel(String id, final T object, DataProvider<T> dataProvider) {
             super(id);
             this.setOutputMarkupId(true);
@@ -84,8 +82,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             final Form<T> form = (Form<T>) this.getParent();
             if (dataProvider.canEdit()) {
                 AjaxFallbackButton editLink = new AjaxFallbackButton(Table.ACTIONS_EDIT_ID, form) {
-                    private static final long serialVersionUID = 2401036651703118413L;
-
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> f) {
                         ActionsPanel.this.onEdit(target, object);
@@ -97,8 +93,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             }
             if (dataProvider.canDelete()) {
                 AjaxFallbackButton deleteLink = new AjaxFallbackButton(Table.ACTIONS_DELETE_ID, form) {
-                    private static final long serialVersionUID = 8838151595047275051L;
-
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> f) {
                         ActionsPanel.this.onDelete(target, object);
@@ -123,15 +117,11 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
 
     /** see AjaxFallbackOrderByBorder, to change sorting */
     protected abstract class AjaxFallbackOrderBy extends Border {
-        private static final long serialVersionUID = 212283337538504257L;
-
         public AjaxFallbackOrderBy(final String id, final String sortProperty, final ISortStateLocator<String> stateLocator,
                 final AjaxFallbackOrderByLink.ICssProvider<String> cssProvider, final IAjaxCallListener ajaxCallListener) {
             super(id);
             AjaxFallbackOrderByLink<String> link = new AjaxFallbackOrderByLink<String>("orderByLink", sortProperty, stateLocator, cssProvider,
                     ajaxCallListener) {
-                private static final long serialVersionUID = -6094915237038098719L;
-
                 @Override
                 protected SortOrder nextSortOrder(final SortOrder order) {
                     switch (order) {
@@ -174,8 +164,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public class BottomToolbar extends AbstractToolbar {
-        private static final long serialVersionUID = -8277730819874510969L;
-
         public BottomToolbar(final DataTable<T, String> table, final DataProvider<T> dataProvider) {
             super(table);
 
@@ -183,8 +171,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             this.add(td);
 
             td.add(AttributeModifier.replace("colspan", new AbstractReadOnlyModel<String>() {
-                private static final long serialVersionUID = 5599883778610261348L;
-
                 @Override
                 public String getObject() {
                     return String.valueOf(table.getColumns().size());
@@ -201,8 +187,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             // moment of execution later so it is not needed during contruction
             Form<?> form = ((DelegateDataProvider<T>) Table.this.getDataprovider()).getForm();
             Table.this.addLink = new AjaxFallbackButton(Table.ACTIONS_ADD_ID, form) {
-                private static final long serialVersionUID = -8033338314334624474L;
-
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> f) {
                     dataProvider.add(target);
@@ -216,8 +200,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     protected static abstract class CssAttributeBehavior extends Behavior {
-        private static final long serialVersionUID = 1159801773515376493L;
-
         protected abstract String getCssClass();
 
         /**
@@ -233,8 +215,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     protected class DefaultDataGridView extends DataGridView<T> {
-        private static final long serialVersionUID = -5612396859737033644L;
-
         public DefaultDataGridView(String id, List<? extends IColumn<T, String>> columns, IDataProvider<T> dataProvider) {
             super(id, columns, dataProvider);
         }
@@ -246,8 +226,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             // final TableColumn<T> column = (TableColumn<T>) Table.this.getColumns().get(index);
             // if (column instanceof IStyledColumn) {
             // item.add(new CssAttributeBehavior() {
-            // private static final long serialVersionUID = -8376202471270737937L;
-            //
             // @Override
             // protected String getCssClass() {
             // return ((IStyledColumn<T, String>) column).getCssClass();
@@ -265,8 +243,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
 
     /* ugly hack */
     private static class DelegateDataProvider<T extends Serializable> implements DataProvider<T> {
-        private static final long serialVersionUID = -3517388036834640180L;
-
         private final Form<?> form;
 
         private final DataProvider<T> delegate;
@@ -372,8 +348,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public static class BooleanColumn<D> extends TableColumn<D, Boolean> {
-        private static final long serialVersionUID = 4634739390630581195L;
-
         public BooleanColumn(IModel<String> displayModel, String propertyExpression) {
             this.setDisplayModel(displayModel);
             this.setPropertyExpression(propertyExpression);
@@ -384,14 +358,11 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             IModel<Boolean> dataModel = this.getDataModel(rowModel);
             CheckBoxPanel checkBoxPanel = new CheckBoxPanel(componentId, dataModel, null);
             checkBoxPanel.getField().setEnabled(false);
-            checkBoxPanel.getField().add(new CssClassNameAppender(PrimeUI.puicheckbox));
             item.add(checkBoxPanel);
         }
     }
 
     public static class EmailColumn<D> extends TableColumn<D, String> {
-        private static final long serialVersionUID = 4634739390630581195L;
-
         public EmailColumn(IModel<String> displayModel, String propertyExpression) {
             this.setDisplayModel(displayModel);
             this.setPropertyExpression(propertyExpression);
@@ -408,8 +379,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public class HeadersToolbar extends AjaxFallbackHeadersToolbar<String> {
-        private static final long serialVersionUID = -8737070685949753385L;
-
         public HeadersToolbar(DataTable<?, String> table, ISortStateLocator<String> stateLocator) {
             super(table, stateLocator);
         }
@@ -417,8 +386,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         @Override
         protected WebMarkupContainer newSortableHeader(String borderId, String property, ISortStateLocator<String> locator) {
             return new AjaxFallbackOrderBy(borderId, property, locator, this.getAjaxCallListener()) {
-                private static final long serialVersionUID = -7436736813608388408L;
-
                 @Override
                 protected void onAjaxClick(final AjaxRequestTarget target) {
                     target.add(HeadersToolbar.this.getTable());
@@ -433,24 +400,18 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public class PagingNavigator extends AjaxPagingNavigator {
-        private static final long serialVersionUID = 1844950934466502565L;
-
         public PagingNavigator(String id, IPageable pageable, IPagingLabelProvider labelProvider) {
             super(id, pageable, labelProvider);
         }
 
         protected void modifyButtonLinkActiveBehavior(final AbstractLink link) {
             link.add(new CssClassNameAppender(Table.this.CSS_ACTIVE_STYLE) {
-                private static final long serialVersionUID = -4390935870504634276L;
-
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && !link.isEnabled();
                 }
             });
             link.add(new CssClassNameRemover(Table.this.CSS_ACTIVE_STYLE) {
-                private static final long serialVersionUID = -6666736063912700264L;
-
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && link.isEnabled();
@@ -460,16 +421,12 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
 
         protected void modifyButtonLinkDisableBehavior(final AbstractLink link) {
             link.add(new CssClassNameAppender(Table.this.CSS_DISABLED_STYLE) {
-                private static final long serialVersionUID = -8703931679380496079L;
-
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && !link.isEnabled();
                 }
             });
             link.add(new CssClassNameRemover(Table.this.CSS_DISABLED_STYLE) {
-                private static final long serialVersionUID = -7077515156924411650L;
-
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && link.isEnabled();
@@ -480,8 +437,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         @Override
         protected PagingNavigation newNavigation(String id, IPageable pageable, IPagingLabelProvider labelProvider) {
             return new AjaxPagingNavigation(id, pageable, labelProvider) {
-                private static final long serialVersionUID = -6446431226749147484L;
-
                 @Override
                 protected Link<?> newPagingNavigationLink(String id0, IPageable pageable0, long pageIndex) {
                     AjaxPagingNavigationLink link = new AjaxPagingNavigationLink(id0, pageable0, pageIndex);
@@ -511,8 +466,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public class TopToolbar extends AjaxNavigationToolbar {
-        private static final long serialVersionUID = 7871654433608259728L;
-
         public TopToolbar(final DataTable<T, String> table, final DataProvider<T> dataProvider) {
             super(table);
         }
@@ -524,8 +477,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public static class URLColumn<D> extends TableColumn<D, URL> {
-        private static final long serialVersionUID = -2998876473654238089L;
-
         public URLColumn(IModel<String> displayModel, String propertyExpression) {
             this.setDisplayModel(displayModel);
             this.setPropertyExpression(propertyExpression);
@@ -538,8 +489,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public static class URIColumn<D> extends TableColumn<D, URI> {
-        private static final long serialVersionUID = -2998876473654238089L;
-
         public URIColumn(IModel<String> displayModel, String propertyExpression) {
             this.setDisplayModel(displayModel);
             this.setPropertyExpression(propertyExpression);
@@ -552,8 +501,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     }
 
     public static class URLStringColumn<D> extends TableColumn<D, String> {
-        private static final long serialVersionUID = -2998876473654238089L;
-
         public URLStringColumn(IModel<String> displayModel, String propertyExpression) {
             this.setDisplayModel(displayModel);
             this.setPropertyExpression(propertyExpression);
@@ -566,8 +513,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         }
     }
 
-    private static final long serialVersionUID = -997730195881970840L;
-
     public static JavaScriptResourceReference JS_AJAX_UPDATE = new JavaScriptResourceReference(Table.class, "TableAjaxRefresh.js")
             .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
 
@@ -577,17 +522,9 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
 
     public static final String ACTIONS_ADD_ID = "add";
 
-    protected String CSS_DISABLED_STYLE = "ui-state-active";
+    protected String CSS_DISABLED_STYLE = "disabled";
 
-    protected String CSS_ACTIVE_STYLE = "ui-state-active";
-
-    public static final String CSS_EVEN = "ui-widget-content pui-datatable-even ui-datatable-even";
-
-    public static final String CSS_ODD = "ui-widget-content pui-datatable-odd ui-datatable-odd";
-
-    protected String cssEven = Table.CSS_EVEN;
-
-    protected String cssOdd = Table.CSS_ODD;
+    protected String CSS_ACTIVE_STYLE = "";
 
     protected AjaxFallbackButton addLink;
 
@@ -628,14 +565,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         return this.bottomToolbar;
     }
 
-    public String getCssEven() {
-        return this.cssEven;
-    }
-
-    public String getCssOdd() {
-        return this.cssOdd;
-    }
-
     public DataProvider<T> getDataprovider() {
         return (DataProvider<T>) this.getDataProvider();
     }
@@ -651,21 +580,10 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     protected String getTableSortConfig() {
         String debug = "debug:true";
         String sortReset = "sortReset:true";
-        String headers = "headers:{'." + TableColumn.UNSORTABLE + "':{sorter:false},'." + TableColumn.SERVER_SORTABLE + "':{sorter:false}}";
-        String widgets = "widgets:[" + this.getTableSortConfigWidgets() + "],widgetOptions:{" + this.getTableSortConfigWidgetsConfig() + "}";
+        String headers = "headers:{'." + TableColumn.CSS_UNSORTABLE + "':{sorter:false},'." + TableColumn.CSS_SERVER_SORTABLE + "':{sorter:false}}";
         String key = "sortMultiSortKey:'ctrlKey'";
-        String css = "cssAsc:'wicket_orderDown',cssDesc:'wicket_orderUp'"; // TODO get wicket_orderDown/wicket_orderUp from somewhere else
-        return debug + "," + headers + "," + widgets + "," + sortReset + "," + key + "," + css;
-    }
-
-    protected String getTableSortConfigWidgets() {
-        // 'filter',
-        return "'zebra'";
-    }
-
-    protected String getTableSortConfigWidgetsConfig() {
-        // filter_useParsedData:true,filter_searchDelay:300,filter_ignoreCase:true,filter_columnFilters:false,filter_saveFilters:true,filter_reset:'.tablesortfilterreset',
-        return "zebra:['" + this.getCssOdd() + "','" + this.getCssEven() + "']";
+        String css = "cssAsc:'wicket_orderDown',cssNone:'wicket_orderNone',cssDesc:'wicket_orderUp'";
+        return debug + "," + headers + "," + sortReset + "," + key + "," + css;
     }
 
     @Override
@@ -676,12 +594,10 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
     @Override
     protected Item<T> newRowItem(final String id, final int index, final IModel<T> model) {
         return new Item<T>(id, index, model) {
-            private static final long serialVersionUID = 4130240092094444434L;
-
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
-                tag.put("class", ((this.getIndex() % 2) == 0) ? Table.this.cssEven : Table.this.cssOdd);
+                // tag.put("class", ((this.getIndex() % 2) == 0) ? Table.this.cssEven : Table.this.cssOdd);
                 Serializable dataId = Table.this.dataProvider.getId(model);
                 String dataIdString;
                 if (dataId instanceof String && StringUtils.isBlank(String.class.cast(dataId))) {
@@ -700,7 +616,7 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         if (!this.isEnabledInHierarchy()) {
             return;
         }
-        this.renderHeadIcons(response);
+        response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), getClass().getSimpleName() + ".css")));
         this.renderHeadClientUpdate(response);
         this.renderHeadClientSorting(response);
     }
@@ -756,18 +672,6 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
                         "js_" + this.tableRefreshAjaxId + "_" + tableMarkupId));
             }
         }
-    }
-
-    public void renderHeadIcons(IHeaderResponse response) {
-        response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_CSS));
-    }
-
-    public void setCssEven(String cssEven) {
-        this.cssEven = cssEven;
-    }
-
-    public void setCssOdd(String cssOdd) {
-        this.cssOdd = cssOdd;
     }
 
     public void setTableRefreshAjaxId(String tableRefreshAjaxId) {

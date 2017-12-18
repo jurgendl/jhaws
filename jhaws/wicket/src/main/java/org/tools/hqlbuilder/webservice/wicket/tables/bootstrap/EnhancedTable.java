@@ -193,9 +193,6 @@ public class EnhancedTable<T extends Serializable> extends Panel {
         public void populateItem(Item cellItem, String componentId, IModel rowModel) {
             T object = ((T) rowModel.getObject());
             cellItem.add(new ActionsPanel<T>(componentId, object, provider) {
-
-                private static final long serialVersionUID = 1L;
-
                 @Override
                 public void onDelete(AjaxRequestTarget target, T o) {
                     provider.delete(target, o);
