@@ -25,10 +25,10 @@ public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<
 				onFormComponentTag(tag);
 				if (Boolean.TRUE.equals(getComponentSettings().getReplaceAllOnDrop())) {
 					WebHelper.tag(tag, "ondrop",
-							"event.preventDefault();$(event.target).val(event.dataTransfer.getData('text'))");
+							";event.preventDefault();$(event.target).val(event.dataTransfer.getData('text'));");
 				}
 				if (Boolean.TRUE.equals(getComponentSettings().getSelectAllOnFocus())) {
-					WebHelper.tag(tag, "onClick", "this.setSelectionRange(0, this.value.length)");
+					WebHelper.tag(tag, "onClick", ";this.setSelectionRange(0,this.value.length);");
 				}
 			}
 		};
