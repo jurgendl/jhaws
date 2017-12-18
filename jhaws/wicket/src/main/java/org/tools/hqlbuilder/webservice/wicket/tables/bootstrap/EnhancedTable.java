@@ -189,6 +189,11 @@ public class EnhancedTable<T extends Serializable> extends Panel {
         }
 
         @Override
+        public String getCssClass() {
+            return super.getCssClass() + " actions";
+        }
+
+        @Override
         @SuppressWarnings({ "rawtypes", "unchecked" })
         public void populateItem(Item cellItem, String componentId, IModel rowModel) {
             T object = ((T) rowModel.getObject());

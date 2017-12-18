@@ -18,3 +18,8 @@
 .wicket_orderNone:not(.unsortable) div, .wicket_orderDown div, .wicket_orderUp div {
 	display: inline-block;
 }
+
+.actions
+/*.table > .thead > tr:first-child > th:first-child*/ {
+	width: 5.5rem;
+}
