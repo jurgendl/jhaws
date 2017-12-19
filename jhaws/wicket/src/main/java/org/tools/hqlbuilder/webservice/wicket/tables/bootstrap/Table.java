@@ -44,6 +44,7 @@ import org.apache.wicket.markup.html.border.Border;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
@@ -58,6 +59,7 @@ import org.apache.wicket.util.string.Strings;
 import org.tools.hqlbuilder.webservice.jquery.ui.tablesorter.TableSorter;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 import org.tools.hqlbuilder.webservice.wicket.components.CheckBoxPanel;
 import org.tools.hqlbuilder.webservice.wicket.components.LinkPanel;
@@ -436,7 +438,7 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
 
         @Override
         protected PagingNavigation newNavigation(String id, IPageable pageable, IPagingLabelProvider labelProvider) {
-            return new AjaxPagingNavigation(id, pageable, labelProvider) {
+            AjaxPagingNavigation ajaxPagingNavigation = new AjaxPagingNavigation(id, pageable, labelProvider) {
                 @Override
                 protected Link<?> newPagingNavigationLink(String id0, IPageable pageable0, long pageIndex) {
                     AjaxPagingNavigationLink link = new AjaxPagingNavigationLink(id0, pageable0, pageIndex);
@@ -447,7 +449,15 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
                     }
                     return link;
                 }
+
+                @Override
+                protected LoopItem newItem(int iteration) {
+                    LoopItem loopItem = new LoopItem(iteration);
+                    WebHelper.hide(loopItem);
+                    return loopItem;
+                }
             };
+            return ajaxPagingNavigation;
         }
 
         @Override
