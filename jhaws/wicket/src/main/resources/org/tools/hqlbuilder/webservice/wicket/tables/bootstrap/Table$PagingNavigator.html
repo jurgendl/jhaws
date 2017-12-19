@@ -1,24 +1,26 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
-	<div class="btn-group btn-group-sm" role="group" aria-label="Pagination">
-		<a wicket:id="first" title="First" type="button" class="btn btn-primary btn-sm">
-			<span class="fa fa-angle-double-left"></span>
-		</a>
-		<a wicket:id="prev" title="Previous" type="button" class="btn btn-primary btn-sm">
-			<span class="fa fa-angle-left"></span>
-		</a>
-		<span wicket:id="navigation">
-			<a wicket:id="pageLink" href="#" class="btn btn-primary btn-sm">
-				<span wicket:id="pageNumber">[pageNumber]</span>
-			</a>
-		</span>
-		<a wicket:id="next" title="Next" type="button" class="btn btn-primary btn-sm">
-			<span class="fa fa-angle-right"></span>
-		</a>
-		<a wicket:id="last" title="Last" type="button" class="btn btn-primary btn-sm">
-			<span class="fa fa-angle-double-right"></span>
-		</a>
+	<div class="btn-toolbar pagination" role="pagination">
+		<div class="btn-group btn-group-sm" role="group" aria-label="Pagination">
+			<button wicket:id="first" title="First" type="button" class="btn btn-primary btn-sm">
+				<span class="fa fa-angle-double-left"></span>
+			</button>
+			<button wicket:id="prev" title="Previous" type="button" class="btn btn-primary btn-sm">
+				<span class="fa fa-angle-left"></span>
+			</button>
+			<span wicket:id="navigation">
+				<button wicket:id="pageLink" href="#" class="btn btn-primary btn-sm">
+					<span wicket:id="pageNumber">[pageNumber]</span>
+				</button>
+			</span>
+			<button wicket:id="next" title="Next" type="button" class="btn btn-primary btn-sm">
+				<span class="fa fa-angle-right"></span>
+			</button>
+			<button wicket:id="last" title="Last" type="button" class="btn btn-primary btn-sm">
+				<span class="fa fa-angle-double-right"></span>
+			</button>
+		</div>
 	</div>
 </wicket:panel>
 </body>

@@ -190,7 +190,7 @@ public class EnhancedTable<T extends Serializable> extends Panel {
 
         @Override
         public String getCssClass() {
-            return super.getCssClass() + " actions";
+            return super.getCssClass() + " actions"; // -> set fixed width on this column based on this class
         }
 
         @Override
