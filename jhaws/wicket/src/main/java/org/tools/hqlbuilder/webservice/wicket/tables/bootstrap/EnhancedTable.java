@@ -164,13 +164,13 @@ public class EnhancedTable<T extends Serializable> extends Panel {
                     try {
                         return parent.getString(property);
                     } catch (java.util.MissingResourceException ex) {
-                        return null;
+                        logger.error(parent.getClass().getName() + ": no translation for " + "[" + property + "_" + parent.getLocale() + "]");
+                        return "[" + property + "_" + parent.getLocale() + "]";
                     }
-
                 }
             };
         } catch (MissingResourceException ex) {
-            logger.error(parent.getClass().getName() + ": no translation for " + property);
+            logger.error(parent.getClass().getName() + ": no translation for " + "[" + property + "_" + parent.getLocale() + "]");
             label = Model.of("[" + property + "_" + parent.getLocale() + "]");
         }
         return label;
