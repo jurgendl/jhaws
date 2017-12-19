@@ -3,13 +3,15 @@
 
 <wicket:panel xmlns:wicket="http://wicket.apache.org">
 	<tr class="">
-		<th wicket:id="td" style="padding:0px">
-			<div style="margin:4px" wicket:id=norecordsfound>[no records found]</div>
-			<button style="margin:4px;padding-top:2px;padding-bottom:2px" class="btn btn-sm btn-primary add" type="submit" wicket:id="add" value="[Add]" wicket:message="value:add.label">
-				<span class="fa fa-plus btn-icon"></span>
-				<wicket:message key="add.label">[Delete]</wicket:message>
-			</button>
-			<span wicket:id="extraActions"></span>
+		<th wicket:id="td">
+			<div style="display:flex; justify-content: center; align-items: center;">
+				<div wicket:id=norecordsfound>[no records found]</div>
+				<button class="btn btn-sm btn-primary add" type="submit" wicket:id="add" value="[Add]" wicket:message="value:add.label">
+					<span class="fa fa-plus btn-icon"></span>
+					<wicket:message key="add.label">[Add]</wicket:message>
+				</button>
+				<span wicket:id="extraActions"></span>
+			</div>
 		</th>
 	</tr>
 </wicket:panel>
