@@ -11,20 +11,20 @@ $('input[type=number].ratinginput').each(function(index) {
 	var _this_max = _this.attr('max');
 	console.log(_this_max);
 	var ratingHtml = '';
-	ratingHtml += '<span class="ratinginput">';
+	ratingHtml += '<span class="ratinginput">\n';
 	for (var i = 1; i <= _this_max; i++) {
 		ratingHtml += '<label>';
 		ratingHtml += '<input type="radio" class="ratingradio" ';
 		if(_this_id) ratingHtml += 'id="'+_this_id+'" ';
 		if(_this_name) ratingHtml += 'name="'+_this_name+'" ';
 		if(_this_val==i) ratingHtml += 'checked="checked" ';
-		ratingHtml += 'value="' + i + '" />';
+		ratingHtml += 'value="' + i + '" />\n';
 		for (var j = 1; j <= i; j++) {
-			ratingHtml += '<span class="rating fa fa-star"></span>';
+			ratingHtml += '<span class="rating fa fa-star"></span>\n';
 		}
-		ratingHtml += '</label>';
+		ratingHtml += '</label>\n';
 	}
-	ratingHtml += '</span>';
+	ratingHtml += '</span>\n';
 	console.log(ratingHtml);
 	_this.replaceWith(ratingHtml);
 });
