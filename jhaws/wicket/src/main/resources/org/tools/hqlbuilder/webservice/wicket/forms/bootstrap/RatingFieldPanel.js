@@ -18,14 +18,18 @@ $('input[type=number].ratinginput').each(function(index) {
 		if(_this_id) ratingHtml += 'id="'+_this_id+'" ';
 		if(_this_name) ratingHtml += 'name="'+_this_name+'" ';
 		if(_this_val==i) ratingHtml += 'checked="checked" ';
-		ratingHtml += 'value="' + i + '" />\n';
+		ratingHtml += 'value="' + i + '"/>\n';
 		for (var j = 1; j <= i; j++) {
-			ratingHtml += '<span class="rating fa fa-star"></span>\n';
+			ratingHtml += '<span class="rating fa fa-star"';
+			if(i==j){
+				ratingHtml += ' title="' + i + '"';
+			}
+			ratingHtml += '></span>\n';
 		}
 		ratingHtml += '</label>\n';
 	}
 	ratingHtml += '</span>\n';
-	console.log(ratingHtml);
+	//console.log(ratingHtml);
 	_this.replaceWith(ratingHtml);
 });
 /*$('.ratinginput :radio').change(function() {
