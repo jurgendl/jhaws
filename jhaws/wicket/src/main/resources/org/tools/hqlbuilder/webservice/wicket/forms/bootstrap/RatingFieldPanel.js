@@ -17,6 +17,7 @@ $('input[type=number].ratinginput').each(function(index) {
 		ratingHtml += '<input type="radio" class="ratingradio" ';
 		if(_this_id) ratingHtml += 'id="'+_this_id+'" ';
 		if(_this_name) ratingHtml += 'name="'+_this_name+'" ';
+		if(_this_val==i) ratingHtml += 'checked="checked" ';
 		ratingHtml += 'value="' + i + '" />';
 		for (var j = 1; j <= i; j++) {
 			ratingHtml += '<span class="rating fa fa-star"></span>';
