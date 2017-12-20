@@ -1,0 +1,66 @@
+.ratinginput {
+  display: inline-block;
+  position: relative;
+  height: 1.25rem;
+  line-height: 1.25rem;
+  font-size: 1.25rem;
+  margin-right: .175rem;
+}
+
+.ratinginput label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  cursor: pointer;
+}
+
+.ratinginput label:last-child {
+  position: static;
+}
+
+.ratinginput label:nth-child(1) {
+  z-index: 5;
+}
+
+.ratinginput label:nth-child(2) {
+  z-index: 4;
+}
+
+.ratinginput label:nth-child(3) {
+  z-index: 3;
+}
+
+.ratinginput label:nth-child(4) {
+  z-index: 2;
+}
+
+.ratinginput label:nth-child(5) {
+  z-index: 1;
+}
+
+.ratinginput label input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.ratinginput label .rating {
+  float: left;
+  color: transparent;
+}
+
+.ratinginput label:last-child .rating {
+  color: #000;
+}
+
+.ratinginput:not(:hover) label input:checked ~ .rating,
+.ratinginput:hover label:hover input ~ .rating {
+  color: #007bff;
+}
+
+.ratinginput label input:focus:not(:checked) ~ .rating:last-child {
+  color: #000;
+  text-shadow: 0 0 5px #007bff;
+}
