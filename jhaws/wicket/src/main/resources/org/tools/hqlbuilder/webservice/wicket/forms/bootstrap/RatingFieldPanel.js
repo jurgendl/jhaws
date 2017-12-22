@@ -1,3 +1,5 @@
+// https://stackoverflow.com/questions/17737182/how-can-i-overlay-a-number-on-top-of-a-fontawesome-glyph
+
 $('input[type=number].ratinginput').each(function(index) {
 	var _this = $(this);
 	console.log(_this);
@@ -14,17 +16,22 @@ $('input[type=number].ratinginput').each(function(index) {
 	ratingHtml += '<span class="ratinginput">\n';
 	for (var i = 1; i <= _this_max; i++) {
 		ratingHtml += '<label>';
+		
 		ratingHtml += '<input type="radio" class="ratingradio" ';
 		if(_this_id) ratingHtml += 'id="'+_this_id+'" ';
 		if(_this_name) ratingHtml += 'name="'+_this_name+'" ';
 		if(_this_val==i) ratingHtml += 'checked="checked" ';
 		ratingHtml += 'value="' + i + '"/>\n';
+		
 		for (var j = 1; j <= i; j++) {
-			ratingHtml += '<span class="rating fa fa-star"';
+			//ratingHtml += '<span class="fa-stack">\n';
+			ratingHtml += '<i class="rating fa fa-star"'; // fa fa-star-o fa-stack-2x
 			if(i==j){
 				ratingHtml += ' title="' + i + '"';
 			}
-			ratingHtml += '></span>\n';
+			ratingHtml += '></i>\n';
+			//ratingHtml += '<i class="fa fa-stack-1x" style="font-size:.75rem">' + j + '</i>\n';
+			//ratingHtml += '</span>\n';
 		}
 		ratingHtml += '</label>\n';
 	}

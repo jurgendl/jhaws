@@ -20,6 +20,6 @@ public class BootstrapEonasdanDateTimePicker {
         JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
         JS.addJavaScriptResourceReferenceDependency(MomentJs.JS);
         CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
-        CSS.addCssResourceReferenceDependency(FontAwesome.CSS);
+        CSS.addCssResourceReferenceDependency(FontAwesome.CSS_v407);
     }
 }
