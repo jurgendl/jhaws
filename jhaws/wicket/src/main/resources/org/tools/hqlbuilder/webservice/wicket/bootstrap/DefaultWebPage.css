@@ -555,4 +555,19 @@ img.niceimage {
 /* bootstrap; smaller navbar toggle btn */
 .navbar-toggler {
 	font-size: 0.75rem !important;
-}	
+}
+
+/* sticky top and navbar space behind: same value (padding)top */
+.navbarwhitebehind {
+	padding-top:3.55rem;
+}
+.sticky {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -o-sticky;
+  position: -ms-sticky;
+  position: sticky;
+  top: 3.55rem;
+  z-index: 1;
+  background-color: white;
+}
