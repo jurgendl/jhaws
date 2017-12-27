@@ -3,6 +3,10 @@ package org.tools.hqlbuilder.webservice.bootstrap4.notify;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
+// call:
+// $.notify({message:'Done'},{delay:0,type:'info',animate: { enter: 'animated fadeInRight', exit: 'animated fadeOutRight' } } );
+//
+// css:
 // [data-notify="progressbar"] {
 // margin-bottom: 0px;
 // position: absolute;
@@ -12,7 +16,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // height: 5px;
 // }
 //
-/// *
+// call full:
 // $.notify({
 // icon: 'glyphicon glyphicon-warning-sign',
 // title: 'Bootstrap notify',
@@ -56,13 +60,14 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // '</div>' +
 // '<a href="{3}" target="{4}" data-notify="url"></a>' +
 // '</div>'
-// });*/
+// });
 //
+// ref:
 // https://github.com/mouse0270/bootstrap-notify/releases
 // http://bootstrap-notify.remabledesigns.com/
 // 3.1.3
 public class BootstrapNotify {
-    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapNotify.class, "bootstrap-notify.js")
-            .addJavaScriptResourceReferenceDependency(Bootstrap4.JS)
-            .addCssResourceReferenceDependency(org.tools.hqlbuilder.webservice.css.WicketCSSRoot.ANIMATE);
+	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapNotify.class,
+			"bootstrap-notify.js").addJavaScriptResourceReferenceDependency(Bootstrap4.JS)
+					.addCssResourceReferenceDependency(org.tools.hqlbuilder.webservice.css.WicketCSSRoot.ANIMATE);
 }

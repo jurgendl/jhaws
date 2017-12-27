@@ -568,6 +568,6 @@ img.niceimage {
   position: -ms-sticky;
   position: sticky;
   top: 3.55rem;
-  z-index: 1;
+  z-index: 999; /* should be less than 1000 of navbar menu */
   background-color: white;
 }
