@@ -1,10 +1,12 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.rangeslider;
 
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // 5.7.2
+// needs jquery-ui or jquery-ui-1.10.4.custom.js
+// see; 		response.render(JavaScriptHeaderItem.forReference(JQRangeSlider.JS));
 /**
  * @see http://ghusse.github.io/jQRangeSlider/documentation.html#dateSliderQuickStart
  */
@@ -12,9 +14,12 @@ public class JQRangeSlider {
 	public static JavaScriptResourceReference JS = new JavaScriptResourceReference(JQRangeSlider.class,
 			"jQAllRangeSliders-withRuler-min.js");
 
+	public static JavaScriptResourceReference JS_JQUI = new JavaScriptResourceReference(JQRangeSlider.class,
+			"jquery-ui-1.10.4.custom.js");
+
 	static {
 		try {
-			JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+			JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
 		} catch (Exception ex) {
 			//
 		}

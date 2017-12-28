@@ -42,18 +42,18 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
 	protected String getFeedbackMessageCSSClass(final FeedbackMessage message) {
 		switch (message.getLevel()) {
 		case FeedbackMessage.DEBUG:
-			return "alert alert-info";
+			return "alert pl-1 pr-1 pt-1 pb-1 alert-info";
 		case FeedbackMessage.INFO:
-			return "alert alert-info";
+			return "alert pl-1 pr-1 pt-1 pb-1 alert-info";
 		case FeedbackMessage.SUCCESS:
-			return "alert alert-success";
+			return "alert pl-1 pr-1 pt-1 pb-1 alert-success";
 		case FeedbackMessage.WARNING:
-			return "alert alert-warning";
+			return "alert pl-1 pr-1 pt-1 pb-1 alert-warning";
 		case FeedbackMessage.ERROR:
-			return "alert alert-danger";
+			return "alert pl-1 pr-1 pt-1 pb-1 alert-danger";
 		case FeedbackMessage.FATAL:
-			return "alert alert-danger";
+			return "alert pl-1 pr-1 pt-1 pb-1 alert-danger";
 		}
-		return "alert alert-info";
+		return "alert pl-1 pr-1 pt-1 pb-1 alert-info";
 	}
 }

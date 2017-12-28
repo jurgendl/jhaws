@@ -93,7 +93,7 @@ public class FfmpegTool implements MediaCte {
 			List<String> command = Arrays.asList(command(getFfmpeg()), "-hwaccels", "-hide_banner", "-y");
 			Lines lines = new Lines();
 			silentcall(lines, FilePath.getTempDirectory(), command);
-			hwAccel = lines.lines();
+			hwAccel = new ArrayList<>(lines.lines());
 			hwAccel.remove("Hardware acceleration methods:");
 			{
 				// ffmpeg -i input -c:v h264_nvenc -profile high444p
@@ -110,8 +110,8 @@ public class FfmpegTool implements MediaCte {
 				command.add(command(input));
 				command.add("-c:v");
 				command.add("h264_nvenc");
-				command.add("-profile");
-				command.add("high444p");
+				// command.add("-profile");
+				// command.add("high444p");
 				command.add("-pixel_format");
 				command.add("yuv444p");
 				command.add("-preset");
@@ -148,8 +148,8 @@ public class FfmpegTool implements MediaCte {
 				command.add(command(input));
 				command.add("-c:v");
 				command.add("h264_cuvid");
-				command.add("-profile");
-				command.add("high444p");
+				// command.add("-profile");
+				// command.add("high444p");
 				command.add("-pixel_format");
 				command.add("yuv444p");
 				command.add("-preset");
@@ -788,7 +788,7 @@ public class FfmpegTool implements MediaCte {
 			cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
 		if (cfg.vcopy == null)
 			cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
-		if (cfg.acopy && cfg.vcopy)
+		if (cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension()))
 			cfg.vcopy = false;
 		if (cfg.hq == null)
 			cfg.hq = cfg.input != null ? cfg.input.hq : true;
