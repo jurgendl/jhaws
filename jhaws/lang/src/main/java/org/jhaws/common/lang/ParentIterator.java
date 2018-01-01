@@ -1,13 +1,12 @@
 package org.jhaws.common.lang;
 
-import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
 import org.jhaws.common.lang.functions.BufferUnaryOperator;
 
-public class ParentIterator<T> implements Iterator<T> {
+public class ParentIterator<T> implements EnhancedIterator<T> {
 	private final T initial;
 
 	private final UnaryOperator<T> nextItem;
