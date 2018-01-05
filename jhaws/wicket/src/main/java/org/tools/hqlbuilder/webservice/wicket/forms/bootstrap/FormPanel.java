@@ -22,6 +22,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.MultiSelectSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.RatingFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TextFieldSettings;
 
@@ -145,12 +146,12 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
         return this.addDefaultRow(new NumberTextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 
-    public <N extends Number & Comparable<N>> RatingFieldPanel<N> addRatingField(N propertyPath, NumberFieldSettings<N> componentSettings) {
-        return this.addDefaultRow(new RatingFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    public RatingFieldPanel addRatingField(Integer propertyPath, RatingFieldSettings componentSettings) {
+        return this.addDefaultRow(new RatingFieldPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 
-    public <N extends Number & Comparable<N>> RatingFieldPanel2<N> addRatingField2(N propertyPath, NumberFieldSettings<N> componentSettings) {
-        return this.addDefaultRow(new RatingFieldPanel2<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    public RatingFieldPanel2 addRatingField2(Integer propertyPath, RatingFieldSettings componentSettings) {
+        return this.addDefaultRow(new RatingFieldPanel2(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 
     public DatePickerPanel<Date> addDatePicker(Date propertyPath, DatePickerSettings componentSettings) {
