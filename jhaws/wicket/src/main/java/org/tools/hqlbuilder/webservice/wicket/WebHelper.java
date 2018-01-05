@@ -211,6 +211,10 @@ public class WebHelper {
         }
     }
 
+    public static void classAdd(ComponentTag tag, String clazz) {
+        tag.getAttributes().put("class", tag.getAttributes().getString("class") + " " + clazz.toString());
+    }
+
     public static PageParameters clone(PageParameters pageParameters, String... ids) {
         PageParameters pp = new PageParameters();
         for (String id : ids) {
