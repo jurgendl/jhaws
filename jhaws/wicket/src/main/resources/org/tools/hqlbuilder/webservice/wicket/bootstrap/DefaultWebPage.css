@@ -316,19 +316,6 @@ body {
 	width: auto; /* needs to set fixed width */
 }
 
-/* ======================== feedback ======================== */
-ul.feedbackPanel {
-	width: 100%;
-	padding: 0px;
-	margin: 0px;
-}
-ul.feedbackPanel li.alert {
-	list-style-type: none;
-}
-ul.feedbackPanel li.alert span.alert {
-	border: none !important;
-}
-
 /* ======================== text transformations ======================== */
 .lower, .lowercase, .lowercased {
 	text-transform: lowercase;
