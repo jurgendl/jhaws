@@ -28,8 +28,8 @@ $('.multiselect').multiselect({
     templates: { 
         //button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"></button>',
         ul: '<ul class="pr-2 multiselect-container dropdown-menu"></ul>',
-        filter: '<li class="multiselect-item filter"><div class="input-group input-group-sm"><span class="input-group-addon"><i class="fa fa-search"></i></span><input class="form-control multiselect-search" type="text"></div></li>',
-        filterClearBtn: '<span class="input-group-btn"><button class="btn btn-sm btn-default multiselect-clear-filter" type="button"><i class="fa fa-remove"></i></button></span>',
+        filter: '<li class="multiselect-item filter"><div class="input-group input-group-sm"><div class="input-group-prepend"><span class="input-group-text"><span class="fa fa-search"></span></span></div><input class="form-control multiselect-search" type="text"></div></li>',
+        filterClearBtn: '<div class="input-group-append"><button class="btn btn-sm btn-default multiselect-clear-filter" type="button"><span class="fa fa-remove"></span></button></div>',
         li: '<li><a tabindex="0" class="dropdown-item"><label style="width:100%" class="pl-2 pr-2"></label></a></li>',
         //divider: '<li class="multiselect-item divider"></li>',
         //liGroup: '<li class="multiselect-item group"><label class="multiselect-group"></label></li>',

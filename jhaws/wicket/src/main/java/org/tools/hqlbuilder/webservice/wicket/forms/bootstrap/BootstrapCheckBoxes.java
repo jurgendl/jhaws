@@ -17,52 +17,52 @@ import org.apache.wicket.util.string.Strings;
 import org.apache.wicket.util.value.IValueMap;
 
 @SuppressWarnings("serial")
-public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener {
+public class BootstrapCheckBoxes<T> extends AbstractSingleSelectChoice<T> implements IOnChangeListener {
     protected String buttonCssClass = "btn btn-sm btn-light";
 
     protected boolean asButtons = false;
 
-    public BootstrapRadioChoice(final String id) {
+    public BootstrapCheckBoxes(final String id) {
         super(id);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(final String id, final List<? extends T> choices) {
+    public BootstrapCheckBoxes(final String id, final List<? extends T> choices) {
         super(id, choices);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(final String id, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer) {
+    public BootstrapCheckBoxes(final String id, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer) {
         super(id, choices, renderer);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(final String id, IModel<T> model, final List<? extends T> choices) {
+    public BootstrapCheckBoxes(final String id, IModel<T> model, final List<? extends T> choices) {
         super(id, model, choices);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(final String id, IModel<T> model, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer) {
+    public BootstrapCheckBoxes(final String id, IModel<T> model, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer) {
         super(id, model, choices, renderer);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(String id, IModel<? extends List<? extends T>> choices) {
+    public BootstrapCheckBoxes(String id, IModel<? extends List<? extends T>> choices) {
         super(id, choices);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices) {
+    public BootstrapCheckBoxes(String id, IModel<T> model, IModel<? extends List<? extends T>> choices) {
         super(id, model, choices);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
+    public BootstrapCheckBoxes(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
         super(id, choices, renderer);
         asButtons = true;
     }
 
-    public BootstrapRadioChoice(String id, IModel<T> model, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
+    public BootstrapCheckBoxes(String id, IModel<T> model, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
         super(id, model, choices, renderer);
         asButtons = true;
     }
@@ -179,9 +179,9 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
 
         // Add radio tag
         buffer.append("<input"//
-                + " type='radio'"//
-                + " name='" + getInputName() + "'"//
-                + " id='" + Strings.escapeMarkup(idAttr) + "'"//
+                + " type='checkbox'"//
+                + " name='" + getInputName() + "'"// FIXME unique
+                + " id='" + Strings.escapeMarkup(idAttr) + "'"// FIXME unique
                 + " value='" + Strings.escapeMarkup(id) + "'"//
                 + " autocomplete='off'"//
                 + ((isSelected(choice, index, selected) ? " checked=\"checked\"" : ""))//
@@ -249,7 +249,7 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
         this.buttonCssClass = buttonCssClass;
     }
 
-    public BootstrapRadioChoice<T> buttonCssClass(String buttonCssClass) {
+    public BootstrapCheckBoxes<T> buttonCssClass(String buttonCssClass) {
         this.buttonCssClass = buttonCssClass;
         return this;
     }
@@ -262,7 +262,7 @@ public class BootstrapRadioChoice<T> extends AbstractSingleSelectChoice<T> imple
         this.asButtons = asButtons;
     }
 
-    public BootstrapRadioChoice<T> asButtons(boolean asButtons) {
+    public BootstrapCheckBoxes<T> asButtons(boolean asButtons) {
         this.asButtons = asButtons;
         return this;
     }

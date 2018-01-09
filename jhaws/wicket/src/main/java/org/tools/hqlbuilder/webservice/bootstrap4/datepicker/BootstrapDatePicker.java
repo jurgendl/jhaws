@@ -4,16 +4,6 @@ import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
-// <div class="form-group form-row">
-// <label class="col-form-label col-sm-2" for="cd">Custom Date</label>
-// <div class="col-sm-10" style="padding-left: 0px !important; padding-right: 0px !important">
-// <div class="input-group input-group-sm bootstrap-datetimepicker">
-// <input id="cd" class="form-control form-control-sm" type="text" /> <span title="Select Date" class="input-group-addon"><span
-// class="fontawesome-calendar"></span></span>
-// </div>
-// </div>
-// </div>
-//
 // response.render(CssHeaderItem.forReference(BootstrapDatePicker.CSS));
 // response.render(JavaScriptHeaderItem.forReference(BootstrapDatePicker.JS));
 // response.render(JavaScriptHeaderItem.forReference(BootstrapDatePicker.JS_I18N));

@@ -461,7 +461,7 @@ kbd, code {
 	border-color: rgba(0, 0, 0, 0.15);
 }
 
-.input-group.plain .input-group-addon {
+.input-group.plain .input-group-prepend, .input-group.plain .input-group-append {
 	background-color: #fff;
 }
 
