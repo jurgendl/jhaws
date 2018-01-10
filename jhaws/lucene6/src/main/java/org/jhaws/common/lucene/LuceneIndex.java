@@ -131,7 +131,7 @@ public class LuceneIndex {
                 String uuid = uuid(tmpDoc).get(DOC_UUID);
                 tmpW.addDocument(tmpDoc);
                 tmpW.commit();
-                tmpW.deleteDocuments(keyValueQuery(DOC_UUID, uuid));
+                tmpW.deleteDocuments(keyValueQuery(DOC_UUID, uuid).build());
                 tmpW.commit();
                 // tmpW.close();
                 // tmpDir.close();
@@ -165,7 +165,7 @@ public class LuceneIndex {
             return;
         }
         docVersion = 0;
-        ScoreDoc metaDataScoreDocs = search1(keyValueQuery(LUCENE_METADATA, LUCENE_METADATA));
+        ScoreDoc metaDataScoreDocs = search1(keyValueQuery(LUCENE_METADATA, LUCENE_METADATA).build());
         Document metaDataDoc = new Document();
         if (metaDataScoreDocs != null) {
             metaDataDoc = getDoc(metaDataScoreDocs);
@@ -486,8 +486,8 @@ public class LuceneIndex {
         return booleanQuery.add(new TermQuery(new Term(key, value)), occur);
     }
 
-    public BooleanQuery keyValueQuery(String key, String value) {
-        return keyValueQuery(new BooleanQuery.Builder(), key, value).build();
+    public BooleanQuery.Builder keyValueQuery(String key, String value) {
+        return keyValueQuery(new BooleanQuery.Builder(), key, value);
     }
 
     public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy, Comparator<Document> comparator, Consumer<Document> after) {
@@ -569,7 +569,7 @@ public class LuceneIndex {
     }
 
     public BooleanQuery uuidQuery(String uuid) {
-        return keyValueQuery(DOC_UUID, uuid);
+        return keyValueQuery(DOC_UUID, uuid).build();
     }
 
     public long getAutoCloseWait() {
