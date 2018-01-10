@@ -35,6 +35,7 @@ import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexUpgrader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MultiFields;
@@ -128,7 +129,8 @@ public class LuceneIndex {
 
     protected Directory createIndex() {
         if (dir.notExists()) {
-            try (FSDirectory tmpDir = FSDirectory.open(dir); IndexWriter tmpW = new IndexWriter(tmpDir, new IndexWriterConfig(getIndexAnalyzer()))) {
+            try (FSDirectory tmpDir = FSDirectory.open(dir.getPath());
+                    IndexWriter tmpW = new IndexWriter(tmpDir, new IndexWriterConfig(getIndexAnalyzer()))) {
                 Document tmpDoc = new Document();
                 String uuid = uuid(tmpDoc).get(DOC_UUID);
                 tmpW.addDocument(tmpDoc);
@@ -144,7 +146,7 @@ public class LuceneIndex {
         new FilePath(dir, WRITE_LOCK).delete();
         MMapDirectory mMapDirectory;
         try {
-            mMapDirectory = new MMapDirectory(dir/* ,new SimpleFSLockFactory() */);
+            mMapDirectory = new MMapDirectory(dir.getPath() /* ,new SimpleFSLockFactory() */);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }
@@ -747,5 +749,10 @@ public class LuceneIndex {
         public String getHighlights() {
             return this.highlights;
         }
+    }
+
+    public void upgrade() throws IOException {
+        // https://lucene.apache.org/core/5_3_0/MIGRATE.html
+        new IndexUpgrader(getIndex(), getIndexWriterConfig(), false).upgrade();
     }
 }
