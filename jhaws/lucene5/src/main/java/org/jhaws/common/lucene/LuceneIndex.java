@@ -753,8 +753,19 @@ public class LuceneIndex {
         }
     }
 
-    public void upgrade() throws IOException {
-        // https://lucene.apache.org/core/5_3_0/MIGRATE.html
-        new IndexUpgrader(getIndex(), getIndexWriterConfig(), false).upgrade();
+    public void upgrade() {
+        try {
+            // https://lucene.apache.org/core/5_3_0/MIGRATE.html
+            new IndexUpgrader(getIndex(), getIndexWriterConfig(), false).upgrade();
+            shutDown();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                shutDown();
+            } catch (Exception ex2) {
+                //
+            }
+        }
     }
 }
