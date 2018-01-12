@@ -263,8 +263,10 @@ public class LuceneIndex {
         return indexWriterConfig = new IndexWriterConfig(getIndexAnalyzer())/* .setWriteLockTimeout(writeLockTimeout) */;
     }
 
+    // always creates a new index writer config
     protected IndexWriterConfig getIndexWriterConfig() {
-        return optional(indexWriterConfig, this::createIndexWriterConfig);
+        // return optional(indexWriterConfig, this::createIndexWriterConfig);
+        return createIndexWriterConfig();
     }
 
     protected DirectoryReader createIndexReader() {
