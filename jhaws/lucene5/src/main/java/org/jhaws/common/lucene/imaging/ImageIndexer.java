@@ -206,7 +206,7 @@ public class ImageIndexer {
 			System.out.println();
 			results.keySet().stream().sorted().forEach(sim.getImageSimilarities()::add);
 			if (report != null) {
-				jaxbMarshalling.marshall(sim, report);
+				jaxbMarshalling.marshall(sim, report.toPath());
 				System.out.println("-------------------------------------------------");
 				System.out.println(report.readAll());
 			}
