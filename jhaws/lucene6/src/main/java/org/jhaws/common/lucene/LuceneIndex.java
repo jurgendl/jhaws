@@ -753,12 +753,18 @@ public class LuceneIndex {
 		}
 	}
 
-	public void upgrade() {
+	public void upgrade(boolean deleteIfUpgradeFails) {
 		try {
-			// https://lucene.apache.org/core/5_3_0/MIGRATE.html
+			// https://lucene.apache.org/core/6_6_0/MIGRATE.html
 			new IndexUpgrader(getIndex(), getIndexWriterConfig(), false).upgrade();
 		} catch (org.apache.lucene.index.IndexFormatTooOldException ex) {
-
+			if (deleteIfUpgradeFails) {
+				try {
+					dir.delete();
+				} catch (Exception ex2) {
+					ex.printStackTrace();
+				}
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
