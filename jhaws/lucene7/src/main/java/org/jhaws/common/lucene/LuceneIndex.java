@@ -31,7 +31,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.LegacyIntField;
+import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -144,7 +144,8 @@ public class LuceneIndex {
 		new FilePath(dir, WRITE_LOCK).delete();
 		MMapDirectory mMapDirectory;
 		try {
-			mMapDirectory = new MMapDirectory(dir.getPath()/* ,new SimpleFSLockFactory() */);
+			mMapDirectory = new MMapDirectory(
+					dir.getPath()/* ,new SimpleFSLockFactory() */);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -566,7 +567,7 @@ public class LuceneIndex {
 
 	public Document replaceValue(Document doc, String key, int value, boolean store) {
 		doc.removeField(key);
-		doc.add(new LegacyIntField(key, value, store ? YES : NO));
+		doc.add(new IntPoint(key, value/* , store ? YES : NO */));
 		return doc;
 	}
 

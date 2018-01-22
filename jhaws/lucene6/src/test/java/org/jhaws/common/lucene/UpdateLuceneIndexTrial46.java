@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.jhaws.common.io.FilePath;
 
-public class UpdateLuceneIndexTrial {
+public class UpdateLuceneIndexTrial46 {
 	public static void main(String[] args) {
 		FilePath lp = FilePath.getTempDirectory().child("luceneempty4");
 		System.out.println(lp);
