@@ -758,10 +758,11 @@ public class LuceneIndex implements Closeable {
 	}
 
 	// 5>6
-	public void upgrade(boolean deleteIfUpgradeFails) {
+	public boolean upgrade(boolean deleteIfUpgradeFails) {
 		try {
 			// https://lucene.apache.org/core/6_6_0/MIGRATE.html
 			new IndexUpgrader(getIndex(), getIndexWriterConfig(), false).upgrade();
+			return true;
 		} catch (org.apache.lucene.index.IndexFormatTooOldException ex) {
 			if (deleteIfUpgradeFails) {
 				try {
@@ -782,6 +783,7 @@ public class LuceneIndex implements Closeable {
 				//
 			}
 		}
+		return false;
 	}
 
 	@Override
