@@ -1,5 +1,5 @@
 /*@preserve
- * Tempus Dominus Bootstrap4 v5.0.0-alpha7 (https://tempusdominus.github.io/bootstrap-4/)
+ * Tempus Dominus Bootstrap4 v5.0.0-alpha14 (https://tempusdominus.github.io/bootstrap-4/)
  * Copyright 2016-2017 Jonathan Peterson
  * Licensed under MIT (https://github.com/tempusdominus/bootstrap-3/blob/master/LICENSE)
  */
@@ -38,10 +38,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 // ReSharper disable once InconsistentNaming
-var DateTimePicker = function ($) {
+var DateTimePicker = function ($, moment) {
     // ReSharper disable InconsistentNaming
     var NAME = 'datetimepicker',
-        VERSION = '5.0.0-alpha7',
+        VERSION = '5.0.0-alpha12',
         DATA_KEY = '' + NAME,
         EVENT_KEY = '.' + DATA_KEY,
         EMIT_EVENT_KEY = DATA_KEY + '.',
@@ -65,6 +65,58 @@ var DateTimePicker = function ($) {
         HIDE: EMIT_EVENT_KEY + 'hide',
         SHOW: EMIT_EVENT_KEY + 'show'
     },
+        DatePickerModes = [{
+        CLASS_NAME: 'days',
+        NAV_FUNCTION: 'M',
+        NAV_STEP: 1
+    }, {
+        CLASS_NAME: 'months',
+        NAV_FUNCTION: 'y',
+        NAV_STEP: 1
+    }, {
+        CLASS_NAME: 'years',
+        NAV_FUNCTION: 'y',
+        NAV_STEP: 10
+    }, {
+        CLASS_NAME: 'decades',
+        NAV_FUNCTION: 'y',
+        NAV_STEP: 100
+    }],
+        KeyMap = {
+        'up': 38,
+        38: 'up',
+        'down': 40,
+        40: 'down',
+        'left': 37,
+        37: 'left',
+        'right': 39,
+        39: 'right',
+        'tab': 9,
+        9: 'tab',
+        'escape': 27,
+        27: 'escape',
+        'enter': 13,
+        13: 'enter',
+        'pageUp': 33,
+        33: 'pageUp',
+        'pageDown': 34,
+        34: 'pageDown',
+        'shift': 16,
+        16: 'shift',
+        'control': 17,
+        17: 'control',
+        'space': 32,
+        32: 'space',
+        't': 84,
+        84: 't',
+        'delete': 46,
+        46: 'delete'
+    },
+        ViewModes = ['times', 'days', 'months', 'years', 'decades'],
+        keyState = {},
+        keyPressHandled = {};
+
+    var MinViewModeNumber = 0,
         Default = {
         timeZone: '',
         format: false,
@@ -75,7 +127,7 @@ var DateTimePicker = function ($) {
         maxDate: false,
         useCurrent: true,
         collapse: true,
-        locale: window.moment.locale(),
+        locale: moment.locale(),
         defaultDate: false,
         disabledDates: false,
         enabledDates: false,
@@ -144,7 +196,7 @@ var DateTimePicker = function ($) {
                 if (!this.widget) {
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(7, 'd'));
                 } else {
@@ -157,7 +209,7 @@ var DateTimePicker = function ($) {
                     this.show();
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(7, 'd'));
                 } else {
@@ -169,7 +221,7 @@ var DateTimePicker = function ($) {
                 if (!this.widget) {
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'y'));
                 } else {
@@ -181,7 +233,7 @@ var DateTimePicker = function ($) {
                 if (!this.widget) {
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'y'));
                 } else {
@@ -193,7 +245,7 @@ var DateTimePicker = function ($) {
                 if (!this.widget) {
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'd'));
                 }
@@ -203,7 +255,7 @@ var DateTimePicker = function ($) {
                 if (!this.widget) {
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'd'));
                 }
@@ -213,7 +265,7 @@ var DateTimePicker = function ($) {
                 if (!this.widget) {
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().subtract(1, 'M'));
                 }
@@ -223,7 +275,7 @@ var DateTimePicker = function ($) {
                 if (!this.widget) {
                     return false;
                 }
-                var d = this._date || this.getMoment();
+                var d = this._dates[0] || this.getMoment();
                 if (this.widget.find('.datepicker').is(':visible')) {
                     this.date(d.clone().add(1, 'M'));
                 }
@@ -269,59 +321,8 @@ var DateTimePicker = function ($) {
         viewDate: false,
         allowMultidate: false,
         multidateSeparator: ','
-    },
-        DatePickerModes = [{
-        CLASS_NAME: 'days',
-        NAV_FUNCTION: 'M',
-        NAV_STEP: 1
-    }, {
-        CLASS_NAME: 'months',
-        NAV_FUNCTION: 'y',
-        NAV_STEP: 1
-    }, {
-        CLASS_NAME: 'years',
-        NAV_FUNCTION: 'y',
-        NAV_STEP: 10
-    }, {
-        CLASS_NAME: 'decades',
-        NAV_FUNCTION: 'y',
-        NAV_STEP: 100
-    }],
-        KeyMap = {
-        'up': 38,
-        38: 'up',
-        'down': 40,
-        40: 'down',
-        'left': 37,
-        37: 'left',
-        'right': 39,
-        39: 'right',
-        'tab': 9,
-        9: 'tab',
-        'escape': 27,
-        27: 'escape',
-        'enter': 13,
-        13: 'enter',
-        'pageUp': 33,
-        33: 'pageUp',
-        'pageDown': 34,
-        34: 'pageDown',
-        'shift': 16,
-        16: 'shift',
-        'control': 17,
-        17: 'control',
-        'space': 32,
-        32: 'space',
-        't': 84,
-        84: 't',
-        'delete': 46,
-        46: 'delete'
-    },
-        ViewModes = ['times', 'days', 'months', 'years', 'decades'],
-        keyState = {},
-        keyPressHandled = {};
+    };
 
-    var MinViewModeNumber = 0;
     // ReSharper restore InconsistentNaming
 
     // ReSharper disable once DeclarationHides
@@ -380,9 +381,9 @@ var DateTimePicker = function ($) {
             this._initFormatting();
 
             if (this.input !== undefined && this.input.is('input') && this.input.val().trim().length !== 0) {
-                this._setValue(this._parseInputDate(this.input.val().trim()));
+                this._setValue(this._parseInputDate(this.input.val().trim()), 0);
             } else if (this._options.defaultDate && this.input !== undefined && this.input.attr('placeholder') === undefined) {
-                this._setValue(this._options.defaultDate);
+                this._setValue(this._options.defaultDate, 0);
             }
             if (this._options.inline) {
                 this.show();
@@ -499,7 +500,7 @@ var DateTimePicker = function ($) {
         };
 
         DateTimePicker.prototype._hasTimeZone = function _hasTimeZone() {
-            return window.moment.tz !== undefined && this._options.timeZone !== undefined && this._options.timeZone !== null && this._options.timeZone !== '';
+            return moment.tz !== undefined && this._options.timeZone !== undefined && this._options.timeZone !== null && this._options.timeZone !== '';
         };
 
         DateTimePicker.prototype._isEnabled = function _isEnabled(granularity) {
@@ -638,7 +639,7 @@ var DateTimePicker = function ($) {
 
         DateTimePicker.prototype._parseInputDate = function _parseInputDate(inputDate) {
             if (this._options.parseInputDate === undefined) {
-                if (!window.moment.isMoment(inputDate)) {
+                if (!moment.isMoment(inputDate)) {
                     inputDate = this.getMoment(inputDate);
                 }
             } else {
@@ -782,13 +783,13 @@ var DateTimePicker = function ($) {
             var returnMoment = void 0;
 
             if (d === undefined || d === null) {
-                returnMoment = window.moment(); //TODO should this use format? and locale?
+                returnMoment = moment(); //TODO should this use format? and locale?
             } else if (this._hasTimeZone()) {
                 // There is a string to parse and a default time zone
                 // parse with the tz function which takes a default time zone if it is not in the format string
-                returnMoment = window.moment.tz(d, this.parseFormats, this._options.useStrict, this._options.timeZone);
+                returnMoment = moment.tz(d, this.parseFormats, this._options.useStrict, this._options.timeZone);
             } else {
-                returnMoment = window.moment(d, this.parseFormats, this._options.useStrict);
+                returnMoment = moment(d, this.parseFormats, this._options.useStrict);
             }
 
             if (this._hasTimeZone()) {
@@ -842,7 +843,7 @@ var DateTimePicker = function ($) {
                 }
             }
 
-            if (newDate !== null && typeof newDate !== 'string' && !window.moment.isMoment(newDate) && !(newDate instanceof Date)) {
+            if (newDate !== null && typeof newDate !== 'string' && !moment.isMoment(newDate) && !(newDate instanceof Date)) {
                 throw new TypeError('date() parameter must be one of [null, string, moment or Date]');
             }
 
@@ -850,9 +851,6 @@ var DateTimePicker = function ($) {
         };
 
         DateTimePicker.prototype.format = function format(newFormat) {
-            ///<summary>test su</summary>
-            ///<param name="newFormat">info about para</param>
-            ///<returns type="string|boolean">returns foo</returns>
             if (arguments.length === 0) {
                 return this._options.format;
             }
@@ -1046,7 +1044,7 @@ var DateTimePicker = function ($) {
             }
             this._options.minDate = parsedDate;
             for (var i = 0; i < this._dates.length; i++) {
-                if (this._options.useCurrent && !this._options.keepInvalid && this._date[i].isBefore(_minDate)) {
+                if (this._options.useCurrent && !this._options.keepInvalid && this._dates[i].isBefore(_minDate)) {
                     this._setValue(this._options.minDate, i);
                 }
             }
@@ -1093,7 +1091,7 @@ var DateTimePicker = function ($) {
                 return this._options.locale;
             }
 
-            if (!window.moment.localeData(_locale)) {
+            if (!moment.localeData(_locale)) {
                 throw new TypeError('locale() locale ' + _locale + ' is not loaded from moment locales!');
             }
 
@@ -1442,8 +1440,8 @@ var DateTimePicker = function ($) {
             if (this._options.useCurrent && !this._options.keepInvalid) {
                 for (var i = 0; i < this._dates.length; i++) {
                     var tries = 0;
-                    while (!this._isValid(this._date[i], 'h')) {
-                        this._date[i].add(1, 'h');
+                    while (!this._isValid(this._dates[i], 'h')) {
+                        this._dates[i].add(1, 'h');
                         if (tries === 24) {
                             throw 'Tried 24 times to find a valid date';
                         }
@@ -1465,7 +1463,7 @@ var DateTimePicker = function ($) {
                 return true;
             }
 
-            if (typeof newDate !== 'string' && !window.moment.isMoment(newDate) && !(newDate instanceof Date)) {
+            if (typeof newDate !== 'string' && !moment.isMoment(newDate) && !(newDate instanceof Date)) {
                 throw new TypeError('viewDate() parameter must be one of [string, moment or Date]');
             }
 
@@ -1572,6 +1570,9 @@ var DateTimePicker = function ($) {
             key: 'Default',
             get: function get() {
                 return Default;
+            },
+            set: function set(value) {
+                Default = value;
             }
         }, {
             key: 'ClassName',
@@ -1584,7 +1585,7 @@ var DateTimePicker = function ($) {
     }();
 
     return DateTimePicker;
-}(jQuery);
+}(jQuery, moment);
 
 //noinspection JSUnusedGlobalSymbols
 /* global DateTimePicker */
@@ -1634,7 +1635,7 @@ var TempusDominusBootstrap4 = function ($) {
                 // in case there is more then one 'input-group-addon' Issue #48
                 var datepickerButton = this._element.find('.datepickerbutton');
                 if (datepickerButton.length === 0) {
-                    this.component = this._element.find('.input-group-addon');
+                    this.component = this._element.find('.input-group-append');
                 } else {
                     this.component = datepickerButton;
                 }
@@ -1871,15 +1872,15 @@ var TempusDominusBootstrap4 = function ($) {
                 self.widget.removeClass('float-right');
             }
 
-            // find the first parent element that has a static css positioning
-            if (parent.css('position') !== 'static') {
+            // find the first parent element that has a relative css positioning
+            if (parent.css('position') !== 'relative') {
                 parent = parent.parents().filter(function () {
-                    return $(this).css('position') === 'static';
+                    return $(this).css('position') === 'relative';
                 }).first();
             }
 
             if (parent.length === 0) {
-                throw new Error('datetimepicker component should be placed within a static positioned container');
+                throw new Error('datetimepicker component should be placed within a relative positioned container');
             }
 
             self.widget.css({
