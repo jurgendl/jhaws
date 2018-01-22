@@ -14,6 +14,7 @@ import static org.jhaws.common.lang.CollectionUtils8.stream;
 import static org.jhaws.common.lang.CollectionUtils8.streamDeepValues;
 import static org.jhaws.common.lang.CollectionUtils8.toList;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
@@ -66,7 +67,7 @@ import org.slf4j.LoggerFactory;
  * @see http://blog.swwomm.com/2013/07/tuning-lucene-to-get-most-relevant.html
  */
 // SmartLifecycle, InitializingBean
-public class LuceneIndex {
+public class LuceneIndex implements Closeable {
 	protected static final String WRITE_LOCK = "write.lock";
 
 	protected static final Logger logger = LoggerFactory.getLogger(LuceneIndex.class);
@@ -144,7 +145,8 @@ public class LuceneIndex {
 		new FilePath(dir, WRITE_LOCK).delete();
 		MMapDirectory mMapDirectory;
 		try {
-			mMapDirectory = new MMapDirectory(dir.getPath()/* ,new SimpleFSLockFactory() */);
+			mMapDirectory = new MMapDirectory(
+					dir.getPath()/* ,new SimpleFSLockFactory() */);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -210,7 +212,9 @@ public class LuceneIndex {
 	}
 
 	protected Document version(Document doc) {
-		return replaceValue(doc, DOC_VERSION, docVersion, true);
+		if (docVersion != null)
+			return replaceValue(doc, DOC_VERSION, docVersion, true);
+		return doc;
 	}
 
 	public <F extends Indexable<? super F>> void replace(F indexable) {
@@ -774,5 +778,10 @@ public class LuceneIndex {
 				//
 			}
 		}
+	}
+
+	@Override
+	public void close() throws IOException {
+		shutDown();
 	}
 }
