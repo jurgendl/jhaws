@@ -403,19 +403,17 @@ body {
 
 /* ========================xxx======================== */
 
-/* https://www.codeply.com/go/SkIJQ5LqKp/custom-file-input */
-.custom-file-control.selected::after {
-	content: "" !important;
-}
 /* custom-file-control other languages */
-.custom-file-control:lang(nl)::before {
-	content: "Selecteer";
+/*.custom-file-input:empty ~ .custom-file-label::before {
+	content: "...";
 }
-
-.custom-file-control:lang(nl)::after {
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+	content: "Choose file";
+}
+.custom-file-input:lang(nl) ~ .custom-file-label::after {
 	content: "Kies bestand";
 }
-
+*/
 /* */
 ul.nested, ul.nested ul {
 	list-style: none;
@@ -521,7 +519,7 @@ img.niceimage {
 	height: calc(1.8125rem + 2px);
 }
 
-.custom-control-input:disabled ~ .custom-control-label {
+.custom-control-input:disabled ~ .custom-control-label:before {
 	background-color: rgba(166, 209, 255, 0.98) !important;
 }
 
@@ -560,4 +558,32 @@ img.niceimage {
   -webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
   -moz-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
   box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
+}
+
+
+
+
+
+
+
+.custom-file,
+.custom-file-control,
+.custom-file-input {
+  height: 2.3rem!important;
+}
+/* add FontAwesome icon for input (optional) */
+.custom-file-control::before {
+  font-family: 'FontAwesome';
+  content: "\f03e"!important;
+  height: 2.3rem!important;
+  padding: .4rem 1rem!important;
+  border-radius: 0!important;
+}
+.custom-file-name:after {
+  content: attr(data-content) !important;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
+  padding: 0.35rem .5rem;
 }
