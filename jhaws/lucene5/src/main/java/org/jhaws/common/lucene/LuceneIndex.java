@@ -767,7 +767,10 @@ public class LuceneIndex implements Closeable {
 					dir.delete();
 				} catch (Exception ex2) {
 					ex.printStackTrace();
+					ex2.printStackTrace();
 				}
+			} else {
+				ex.printStackTrace();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

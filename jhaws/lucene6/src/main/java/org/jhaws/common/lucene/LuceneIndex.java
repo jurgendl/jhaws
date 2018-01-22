@@ -757,6 +757,7 @@ public class LuceneIndex implements Closeable {
 		}
 	}
 
+	// 5>6
 	public void upgrade(boolean deleteIfUpgradeFails) {
 		try {
 			// https://lucene.apache.org/core/6_6_0/MIGRATE.html
@@ -767,7 +768,10 @@ public class LuceneIndex implements Closeable {
 					dir.delete();
 				} catch (Exception ex2) {
 					ex.printStackTrace();
+					ex2.printStackTrace();
 				}
+			} else {
+				ex.printStackTrace();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
