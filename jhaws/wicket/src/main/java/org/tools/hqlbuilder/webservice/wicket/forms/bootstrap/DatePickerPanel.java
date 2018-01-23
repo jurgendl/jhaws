@@ -28,111 +28,110 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRem
 
 @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel {
-	protected String dateFormat;
+    protected String dateFormat;
 
-	protected Converter<X, Date> dateConverter;
+    protected Converter<X, Date> dateConverter;
 
-	public DatePickerPanel(IModel<?> model, Date propertyPath, FormSettings formSettings,
-			DatePickerSettings componentSettings) {
-		super(model, propertyPath, formSettings, componentSettings);
-		this.dateConverter = null;
-	}
+    public DatePickerPanel(IModel<?> model, Date propertyPath, FormSettings formSettings, DatePickerSettings componentSettings) {
+        super(model, propertyPath, formSettings, componentSettings);
+        this.dateConverter = null;
+    }
 
-	public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings,
-			DatePickerSettings componentSettings) {
-		super(model, propertyPath, formSettings, componentSettings);
-		this.dateConverter = dateConverter;
-	}
+    public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings,
+            DatePickerSettings componentSettings) {
+        super(model, propertyPath, formSettings, componentSettings);
+        this.dateConverter = dateConverter;
+    }
 
-	@Override
-	public IModel<Date> getValueModel() {
-		if (dateConverter == null) {
-			return super.getValueModel();
-		}
-		IModel<X> backingModel = new PropertyModel<>(getDefaultModel(), getPropertyName());
-		return new ModelConverter<>(backingModel, dateConverter);
-	}
+    @Override
+    public IModel<Date> getValueModel() {
+        if (dateConverter == null) {
+            return super.getValueModel();
+        }
+        IModel<X> backingModel = new PropertyModel<>(getDefaultModel(), getPropertyName());
+        return new ModelConverter<>(backingModel, dateConverter);
+    }
 
-	@Override
-	protected FormComponent createComponent(IModel model, Class valueType) {
-		Map<String, String> dateFormats = MomentJs.dateFormats(getLocale());
-		if (DatePickerSettings.class.cast(getComponentSettings()).getType() != null) {
-			switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
-			case datetime:
-				dateFormat = dateFormats.get("L");
-				break;
-			case time:
-				dateFormat = dateFormats.get("LT");
-				break;
-			default:
-			case date:
-				dateFormat = dateFormats.get("L") + " " + dateFormats.get("LT");
-				break;
-			}
-		}
-		org.apache.wicket.extensions.markup.html.form.DateTextField textField = new org.apache.wicket.extensions.markup.html.form.DateTextField(
-				VALUE, model, dateFormat) {
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				onFormComponentTag(tag);
-			}
-		};
-		return textField;
-	}
+    @Override
+    protected FormComponent createComponent(IModel model, Class valueType) {
+        Map<String, String> dateFormats = MomentJs.dateFormats(getLocale());
+        if (DatePickerSettings.class.cast(getComponentSettings()).getType() != null) {
+            switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
+                case datetime:
+                    dateFormat = dateFormats.get("L");
+                    break;
+                case time:
+                    dateFormat = dateFormats.get("LT");
+                    break;
+                default:
+                case date:
+                    dateFormat = dateFormats.get("L") + " " + dateFormats.get("LT");
+                    break;
+            }
+        }
+        org.apache.wicket.extensions.markup.html.form.DateTextField textField = new org.apache.wicket.extensions.markup.html.form.DateTextField(VALUE,
+                model, dateFormat) {
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                onFormComponentTag(tag);
+            }
+        };
+        return textField;
+    }
 
-	@Override
-	public FormRowPanelParent addComponents() {
-		this.add(this.getLabel());
-		WebMarkupContainer tempusdominuspicker = new WebMarkupContainer("tempusdominuspicker");
-		if (DatePickerSettings.class.cast(getComponentSettings()).getType() != null) {
-			switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
-			case datetime:
-				tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
-				tempusdominuspicker.add(new CssClassNameAppender("tempusdominusdatetime"));
-				break;
-			case time:
-				tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
-				tempusdominuspicker.add(new CssClassNameAppender("tempusdominustime"));
-				break;
-			default:
-			case date:
-				break;
-			}
-		}
-		WebMarkupContainer tempusdominuspickergroup = new WebMarkupContainer("tempusdominuspickergroup");
-		tempusdominuspicker.add(tempusdominuspickergroup);
-		FormComponent _component = getComponent();
-		tempusdominuspicker.add(_component);
-		getComponentContainer().add(tempusdominuspicker);
-		getComponentContainer().add(getRequiredMarker());
-		getComponentContainer().add(getFeedback());
-		this.add(getComponentContainer());
-		tempusdominuspickergroup.add(new AttributeModifier("data-target", "#" + tempusdominuspicker.getMarkupId()));
-		_component.add(new AttributeModifier("data-target", "#" + tempusdominuspicker.getMarkupId()));
-		return this;
-	}
+    @Override
+    public FormRowPanelParent addComponents() {
+        this.add(this.getLabel());
+        WebMarkupContainer tempusdominuspicker = new WebMarkupContainer("tempusdominuspicker");
+        if (DatePickerSettings.class.cast(getComponentSettings()).getType() != null) {
+            switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
+                case datetime:
+                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
+                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominusdatetime"));
+                    break;
+                case time:
+                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
+                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominustime"));
+                    break;
+                default:
+                case date:
+                    break;
+            }
+        }
+        WebMarkupContainer tempusdominuspickergroup = new WebMarkupContainer("tempusdominuspickergroup");
+        tempusdominuspicker.add(tempusdominuspickergroup);
+        FormComponent _component = getComponent();
+        tempusdominuspicker.add(_component);
+        getComponentContainer().add(tempusdominuspicker);
+        getComponentContainer().add(getRequiredMarker());
+        getComponentContainer().add(getFeedback());
+        this.add(getComponentContainer());
+        tempusdominuspickergroup.add(new AttributeModifier("data-target", "#" + tempusdominuspicker.getMarkupId()));
+        _component.add(new AttributeModifier("data-target", "#" + tempusdominuspicker.getMarkupId()));
+        tempusdominuspickergroup.add(new WebMarkupContainer("tempusdominuspickericon"));
+        return this;
+    }
 
-	public static String dateformat(Locale locale) {
-		return LocaleUtils.getLocaleDatePattern(locale, DateFormat.SHORT);
-	}
+    public static String dateformat(Locale locale) {
+        return LocaleUtils.getLocaleDatePattern(locale, DateFormat.SHORT);
+    }
 
-	@Override
-	protected void setupPlaceholder(ComponentTag tag) {
-		if (this.componentSettings.isShowPlaceholder()) {
-			tag.getAttributes().put(PLACEHOLDER,
-					"<" + new SimpleDateFormat(dateFormat, getLocale()).format(new Date()) + ">");
-		}
-	}
+    @Override
+    protected void setupPlaceholder(ComponentTag tag) {
+        if (this.componentSettings.isShowPlaceholder()) {
+            tag.getAttributes().put(PLACEHOLDER, "<" + new SimpleDateFormat(dateFormat, getLocale()).format(new Date()) + ">");
+        }
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		// response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
-		// response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
-		// response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        // response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
+        // response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
+        // response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
+    }
 }

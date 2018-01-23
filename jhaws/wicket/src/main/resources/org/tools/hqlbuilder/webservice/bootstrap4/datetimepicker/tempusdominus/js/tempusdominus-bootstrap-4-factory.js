@@ -1,4 +1,5 @@
 ;
+$('.tempusdominussimple').datetimepicker();
 $('.tempusdominus').datetimepicker({
 	locale : moment.locale(),
 	calendarWeeks : true,

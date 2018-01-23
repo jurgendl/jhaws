@@ -1,10 +1,10 @@
 <wicket:extend>
-	<div wicket:id="tempusdominuspicker" class="input-group input-group-sm date tempusdominusdate" data-target-input="nearest">
-		<div wicket:id="tempusdominuspickergroup" data-target="#tempusdominuspicker" class="input-group-prepend" data-toggle="datetimepicker">
-			<span class="input-group-text">
-				<span class="fa fa-calendar"></span>
-			</span>
+	<div wicket:id="tempusdominuspicker" class="tempusdominuspicker input-group input-group-sm date" data-target-input="nearest">
+		<input wicket:id="value" data-target="css_class_tempusdominuspicker" type="text" class="form-control form-control-sm datetimepicker-input" />
+		<div wicket:id="tempusdominuspickergroup" data-target="css_class_tempusdominuspicker" class="input-group-append" data-toggle="datetimepicker">
+			<div class="input-group-text">
+				<i wicket:id="tempusdominuspickericon" class="fa fa-calendar"></i>
+			</div>
 		</div>
-		<input wicket:id="value" data-target="#tempusdominuspicker" type="text" class="form-control form-control-sm datetimepicker-input" />
 	</div>
 </wicket:extend>
