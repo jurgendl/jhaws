@@ -35,7 +35,7 @@ public class ImageIndexerTest {
 	}
 
 	public static void main(String[] args) {
-		FilePath p = new FilePath(args[0]);
+		FilePath p = new FilePath(args.length == 0 ? "src/test/resources/" : args[0]);
 		FilePath xml = p.child("dubsreport.xml");
 		ImageSimilarities results = new ImageIndexer().findDuplicatesExt(p.child("dubsindex"), p, xml, 5.0,
 				Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class, ColorLayout.class, ScalableColor.class,

@@ -29,3 +29,4 @@ org.eclipse.wst.common.project.facet.core.xml
 /jhaws/lucene6/cmds.bat
 /jhaws/documents/.settings/org.eclipse.jdt.ui.prefs
 /jhaws/documents/.settings/org.eclipse.m2e.core.prefs
+/jhaws/lucene7/src/test/resources/dubsindex
