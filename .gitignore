@@ -1,7 +1,6 @@
 .classpath
 .project
 target
-/jhaws/net/src/test/java/org/jhaws/common/net/client/tests/TTTTTTT.java
 /jhaws/lucene3/src/site/resources/xpdfbin-win-3.03.zip
 /jhaws/net/.settings/org.eclipse.jdt.core.prefs
 /jhaws/net/.settings/org.eclipse.wst.common.component
@@ -29,4 +28,7 @@ org.eclipse.wst.common.project.facet.core.xml
 /jhaws/lucene6/cmds.bat
 /jhaws/documents/.settings/org.eclipse.jdt.ui.prefs
 /jhaws/documents/.settings/org.eclipse.m2e.core.prefs
+/jhaws/lucene/src/test/resources/dubsindex
+/jhaws/lucene5/src/test/resources/dubsindex
+/jhaws/lucene6/src/test/resources/dubsindex
 /jhaws/lucene7/src/test/resources/dubsindex
