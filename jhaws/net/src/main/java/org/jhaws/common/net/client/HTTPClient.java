@@ -312,21 +312,8 @@ public class HTTPClient implements Closeable {
 		logger.trace("{}", uri);
 
 		HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-		if (context == null) {
-			context = HttpClientContext.create();
-
-			CredentialsProvider preemptiveCP = getPreemptiveCredentialsProvider();
-			if (preemptiveCP != null) {
-				context.setCredentialsProvider(preemptiveCP);
-				AuthCache authCache = new BasicAuthCache();
-				BasicScheme basicAuth = new BasicScheme();
-				authCache.put(targetHost, basicAuth);
-				context.setAuthCache(authCache);
-			}
-		}
-
 		Response response = null;
-		try (CloseableHttpResponse httpResponse = getHttpClient().execute(targetHost, req, context)) {
+		try (CloseableHttpResponse httpResponse = getHttpClient().execute(targetHost, req, getContext(uri))) {
 			response = buildResponse(req, httpResponse, out);
 			consumeQuietly(httpResponse.getEntity());
 		} catch (IOException ioex) {
@@ -724,7 +711,20 @@ public class HTTPClient implements Closeable {
 		this.preemptiveCredentialsProvider = credentialsProvider;
 	}
 
-	public HttpClientContext getContext() {
+	public HttpClientContext getContext(URI preemptiveCPBaseUrl) {
+		if (context == null) {
+			context = HttpClientContext.create();
+			CredentialsProvider preemptiveCP = getPreemptiveCredentialsProvider();
+			if (preemptiveCP != null) {
+				context.setCredentialsProvider(preemptiveCP);
+				AuthCache authCache = new BasicAuthCache();
+				BasicScheme basicAuth = new BasicScheme();
+				HttpHost targetHost = new HttpHost(preemptiveCPBaseUrl.getHost(), preemptiveCPBaseUrl.getPort(),
+						preemptiveCPBaseUrl.getScheme());
+				authCache.put(targetHost, basicAuth);
+				context.setAuthCache(authCache);
+			}
+		}
 		return this.context;
 	}
 
