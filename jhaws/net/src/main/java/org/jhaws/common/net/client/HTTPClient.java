@@ -122,6 +122,8 @@ public class HTTPClient implements Closeable {
 
 	protected org.apache.http.client.CookieStore cookieStore;
 
+	protected HttpClientContext context;
+
 	protected HttpClientConnectionManager connectionManager;
 
 	protected transient long downloaded;
@@ -282,15 +284,17 @@ public class HTTPClient implements Closeable {
 
 		URI uri = req.getURI();
 		HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-		HttpClientContext context = HttpClientContext.create();
+		if (context == null) {
+			context = HttpClientContext.create();
 
-		CredentialsProvider preemptiveCP = getPreemptiveCredentialsProvider();
-		if (preemptiveCP != null) {
-			context.setCredentialsProvider(preemptiveCP);
-			AuthCache authCache = new BasicAuthCache();
-			BasicScheme basicAuth = new BasicScheme();
-			authCache.put(targetHost, basicAuth);
-			context.setAuthCache(authCache);
+			CredentialsProvider preemptiveCP = getPreemptiveCredentialsProvider();
+			if (preemptiveCP != null) {
+				context.setCredentialsProvider(preemptiveCP);
+				AuthCache authCache = new BasicAuthCache();
+				BasicScheme basicAuth = new BasicScheme();
+				authCache.put(targetHost, basicAuth);
+				context.setAuthCache(authCache);
+			}
 		}
 
 		Response response = null;
@@ -690,5 +694,17 @@ public class HTTPClient implements Closeable {
 
 	public void setPreemptiveCredentialsProvider(CredentialsProvider credentialsProvider) {
 		this.preemptiveCredentialsProvider = credentialsProvider;
+	}
+
+	public HttpClientContext getContext() {
+		return this.context;
+	}
+
+	public void setContext(HttpClientContext context) {
+		this.context = context;
+	}
+
+	public void setHttpClient(CloseableHttpClient httpClient) {
+		this.httpClient = httpClient;
 	}
 }

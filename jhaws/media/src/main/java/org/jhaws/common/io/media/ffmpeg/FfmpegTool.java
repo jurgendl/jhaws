@@ -27,6 +27,8 @@ import org.jhaws.common.io.media.ffmpeg.xml.StreamType;
 import org.jhaws.common.io.media.images.ImageTools;
 import org.jhaws.common.lang.BooleanValue;
 import org.jhaws.common.lang.DateTime8;
+import org.jhaws.common.lang.KeyValue;
+import org.jhaws.common.lang.Value;
 import org.jhaws.common.lang.functions.EFunction;
 import org.jhaws.common.pool.Pooled;
 import org.slf4j.Logger;
@@ -38,13 +40,13 @@ import org.slf4j.LoggerFactory;
  * @see https://trac.ffmpeg.org/
  */
 public class FfmpegTool implements MediaCte {
-	private static final String FIX_DIV2 = "scale=trunc(iw/2)*2:trunc(ih/2)*2";
+	public static final String FIX_DIV2 = "scale=trunc(iw/2)*2:trunc(ih/2)*2";
 
-	private static final String FORMAT_YUV420P = "format=yuv420p";
+	public static final String FORMAT_YUV420P = "format=yuv420p";
 
-	private static final String VIDEO = "video";
+	public static final String VIDEO = "video";
 
-	private static final String AUDIO = "audio";
+	public static final String AUDIO = "audio";
 
 	protected static class FfmpegDebug implements Consumer<String> {
 		@Override
@@ -63,6 +65,18 @@ public class FfmpegTool implements MediaCte {
 	protected FilePath ffprobe = null;
 
 	protected List<String> hwAccel = null;
+
+	protected List<KeyValue<ProcessInfo, Process>> actions = new ArrayList<>();
+
+	public static class ProcessInfo {
+		public ProcessInfo(String action, FilePath input) {
+			this.input = input;
+			this.action = action;
+		}
+
+		public FilePath input;
+		public String action;
+	}
 
 	public FfmpegTool() {
 		super();
@@ -92,7 +106,7 @@ public class FfmpegTool implements MediaCte {
 		if (hwAccel == null) {
 			List<String> command = Arrays.asList(command(getFfmpeg()), "-hwaccels", "-hide_banner", "-y");
 			Lines lines = new Lines();
-			silentcall(lines, FilePath.getTempDirectory(), command);
+			silentcall(null, lines, FilePath.getTempDirectory(), command);
 			hwAccel = new ArrayList<>(lines.lines());
 			hwAccel.remove("Hardware acceleration methods:");
 			{
@@ -119,7 +133,7 @@ public class FfmpegTool implements MediaCte {
 				command.add(command(output));
 				logger.info("{}", join(command, false));
 				try {
-					silentcall(lines, FilePath.getTempDirectory(), command);
+					silentcall(null, lines, FilePath.getTempDirectory(), command);
 					if (!hwAccel.contains("nvenc")) {
 						hwAccel.add("nvenc");
 					}
@@ -158,7 +172,7 @@ public class FfmpegTool implements MediaCte {
 				logger.info("{}", join(command, false));
 				try {
 					lines = new Lines();
-					silentcall(lines, FilePath.getTempDirectory(), command);
+					silentcall(null, lines, FilePath.getTempDirectory(), command);
 					if (!hwAccel.contains("cuvid")) {
 						hwAccel.add("cuvid");
 					}
@@ -195,7 +209,7 @@ public class FfmpegTool implements MediaCte {
 			// command.add("-sexagesimal");
 			command.add("-i");
 			command.add(command(input));
-			silentcall(lines, input.getParentPath(), command);
+			silentcall(null, lines, input.getParentPath(), command);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
 			logger.info("{}", xml);
 			return unmarshall(xml);
@@ -212,6 +226,12 @@ public class FfmpegTool implements MediaCte {
 
 	public static enum SplashPow {
 		_1, _2, _3, _4;
+	}
+
+	protected KeyValue<ProcessInfo, Process> act(FilePath input, String action) {
+		KeyValue<ProcessInfo, Process> act = new KeyValue<ProcessInfo, Process>(new ProcessInfo(action, input), null);
+		actions.add(act);
+		return act;
 	}
 
 	/**
@@ -276,7 +296,7 @@ public class FfmpegTool implements MediaCte {
 						.appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
-				silentcall(new Lines(), video.getParentPath(), command);
+				silentcall(act(video, "splash"), new Lines(), video.getParentPath(), command);
 			}
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
@@ -401,7 +421,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("-t");
 			command.add(length);
 			command.add(command(output));
-			call(new Lines(), input.getParentPath(), command);
+			call(null, new Lines(), input.getParentPath(), command);
 			if (output.exists() && output.getFileSize() > 500) {
 				logger.info("done {}", output);
 			} else {
@@ -432,8 +452,8 @@ public class FfmpegTool implements MediaCte {
 		List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 		Lines lines = new Lines();
 		try {
-			call(lines, input != null ? input.getParentPath() : output.getParentPath(), command, true,
-					listener == null ? null : listener.apply(cfg));
+			call(act(input, "remux"), lines, input != null ? input.getParentPath() : output.getParentPath(), command,
+					true, listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
 			exception = ex;
 		}
@@ -449,7 +469,8 @@ public class FfmpegTool implements MediaCte {
 		if (needsFixing.is()) {
 			command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 			lines = new Lines();
-			call(lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			call(act(input, "remux-fix"), lines, input.getParentPath(), command, true,
+					listener == null ? null : listener.apply(cfg));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -457,7 +478,8 @@ public class FfmpegTool implements MediaCte {
 		if (cfg.defaults.twopass) {
 			command = command(2, cfg);
 			lines = new Lines();
-			call(lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			call(act(input, "remux-two-pass"), lines, input.getParentPath(), command, true,
+					listener == null ? null : listener.apply(cfg));
 			input.getParentPath().child("ffmpeg2pass-0.log").delete();
 			input.getParentPath().child("ffmpeg2pass-0.log.mbtree").delete();
 			output.getParentPath().child("ffmpeg2pass-0.log").delete();
@@ -466,7 +488,7 @@ public class FfmpegTool implements MediaCte {
 		return cfg;
 	}
 
-	private RemuxCfg config(RemuxDefaultsCfg defaults, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+	protected RemuxCfg config(RemuxDefaultsCfg defaults, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
 		RemuxCfg cfg = new RemuxCfg();
 		if (defaults != null)
 			cfg.defaults = defaults;
@@ -889,7 +911,7 @@ public class FfmpegTool implements MediaCte {
 		}
 		{
 			command.add("-threads");
-			command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 2)));
+			command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 4)));
 		}
 		if (!cfg.vcopy && cfg.fixes.fixNotHighProfile) {
 			command.add("-profile:v");
@@ -1056,7 +1078,7 @@ public class FfmpegTool implements MediaCte {
 			command.add("-movflags");
 			command.add("+faststart");
 			command.add(command(output));
-			call(lines, output.getParentPath(), command);
+			call(null, lines, output.getParentPath(), command);
 			return true;
 		} catch (RuntimeException ex) {
 			logger.error("", ex);
@@ -1128,15 +1150,16 @@ public class FfmpegTool implements MediaCte {
 		});
 	}
 
-	protected Lines call(Lines lines, FilePath dir, List<String> command) {
-		return call(lines, dir, command, true, null);
+	protected Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command) {
+		return call(processHolder, lines, dir, command, true, null);
 	}
 
-	protected Lines silentcall(Lines lines, FilePath dir, List<String> command) {
-		return call(lines, dir, command, false, null);
+	protected Lines silentcall(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command) {
+		return call(processHolder, lines, dir, command, false, null);
 	}
 
-	protected Lines call(Lines lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
+	protected Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log,
+			Consumer<String> listener) {
 		if (lines == null)
 			lines = new Lines();
 		Consumer<String> consumers = log ? lines.andThen(new FfmpegDebug()) : lines;
@@ -1147,7 +1170,7 @@ public class FfmpegTool implements MediaCte {
 			logger.info("start - {}", join(command, false));
 		}
 		long start = System.currentTimeMillis();
-		Processes.callProcess(true, command, dir, consumers);
+		Processes.callProcess(processHolder, true, command, dir, consumers);
 		if (log) {
 			logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command, false));
 		}

@@ -380,7 +380,7 @@ public class ExifTool implements MediaCte {
 		List<String> command = Arrays.asList(command(exif), "-Comment=\"" + comment + "\"", path.getAbsolutePath());
 		String jc = join(command, false);
 		logger.trace("{}", jc);
-		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
 		path.getParentPath().child(path.getFileNameString() + "_original").delete();
 	}
 
@@ -391,7 +391,7 @@ public class ExifTool implements MediaCte {
 		List<String> command = Arrays.asList(command(exif), "-Comment", path.getAbsolutePath());
 		String jc = join(command, false);
 		logger.trace("{}", jc);
-		return callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
+		return callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream()
 				.filter(l -> l.toLowerCase().startsWith("comment")).map(l -> l.split(":")[1].trim()).findFirst()
 				.orElse(null);
 	}
@@ -403,7 +403,7 @@ public class ExifTool implements MediaCte {
 		List<String> command = Arrays.asList(command(exif), "-Software=\"" + program + "\"", path.getAbsolutePath());
 		String jc = join(command, false);
 		logger.trace("{}", jc);
-		callProcess(false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
 		path.getParentPath().child(path.getFileNameString() + "_original").delete();
 	}
 
@@ -414,7 +414,7 @@ public class ExifTool implements MediaCte {
 		List<String> command = Arrays.asList(command(exif), "-Software", path.getAbsolutePath());
 		String jc = join(command, false);
 		logger.trace("{}", jc);
-		return callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
+		return callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream()
 				.filter(l -> l.toLowerCase().contains("software")).map(l -> l.split(":")[1].trim()).findFirst()
 				.orElse(null);
 	}
@@ -442,8 +442,8 @@ public class ExifTool implements MediaCte {
 				String jc = join(command, false);
 				logger.trace("{}", jc);
 
-				List<String> lines = callProcess(false, command, path.getParentPath(), new Lines()).lines().stream()
-						.collect(collectList());
+				List<String> lines = callProcess(null, false, command, path.getParentPath(), new Lines()).lines()
+						.stream().collect(collectList());
 				// lines.forEach(System.out::println);
 				@SuppressWarnings("unchecked")
 				Map<String, Object> tmp = (Map<String, Object>) ((Map<String, Object>) JavaScript

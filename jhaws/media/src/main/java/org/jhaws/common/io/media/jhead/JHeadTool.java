@@ -28,6 +28,6 @@ public class JHeadTool {
 	public void fix(FilePath image) {
 		List<String> command = Arrays.asList(command(jhead), "-autorot", "-v", command(image));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		callProcess(false, command, jhead.getParentPath(), new Lines()).lines().forEach(System.out::println);
+		callProcess(null, false, command, jhead.getParentPath(), new Lines()).lines().forEach(System.out::println);
 	}
 }

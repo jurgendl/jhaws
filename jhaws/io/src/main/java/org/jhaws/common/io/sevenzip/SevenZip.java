@@ -142,7 +142,7 @@ public class SevenZip {
 		cmd.add(archive.getAbsolutePath());
 		cmd.addAll(Arrays.asList(sources));
 		try {
-			Processes.callProcess(false, cmd, archive.getParentPath(), new Log());
+			Processes.callProcess(null, false, cmd, archive.getParentPath(), new Log());
 		} catch (ExitValueException ex) {
 			throw translate(ex.getExitValue());
 		}
@@ -163,7 +163,7 @@ public class SevenZip {
 		cmd.add(target.getAbsolutePath());
 		cmd.addAll(Arrays.asList(filters));
 		try {
-			Processes.callProcess(false, cmd, archive.getParentPath(), new Log());
+			Processes.callProcess(null, false, cmd, archive.getParentPath(), new Log());
 		} catch (ExitValueException ex) {
 			throw translate(ex.getExitValue());
 		}
@@ -180,7 +180,8 @@ public class SevenZip {
 			cmd.add("-p" + password);
 		cmd.add(archive.getAbsolutePath());
 		try {
-			return Processes.callProcess(false, cmd, archive.getParentPath(), new ListFiles(), new Log()).getContents();
+			return Processes.callProcess(null, false, cmd, archive.getParentPath(), new ListFiles(), new Log())
+					.getContents();
 		} catch (ExitValueException ex) {
 			throw translate(ex.getExitValue());
 		}
@@ -195,7 +196,8 @@ public class SevenZip {
 		// 8 Not enough memory for operation
 		// 255 User stopped the process
 		if (exitValue == 1) {
-			return new RuntimeException("Warning (Non fatal error(s)). For example, one or more files were locked by some other application, so they were not compressed.");
+			return new RuntimeException(
+					"Warning (Non fatal error(s)). For example, one or more files were locked by some other application, so they were not compressed.");
 		}
 		if (exitValue == 2) {
 			return new RuntimeException("Fatal error");
