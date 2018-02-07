@@ -16,12 +16,14 @@ import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PreDestroy;
+import javax.net.ssl.SSLContext;
 
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.http.Header;
@@ -51,6 +53,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
@@ -68,6 +71,8 @@ import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.net.NetHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * http test server: http://httpbin.org/
@@ -81,6 +86,8 @@ import org.jhaws.common.net.NetHelper;
  * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced-.html
  */
 public class HTTPClient implements Closeable {
+	protected static Logger logger = LoggerFactory.getLogger(HTTPClient.class);
+
 	/**
 	 * Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0
 	 */
@@ -132,15 +139,18 @@ public class HTTPClient implements Closeable {
 
 	protected final boolean compressed;
 
+	protected final boolean ssl;
+
 	protected transient CredentialsProvider defaultCredentialsProvider;
 
 	protected transient CredentialsProvider preemptiveCredentialsProvider;
 
 	public HTTPClient() {
-		this(true);
+		this(false, true);
 	}
 
-	public HTTPClient(boolean compressed) {
+	public HTTPClient(boolean ssl, boolean compressed) {
+		this.ssl = ssl;
 		this.compressed = compressed;
 	}
 
@@ -223,8 +233,23 @@ public class HTTPClient implements Closeable {
 					.setDefaultRequestConfig(getRequestConfig())//
 					.setConnectionManager(getConnectionManager())//
 					.setDefaultCredentialsProvider(getDefaultCredentialsProvider());
-			if (!compressed)
+			if (!compressed) {
 				httpClientBuilder.disableContentCompression();
+			}
+			if (ssl) {
+				// Trust own CA and all self-signed certs
+				SSLContext sslcontext;
+				try {
+					sslcontext = SSLContext.getDefault();
+				} catch (NoSuchAlgorithmException ex) {
+					throw new RuntimeException(ex);
+				}
+				// Allow TLSv1 protocol only
+				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext,
+						new String[] { "TLSv1", "TLSv1.1", "TLSv1.2" }, null,
+						SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+				httpClientBuilder.setSSLSocketFactory(sslsf);
+			}
 			httpClient = httpClientBuilder.build();//
 		}
 		return httpClient;
@@ -272,8 +297,9 @@ public class HTTPClient implements Closeable {
 
 	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req,
 			OutputStream out) {
-		if (params != null)
+		if (params != null) {
 			prepareRequest(params, req);
+		}
 
 		chain = new ThreadLocal<List<URI>>() {
 			@Override
@@ -283,6 +309,8 @@ public class HTTPClient implements Closeable {
 		};
 
 		URI uri = req.getURI();
+		logger.trace("{}", uri);
+
 		HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
 		if (context == null) {
 			context = HttpClientContext.create();
