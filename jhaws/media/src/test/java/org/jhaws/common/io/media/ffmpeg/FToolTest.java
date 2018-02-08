@@ -169,4 +169,14 @@ public class FToolTest {
             ex.printStackTrace(System.out);
         }
     }
+
+    @Test
+    public void test5() {
+        try {
+            System.out.println(t.getHwAccel());
+        } catch (RuntimeException ex) {
+            ex.printStackTrace(System.out);
+            throw ex;
+        }
+    }
 }
