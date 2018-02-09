@@ -74,9 +74,17 @@ public class FfmpegTool implements MediaCte {
             this.action = action;
         }
 
+        public ProcessInfo(Object context, String action, FilePath input) {
+            this.context = context;
+            this.input = input;
+            this.action = action;
+        }
+
         public FilePath input;
 
         public String action;
+
+        public Object context;
     }
 
     public FfmpegTool() {
@@ -229,8 +237,8 @@ public class FfmpegTool implements MediaCte {
         _1, _2, _3, _4;
     }
 
-    protected KeyValue<ProcessInfo, Process> act(FilePath input, String action) {
-        KeyValue<ProcessInfo, Process> act = new KeyValue<ProcessInfo, Process>(new ProcessInfo(action, input), null);
+    protected KeyValue<ProcessInfo, Process> act(Object context, FilePath input, String action) {
+        KeyValue<ProcessInfo, Process> act = new KeyValue<ProcessInfo, Process>(new ProcessInfo(context, action, input), null);
         actions.add(act);
         return act;
     }
@@ -239,7 +247,7 @@ public class FfmpegTool implements MediaCte {
      * @see https://www.peterbe.com/plog/fastest-way-to-take-screencaps-out-of-videos
      */
     public boolean splash(FilePath video, FilePath splashFile, Duration duration, long frames, SplashPow pow) {
-        KeyValue<ProcessInfo, Process> act = act(video, "splash");
+        KeyValue<ProcessInfo, Process> act = act(null, video, "splash");
         // That will seek 10 seconds into the movie, select every 1000th frame,
         // scale it to 320x240 pixels and create 2x3 tiles
         // ffmpeg -ss 00:00:10 -i movie.avi -frames 1 -vf
@@ -440,7 +448,7 @@ public class FfmpegTool implements MediaCte {
     }
 
     @Pooled
-    public RemuxCfg remux(RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output,
+    public RemuxCfg remux(Object context, RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output,
             Consumer<RemuxCfg> cfgEdit) {
         try {
             output.checkNotExists();
@@ -452,7 +460,7 @@ public class FfmpegTool implements MediaCte {
         List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
         Lines lines = new Lines();
         try {
-            call(act(input, "remux"), lines, input != null ? input.getParentPath() : output.getParentPath(), command, true,
+            call(act(context, input, "remux"), lines, input != null ? input.getParentPath() : output.getParentPath(), command, true,
                     listener == null ? null : listener.apply(cfg));
         } catch (RuntimeException ex) {
             exception = ex;
@@ -469,7 +477,7 @@ public class FfmpegTool implements MediaCte {
         if (needsFixing.is()) {
             command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
             lines = new Lines();
-            call(act(input, "remux-fix"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+            call(act(context, input, "remux-fix"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
         }
         if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
             throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -477,7 +485,7 @@ public class FfmpegTool implements MediaCte {
         if (cfg.defaults.twopass) {
             command = command(2, cfg);
             lines = new Lines();
-            call(act(input, "remux-two-pass"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+            call(act(context, input, "remux-two-pass"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
             input.getParentPath().child("ffmpeg2pass-0.log").delete();
             input.getParentPath().child("ffmpeg2pass-0.log.mbtree").delete();
             output.getParentPath().child("ffmpeg2pass-0.log").delete();
@@ -1030,7 +1038,7 @@ public class FfmpegTool implements MediaCte {
         }
         if (!"mp4".equals(video.getExtension())) {
             FilePath tmp = video.appendExtension("mp4");
-            remux(new RemuxDefaultsCfg(), null, video, tmp, null);
+            remux(null, new RemuxDefaultsCfg(), null, video, tmp, null);
             video = tmp;
         }
         StreamType a = audio(info(audio));
@@ -1122,7 +1130,7 @@ public class FfmpegTool implements MediaCte {
         // call(output.getParentPath(), command, true, listener);
         RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
         defaults.cfrHQ = 15;
-        remux(defaults, cfg -> listener, null, output, cfg -> {
+        remux(null, defaults, cfg -> listener, null, output, cfg -> {
             cfg.fixes.fixNotHighProfile = true;
             cfg.slideshowCfg = new SlideshowCfg();
             cfg.slideshowCfg.input = input;
@@ -1204,7 +1212,7 @@ public class FfmpegTool implements MediaCte {
         // https://video.stackexchange.com/questions/12905/repeat-loop-input-video-with-ffmpeg
         RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
         defaults.cfrHQ = 15;
-        remux(defaults, cfg -> listener, input, output, cfg -> {
+        remux(null, defaults, cfg -> listener, input, output, cfg -> {
             cfg.fixes.fixNotHighProfile = true;
             cfg.repeat = times;
         });
