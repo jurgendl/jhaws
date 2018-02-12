@@ -28,9 +28,9 @@
         <version.junit>4.12</version.junit>
         <version.commons.lang3>3.4</version.commons.lang3>
         <version.bouncycastle>1.56</version.bouncycastle>
-        <version.httpcomponents>4.5.2</version.httpcomponents>
-        <version.httpcomponents.nio>4.4.5</version.httpcomponents.nio>
-        <version.httpcomponents.cache>4.1.2</version.httpcomponents.cache>
+        <version.httpcomponents>4.5.5</version.httpcomponents>
+        <version.httpcomponents.nio>4.4.9</version.httpcomponents.nio>
+        <version.httpcomponents.cache>4.1.3</version.httpcomponents.cache>
         <version.resteasy>3.0.19.Final</version.resteasy>
         <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs>
         <version.xhtmlrenderer>9.0.8</version.xhtmlrenderer>
