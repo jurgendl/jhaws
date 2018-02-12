@@ -17,6 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.jhaws.common.io.FilePath;
 
+// https://stackoverflow.com/questions/1132567/encrypt-password-in-configuration-files/1133815#1133815
 public class SecureMeAlt implements Security {
     private SecretKeySpec key;
 
