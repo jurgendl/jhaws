@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Pool<M> {
     protected static final AtomicInteger id = new AtomicInteger();
 
-    protected final PoolAutoShutdown<M> autoShutdown = new PoolAutoShutdown<>();
+    protected final PoolAutoShutdownListener<M> autoShutdown = new PoolAutoShutdownListener<>();
 
     protected ThreadFactory threadFactory;
 
