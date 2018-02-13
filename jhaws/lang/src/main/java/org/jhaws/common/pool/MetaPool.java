@@ -1,30 +1,30 @@
 package org.jhaws.common.pool;
 
 public class MetaPool extends Pool<PoolMeta> {
-	public MetaPool(String name) {
-		super(name);
-	}
+    public MetaPool(String name) {
+        super(name);
+    }
 
-	@Override
-	public Task<PoolMeta> addJob(Runnable runnable) {
-		return super.addJob(runnable, new PoolMeta());
-	}
+    @Override
+    public Task<PoolMeta> addJob(Runnable runnable) {
+        return super.addJob(runnable, new PoolMeta());
+    }
 
-	@Override
-	public org.jhaws.common.pool.Task<PoolMeta> addJob(Runnable runnable, PoolMeta meta) {
-		meta.enqueued = System.currentTimeMillis();
-		return super.addJob(runnable, meta);
-	}
+    @Override
+    protected void whenQueued(Job<PoolMeta> job) {
+        job.getMeta().enqueued = System.currentTimeMillis();
+        super.whenQueued(job);
+    }
 
-	@Override
-	protected void beforeExecute(Job<PoolMeta> job) {
-		job.getMeta().started = System.currentTimeMillis();
-		super.beforeExecute(job);
-	}
+    @Override
+    protected void beforeExecute(Job<PoolMeta> job) {
+        job.getMeta().started = System.currentTimeMillis();
+        super.beforeExecute(job);
+    }
 
-	@Override
-	protected void afterExecute(Job<PoolMeta> job) {
-		super.afterExecute(job);
-		job.getMeta().completed = System.currentTimeMillis();
-	}
+    @Override
+    protected void afterExecute(Job<PoolMeta> job) {
+        super.afterExecute(job);
+        job.getMeta().completed = System.currentTimeMillis();
+    }
 }
