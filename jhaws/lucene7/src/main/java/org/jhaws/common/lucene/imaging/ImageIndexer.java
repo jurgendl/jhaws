@@ -21,7 +21,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.BaseDirectory;
-import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
@@ -71,9 +71,9 @@ public class ImageIndexer {
 					f.isEmpty() ? null : f//
 			);
 		} catch (NumberFormatException ex) {
-			ex.printStackTrace();
+			ex.printStackTrace(System.out);
 		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
+			ex.printStackTrace(System.out);
 		}
 	}
 
@@ -86,11 +86,13 @@ public class ImageIndexer {
 			List<Class<? extends GlobalFeature>> features) {
 		ImageSimilarities sim = new ImageSimilarities();
 		System.out.println(features);
-		if (features == null)
+		if (features == null) {
 			features = Arrays.asList(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
+		}
 		System.out.println(features);
-		if (max == null)
+		if (max == null) {
 			max = 5.0;
+		}
 		EnhancedHashMap<ImageSimilarity, ImageSimilarity> results = new EnhancedHashMap<>();
 		Map<String, int[]> wh = new HashMap<>();
 		Map<String, Long> size = new HashMap<>();
@@ -106,8 +108,8 @@ public class ImageIndexer {
 			List<String> images = FileUtils.getAllImages(root.toFile(), false);
 			if (images == null)
 				images = Collections.<String>emptyList();
-			if (index != null)
-				index.delete();
+			// if (index != null)
+			// index.delete();
 			GlobalDocumentBuilder globalDocumentBuilder = new GlobalDocumentBuilder(false, HashingMode.None, false);
 			features.forEach(globalDocumentBuilder::addExtractor);
 			// globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);
@@ -129,81 +131,102 @@ public class ImageIndexer {
 			if (index == null) {
 				fsDir = new RAMDirectory();
 			} else {
-				fsDir = FSDirectory.open(index.getPath());
+				fsDir = NIOFSDirectory.open(index.getPath());
 			}
+			System.out.println("directory openened");
 			IndexWriter iw = new IndexWriter(fsDir, conf);
-			Document tmpDoc = new Document();
-			iw.addDocument(tmpDoc);
-			iw.deleteAll();
-			iw.commit();
-			int x = 0;
-			long start0 = System.currentTimeMillis();
-			for (Iterator<String> it = images.iterator(); it.hasNext();) {
-				String imageFilePath = it.next();
-				System.out.println("Indexing " + imageFilePath);
-				long start = System.currentTimeMillis();
-				BufferedImage img = null;
-				try {
-					img = ImageIO.read(new FileInputStream(imageFilePath));
-					wh.put(imageFilePath, new int[] { img.getWidth(), img.getHeight() });
-					size.put(imageFilePath, new FilePath(imageFilePath).getFileSize());
-					Document document = globalDocumentBuilder.createDocument(img, imageFilePath);
-					iw.addDocument(document);
-					iw.commit();
-				} catch (Exception e) {
-					System.err.println("Error reading image or indexing it. " + imageFilePath);
-					e.printStackTrace();
-				}
-				x++;
-				System.out.println(
-						"" + x + "/" + images.size() + " - " + new FilePath(imageFilePath).getHumanReadableFileSize()
-								+ " - " + (System.currentTimeMillis() - start));
-				if (img != null) {
-					BufferedImage _img = img;
-					Double _max = max;
-					System.out.println("Searching duplicates of " + imageFilePath);
-					IndexReader ir = DirectoryReader.open(iw);
-					features.forEach(feature -> {
+			System.out.println("writer openened");
+			try {
+				// Document tmpDoc = new Document();
+				// iw.addDocument(tmpDoc);
+				// iw.deleteAll();
+				// iw.commit();
+				int x = 0;
+				long start0 = System.currentTimeMillis();
+				for (Iterator<String> it = images.iterator(); it.hasNext();) {
+					String imageFilePath = it.next();
+					System.out.println("Indexing " + imageFilePath);
+					long start = System.currentTimeMillis();
+					BufferedImage img = null;
+					try {
+						img = ImageIO.read(new FileInputStream(imageFilePath));
+						wh.put(imageFilePath, new int[] { img.getWidth(), img.getHeight() });
+						size.put(imageFilePath, new FilePath(imageFilePath).getFileSize());
+						Document document = globalDocumentBuilder.createDocument(img, imageFilePath);
+						iw.addDocument(document);
+						iw.commit();
+					} catch (Exception e) {
+						System.out.println("Error reading image or indexing it. " + imageFilePath + ": " + e);
+					}
+					x++;
+					System.out.println("" + x + "/" + images.size() + " - "
+							+ new FilePath(imageFilePath).getHumanReadableFileSize() + " - "
+							+ (System.currentTimeMillis() - start));
+					if (img != null) {
+						BufferedImage _img = img;
+						Double _max = max;
+						System.out.println("Searching duplicates of " + imageFilePath);
+						IndexReader ir = DirectoryReader.open(iw);
+						System.out.println("reader openened");
 						try {
-							System.out.println("method " + names.get(feature));
-							ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
-							ImageSearchHits hits = searcher.search(_img, ir);
-							for (int i = 0; i < hits.length(); i++) {
-								String fileName = ir.document(hits.documentID(i))
-										.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-								double score = hits.score(i);
-								if (score > _max) {
-									continue;
+							features.forEach(feature -> {
+								try {
+									System.out.println("method " + names.get(feature));
+									ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
+									ImageSearchHits hits = searcher.search(_img, ir);
+									for (int i = 0; i < hits.length(); i++) {
+										String fileName = ir.document(hits.documentID(i))
+												.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+										double score = hits.score(i);
+										if (score > _max) {
+											continue;
+										}
+										if (imageFilePath.equals(fileName)) {
+											continue;
+										}
+										System.out.println(score + ": \t" + fileName);
+										String similarityType = names.get(feature);
+										String a = imageFilePath;
+										String b = fileName;
+										Map<String, Long> _size = size;
+										Map<String, int[]> _wh = wh;
+										Long aSize = _size.get(a);
+										Long bSize = _size.get(b);
+										int[] aWH = _wh.get(a);
+										int[] bWH = _wh.get(b);
+										ImageSimilarity e = new ImageSimilarity(imageFilePath, fileName, score, aWH,
+												bWH, aSize, bSize, similarityType);
+										if (results.containsKey(e)) {
+											ImageSimilarity exist = results.get(e);
+											results.remove(e);
+											exist.addSimilarity(names.get(feature), score);
+											System.out.println(exist);
+											results.put(exist, exist);
+										} else {
+											System.out.println(e);
+											results.put(e, e);
+										}
+									}
+									System.out.println();
+								} catch (IOException ex) {
+									throw new UncheckedIOException(ex);
 								}
-								if (imageFilePath.equals(fileName)) {
-									continue;
-								}
-								System.out.println(score + ": \t" + fileName);
-								ImageSimilarity e = new ImageSimilarity(imageFilePath, fileName, score,
-										wh.get(imageFilePath), wh.get(fileName), size.get(imageFilePath),
-										size.get(fileName), names.get(feature));
-								if (results.containsKey(e)) {
-									ImageSimilarity exist = results.get(e);
-									results.remove(e);
-									exist.addSimilarity(names.get(feature), score);
-									System.out.println(exist);
-									results.put(exist, exist);
-								} else {
-									System.out.println(e);
-									results.put(e, e);
-								}
-							}
-							System.out.println();
-						} catch (IOException ex) {
-							throw new UncheckedIOException(ex);
+							});
+						} finally {
+							ir.close();
+							System.out.println("reader closed " + !ir.hasDeletions());
 						}
-					});
-					ir.close();
+					}
 				}
+				System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
+				System.out.println();
+			} finally {
+				iw.commit();
+				iw.close();
+				System.out.println("writer closed " + !iw.hasUncommittedChanges() + " " + !iw.hasPendingMerges());
+				fsDir.close();
+				System.out.println("directory closed");
 			}
-			iw.close();
-			System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
-			System.out.println();
 			results.keySet().stream().sorted().forEach(sim.getImageSimilarities()::add);
 			if (report != null) {
 				jaxbMarshalling.marshall(sim, report.toPath());
@@ -211,7 +234,7 @@ public class ImageIndexer {
 				System.out.println(report.readAll());
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			ex.printStackTrace(System.out);
 		} finally {
 			System.out.println("============================= done ============================= ");
 		}
