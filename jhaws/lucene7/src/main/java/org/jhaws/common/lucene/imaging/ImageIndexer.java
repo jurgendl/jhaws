@@ -1,9 +1,8 @@
 package org.jhaws.common.lucene.imaging;
 
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,13 +15,19 @@ import javax.imageio.ImageIO;
 
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.MultiFields;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.store.BaseDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Bits;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.lang.EnhancedHashMap;
@@ -47,197 +52,284 @@ import net.semanticmetadata.lire.utils.FileUtils;
 // https://github.com/aoldemeier/image-similarity-with-lire/blob/master/src/main/java/de/mayflower/samplecode/SimilaritySearchWithLIRE/SimilaritySearchWithLIRE.java
 // https://www.researchgate.net/publication/221573372_Lire_lucene_image_retrieval_an_extensible_java_CBIR_library
 public class ImageIndexer {
-	private static JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(ImageSimilarities.class);
+    protected static final String NAME = "name";
 
-	@SuppressWarnings("unchecked")
-	public static void main(String[] args) {
-		try {
-			List<Class<? extends GlobalFeature>> f = new ArrayList<>();
-			if (args.length > 4) {
-				for (int i = 4; i < args.length; i++) {
-					System.out.println("**" + args[i] + "**");
-					if (!"null".equals(args[i])) {
-						f.add((Class<? extends GlobalFeature>) Class
-								.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[i]));
-					}
-				}
-			}
-			System.out.println(f);
-			new ImageIndexer().findDuplicatesExt(//
-					"null".equals(args[0]) ? null : new FilePath(args[0]), //
-					new FilePath(args[1]), //
-					"null".equals(args[2]) ? null : new FilePath(args[2]), //
-					"null".equals(args[3]) ? 5.0 : Double.parseDouble(args[3]), //
-					f.isEmpty() ? null : f//
-			);
-		} catch (NumberFormatException ex) {
-			ex.printStackTrace(System.out);
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace(System.out);
-		}
-	}
+    protected static final String LASTMOD = "lastmod";
 
-	public ImageSimilarities findDuplicates(FilePath index, FilePath root, FilePath report, Double max,
-			Class<? extends GlobalFeature> feature) {
-		return findDuplicatesExt(index, root, report, max, feature == null ? null : Arrays.asList(feature));
-	}
+    protected static final String SIZE = "size";
 
-	public ImageSimilarities findDuplicatesExt(FilePath index, FilePath root, FilePath report, Double max,
-			List<Class<? extends GlobalFeature>> features) {
-		ImageSimilarities sim = new ImageSimilarities();
-		System.out.println(features);
-		if (features == null) {
-			features = Arrays.asList(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
-		}
-		System.out.println(features);
-		if (max == null) {
-			max = 5.0;
-		}
-		EnhancedHashMap<ImageSimilarity, ImageSimilarity> results = new EnhancedHashMap<>();
-		Map<String, int[]> wh = new HashMap<>();
-		Map<String, Long> size = new HashMap<>();
-		Map<Class<? extends GlobalFeature>, String> names = new HashMap<>();
-		features.forEach(feature -> {
-			try {
-				names.put(feature, feature.newInstance().getFeatureName().toString());
-			} catch (Exception ex) {
-				names.put(feature, feature.getName());
-			}
-		});
-		try {
-			List<String> images = FileUtils.getAllImages(root.toFile(), false);
-			if (images == null)
-				images = Collections.<String>emptyList();
-			// if (index != null)
-			// index.delete();
-			GlobalDocumentBuilder globalDocumentBuilder = new GlobalDocumentBuilder(false, HashingMode.None, false);
-			features.forEach(globalDocumentBuilder::addExtractor);
-			// globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);
-			// globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
-			// globalDocumentBuilder
-			// .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.ColorLayout.class);
-			// globalDocumentBuilder
-			// .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.EdgeHistogram.class);
-			// globalDocumentBuilder
-			// .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.ScalableColor.class);
-			// globalDocumentBuilder
-			// .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.AutoColorCorrelogram.class);
-			// globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.Tamura.class);
-			// globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.Gabor.class);
-			// globalDocumentBuilder
-			// .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.joint.JointHistogram.class);
-			IndexWriterConfig conf = new IndexWriterConfig(new WhitespaceAnalyzer());
-			BaseDirectory fsDir;
-			if (index == null) {
-				fsDir = new RAMDirectory();
-			} else {
-				fsDir = NIOFSDirectory.open(index.getPath());
-			}
-			System.out.println("directory openened");
-			IndexWriter iw = new IndexWriter(fsDir, conf);
-			System.out.println("writer openened");
-			try {
-				// Document tmpDoc = new Document();
-				// iw.addDocument(tmpDoc);
-				// iw.deleteAll();
-				// iw.commit();
-				int x = 0;
-				long start0 = System.currentTimeMillis();
-				for (Iterator<String> it = images.iterator(); it.hasNext();) {
-					String imageFilePath = it.next();
-					System.out.println("Indexing " + imageFilePath);
-					long start = System.currentTimeMillis();
-					BufferedImage img = null;
-					try {
-						img = ImageIO.read(new FileInputStream(imageFilePath));
-						wh.put(imageFilePath, new int[] { img.getWidth(), img.getHeight() });
-						size.put(imageFilePath, new FilePath(imageFilePath).getFileSize());
-						Document document = globalDocumentBuilder.createDocument(img, imageFilePath);
-						iw.addDocument(document);
-						iw.commit();
-					} catch (Exception e) {
-						System.out.println("Error reading image or indexing it. " + imageFilePath + ": " + e);
-					}
-					x++;
-					System.out.println("" + x + "/" + images.size() + " - "
-							+ new FilePath(imageFilePath).getHumanReadableFileSize() + " - "
-							+ (System.currentTimeMillis() - start));
-					if (img != null) {
-						BufferedImage _img = img;
-						Double _max = max;
-						System.out.println("Searching duplicates of " + imageFilePath);
-						IndexReader ir = DirectoryReader.open(iw);
-						System.out.println("reader openened");
-						try {
-							features.forEach(feature -> {
-								try {
-									System.out.println("method " + names.get(feature));
-									ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
-									ImageSearchHits hits = searcher.search(_img, ir);
-									for (int i = 0; i < hits.length(); i++) {
-										String fileName = ir.document(hits.documentID(i))
-												.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
-										double score = hits.score(i);
-										if (score > _max) {
-											continue;
-										}
-										if (imageFilePath.equals(fileName)) {
-											continue;
-										}
-										System.out.println(score + ": \t" + fileName);
-										String similarityType = names.get(feature);
-										String a = imageFilePath;
-										String b = fileName;
-										Map<String, Long> _size = size;
-										Map<String, int[]> _wh = wh;
-										Long aSize = _size.get(a);
-										Long bSize = _size.get(b);
-										int[] aWH = _wh.get(a);
-										int[] bWH = _wh.get(b);
-										ImageSimilarity e = new ImageSimilarity(imageFilePath, fileName, score, aWH,
-												bWH, aSize, bSize, similarityType);
-										if (results.containsKey(e)) {
-											ImageSimilarity exist = results.get(e);
-											results.remove(e);
-											exist.addSimilarity(names.get(feature), score);
-											System.out.println(exist);
-											results.put(exist, exist);
-										} else {
-											System.out.println(e);
-											results.put(e, e);
-										}
-									}
-									System.out.println();
-								} catch (IOException ex) {
-									throw new UncheckedIOException(ex);
-								}
-							});
-						} finally {
-							ir.close();
-							System.out.println("reader closed " + !ir.hasDeletions());
-						}
-					}
-				}
-				System.out.println("--- " + (System.currentTimeMillis() - start0) + "----");
-				System.out.println();
-			} finally {
-				iw.commit();
-				iw.close();
-				System.out.println("writer closed " + !iw.hasUncommittedChanges() + " " + !iw.hasPendingMerges());
-				fsDir.close();
-				System.out.println("directory closed");
-			}
-			results.keySet().stream().sorted().forEach(sim.getImageSimilarities()::add);
-			if (report != null) {
-				jaxbMarshalling.marshall(sim, report.toPath());
-				System.out.println("-------------------------------------------------");
-				System.out.println(report.readAll());
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
-		} finally {
-			System.out.println("============================= done ============================= ");
-		}
-		return sim;
-	}
+    protected static final String H = "h";
+
+    protected static final String W = "w";
+
+    protected static JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(ImageSimilarities.class);
+
+    @SuppressWarnings("unchecked")
+    public static void main(String[] args) {
+        try {
+            List<Class<? extends GlobalFeature>> f = new ArrayList<>();
+            if (args.length > 4) {
+                for (int i = 4; i < args.length; i++) {
+                    System.out.println("**" + args[i] + "**");
+                    if (!"null".equals(args[i])) {
+                        f.add((Class<? extends GlobalFeature>) Class.forName("net.semanticmetadata.lire.imageanalysis.features.global." + args[i]));
+                    }
+                }
+            }
+            System.out.println(f);
+            new ImageIndexer().findDuplicatesExt(//
+                    "null".equals(args[0]) ? null : new FilePath(args[0]), //
+                    new FilePath(args[1]), //
+                    "null".equals(args[2]) ? null : new FilePath(args[2]), //
+                    "null".equals(args[3]) ? 5.0 : Double.parseDouble(args[3]), //
+                    f.isEmpty() ? null : f//
+            );
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace(System.out);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
+
+    public ImageSimilarities findDuplicates(FilePath index, FilePath root, FilePath report, Double max, Class<? extends GlobalFeature> feature) {
+        return findDuplicatesExt(index, root, report, max, feature == null ? null : Arrays.asList(feature));
+    }
+
+    public ImageSimilarities findDuplicatesExt(FilePath index, FilePath root, FilePath report, Double max,
+            List<Class<? extends GlobalFeature>> features) {
+        ImageSimilarities sim = new ImageSimilarities();
+        if (features == null) {
+            features = Arrays.asList(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
+        }
+        System.out.println(features);
+        if (max == null) {
+            max = 5.0;
+        }
+        EnhancedHashMap<ImageSimilarity, ImageSimilarity> results = new EnhancedHashMap<>();
+        Map<Class<? extends GlobalFeature>, String> names = new HashMap<>();
+        features.forEach(feature -> {
+            try {
+                names.put(feature, feature.newInstance().getFeatureName().toString());
+            } catch (Exception ex) {
+                names.put(feature, feature.getName());
+            }
+        });
+        try {
+            List<String> images = FileUtils.getAllImages(root.toFile(), false);
+            if (images == null) images = Collections.<String> emptyList();
+            GlobalDocumentBuilder globalDocumentBuilder = new GlobalDocumentBuilder(false, HashingMode.None, false);
+            features.forEach(globalDocumentBuilder::addExtractor);
+            // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.CEDD.class);
+            // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.FCTH.class);
+            // globalDocumentBuilder
+            // .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.ColorLayout.class);
+            // globalDocumentBuilder
+            // .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.EdgeHistogram.class);
+            // globalDocumentBuilder
+            // .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.ScalableColor.class);
+            // globalDocumentBuilder
+            // .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.AutoColorCorrelogram.class);
+            // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.Tamura.class);
+            // globalDocumentBuilder.addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.Gabor.class);
+            // globalDocumentBuilder
+            // .addExtractor(net.semanticmetadata.lire.imageanalysis.features.global.joint.JointHistogram.class);
+            WhitespaceAnalyzer analyzer = new WhitespaceAnalyzer();
+            IndexWriterConfig conf = new IndexWriterConfig(analyzer);
+            BaseDirectory fsDir;
+            if (index == null) {
+                fsDir = new RAMDirectory();
+            } else {
+                fsDir = NIOFSDirectory.open(index.getPath());
+                System.out.println(index.getAbsolutePath());
+            }
+            System.out.println("directory openened");
+            try {
+                Map<String, Long> data = new HashMap<>();
+                try {
+                    IndexReader ir = DirectoryReader.open(fsDir);
+                    System.out.println("reader openened");
+                    try {
+                        data = list(ir);
+                    } finally {
+                        ir.close();
+                        System.out.println("reader closed " + !ir.hasDeletions());
+                    }
+                } catch (org.apache.lucene.index.IndexNotFoundException ex) {
+                    //
+                }
+                {
+                    IndexWriter iw = new IndexWriter(fsDir, conf);
+                    System.out.println("writer openened");
+                    try {
+                        index(analyzer, data, images, globalDocumentBuilder, iw);
+                        System.out.println("#" + iw.numDocs());
+                    } finally {
+                        iw.commit();
+                        iw.close();
+                        System.out.println("writer closed " + !iw.hasUncommittedChanges() + " " + !iw.hasPendingMerges());
+                    }
+                }
+                {
+                    IndexReader ir = DirectoryReader.open(fsDir);
+                    System.out.println("reader openened");
+                    try {
+                        sim(ir, max, features, results, names, images, fsDir);
+                    } finally {
+                        ir.close();
+                        System.out.println("reader closed " + !ir.hasDeletions());
+                    }
+                }
+            } finally {
+                fsDir.close();
+                System.out.println("directory closed");
+            }
+            results.keySet().stream().sorted().forEach(sim.getImageSimilarities()::add);
+            if (report != null) {
+                jaxbMarshalling.marshall(sim, report.toPath());
+                System.out.println("-------------------------------------------------");
+                System.out.println(report.readAll());
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        } finally {
+            System.out.println("============================= done ============================= ");
+        }
+        return sim;
+    }
+
+    protected Map<String, Long> list(IndexReader ir) {
+        Map<String, Long> data = new HashMap<>();
+        Bits liveDocs = MultiFields.getLiveDocs(ir);
+        for (int i = 0; i < ir.maxDoc(); i++) {
+            if (liveDocs != null && !liveDocs.get(i)) continue;
+            try {
+                Document doc = ir.document(i);
+                String name = doc.getField(NAME).stringValue();
+                long lastmod = doc.getField(LASTMOD).numericValue().longValue();
+                data.put(name, lastmod);
+            } catch (Exception ex) {
+                ex.printStackTrace(System.out);
+            }
+        }
+        return data;
+    }
+
+    protected void index(WhitespaceAnalyzer analyzer, Map<String, Long> data, List<String> images, GlobalDocumentBuilder globalDocumentBuilder,
+            IndexWriter iw) {
+        int x = 0;
+        long start = System.currentTimeMillis();
+        for (Iterator<String> it = images.iterator(); it.hasNext();) {
+            long start2 = System.currentTimeMillis();
+            FilePath ifp = new FilePath(it.next());
+            indexPerImage(analyzer, data, globalDocumentBuilder, iw, ifp);
+            x++;
+            System.out.println("" + x + "/" + images.size() + " - " + (ifp == null ? null : ifp.getHumanReadableFileSize()) + " - "
+                    + (System.currentTimeMillis() - start2));
+        }
+        System.out.println("--- " + (System.currentTimeMillis() - start) + "----");
+        System.out.println();
+    }
+
+    protected void indexPerImage(WhitespaceAnalyzer analyzer, Map<String, Long> data, GlobalDocumentBuilder globalDocumentBuilder, IndexWriter iw,
+            FilePath ifp) {
+        String id = ifp.getAbsolutePath().replace("\\", "/");
+        try {
+            Long lastmod = data.get(id);
+            if (lastmod != null) {
+                if (ifp.getLastModifiedTime().toMillis() > lastmod) {
+                    System.out.println("Indexing: newer: " + id);
+                    iw.deleteDocuments(new QueryParser(NAME, analyzer).parse(id));
+                    indexPerImagePerformIndexing(globalDocumentBuilder, iw, ifp, id);
+                } else {
+                    System.out.println("Indexing: no update needed: " + id);
+                }
+            } else {
+                System.out.println("Indexing: new: " + id);
+                indexPerImagePerformIndexing(globalDocumentBuilder, iw, ifp, id);
+            }
+        } catch (Exception e) {
+            System.out.println("Error reading image or indexing it. " + id + ": " + e);
+        }
+    }
+
+    protected void indexPerImagePerformIndexing(GlobalDocumentBuilder globalDocumentBuilder, IndexWriter iw, FilePath ifp, String id)
+            throws IOException {
+        BufferedImage img = ImageIO.read(ifp.newInputStream());
+        int aW = img.getWidth();
+        int aH = img.getHeight();
+        long aSize = ifp.getFileSize();
+        Document document = globalDocumentBuilder.createDocument(img, id);
+        document.add(new StringField(NAME, id, Store.YES));
+        document.add(new StoredField(W, aW));
+        document.add(new StoredField(H, aH));
+        document.add(new StoredField(SIZE, aSize));
+        document.add(new StoredField(LASTMOD, ifp.getLastModifiedTime().toMillis()));
+        iw.addDocument(document);
+        iw.commit();
+    }
+
+    protected void sim(IndexReader ir, Double max, List<Class<? extends GlobalFeature>> features,
+            EnhancedHashMap<ImageSimilarity, ImageSimilarity> results, Map<Class<? extends GlobalFeature>, String> names, List<String> images,
+            BaseDirectory fsDir) throws IOException, FileNotFoundException {
+        for (Iterator<String> it = images.iterator(); it.hasNext();) {
+            simPerImage(features, results, names, max, ir, it);
+        }
+    }
+
+    protected void simPerImage(List<Class<? extends GlobalFeature>> features, EnhancedHashMap<ImageSimilarity, ImageSimilarity> results,
+            Map<Class<? extends GlobalFeature>, String> names, double max, IndexReader ir, Iterator<String> it)
+            throws IOException, FileNotFoundException {
+        FilePath ifp = new FilePath(it.next());
+        String id = ifp.getAbsolutePath().replace("\\", "/");
+        System.out.println("Searching duplicates of " + id);
+        BufferedImage img = ImageIO.read(ifp.newInputStream());
+        int aW = img.getWidth();
+        int aH = img.getHeight();
+        long aSize = ifp.getFileSize();
+        features.forEach(feature -> simPerImagePerFeature(results, names, max, ir, id, img, aW, aH, aSize, feature));
+    }
+
+    protected void simPerImagePerFeature(EnhancedHashMap<ImageSimilarity, ImageSimilarity> results, Map<Class<? extends GlobalFeature>, String> names,
+            double max, IndexReader ir, String id, BufferedImage img, int aW, int aH, long aSize, Class<? extends GlobalFeature> feature) {
+        try {
+            System.out.println("method " + names.get(feature));
+            ImageSearcher searcher = new GenericFastImageSearcher(100, feature, true, ir);
+            ImageSearchHits hits = searcher.search(img, ir);
+            for (int i = 0; i < hits.length(); i++) {
+                simPerImagePerFeaturePerHit(results, names, max, ir, id, aW, aH, aSize, feature, hits, i);
+            }
+            System.out.println();
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
+
+    protected void simPerImagePerFeaturePerHit(EnhancedHashMap<ImageSimilarity, ImageSimilarity> results,
+            Map<Class<? extends GlobalFeature>, String> names, double max, IndexReader ir, String id, int aW, int aH, long aSize,
+            Class<? extends GlobalFeature> feature, ImageSearchHits hits, int i) throws IOException {
+        Document document = ir.document(hits.documentID(i));
+        String fileName = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
+        double score = hits.score(i);
+        if (!(score > max)) {
+            if (!(id.equals(fileName))) {
+                System.out.println(score + ": \t" + fileName);
+                String similarityType = names.get(feature);
+                int bW = document.getField(W).numericValue().intValue();
+                int bH = document.getField(H).numericValue().intValue();
+                long bSize = document.getField(SIZE).numericValue().intValue();
+                ImageSimilarity e = new ImageSimilarity(id, fileName, score, new int[] { aW, aH }, new int[] { bW, bH }, aSize, bSize,
+                        similarityType);
+                if (results.containsKey(e)) {
+                    ImageSimilarity exist = results.get(e);
+                    results.remove(e);
+                    exist.addSimilarity(names.get(feature), score);
+                    System.out.println(exist);
+                    results.put(exist, exist);
+                } else {
+                    System.out.println(e);
+                    results.put(e, e);
+                }
+            }
+        }
+    }
 }
