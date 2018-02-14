@@ -41,6 +41,11 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-documents</artifactId>
             <version>${project.version}</version>
