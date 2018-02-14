@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.junit>4.12</version.junit>
-        <version.poi>3.16</version.poi>
+        <version.poi>3.17</version.poi>
         <version.commons.codec>1.10</version.commons.codec>
     </properties>
     <dependencyManagement>
@@ -47,14 +47,19 @@
             <version>2.6</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.16.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
-            <version>1.15</version>
+            <version>1.17</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
-            <version>1.15</version>
+            <version>1.17</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -125,7 +130,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.10.3</version>
+            <version>1.11.2</version>
         </dependency>
     </dependencies>
 </project>

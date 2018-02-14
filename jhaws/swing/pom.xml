@@ -33,7 +33,7 @@
         <version.commons.beanutils>1.9.2</version.commons.beanutils>
         <version.xhtmlrenderer>9.0.8</version.xhtmlrenderer>
         <version.commons.codec>1.10</version.commons.codec>
-        <version.poi>3.16</version.poi>
+        <version.poi>3.17</version.poi>
         <version.junit>4.12</version.junit>
         <version.ostermiller>1.07.00</version.ostermiller>
     </properties>
