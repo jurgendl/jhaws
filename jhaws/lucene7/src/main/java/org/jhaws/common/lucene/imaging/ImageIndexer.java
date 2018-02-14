@@ -3,13 +3,16 @@ package org.jhaws.common.lucene.imaging;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -23,6 +26,7 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.MultiFields;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.store.BaseDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
@@ -138,6 +142,7 @@ public class ImageIndexer {
             BaseDirectory fsDir;
             if (index == null) {
                 fsDir = new RAMDirectory();
+                System.out.println("RAM");
             } else {
                 fsDir = NIOFSDirectory.open(index.getPath());
                 System.out.println(index.getAbsolutePath());
@@ -161,8 +166,11 @@ public class ImageIndexer {
                     IndexWriter iw = new IndexWriter(fsDir, conf);
                     System.out.println("writer openened");
                     try {
-                        index(analyzer, data, images, globalDocumentBuilder, iw);
+                        List<String> ids = index(analyzer, data, images, globalDocumentBuilder, iw);
                         System.out.println("#" + iw.numDocs());
+                        Set<String> existing = new HashSet<>(data.keySet());
+                        existing.removeAll(ids);
+                        cleanup(analyzer, iw, existing);
                     } finally {
                         iw.commit();
                         iw.close();
@@ -197,6 +205,10 @@ public class ImageIndexer {
         return sim;
     }
 
+    protected void cleanup(WhitespaceAnalyzer analyzer, IndexWriter iw, Set<String> existing) {
+        existing.forEach(id -> deleteDocument(analyzer, iw, id));
+    }
+
     protected Map<String, Long> list(IndexReader ir) {
         Map<String, Long> data = new HashMap<>();
         Bits liveDocs = MultiFields.getLiveDocs(ir);
@@ -214,31 +226,34 @@ public class ImageIndexer {
         return data;
     }
 
-    protected void index(WhitespaceAnalyzer analyzer, Map<String, Long> data, List<String> images, GlobalDocumentBuilder globalDocumentBuilder,
-            IndexWriter iw) {
+    protected List<String> index(WhitespaceAnalyzer analyzer, Map<String, Long> data, List<String> images,
+            GlobalDocumentBuilder globalDocumentBuilder, IndexWriter iw) {
         int x = 0;
         long start = System.currentTimeMillis();
+        List<String> ids = new ArrayList<>();
         for (Iterator<String> it = images.iterator(); it.hasNext();) {
             long start2 = System.currentTimeMillis();
             FilePath ifp = new FilePath(it.next());
-            indexPerImage(analyzer, data, globalDocumentBuilder, iw, ifp);
+            String id = ifp.getAbsolutePath().replace("\\", "/");
+            ids.add(id);
+            indexPerImage(analyzer, data, globalDocumentBuilder, iw, ifp, id);
             x++;
             System.out.println("" + x + "/" + images.size() + " - " + (ifp == null ? null : ifp.getHumanReadableFileSize()) + " - "
                     + (System.currentTimeMillis() - start2));
         }
         System.out.println("--- " + (System.currentTimeMillis() - start) + "----");
         System.out.println();
+        return ids;
     }
 
     protected void indexPerImage(WhitespaceAnalyzer analyzer, Map<String, Long> data, GlobalDocumentBuilder globalDocumentBuilder, IndexWriter iw,
-            FilePath ifp) {
-        String id = ifp.getAbsolutePath().replace("\\", "/");
+            FilePath ifp, String id) {
         try {
             Long lastmod = data.get(id);
             if (lastmod != null) {
                 if (ifp.getLastModifiedTime().toMillis() > lastmod) {
                     System.out.println("Indexing: newer: " + id);
-                    iw.deleteDocuments(new QueryParser(NAME, analyzer).parse(id));
+                    deleteDocument(analyzer, iw, id);
                     indexPerImagePerformIndexing(globalDocumentBuilder, iw, ifp, id);
                 } else {
                     System.out.println("Indexing: no update needed: " + id);
@@ -252,20 +267,32 @@ public class ImageIndexer {
         }
     }
 
+    protected void deleteDocument(WhitespaceAnalyzer analyzer, IndexWriter iw, String id) {
+        System.out.println("deleting " + id);
+        try {
+            iw.deleteDocuments(new QueryParser(NAME, analyzer).parse(id));
+            iw.commit();
+        } catch (IOException | ParseException ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
+
     protected void indexPerImagePerformIndexing(GlobalDocumentBuilder globalDocumentBuilder, IndexWriter iw, FilePath ifp, String id)
             throws IOException {
-        BufferedImage img = ImageIO.read(ifp.newInputStream());
-        int aW = img.getWidth();
-        int aH = img.getHeight();
-        long aSize = ifp.getFileSize();
-        Document document = globalDocumentBuilder.createDocument(img, id);
-        document.add(new StringField(NAME, id, Store.YES));
-        document.add(new StoredField(W, aW));
-        document.add(new StoredField(H, aH));
-        document.add(new StoredField(SIZE, aSize));
-        document.add(new StoredField(LASTMOD, ifp.getLastModifiedTime().toMillis()));
-        iw.addDocument(document);
-        iw.commit();
+        try (InputStream in = ifp.newInputStream()) {
+            BufferedImage img = ImageIO.read(in);
+            int aW = img.getWidth();
+            int aH = img.getHeight();
+            long aSize = ifp.getFileSize();
+            Document document = globalDocumentBuilder.createDocument(img, id);
+            document.add(new StringField(NAME, id, Store.YES));
+            document.add(new StoredField(W, aW));
+            document.add(new StoredField(H, aH));
+            document.add(new StoredField(SIZE, aSize));
+            document.add(new StoredField(LASTMOD, ifp.getLastModifiedTime().toMillis()));
+            iw.addDocument(document);
+            iw.commit();
+        }
     }
 
     protected void sim(IndexReader ir, Double max, List<Class<? extends GlobalFeature>> features,
@@ -282,11 +309,13 @@ public class ImageIndexer {
         FilePath ifp = new FilePath(it.next());
         String id = ifp.getAbsolutePath().replace("\\", "/");
         System.out.println("Searching duplicates of " + id);
-        BufferedImage img = ImageIO.read(ifp.newInputStream());
-        int aW = img.getWidth();
-        int aH = img.getHeight();
-        long aSize = ifp.getFileSize();
-        features.forEach(feature -> simPerImagePerFeature(results, names, max, ir, id, img, aW, aH, aSize, feature));
+        try (InputStream in = ifp.newInputStream()) {
+            BufferedImage img = ImageIO.read(in);
+            int aW = img.getWidth();
+            int aH = img.getHeight();
+            long aSize = ifp.getFileSize();
+            features.forEach(feature -> simPerImagePerFeature(results, names, max, ir, id, img, aW, aH, aSize, feature));
+        }
     }
 
     protected void simPerImagePerFeature(EnhancedHashMap<ImageSimilarity, ImageSimilarity> results, Map<Class<? extends GlobalFeature>, String> names,
