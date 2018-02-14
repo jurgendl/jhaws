@@ -32,3 +32,4 @@ org.eclipse.wst.common.project.facet.core.xml
 /jhaws/lucene5/src/test/resources/dubsindex
 /jhaws/lucene6/src/test/resources/dubsindex
 /jhaws/lucene7/src/test/resources/dubsindex
+/jhaws/lucene7/cmds.bat
