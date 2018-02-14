@@ -339,8 +339,8 @@ public class ImageIndexer {
         Document document = ir.document(hits.documentID(i));
         String fileName = document.getValues(DocumentBuilder.FIELD_NAME_IDENTIFIER)[0];
         double score = hits.score(i);
-        if (!(score > max)) {
-            if (!(id.equals(fileName))) {
+        if (score <= max) {
+            if (!id.equals(fileName)) {
                 System.out.println(score + ": \t" + fileName);
                 String similarityType = names.get(feature);
                 int bW = document.getField(W).numericValue().intValue();
@@ -350,10 +350,8 @@ public class ImageIndexer {
                         similarityType);
                 if (results.containsKey(e)) {
                     ImageSimilarity exist = results.get(e);
-                    results.remove(e);
                     exist.addSimilarity(names.get(feature), score);
                     System.out.println(exist);
-                    results.put(exist, exist);
                 } else {
                     System.out.println(e);
                     results.put(e, e);
