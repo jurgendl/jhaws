@@ -8,11 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for pixelFormatFlagsType complex type.
+ * <p>
+ * Java class for pixelFormatFlagsType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="pixelFormatFlagsType">
@@ -39,18 +40,25 @@ public class PixelFormatFlagsType {
 
     @XmlAttribute(name = "big_endian", required = true)
     protected int bigEndian;
+
     @XmlAttribute(name = "palette", required = true)
     protected int palette;
+
     @XmlAttribute(name = "bitstream", required = true)
     protected int bitstream;
+
     @XmlAttribute(name = "hwaccel", required = true)
     protected int hwaccel;
+
     @XmlAttribute(name = "planar", required = true)
     protected int planar;
+
     @XmlAttribute(name = "rgb", required = true)
     protected int rgb;
+
     @XmlAttribute(name = "pseudopal", required = true)
     protected int pseudopal;
+
     @XmlAttribute(name = "alpha", required = true)
     protected int alpha;
 
@@ -183,8 +191,7 @@ public class PixelFormatFlagsType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override

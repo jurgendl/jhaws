@@ -8,11 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for libraryVersionType complex type.
+ * <p>
+ * Java class for libraryVersionType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="libraryVersionType">
@@ -37,24 +38,27 @@ public class LibraryVersionType {
 
     @XmlAttribute(name = "name", required = true)
     protected String name;
+
     @XmlAttribute(name = "major", required = true)
     protected int major;
+
     @XmlAttribute(name = "minor", required = true)
     protected int minor;
+
     @XmlAttribute(name = "micro", required = true)
     protected int micro;
+
     @XmlAttribute(name = "version", required = true)
     protected int version;
+
     @XmlAttribute(name = "ident", required = true)
     protected String ident;
 
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
         return name;
@@ -63,10 +67,8 @@ public class LibraryVersionType {
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -139,10 +141,8 @@ public class LibraryVersionType {
     /**
      * Gets the value of the ident property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIdent() {
         return ident;
@@ -151,18 +151,15 @@ public class LibraryVersionType {
     /**
      * Sets the value of the ident property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setIdent(String value) {
         this.ident = value;
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override

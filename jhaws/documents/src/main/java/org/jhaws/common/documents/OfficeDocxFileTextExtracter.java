@@ -10,16 +10,16 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.jhaws.common.io.FilePath;
 
 public class OfficeDocxFileTextExtracter implements FileTextExtracter {
-	@Override
-	public List<String> accepts() {
-		return Arrays.asList("docx");
-	}
+    @Override
+    public List<String> accepts() {
+        return Arrays.asList("docx");
+    }
 
-	@Override
-	public void extract(InputStream inputFile, FilePath target) throws IOException {
-		XWPFDocument docx = new XWPFDocument(inputFile);
-		try (XWPFWordExtractor we = new XWPFWordExtractor(docx)) {
-			target.write(we.getText());
-		}
-	}
+    @Override
+    public void extract(InputStream inputFile, FilePath target) throws IOException {
+        XWPFDocument docx = new XWPFDocument(inputFile);
+        try (XWPFWordExtractor we = new XWPFWordExtractor(docx)) {
+            target.write(we.getText());
+        }
+    }
 }

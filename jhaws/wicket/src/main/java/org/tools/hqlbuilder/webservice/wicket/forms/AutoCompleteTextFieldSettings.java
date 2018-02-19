@@ -3,49 +3,49 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 
 public class AutoCompleteTextFieldSettings extends AbstractFormElementSettings<AutoCompleteTextFieldSettings> {
-	private static final long serialVersionUID = 208227230310006451L;
+    private static final long serialVersionUID = 208227230310006451L;
 
-	protected int maxResults = 10;
+    protected int maxResults = 10;
 
-	protected boolean contains = true;
+    protected boolean contains = true;
 
-	protected int minLenght = 3;
+    protected int minLenght = 3;
 
-	protected boolean normalize = true;
+    protected boolean normalize = true;
 
-	public int getMaxResults() {
-		return this.maxResults;
-	}
+    public int getMaxResults() {
+        return this.maxResults;
+    }
 
-	public boolean isContains() {
-		return this.contains;
-	}
+    public boolean isContains() {
+        return this.contains;
+    }
 
-	public int getMinLenght() {
-		return this.minLenght;
-	}
+    public int getMinLenght() {
+        return this.minLenght;
+    }
 
-	public AutoCompleteTextFieldSettings setMaxResults(int maxResults) {
-		this.maxResults = maxResults;
-		return this;
-	}
+    public AutoCompleteTextFieldSettings setMaxResults(int maxResults) {
+        this.maxResults = maxResults;
+        return this;
+    }
 
-	public AutoCompleteTextFieldSettings setContains(boolean contains) {
-		this.contains = contains;
-		return this;
-	}
+    public AutoCompleteTextFieldSettings setContains(boolean contains) {
+        this.contains = contains;
+        return this;
+    }
 
-	public AutoCompleteTextFieldSettings setMinLenght(int minLenght) {
-		this.minLenght = minLenght;
-		return this;
-	}
+    public AutoCompleteTextFieldSettings setMinLenght(int minLenght) {
+        this.minLenght = minLenght;
+        return this;
+    }
 
-	public boolean isNormalize() {
-		return this.normalize;
-	}
+    public boolean isNormalize() {
+        return this.normalize;
+    }
 
-	public AutoCompleteTextFieldSettings setNormalize(boolean normalize) {
-		this.normalize = normalize;
-		return this;
-	}
+    public AutoCompleteTextFieldSettings setNormalize(boolean normalize) {
+        this.normalize = normalize;
+        return this;
+    }
 }

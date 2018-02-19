@@ -8,11 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for pixelFormatComponentType complex type.
+ * <p>
+ * Java class for pixelFormatComponentType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="pixelFormatComponentType">
@@ -33,6 +34,7 @@ public class PixelFormatComponentType {
 
     @XmlAttribute(name = "index", required = true)
     protected int index;
+
     @XmlAttribute(name = "bit_depth", required = true)
     protected int bitDepth;
 
@@ -69,8 +71,7 @@ public class PixelFormatComponentType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override

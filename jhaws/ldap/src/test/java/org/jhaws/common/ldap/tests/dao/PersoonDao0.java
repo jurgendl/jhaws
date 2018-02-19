@@ -8,12 +8,12 @@ import org.jhaws.common.ldap.tests.pojo.Person;
  */
 public class PersoonDao0 extends AbstractLdapDao<Person> {
 
-	private static final long serialVersionUID = 5642907709091675836L;
+    private static final long serialVersionUID = 5642907709091675836L;
 
-	/**
-	 * Creates a new PersoonDao0 object.
-	 */
-	public PersoonDao0() {
-		super();
-	}
+    /**
+     * Creates a new PersoonDao0 object.
+     */
+    public PersoonDao0() {
+        super();
+    }
 }

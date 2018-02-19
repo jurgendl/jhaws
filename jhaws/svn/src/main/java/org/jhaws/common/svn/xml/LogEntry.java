@@ -8,39 +8,39 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 public class LogEntry extends Commit implements Iterable<Path> {
-	private String msg;
+    private String msg;
 
-	@XmlElement(name = "path")
-	@XmlElementWrapper(name = "paths")
-	private List<Path> path;
+    @XmlElement(name = "path")
+    @XmlElementWrapper(name = "paths")
+    private List<Path> path;
 
-	public String getMsg() {
-		return msg;
-	}
+    public String getMsg() {
+        return msg;
+    }
 
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<Path> getPath() {
-		if (path == null) {
-			return Collections.emptyList();
-		}
-		return path;
-	}
+    @SuppressWarnings("unchecked")
+    public List<Path> getPath() {
+        if (path == null) {
+            return Collections.emptyList();
+        }
+        return path;
+    }
 
-	public void setPath(List<Path> path) {
-		this.path = path;
-	}
+    public void setPath(List<Path> path) {
+        this.path = path;
+    }
 
-	@Override
-	public String toString() {
-		return "LogEntry [" + (msg != null ? "msg=" + msg : "") + "]";
-	}
+    @Override
+    public String toString() {
+        return "LogEntry [" + (msg != null ? "msg=" + msg : "") + "]";
+    }
 
-	@Override
-	public Iterator<Path> iterator() {
-		return getPath().iterator();
-	}
+    @Override
+    public Iterator<Path> iterator() {
+        return getPath().iterator();
+    }
 }

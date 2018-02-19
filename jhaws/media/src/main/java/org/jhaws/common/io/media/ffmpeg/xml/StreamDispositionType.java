@@ -8,11 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for streamDispositionType complex type.
+ * <p>
+ * Java class for streamDispositionType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="streamDispositionType">
@@ -43,26 +44,37 @@ public class StreamDispositionType {
 
     @XmlAttribute(name = "default", required = true)
     protected int _default;
+
     @XmlAttribute(name = "dub", required = true)
     protected int dub;
+
     @XmlAttribute(name = "original", required = true)
     protected int original;
+
     @XmlAttribute(name = "comment", required = true)
     protected int comment;
+
     @XmlAttribute(name = "lyrics", required = true)
     protected int lyrics;
+
     @XmlAttribute(name = "karaoke", required = true)
     protected int karaoke;
+
     @XmlAttribute(name = "forced", required = true)
     protected int forced;
+
     @XmlAttribute(name = "hearing_impaired", required = true)
     protected int hearingImpaired;
+
     @XmlAttribute(name = "visual_impaired", required = true)
     protected int visualImpaired;
+
     @XmlAttribute(name = "clean_effects", required = true)
     protected int cleanEffects;
+
     @XmlAttribute(name = "attached_pic", required = true)
     protected int attachedPic;
+
     @XmlAttribute(name = "timed_thumbnails", required = true)
     protected int timedThumbnails;
 
@@ -259,8 +271,7 @@ public class StreamDispositionType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override

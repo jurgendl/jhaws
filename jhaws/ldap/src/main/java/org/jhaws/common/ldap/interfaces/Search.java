@@ -8,24 +8,23 @@ import javax.naming.directory.SearchControls;
  * @author Jurgen
  */
 public enum Search {
-	SINGLE_LEVEL, DEEP;
-	/**
-	 * na
-	 * 
-	 * @return
-	 * 
-	 * @throws IllegalArgumentException
-	 *             na
-	 */
-	public int value() {
-		switch (this) {
-			case SINGLE_LEVEL:
-				return SearchControls.ONELEVEL_SCOPE;
+    SINGLE_LEVEL, DEEP;
+    /**
+     * na
+     * 
+     * @return
+     * 
+     * @throws IllegalArgumentException na
+     */
+    public int value() {
+        switch (this) {
+            case SINGLE_LEVEL:
+                return SearchControls.ONELEVEL_SCOPE;
 
-			case DEEP:
-				return SearchControls.SUBTREE_SCOPE;
-		}
+            case DEEP:
+                return SearchControls.SUBTREE_SCOPE;
+        }
 
-		throw new IllegalArgumentException();
-	}
+        throw new IllegalArgumentException();
+    }
 }

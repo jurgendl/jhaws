@@ -14,5 +14,5 @@ import org.jboss.resteasy.plugins.providers.jaxb.PrettyProcessor;
 @Retention(RetentionPolicy.RUNTIME)
 @Decorator(processor = PrettyProcessor.class, target = Marshaller.class)
 public @interface Pretty {
-	//
+    //
 }

@@ -12,29 +12,28 @@ import java.io.File;
  */
 @Deprecated
 public class AllFilesFilter extends AbstractFileFilter {
-	/**
-	 * Creates a new AllFilesFilter object.
-	 *
-	 * @param description
-	 *            description
-	 */
-	public AllFilesFilter(String description) {
-		super(description);
-	}
+    /**
+     * Creates a new AllFilesFilter object.
+     *
+     * @param description description
+     */
+    public AllFilesFilter(String description) {
+        super(description);
+    }
 
-	/**
-	 * Creates a new AllFilesFilter object.
-	 */
-	public AllFilesFilter() {
-		this("all files and directories"); //$NON-NLS-1$
-	}
+    /**
+     * Creates a new AllFilesFilter object.
+     */
+    public AllFilesFilter() {
+        this("all files and directories"); //$NON-NLS-1$
+    }
 
-	/**
-	 *
-	 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
-	 */
-	@Override
-	public final boolean acceptFile(File f) {
-		return true;
-	}
+    /**
+     *
+     * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
+     */
+    @Override
+    public final boolean acceptFile(File f) {
+        return true;
+    }
 }

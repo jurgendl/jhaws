@@ -8,5 +8,5 @@ import org.jhaws.common.ldap.spring.AbstractSpringLdapDao;
  */
 public class SpringUserDao extends AbstractSpringLdapDao<User> {
 
-	private static final long serialVersionUID = 5114567127509099227L;
+    private static final long serialVersionUID = 5114567127509099227L;
 }

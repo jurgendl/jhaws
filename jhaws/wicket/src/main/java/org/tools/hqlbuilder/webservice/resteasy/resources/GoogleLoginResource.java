@@ -16,14 +16,14 @@ import org.jhaws.common.web.resteasy.RestResource;
 @Pretty
 @GZIP
 public interface GoogleLoginResource extends RestResource {
-	@GET
-	@Path("/ping" + D + TEXT_EXTENSION)
-	@Produces(TEXT)
-	public String ping();
+    @GET
+    @Path("/ping" + D + TEXT_EXTENSION)
+    @Produces(TEXT)
+    public String ping();
 
-	@POST
-	@Path("/tokensignin")
-	@Consumes(FORM_URLENCODED)
-	@Produces(HTML)
-	public Response tokensignin(@FormParam("idtoken") String id_token);
+    @POST
+    @Path("/tokensignin")
+    @Consumes(FORM_URLENCODED)
+    @Produces(HTML)
+    public Response tokensignin(@FormParam("idtoken") String id_token);
 }

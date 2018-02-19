@@ -11,11 +11,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for pixelFormatsType complex type.
+ * <p>
+ * Java class for pixelFormatsType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="pixelFormatsType">
@@ -32,9 +33,7 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "pixelFormatsType", propOrder = {
-    "pixelFormat"
-})
+@XmlType(name = "pixelFormatsType", propOrder = { "pixelFormat" })
 public class PixelFormatsType {
 
     @XmlElement(name = "pixel_format")
@@ -44,21 +43,19 @@ public class PixelFormatsType {
      * Gets the value of the pixelFormat property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the pixelFormat property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the pixelFormat property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPixelFormat().add(newItem);
+     * getPixelFormat().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PixelFormatType }
+     * Objects of the following type(s) are allowed in the list {@link PixelFormatType }
      * 
      * 
      */
@@ -70,8 +67,7 @@ public class PixelFormatsType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -80,8 +76,8 @@ public class PixelFormatsType {
     }
 
     public PixelFormatsType withPixelFormat(PixelFormatType... values) {
-        if (values!= null) {
-            for (PixelFormatType value: values) {
+        if (values != null) {
+            for (PixelFormatType value : values) {
                 getPixelFormat().add(value);
             }
         }
@@ -89,7 +85,7 @@ public class PixelFormatsType {
     }
 
     public PixelFormatsType withPixelFormat(Collection<PixelFormatType> values) {
-        if (values!= null) {
+        if (values != null) {
             getPixelFormat().addAll(values);
         }
         return this;

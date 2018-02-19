@@ -10,15 +10,15 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
  * @see http://julian.com/research/velocity/
  */
 public class Velocity {
-	public static JavaScriptResourceReference VELOCITY_UI_JS = new JavaScriptResourceReference(Velocity.class, "velocity.ui.js");
+    public static JavaScriptResourceReference VELOCITY_UI_JS = new JavaScriptResourceReference(Velocity.class, "velocity.ui.js");
 
-	public static JavaScriptResourceReference VELOCITY_JS = new JavaScriptResourceReference(Velocity.class, "velocity.js");
+    public static JavaScriptResourceReference VELOCITY_JS = new JavaScriptResourceReference(Velocity.class, "velocity.js");
 
-	static {
-		try {
-			VELOCITY_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
-		} catch (Exception ex) {
-			//
-		}
-	}
+    static {
+        try {
+            VELOCITY_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+        } catch (Exception ex) {
+            //
+        }
+    }
 }

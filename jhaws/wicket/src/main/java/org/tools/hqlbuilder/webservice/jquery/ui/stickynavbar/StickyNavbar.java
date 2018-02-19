@@ -9,15 +9,15 @@ import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
  * @see https://github.com/jbutko/stickyNavbar.js
  */
 public class StickyNavbar {
-	public static JavaScriptResourceReference STICKY_NAVBAR_JS = new JavaScriptResourceReference(StickyNavbar.class, "jquery.stickyNavbar.js");
+    public static JavaScriptResourceReference STICKY_NAVBAR_JS = new JavaScriptResourceReference(StickyNavbar.class, "jquery.stickyNavbar.js");
 
-	static {
-		try {
-			STICKY_NAVBAR_JS.addCssResourceReferenceDependency(WicketCSSRoot.ANIMATE);
-			STICKY_NAVBAR_JS.addJavaScriptResourceReferenceDependency(Easing.EASING_JS);
-			STICKY_NAVBAR_JS.addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+    static {
+        try {
+            STICKY_NAVBAR_JS.addCssResourceReferenceDependency(WicketCSSRoot.ANIMATE);
+            STICKY_NAVBAR_JS.addJavaScriptResourceReferenceDependency(Easing.EASING_JS);
+            STICKY_NAVBAR_JS.addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 }

@@ -14,22 +14,23 @@ import org.tools.hqlbuilder.service.filestore.FileService;
 import com.Ostermiller.util.CircularByteBuffer;
 
 public class FileDownload implements StreamingOutput {
-	private final FileService fileService;
-	private final FileMeta file;
+    private final FileService fileService;
 
-	public FileDownload(FileService fileService, FileMeta file) {
-		super();
-		this.fileService = fileService;
-		this.file = file;
-	}
+    private final FileMeta file;
 
-	@Override
-	public void write(OutputStream output) {
-		CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
-		try (OutputStream tee = new TeeOutputStream(cbb.getOutputStream(), output)) {
-			fileService.readFile(file, tee);
-		} catch (IOException | UncheckedIOException ex) {
-			throw new WebApplicationException(HttpURLConnection.HTTP_NOT_FOUND);
-		}
-	}
+    public FileDownload(FileService fileService, FileMeta file) {
+        super();
+        this.fileService = fileService;
+        this.file = file;
+    }
+
+    @Override
+    public void write(OutputStream output) {
+        CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
+        try (OutputStream tee = new TeeOutputStream(cbb.getOutputStream(), output)) {
+            fileService.readFile(file, tee);
+        } catch (IOException | UncheckedIOException ex) {
+            throw new WebApplicationException(HttpURLConnection.HTTP_NOT_FOUND);
+        }
+    }
 }

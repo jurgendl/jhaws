@@ -11,11 +11,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for libraryVersionsType complex type.
+ * <p>
+ * Java class for libraryVersionsType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="libraryVersionsType">
@@ -32,9 +33,7 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "libraryVersionsType", propOrder = {
-    "libraryVersion"
-})
+@XmlType(name = "libraryVersionsType", propOrder = { "libraryVersion" })
 public class LibraryVersionsType {
 
     @XmlElement(name = "library_version")
@@ -44,21 +43,19 @@ public class LibraryVersionsType {
      * Gets the value of the libraryVersion property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the libraryVersion property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the libraryVersion property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getLibraryVersion().add(newItem);
+     * getLibraryVersion().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link LibraryVersionType }
+     * Objects of the following type(s) are allowed in the list {@link LibraryVersionType }
      * 
      * 
      */
@@ -70,8 +67,7 @@ public class LibraryVersionsType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -80,8 +76,8 @@ public class LibraryVersionsType {
     }
 
     public LibraryVersionsType withLibraryVersion(LibraryVersionType... values) {
-        if (values!= null) {
-            for (LibraryVersionType value: values) {
+        if (values != null) {
+            for (LibraryVersionType value : values) {
                 getLibraryVersion().add(value);
             }
         }
@@ -89,7 +85,7 @@ public class LibraryVersionsType {
     }
 
     public LibraryVersionsType withLibraryVersion(Collection<LibraryVersionType> values) {
-        if (values!= null) {
+        if (values != null) {
             getLibraryVersion().addAll(values);
         }
         return this;

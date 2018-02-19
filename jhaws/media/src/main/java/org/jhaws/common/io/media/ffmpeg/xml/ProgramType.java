@@ -11,11 +11,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for programType complex type.
+ * <p>
+ * Java class for programType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="programType">
@@ -42,30 +43,37 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "programType", propOrder = {
-    "tag",
-    "streams"
-})
+@XmlType(name = "programType", propOrder = { "tag", "streams" })
 public class ProgramType {
 
     protected List<TagType> tag;
+
     protected StreamsType streams;
+
     @XmlAttribute(name = "program_id", required = true)
     protected int programId;
+
     @XmlAttribute(name = "program_num", required = true)
     protected int programNum;
+
     @XmlAttribute(name = "nb_streams", required = true)
     protected int nbStreams;
+
     @XmlAttribute(name = "start_time")
     protected Float startTime;
+
     @XmlAttribute(name = "start_pts")
     protected Long startPts;
+
     @XmlAttribute(name = "end_time")
     protected Float endTime;
+
     @XmlAttribute(name = "end_pts")
     protected Long endPts;
+
     @XmlAttribute(name = "pmt_pid", required = true)
     protected int pmtPid;
+
     @XmlAttribute(name = "pcr_pid", required = true)
     protected int pcrPid;
 
@@ -73,21 +81,19 @@ public class ProgramType {
      * Gets the value of the tag property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the tag property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tag property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getTag().add(newItem);
+     * getTag().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link TagType }
+     * Objects of the following type(s) are allowed in the list {@link TagType }
      * 
      * 
      */
@@ -101,10 +107,8 @@ public class ProgramType {
     /**
      * Gets the value of the streams property.
      * 
-     * @return
-     *     possible object is
-     *     {@link StreamsType }
-     *     
+     * @return possible object is {@link StreamsType }
+     * 
      */
     public StreamsType getStreams() {
         return streams;
@@ -113,10 +117,8 @@ public class ProgramType {
     /**
      * Sets the value of the streams property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link StreamsType }
-     *     
+     * @param value allowed object is {@link StreamsType }
+     * 
      */
     public void setStreams(StreamsType value) {
         this.streams = value;
@@ -173,10 +175,8 @@ public class ProgramType {
     /**
      * Gets the value of the startTime property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Float }
-     *     
+     * @return possible object is {@link Float }
+     * 
      */
     public Float getStartTime() {
         return startTime;
@@ -185,10 +185,8 @@ public class ProgramType {
     /**
      * Sets the value of the startTime property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Float }
-     *     
+     * @param value allowed object is {@link Float }
+     * 
      */
     public void setStartTime(Float value) {
         this.startTime = value;
@@ -197,10 +195,8 @@ public class ProgramType {
     /**
      * Gets the value of the startPts property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getStartPts() {
         return startPts;
@@ -209,10 +205,8 @@ public class ProgramType {
     /**
      * Sets the value of the startPts property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     * @param value allowed object is {@link Long }
+     * 
      */
     public void setStartPts(Long value) {
         this.startPts = value;
@@ -221,10 +215,8 @@ public class ProgramType {
     /**
      * Gets the value of the endTime property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Float }
-     *     
+     * @return possible object is {@link Float }
+     * 
      */
     public Float getEndTime() {
         return endTime;
@@ -233,10 +225,8 @@ public class ProgramType {
     /**
      * Sets the value of the endTime property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Float }
-     *     
+     * @param value allowed object is {@link Float }
+     * 
      */
     public void setEndTime(Float value) {
         this.endTime = value;
@@ -245,10 +235,8 @@ public class ProgramType {
     /**
      * Gets the value of the endPts property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getEndPts() {
         return endPts;
@@ -257,10 +245,8 @@ public class ProgramType {
     /**
      * Sets the value of the endPts property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     * @param value allowed object is {@link Long }
+     * 
      */
     public void setEndPts(Long value) {
         this.endPts = value;
@@ -299,8 +285,7 @@ public class ProgramType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -309,8 +294,8 @@ public class ProgramType {
     }
 
     public ProgramType withTag(TagType... values) {
-        if (values!= null) {
-            for (TagType value: values) {
+        if (values != null) {
+            for (TagType value : values) {
                 getTag().add(value);
             }
         }
@@ -318,7 +303,7 @@ public class ProgramType {
     }
 
     public ProgramType withTag(Collection<TagType> values) {
-        if (values!= null) {
+        if (values != null) {
             getTag().addAll(values);
         }
         return this;

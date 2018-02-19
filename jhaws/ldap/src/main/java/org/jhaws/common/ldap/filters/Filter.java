@@ -6,5 +6,5 @@ package org.jhaws.common.ldap.filters;
  * @author Jurgen
  */
 public interface Filter {
-	//
+    //
 }

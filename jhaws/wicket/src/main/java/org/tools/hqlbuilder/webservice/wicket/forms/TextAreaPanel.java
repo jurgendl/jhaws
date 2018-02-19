@@ -18,39 +18,39 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
  * @see http://www.primefaces.org/primeui/inputtextarea.html
  */
 public class TextAreaPanel<T extends Serializable> extends DefaultFormRowPanel<T, TextArea<T>, TextAreaSettings> {
-	private static final long serialVersionUID = 7189330022100675150L;
+    private static final long serialVersionUID = 7189330022100675150L;
 
-	public TextAreaPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings, TextAreaSettings textAreaSettings) {
-		super(model, propertyPath, formSettings, textAreaSettings);
-	}
+    public TextAreaPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings, TextAreaSettings textAreaSettings) {
+        super(model, propertyPath, formSettings, textAreaSettings);
+    }
 
-	@Override
-	protected TextArea<T> createComponent(IModel<T> model, Class<T> valueType) {
-		TextArea<T> textArea = new TextArea<T>(VALUE, model) {
-			private static final long serialVersionUID = 4613842350545363891L;
+    @Override
+    protected TextArea<T> createComponent(IModel<T> model, Class<T> valueType) {
+        TextArea<T> textArea = new TextArea<T>(VALUE, model) {
+            private static final long serialVersionUID = 4613842350545363891L;
 
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				tag(tag, "cols", getComponentSettings().getCols());
-				tag(tag, "rows", getComponentSettings().getRows());
-				/* http://brett.batie.com/website_development/no-resize-textarea-in-chrome-safari/ */
-				if (!getComponentSettings().isResizable()) {
-					tag(tag, "style", "resize: none; height: auto;");
-				}
-				onFormComponentTag(tag);
-			}
-		};
-		textArea.add(new CssClassNameAppender(PrimeUI.puiinputtextarea));
-		return textArea;
-	}
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag(tag, "cols", getComponentSettings().getCols());
+                tag(tag, "rows", getComponentSettings().getRows());
+                /* http://brett.batie.com/website_development/no-resize-textarea-in-chrome-safari/ */
+                if (!getComponentSettings().isResizable()) {
+                    tag(tag, "style", "resize: none; height: auto;");
+                }
+                onFormComponentTag(tag);
+            }
+        };
+        textArea.add(new CssClassNameAppender(PrimeUI.puiinputtextarea));
+        return textArea;
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
+    }
 }

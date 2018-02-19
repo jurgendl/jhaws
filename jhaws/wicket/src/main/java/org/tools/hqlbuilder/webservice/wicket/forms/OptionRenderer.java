@@ -7,15 +7,15 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 public class OptionRenderer<T extends Serializable> implements IOptionRenderer<T> {
-	private static final long serialVersionUID = -585868546428887624L;
+    private static final long serialVersionUID = -585868546428887624L;
 
-	@Override
-	public String getDisplayValue(T object) {
-		return object == null ? null : String.valueOf(object);
-	}
+    @Override
+    public String getDisplayValue(T object) {
+        return object == null ? null : String.valueOf(object);
+    }
 
-	@Override
-	public IModel<T> getModel(T value) {
-		return Model.of(value);
-	}
+    @Override
+    public IModel<T> getModel(T value) {
+        return Model.of(value);
+    }
 }

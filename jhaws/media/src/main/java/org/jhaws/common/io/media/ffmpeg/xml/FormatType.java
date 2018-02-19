@@ -11,11 +11,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for formatType complex type.
+ * <p>
+ * Java class for formatType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="formatType">
@@ -42,30 +43,38 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "formatType", propOrder = {
-    "tag"
-})
+@XmlType(name = "formatType", propOrder = { "tag" })
 public class FormatType {
 
     protected List<TagType> tag;
+
     @XmlAttribute(name = "filename", required = true)
     protected String filename;
+
     @XmlAttribute(name = "nb_streams", required = true)
     protected int nbStreams;
+
     @XmlAttribute(name = "nb_programs", required = true)
     protected int nbPrograms;
+
     @XmlAttribute(name = "format_name", required = true)
     protected String formatName;
+
     @XmlAttribute(name = "format_long_name")
     protected String formatLongName;
+
     @XmlAttribute(name = "start_time")
     protected Float startTime;
+
     @XmlAttribute(name = "duration")
     protected Float duration;
+
     @XmlAttribute(name = "size")
     protected Long size;
+
     @XmlAttribute(name = "bit_rate")
     protected Long bitRate;
+
     @XmlAttribute(name = "probe_score")
     protected Integer probeScore;
 
@@ -73,21 +82,19 @@ public class FormatType {
      * Gets the value of the tag property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the tag property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tag property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getTag().add(newItem);
+     * getTag().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link TagType }
+     * Objects of the following type(s) are allowed in the list {@link TagType }
      * 
      * 
      */
@@ -101,10 +108,8 @@ public class FormatType {
     /**
      * Gets the value of the filename property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFilename() {
         return filename;
@@ -113,10 +118,8 @@ public class FormatType {
     /**
      * Sets the value of the filename property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setFilename(String value) {
         this.filename = value;
@@ -157,10 +160,8 @@ public class FormatType {
     /**
      * Gets the value of the formatName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFormatName() {
         return formatName;
@@ -169,10 +170,8 @@ public class FormatType {
     /**
      * Sets the value of the formatName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setFormatName(String value) {
         this.formatName = value;
@@ -181,10 +180,8 @@ public class FormatType {
     /**
      * Gets the value of the formatLongName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFormatLongName() {
         return formatLongName;
@@ -193,10 +190,8 @@ public class FormatType {
     /**
      * Sets the value of the formatLongName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setFormatLongName(String value) {
         this.formatLongName = value;
@@ -205,10 +200,8 @@ public class FormatType {
     /**
      * Gets the value of the startTime property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Float }
-     *     
+     * @return possible object is {@link Float }
+     * 
      */
     public Float getStartTime() {
         return startTime;
@@ -217,10 +210,8 @@ public class FormatType {
     /**
      * Sets the value of the startTime property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Float }
-     *     
+     * @param value allowed object is {@link Float }
+     * 
      */
     public void setStartTime(Float value) {
         this.startTime = value;
@@ -229,10 +220,8 @@ public class FormatType {
     /**
      * Gets the value of the duration property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Float }
-     *     
+     * @return possible object is {@link Float }
+     * 
      */
     public Float getDuration() {
         return duration;
@@ -241,10 +230,8 @@ public class FormatType {
     /**
      * Sets the value of the duration property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Float }
-     *     
+     * @param value allowed object is {@link Float }
+     * 
      */
     public void setDuration(Float value) {
         this.duration = value;
@@ -253,10 +240,8 @@ public class FormatType {
     /**
      * Gets the value of the size property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getSize() {
         return size;
@@ -265,10 +250,8 @@ public class FormatType {
     /**
      * Sets the value of the size property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     * @param value allowed object is {@link Long }
+     * 
      */
     public void setSize(Long value) {
         this.size = value;
@@ -277,10 +260,8 @@ public class FormatType {
     /**
      * Gets the value of the bitRate property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Long }
-     *     
+     * @return possible object is {@link Long }
+     * 
      */
     public Long getBitRate() {
         return bitRate;
@@ -289,10 +270,8 @@ public class FormatType {
     /**
      * Sets the value of the bitRate property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Long }
-     *     
+     * @param value allowed object is {@link Long }
+     * 
      */
     public void setBitRate(Long value) {
         this.bitRate = value;
@@ -301,10 +280,8 @@ public class FormatType {
     /**
      * Gets the value of the probeScore property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
+     * @return possible object is {@link Integer }
+     * 
      */
     public Integer getProbeScore() {
         return probeScore;
@@ -313,18 +290,15 @@ public class FormatType {
     /**
      * Sets the value of the probeScore property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
+     * @param value allowed object is {@link Integer }
+     * 
      */
     public void setProbeScore(Integer value) {
         this.probeScore = value;
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -333,8 +307,8 @@ public class FormatType {
     }
 
     public FormatType withTag(TagType... values) {
-        if (values!= null) {
-            for (TagType value: values) {
+        if (values != null) {
+            for (TagType value : values) {
                 getTag().add(value);
             }
         }
@@ -342,7 +316,7 @@ public class FormatType {
     }
 
     public FormatType withTag(Collection<TagType> values) {
-        if (values!= null) {
+        if (values != null) {
             getTag().addAll(values);
         }
         return this;

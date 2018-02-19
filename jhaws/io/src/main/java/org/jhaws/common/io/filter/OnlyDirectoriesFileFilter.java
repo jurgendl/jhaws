@@ -12,29 +12,28 @@ import org.jhaws.common.io.IODirectory;
  */
 @Deprecated
 public class OnlyDirectoriesFileFilter extends DirectoryFilter {
-	/**
-	 * Creates a new OnlyDirectoriesFileFilter object.
-	 */
-	public OnlyDirectoriesFileFilter() {
-		this("all directories"); //$NON-NLS-1$
-	}
+    /**
+     * Creates a new OnlyDirectoriesFileFilter object.
+     */
+    public OnlyDirectoriesFileFilter() {
+        this("all directories"); //$NON-NLS-1$
+    }
 
-	/**
-	 * Creates a new OnlyDirectoriesFileFilter object.
-	 *
-	 * @param description
-	 *            description
-	 */
-	public OnlyDirectoriesFileFilter(String description) {
-		super(description);
-	}
+    /**
+     * Creates a new OnlyDirectoriesFileFilter object.
+     *
+     * @param description description
+     */
+    public OnlyDirectoriesFileFilter(String description) {
+        super(description);
+    }
 
-	/**
-	 *
-	 * @see org.jhaws.common.io.filter.DirectoryFilter#acceptDirectory(util.io.IODirectory)
-	 */
-	@Override
-	public final boolean acceptDirectory(IODirectory f) {
-		return true;
-	}
+    /**
+     *
+     * @see org.jhaws.common.io.filter.DirectoryFilter#acceptDirectory(util.io.IODirectory)
+     */
+    @Override
+    public final boolean acceptDirectory(IODirectory f) {
+        return true;
+    }
 }

@@ -15,58 +15,60 @@ import org.tools.hqlbuilder.webservice.wicket.WicketUtils;
  * @see http://www.easy-bits.com/products/http-streaming-for-flash/flowplayer
  */
 public class EasybitsFlowplayerHttpstreaming {
-	public static JavaScriptResourceReference JS = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class, "easybits-flash-streaming.js");
+    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class,
+            "easybits-flash-streaming.js");
 
-	public static JavaScriptResourceReference JS2 = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class, "easybits-helper.js");
+    public static JavaScriptResourceReference JS2 = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class, "easybits-helper.js");
 
-	public static JavaScriptResourceReference JS3 = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class, "easybits-multistreaming.js");
+    public static JavaScriptResourceReference JS3 = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class,
+            "easybits-multistreaming.js");
 
-	static {
-		JS//
-				.addJavaScriptResourceReferenceDependency(JS2)//
-				.addJavaScriptResourceReferenceDependency(JS3)//
-				.addJavaScriptResourceReferenceDependency(FlowPlayer.JS);//
-	}
+    static {
+        JS//
+                .addJavaScriptResourceReferenceDependency(JS2)//
+                .addJavaScriptResourceReferenceDependency(JS3)//
+                .addJavaScriptResourceReferenceDependency(FlowPlayer.JS);//
+    }
 
-	public static String swf = "easybits-httpstreaming-flowplayer-plugin.swf";
+    public static String swf = "easybits-httpstreaming-flowplayer-plugin.swf";
 
-	private static String url = null;
+    private static String url = null;
 
-	public static String url() {
-		if (url == null) {
-			url = WicketUtils.mountStream(swf, new StreamResourceReference(EasybitsFlowplayerHttpstreaming.class, swf) {
-				private static final long serialVersionUID = -627759054701557680L;
+    public static String url() {
+        if (url == null) {
+            url = WicketUtils.mountStream(swf, new StreamResourceReference(EasybitsFlowplayerHttpstreaming.class, swf) {
+                private static final long serialVersionUID = -627759054701557680L;
 
-				@Override
-				public IResourceStream getResourceStream() {
-					return new AbstractResourceStream() {
-						private static final long serialVersionUID = -2733832263859249860L;
+                @Override
+                public IResourceStream getResourceStream() {
+                    return new AbstractResourceStream() {
+                        private static final long serialVersionUID = -2733832263859249860L;
 
-						protected transient InputStream inputStream;
+                        protected transient InputStream inputStream;
 
-						@Override
-						public void close() throws IOException {
-							if (inputStream != null) {
-								inputStream.close();
-							}
-						}
+                        @Override
+                        public void close() throws IOException {
+                            if (inputStream != null) {
+                                inputStream.close();
+                            }
+                        }
 
-						@Override
-						public InputStream getInputStream() throws ResourceStreamNotFoundException {
-							if (inputStream == null) {
-								try {
-									inputStream = EasybitsFlowplayerHttpstreaming.class.getClassLoader()
-											.getResourceAsStream(EasybitsFlowplayerHttpstreaming.class.getPackage().getName().replace('.', '/') + "/" + swf);
-								} catch (Exception e) {
-									throw new ResourceStreamNotFoundException(e);
-								}
-							}
-							return inputStream;
-						}
-					};
-				}
-			});
-		}
-		return url;
-	}
+                        @Override
+                        public InputStream getInputStream() throws ResourceStreamNotFoundException {
+                            if (inputStream == null) {
+                                try {
+                                    inputStream = EasybitsFlowplayerHttpstreaming.class.getClassLoader().getResourceAsStream(
+                                            EasybitsFlowplayerHttpstreaming.class.getPackage().getName().replace('.', '/') + "/" + swf);
+                                } catch (Exception e) {
+                                    throw new ResourceStreamNotFoundException(e);
+                                }
+                            }
+                            return inputStream;
+                        }
+                    };
+                }
+            });
+        }
+        return url;
+    }
 }

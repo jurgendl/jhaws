@@ -14,32 +14,30 @@ import org.jhaws.common.io.IODirectory;
  */
 @Deprecated
 public abstract class DirectoryFilter extends AbstractFileFilter {
-	/**
-	 * Creates a new DirectoryFilter object.
-	 *
-	 * @param description
-	 *            description
-	 */
-	protected DirectoryFilter(String description) {
-		super(description);
-	}
+    /**
+     * Creates a new DirectoryFilter object.
+     *
+     * @param description description
+     */
+    protected DirectoryFilter(String description) {
+        super(description);
+    }
 
-	/**
-	 *
-	 * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
-	 */
-	@Override
-	public final boolean acceptFile(File f) {
-		return f.isDirectory() && acceptDirectory(new IODirectory(f));
-	}
+    /**
+     *
+     * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
+     */
+    @Override
+    public final boolean acceptFile(File f) {
+        return f.isDirectory() && acceptDirectory(new IODirectory(f));
+    }
 
-	/**
-	 * accepts this directory?
-	 *
-	 * @param f
-	 *            IODirectory
-	 *
-	 * @return boolean
-	 */
-	public abstract boolean acceptDirectory(IODirectory f);
+    /**
+     * accepts this directory?
+     *
+     * @param f IODirectory
+     *
+     * @return boolean
+     */
+    public abstract boolean acceptDirectory(IODirectory f);
 }

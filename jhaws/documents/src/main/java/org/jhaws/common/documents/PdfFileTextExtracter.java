@@ -38,7 +38,7 @@ public class PdfFileTextExtracter implements FileTextExtracter {
         } else {
             txt.getParentPath().createDirectory();
         }
-        Processes.callProcess(null,true,
+        Processes.callProcess(null, true,
                 Arrays.asList("\"" + xpdfexe.getAbsolutePath() + "\"", "-enc", "Latin1", "-eol", "dos",
                         // "-nopgbrk", // "\u000C" // FORM FEED (FF)
                         "\"" + pdf.getAbsolutePath() + "\"", "\"" + txt.getAbsolutePath() + "\""),

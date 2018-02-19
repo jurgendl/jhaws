@@ -4,18 +4,18 @@ import java.util.function.Supplier;
 
 @FunctionalInterface
 public interface ESupplier<T> extends SSupplier<T> {
-	public static <T> Supplier<T> enhance(ESupplier<T> predicate) {
-		return predicate::get;
-	}
+    public static <T> Supplier<T> enhance(ESupplier<T> predicate) {
+        return predicate::get;
+    }
 
-	@Override
-	default T get() {
-		try {
-			return getEnhanced();
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    @Override
+    default T get() {
+        try {
+            return getEnhanced();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	T getEnhanced() throws Exception;
+    T getEnhanced() throws Exception;
 }

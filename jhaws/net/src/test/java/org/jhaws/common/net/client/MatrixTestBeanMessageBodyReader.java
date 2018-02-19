@@ -22,24 +22,24 @@ import net.sf.cglib.core.Predicate;
 @Provider
 // @Consumes
 public class MatrixTestBeanMessageBodyReader implements MessageBodyReader<MatrixTestBeanI> {
-	@Override
-	public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-		return true;
-	}
+    @Override
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return true;
+    }
 
-	@Override
-	public MatrixTestBeanI readFrom(Class<MatrixTestBeanI> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders,
-			InputStream entityStream) throws IOException, WebApplicationException {
-		System.out.println("READING");
-		final BeanGenerator beanGenerator = new BeanGenerator();
-		beanGenerator.setNamingPolicy(new NamingPolicy() {
-			@Override
-			public String getClassName(final String prefix, final String source, final Object key, final Predicate names) {
-				return type.getName();
-			}
-		});
-		Map<String, List<String>> properties = httpHeaders.keySet().stream().collect(Collectors.toMap(Function.identity(), i -> httpHeaders.get(i)));
-		BeanGenerator.addProperties(beanGenerator, properties);
-		return type.cast(beanGenerator.createClass());
-	}
+    @Override
+    public MatrixTestBeanI readFrom(Class<MatrixTestBeanI> type, Type genericType, Annotation[] annotations, MediaType mediaType,
+            MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
+        System.out.println("READING");
+        final BeanGenerator beanGenerator = new BeanGenerator();
+        beanGenerator.setNamingPolicy(new NamingPolicy() {
+            @Override
+            public String getClassName(final String prefix, final String source, final Object key, final Predicate names) {
+                return type.getName();
+            }
+        });
+        Map<String, List<String>> properties = httpHeaders.keySet().stream().collect(Collectors.toMap(Function.identity(), i -> httpHeaders.get(i)));
+        BeanGenerator.addProperties(beanGenerator, properties);
+        return type.cast(beanGenerator.createClass());
+    }
 }

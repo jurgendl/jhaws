@@ -5,7 +5,7 @@ import java.util.function.LongSupplier;
 
 @FunctionalInterface
 public interface SLongSupplier extends LongSupplier, Serializable {
-	public static LongSupplier enhance(SLongSupplier supplier) {
-		return supplier::getAsLong;
-	}
+    public static LongSupplier enhance(SLongSupplier supplier) {
+        return supplier::getAsLong;
+    }
 }

@@ -8,12 +8,12 @@ import org.jhaws.common.ldap.tests.pojo.Root;
  */
 public class RootDao0 extends AbstractLdapDao<Root> {
 
-	private static final long serialVersionUID = 5143253549030495931L;
+    private static final long serialVersionUID = 5143253549030495931L;
 
-	/**
-	 * Creates a new RootDao0 object.
-	 */
-	public RootDao0() {
-		super();
-	}
+    /**
+     * Creates a new RootDao0 object.
+     */
+    public RootDao0() {
+        super();
+    }
 }

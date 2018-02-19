@@ -9,15 +9,15 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
  * @see http://www.marcandrew.net/off-canvas-infinity-push/
  */
 public class OffCanvasInfinityPush {
-	public static JavaScriptResourceReference JS = new JavaScriptResourceReference(OffCanvasInfinityPush.class, "jquery.ma.infinitypush.js");
+    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(OffCanvasInfinityPush.class, "jquery.ma.infinitypush.js");
 
-	static {
-		try {
-			JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-		} catch (Exception ex) {
-			//
-		}
-	}
+    static {
+        try {
+            JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+        } catch (Exception ex) {
+            //
+        }
+    }
 
-	public static CssResourceReference CSS = new CssResourceReference(OffCanvasInfinityPush.class, "jquery.ma.infinitypush.css");
+    public static CssResourceReference CSS = new CssResourceReference(OffCanvasInfinityPush.class, "jquery.ma.infinitypush.css");
 }

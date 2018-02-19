@@ -31,75 +31,76 @@ import org.tools.hqlbuilder.service.filestore.FileService;
 @Component
 @Controller
 public class FileStoreResourceImpl implements FileStoreResource {
-	private FileService fileService;
+    private FileService fileService;
 
-	/**
-	 * @see FileStoreResource.JQueryFileUploadRest#deleteUpload(java.lang.String)
-	 */
-	@Override
-	public DeleteResult deleteUpload(String name) {
-		try {
-			fileService.deleteFiles(name);
-			DeleteResult result = new DeleteResult();
-			result.files.add(Collections.singletonMap("name", true));
-			return result;
-		} catch (IOException | UncheckedIOException ex) {
-			throw new WebApplicationException(String.valueOf(ex), HttpURLConnection.HTTP_INTERNAL_ERROR);
-		}
-	}
+    /**
+     * @see FileStoreResource.JQueryFileUploadRest#deleteUpload(java.lang.String)
+     */
+    @Override
+    public DeleteResult deleteUpload(String name) {
+        try {
+            fileService.deleteFiles(name);
+            DeleteResult result = new DeleteResult();
+            result.files.add(Collections.singletonMap("name", true));
+            return result;
+        } catch (IOException | UncheckedIOException ex) {
+            throw new WebApplicationException(String.valueOf(ex), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
 
-	/**
-	 * @see FileStoreResource.JQueryFileUploadRest#download(java.lang.String)
-	 */
-	@Override
-	public StreamingOutput download(String name) {
-		try {
-			return new FileDownload(fileService, fileService.getFile(name));
-		} catch (IOException | UncheckedIOException ex) {
-			throw new WebApplicationException(String.valueOf(ex), HttpURLConnection.HTTP_INTERNAL_ERROR);
-		}
-	}
+    /**
+     * @see FileStoreResource.JQueryFileUploadRest#download(java.lang.String)
+     */
+    @Override
+    public StreamingOutput download(String name) {
+        try {
+            return new FileDownload(fileService, fileService.getFile(name));
+        } catch (IOException | UncheckedIOException ex) {
+            throw new WebApplicationException(String.valueOf(ex), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
 
-	public FileService getFileService() {
-		return fileService;
-	}
+    public FileService getFileService() {
+        return fileService;
+    }
 
-	/**
-	 * @see FileStoreResource.JQueryFileUploadRest#getUploads()
-	 */
-	@Override
-	public UploadResult getUploads() {
-		return new UploadResult(fileService.getFiles());
-	}
+    /**
+     * @see FileStoreResource.JQueryFileUploadRest#getUploads()
+     */
+    @Override
+    public UploadResult getUploads() {
+        return new UploadResult(fileService.getFiles());
+    }
 
-	public void setFileService(FileService fileService) {
-		this.fileService = fileService;
-	}
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
 
-	/**
-	 * @see FileStoreResource.JQueryFileUploadRest#upload(javax.servlet.http.HttpServletRequest, org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput)
-	 */
-	@Override
-	public UploadResult upload(HttpServletRequest request, MultipartFormDataInput input) {
-		try {
-			List<FileMeta> files = new ArrayList<>();
-			List<InputPart> inputParts = input.getFormDataMap().get("files[]");
-			String cp = java.nio.file.Paths.get(request.getRequestURI()).getParent().toString().replace('\\', '/');
-			for (InputPart inputPart : inputParts) {
-				MultivaluedMap<String, String> header = inputPart.getHeaders();
-				try (InputStream inputStream = inputPart.getBody(InputStream.class, null)) {
-					FileMeta file = new FileMeta();
-					file.name = FileStoreResource.getFileName(header);
-					file.deleteUrl = cp + FileStoreResource.PATH_DELETE + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
-					file.thumbnailUrl = cp + FileStoreResource.PATH_GET + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
-					file.url = cp + FileStoreResource.PATH_GET + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
-					file.size = fileService.add(file, inputStream);
-					files.add(file);
-				}
-			}
-			return new UploadResult(files);
-		} catch (IOException | UncheckedIOException ex) {
-			throw new WebApplicationException(String.valueOf(ex), HttpURLConnection.HTTP_INTERNAL_ERROR);
-		}
-	}
+    /**
+     * @see FileStoreResource.JQueryFileUploadRest#upload(javax.servlet.http.HttpServletRequest,
+     *      org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput)
+     */
+    @Override
+    public UploadResult upload(HttpServletRequest request, MultipartFormDataInput input) {
+        try {
+            List<FileMeta> files = new ArrayList<>();
+            List<InputPart> inputParts = input.getFormDataMap().get("files[]");
+            String cp = java.nio.file.Paths.get(request.getRequestURI()).getParent().toString().replace('\\', '/');
+            for (InputPart inputPart : inputParts) {
+                MultivaluedMap<String, String> header = inputPart.getHeaders();
+                try (InputStream inputStream = inputPart.getBody(InputStream.class, null)) {
+                    FileMeta file = new FileMeta();
+                    file.name = FileStoreResource.getFileName(header);
+                    file.deleteUrl = cp + FileStoreResource.PATH_DELETE + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
+                    file.thumbnailUrl = cp + FileStoreResource.PATH_GET + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
+                    file.url = cp + FileStoreResource.PATH_GET + "?" + FileStoreResource.PARAM_NAME + "=" + file.name;
+                    file.size = fileService.add(file, inputStream);
+                    files.add(file);
+                }
+            }
+            return new UploadResult(files);
+        } catch (IOException | UncheckedIOException ex) {
+            throw new WebApplicationException(String.valueOf(ex), HttpURLConnection.HTTP_INTERNAL_ERROR);
+        }
+    }
 }

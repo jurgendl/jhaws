@@ -7,38 +7,38 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class ChangeList implements Iterable<Entry> {
-	@XmlAttribute
-	private String name;
+    @XmlAttribute
+    private String name;
 
-	private List<Entry> entry;
+    private List<Entry> entry;
 
-	@SuppressWarnings("unchecked")
-	public List<Entry> getEntry() {
-		if (entry == null) {
-			return Collections.emptyList();
-		}
-		return entry;
-	}
+    @SuppressWarnings("unchecked")
+    public List<Entry> getEntry() {
+        if (entry == null) {
+            return Collections.emptyList();
+        }
+        return entry;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setEntry(List<Entry> entry) {
-		this.entry = entry;
-	}
+    public void setEntry(List<Entry> entry) {
+        this.entry = entry;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return "ChangeList [" + (name != null ? "name=" + name : "") + "]";
-	}
+    @Override
+    public String toString() {
+        return "ChangeList [" + (name != null ? "name=" + name : "") + "]";
+    }
 
-	@Override
-	public Iterator<Entry> iterator() {
-		return getEntry().iterator();
-	}
+    @Override
+    public Iterator<Entry> iterator() {
+        return getEntry().iterator();
+    }
 }

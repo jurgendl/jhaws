@@ -18,23 +18,23 @@ import org.xml.sax.SAXException;
  * @see https://www.tutorialspoint.com/tika/tika_extracting_odf.htm
  */
 public class OdfFileTextExtracter implements FileTextExtracter {
-	@Override
-	public List<String> accepts() {
-		return Arrays.asList("odt", "odp", "ods");
-	}
+    @Override
+    public List<String> accepts() {
+        return Arrays.asList("odt", "odp", "ods");
+    }
 
-	@Override
-	public void extract(InputStream pdf, FilePath txt) throws IOException {
-		try {
-			ContentHandler handler = new BodyContentHandler();
-			// handler = new SafeContentHandler(handler);
-			Metadata metadata = new Metadata();
-			ParseContext pcontext = new ParseContext();
-			OpenDocumentParser openofficeparser = new OpenDocumentParser();
-			openofficeparser.parse(pdf, handler, metadata, pcontext);
-			txt.write(handler.toString());
-		} catch (org.apache.tika.exception.TikaException | SAXException ex) {
-			throw new IOException(ex);
-		}
-	}
+    @Override
+    public void extract(InputStream pdf, FilePath txt) throws IOException {
+        try {
+            ContentHandler handler = new BodyContentHandler();
+            // handler = new SafeContentHandler(handler);
+            Metadata metadata = new Metadata();
+            ParseContext pcontext = new ParseContext();
+            OpenDocumentParser openofficeparser = new OpenDocumentParser();
+            openofficeparser.parse(pdf, handler, metadata, pcontext);
+            txt.write(handler.toString());
+        } catch (org.apache.tika.exception.TikaException | SAXException ex) {
+            throw new IOException(ex);
+        }
+    }
 }

@@ -11,52 +11,52 @@ import org.apache.http.nio.client.methods.AsyncByteConsumer;
 import org.apache.http.protocol.HttpContext;
 
 public class AsyncConsumer extends AsyncByteConsumer<OutputStream> {
-	protected final OutputStream out;
+    protected final OutputStream out;
 
-	public AsyncConsumer(OutputStream out) {
-		super(1024 * 16);
-		this.out = out;
-	}
+    public AsyncConsumer(OutputStream out) {
+        super(1024 * 16);
+        this.out = out;
+    }
 
-	@Override
-	protected void onByteReceived(ByteBuffer buf, IOControl ioctrl) throws IOException {
-		copy(buf, out);
-		out.flush();
-	}
+    @Override
+    protected void onByteReceived(ByteBuffer buf, IOControl ioctrl) throws IOException {
+        copy(buf, out);
+        out.flush();
+    }
 
-	@Override
-	protected void onResponseReceived(HttpResponse response) throws HttpException, IOException {
-		//
-	}
+    @Override
+    protected void onResponseReceived(HttpResponse response) throws HttpException, IOException {
+        //
+    }
 
-	@Override
-	protected void releaseResources() {
-		super.releaseResources();
-		try {
-			out.close();
-		} catch (Exception e) {
-			//
-		}
-	}
+    @Override
+    protected void releaseResources() {
+        super.releaseResources();
+        try {
+            out.close();
+        } catch (Exception e) {
+            //
+        }
+    }
 
-	@Override
-	protected OutputStream buildResult(HttpContext context) throws Exception {
-		return out;
-	}
+    @Override
+    protected OutputStream buildResult(HttpContext context) throws Exception {
+        return out;
+    }
 
-	public static int copy(ByteBuffer src, OutputStream dest) throws IOException {
-		int len = src.remaining();
-		int totalWritten = 0;
-		byte[] buf = null;
-		while (totalWritten < len) {
-			int bytesToWrite = Math.min(len - totalWritten, 1024 * 16);
-			if (buf == null || buf.length < bytesToWrite) {
-				buf = new byte[bytesToWrite];
-			}
-			src.get(buf, 0, bytesToWrite);
-			dest.write(buf, 0, bytesToWrite);
-			totalWritten += bytesToWrite;
-		}
-		return totalWritten;
-	}
+    public static int copy(ByteBuffer src, OutputStream dest) throws IOException {
+        int len = src.remaining();
+        int totalWritten = 0;
+        byte[] buf = null;
+        while (totalWritten < len) {
+            int bytesToWrite = Math.min(len - totalWritten, 1024 * 16);
+            if (buf == null || buf.length < bytesToWrite) {
+                buf = new byte[bytesToWrite];
+            }
+            src.get(buf, 0, bytesToWrite);
+            dest.write(buf, 0, bytesToWrite);
+            totalWritten += bytesToWrite;
+        }
+        return totalWritten;
+    }
 }

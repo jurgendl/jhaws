@@ -13,18 +13,18 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface LdapKeyValue {
-	/**
-	 * key
-	 * 
-	 * @return key
-	 */
-	String key();
+    /**
+     * key
+     * 
+     * @return key
+     */
+    String key();
 
-	/**
-	 * 
-	 * value
-	 * 
-	 * @return value
-	 */
-	String value();
+    /**
+     * 
+     * value
+     * 
+     * @return value
+     */
+    String value();
 }

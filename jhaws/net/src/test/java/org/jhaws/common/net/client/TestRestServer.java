@@ -15,97 +15,97 @@ import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 
 public class TestRestServer implements AutoCloseable {
-	int port;
+    int port;
 
-	Set<Object> objects = new HashSet<>();
+    Set<Object> objects = new HashSet<>();
 
-	Set<Class<?>> classes = new HashSet<>();
+    Set<Class<?>> classes = new HashSet<>();
 
-	TJWSEmbeddedJaxrsServer server;
+    TJWSEmbeddedJaxrsServer server;
 
-	SecurityDomain securityDomain;
+    SecurityDomain securityDomain;
 
-	ResteasyClient resteasyClient;
+    ResteasyClient resteasyClient;
 
-	String bindAddress = "localhost";
+    String bindAddress = "localhost";
 
-	private TestRestServer(Object... objects) {
-		append(objects);
-	}
+    private TestRestServer(Object... objects) {
+        append(objects);
+    }
 
-	public static TestRestServer create(Object... objects) throws IOException {
-		return create(null, objects);
-	}
+    public static TestRestServer create(Object... objects) throws IOException {
+        return create(null, objects);
+    }
 
-	public static TestRestServer create(SecurityDomain securityDomain, Object... objects) throws IOException {
-		TestRestServer inMemoryRestServer = new TestRestServer(objects);
-		inMemoryRestServer.withDefaults(securityDomain);
-		inMemoryRestServer.start();
-		return inMemoryRestServer;
-	}
+    public static TestRestServer create(SecurityDomain securityDomain, Object... objects) throws IOException {
+        TestRestServer inMemoryRestServer = new TestRestServer(objects);
+        inMemoryRestServer.withDefaults(securityDomain);
+        inMemoryRestServer.start();
+        return inMemoryRestServer;
+    }
 
-	private void append(Object... _objects) {
-		for (Object object : _objects) {
-			if (object instanceof Class) {
-				classes.add((Class<?>) object);
-			} else {
-				this.objects.add(object);
-			}
-		}
-	}
+    private void append(Object... _objects) {
+        for (Object object : _objects) {
+            if (object instanceof Class) {
+                classes.add((Class<?>) object);
+            } else {
+                this.objects.add(object);
+            }
+        }
+    }
 
-	private void withDefaults(SecurityDomain _securityDomain) {
-		this.securityDomain = _securityDomain;
-		this.resteasyClient = new ResteasyClientBuilder().build();
-	}
+    private void withDefaults(SecurityDomain _securityDomain) {
+        this.securityDomain = _securityDomain;
+        this.resteasyClient = new ResteasyClientBuilder().build();
+    }
 
-	private void start() throws IOException {
-		port = findFreePort();
-		server = new TJWSEmbeddedJaxrsServer();
-		server.setPort(port);
-		server.setBindAddress(bindAddress);
-		server.setSecurityDomain(securityDomain);
-		System.out.println(bindAddress + ":" + port);
-		ResteasyDeployment deployment = server.getDeployment();
-		for (Object object : objects) {
-			if (object instanceof Application) {
-				deployment.setApplication((Application) object);
-			} else {
-				deployment.getResources().add(object);
-			}
-		}
-		for (Class<?> resourceOrProvider : classes) {
-			if (Application.class.isAssignableFrom(resourceOrProvider)) {
-				deployment.setApplicationClass(resourceOrProvider.getName());
-			} else {
-				deployment.getProviderClasses().add(resourceOrProvider.getName());
-			}
-		}
-		deployment.getProviderClasses().add(MatrixTestBeanMessageBodyReader.class.getName());
-		server.start();
-	}
+    private void start() throws IOException {
+        port = findFreePort();
+        server = new TJWSEmbeddedJaxrsServer();
+        server.setPort(port);
+        server.setBindAddress(bindAddress);
+        server.setSecurityDomain(securityDomain);
+        System.out.println(bindAddress + ":" + port);
+        ResteasyDeployment deployment = server.getDeployment();
+        for (Object object : objects) {
+            if (object instanceof Application) {
+                deployment.setApplication((Application) object);
+            } else {
+                deployment.getResources().add(object);
+            }
+        }
+        for (Class<?> resourceOrProvider : classes) {
+            if (Application.class.isAssignableFrom(resourceOrProvider)) {
+                deployment.setApplicationClass(resourceOrProvider.getName());
+            } else {
+                deployment.getProviderClasses().add(resourceOrProvider.getName());
+            }
+        }
+        deployment.getProviderClasses().add(MatrixTestBeanMessageBodyReader.class.getName());
+        server.start();
+    }
 
-	public String baseUri() {
-		return "http://" + bindAddress + ":" + port;
-	}
+    public String baseUri() {
+        return "http://" + bindAddress + ":" + port;
+    }
 
-	public ResteasyWebTarget newRequest(String uriTemplate) {
-		return resteasyClient.target(baseUri() + uriTemplate);
-	}
+    public ResteasyWebTarget newRequest(String uriTemplate) {
+        return resteasyClient.target(baseUri() + uriTemplate);
+    }
 
-	public static int findFreePort() throws IOException {
-		try (ServerSocket server = new ServerSocket(0)) {
-			int port = server.getLocalPort();
-			server.close();
-			return port;
-		}
-	}
+    public static int findFreePort() throws IOException {
+        try (ServerSocket server = new ServerSocket(0)) {
+            int port = server.getLocalPort();
+            server.close();
+            return port;
+        }
+    }
 
-	@Override
-	public void close() {
-		if (server != null) {
-			server.stop();
-			server = null;
-		}
-	}
+    @Override
+    public void close() {
+        if (server != null) {
+            server.stop();
+            server = null;
+        }
+    }
 }

@@ -17,33 +17,33 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
  * @see http://www.primefaces.org/primeui/inputtext.html
  */
 public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<T, TextField<T>, FormElementSettings> {
-	private static final long serialVersionUID = -7993592150932306594L;
+    private static final long serialVersionUID = -7993592150932306594L;
 
-	public TextFieldPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings, FormElementSettings componentSettings) {
-		super(model, propertyPath, formSettings, componentSettings);
-	}
+    public TextFieldPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings, FormElementSettings componentSettings) {
+        super(model, propertyPath, formSettings, componentSettings);
+    }
 
-	@Override
-	protected TextField<T> createComponent(IModel<T> model, Class<T> valueType) {
-		TextField<T> textField = new TextField<T>(VALUE, model, valueType) {
-			private static final long serialVersionUID = -3231896888772971388L;
+    @Override
+    protected TextField<T> createComponent(IModel<T> model, Class<T> valueType) {
+        TextField<T> textField = new TextField<T>(VALUE, model, valueType) {
+            private static final long serialVersionUID = -3231896888772971388L;
 
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				onFormComponentTag(tag);
-			}
-		};
-		textField.add(new CssClassNameAppender(PrimeUI.puiinputtext));
-		return textField;
-	}
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                onFormComponentTag(tag);
+            }
+        };
+        textField.add(new CssClassNameAppender(PrimeUI.puiinputtext));
+        return textField;
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
+    }
 }

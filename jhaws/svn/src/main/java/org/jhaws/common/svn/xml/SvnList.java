@@ -11,22 +11,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "lists")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SvnList extends SvnRootBean implements Iterable<EntryList> {
-	private List<EntryList> list;
+    private List<EntryList> list;
 
-	@SuppressWarnings("unchecked")
-	public List<EntryList> getList() {
-		if (list == null) {
-			return Collections.emptyList();
-		}
-		return list;
-	}
+    @SuppressWarnings("unchecked")
+    public List<EntryList> getList() {
+        if (list == null) {
+            return Collections.emptyList();
+        }
+        return list;
+    }
 
-	public void setList(List<EntryList> list) {
-		this.list = list;
-	}
+    public void setList(List<EntryList> list) {
+        this.list = list;
+    }
 
-	@Override
-	public Iterator<EntryList> iterator() {
-		return getList().iterator();
-	}
+    @Override
+    public Iterator<EntryList> iterator() {
+        return getList().iterator();
+    }
 }

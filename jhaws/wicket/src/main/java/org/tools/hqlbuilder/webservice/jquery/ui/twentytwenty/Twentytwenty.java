@@ -22,30 +22,27 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // </div>
 // </div>
 //
-//.twentytwenty-overlay:hover { #disable gray overlay on hover
+// .twentytwenty-overlay:hover { #disable gray overlay on hover
 // background: rgba(0, 0, 0, 0) !important;
-//}
+// }
 //
 // https://zurb.com/playground/twentytwenty
 // https://github.com/zurb/twentytwenty/
 public class Twentytwenty {
-	public static JavaScriptResourceReference JS_EVENT = new JavaScriptResourceReference(Twentytwenty.class,
-			"js/jquery.event.move.js");
+    public static JavaScriptResourceReference JS_EVENT = new JavaScriptResourceReference(Twentytwenty.class, "js/jquery.event.move.js");
 
-	public static JavaScriptResourceReference JS_MOVE = new JavaScriptResourceReference(Twentytwenty.class,
-			"js/jquery.twentytwenty.js");
+    public static JavaScriptResourceReference JS_MOVE = new JavaScriptResourceReference(Twentytwenty.class, "js/jquery.twentytwenty.js");
 
-	public static CssResourceReference CSS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty.css");
+    public static CssResourceReference CSS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty.css");
 
-	public static CssResourceReference CSS_NO_COMPASS = new CssResourceReference(Twentytwenty.class,
-			"css/twentytwenty-no-compass.css");
+    public static CssResourceReference CSS_NO_COMPASS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty-no-compass.css");
 
-	static {
-		try {
-			JS_EVENT.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-			JS_MOVE.addJavaScriptResourceReferenceDependency(JS_EVENT);
-		} catch (Exception ex) {
-			//
-		}
-	}
+    static {
+        try {
+            JS_EVENT.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+            JS_MOVE.addJavaScriptResourceReferenceDependency(JS_EVENT);
+        } catch (Exception ex) {
+            //
+        }
+    }
 }

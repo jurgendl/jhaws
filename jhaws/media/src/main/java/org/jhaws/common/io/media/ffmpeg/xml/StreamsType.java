@@ -10,11 +10,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for streamsType complex type.
+ * <p>
+ * Java class for streamsType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="streamsType">
@@ -31,9 +32,7 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "streamsType", propOrder = {
-    "stream"
-})
+@XmlType(name = "streamsType", propOrder = { "stream" })
 public class StreamsType {
 
     protected List<StreamType> stream;
@@ -42,21 +41,19 @@ public class StreamsType {
      * Gets the value of the stream property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the stream property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the stream property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getStream().add(newItem);
+     * getStream().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link StreamType }
+     * Objects of the following type(s) are allowed in the list {@link StreamType }
      * 
      * 
      */
@@ -68,8 +65,7 @@ public class StreamsType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -78,8 +74,8 @@ public class StreamsType {
     }
 
     public StreamsType withStream(StreamType... values) {
-        if (values!= null) {
-            for (StreamType value: values) {
+        if (values != null) {
+            for (StreamType value : values) {
                 getStream().add(value);
             }
         }
@@ -87,7 +83,7 @@ public class StreamsType {
     }
 
     public StreamsType withStream(Collection<StreamType> values) {
-        if (values!= null) {
+        if (values != null) {
             getStream().addAll(values);
         }
         return this;

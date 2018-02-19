@@ -8,12 +8,13 @@ import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
  * @see https://github.com/FaroeMedia/scrollator
  */
 public class Scrollator {
-	public static JavaScriptResourceReference SCROLLATOR_JS = new JavaScriptResourceReference(Scrollator.class, "fm.scrollator.jquery.js")
-			.addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
+    public static JavaScriptResourceReference SCROLLATOR_JS = new JavaScriptResourceReference(Scrollator.class, "fm.scrollator.jquery.js")
+            .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
 
-	public static CssResourceReference SCROLLATOR_CSS = new CssResourceReference(Scrollator.class, "fm.scrollator.jquery.css");
+    public static CssResourceReference SCROLLATOR_CSS = new CssResourceReference(Scrollator.class, "fm.scrollator.jquery.css");
 
-	public static final String SCROLLATOR_CLASS = "scrollator";
+    public static final String SCROLLATOR_CLASS = "scrollator";
 
-	public static final String SCROLLATOR_FACTORY_JS = "$(document.body).scrollator();$('." + SCROLLATOR_CLASS + "').scrollator();$('textarea').scrollator();";
+    public static final String SCROLLATOR_FACTORY_JS = "$(document.body).scrollator();$('." + SCROLLATOR_CLASS
+            + "').scrollator();$('textarea').scrollator();";
 }

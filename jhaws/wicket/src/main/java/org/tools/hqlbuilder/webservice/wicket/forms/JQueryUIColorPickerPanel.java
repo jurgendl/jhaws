@@ -17,62 +17,63 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
  * @see http://vanderlee.github.io/colorpicker/
  */
 public class JQueryUIColorPickerPanel extends DefaultFormRowPanel<String, TextField<String>, JQueryUIColorPickerSettings> {
-	private static final long serialVersionUID = 6138233201045557179L;
+    private static final long serialVersionUID = 6138233201045557179L;
 
-	protected Output output;
+    protected Output output;
 
-	public JQueryUIColorPickerPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, JQueryUIColorPickerSettings colorPickerSettings) {
-		super(model, propertyPath, formSettings, colorPickerSettings);
-	}
+    public JQueryUIColorPickerPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings,
+            JQueryUIColorPickerSettings colorPickerSettings) {
+        super(model, propertyPath, formSettings, colorPickerSettings);
+    }
 
-	@Override
-	protected void onInitialize() {
-		super.onInitialize();
-		setOutputMarkupId(true);
-	}
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+        setOutputMarkupId(true);
+    }
 
-	@Override
-	public Class<String> getPropertyType() {
-		return String.class;
-	}
+    @Override
+    public Class<String> getPropertyType() {
+        return String.class;
+    }
 
-	@Override
-	protected TextField<String> createComponent(IModel<String> model, Class<String> valueType) {
-		TextField<String> textField = new TextField<String>(VALUE, model, valueType) {
-			private static final long serialVersionUID = 56917009106322008L;
+    @Override
+    protected TextField<String> createComponent(IModel<String> model, Class<String> valueType) {
+        TextField<String> textField = new TextField<String>(VALUE, model, valueType) {
+            private static final long serialVersionUID = 56917009106322008L;
 
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				onFormComponentTag(tag);
-			}
-		};
-		textField.add(new CssClassNameAppender(PrimeUI.puiinputtext + " " + JQueryUIColorPicker.jquicolorpicker));
-		return textField;
-	}
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                onFormComponentTag(tag);
+            }
+        };
+        textField.add(new CssClassNameAppender(PrimeUI.puiinputtext + " " + JQueryUIColorPicker.jquicolorpicker));
+        return textField;
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		response.render(JavaScriptHeaderItem.forReference(JQueryUIColorPicker.JQUERY_COLORPICKER_I18N_JS));
-		response.render(CssHeaderItem.forReference(JQueryUIColorPicker.JQUERY_COLORPICKER_CSS));
-		response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
-		response.render(OnDomReadyHeaderItem.forScript(createLoadScript()));
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        response.render(JavaScriptHeaderItem.forReference(JQueryUIColorPicker.JQUERY_COLORPICKER_I18N_JS));
+        response.render(CssHeaderItem.forReference(JQueryUIColorPicker.JQUERY_COLORPICKER_CSS));
+        response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
+        response.render(OnDomReadyHeaderItem.forScript(createLoadScript()));
+    }
 
-	protected String createLoadScript() {
-		JQueryUIColorPickerSettings colorPickerSettings = JQueryUIColorPickerSettings.class.cast(getComponentSettings());
-		// if (!(getValueModel() == null || StringUtils.isBlank(getValueModel().getObject()))) {
-		// colorPickerSettings.setColor(getValueModel().getObject());
-		// }
-		return "$(\"#" + getComponent().getMarkupId() + "\").colorpicker(" + colorPickerSettings + ");";
-	}
+    protected String createLoadScript() {
+        JQueryUIColorPickerSettings colorPickerSettings = JQueryUIColorPickerSettings.class.cast(getComponentSettings());
+        // if (!(getValueModel() == null || StringUtils.isBlank(getValueModel().getObject()))) {
+        // colorPickerSettings.setColor(getValueModel().getObject());
+        // }
+        return "$(\"#" + getComponent().getMarkupId() + "\").colorpicker(" + colorPickerSettings + ");";
+    }
 
-	@Override
-	protected void setupPlaceholder(ComponentTag tag) {
-		//
-	}
+    @Override
+    protected void setupPlaceholder(ComponentTag tag) {
+        //
+    }
 }

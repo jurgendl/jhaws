@@ -13,21 +13,21 @@ import org.apache.xmlbeans.XmlException;
 import org.jhaws.common.io.FilePath;
 
 public class OfficePpsxFileTextExtracter implements FileTextExtracter {
-	@Override
-	public List<String> accepts() {
-		return Arrays.asList("ppsx");
-	}
+    @Override
+    public List<String> accepts() {
+        return Arrays.asList("ppsx");
+    }
 
-	@Override
-	public void extract(InputStream inputFile, FilePath target) throws IOException {
-		try {
-			OPCPackage d = OPCPackage.open(inputFile);
-			XSLFSlideShow ppsx = new XSLFSlideShow(d);
-			try (XSLFPowerPointExtractor xw = new XSLFPowerPointExtractor(ppsx);) {
-				target.write(xw.getText());
-			}
-		} catch (OpenXML4JException | XmlException ex) {
-			throw new IOException(ex);
-		}
-	}
+    @Override
+    public void extract(InputStream inputFile, FilePath target) throws IOException {
+        try {
+            OPCPackage d = OPCPackage.open(inputFile);
+            XSLFSlideShow ppsx = new XSLFSlideShow(d);
+            try (XSLFPowerPointExtractor xw = new XSLFPowerPointExtractor(ppsx);) {
+                target.write(xw.getText());
+            }
+        } catch (OpenXML4JException | XmlException ex) {
+            throw new IOException(ex);
+        }
+    }
 }

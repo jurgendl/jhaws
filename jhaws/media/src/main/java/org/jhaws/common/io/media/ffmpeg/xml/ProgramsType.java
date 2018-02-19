@@ -10,11 +10,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for programsType complex type.
+ * <p>
+ * Java class for programsType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="programsType">
@@ -31,9 +32,7 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "programsType", propOrder = {
-    "program"
-})
+@XmlType(name = "programsType", propOrder = { "program" })
 public class ProgramsType {
 
     protected List<ProgramType> program;
@@ -42,21 +41,19 @@ public class ProgramsType {
      * Gets the value of the program property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the program property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the program property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getProgram().add(newItem);
+     * getProgram().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ProgramType }
+     * Objects of the following type(s) are allowed in the list {@link ProgramType }
      * 
      * 
      */
@@ -68,8 +65,7 @@ public class ProgramsType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -78,8 +74,8 @@ public class ProgramsType {
     }
 
     public ProgramsType withProgram(ProgramType... values) {
-        if (values!= null) {
-            for (ProgramType value: values) {
+        if (values != null) {
+            for (ProgramType value : values) {
                 getProgram().add(value);
             }
         }
@@ -87,7 +83,7 @@ public class ProgramsType {
     }
 
     public ProgramsType withProgram(Collection<ProgramType> values) {
-        if (values!= null) {
+        if (values != null) {
             getProgram().addAll(values);
         }
         return this;

@@ -8,11 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for packetSideDataType complex type.
+ * <p>
+ * Java class for packetSideDataType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="packetSideDataType">
@@ -33,16 +34,15 @@ public class PacketSideDataType {
 
     @XmlAttribute(name = "side_data_type")
     protected String sideDataType;
+
     @XmlAttribute(name = "side_data_size")
     protected Integer sideDataSize;
 
     /**
      * Gets the value of the sideDataType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSideDataType() {
         return sideDataType;
@@ -51,10 +51,8 @@ public class PacketSideDataType {
     /**
      * Sets the value of the sideDataType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSideDataType(String value) {
         this.sideDataType = value;
@@ -63,10 +61,8 @@ public class PacketSideDataType {
     /**
      * Gets the value of the sideDataSize property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
+     * @return possible object is {@link Integer }
+     * 
      */
     public Integer getSideDataSize() {
         return sideDataSize;
@@ -75,18 +71,15 @@ public class PacketSideDataType {
     /**
      * Sets the value of the sideDataSize property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
+     * @param value allowed object is {@link Integer }
+     * 
      */
     public void setSideDataSize(Integer value) {
         this.sideDataSize = value;
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override

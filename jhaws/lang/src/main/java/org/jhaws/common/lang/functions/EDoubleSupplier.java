@@ -4,18 +4,18 @@ import java.util.function.DoubleSupplier;
 
 @FunctionalInterface
 public interface EDoubleSupplier extends SDoubleSupplier {
-	public static DoubleSupplier enhance(EDoubleSupplier supplier) {
-		return supplier::getAsDouble;
-	}
+    public static DoubleSupplier enhance(EDoubleSupplier supplier) {
+        return supplier::getAsDouble;
+    }
 
-	@Override
-	default double getAsDouble() {
-		try {
-			return getAsDoubleEnhanced();
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+    @Override
+    default double getAsDouble() {
+        try {
+            return getAsDoubleEnhanced();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
-	double getAsDoubleEnhanced() throws Exception;
+    double getAsDoubleEnhanced() throws Exception;
 }

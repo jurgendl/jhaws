@@ -8,11 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for ffprobeType complex type.
+ * <p>
+ * Java class for ffprobeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ffprobeType">
@@ -40,43 +41,50 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ffprobeType", propOrder = {
-    "programVersion",
-    "libraryVersions",
-    "pixelFormats",
-    "packets",
-    "frames",
-    "packetsAndFrames",
-    "programs",
-    "streams",
-    "chapters",
-    "format",
-    "error"
-})
+        "programVersion",
+        "libraryVersions",
+        "pixelFormats",
+        "packets",
+        "frames",
+        "packetsAndFrames",
+        "programs",
+        "streams",
+        "chapters",
+        "format",
+        "error" })
 public class FfprobeType {
 
     @XmlElement(name = "program_version")
     protected ProgramVersionType programVersion;
+
     @XmlElement(name = "library_versions")
     protected LibraryVersionsType libraryVersions;
+
     @XmlElement(name = "pixel_formats")
     protected PixelFormatsType pixelFormats;
+
     protected PacketsType packets;
+
     protected FramesType frames;
+
     @XmlElement(name = "packets_and_frames")
     protected PacketsAndFramesType packetsAndFrames;
+
     protected ProgramsType programs;
+
     protected StreamsType streams;
+
     protected ChaptersType chapters;
+
     protected FormatType format;
+
     protected ErrorType error;
 
     /**
      * Gets the value of the programVersion property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ProgramVersionType }
-     *     
+     * @return possible object is {@link ProgramVersionType }
+     * 
      */
     public ProgramVersionType getProgramVersion() {
         return programVersion;
@@ -85,10 +93,8 @@ public class FfprobeType {
     /**
      * Sets the value of the programVersion property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ProgramVersionType }
-     *     
+     * @param value allowed object is {@link ProgramVersionType }
+     * 
      */
     public void setProgramVersion(ProgramVersionType value) {
         this.programVersion = value;
@@ -97,10 +103,8 @@ public class FfprobeType {
     /**
      * Gets the value of the libraryVersions property.
      * 
-     * @return
-     *     possible object is
-     *     {@link LibraryVersionsType }
-     *     
+     * @return possible object is {@link LibraryVersionsType }
+     * 
      */
     public LibraryVersionsType getLibraryVersions() {
         return libraryVersions;
@@ -109,10 +113,8 @@ public class FfprobeType {
     /**
      * Sets the value of the libraryVersions property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link LibraryVersionsType }
-     *     
+     * @param value allowed object is {@link LibraryVersionsType }
+     * 
      */
     public void setLibraryVersions(LibraryVersionsType value) {
         this.libraryVersions = value;
@@ -121,10 +123,8 @@ public class FfprobeType {
     /**
      * Gets the value of the pixelFormats property.
      * 
-     * @return
-     *     possible object is
-     *     {@link PixelFormatsType }
-     *     
+     * @return possible object is {@link PixelFormatsType }
+     * 
      */
     public PixelFormatsType getPixelFormats() {
         return pixelFormats;
@@ -133,10 +133,8 @@ public class FfprobeType {
     /**
      * Sets the value of the pixelFormats property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link PixelFormatsType }
-     *     
+     * @param value allowed object is {@link PixelFormatsType }
+     * 
      */
     public void setPixelFormats(PixelFormatsType value) {
         this.pixelFormats = value;
@@ -145,10 +143,8 @@ public class FfprobeType {
     /**
      * Gets the value of the packets property.
      * 
-     * @return
-     *     possible object is
-     *     {@link PacketsType }
-     *     
+     * @return possible object is {@link PacketsType }
+     * 
      */
     public PacketsType getPackets() {
         return packets;
@@ -157,10 +153,8 @@ public class FfprobeType {
     /**
      * Sets the value of the packets property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link PacketsType }
-     *     
+     * @param value allowed object is {@link PacketsType }
+     * 
      */
     public void setPackets(PacketsType value) {
         this.packets = value;
@@ -169,10 +163,8 @@ public class FfprobeType {
     /**
      * Gets the value of the frames property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FramesType }
-     *     
+     * @return possible object is {@link FramesType }
+     * 
      */
     public FramesType getFrames() {
         return frames;
@@ -181,10 +173,8 @@ public class FfprobeType {
     /**
      * Sets the value of the frames property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FramesType }
-     *     
+     * @param value allowed object is {@link FramesType }
+     * 
      */
     public void setFrames(FramesType value) {
         this.frames = value;
@@ -193,10 +183,8 @@ public class FfprobeType {
     /**
      * Gets the value of the packetsAndFrames property.
      * 
-     * @return
-     *     possible object is
-     *     {@link PacketsAndFramesType }
-     *     
+     * @return possible object is {@link PacketsAndFramesType }
+     * 
      */
     public PacketsAndFramesType getPacketsAndFrames() {
         return packetsAndFrames;
@@ -205,10 +193,8 @@ public class FfprobeType {
     /**
      * Sets the value of the packetsAndFrames property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link PacketsAndFramesType }
-     *     
+     * @param value allowed object is {@link PacketsAndFramesType }
+     * 
      */
     public void setPacketsAndFrames(PacketsAndFramesType value) {
         this.packetsAndFrames = value;
@@ -217,10 +203,8 @@ public class FfprobeType {
     /**
      * Gets the value of the programs property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ProgramsType }
-     *     
+     * @return possible object is {@link ProgramsType }
+     * 
      */
     public ProgramsType getPrograms() {
         return programs;
@@ -229,10 +213,8 @@ public class FfprobeType {
     /**
      * Sets the value of the programs property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ProgramsType }
-     *     
+     * @param value allowed object is {@link ProgramsType }
+     * 
      */
     public void setPrograms(ProgramsType value) {
         this.programs = value;
@@ -241,10 +223,8 @@ public class FfprobeType {
     /**
      * Gets the value of the streams property.
      * 
-     * @return
-     *     possible object is
-     *     {@link StreamsType }
-     *     
+     * @return possible object is {@link StreamsType }
+     * 
      */
     public StreamsType getStreams() {
         return streams;
@@ -253,10 +233,8 @@ public class FfprobeType {
     /**
      * Sets the value of the streams property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link StreamsType }
-     *     
+     * @param value allowed object is {@link StreamsType }
+     * 
      */
     public void setStreams(StreamsType value) {
         this.streams = value;
@@ -265,10 +243,8 @@ public class FfprobeType {
     /**
      * Gets the value of the chapters property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ChaptersType }
-     *     
+     * @return possible object is {@link ChaptersType }
+     * 
      */
     public ChaptersType getChapters() {
         return chapters;
@@ -277,10 +253,8 @@ public class FfprobeType {
     /**
      * Sets the value of the chapters property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ChaptersType }
-     *     
+     * @param value allowed object is {@link ChaptersType }
+     * 
      */
     public void setChapters(ChaptersType value) {
         this.chapters = value;
@@ -289,10 +263,8 @@ public class FfprobeType {
     /**
      * Gets the value of the format property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FormatType }
-     *     
+     * @return possible object is {@link FormatType }
+     * 
      */
     public FormatType getFormat() {
         return format;
@@ -301,10 +273,8 @@ public class FfprobeType {
     /**
      * Sets the value of the format property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FormatType }
-     *     
+     * @param value allowed object is {@link FormatType }
+     * 
      */
     public void setFormat(FormatType value) {
         this.format = value;
@@ -313,10 +283,8 @@ public class FfprobeType {
     /**
      * Gets the value of the error property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ErrorType }
-     *     
+     * @return possible object is {@link ErrorType }
+     * 
      */
     public ErrorType getError() {
         return error;
@@ -325,18 +293,15 @@ public class FfprobeType {
     /**
      * Sets the value of the error property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ErrorType }
-     *     
+     * @param value allowed object is {@link ErrorType }
+     * 
      */
     public void setError(ErrorType value) {
         this.error = value;
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override

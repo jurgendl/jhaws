@@ -4,22 +4,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public class FloatValue extends Value<Float> {
-	private static final long serialVersionUID = -1530814975734843133L;
+    private static final long serialVersionUID = -1530814975734843133L;
 
-	public FloatValue() {
-		super(0f);
-	}
+    public FloatValue() {
+        super(0f);
+    }
 
-	public FloatValue(float value) {
-		super(value);
-	}
+    public FloatValue(float value) {
+        super(value);
+    }
 
-	public FloatValue add(float i) {
-		set(get() + i);
-		return this;
-	}
+    public FloatValue add(float i) {
+        set(get() + i);
+        return this;
+    }
 
-	public FloatValue remove(float i) {
-		return add(-i);
-	}
+    public FloatValue remove(float i) {
+        return add(-i);
+    }
 }

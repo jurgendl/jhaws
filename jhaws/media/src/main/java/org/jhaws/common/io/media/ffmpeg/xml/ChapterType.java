@@ -11,11 +11,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for chapterType complex type.
+ * <p>
+ * Java class for chapterType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="chapterType">
@@ -38,22 +39,26 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "chapterType", propOrder = {
-    "tag"
-})
+@XmlType(name = "chapterType", propOrder = { "tag" })
 public class ChapterType {
 
     protected List<TagType> tag;
+
     @XmlAttribute(name = "id", required = true)
     protected int id;
+
     @XmlAttribute(name = "time_base", required = true)
     protected String timeBase;
+
     @XmlAttribute(name = "start", required = true)
     protected int start;
+
     @XmlAttribute(name = "start_time")
     protected Float startTime;
+
     @XmlAttribute(name = "end", required = true)
     protected int end;
+
     @XmlAttribute(name = "end_time", required = true)
     protected float endTime;
 
@@ -61,21 +66,19 @@ public class ChapterType {
      * Gets the value of the tag property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the tag property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tag property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getTag().add(newItem);
+     * getTag().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link TagType }
+     * Objects of the following type(s) are allowed in the list {@link TagType }
      * 
      * 
      */
@@ -105,10 +108,8 @@ public class ChapterType {
     /**
      * Gets the value of the timeBase property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getTimeBase() {
         return timeBase;
@@ -117,10 +118,8 @@ public class ChapterType {
     /**
      * Sets the value of the timeBase property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setTimeBase(String value) {
         this.timeBase = value;
@@ -145,10 +144,8 @@ public class ChapterType {
     /**
      * Gets the value of the startTime property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Float }
-     *     
+     * @return possible object is {@link Float }
+     * 
      */
     public Float getStartTime() {
         return startTime;
@@ -157,10 +154,8 @@ public class ChapterType {
     /**
      * Sets the value of the startTime property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Float }
-     *     
+     * @param value allowed object is {@link Float }
+     * 
      */
     public void setStartTime(Float value) {
         this.startTime = value;
@@ -199,8 +194,7 @@ public class ChapterType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -209,8 +203,8 @@ public class ChapterType {
     }
 
     public ChapterType withTag(TagType... values) {
-        if (values!= null) {
-            for (TagType value: values) {
+        if (values != null) {
+            for (TagType value : values) {
                 getTag().add(value);
             }
         }
@@ -218,7 +212,7 @@ public class ChapterType {
     }
 
     public ChapterType withTag(Collection<TagType> values) {
-        if (values!= null) {
+        if (values != null) {
             getTag().addAll(values);
         }
         return this;

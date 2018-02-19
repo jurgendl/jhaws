@@ -10,26 +10,25 @@ package org.jhaws.common.io.filter;
  */
 @Deprecated
 public class ArchiveFileFilter extends FileExtensionFilter {
-	private static final String[] ext = new String[0];
+    private static final String[] ext = new String[0];
 
-	private static String[] extensions() {
-		return ArchiveFileFilter.ext;
-	}
+    private static String[] extensions() {
+        return ArchiveFileFilter.ext;
+    }
 
-	/**
-	 * Creates a new ArchiveFileFilter object.
-	 */
-	public ArchiveFileFilter() {
-		this("archive files"); //$NON-NLS-1$
-	}
+    /**
+     * Creates a new ArchiveFileFilter object.
+     */
+    public ArchiveFileFilter() {
+        this("archive files"); //$NON-NLS-1$
+    }
 
-	/**
-	 * Creates a new ArchiveFileFilter object.
-	 *
-	 * @param description
-	 *            description
-	 */
-	public ArchiveFileFilter(String description) {
-		super(description, ArchiveFileFilter.extensions());
-	}
+    /**
+     * Creates a new ArchiveFileFilter object.
+     *
+     * @param description description
+     */
+    public ArchiveFileFilter(String description) {
+        super(description, ArchiveFileFilter.extensions());
+    }
 }

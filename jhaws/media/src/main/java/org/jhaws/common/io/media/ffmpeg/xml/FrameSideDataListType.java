@@ -11,11 +11,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for frameSideDataListType complex type.
+ * <p>
+ * Java class for frameSideDataListType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="frameSideDataListType">
@@ -32,9 +33,7 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "frameSideDataListType", propOrder = {
-    "sideData"
-})
+@XmlType(name = "frameSideDataListType", propOrder = { "sideData" })
 public class FrameSideDataListType {
 
     @XmlElement(name = "side_data", required = true)
@@ -44,21 +43,19 @@ public class FrameSideDataListType {
      * Gets the value of the sideData property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the sideData property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the sideData property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSideData().add(newItem);
+     * getSideData().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link FrameSideDataType }
+     * Objects of the following type(s) are allowed in the list {@link FrameSideDataType }
      * 
      * 
      */
@@ -70,8 +67,7 @@ public class FrameSideDataListType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -80,8 +76,8 @@ public class FrameSideDataListType {
     }
 
     public FrameSideDataListType withSideData(FrameSideDataType... values) {
-        if (values!= null) {
-            for (FrameSideDataType value: values) {
+        if (values != null) {
+            for (FrameSideDataType value : values) {
                 getSideData().add(value);
             }
         }
@@ -89,7 +85,7 @@ public class FrameSideDataListType {
     }
 
     public FrameSideDataListType withSideData(Collection<FrameSideDataType> values) {
-        if (values!= null) {
+        if (values != null) {
             getSideData().addAll(values);
         }
         return this;

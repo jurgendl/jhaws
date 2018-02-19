@@ -7,14 +7,14 @@ import org.jhaws.common.ldap.tests.dao.PersoonDao;
  */
 public class PersoonDaoMock extends PersoonDao {
 
-	private static final long serialVersionUID = -6670301193215892963L;
+    private static final long serialVersionUID = -6670301193215892963L;
 
-	/**
-	 * Instantieer een nieuwe PersoonDaoMock
-	 * 
-	 * @param b
-	 */
-	public PersoonDaoMock() {
-		this.setLdapOperations(LdapTemplateMock.singleton());
-	}
+    /**
+     * Instantieer een nieuwe PersoonDaoMock
+     * 
+     * @param b
+     */
+    public PersoonDaoMock() {
+        this.setLdapOperations(LdapTemplateMock.singleton());
+    }
 }

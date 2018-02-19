@@ -7,15 +7,14 @@ import org.jhaws.common.ldap.tests.dao.CADao;
  */
 public class CADaoMock extends CADao {
 
-	private static final long serialVersionUID = 9201760704127683097L;
+    private static final long serialVersionUID = 9201760704127683097L;
 
-	/**
-	 * Creates a new CADaoMock object.
-	 * 
-	 * @param b
-	 *            na
-	 */
-	public CADaoMock() {
-		this.setLdapOperations(LdapTemplateMock.singleton());
-	}
+    /**
+     * Creates a new CADaoMock object.
+     * 
+     * @param b na
+     */
+    public CADaoMock() {
+        this.setLdapOperations(LdapTemplateMock.singleton());
+    }
 }

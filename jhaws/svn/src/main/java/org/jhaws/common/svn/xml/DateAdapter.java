@@ -9,23 +9,23 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.apache.commons.lang3.StringUtils;
 
 public class DateAdapter extends XmlAdapter<String, Date> {
-	private static final DateFormat XML_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final DateFormat XML_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-	@Override
-	public String marshal(Date v) throws Exception {
-		if (v == null) {
-			return null;
-		}
+    @Override
+    public String marshal(Date v) throws Exception {
+        if (v == null) {
+            return null;
+        }
 
-		return DateAdapter.XML_DATE_FORMAT.format(v);
-	}
+        return DateAdapter.XML_DATE_FORMAT.format(v);
+    }
 
-	@Override
-	public Date unmarshal(String v) throws Exception {
-		if (StringUtils.isBlank(v)) {
-			return null;
-		}
+    @Override
+    public Date unmarshal(String v) throws Exception {
+        if (StringUtils.isBlank(v)) {
+            return null;
+        }
 
-		return DateAdapter.XML_DATE_FORMAT.parse(v);
-	}
+        return DateAdapter.XML_DATE_FORMAT.parse(v);
+    }
 }

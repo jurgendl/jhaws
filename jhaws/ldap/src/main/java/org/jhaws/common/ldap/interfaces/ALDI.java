@@ -14,5 +14,5 @@ import java.io.Serializable;
 @Deprecated
 public abstract class ALDI<T extends Serializable & Comparable<? super T>> extends LdapDAOCommonSuperclass<T> {
 
-	private static final long serialVersionUID = -7411351913012966087L;
+    private static final long serialVersionUID = -7411351913012966087L;
 }

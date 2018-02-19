@@ -10,11 +10,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for packetsType complex type.
+ * <p>
+ * Java class for packetsType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="packetsType">
@@ -31,9 +32,7 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "packetsType", propOrder = {
-    "packet"
-})
+@XmlType(name = "packetsType", propOrder = { "packet" })
 public class PacketsType {
 
     protected List<PacketType> packet;
@@ -42,21 +41,19 @@ public class PacketsType {
      * Gets the value of the packet property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the packet property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the packet property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPacket().add(newItem);
+     * getPacket().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PacketType }
+     * Objects of the following type(s) are allowed in the list {@link PacketType }
      * 
      * 
      */
@@ -68,8 +65,7 @@ public class PacketsType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -78,8 +74,8 @@ public class PacketsType {
     }
 
     public PacketsType withPacket(PacketType... values) {
-        if (values!= null) {
-            for (PacketType value: values) {
+        if (values != null) {
+            for (PacketType value : values) {
                 getPacket().add(value);
             }
         }
@@ -87,7 +83,7 @@ public class PacketsType {
     }
 
     public PacketsType withPacket(Collection<PacketType> values) {
-        if (values!= null) {
+        if (values != null) {
             getPacket().addAll(values);
         }
         return this;

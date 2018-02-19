@@ -8,8 +8,8 @@ import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
  * @see http://qtip2.com
  */
 public class QTip {
-	public static JavaScriptResourceReference QTIP_JS = new JavaScriptResourceReference(QTip.class, "jquery.qtip.js")
-			.addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
+    public static JavaScriptResourceReference QTIP_JS = new JavaScriptResourceReference(QTip.class, "jquery.qtip.js")
+            .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
 
-	public static CssResourceReference QTIP_CSS = new CssResourceReference(QTip.class, "jquery.qtip.css");
+    public static CssResourceReference QTIP_CSS = new CssResourceReference(QTip.class, "jquery.qtip.css");
 }

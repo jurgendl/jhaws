@@ -8,12 +8,12 @@ import org.jhaws.common.ldap.tests.pojo.CA;
  */
 public class CADao extends AbstractSpringLdapDao<CA> {
 
-	private static final long serialVersionUID = -6411318567032859524L;
+    private static final long serialVersionUID = -6411318567032859524L;
 
-	/**
-	 * Creates a new CADao object.
-	 */
-	public CADao() {
-		super();
-	}
+    /**
+     * Creates a new CADao object.
+     */
+    public CADao() {
+        super();
+    }
 }

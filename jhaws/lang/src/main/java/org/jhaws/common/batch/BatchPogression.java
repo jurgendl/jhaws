@@ -8,34 +8,34 @@ import org.jhaws.common.jaxb.adapters.XmlWrapperAdapter;
 
 @XmlRootElement(name = "progression")
 public class BatchPogression {
-	@XmlJavaTypeAdapter(XmlWrapperAdapter.class)
-	private XmlWrapper<?> config;
+    @XmlJavaTypeAdapter(XmlWrapperAdapter.class)
+    private XmlWrapper<?> config;
 
-	private BatchStep progression;
+    private BatchStep progression;
 
-	public BatchPogression() {
-		super();
-	}
+    public BatchPogression() {
+        super();
+    }
 
-	public BatchPogression(XmlWrapper<?> config, BatchStep progression) {
-		super();
-		this.config = config;
-		this.progression = progression;
-	}
+    public BatchPogression(XmlWrapper<?> config, BatchStep progression) {
+        super();
+        this.config = config;
+        this.progression = progression;
+    }
 
-	public BatchStep getProgression() {
-		return this.progression;
-	}
+    public BatchStep getProgression() {
+        return this.progression;
+    }
 
-	public void setProgression(BatchStep progression) {
-		this.progression = progression;
-	}
+    public void setProgression(BatchStep progression) {
+        this.progression = progression;
+    }
 
-	public XmlWrapper<?> getConfig() {
-		return this.config;
-	}
+    public XmlWrapper<?> getConfig() {
+        return this.config;
+    }
 
-	public void setConfig(XmlWrapper<?> config) {
-		this.config = config;
-	}
+    public void setConfig(XmlWrapper<?> config) {
+        this.config = config;
+    }
 }

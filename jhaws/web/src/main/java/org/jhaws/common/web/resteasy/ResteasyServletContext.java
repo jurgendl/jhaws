@@ -17,11 +17,11 @@ import org.springframework.stereotype.Component;
 @Provider
 @ServerInterceptor
 public class ResteasyServletContext implements ContainerRequestFilter {
-	@Inject
-	ServletContext sc;
+    @Inject
+    ServletContext sc;
 
-	@Override
-	public void filter(ContainerRequestContext requestContext) throws IOException {
-		ResteasyProviderFactory.getContextDataMap().put(ServletContext.class, sc);
-	}
+    @Override
+    public void filter(ContainerRequestContext requestContext) throws IOException {
+        ResteasyProviderFactory.getContextDataMap().put(ServletContext.class, sc);
+    }
 }

@@ -10,16 +10,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jhaws.common.io.FilePath;
 
 public class OfficeXlsxFileTextExtracter implements FileTextExtracter {
-	@Override
-	public List<String> accepts() {
-		return Arrays.asList("xlsx");
-	}
+    @Override
+    public List<String> accepts() {
+        return Arrays.asList("xlsx");
+    }
 
-	@Override
-	public void extract(InputStream inputFile, FilePath target) throws IOException {
-		XSSFWorkbook xlsx = new XSSFWorkbook(inputFile);
-		try (XSSFExcelExtractor xe = new XSSFExcelExtractor(xlsx);) {
-			target.write(xe.getText());
-		}
-	}
+    @Override
+    public void extract(InputStream inputFile, FilePath target) throws IOException {
+        XSSFWorkbook xlsx = new XSSFWorkbook(inputFile);
+        try (XSSFExcelExtractor xe = new XSSFExcelExtractor(xlsx);) {
+            target.write(xe.getText());
+        }
+    }
 }

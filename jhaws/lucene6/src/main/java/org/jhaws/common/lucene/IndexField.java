@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD })
 @Inherited
 public @interface IndexField {
-	String value() default "";
+    String value() default "";
 
-	boolean store() default true;
+    boolean store() default true;
 
-	boolean big() default false;
+    boolean big() default false;
 }

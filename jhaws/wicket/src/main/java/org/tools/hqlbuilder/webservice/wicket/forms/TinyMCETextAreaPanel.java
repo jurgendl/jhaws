@@ -20,38 +20,39 @@ import wicket.contrib.tinymce.settings.TinyMCESettings;
  * @see http://wicket.apache.org/guide/guide/wicketstuff.html#wicketstuff_2
  */
 public class TinyMCETextAreaPanel<T extends Serializable> extends DefaultFormRowPanel<T, TextArea<T>, TinyMCETextAreaSettings> {
-	private static final long serialVersionUID = -2084541282171331186L;
+    private static final long serialVersionUID = -2084541282171331186L;
 
-	public TinyMCETextAreaPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings, TinyMCETextAreaSettings TinyMCETextAreaSettings) {
-		super(model, propertyPath, formSettings, TinyMCETextAreaSettings);
-	}
+    public TinyMCETextAreaPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings,
+            TinyMCETextAreaSettings TinyMCETextAreaSettings) {
+        super(model, propertyPath, formSettings, TinyMCETextAreaSettings);
+    }
 
-	@Override
-	protected TextArea<T> createComponent(IModel<T> model, Class<T> valueType) {
-		TextArea<T> textArea = new TextArea<T>(VALUE, model) {
-			private static final long serialVersionUID = 7135822567688476733L;
+    @Override
+    protected TextArea<T> createComponent(IModel<T> model, Class<T> valueType) {
+        TextArea<T> textArea = new TextArea<T>(VALUE, model) {
+            private static final long serialVersionUID = 7135822567688476733L;
 
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				onFormComponentTag(tag);
-			}
-		};
-		TinyMCESettings tinyMCESettings = componentSettings.getTinyMCESettings();
-		tinyMCESettings.register(new AutoResizePlugin());
-		tinyMCESettings.register(new FullScreenPlugin());
-		tinyMCESettings.register(new DateTimePlugin());
-		tinyMCESettings.register(new PrintPlugin());
-		tinyMCESettings.register(new SavePlugin());
-		tinyMCESettings.register(new SearchReplacePlugin());
-		tinyMCESettings.register(new SpellCheckPlugin());
-		// tinyMCESettings.register(new WicketSavePlugin());
-		textArea.add(new wicket.contrib.tinymce.TinyMceBehavior(tinyMCESettings));
-		return textArea;
-	}
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                onFormComponentTag(tag);
+            }
+        };
+        TinyMCESettings tinyMCESettings = componentSettings.getTinyMCESettings();
+        tinyMCESettings.register(new AutoResizePlugin());
+        tinyMCESettings.register(new FullScreenPlugin());
+        tinyMCESettings.register(new DateTimePlugin());
+        tinyMCESettings.register(new PrintPlugin());
+        tinyMCESettings.register(new SavePlugin());
+        tinyMCESettings.register(new SearchReplacePlugin());
+        tinyMCESettings.register(new SpellCheckPlugin());
+        // tinyMCESettings.register(new WicketSavePlugin());
+        textArea.add(new wicket.contrib.tinymce.TinyMceBehavior(tinyMCESettings));
+        return textArea;
+    }
 
-	@Override
-	protected void setupPlaceholder(ComponentTag tag) {
-		//
-	}
+    @Override
+    protected void setupPlaceholder(ComponentTag tag) {
+        //
+    }
 }

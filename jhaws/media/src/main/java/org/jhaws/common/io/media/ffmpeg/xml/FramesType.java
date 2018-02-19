@@ -12,11 +12,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for framesType complex type.
+ * <p>
+ * Java class for framesType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="framesType">
@@ -36,37 +37,29 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "framesType", propOrder = {
-    "frameOrSubtitle"
-})
+@XmlType(name = "framesType", propOrder = { "frameOrSubtitle" })
 public class FramesType {
 
-    @XmlElements({
-        @XmlElement(name = "frame", type = FrameType.class),
-        @XmlElement(name = "subtitle", type = SubtitleType.class)
-    })
+    @XmlElements({ @XmlElement(name = "frame", type = FrameType.class), @XmlElement(name = "subtitle", type = SubtitleType.class) })
     protected List<Object> frameOrSubtitle;
 
     /**
      * Gets the value of the frameOrSubtitle property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the frameOrSubtitle property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the frameOrSubtitle property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getFrameOrSubtitle().add(newItem);
+     * getFrameOrSubtitle().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link FrameType }
-     * {@link SubtitleType }
+     * Objects of the following type(s) are allowed in the list {@link FrameType } {@link SubtitleType }
      * 
      * 
      */
@@ -78,8 +71,7 @@ public class FramesType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -88,8 +80,8 @@ public class FramesType {
     }
 
     public FramesType withFrameOrSubtitle(Object... values) {
-        if (values!= null) {
-            for (Object value: values) {
+        if (values != null) {
+            for (Object value : values) {
                 getFrameOrSubtitle().add(value);
             }
         }
@@ -97,7 +89,7 @@ public class FramesType {
     }
 
     public FramesType withFrameOrSubtitle(Collection<Object> values) {
-        if (values!= null) {
+        if (values != null) {
             getFrameOrSubtitle().addAll(values);
         }
         return this;

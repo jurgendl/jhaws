@@ -5,7 +5,7 @@ import java.util.function.BooleanSupplier;
 
 @FunctionalInterface
 public interface SBooleanSupplier extends BooleanSupplier, Serializable {
-	public static BooleanSupplier enhance(SBooleanSupplier supplier) {
-		return supplier::getAsBoolean;
-	}
+    public static BooleanSupplier enhance(SBooleanSupplier supplier) {
+        return supplier::getAsBoolean;
+    }
 }

@@ -12,11 +12,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for packetsAndFramesType complex type.
+ * <p>
+ * Java class for packetsAndFramesType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="packetsAndFramesType">
@@ -37,39 +38,32 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "packetsAndFramesType", propOrder = {
-    "packetOrFrameOrSubtitle"
-})
+@XmlType(name = "packetsAndFramesType", propOrder = { "packetOrFrameOrSubtitle" })
 public class PacketsAndFramesType {
 
     @XmlElements({
-        @XmlElement(name = "packet", type = PacketType.class),
-        @XmlElement(name = "frame", type = FrameType.class),
-        @XmlElement(name = "subtitle", type = SubtitleType.class)
-    })
+            @XmlElement(name = "packet", type = PacketType.class),
+            @XmlElement(name = "frame", type = FrameType.class),
+            @XmlElement(name = "subtitle", type = SubtitleType.class) })
     protected List<Object> packetOrFrameOrSubtitle;
 
     /**
      * Gets the value of the packetOrFrameOrSubtitle property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the packetOrFrameOrSubtitle property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
+     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the packetOrFrameOrSubtitle property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPacketOrFrameOrSubtitle().add(newItem);
+     * getPacketOrFrameOrSubtitle().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PacketType }
-     * {@link FrameType }
-     * {@link SubtitleType }
+     * Objects of the following type(s) are allowed in the list {@link PacketType } {@link FrameType } {@link SubtitleType }
      * 
      * 
      */
@@ -81,8 +75,7 @@ public class PacketsAndFramesType {
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override
@@ -91,8 +84,8 @@ public class PacketsAndFramesType {
     }
 
     public PacketsAndFramesType withPacketOrFrameOrSubtitle(Object... values) {
-        if (values!= null) {
-            for (Object value: values) {
+        if (values != null) {
+            for (Object value : values) {
                 getPacketOrFrameOrSubtitle().add(value);
             }
         }
@@ -100,7 +93,7 @@ public class PacketsAndFramesType {
     }
 
     public PacketsAndFramesType withPacketOrFrameOrSubtitle(Collection<Object> values) {
-        if (values!= null) {
+        if (values != null) {
             getPacketOrFrameOrSubtitle().addAll(values);
         }
         return this;

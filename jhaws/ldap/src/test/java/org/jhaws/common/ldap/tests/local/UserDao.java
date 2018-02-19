@@ -7,5 +7,5 @@ import org.jhaws.common.ldap.standalone.AbstractLdapDao;
  */
 public class UserDao extends AbstractLdapDao<User> {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 }

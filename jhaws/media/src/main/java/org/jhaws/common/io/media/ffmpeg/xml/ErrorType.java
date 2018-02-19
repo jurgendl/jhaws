@@ -8,11 +8,12 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
-
 /**
- * <p>Java class for errorType complex type.
+ * <p>
+ * Java class for errorType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="errorType">
@@ -33,6 +34,7 @@ public class ErrorType {
 
     @XmlAttribute(name = "code", required = true)
     protected int code;
+
     @XmlAttribute(name = "string", required = true)
     protected String string;
 
@@ -55,10 +57,8 @@ public class ErrorType {
     /**
      * Gets the value of the string property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getString() {
         return string;
@@ -67,18 +67,15 @@ public class ErrorType {
     /**
      * Sets the value of the string property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setString(String value) {
         this.string = value;
     }
 
     /**
-     * Generates a String representation of the contents of this type.
-     * This is an extension method, produced by the 'ts' xjc plugin
+     * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
      * 
      */
     @Override

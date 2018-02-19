@@ -7,13 +7,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "info")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SvnInfo extends SvnRootBean {
-	private Entry entry;
+    private Entry entry;
 
-	public Entry getEntry() {
-		return entry;
-	}
+    public Entry getEntry() {
+        return entry;
+    }
 
-	public void setEntry(Entry entry) {
-		this.entry = entry;
-	}
+    public void setEntry(Entry entry) {
+        this.entry = entry;
+    }
 }

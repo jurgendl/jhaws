@@ -77,137 +77,132 @@ import org.jhaws.common.io.console.Processes.Log;
 //
 /** https://sevenzip.osdn.jp/chm/cmdline/ */
 public class SevenZip {
-	public static class ListFiles implements Consumer<String>, Iterable<String> {
-		final List<String> contents = new ArrayList<>();
+    public static class ListFiles implements Consumer<String>, Iterable<String> {
+        final List<String> contents = new ArrayList<>();
 
-		int idx = 0;
+        int idx = 0;
 
-		@Override
-		public void accept(String _line) {
-			String prefixnon = "   Date      Time    Attr         Size   Compressed  ";
-			String prefix = prefixnon + "Name";
-			if (_line.startsWith(prefix)) {
-				idx++;
-				return;
-			}
-			if (idx == 1 && _line.startsWith("--")) {
-				idx++;
-				return;
-			}
-			if (idx == 2 && _line.startsWith("--")) {
-				idx++;
-				return;
-			}
-			if (idx == 2) {
-				// String[] parts = line.split("\\s+"); // if
-				// (!parts[2].startsWith("D")) {
-				String filename = _line.substring(prefixnon.length());
-				contents.add(filename);
-			}
-		}
+        @Override
+        public void accept(String _line) {
+            String prefixnon = "   Date      Time    Attr         Size   Compressed  ";
+            String prefix = prefixnon + "Name";
+            if (_line.startsWith(prefix)) {
+                idx++;
+                return;
+            }
+            if (idx == 1 && _line.startsWith("--")) {
+                idx++;
+                return;
+            }
+            if (idx == 2 && _line.startsWith("--")) {
+                idx++;
+                return;
+            }
+            if (idx == 2) {
+                // String[] parts = line.split("\\s+"); // if
+                // (!parts[2].startsWith("D")) {
+                String filename = _line.substring(prefixnon.length());
+                contents.add(filename);
+            }
+        }
 
-		@Override
-		public Iterator<String> iterator() {
-			return contents.iterator();
-		}
+        @Override
+        public Iterator<String> iterator() {
+            return contents.iterator();
+        }
 
-		public List<String> getContents() {
-			return this.contents;
-		}
-	}
+        public List<String> getContents() {
+            return this.contents;
+        }
+    }
 
-	private FilePath executable;
+    private FilePath executable;
 
-	public SevenZip(FilePath executable) {
-		this.executable = executable;
-	}
+    public SevenZip(FilePath executable) {
+        this.executable = executable;
+    }
 
-	public FilePath getExecutable() {
-		return this.executable;
-	}
+    public FilePath getExecutable() {
+        return this.executable;
+    }
 
-	public void setExecutable(FilePath executable) {
-		this.executable = executable;
-	}
+    public void setExecutable(FilePath executable) {
+        this.executable = executable;
+    }
 
-	public void compress(FilePath archive, String password, String... sources) {
-		List<String> cmd = new ArrayList<>();
-		cmd.add(executable.getAbsolutePath());
-		cmd.add("a");
-		cmd.add("-bd");
-		cmd.add("-r");
-		cmd.add("-y");
-		if (StringUtils.isNotBlank(password))
-			cmd.add("-p" + password);
-		cmd.add(archive.getAbsolutePath());
-		cmd.addAll(Arrays.asList(sources));
-		try {
-			Processes.callProcess(null, false, cmd, archive.getParentPath(), new Log());
-		} catch (ExitValueException ex) {
-			throw translate(ex.getExitValue());
-		}
-	}
+    public void compress(FilePath archive, String password, String... sources) {
+        List<String> cmd = new ArrayList<>();
+        cmd.add(executable.getAbsolutePath());
+        cmd.add("a");
+        cmd.add("-bd");
+        cmd.add("-r");
+        cmd.add("-y");
+        if (StringUtils.isNotBlank(password)) cmd.add("-p" + password);
+        cmd.add(archive.getAbsolutePath());
+        cmd.addAll(Arrays.asList(sources));
+        try {
+            Processes.callProcess(null, false, cmd, archive.getParentPath(), new Log());
+        } catch (ExitValueException ex) {
+            throw translate(ex.getExitValue());
+        }
+    }
 
-	public void extract(FilePath archive, String password, FilePath target, String... filters) {
-		if (filters == null)
-			filters = new String[] { "*.*" };
-		List<String> cmd = new ArrayList<>();
-		cmd.add(executable.getAbsolutePath());
-		cmd.add("x");
-		cmd.add("-bd");
-		cmd.add("-r");
-		cmd.add("-y");
-		if (StringUtils.isNotBlank(password))
-			cmd.add("-p" + password);
-		cmd.add(archive.getAbsolutePath());
-		cmd.add(target.getAbsolutePath());
-		cmd.addAll(Arrays.asList(filters));
-		try {
-			Processes.callProcess(null, false, cmd, archive.getParentPath(), new Log());
-		} catch (ExitValueException ex) {
-			throw translate(ex.getExitValue());
-		}
-	}
+    public void extract(FilePath archive, String password, FilePath target, String... filters) {
+        if (filters == null) filters = new String[] { "*.*" };
+        List<String> cmd = new ArrayList<>();
+        cmd.add(executable.getAbsolutePath());
+        cmd.add("x");
+        cmd.add("-bd");
+        cmd.add("-r");
+        cmd.add("-y");
+        if (StringUtils.isNotBlank(password)) cmd.add("-p" + password);
+        cmd.add(archive.getAbsolutePath());
+        cmd.add(target.getAbsolutePath());
+        cmd.addAll(Arrays.asList(filters));
+        try {
+            Processes.callProcess(null, false, cmd, archive.getParentPath(), new Log());
+        } catch (ExitValueException ex) {
+            throw translate(ex.getExitValue());
+        }
+    }
 
-	public List<String> list(FilePath archive, String password) {
-		List<String> cmd = new ArrayList<>();
-		cmd.add(executable.getAbsolutePath());
-		cmd.add("l");
-		cmd.add("-bd");
-		cmd.add("-r");
-		cmd.add("-y");
-		if (StringUtils.isNotBlank(password))
-			cmd.add("-p" + password);
-		cmd.add(archive.getAbsolutePath());
-		try {
-			return Processes.callProcess(null, false, cmd, archive.getParentPath(), new ListFiles(), new Log())
-					.getContents();
-		} catch (ExitValueException ex) {
-			throw translate(ex.getExitValue());
-		}
-	}
+    public List<String> list(FilePath archive, String password) {
+        List<String> cmd = new ArrayList<>();
+        cmd.add(executable.getAbsolutePath());
+        cmd.add("l");
+        cmd.add("-bd");
+        cmd.add("-r");
+        cmd.add("-y");
+        if (StringUtils.isNotBlank(password)) cmd.add("-p" + password);
+        cmd.add(archive.getAbsolutePath());
+        try {
+            return Processes.callProcess(null, false, cmd, archive.getParentPath(), new ListFiles(), new Log()).getContents();
+        } catch (ExitValueException ex) {
+            throw translate(ex.getExitValue());
+        }
+    }
 
-	private RuntimeException translate(int exitValue) {
-		// 0 No error
-		// 1 Warning (Non fatal error(s)). For example, one or more files were
-		// locked by some other application, so they were not compressed.
-		// 2 Fatal error
-		// 7 Command line error
-		// 8 Not enough memory for operation
-		// 255 User stopped the process
-		if (exitValue == 1) {
-			return new RuntimeException(
-					"Warning (Non fatal error(s)). For example, one or more files were locked by some other application, so they were not compressed.");
-		}
-		if (exitValue == 2) {
-			return new RuntimeException("Fatal error");
-		}
-		if (exitValue == 7) {
-			return new RuntimeException("Command line error");
-		}
-		if (exitValue == 8) {
-			return new RuntimeException("Not enough memory for operation");
-		}
-		return null;
-	}
+    private RuntimeException translate(int exitValue) {
+        // 0 No error
+        // 1 Warning (Non fatal error(s)). For example, one or more files were
+        // locked by some other application, so they were not compressed.
+        // 2 Fatal error
+        // 7 Command line error
+        // 8 Not enough memory for operation
+        // 255 User stopped the process
+        if (exitValue == 1) {
+            return new RuntimeException(
+                    "Warning (Non fatal error(s)). For example, one or more files were locked by some other application, so they were not compressed.");
+        }
+        if (exitValue == 2) {
+            return new RuntimeException("Fatal error");
+        }
+        if (exitValue == 7) {
+            return new RuntimeException("Command line error");
+        }
+        if (exitValue == 8) {
+            return new RuntimeException("Not enough memory for operation");
+        }
+        return null;
+    }
 }
