@@ -3,17 +3,15 @@ package org.jhaws.common.lucene;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 
-import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.search.IndexSearcher;
 
 @FunctionalInterface
-public interface IndexWriterAction<T> {
-    T action(IndexWriter writer) throws Exception;
+public interface IndexSearcherAction<T> {
+    T action(IndexSearcher searcher) throws Exception;
 
-    public default T transaction(IndexWriter writer) {
+    public default T transaction(IndexSearcher searcher) {
         try {
-            T rv = action(writer);
-            writer.commit();
-            return rv;
+            return action(searcher);
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         } catch (RuntimeException ex) {

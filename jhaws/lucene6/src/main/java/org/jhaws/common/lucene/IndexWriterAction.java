@@ -6,13 +6,14 @@ import java.io.UncheckedIOException;
 import org.apache.lucene.index.IndexWriter;
 
 @FunctionalInterface
-public interface IndexWriterAction {
-    void action(IndexWriter writer) throws Exception;
+public interface IndexWriterAction<T> {
+    T action(IndexWriter writer) throws Exception;
 
-    public default void transaction(IndexWriter writer) {
+    public default T transaction(IndexWriter writer) {
         try {
-            action(writer);
+            T rv = action(writer);
             writer.commit();
+            return rv;
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         } catch (RuntimeException ex) {

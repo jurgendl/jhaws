@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -70,6 +71,8 @@ import org.slf4j.LoggerFactory;
  */
 // SmartLifecycle, InitializingBean
 public class LuceneIndex implements Closeable {
+    protected final ReentrantLock lock = new ReentrantLock();
+
     protected static final String WRITE_LOCK = "write.lock";
 
     protected static final Logger logger = LoggerFactory.getLogger(LuceneIndex.class);
@@ -225,7 +228,7 @@ public class LuceneIndex implements Closeable {
         if (isBlank(doc.get(DOC_UUID))) {
             throw new IllegalArgumentException("doc does not contain " + DOC_UUID);
         }
-        transaction(w -> {
+        wtransaction(w -> {
             w.deleteDocuments(uuidQuery(doc.get(DOC_UUID)));
             w.addDocument(doc);
         });
@@ -294,47 +297,86 @@ public class LuceneIndex implements Closeable {
     }
 
     public void shutDown() {
-        if (index == null) return;
-        index = null;
-        logger.info("shutdown index@{}", dir);
+        lock.lock();
         try {
-            indexWriter.commit();
-            indexWriter.forceMergeDeletes();
-        } catch (Exception ex) {
-            //
+            if (index == null) return;
+            index = null;
+            logger.info("shutdown index@{}", dir);
+            try {
+                indexWriter.commit();
+                indexWriter.forceMergeDeletes();
+            } catch (Exception ex) {
+                //
+            }
+            try {
+                indexReader.close();
+            } catch (Exception ex) {
+                //
+            }
+            try {
+                indexWriter.close();
+            } catch (Exception ex) {
+                //
+            }
+            try {
+                indexAnalyzer.close();
+            } catch (Exception ex) {
+                //
+            }
+            indexReader = null;
+            indexWriter = null;
+            indexWriterConfig = null;
+            indexAnalyzer = null;
+            indexSearcher = null;
+            activity = null;
+        } finally {
+            lock.unlock();
         }
-        try {
-            indexReader.close();
-        } catch (Exception ex) {
-            //
-        }
-        try {
-            indexWriter.close();
-        } catch (Exception ex) {
-            //
-        }
-        try {
-            indexAnalyzer.close();
-        } catch (Exception ex) {
-            //
-        }
-        indexReader = null;
-        indexWriter = null;
-        indexWriterConfig = null;
-        indexAnalyzer = null;
-        indexSearcher = null;
-        activity = null;
     }
 
-    protected void transaction(IndexWriterAction action) {
-        action.transaction(getIndexWriter());
-        if (indexReader != null) try {
-            indexReader.close();
-        } catch (Exception ex) {
-            //
+    protected void wtransaction(IndexWriterActionVoid action) {
+        lock.lock();
+        try {
+            action.transaction(getIndexWriter());
+            if (indexReader != null) {
+                try {
+                    indexReader.close();
+                } catch (Exception ex) {
+                    //
+                }
+            }
+            indexReader = null;
+            indexSearcher = null;
+        } finally {
+            lock.unlock();
         }
-        indexReader = null;
-        indexSearcher = null;
+    }
+
+    protected void rtransaction(IndexReaderActionVoid action) {
+        lock.lock();
+        try {
+            action.transaction(getIndexReader());
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    protected void stransaction(IndexSearcherActionVoid action) {
+        lock.lock();
+        try {
+            action.transaction(getIndexSearcher());
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    protected <T> T stransactionReturn(IndexSearcherAction<T> action) {
+        lock.lock();
+        try {
+            return action.transaction(getIndexSearcher());
+        } finally {
+            lock.unlock();
+        }
     }
 
     public FilePath getDir() {
@@ -389,8 +431,8 @@ public class LuceneIndex implements Closeable {
                 .parallel() //
                 .forEach(onCreate.andThen(f -> log("sync:index:create", f)));
 
-        transaction(w -> delete.stream().map(Indexable::term).forEach(EConsumer.enhance(w::deleteDocuments)));
-        transaction(w -> create.stream().map(Indexable::indexable).forEach(EConsumer.enhance(this::addDocs)));
+        wtransaction(w -> delete.stream().map(Indexable::term).forEach(EConsumer.enhance(w::deleteDocuments)));
+        wtransaction(w -> create.stream().map(Indexable::indexable).forEach(EConsumer.enhance(this::addDocs)));
 
         List<F> result = new ArrayList<>(create);
         // do not change to parallelStream or it will add null values
@@ -438,7 +480,7 @@ public class LuceneIndex implements Closeable {
     }
 
     protected void deleteDocs(Collection<Document> docs) {
-        split(docs, maxBatchSize).stream().forEach(batch -> transaction(
+        split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(
                 w -> batch.stream().forEach(EConsumer.enhance(doc -> w.deleteDocuments(uuidQuery(doc.get(DOC_UUID).toString()))))));
     }
 
@@ -454,11 +496,7 @@ public class LuceneIndex implements Closeable {
 
     public TopDocs score(Query query, int max) {
         TopScoreDocCollector collector = TopScoreDocCollector.create(max);
-        try {
-            getIndexSearcher().search(query, collector);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        stransaction(s -> s.search(query, collector));
         return collector.topDocs();
     }
 
@@ -479,11 +517,7 @@ public class LuceneIndex implements Closeable {
     }
 
     protected Document getDoc(ScoreDoc hit) {
-        try {
-            return getIndexSearcher().doc(hit.doc);
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        return stransactionReturn(s -> s.doc(hit.doc));
     }
 
     public BooleanQuery.Builder keyValueQuery(BooleanQuery.Builder booleanQuery, String key, String value) {
@@ -531,7 +565,7 @@ public class LuceneIndex implements Closeable {
                 .parallel() //
                 .filter(d -> d.getField(DOC_VERSION) == null)
                 .forEach(this::version);
-        split(docs, maxBatchSize).stream().forEach(batch -> transaction(w -> w.addDocuments(batch)));
+        split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(w -> w.addDocuments(batch)));
     }
 
     public <F extends Indexable<? super F>> List<F> searchAll(Supplier<F> indexable) {
@@ -539,22 +573,23 @@ public class LuceneIndex implements Closeable {
     }
 
     public List<Document> searchAllDocs() {
-        DirectoryReader reader = getIndexReader();
-        Bits liveDocs = MultiFields.getLiveDocs(reader);
         List<Document> documents = new ArrayList<>();
-        for (int i = 0; i < reader.maxDoc(); i++) {
-            if (liveDocs != null && !liveDocs.get(i)) continue;
-            try {
-                documents.add(reader.document(i));
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
+        rtransaction(r -> {
+            Bits liveDocs = MultiFields.getLiveDocs(r);
+            for (int i = 0; i < r.maxDoc(); i++) {
+                if (liveDocs != null && !liveDocs.get(i)) continue;
+                try {
+                    documents.add(r.document(i));
+                } catch (IOException ex) {
+                    throw new UncheckedIOException(ex);
+                }
             }
-        }
+        });
         return documents;
     }
 
     public void deleteAll() {
-        transaction(w -> w.deleteAll());
+        wtransaction(w -> w.deleteAll());
         shutDown();
     }
 
@@ -597,7 +632,7 @@ public class LuceneIndex implements Closeable {
     }
 
     public void delete(Query query) {
-        transaction(writer -> writer.deleteDocuments(query));
+        wtransaction(writer -> writer.deleteDocuments(query));
     }
 
     public QueryParser newQueryParser(String field) {
@@ -719,21 +754,19 @@ public class LuceneIndex implements Closeable {
     }
 
     public List<HighlightResult> highlight(Query query, TopDocs topDocs, String field) {
-        try {
+        return stransactionReturn(s -> {
             PostingsHighlighter highlighter = new PostingsHighlighter();
             // select up to the three best highlights from the "all" field
             // of each result, concatenated with ellipses
-            String[] highlights = highlighter.highlight(field, query, getIndexSearcher(), topDocs, 3);
+            String[] highlights = highlighter.highlight(field, query, s, topDocs, 3);
             int length = topDocs.scoreDocs.length;
             List<HighlightResult> results = new ArrayList<HighlightResult>(length);
             for (int i = 0; i < length; i++) {
                 int docId = topDocs.scoreDocs[i].doc;
-                results.add(new HighlightResult(getIndexSearcher().doc(docId), highlights[i]));
+                results.add(new HighlightResult(s.doc(docId), highlights[i]));
             }
             return results;
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        });
     }
 
     public class HighlightResult {
