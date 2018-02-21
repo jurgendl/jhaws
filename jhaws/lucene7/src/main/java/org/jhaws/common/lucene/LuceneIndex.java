@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -58,7 +59,6 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Bits;
-import org.jhaws.common.concurrent.DummyLock;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.CollectionUtils8;
 import org.jhaws.common.lang.functions.EConsumer;
@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  */
 // SmartLifecycle, InitializingBean
 public class LuceneIndex implements Closeable {
-    protected final Lock lock = new DummyLock(); // new ReentrantLock();
+    protected final Lock lock = new ReentrantLock();
 
     protected static final String WRITE_LOCK = "write.lock";
 
