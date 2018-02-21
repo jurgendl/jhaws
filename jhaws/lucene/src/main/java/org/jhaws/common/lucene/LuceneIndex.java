@@ -628,7 +628,7 @@ public class LuceneIndex implements Closeable {
     }
 
     public void delete(Query query) {
-        wtransaction(writer -> writer.deleteDocuments(query));
+        wtransaction(w -> w.deleteDocuments(query));
     }
 
     public QueryParser newQueryParser(String field) {

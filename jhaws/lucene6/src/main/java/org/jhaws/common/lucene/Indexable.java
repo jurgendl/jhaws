@@ -12,6 +12,7 @@ import org.apache.lucene.document.LegacyLongField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.Term;
 
+@SuppressWarnings("deprecation")
 public interface Indexable<T> {
     public default Term term() {
         return new Term(LuceneIndex.DOC_UUID, getUuid().toString());

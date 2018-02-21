@@ -104,7 +104,7 @@ public class LuceneIndex implements Closeable {
 
     protected final FilePath dir;
 
-    protected Integer docVersion;
+    // protected Integer docVersion;
 
     protected Long activity;
 
@@ -163,44 +163,44 @@ public class LuceneIndex implements Closeable {
         return index = mMapDirectory;
     }
 
-    public int getVersion() {
-        return docVersion;
-    }
+    // public int getVersion() {
+    // return docVersion;
+    // }
 
-    protected void fixDocVersion() {
-        if (docVersion != null) {
-            return;
-        }
-        docVersion = 0;
-        ScoreDoc metaDataScoreDocs = search1(keyValueQuery(LUCENE_METADATA, LUCENE_METADATA).build());
-        Document metaDataDoc = new Document();
-        if (metaDataScoreDocs != null) {
-            metaDataDoc = getDoc(metaDataScoreDocs);
-            docVersion = metaDataDoc.getField(DOC_VERSION).numericValue().intValue();
-        }
-        if (docVersion < 1) {
-            docVersion++;
-            List<Document> docs = searchAllDocs();
-            deleteAll();
-            List<Document> batch = new ArrayList<>();
-            for (Document doc : docs) {
-                batch.add(doc);
-            }
-            addDocs(batch);
-            metaDataDoc = new Document();
-            metaDataDoc.add(new StringField(LUCENE_METADATA, LUCENE_METADATA, YES));
-            uuid(metaDataDoc);
-            version(metaDataDoc, docVersion);
-            addDocs(metaDataDoc);
-            shutDown();
-        }
-        // if (currentDocVersion < 2) {
-        // docVersion++;
-        // metaDataDoc.removeField(DOC_VERSION);
-        // metaDataDoc.add(new IntField(DOC_VERSION, 1, YES));
-        // replaceDoc(metaDataDoc);
-        // }
-    }
+    // protected void fixDocVersion() {
+    // if (docVersion != null) {
+    // return;
+    // }
+    // docVersion = 0;
+    // ScoreDoc metaDataScoreDocs = search1(keyValueQuery(LUCENE_METADATA, LUCENE_METADATA).build());
+    // Document metaDataDoc = new Document();
+    // if (metaDataScoreDocs != null) {
+    // metaDataDoc = getDoc(metaDataScoreDocs);
+    // docVersion = metaDataDoc.getField(DOC_VERSION).numericValue().intValue();
+    // }
+    // if (docVersion < 1) {
+    // docVersion++;
+    // List<Document> docs = searchAllDocs();
+    // deleteAll();
+    // List<Document> batch = new ArrayList<>();
+    // for (Document doc : docs) {
+    // batch.add(doc);
+    // }
+    // addDocs(batch);
+    // metaDataDoc = new Document();
+    // metaDataDoc.add(new StringField(LUCENE_METADATA, LUCENE_METADATA, YES));
+    // uuid(metaDataDoc);
+    // version(metaDataDoc, docVersion);
+    // addDocs(metaDataDoc);
+    // shutDown();
+    // }
+    // // if (currentDocVersion < 2) {
+    // // docVersion++;
+    // // metaDataDoc.removeField(DOC_VERSION);
+    // // metaDataDoc.add(new IntField(DOC_VERSION, 1, YES));
+    // // replaceDoc(metaDataDoc);
+    // // }
+    // }
 
     protected Document version(Document doc, int version) {
         return replaceValue(doc, DOC_VERSION, version, true);
@@ -214,10 +214,10 @@ public class LuceneIndex implements Closeable {
         return java.util.UUID.randomUUID().toString();
     }
 
-    protected Document version(Document doc) {
-        if (docVersion != null) return replaceValue(doc, DOC_VERSION, docVersion, true);
-        return doc;
-    }
+    // protected Document version(Document doc) {
+    // if (docVersion != null) return replaceValue(doc, DOC_VERSION, docVersion, true);
+    // return doc;
+    // }
 
     public <F extends Indexable<? super F>> void replace(F indexable) {
         replaceDoc(indexable.indexable());
@@ -259,7 +259,7 @@ public class LuceneIndex implements Closeable {
 
     protected synchronized IndexWriter getIndexWriter() {
         activity = System.currentTimeMillis();
-        fixDocVersion();
+        // fixDocVersion();
         return optional(indexWriter, this::createIndexWriter);
     }
 
@@ -283,7 +283,7 @@ public class LuceneIndex implements Closeable {
 
     protected DirectoryReader getIndexReader() {
         activity = System.currentTimeMillis();
-        fixDocVersion();
+        // fixDocVersion();
         return optional(indexReader, this::createIndexReader);
     }
 
@@ -386,7 +386,7 @@ public class LuceneIndex implements Closeable {
             BiConsumer<F, F> onRematchOptional, ForceRedo<F> forceRedoOptional) {
         fetched.forEach(f -> {
             if (f.getUuid() == null) f.setUuid(newUuid());
-            if (f.getVersion() == null) f.setVersion(docVersion);
+            // if (f.getVersion() == null) f.setVersion(docVersion);
         });
 
         Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
@@ -560,10 +560,10 @@ public class LuceneIndex implements Closeable {
                 .parallel() //
                 .filter(d -> isBlank(d.get(DOC_UUID)))
                 .forEach(this::uuid);
-        docs.stream()
-                .parallel() //
-                .filter(d -> d.getField(DOC_VERSION) == null)
-                .forEach(this::version);
+        // docs.stream()
+        // .parallel() //
+        // .filter(d -> d.getField(DOC_VERSION) == null)
+        // .forEach(this::version);
         split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(w -> w.addDocuments(batch)));
     }
 
@@ -634,7 +634,7 @@ public class LuceneIndex implements Closeable {
     }
 
     public void delete(Query query) {
-        wtransaction(writer -> writer.deleteDocuments(query));
+        wtransaction(w -> w.deleteDocuments(query));
     }
 
     public QueryParser newQueryParser(String field) {

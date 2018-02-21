@@ -20,6 +20,7 @@ import org.apache.lucene.index.IndexableField;
 import org.jhaws.common.lang.ClassUtils;
 import org.jhaws.common.lang.DateTime8;
 
+@SuppressWarnings("deprecation")
 public abstract class LuceneDocumentBuilder<T> {
     protected Class<T> type;
 

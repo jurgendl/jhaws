@@ -23,7 +23,7 @@ public interface Indexable<T> {
         if (getUuid() != null) d.add(new StringField(LuceneIndex.DOC_UUID, getUuid(), Field.Store.YES));
         if (getVersion() != null) {
             d.add(new IntPoint(LuceneIndex.DOC_VERSION, getVersion()));
-            d.add(new StoredField(LuceneIndex.DOC_VERSION, 17));
+            d.add(new StoredField(LuceneIndex.DOC_VERSION, getVersion()));
         }
         d.add(new LongPoint(LuceneIndex.DOC_LASTMOD, Date.from(getLastmodified().toInstant(ZoneOffset.ofHours(0))).getTime()));
         d.add(new StoredField(LuceneIndex.DOC_LASTMOD, Date.from(getLastmodified().toInstant(ZoneOffset.ofHours(0))).getTime()));

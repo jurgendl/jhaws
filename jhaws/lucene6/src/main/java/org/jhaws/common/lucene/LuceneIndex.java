@@ -68,6 +68,7 @@ import org.slf4j.LoggerFactory;
  * @see http://blog.swwomm.com/2013/07/tuning-lucene-to-get-most-relevant.html
  */
 // SmartLifecycle, InitializingBean
+@SuppressWarnings("deprecation")
 public class LuceneIndex implements Closeable {
     protected final ReentrantLock lock = new ReentrantLock();
 
@@ -630,7 +631,7 @@ public class LuceneIndex implements Closeable {
     }
 
     public void delete(Query query) {
-        wtransaction(writer -> writer.deleteDocuments(query));
+        wtransaction(w -> w.deleteDocuments(query));
     }
 
     public QueryParser newQueryParser(String field) {
