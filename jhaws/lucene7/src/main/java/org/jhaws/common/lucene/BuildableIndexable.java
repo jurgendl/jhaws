@@ -7,8 +7,8 @@ import org.apache.lucene.document.Document;
 public class BuildableIndexable<T> implements Indexable<T> {
     protected transient LuceneDocumentBuilder<T> builder;
 
-    @IndexField(LuceneIndex.DOC_VERSION)
-    protected Integer version;
+    // @IndexField(LuceneIndex.DOC_VERSION)
+    // protected Integer version;
 
     @IndexField(LuceneIndex.DOC_UUID)
     protected String uuid;
@@ -23,15 +23,15 @@ public class BuildableIndexable<T> implements Indexable<T> {
         };
     }
 
-    @Override
-    public Integer getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+    // @Override
+    // public Integer getVersion() {
+    // return version;
+    // }
+    //
+    // @Override
+    // public void setVersion(Integer version) {
+    // this.version = version;
+    // }
 
     @Override
     public String getUuid() {

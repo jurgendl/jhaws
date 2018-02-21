@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -70,7 +71,7 @@ import org.slf4j.LoggerFactory;
 // SmartLifecycle, InitializingBean
 @SuppressWarnings("deprecation")
 public class LuceneIndex implements Closeable {
-    protected final ReentrantLock lock = new ReentrantLock();
+    protected final Lock lock = new ReentrantLock();
 
     protected static final String WRITE_LOCK = "write.lock";
 
@@ -821,7 +822,7 @@ public class LuceneIndex implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         shutDown();
     }
 }

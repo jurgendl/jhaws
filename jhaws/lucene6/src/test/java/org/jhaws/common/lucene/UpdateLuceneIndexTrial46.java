@@ -1,7 +1,5 @@
 package org.jhaws.common.lucene;
 
-import java.io.IOException;
-
 import org.jhaws.common.io.FilePath;
 
 public class UpdateLuceneIndexTrial46 {
@@ -10,7 +8,7 @@ public class UpdateLuceneIndexTrial46 {
         System.out.println(lp);
         try (LuceneIndex li = new LuceneIndex(lp)) {
             li.upgrade(false);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

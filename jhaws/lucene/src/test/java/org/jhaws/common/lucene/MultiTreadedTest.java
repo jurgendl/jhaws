@@ -1,10 +1,14 @@
 package org.jhaws.common.lucene;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.StringField;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.lucene.LuceneIndex;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MultiTreadedTest {
@@ -15,17 +19,47 @@ public class MultiTreadedTest {
         System.out.println(fp);
         @SuppressWarnings("resource")
         LuceneIndex li = new LuceneIndex(fp);
+        Random r = new Random();
         for (int i = 0; i < 10; i++) {
-            final int ii = i;
             Thread t = new Thread(() -> {
                 for (int j = 0; j < 100; j++) {
-                    Document doc = new Document();
-                    li.addDocs(doc);
-                    if (j % 10 == 0) System.out.println(ii + "/" + j);
+                    List<Document> docs = new ArrayList<>();
+                    for (int k = 0; k < 10000; k++) {
+                        Document doc = new Document();
+                        doc.add(new StringField("idx", "" + ((char) ((int) 'a' + r.nextInt(26))) + ((char) ((int) 'a' + r.nextInt(26))),
+                                org.apache.lucene.document.Field.Store.YES));
+                        docs.add(doc);
+                    }
+                    try {
+                        li.addDocs(docs);
+                    } catch (Exception ex) {
+                        ex.printStackTrace(System.out);
+                        Assert.fail("" + ex);
+                    }
                 }
                 latch.countDown();
             }, "MultiTreadedTest-" + i);
             t.setDaemon(false);
+            t.start();
+            System.out.println(i);
+        }
+        for (int i = 0; i < 5; i++) {
+            Thread t = new Thread(() -> {
+                while (true) {
+                    try {
+                        li.search(li.keyValueQuery("idx", "" + ((char) ((int) 'a' + r.nextInt(26))) + ((char) ((int) 'a' + r.nextInt(26)))), 10000);
+                    } catch (Exception ex) {
+                        ex.printStackTrace(System.out);
+                        Assert.fail("" + ex);
+                    }
+                    try {
+                        Thread.sleep(3000l);
+                    } catch (InterruptedException ex) {
+                        //
+                    }
+                }
+            }, "MultiTreadedTest-" + i);
+            t.setDaemon(true);
             t.start();
             System.out.println(i);
         }

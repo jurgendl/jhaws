@@ -25,7 +25,7 @@ public class Img2Pdf {
         List<FilePath> images = trg.listFiles();
         images = sort(true, images, new LastModifiedTimeComparator());
         com.itextpdf.text.Document document = new com.itextpdf.text.Document();
-        PdfWriter writer = PdfWriter.getInstance(document, pdffile.newBufferedOutputStream());
+        /* PdfWriter writer = */PdfWriter.getInstance(document, pdffile.newBufferedOutputStream());
         document.open();
         for (FilePath img : images) {
             Image iimg = Image.getInstance(img.toUrl());

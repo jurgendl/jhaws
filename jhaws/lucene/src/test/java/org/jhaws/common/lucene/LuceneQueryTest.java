@@ -10,5 +10,6 @@ public class LuceneQueryTest {
         Assert.assertEquals(
                 "defaultfield:\"some sentence query\"~2^15.0 ((defaultfield:some defaultfield:sentence defaultfield:query)~2^6.0) ((defaultfield:some defaultfield:sentence defaultfield:query)~3^9.0)",
                 i.buildQuery("some sentence to query", "defaultfield").toString());
+        i.close();
     }
 }

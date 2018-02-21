@@ -1,7 +1,5 @@
 package org.jhaws.common.lucene;
 
-import java.io.IOException;
-
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
@@ -16,7 +14,7 @@ public class EmptyLuceneIndex {
         doc.add(new StringField("name", "value", Store.YES));
         try (LuceneIndex li = new LuceneIndex(lp)) {
             li.addDocs(doc);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

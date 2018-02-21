@@ -37,7 +37,7 @@ public class LuceneDocumentBuilderTest {
             It it = new It();
             it.setLastmodified(LocalDateTime.now());
             it.setUuid("uuid");
-            it.setVersion(1);
+            // it.setVersion(1);
             it.setField1("field1");
             it.setField2("field2");
             Document d = it.indexable();
@@ -45,7 +45,7 @@ public class LuceneDocumentBuilderTest {
             it2 = it2.retrieve(d);
             Assert.assertFalse(it == it2);
             Assert.assertEquals(it.getUuid(), it2.getUuid());
-            Assert.assertEquals(it.getVersion(), it2.getVersion());
+            // Assert.assertEquals(it.getVersion(), it2.getVersion());
             Assert.assertEquals(it.getLastmodified(), it2.getLastmodified());
             Assert.assertEquals(it.getField1(), it2.getField1());
             Assert.assertEquals(it.getField2(), it2.getField2());

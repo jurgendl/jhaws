@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.Lock;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -58,6 +58,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Bits;
+import org.jhaws.common.concurrent.DummyLock;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.CollectionUtils8;
 import org.jhaws.common.lang.functions.EConsumer;
@@ -70,7 +71,7 @@ import org.slf4j.LoggerFactory;
  */
 // SmartLifecycle, InitializingBean
 public class LuceneIndex implements Closeable {
-    protected final ReentrantLock lock = new ReentrantLock();
+    protected final Lock lock = new DummyLock(); // new ReentrantLock();
 
     protected static final String WRITE_LOCK = "write.lock";
 
@@ -82,7 +83,7 @@ public class LuceneIndex implements Closeable {
 
     protected static final String LUCENE_METADATA = "LUCENE_METADATA";
 
-    public static final String DOC_VERSION = "DOC_VERSION";
+    // public static final String DOC_VERSION = "DOC_VERSION";
 
     public static final String DOC_UUID = "DOC_UUID";
 
@@ -202,9 +203,9 @@ public class LuceneIndex implements Closeable {
     // // }
     // }
 
-    protected Document version(Document doc, int version) {
-        return replaceValue(doc, DOC_VERSION, version, true);
-    }
+    // protected Document version(Document doc, int version) {
+    // return replaceValue(doc, DOC_VERSION, version, true);
+    // }
 
     protected Document uuid(Document doc) {
         return replaceValue(doc, DOC_UUID, newUuid(), true);
@@ -257,7 +258,7 @@ public class LuceneIndex implements Closeable {
         }
     }
 
-    protected synchronized IndexWriter getIndexWriter() {
+    protected IndexWriter getIndexWriter() {
         activity = System.currentTimeMillis();
         // fixDocVersion();
         return optional(indexWriter, this::createIndexWriter);
@@ -488,6 +489,7 @@ public class LuceneIndex implements Closeable {
     }
 
     public List<ScoreDoc> search(Query query, int max) {
+        if (dir.isEmpty()) return new ArrayList<>();
         ScoreDoc[] scoreDocs = score(query, max).scoreDocs;
         logger.info("{} -> #{}", query, scoreDocs.length);
         return toList(scoreDocs);
@@ -818,7 +820,7 @@ public class LuceneIndex implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         shutDown();
     }
 }
