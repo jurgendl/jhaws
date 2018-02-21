@@ -250,7 +250,7 @@ public class LuceneIndex implements Closeable {
         return optional(searchAnalyzer, this::createSearchAnalyzer);
     }
 
-    protected IndexWriter createIndexWriter() {
+    protected synchronized IndexWriter createIndexWriter() {
         try {
             return indexWriter = new IndexWriter(getIndex(), getIndexWriterConfig());
         } catch (IOException ex) {
