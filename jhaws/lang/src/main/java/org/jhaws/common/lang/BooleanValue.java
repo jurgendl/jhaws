@@ -1,9 +1,11 @@
 package org.jhaws.common.lang;
 
+import java.util.function.BooleanSupplier;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class BooleanValue extends Value<Boolean> {
+public class BooleanValue extends Value<Boolean> implements BooleanSupplier {
     private static final long serialVersionUID = -1530814975734843133L;
 
     public BooleanValue() {
@@ -57,5 +59,10 @@ public class BooleanValue extends Value<Boolean> {
     public BooleanValue setFalse() {
         set(Boolean.FALSE);
         return this;
+    }
+
+    @Override
+    public boolean getAsBoolean() {
+        return Boolean.TRUE.equals(getValue());
     }
 }

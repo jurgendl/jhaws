@@ -3,6 +3,7 @@ package org.jhaws.common.lang;
 import java.io.Serializable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,7 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.janino.util.Producer;
 
 @XmlRootElement
-public class Value<T> implements Serializable {
+public class Value<T> implements Serializable, Supplier<T> {
     private static final long serialVersionUID = -5341543889953418944L;
 
     public static <T> Value<T> value(T value) {
@@ -35,6 +36,7 @@ public class Value<T> implements Serializable {
         return this.value = value;
     }
 
+    @Override
     public T get() {
         return getValue();
     }
