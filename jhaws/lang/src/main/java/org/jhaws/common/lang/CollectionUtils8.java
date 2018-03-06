@@ -511,22 +511,30 @@ public interface CollectionUtils8 {
         }
     }
 
+    /**
+     * always use first value for key
+     */
     public static <T> BinaryOperator<T> keepFirst() {
         return (p1, p2) -> p1;
     }
 
+    /**
+     * always use last value for key
+     */
     public static <T> BinaryOperator<T> keepLast() {
         return (p1, p2) -> p2;
     }
 
     /**
-     * BinaryOperator<V> binaryOperator = (k, v) -> k;
+     * see {@link #keepLast()}
      */
     public static <V> BinaryOperator<V> acceptDuplicateKeys() {
         return keepLast();
     }
 
     /**
+     * rejects !different! keys for the same value
+     * 
      * @throws IllegalArgumentException
      */
     public static <V> BinaryOperator<V> rejectDuplicateKeys() throws IllegalArgumentException {
@@ -1185,6 +1193,10 @@ public interface CollectionUtils8 {
         return stream(new String(text));
     }
 
+    public static Stream<Character> stream(Character[] text) {
+        return Arrays.stream(text);
+    }
+
     public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
         return values.stream()
                 .parallel()
@@ -1304,12 +1316,30 @@ public interface CollectionUtils8 {
         return stream(streamMaps(maps).collect(Collectors.toMap(Entry::getKey, Entry::getValue, keepLast(), newLinkedMap())));
     }
 
+    public static <K, V> Collector<Entry<K, V>, ?, EnhancedMap<K, V>> collectMapEntries(Function<Entry<K, V>, V> valueMapper) {
+        return Collectors.toMap(Entry::getKey, valueMapper, rejectDuplicateKeys(), newMap());
+    }
+
+    public static <K, V> Collector<Entry<K, V>, ?, EnhancedMap<K, V>> collectMapEntriesAlt(Function<Entry<K, V>, K> keyMapper) {
+        return Collectors.toMap(keyMapper, Entry::getValue, rejectDuplicateKeys(), newMap());
+    }
+
+    public static <K, V> Collector<Entry<K, V>, ?, EnhancedMap<K, V>> collectMapEntries() {
+        return Collectors.toMap(Entry::getKey, Entry::getValue, rejectDuplicateKeys(), newMap());
+    }
+
     public static <T, K, V> Collector<T, ?, EnhancedMap<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper) {
         return collectMap(keyMapper, valueMapper, rejectDuplicateKeys());
     }
 
     public static <T, K, V> Collector<T, ?, EnhancedMap<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
             BinaryOperator<V> duplicateValues) {
+        return Collectors.toMap(keyMapper, valueMapper, duplicateValues, newMap());
+    }
+
+    public static <T, K, V> Collector<T, ?, EnhancedMap<K, V>> collectMapAlt(Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
+        @SuppressWarnings("unchecked")
+        Function<T, K> keyMapper = (Function<T, K>) id();
         return Collectors.toMap(keyMapper, valueMapper, duplicateValues, newMap());
     }
 
@@ -2027,5 +2057,13 @@ public interface CollectionUtils8 {
 
     public static <K extends Serializable, V extends Serializable> SortedMap<K, V> serializable(SortedMap<K, V> set) {
         return set instanceof Serializable ? set : new TreeMap<>(set);
+    }
+
+    public static IntStream stream(byte[] bytes) {
+        return IntStream.range(0, bytes.length).map(idx -> bytes[idx]);
+    }
+
+    public static IntStream stream(Byte[] bytes) {
+        return IntStream.range(0, bytes.length).map(idx -> bytes[idx]);
     }
 }
