@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jhaws.common</groupId>
         <artifactId>modules</artifactId>
-        <version>4.0.9-SNAPSHOT</version>
+        <version>4.0.10-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jhaws-lucene7</artifactId>
