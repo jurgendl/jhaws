@@ -1656,7 +1656,8 @@ public interface CollectionUtils8 {
     }
 
     @SafeVarargs
-    public static <T> List<T> sortBy(Collection<T> collection, Function<T, ?> map, Function<T, ?>... mapAdditional) {
+    public static <T> List<T> sortBy(Collection<T> collection, Function<T, ? extends Comparable<?>> map,
+            Function<T, ? extends Comparable<?>>... mapAdditional) {
         return collection.stream().sorted(comparator(map, mapAdditional)).collect(collectList());
     }
 
@@ -1667,13 +1668,15 @@ public interface CollectionUtils8 {
     }
 
     @SafeVarargs
-    public static <T> List<T> sortInPlace(List<T> list, Function<T, ?> map, Function<T, ?>... mapAdditional) {
+    public static <T> List<T> sortInPlace(List<T> list, Function<T, ? extends Comparable<?>> map,
+            Function<T, ? extends Comparable<?>>... mapAdditional) {
         list.sort(comparator(map, mapAdditional));
         return list;
     }
 
     @SafeVarargs
-    public static <T> Comparator<T> comparator(Function<T, ?> compare, Function<T, ?>... compareAdditional) {
+    public static <T> Comparator<T> comparator(Function<T, ? extends Comparable<?>> compare,
+            Function<T, ? extends Comparable<?>>... compareAdditional) {
         return (t1, t2) -> {
             CompareToBuilder cb = new CompareToBuilder();
             cb.append(compare.apply(t1), compare.apply(t2));
