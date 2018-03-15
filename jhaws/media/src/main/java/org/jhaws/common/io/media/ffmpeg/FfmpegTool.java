@@ -10,7 +10,10 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -69,6 +72,8 @@ public class FfmpegTool implements MediaCte {
     protected List<KeyValue<ProcessInfo, Process>> actions = new ArrayList<>();
 
     public static class ProcessInfo {
+        public final String id = UUID.randomUUID().toString();
+
         public ProcessInfo(String action, FilePath input) {
             this.input = input;
             this.action = action;
@@ -247,7 +252,9 @@ public class FfmpegTool implements MediaCte {
      * @see https://www.peterbe.com/plog/fastest-way-to-take-screencaps-out-of-videos
      */
     public boolean splash(FilePath video, FilePath splashFile, Duration duration, long frames, SplashPow pow) {
-        KeyValue<ProcessInfo, Process> act = act(null, video, "splash");
+        Map<String, Object> context = new HashMap<>();
+        context.put("start", System.currentTimeMillis());
+        KeyValue<ProcessInfo, Process> act = act(context, video, "splash");
         // That will seek 10 seconds into the movie, select every 1000th frame,
         // scale it to 320x240 pixels and create 2x3 tiles
         // ffmpeg -ss 00:00:10 -i movie.avi -frames 1 -vf
@@ -317,9 +324,15 @@ public class FfmpegTool implements MediaCte {
                 ImageTools.write(bio, splashFile);
             }
             seperates.stream().forEach(FilePath::delete);
-            return splashFile.exists();
+            boolean success = splashFile.exists();
+            context.put("end", System.currentTimeMillis());
+            context.put("success", success);
+            return success;
         } catch (Exception ex) {
             logger.error("{}", ex);
+            context.put("end", System.currentTimeMillis());
+            context.put("success", false);
+            context.put("exception", "" + ex);
             return false;
         }
         // int parts = wh * wh + 2;
