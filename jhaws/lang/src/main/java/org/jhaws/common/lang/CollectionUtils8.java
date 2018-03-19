@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -724,23 +723,23 @@ public interface CollectionUtils8 {
     }
 
     public static <T> Supplier<Deque<T>> newDeque() {
-        return LinkedList::new;
+        return EnhancedLinkedList::new;
     }
 
     public static <T> Supplier<List<T>> newList() {
-        return ArrayList::new;
+        return EnhancedArrayList::new;
     }
 
     public static <T> Supplier<Queue<T>> newQueue() {
-        return LinkedList::new;
+        return EnhancedLinkedList::new;
     }
 
     public static <T> Supplier<Set<T>> newSet() {
-        return HashSet::new;
+        return EnhancedHashSet::new;
     }
 
     public static <T> Supplier<SortedSet<T>> newSortedSet() {
-        return TreeSet::new;
+        return EnhancedTreeSet::new;
     }
 
     public static <T> Supplier<BlockingQueue<T>> newBlockingQueue() {
