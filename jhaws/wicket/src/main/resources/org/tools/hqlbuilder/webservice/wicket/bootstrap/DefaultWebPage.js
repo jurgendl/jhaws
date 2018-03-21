@@ -277,3 +277,5 @@ function rangeslider(id,m,from,to) {
 		$('#'+to).val(data.values.max.toString().toHHMMSS());
 	});
 }
+
+/* ======================================================= */
