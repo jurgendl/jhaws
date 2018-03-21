@@ -45,9 +45,32 @@ function appVueProcessResponse(response) {
 				}
 			}
 		} else {
-			vueApplication.app = new Vue({
-				el : '#'+vueApplication.domId,
-				data : response['data']
+			vueApplication.app = new Vue({ 
+				el : '#'+vueApplication.domId, 
+				data : {
+					filter : {
+						showFilter : true,
+						showAll : true,
+						search : '',
+						passesFilter : function (element) {
+							var _s = this.search;
+							if(!_s) return true;
+							if(_s=='') return true;
+							if(element.title && element.title.indexOf(_s)>-1) return true;
+							if(element.subtitle && element.subtitle.indexOf(_s)>-1) return true;
+							if(element.description && element.description.indexOf(_s)>-1) return true;
+							return false;
+						}
+					},
+					elements : response['data'].elements,
+					background : function (element) {
+						if(element.state=='waiting') return 'bg-light';
+						if(element.state=='busy') return 'bg-info text-white';
+						if(element.state=='error') return 'bg-warning text-white';
+						if(element.state=='success') return 'bg-success text-white';
+						return 'bg-dark text-white';
+					}
+				},
 			});
 			$('#'+vueApplication.domId).attr('style', '');
 		}
