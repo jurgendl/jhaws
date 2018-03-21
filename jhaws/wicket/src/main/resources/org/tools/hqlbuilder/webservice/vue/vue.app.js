@@ -56,9 +56,10 @@ function appVueProcessResponse(response) {
 							var _s = this.search;
 							if(!_s) return true;
 							if(_s=='') return true;
-							if(element.title && element.title.indexOf(_s)>-1) return true;
-							if(element.subtitle && element.subtitle.indexOf(_s)>-1) return true;
-							if(element.description && element.description.indexOf(_s)>-1) return true;
+							_s = _s.toUpperCase();
+							if(element.title && element.title.toUpperCase().indexOf(_s)>-1) return true;
+							if(element.subtitle && element.subtitle.toUpperCase().indexOf(_s)>-1) return true;
+							if(element.description && element.description.toUpperCase().indexOf(_s)>-1) return true;
 							return false;
 						}
 					},
@@ -66,7 +67,7 @@ function appVueProcessResponse(response) {
 					background : function (element) {
 						if(element.state=='waiting') return 'bg-light';
 						if(element.state=='busy') return 'bg-info text-white';
-						if(element.state=='error') return 'bg-warning text-white';
+						if(element.state=='error') return 'bg-warning';
 						if(element.state=='success') return 'bg-success text-white';
 						return 'bg-dark text-white';
 					}
