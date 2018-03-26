@@ -25,6 +25,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.RatingFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TextFieldSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.TriStateCheckBoxSettings;
 
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
@@ -171,5 +172,9 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 
     public TagItTextFieldPanel addTagItTextFieldPanel(String propertyPath, TagItTextFieldSettings componentSettings, IModel<List<String>> choices) {
         return this.addDefaultRow(new TagItTextFieldPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices));
+    }
+
+    public TriStateCheckBoxPanel addTriStateCheckBox(Boolean propertyPath, TriStateCheckBoxSettings componentSettings) {
+        return this.addDefaultRow(new TriStateCheckBoxPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 }
