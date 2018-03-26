@@ -12,7 +12,9 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.RatingFieldSettings;
 
-/** https://github.com/javiertoledo/bootstrap-rating-input */
+/**
+ * https://github.com/javiertoledo/bootstrap-rating-input v0.4
+ */
 @SuppressWarnings("serial")
 public class RatingFieldPanel2 extends DefaultFormRowPanel<Integer, NumberTextField<Integer>, RatingFieldSettings> {
     public RatingFieldPanel2(IModel<?> model, Integer propertyPath, FormSettings formSettings, RatingFieldSettings componentSettings) {
@@ -38,7 +40,8 @@ public class RatingFieldPanel2 extends DefaultFormRowPanel<Integer, NumberTextFi
                 tag(tag, "data-inactive-icon", "fa-star-o text-secondary");
                 if (Boolean.TRUE.equals(getComponentSettings().getClearable())) {
                     tag(tag, "data-clearable-icon", "fa-remove text-danger");
-                    tag(tag, "data-clearable", "");
+                    tag(tag, "data-clearable", ".");
+                    tag(tag, "data-clearable-remain", "true");
                 }
                 tag(tag, "min", 1);
                 tag(tag, "max", settings.getMaximum());

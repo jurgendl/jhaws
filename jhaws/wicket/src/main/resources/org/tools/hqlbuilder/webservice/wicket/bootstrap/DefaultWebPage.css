@@ -559,7 +559,10 @@ img.niceimage {
   box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
 }
 
-
+/** rating V2 (transparent clear text) */
+div.rating-input a.rating-clear {
+	color: rgba(0, 0, 0, 0) !important;
+}
 
 
 
@@ -586,3 +589,4 @@ img.niceimage {
   overflow: hidden;
   padding: 0.35rem .5rem;
 }
+
