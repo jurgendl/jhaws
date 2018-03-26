@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
@@ -54,7 +55,8 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
                 protected void onComponentTag(ComponentTag tag) {
                     super.onComponentTag(tag);
                     String markupId = getComponent().getMarkupId();
-                    // tag.getAttributes().put(FOR, markupId);
+                    tag.getAttributes().put(FormConstants.FOR, markupId);
+                    tag.getAttributes().put(FormConstants.TITLE, getLabelModel().getObject());
                 }
             };
             if (getLabelClass() != null) {

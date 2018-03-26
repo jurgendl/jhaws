@@ -15,10 +15,9 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
  * @see http://jqueryui.com/button/
  * @see http://vanderlee.github.io/tristate/
  */
+@SuppressWarnings("serial")
 public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckBoxSettings> {
     public static final String CHECKBOXLABEL = "checkboxlabel";
-
-    private static final long serialVersionUID = 7669787482921703670L;
 
     public CheckBoxPanel(IModel<?> model, Boolean propertyPath, FormSettings formSettings, CheckBoxSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
@@ -46,8 +45,6 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
     public Label getLabel() {
         if (label == null) {
             label = new Label(LABEL, getLabelModel()) {
-                private static final long serialVersionUID = 8512361193054906821L;
-
                 @Override
                 public boolean isVisible() {
                     return super.isVisible() && (formSettings == null || formSettings.isShowLabel());
@@ -68,8 +65,6 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
         this.add(getLabel());
         this.add(getComponentContainer().add(getComponent()));
         this.add(getComponentContainer().add(new Label(CHECKBOXLABEL, getLabelModel()) {
-            private static final long serialVersionUID = 7533571573957789273L;
-
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);

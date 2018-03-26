@@ -88,8 +88,9 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
     }
 
     public FormRowPanelParent<P, T, C, ElementSettings> addComponents() {
-        this.add(this.getLabel());
-        this.add(getComponentContainer());
+        Label _label = getLabel();
+        add(_label);
+        add(getComponentContainer());
         C _component = getComponent();
         getComponentContainer().add(_component);
         getComponentContainer().add(getRequiredMarker());
@@ -176,7 +177,8 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
                 @Override
                 protected void onComponentTag(ComponentTag tag) {
                     super.onComponentTag(tag);
-                    tag.getAttributes().put(FormConstants.FOR, FormRowPanelParent.this.getComponent().getMarkupId());
+                    String markupId = FormRowPanelParent.this.getComponent().getMarkupId();
+                    tag.getAttributes().put(FormConstants.FOR, markupId);
                     tag.getAttributes().put(FormConstants.TITLE, FormRowPanelParent.this.getLabelModel().getObject());
                 }
             };
