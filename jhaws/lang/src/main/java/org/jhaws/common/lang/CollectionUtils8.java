@@ -67,6 +67,12 @@ import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.jhaws.common.lang.QuadruplePredicate.NotNullQuadruplePredicate;
+import org.jhaws.common.lang.QuadruplePredicate.NotNullQuadrupleStringPredicate;
+import org.jhaws.common.lang.QuintuplePredicate.NotNullQuintuplePredicate;
+import org.jhaws.common.lang.QuintuplePredicate.NotNullQuintupleStringPredicate;
+import org.jhaws.common.lang.TriplePredicate.NotNullTriplePredicate;
+import org.jhaws.common.lang.TriplePredicate.NotNullTripleStringPredicate;
 
 // http://infotechgems.blogspot.be/2011/11/java-collections-performance-time.html
 // TODO https://www.techempower.com/blog/2016/10/19/efficient-multiple-stream-concatenation-in-java/
@@ -2067,5 +2073,45 @@ public interface CollectionUtils8 {
 
     public static IntStream stream(Byte[] bytes) {
         return IntStream.range(0, bytes.length).map(idx -> bytes[idx]);
+    }
+
+    public static <A> Predicate<A> notNullPredicate() {
+        return a -> a != null;
+    }
+
+    public static Predicate<String> notNullStringPredicate() {
+        return a -> StringUtils.isNotBlank(a);
+    }
+
+    public static <A, B> BiPredicate<A, B> notNullBiPredicate() {
+        return (a, b) -> a != null || b != null;
+    }
+
+    public static BiPredicate<String, String> notNullBiStringPredicate() {
+        return (a, b) -> StringUtils.isNotBlank(a) || StringUtils.isNotBlank(b);
+    }
+
+    public static <A, B, C> TriplePredicate<A, B, C> notNullTriplePredicate() {
+        return new NotNullTriplePredicate<>();
+    }
+
+    public static TriplePredicate<String, String, String> notNullTripleStringPredicate() {
+        return new NotNullTripleStringPredicate();
+    }
+
+    public static <A, B, C, D> QuadruplePredicate<A, B, C, D> notNullQuadruplePredicate() {
+        return new NotNullQuadruplePredicate<>();
+    }
+
+    public static QuadruplePredicate<String, String, String, String> notNullQuadrupleStringPredicate() {
+        return new NotNullQuadrupleStringPredicate();
+    }
+
+    public static <A, B, C, D, E> QuintuplePredicate<A, B, C, D, E> notNullQuintuplePredicate() {
+        return new NotNullQuintuplePredicate<>();
+    }
+
+    public static QuintuplePredicate<String, String, String, String, String> notNullQuintupleStringPredicate() {
+        return new NotNullQuintupleStringPredicate();
     }
 }
