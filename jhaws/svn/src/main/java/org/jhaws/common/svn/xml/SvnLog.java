@@ -11,22 +11,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "log")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SvnLog extends SvnRootBean implements Iterable<LogEntry> {
-    private List<LogEntry> logentry;
+	private List<LogEntry> logentry;
 
-    @SuppressWarnings("unchecked")
-    public List<LogEntry> getLogentry() {
-        if (logentry == null) {
-            return Collections.emptyList();
-        }
-        return logentry;
-    }
+	public List<LogEntry> getLogentry() {
+		if (logentry == null) {
+			return Collections.emptyList();
+		}
+		return logentry;
+	}
 
-    @Override
-    public Iterator<LogEntry> iterator() {
-        return getLogentry().iterator();
-    }
+	@Override
+	public Iterator<LogEntry> iterator() {
+		return getLogentry().iterator();
+	}
 
-    public void setLogentry(List<LogEntry> logentry) {
-        this.logentry = logentry;
-    }
+	public void setLogentry(List<LogEntry> logentry) {
+		this.logentry = logentry;
+	}
 }
