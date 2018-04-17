@@ -39,6 +39,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.RedirectStrategy;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -159,7 +160,6 @@ public class HTTPClient implements Closeable {
         this.userAgent = userAgent;
     }
 
-    @SuppressWarnings("deprecation")
     public RequestConfig getRequestConfig() {
         if (requestConfig == null) {
             Builder requestConfigBuilder = RequestConfig.custom()//
@@ -169,7 +169,10 @@ public class HTTPClient implements Closeable {
                     .setConnectTimeout(5000)//
                     .setExpectContinueEnabled(true)//
                     .setRedirectsEnabled(true)//
-                    .setCookieSpec(org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY);
+                    // https://stackoverflow.com/questions/36473478/fixing-httpclient-warning-invalid-expires-attribute-using-fluent-api/40697322
+                    .setCookieSpec(CookieSpecs.STANDARD)//
+            // .setCookieSpec(org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY)//
+            ;
             requestConfigBuilder = requestConfigBuilder.setContentCompressionEnabled(compressed);
             requestConfig = requestConfigBuilder.build();
         }
