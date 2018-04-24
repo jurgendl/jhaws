@@ -2111,4 +2111,16 @@ public interface CollectionUtils8 {
     public static QuintuplePredicate<String, String, String, String, String> notNullQuintupleStringPredicate() {
         return new NotNullQuintupleStringPredicate();
     }
+
+    public static <T> List<T> replaceOrAdd(List<T> list, T object) {
+        if (list == null || object == null) return list;
+        int i = list.indexOf(object);
+        if (i != -1) {
+            list.remove(object);
+            list.add(i, object);
+        } else {
+            list.add(object);
+        }
+        return list;
+    }
 }
