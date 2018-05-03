@@ -8,6 +8,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://fontawesome.com/how-to-use/upgrading-from-4
 // https://fontawesome.com/get-started/svg-with-js
 // https://fontawesome.com/icons?d=gallery
+// https://fontawesome.com/how-to-use/upgrading-from-4#icon-name-changes-complete-list
 // 4.7.0
 // 5.0.11
 public class FontAwesome {
