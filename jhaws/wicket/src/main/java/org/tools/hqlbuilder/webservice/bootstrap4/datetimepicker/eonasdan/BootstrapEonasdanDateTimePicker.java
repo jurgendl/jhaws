@@ -10,16 +10,16 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://github.com/Eonasdan/bootstrap-datetimepicker
 // 4.17.47
 public class BootstrapEonasdanDateTimePicker {
-    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapEonasdanDateTimePicker.class,
-            "js/bootstrap-datetimepicker.min.js");
+	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(
+			BootstrapEonasdanDateTimePicker.class, "js/bootstrap-datetimepicker.min.js");
 
-    public static final CssResourceReference CSS = new CssResourceReference(BootstrapEonasdanDateTimePicker.class,
-            "css/bootstrap-datetimepicker.css");
+	public static final CssResourceReference CSS = new CssResourceReference(BootstrapEonasdanDateTimePicker.class,
+			"css/bootstrap-datetimepicker.css");
 
-    static {
-        JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
-        JS.addJavaScriptResourceReferenceDependency(MomentJs.JS);
-        CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
-        CSS.addCssResourceReferenceDependency(FontAwesome.CSS_v407);
-    }
+	static {
+		JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
+		JS.addJavaScriptResourceReferenceDependency(MomentJs.JS);
+		CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
+		CSS.addCssResourceReferenceDependency(FontAwesome.CSS4);
+	}
 }
