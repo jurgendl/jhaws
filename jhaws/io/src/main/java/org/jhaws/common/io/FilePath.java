@@ -519,8 +519,8 @@ public class FilePath implements Path, Externalizable {
 
 		public static class VideoFilter extends Filters.ExtensionFilter {
 			public VideoFilter() {
-				super("flv", "webm", "mp4", "m4v", "mpg", "mpeg", "mpe", "mpv", "wmv", "avi", "mov", "qt", "asf", "rm",
-						"divx", "mkv", "ts");
+				super("flv", "webm", "mp4v", "mp4", "m4v", "mpg", "mpeg", "mpe", "mpv", "wmv", "avi", "mov", "qt",
+						"asf", "rm", "divx", "mkv", "ts");
 			}
 		}
 

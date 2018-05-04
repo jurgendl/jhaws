@@ -1,10 +1,11 @@
 .ratinginput {
   display: inline-block;
   position: relative;
-  height: 1.25rem;
-  line-height: 1.25rem;
-  font-size: 1.25rem;
+  height: .75rem;
+  line-height: .75rem;
+  font-size: .75rem;
   margin-right: .175rem;
+  margin-top: .75rem;
 }
 
 .ratinginput label {

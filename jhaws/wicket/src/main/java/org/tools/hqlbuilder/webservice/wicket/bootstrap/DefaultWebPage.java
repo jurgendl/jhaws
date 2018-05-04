@@ -40,7 +40,6 @@ import org.tools.hqlbuilder.webservice.jquery.ui.blazy.BLazy;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.jquery.ui.picturefill.PictureFill;
-import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
@@ -434,7 +433,7 @@ public abstract class DefaultWebPage extends WebPage {
 		response.render(CssHeaderItem.forReference(FontAwesome.CSS5SVG));
 		response.render(JavaScriptHeaderItem.forReference(FontAwesome.JS5SVG_4SHIM));
 
-		response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_CSS));
+		// response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_CSS));
 		// response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_SOCIAL_CSS));
 		// response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_CSS));
 		// response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_HOVER_CSS));
