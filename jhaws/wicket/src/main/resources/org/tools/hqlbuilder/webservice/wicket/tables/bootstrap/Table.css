@@ -1,6 +1,7 @@
 .wicket_orderNone:not(.unsortable):before, .wicket_orderDown:before, .wicket_orderUp:before {
 	display: inline-block;
-	font: normal normal normal 14px/1 FontAwesome;
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
 	font-size: inherit;
 	text-rendering: auto;
 	-webkit-font-smoothing: antialiased;
@@ -8,12 +9,33 @@
 }
 .wicket_orderNone:not(.unsortable):before {
 	content: "\f0dc";
+	display: inline-block;
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	margin-right: .25rem;
 }
 .wicket_orderDown:before {
 	content: "\f15d";
+	display: inline-block;
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	margin-right: .25rem;
 }
 .wicket_orderUp:before {
 	content: "\f15e";
+	display: inline-block;
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+	font-size: inherit;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	margin-right: .25rem;
 }
 .wicket_orderNone:not(.unsortable) div, .wicket_orderDown div, .wicket_orderUp div {
 	display: inline-block;
