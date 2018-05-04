@@ -69,7 +69,7 @@ public class Vue {
                             &lt;h6 class="card-subtitle mb-2 text-muted"&gt;{{ element.order }}&lt;/h6&gt;
                             &lt;p class="card-text"&gt;&lt;small class="text-muted"&gt;{{ index }}&lt;/small&gt;&lt;/p&gt;
                         &lt;/div&gt;
-                        &lt;button onclick="appVueTest.remove(this)" style="position:absolute;top:0.25rem;right:0.25rem;" class="btn btn-sm btn-danger"&gt;&lt;i class="fa fa-stop-circle"&gt;&lt;/i&gt;&lt;/button&gt;
+                        &lt;button onclick="appVueTest.remove(this)" style="position:absolute;top:0.25rem;right:0.25rem;" class="btn btn-sm btn-danger"&gt;&lt;i class="fa-fw fas fa-stop-circle"&gt;&lt;/i&gt;&lt;/button&gt;
                     &lt;/div&gt;
                 &lt;/transition&gt;
             &lt;/span&gt;

@@ -25,12 +25,12 @@ $('input[type=number].ratinginput').each(function(index) {
 		
 		for (var j = 1; j <= i; j++) {
 			//ratingHtml += '<span class="fa-stack">\n';
-			ratingHtml += '<i class="rating fa fa-star"'; // fa fa-star-o fa-stack-2x
+			ratingHtml += '<i class="rating fa-fw fas fa-star"'; // fa-fw fas fa-star-o fa-stack-2x
 			if(i==j){
 				ratingHtml += ' title="' + i + '"';
 			}
 			ratingHtml += '></i>\n';
-			//ratingHtml += '<i class="fa fa-stack-1x" style="font-size:.75rem">' + j + '</i>\n';
+			//ratingHtml += '<i class="fa-fw fas fa-stack-1x" style="font-size:.75rem">' + j + '</i>\n';
 			//ratingHtml += '</span>\n';
 		}
 		ratingHtml += '</label>\n';

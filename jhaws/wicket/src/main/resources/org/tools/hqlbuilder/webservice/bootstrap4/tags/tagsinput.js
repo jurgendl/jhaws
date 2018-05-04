@@ -140,7 +140,7 @@
 
       // add a tag element
 
-      var $tag = $('<span class="badge ' + htmlEncode(tagClass) + (itemTitle !== null ? ('" title="' + itemTitle) : '') + '">' + htmlEncode(itemText) + '<span class="fa fa-minus-circle" data-role="remove"></span></span>');
+      var $tag = $('<span class="badge ' + htmlEncode(tagClass) + (itemTitle !== null ? ('" title="' + itemTitle) : '') + '">' + htmlEncode(itemText) + '<span class="fa-fw fas fa-minus-circle" data-role="remove"></span></span>');
       $tag.data('item', item);
       self.findInputWrapper().before($tag);
       $tag.after(' ');
