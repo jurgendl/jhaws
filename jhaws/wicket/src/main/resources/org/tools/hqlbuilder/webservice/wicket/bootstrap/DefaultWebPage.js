@@ -10,23 +10,25 @@
 */
 
 function toggle_visibility(expander,collapsible) {
-	set_visibility(expander,collapsible,$("[id="+collapsible+"]").hasClass( "hidden" ));
-}
-function set_visibility(expander,collapsible,ishidden) {
-	collapsibletag = $("[id="+collapsible+"]");
 	expandertag = $("[id="+expander+"]");
+	tagplus = $(expandertag).children("svg.fa-plus-square");
+	console.log(tagplus);
+	tagminus = $(expandertag).children("svg.fa-minus-square");
+	console.log(tagminus);
+	collapsibletag = $("[id="+collapsible+"]");
+	ishidden = collapsibletag.hasClass( "hidden" );
 	if( ishidden ) {
 		collapsibletag.removeClass( "hidden" );
 		expandertag.removeClass( "collapsed" );
 		expandertag.addClass( "expanded" );
-		expandertag.removeClass( "iconicfill-plus" );
-		expandertag.addClass( "iconicfill-minus" );
+		tagplus.addClass( "hidden" );
+		tagminus.removeClass( "hidden" );
 	} else {
 		collapsibletag.addClass( "hidden" );
 		expandertag.removeClass( "expanded" );
 		expandertag.addClass( "collapsed" );
-		expandertag.removeClass( "iconicfill-minus" );
-		expandertag.addClass( "iconicfill-plus" );
+		tagplus.removeClass( "hidden" );
+		tagminus.addClass( "hidden" );
 	}
 }
 
