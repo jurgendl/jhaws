@@ -2,8 +2,8 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 	<entry key="nocookies">This site uses cookies, do you want to</entry>
-	<entry key="allowcookies">allow cookies</entry>
-	<entry key="disallowcookies">disallow cookies</entry>
+	<entry key="allowcookies">Allow cookies</entry>
+	<entry key="disallowcookies">Disallow cookies</entry>
 	<entry key="cookiesfull"><![CDATA[
 		<h2>What are cookies?</h2>
 			<p>Cookies are small text files containing a string of characters that can be placed on your computer or mobile device that uniquely identify your browser or device. What are cookies used for?</p>
