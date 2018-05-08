@@ -15,11 +15,11 @@ public class LongValue extends Value<Long> {
     }
 
     public LongValue add() {
-        return add(1);
+        return add(1l);
     }
 
     public LongValue remove() {
-        return add(-1);
+        return add(-1l);
     }
 
     public LongValue add(long i) {
