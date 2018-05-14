@@ -513,7 +513,7 @@ public class FilePath implements Path, Externalizable {
 			public ImageFilter() {
 				super("jpg", "jpeg", "bmp", "tiff", "tif", "pix", "png", "gif", "jp2", "tga", "pcx", "pnm", "ppm",
 						"pbm", "pgm", "ras", "iff", "raw", "jpe", "wmf", "svg", "jpm", "emf", "rla", "jif", "dpx",
-						"dcx", "pic", "ico");
+						"dcx", "pic", "ico", "webp");
 			}
 		}
 
