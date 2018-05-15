@@ -65,4 +65,30 @@ public class BooleanValue extends Value<Boolean> implements BooleanSupplier {
     public boolean getAsBoolean() {
         return Boolean.TRUE.equals(getValue());
     }
+
+    public BooleanValue and(BooleanValue b) {
+        return and(b.getAsBoolean());
+    }
+
+    public BooleanValue and(Boolean b) {
+        return and(Boolean.TRUE.equals(b));
+    }
+
+    public BooleanValue and(boolean b) {
+        set(getAsBoolean() && b);
+        return this;
+    }
+
+    public BooleanValue or(BooleanValue b) {
+        return or(b.getAsBoolean());
+    }
+
+    public BooleanValue or(Boolean b) {
+        return or(Boolean.TRUE.equals(b));
+    }
+
+    public BooleanValue or(boolean b) {
+        set(getAsBoolean() || b);
+        return this;
+    }
 }
