@@ -17,6 +17,7 @@ import org.tools.hqlbuilder.webservice.wicket.WicketUtils;
 // https://flowplayer.com/demos
 // https://flowplayer.com/docs
 // https://flowplayer.com/player
+// https://flowplayer.com/demos/showcase/complete
 // 7.2.6
 @SuppressWarnings("serial")
 public class FlowPlayer7 {
