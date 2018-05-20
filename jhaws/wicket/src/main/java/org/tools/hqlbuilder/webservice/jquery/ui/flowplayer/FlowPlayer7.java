@@ -27,6 +27,13 @@ public class FlowPlayer7 {
 		JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
 	}
 
+	public static JavaScriptResourceReference JS_HLS = new JavaScriptResourceReference(FlowPlayer7.class,
+			"flowplayer-7.2.6/flowplayer.hlsjs.js");
+
+	static {
+		JS_HLS.addJavaScriptResourceReferenceDependency(JS);
+	}
+
 	public static CssResourceReference SKIN_CSS = new CssResourceReference(FlowPlayer7.class,
 			"flowplayer-7.2.6/skin/skin.css");
 
@@ -111,9 +118,9 @@ public class FlowPlayer7 {
 	}
 
 	/**
-	 * response.render(CssHeaderItem.forReference(FlowPlayer.SKIN_CSS));<br>
-	 * response.render(JavaScriptHeaderItem.forReference(FlowPlayer.JS));<br>
-	 * response.render(OnDomReadyHeaderItem.forScript(FlowPlayer.javaScript("customflowplayer",
+	 * response.render(CssHeaderItem.forReference(FlowPlayer7.SKIN_CSS));<br>
+	 * response.render(JavaScriptHeaderItem.forReference(FlowPlayer7.JS));<br>
+	 * response.render(OnDomReadyHeaderItem.forScript(FlowPlayer7.javaScript("customflowplayer",
 	 * true, true)));<br>
 	 */
 	public static String javaScript(String tag, boolean loop, boolean splash) {

@@ -14,6 +14,7 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 
 @SuppressWarnings("serial")
 public class FlowPlayer7Panel extends Panel {
+	@SuppressWarnings("unused")
 	private FlowPlayer7Config config;
 
 	public FlowPlayer7Panel(String id, FlowPlayer7Config config) {
@@ -40,7 +41,7 @@ public class FlowPlayer7Panel extends Panel {
 		// fixed controls
 		// flowplayer.add(new CssClassNameAppender("no-toggle"));
 		// angular icons
-		// flowplayer.add(new CssClassNameAppender("fp-edgy"));
+		flowplayer.add(new CssClassNameAppender("fp-edgy"));
 		// outline icons
 		// flowplayer.add(new CssClassNameAppender("fp-outlined"));
 		if (Boolean.TRUE.equals(_config.getMinimal())) {
@@ -111,7 +112,7 @@ public class FlowPlayer7Panel extends Panel {
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 		response.render(CssHeaderItem.forReference(FlowPlayer7.SKIN_CSS));
-		response.render(JavaScriptHeaderItem.forReference(FlowPlayer7.JS));
+		response.render(JavaScriptHeaderItem.forReference(FlowPlayer7.JS_HLS));
 		response.render(OnDomReadyHeaderItem.forScript(";$('.customflowplayer').flowplayer(" + //
 				"{" + //
 				// (config.isSplash() ? "," + "splash:true" : "") + //
