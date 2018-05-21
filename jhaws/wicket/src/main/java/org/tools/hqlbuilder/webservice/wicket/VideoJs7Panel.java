@@ -116,11 +116,12 @@ public class VideoJs7Panel extends Panel {
 		if (StringUtils.isNotBlank(_config.getSplashUrl())) {
 			video.add(new AttributeModifier("poster", _config.getSplashUrl()));
 		}
-		video.add(new AttributeModifier("loop", "true"));
+		// video.add(new AttributeModifier("loop", "true"));
 		if (size) {
 			video.add(new AttributeModifier("aspectRatio", _config.getW() + ":" + _config.getH()));
 		}
 		video.add(new AttributeModifier("fluid", "true"));
+		video.add(new AttributeModifier("muted", "true"));
 
 		return videocontainer;
 	}
