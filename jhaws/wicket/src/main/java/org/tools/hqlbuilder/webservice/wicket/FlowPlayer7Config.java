@@ -7,39 +7,7 @@ import org.jhaws.common.io.FilePath;
 
 @SuppressWarnings("serial")
 public class FlowPlayer7Config implements Serializable {
-	public static class FlowPlayer7Video implements Serializable {
-		private String url;
-
-		private String mimetype;
-
-		private FilePath file;
-
-		public String getUrl() {
-			return this.url;
-		}
-
-		public void setUrl(String url) {
-			this.url = url;
-		}
-
-		public String getMimetype() {
-			return this.mimetype;
-		}
-
-		public void setMimetype(String mimetype) {
-			this.mimetype = mimetype;
-		}
-
-		public FilePath getFile() {
-			return this.file;
-		}
-
-		public void setFile(FilePath file) {
-			this.file = file;
-		}
-	}
-
-	private List<FlowPlayer7Video> sources;
+	private List<Html5VideoElement> sources;
 
 	private Boolean minimal;
 
@@ -55,11 +23,11 @@ public class FlowPlayer7Config implements Serializable {
 
 	private boolean loop;
 
-	public List<FlowPlayer7Video> getSources() {
+	public List<Html5VideoElement> getSources() {
 		return this.sources;
 	}
 
-	public void setSources(List<FlowPlayer7Video> sources) {
+	public void setSources(List<Html5VideoElement> sources) {
 		this.sources = sources;
 	}
 

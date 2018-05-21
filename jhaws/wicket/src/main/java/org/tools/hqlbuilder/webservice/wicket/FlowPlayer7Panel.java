@@ -22,17 +22,17 @@ public class FlowPlayer7Panel extends Panel {
 	public FlowPlayer7Panel(String id, FlowPlayer7Config config) {
 		super(id);
 		this.config = config;
-		add(createFlowplayercontainer(config));
+		add(createContainer(config));
 	}
 
-	protected WebMarkupContainer createFlowplayercontainer(FlowPlayer7Config _config) {
+	protected WebMarkupContainer createContainer(FlowPlayer7Config _config) {
 		WebMarkupContainer flowplayercontainer = new WebMarkupContainer("flowplayercontainer");
-		flowplayercontainer.add(createFlowplayer(_config));
-		flowplayercontainer.add(createFlowplayerActions(_config));
+		flowplayercontainer.add(createPlayer(_config));
+		flowplayercontainer.add(createActions(_config));
 		return flowplayercontainer;
 	}
 
-	protected WebMarkupContainer createFlowplayer(FlowPlayer7Config _config) {
+	protected WebMarkupContainer createPlayer(FlowPlayer7Config _config) {
 		boolean size = _config.getW() != null && _config.getH() != null && _config.getW() > 0 && _config.getH() > 0;
 
 		WebMarkupContainer flowplayer = new WebMarkupContainer("flowplayer");
@@ -61,7 +61,7 @@ public class FlowPlayer7Panel extends Panel {
 		if (_config.isSplash()) {
 			flowplayer.add(new CssClassNameAppender("is-splash"));
 			if (_config.getSplashFile().exists()) {
-				if (_config.getW() != 0 && _config.getH() != 0) {
+				if (size) {
 					flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl()
 							+ ") no-repeat;background-size:cover;background-position-x:center"
 					// + ";max-width:" + _config.getW() + "px"
@@ -72,14 +72,14 @@ public class FlowPlayer7Panel extends Panel {
 							+ ") no-repeat;background-size:cover;background-position-x:center"));
 				}
 			} else {
-				if (_config.getW() != 0 && _config.getH() != 0) {
+				if (size) {
 				} else {
 					flowplayer.add(new AttributeModifier("style", ""));
 				}
 			}
 		} else {
 			flowplayer.add(new CssClassNameRemover("is-splash"));
-			if (_config.getW() != null && _config.getH() != null && _config.getW() != 0 && _config.getH() != 0) {
+			if (size) {
 				flowplayer.add(new AttributeModifier("style", ";background-size:cover;background-position-x:center"));
 			} else {
 				flowplayer.add(new AttributeModifier("style", ";background-size:cover"));
@@ -101,7 +101,7 @@ public class FlowPlayer7Panel extends Panel {
 		videocontainer.add(videosource);
 		videocontainer.add(new AttributeModifier("preload", "none")); // metadata
 
-		if (_config.getW() != null && _config.getH() != null && _config.getW() != 0 && _config.getH() != 0) {
+		if (size) {
 			videocontainer.add(new AttributeModifier("width", _config.getW()));
 			videocontainer.add(new AttributeModifier("height", _config.getH()));
 			videosource.add(new AttributeModifier("width", _config.getW()));
@@ -111,7 +111,7 @@ public class FlowPlayer7Panel extends Panel {
 		return flowplayer;
 	}
 
-	protected WebMarkupContainer createFlowplayerActions(FlowPlayer7Config _config) {
+	protected WebMarkupContainer createActions(FlowPlayer7Config _config) {
 		WebMarkupContainer flowplayeractions = new WebMarkupContainer("flowplayeractions");
 		return flowplayeractions;
 	}
