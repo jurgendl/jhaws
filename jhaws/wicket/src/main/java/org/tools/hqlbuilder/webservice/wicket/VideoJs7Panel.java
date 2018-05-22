@@ -72,5 +72,6 @@ public class VideoJs7Panel extends Panel {
         super.renderHead(response);
         response.render(CssHeaderItem.forReference(VideoJs7.CSS));
         response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS));
+        response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS_PREVENT_MULTIPLE));
     }
 }
