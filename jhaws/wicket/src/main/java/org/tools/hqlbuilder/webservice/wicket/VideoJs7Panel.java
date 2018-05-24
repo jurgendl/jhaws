@@ -10,6 +10,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.tools.hqlbuilder.webservice.libraries.videojs.VideoJs7;
 
+// https://github.com/videojs/video.js/issues/3773
+// http://jsbin.com/faxayot/edit?html,output
 // https://blog.videojs.com/video-js-5-s-fluid-mode-and-playlist-picker/
 // https://codepen.io/dotdreaming/pen/CnLeD
 // https://codepen.io/rayrc/post/responsive-html5-video-using-video-js
@@ -52,7 +54,7 @@ public class VideoJs7Panel extends Panel {
 		});
 		video.add(new AttributeModifier("preload", "none")); // metadata
 		if (StringUtils.isNotBlank(_config.getSplashUrl())) {
-			video.add(new AttributeModifier("poster", _config.getSplashUrl()));
+			// video.add(new AttributeModifier("poster", _config.getSplashUrl()));
 		}
 		if (Boolean.TRUE.equals(_config.getLoop())) {
 			video.add(new AttributeModifier("loop", "true"));
@@ -64,6 +66,12 @@ public class VideoJs7Panel extends Panel {
 		}
 		video.add(new AttributeModifier("fluid", "true"));
 		video.add(new AttributeModifier("muted", "true"));
+
+		// video.add(new AttributeModifier("style", "width:100% !important;
+		// padding-bottom:"
+		// + (int) (100.0 * config.getH() / _config.getW()) + "% !important"));
+		// video.add(new AttributeModifier("style", "width:100% !important;height:100%
+		// !important"));
 
 		return videocontainer;
 	}
