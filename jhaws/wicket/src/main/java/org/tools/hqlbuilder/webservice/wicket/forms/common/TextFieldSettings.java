@@ -10,6 +10,7 @@ public class TextFieldSettings extends AbstractFormElementSettings<TextFieldSett
 
 	public TextFieldSettings() {
 		super();
+		autocomplete = false;
 	}
 
 	public Boolean getSelectAllOnFocus() {
