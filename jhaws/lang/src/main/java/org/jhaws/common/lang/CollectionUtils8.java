@@ -2140,4 +2140,22 @@ public interface CollectionUtils8 {
         }
         return list;
     }
+
+    public static <T> Consumer<T> throwing(Supplier<RuntimeException> exception) {
+        return t -> {
+            throw exception.get();
+        };
+    }
+
+    public static <T> Consumer<T> throwing(RuntimeException exception) {
+        return t -> {
+            throw exception;
+        };
+    }
+
+    public static <T> Consumer<T> throwing(Function<T, RuntimeException> exception) {
+        return t -> {
+            throw exception.apply(t);
+        };
+    }
 }
