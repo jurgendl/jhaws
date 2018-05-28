@@ -115,8 +115,11 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			String javaScript = "$('#" + getForm().getMarkupId() + "').submit(function(){"//
 					+ "$('#" + submitId + "').attr('disabled', true);" //
 					+ "$('#" + submitId + "').addClass('disabled');"//
-					+ "$('#" + submitId
-					+ "').children('.fa-check').removeClass('fa-check').addClass('fa-compass fa-spin');"//
+					+ "$('#" + submitId + "').children('.fa-check')"//
+					+ ".removeClass('fa-check')"//
+					+ ".addClass('fa-compass fa-spin')"//
+					// + ".addClass('spinner')"//
+					+ ";"//
 					+ "return true;"//
 					+ "});";
 			response.render(OnDomReadyHeaderItem.forScript(javaScript));

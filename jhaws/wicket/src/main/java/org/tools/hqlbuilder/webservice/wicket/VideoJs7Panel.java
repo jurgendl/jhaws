@@ -54,7 +54,7 @@ public class VideoJs7Panel extends Panel {
 		});
 		video.add(new AttributeModifier("preload", "none")); // metadata
 		if (StringUtils.isNotBlank(_config.getSplashUrl())) {
-			// video.add(new AttributeModifier("poster", _config.getSplashUrl()));
+			video.add(new AttributeModifier("poster", _config.getSplashUrl()));
 		}
 		if (Boolean.TRUE.equals(_config.getLoop())) {
 			video.add(new AttributeModifier("loop", "true"));
