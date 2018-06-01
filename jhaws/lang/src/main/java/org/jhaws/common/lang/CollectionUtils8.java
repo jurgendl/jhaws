@@ -1478,19 +1478,46 @@ public interface CollectionUtils8 {
     }
 
     /**
-     * c1 - c2, does not change input collections
+     * c1 - c2, does not change input collections, returns new collection (list)
      */
-    public static <T> Collection<T> subtract(Collection<T> c1, Collection<T> c2) {
-        Collection<T> tmp = new ArrayDeque<>(c1);
-        tmp.removeAll(c2);
+    public static <T> List<T> subtract(Collection<T> c1, Collection<T> c2) {
+        if (c1 != null) {
+            return Collections.emptyList();
+        }
+        List<T> tmp = new ArrayList<>(c1);
+        if (c2 != null) {
+            tmp.removeAll(c2);
+        }
         return tmp;
     }
 
     /**
-     * intersection of c1 and c2, does not change input collections
+     * intersection of c1 and c2, does not change input collections, returns new collection (list)
      */
-    public static <T> Collection<T> intersection(Collection<T> c1, Collection<T> c2) {
+    public static <T> List<T> intersection(Collection<T> c1, Collection<T> c2) {
+        if (c1 == null || c2 == null) {
+            return Collections.emptyList();
+        }
         return c1.stream().filter(c2::contains).collect(collectList());
+    }
+
+    /**
+     * intersection of c1 and c2, does not change input collections, returns new collection (list)
+     */
+    public static <T> List<T> union(Collection<T> c1, Collection<T> c2) {
+        if (c1 == null && c2 == null) {
+            return Collections.emptyList();
+        }
+        if (c1 == null) {
+            return new ArrayList<>(c2);
+        }
+        if (c2 == null) {
+            return new ArrayList<>(c1);
+        }
+        List<T> tmp = new ArrayList<>(c1.size() + c2.size());
+        tmp.addAll(c1);
+        tmp.addAll(c2);
+        return tmp;
     }
 
     /**
@@ -1515,16 +1542,6 @@ public interface CollectionUtils8 {
         }
         return Collector.of(IntersectAcc::new, IntersectAcc::accept, IntersectAcc::combine,
                 acc -> acc.result == null ? Collections.emptySet() : acc.result, Collector.Characteristics.UNORDERED);
-    }
-
-    /**
-     * intersection of c1 and c2, does not change input collections
-     */
-    public static <T> Collection<T> union(Collection<T> c1, Collection<T> c2) {
-        Collection<T> tmp = new ArrayDeque<>(c1.size() + c2.size());
-        tmp.addAll(c1);
-        tmp.addAll(c2);
-        return tmp;
     }
 
     /**
