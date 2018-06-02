@@ -541,9 +541,21 @@ img.niceimage {
 	font-size: 0.75rem !important;
 }
 
+/**/
+@media (max-width: 575.98px) {
+	.back-to-top {
+		display: none !important;
+	}
+}
+
 /* sticky top and navbar space behind: same value (padding)top */
 .navbarwhitebehind {
 	padding-top:3.55rem;
+}
+@media (max-width: 575.98px) {
+	.navbarwhitebehind {
+		padding-top:2.7rem;
+	}
 }
 .sticky {
   position: -webkit-sticky;
@@ -557,6 +569,12 @@ img.niceimage {
   -webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
   -moz-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
   box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
+}
+@media (max-width: 575.98px) {
+	.sticky {
+		/*top:2.7rem;*/
+		display: none !important;
+	}
 }
 
 /** rating V2 (transparent clear text) */
