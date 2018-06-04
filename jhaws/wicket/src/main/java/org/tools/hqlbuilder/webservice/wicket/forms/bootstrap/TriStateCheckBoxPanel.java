@@ -1,11 +1,14 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
+import java.util.Locale;
+
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.util.convert.converter.BooleanConverter;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TriStateCheckBoxSettings;
@@ -14,7 +17,22 @@ import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameApp
 
 @SuppressWarnings("serial")
 public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, TriStateCheckBoxSettings> {
+    public static Boolean toBoolean(Object object, BooleanConverter booleanConverter, Locale locale) {
+        if (object == null) {
+            return null;
+        }
+        if (object instanceof Boolean) {
+            return (Boolean) object;
+        }
+        if (object instanceof String) {
+            return booleanConverter.convertToObject((String) object, locale);
+        }
+        throw new UnsupportedOperationException();
+    }
+
     public static final String CHECKBOXLABEL = "checkboxlabel";
+
+    private CheckBox checkBox;
 
     public TriStateCheckBoxPanel(IModel<?> model, Boolean propertyPath, FormSettings formSettings, TriStateCheckBoxSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
@@ -92,5 +110,9 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox
         this.add(getComponentContainer().add(getRequiredMarker().setVisible(false)));
         this.add(getComponentContainer().add(getFeedback()));
         return this;
+    }
+
+    public CheckBox getCheckBox() {
+        return this.checkBox;
     }
 }

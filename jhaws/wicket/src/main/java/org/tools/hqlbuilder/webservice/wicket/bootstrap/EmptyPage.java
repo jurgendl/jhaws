@@ -1,18 +1,38 @@
-package org.tools.hqlbuilder.webservice.wicket;
+package org.tools.hqlbuilder.webservice.wicket.bootstrap;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+@SuppressWarnings("serial")
 public class EmptyPage extends DefaultWebPage {
-    private static final long serialVersionUID = -6224371951323596850L;
-
     public EmptyPage(PageParameters parameters) {
         super(parameters);
+    }
+
+    private String toString(PageParameters params) {
+        Map<String, Object> map = new HashMap<>();
+        for (String name : params.getNamedKeys()) {
+            map.put(name, params.getValues(name));
+        }
+        return map.toString();
+    }
+
+    private String toString(IRequestParameters params) {
+        Map<String, Object> map = new HashMap<>();
+        for (String name : params.getParameterNames()) {
+            map.put(name, params.getParameterValue(name));
+        }
+        return map.toString();
+    }
+
+    @Override
+    protected void addComponents(PageParameters parameters, MarkupContainer html) {
         add(new Label("PageParameters", toString(parameters)));
         add(new Label("PostParameters", toString(getPage().getRequest().getPostParameters())));
         add(new Label("QueryParameters", toString(getPage().getRequest().getQueryParameters())));
@@ -35,21 +55,5 @@ public class EmptyPage extends DefaultWebPage {
             System.out.println(servletWebRequest.getOriginalUrl());
             System.out.println(servletWebRequest.getUrl());
         }
-    }
-
-    private String toString(PageParameters params) {
-        Map<String, Object> map = new HashMap<>();
-        for (String name : params.getNamedKeys()) {
-            map.put(name, params.getValues(name));
-        }
-        return map.toString();
-    }
-
-    private String toString(IRequestParameters params) {
-        Map<String, Object> map = new HashMap<>();
-        for (String name : params.getParameterNames()) {
-            map.put(name, params.getParameterValue(name));
-        }
-        return map.toString();
     }
 }
