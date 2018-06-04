@@ -1481,7 +1481,7 @@ public interface CollectionUtils8 {
      * c1 - c2, does not change input collections, returns new collection (list)
      */
     public static <T> List<T> subtract(Collection<T> c1, Collection<T> c2) {
-        if (c1 != null) {
+        if (c1 == null) {
             return Collections.emptyList();
         }
         List<T> tmp = new ArrayList<>(c1);
