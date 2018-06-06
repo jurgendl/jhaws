@@ -258,21 +258,22 @@ public interface CollectionUtils8 {
             return or(supplier.get());
         }
 
-        default <M> M map(Function<T, M> map) {
-            return map.apply(get());
-        }
-
-        default <M> M mapOrNull(Function<T, M> map) {
-            return mapOr(map, (M) null);
-        }
-
-        default <M> M mapOr(Function<T, M> map, M value) {
-            return mapOr(map, (Supplier<M>) () -> value);
-        }
-
-        default <M> M mapOr(Function<T, M> map, Supplier<M> value) {
+        default <X> OptEager<X> map(Function<T, X> map) {
             T v = get();
-            return v == null ? value.get() : map.apply(v);
+            return Opt.eager(map.apply(v));
+        }
+
+        default <X> OptEager<X> mapOrNull(Function<T, X> map) {
+            return mapOr(map, (X) null);
+        }
+
+        default <X> OptEager<X> mapOr(Function<T, X> map, X value) {
+            return mapOr(map, (Supplier<X>) () -> value);
+        }
+
+        default <X> OptEager<X> mapOr(Function<T, X> map, Supplier<X> value) {
+            T v = get();
+            return Opt.eager(v == null ? value.get() : map.apply(v));
         }
 
         /** default eager */
