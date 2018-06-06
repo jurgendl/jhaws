@@ -1,9 +1,9 @@
 <wicket:extend>
-	<div wicket:id="tempusdominuspicker" class="tempusdominuspicker input-group input-group-sm date" data-target-input="nearest">
-		<input wicket:id="value" data-target="css_class_tempusdominuspicker" type="text" class="form-control form-control-sm datetimepicker-input" />
-		<div wicket:id="tempusdominuspickergroup" data-target="css_class_tempusdominuspicker" class="input-group-append" data-toggle="datetimepicker">
+	<div wicket:id="tempusdominuspicker" class="input-group input-group-sm date tempusdominusdate" data-target-input="nearest">
+		<input wicket:id="value" type="text" class="form-control datetimepicker-input" data-target="#tempusdominuspicker" />
+		<div wicket:id="tempusdominuspickergroup" class="input-group-append" data-target="#tempusdominuspicker" data-toggle="datetimepicker">
 			<div class="input-group-text">
-				<i wicket:id="tempusdominuspickericon" class="fa-fw fas fa-calendar"></i>
+				<i wicket:id="tempusdominuspickericon" class="fa-fw far fa-calendar"></i>
 			</div>
 		</div>
 	</div>

@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
@@ -87,15 +86,16 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
         if (DatePickerSettings.class.cast(getComponentSettings()).getType() != null) {
             switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
                 case datetime:
-                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
-                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominusdatetime"));
+                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate")); // remove default
+                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominusdatetime")); // add correct one
                     break;
                 case time:
-                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate"));
-                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominustime"));
+                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate")); // remove default
+                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominustime")); // add correct one
                     break;
                 default:
                 case date:
+                    // tempusdominusdate is default, css class is ok
                     break;
             }
         }
@@ -109,7 +109,8 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
         this.add(getComponentContainer());
         tempusdominuspickergroup.add(new AttributeModifier("data-target", "#" + tempusdominuspicker.getMarkupId()));
         _component.add(new AttributeModifier("data-target", "#" + tempusdominuspicker.getMarkupId()));
-        tempusdominuspickergroup.add(new WebMarkupContainer("tempusdominuspickericon"));
+        WebMarkupContainer tempusdominuspickericon = new WebMarkupContainer("tempusdominuspickericon");
+        tempusdominuspickergroup.add(tempusdominuspickericon);
         return this;
     }
 
@@ -124,14 +125,14 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
         }
     }
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        if (!isEnabledInHierarchy()) {
-            return;
-        }
-        // response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
-        // response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
-        // response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
-    }
+    // @Override
+    // public void renderHead(IHeaderResponse response) {
+    // super.renderHead(response);
+    // if (!isEnabledInHierarchy()) {
+    // return;
+    // }
+    // response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
+    // response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
+    // response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
+    // }
 }
