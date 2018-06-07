@@ -98,6 +98,16 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
         });
     }
 
+    public TextFieldPanel<String> addUrlField(String propertyPath, TextFieldSettings componentSettings) {
+        return this.addDefaultRow(new TextFieldPanel<String>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings) {
+            @Override
+            protected void onFormComponentTag(ComponentTag tag) {
+                super.onFormComponentTag(tag);
+                WebHelper.tag(tag, "type", "url");
+            }
+        });
+    }
+
     public <F extends Serializable> TextAreaPanel<F> addTextArea(F propertyPath, TextAreaSettings componentSettings) {
         return this.addDefaultRow(new TextAreaPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }

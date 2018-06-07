@@ -2,6 +2,7 @@ package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
@@ -18,8 +19,17 @@ public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<
     @Override
     protected void onFormComponentTag(ComponentTag tag) {
         super.onFormComponentTag(tag);
+        if (getComponentSettings().getMinlength() != null) {
+            WebHelper.tag(tag, "minlength", String.valueOf(getComponentSettings().getMinlength()));
+        }
+        if (getComponentSettings().getMinlength() != null) {
+            WebHelper.tag(tag, "maxlength", String.valueOf(getComponentSettings().getMaxlength()));
+        }
         if (Boolean.FALSE.equals(getComponentSettings().getAutocomplete())) {
             WebHelper.tag(tag, "autocomplete", "off");
+        }
+        if (StringUtils.isNotBlank(getComponentSettings().getPattern())) {
+            WebHelper.tag(tag, "pattern", getComponentSettings().getPattern());
         }
         if (Boolean.TRUE.equals(getComponentSettings().getReplaceAllOnDrop())) {
             WebHelper.tag(tag, "ondrop", ";event.preventDefault();$(event.target).val(event.dataTransfer.getData('text'));");
