@@ -6,18 +6,13 @@ public class TextFieldSettings extends AbstractFormElementSettings<TextFieldSett
 
     protected Boolean replaceAllOnDrop;
 
-    protected Boolean autocomplete;
+    protected Boolean autocomplete = false;
 
     protected String pattern;
 
     protected Integer minlength;
 
     protected Integer maxlength;
-
-    public TextFieldSettings() {
-        super();
-        autocomplete = false;
-    }
 
     public Boolean getSelectAllOnFocus() {
         return this.selectAllOnFocus;

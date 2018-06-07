@@ -8,9 +8,14 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
+import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
+import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
@@ -32,9 +37,23 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.TriStateCheckBoxSetti
 
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
+    public static final CssResourceReference FORM_CSS = new CssResourceReference(FormPanel.class, "form.css");
+
+    public static final JavaScriptResourceReference FORM_JS = new JavaScriptResourceReference(FormPanel.class, "form.js");
+
     public FormPanel(String id, FormActions<T> formActions, FormSettings formSettings) {
         super(id, formActions, formSettings);
         bootstrap = true;
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!this.isEnabledInHierarchy()) {
+            return;
+        }
+        response.render(CssHeaderItem.forReference(FormPanel.FORM_CSS));
+        response.render(JavaScriptHeaderItem.forReference(FormPanel.FORM_JS));
     }
 
     protected String getFeedbackCss(org.apache.wicket.feedback.FeedbackMessage message) {
@@ -197,11 +216,15 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
         return this.addDefaultRow(new HiddenFieldPanel<F>(this.getFormModel(), propertyPath));
     }
 
-    public TagItTextFieldPanel addTagItTextFieldPanel(String propertyPath, TagItTextFieldSettings componentSettings, IModel<List<String>> choices) {
+    public TagItTextFieldPanel addTagItField(String propertyPath, TagItTextFieldSettings componentSettings, IModel<List<String>> choices) {
         return this.addDefaultRow(new TagItTextFieldPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices));
     }
 
     public TriStateCheckBoxPanel addTriStateCheckBox(Boolean propertyPath, TriStateCheckBoxSettings componentSettings) {
         return this.addDefaultRow(new TriStateCheckBoxPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    }
+
+    public TinyMCEPanel addTinyMCEPanel(String propertyPath, TinyMCESettings componentSettings) {
+        return this.addDefaultRow(new TinyMCEPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 }
