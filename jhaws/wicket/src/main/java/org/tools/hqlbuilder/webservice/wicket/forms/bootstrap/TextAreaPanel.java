@@ -20,6 +20,12 @@ public class TextAreaPanel<T extends Serializable> extends DefaultFormRowPanel<T
     @Override
     protected void onFormComponentTag(ComponentTag tag) {
         super.onFormComponentTag(tag);
+        tag(tag, "cols", getComponentSettings().getCols());
+        tag(tag, "rows", getComponentSettings().getRows());
+        if (!getComponentSettings().isResizable()) {
+            // http://brett.batie.com/website_development/no-resize-textarea-in-chrome- safari/
+            tag(tag, "style", "resize: none; height: auto;");
+        }
         if (getComponentSettings().getMinlength() != null) {
             WebHelper.tag(tag, "minlength", String.valueOf(getComponentSettings().getMinlength()));
         }
@@ -34,14 +40,6 @@ public class TextAreaPanel<T extends Serializable> extends DefaultFormRowPanel<T
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
-                tag(tag, "cols", getComponentSettings().getCols());
-                tag(tag, "rows", getComponentSettings().getRows());
-                /*
-                 * http://brett.batie.com/website_development/no-resize-textarea-in-chrome- safari/
-                 */
-                if (!getComponentSettings().isResizable()) {
-                    tag(tag, "style", "resize: none; height: auto;");
-                }
                 onFormComponentTag(tag);
             }
         };
