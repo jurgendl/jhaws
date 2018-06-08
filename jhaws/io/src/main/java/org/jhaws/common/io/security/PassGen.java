@@ -42,6 +42,9 @@ public class PassGen {
         System.out.println("\n\nOracle:");
         for (int i = 0; i < 5; i++)
             System.out.println(pass(30, "#_$(^", PassType.lowercase, PassType.uppercase, PassType.numbers));
+        System.out.println("\n\nSimple:");
+        for (int i = 0; i < 5; i++)
+            System.out.println(simplepass());
     }
 
     public static String specialpass(int length) {
@@ -62,6 +65,20 @@ public class PassGen {
 
     public static String pass(int length, PassType type, PassType... types) {
         return pass(length, (String) null, type, types);
+    }
+
+    public static String simplepass() {
+        List<String> list1 = new ArrayList<>();
+        RandomStringUtils.random(5, 0, 0, false, false, CHARS_LC, random).chars().mapToObj(c -> String.valueOf((char) c)).forEach(list1::add);
+        List<String> list2 = new ArrayList<>();
+        RandomStringUtils.random(5, 0, 0, false, false, CHARS_NR, random).chars().mapToObj(c -> String.valueOf((char) c)).forEach(list2::add);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            list.add(list1.get(i));
+            list.add(list2.get(i));
+        }
+        String p = list.stream().collect(Collectors.joining());
+        return p;
     }
 
     public static String pass(int length, String chars, PassType type, PassType... types) {
@@ -93,10 +110,8 @@ public class PassGen {
             length -= 1;
             S += STRING_SP;
         }
-        RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random)
-                .chars()
-                .mapToObj(c -> String.valueOf((char) c))
-                .forEach(list::add);
+        RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random).chars().mapToObj(c -> String.valueOf((char) c)).forEach(
+                list::add);
         Collections.shuffle(list);
         String p = list.stream().collect(Collectors.joining());
         return p;

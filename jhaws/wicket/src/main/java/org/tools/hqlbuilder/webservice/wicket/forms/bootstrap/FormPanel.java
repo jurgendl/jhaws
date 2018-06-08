@@ -35,6 +35,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.TextAreaSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TextFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TriStateCheckBoxSettings;
 
+// TODO validation https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
     public static final CssResourceReference FORM_CSS = new CssResourceReference(FormPanel.class, "form.css");
@@ -105,6 +106,16 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 
     public <F extends Serializable> TextFieldPanel<F> addTextField(F propertyPath, TextFieldSettings componentSettings) {
         return this.addDefaultRow(new TextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    }
+
+    public TextFieldPanel<String> addPasswordField(String propertyPath, TextFieldSettings componentSettings) {
+        return this.addDefaultRow(new TextFieldPanel<String>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings) {
+            @Override
+            protected void onFormComponentTag(ComponentTag tag) {
+                super.onFormComponentTag(tag);
+                WebHelper.tag(tag, "type", "password");
+            }
+        });
     }
 
     public TextFieldPanel<String> addEmailField(String propertyPath, TextFieldSettings componentSettings) {
