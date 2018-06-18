@@ -19,18 +19,4 @@ public interface TriplePredicate<A, B, C> {
         Objects.requireNonNull(other);
         return (A a, B b, C c) -> test(a, b, c) || other.test(a, b, c);
     }
-
-    public static class NotNullTriplePredicate<A, B, C> implements TriplePredicate<A, B, C> {
-        @Override
-        public boolean test(A a, B b, C c) {
-            return a != null || b != null || c != null;
-        }
-    }
-
-    public static class NotNullTripleStringPredicate implements TriplePredicate<String, String, String> {
-        @Override
-        public boolean test(String a, String b, String c) {
-            return StringUtils.isNotBlank(a) || StringUtils.isNotBlank(b) || StringUtils.isNotBlank(c);
-        }
-    }
 }
