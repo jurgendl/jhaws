@@ -8,6 +8,6 @@
 			<outputPatternAsHeader>false</outputPatternAsHeader>
 		</encoder>
 	</appender>
-	<logger name="org.apache.http.wire" level="debug" />
-	<root level="debug"><appender-ref ref="CONSOLE" /></root>
+	<logger name="org.apache.http.wire" level="warn" />
+	<root level="warn"><appender-ref ref="CONSOLE" /></root>
 </configuration>

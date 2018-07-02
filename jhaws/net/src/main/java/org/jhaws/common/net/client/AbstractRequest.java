@@ -1,5 +1,6 @@
 package org.jhaws.common.net.client;
 
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.HashMap;
@@ -15,6 +16,8 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
     protected String acceptEncoding;
 
     protected Map<String, Object> headers = new HashMap<>();
+
+    protected transient OutputStream out;
 
     public AbstractRequest() {
         super();
@@ -86,6 +89,15 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
 
     public T setAcceptEncoding(String acceptEncoding) {
         this.acceptEncoding = acceptEncoding;
+        return cast();
+    }
+
+    public OutputStream getOut() {
+        return this.out;
+    }
+
+    public T setOut(OutputStream out) {
+        this.out = out;
         return cast();
     }
 }

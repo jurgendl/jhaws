@@ -368,7 +368,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response get(GetRequest get) {
-        return execute(get, createGet(get));
+        return execute(get, createGet(get), get.getOut());
     }
 
     public HttpGet createGet(GetRequest get) {
@@ -376,7 +376,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response delete(DeleteRequest delete) {
-        return execute(delete, createDelete(delete));
+        return execute(delete, createDelete(delete), delete.getOut());
     }
 
     public HttpDelete createDelete(DeleteRequest delete) {
@@ -384,7 +384,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response put(PutRequest put) {
-        return execute(put, createPut(put));
+        return execute(put, createPut(put), put.getOut());
     }
 
     public HttpUriRequest createPut(PutRequest put) {
@@ -404,7 +404,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response post(PostRequest post) {
-        return execute(post, createPost(post));
+        return execute(post, createPost(post), post.getOut());
     }
 
     public HttpUriRequest createPost(PostRequest post) {
@@ -435,7 +435,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response head(HeadRequest head) {
-        return execute(head, createHead(head));
+        return execute(head, createHead(head), head.getOut());
     }
 
     public HttpHead createHead(HeadRequest head) {
@@ -443,7 +443,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response options(OptionsRequest options) {
-        return execute(options, createOptions(options));
+        return execute(options, createOptions(options), options.getOut());
     }
 
     public HttpOptions createOptions(OptionsRequest options) {
@@ -451,7 +451,7 @@ public class HTTPClient implements Closeable {
     }
 
     public Response trace(TraceRequest trace) {
-        return execute(trace, createTrace(trace));
+        return execute(trace, createTrace(trace), trace.getOut());
     }
 
     public HttpTrace createTrace(TraceRequest trace) {
@@ -586,11 +586,8 @@ public class HTTPClient implements Closeable {
 
     protected void prepareRequest_additionalHeaders(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req) {
         if (params != null) {
-            params.getHeaders()
-                    .entrySet()
-                    .stream()
-                    .filter(h -> h.getValue() != null)
-                    .forEach(h -> req.setHeader(h.getKey(), String.valueOf(h.getValue())));
+            params.getHeaders().entrySet().stream().filter(h -> h.getValue() != null).forEach(
+                    h -> req.setHeader(h.getKey(), String.valueOf(h.getValue())));
         }
     }
 

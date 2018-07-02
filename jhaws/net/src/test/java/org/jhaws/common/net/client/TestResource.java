@@ -173,25 +173,27 @@ public class TestResource implements TestResourceI {
             written.clear();
             streamBusy = true;
             int w = 0;
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 4; j++) {
-                    for (int k = 0; k < 20; k++) {
-                        output.write((char) ('a' + k/* r.nextInt(25) */));
+            for (int z = 0; z < 30000; z++) {
+                for (int i = 0; i < 10; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        for (int k = 0; k < 20; k++) {
+                            output.write((char) ('a' + k/* r.nextInt(25) */));
+                        }
                     }
+                    long currentTimeMillis = 0;// System.currentTimeMillis();
+                    w += 100 + 1 + 9 + 1 + ("" + currentTimeMillis).length() + 1;
+                    String log = String.format("%09d", w) + "," + currentTimeMillis;
+                    // System.out.println("> " + log);
+                    written.add(log);
+                    output.write('\n');
+                    output.write(log.getBytes());
+                    output.write('\n');
+                    // try {
+                    // Thread.sleep(3000l);
+                    // } catch (Exception e) {
+                    // //
+                    // }
                 }
-                long currentTimeMillis = 0;// System.currentTimeMillis();
-                w += 100 + 1 + 9 + 1 + ("" + currentTimeMillis).length() + 1;
-                String log = String.format("%09d", w) + "," + currentTimeMillis;
-                // System.out.println("> " + log);
-                written.add(log);
-                output.write('\n');
-                output.write(log.getBytes());
-                output.write('\n');
-                // try {
-                // Thread.sleep(3000l);
-                // } catch (Exception e) {
-                // //
-                // }
             }
             streamBusy = false;
         };

@@ -217,16 +217,16 @@ public class HttpClientTest {
 
     @Test
     public void test_stream_out() {
-        URI uri = getBase().path(TestResourceI.STREAM_OUT).build();
-        GetRequest get = new GetRequest(uri);
-
         FilePath tmp1 = FilePath.getTempDirectory().child("hctest_1_.txt");
         tmp1.delete();
-        tmp1.write(hc.get(get).getContent());
+        tmp1.write(hc.get(new GetRequest(getBase().path(TestResourceI.STREAM_OUT).build())).getContent());
 
         FilePath tmp2 = FilePath.getTempDirectory().child("hctest_2_.txt");
         tmp2.delete();
-        hc.execute(get, hc.createGet(get), tmp2.newBufferedOutputStream());
+        hc.get(new GetRequest(getBase().path(TestResourceI.STREAM_OUT).build()).setOut(tmp2.newBufferedOutputStream()));
+
+        System.out.println(tmp2);
+        System.out.println(tmp2.getFileSize());
 
         Assert.assertEquals(tmp1.getFileSize(), tmp2.getFileSize());
         Assert.assertEquals(tmp1.readAll(), tmp2.readAll());

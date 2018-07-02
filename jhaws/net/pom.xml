@@ -53,6 +53,12 @@
             <version>${version.junit}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>3.3.0.Final</version>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
