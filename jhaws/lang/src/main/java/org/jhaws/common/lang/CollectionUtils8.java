@@ -254,7 +254,7 @@ public interface CollectionUtils8 {
 
         default <X> OptEager<X> map(Function<T, X> map) {
             T v = get();
-            return Opt.eager(map.apply(v));
+            return Opt.eager(v == null ? null : map.apply(v));
         }
 
         default <X> OptEager<X> mapOrNull(Function<T, X> map) {
