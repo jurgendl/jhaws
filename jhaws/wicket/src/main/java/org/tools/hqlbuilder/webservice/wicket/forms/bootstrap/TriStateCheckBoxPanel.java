@@ -40,7 +40,7 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox
 
     @Override
     protected CheckBox createComponent(IModel<Boolean> model, Class<Boolean> valueType) {
-        CheckBox checkBox = new CheckBox(VALUE, model) {
+        checkBox = new CheckBox(VALUE, model) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
