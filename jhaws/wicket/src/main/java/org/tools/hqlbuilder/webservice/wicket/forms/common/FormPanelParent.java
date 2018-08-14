@@ -487,9 +487,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
         if (rowpanel.takesUpSpace()) {
             this.count++;
             if (this.formSettings.getColumns() != null && this.count == this.formSettings.getColumns()) {
-                this.count = 0; // reset count
-                // so that a new one is created when needed
-                this.componentRepeater = null;
+                newRow();
             }
         }
 
@@ -498,5 +496,11 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
     protected String getFeedbackCss(org.apache.wicket.feedback.FeedbackMessage message) {
         return null;
+    }
+
+    public void newRow() {
+        this.count = 0; // reset count
+        // so that a new one is created when needed
+        this.componentRepeater = null;
     }
 }
