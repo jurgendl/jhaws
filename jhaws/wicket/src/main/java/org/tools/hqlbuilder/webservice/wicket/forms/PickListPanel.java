@@ -147,11 +147,11 @@ public class PickListPanel<T extends Serializable> extends FormRowPanel<Collecti
     }
 
     @Override
-    public FormRowPanel<Collection<T>, Collection<T>, ListMultipleChoice<T>, ListSettings> addComponents() {
-        this.add(getLabel());
-        this.add(getComponentContainer().add(getPickList().add(getSource()).add(getComponent())));
-        this.add(getComponentContainer().add(getRequiredMarker()));
-        this.add(getComponentContainer().add(getFeedback()));
+    public FormRowPanel<Collection<T>, Collection<T>, ListMultipleChoice<T>, ListSettings> addComponents(ListSettings settings) {
+        this.add(getLabel(settings));
+        this.add(getComponentContainer(settings).add(getPickList().add(getSource()).add(getComponent())));
+        this.add(getComponentContainer(settings).add(getRequiredMarker()));
+        this.add(getComponentContainer(settings).add(getFeedback()));
         return this;
     }
 

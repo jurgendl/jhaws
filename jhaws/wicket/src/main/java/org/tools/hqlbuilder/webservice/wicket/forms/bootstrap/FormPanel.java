@@ -87,16 +87,16 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
             return "warning";
         }
         if (FeedbackMessage.ERROR == message.getLevel()) {
-            return "danger";
+            return "error";
         }
         if (FeedbackMessage.FATAL == message.getLevel()) {
-            return "error";
+            return "danger";
         }
         return "primary";
     }
 
-    public <PropertyType, ComponentType extends FormComponent<PropertyType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends DefaultFormRowPanel<PropertyType, ComponentType, ElementSettings>> RowPanel addDefaultRow(
-            RowPanel rowpanel) {
+    public <PropertyType, ComponentType extends FormComponent<PropertyType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends DefaultFormRowPanel<PropertyType, ComponentType, ElementSettings>> //
+    RowPanel addDefaultRow(RowPanel rowpanel) {
         return this.addRow(rowpanel);
     }
 

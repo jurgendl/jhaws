@@ -18,14 +18,20 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
         super(true, propertyPath, valueModel, formSettings, componentSettings);
     }
 
-    public String getLabelClass() {
+    public String getLabelClass(ElementSettings settings) {
+        if (formSettings.getColumns() == null) {
+            return settings.getLabelClass();
+        }
         if (formSettings.getColumns() >= 5) {
             return "col-1";
         }
         return "col-2";
     }
 
-    public String getComponentClass() {
+    public String getComponentClass(ElementSettings settings) {
+        if (formSettings.getColumns() == null) {
+            return settings.getComponentClass();
+        }
         if (formSettings.getColumns() == 1) {
             return "col-10";
         }

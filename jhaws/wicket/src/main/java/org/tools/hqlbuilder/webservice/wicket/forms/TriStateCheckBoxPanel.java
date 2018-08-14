@@ -55,14 +55,14 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, HiddenFi
     }
 
     @Override
-    public Label getLabel() {
+    public Label getLabel(TriStateCheckBoxSettings settings) {
         if (label == null) {
             label = new Label(LABEL, getLabelModel()) {
                 private static final long serialVersionUID = 8512361193054906821L;
 
                 @Override
                 public boolean isVisible() {
-                    return super.isVisible() && (formSettings == null || formSettings.isShowLabel());
+                    return super.isVisible() && settings.isShowLabel() && (formSettings == null || formSettings.isShowLabel());
                 }
 
                 @Override
@@ -76,12 +76,12 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, HiddenFi
     }
 
     @Override
-    public TriStateCheckBoxPanel addComponents() {
-        this.add(getLabel());
-        this.add(getComponentContainer().add(getComponent()));
-        this.add(getComponentContainer().add(getCheckBox()));
-        this.add(getComponentContainer().add(getRequiredMarker().setVisible(false)));
-        this.add(getComponentContainer().add(getFeedback()));
+    public TriStateCheckBoxPanel addComponents(TriStateCheckBoxSettings settings) {
+        this.add(getLabel(settings));
+        this.add(getComponentContainer(settings).add(getComponent()));
+        this.add(getComponentContainer(settings).add(getCheckBox()));
+        this.add(getComponentContainer(settings).add(getRequiredMarker().setVisible(false)));
+        this.add(getComponentContainer(settings).add(getFeedback()));
         return this;
     }
 

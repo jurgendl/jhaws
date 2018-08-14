@@ -75,12 +75,12 @@ public class FilePickerPanel<P> extends FormRowPanel<P, List<FileUpload>, FileUp
     }
 
     @Override
-    public FormRowPanel<P, List<FileUpload>, FileUploadField, FilePickerSettings> addComponents() {
-        this.add(getLabel());
+    public FormRowPanel<P, List<FileUpload>, FileUploadField, FilePickerSettings> addComponents(FilePickerSettings settings) {
+        this.add(getLabel(settings));
 
         WebMarkupContainer fileComponentContainer = new WebMarkupContainer(FILE_COMPONENT_CONTAINER_ID);
         fileComponentContainer.setOutputMarkupId(true);
-        add(getComponentContainer().add(fileComponentContainer));
+        add(getComponentContainer(settings).add(fileComponentContainer));
 
         WebMarkupContainer fileInputContainer = new WebMarkupContainer(FILE_INPUT_CONTAINER_ID) {
             private static final long serialVersionUID = -5403623924747451558L;
@@ -120,8 +120,8 @@ public class FilePickerPanel<P> extends FormRowPanel<P, List<FileUpload>, FileUp
         filePresentContainer.add(getRemoveFile()); // FIXME can only remove all
                                                    // files
 
-        this.add(getComponentContainer().add(getRequiredMarker()));
-        this.add(getComponentContainer().add(getFeedback()));
+        this.add(getComponentContainer(settings).add(getRequiredMarker()));
+        this.add(getComponentContainer(settings).add(getFeedback()));
 
         return this;
     }

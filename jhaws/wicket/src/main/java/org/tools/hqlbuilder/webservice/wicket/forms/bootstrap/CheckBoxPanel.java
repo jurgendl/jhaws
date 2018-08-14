@@ -43,12 +43,12 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
     }
 
     @Override
-    public Label getLabel() {
+    public Label getLabel(CheckBoxSettings settings) {
         if (label == null) {
             label = new Label(LABEL, getLabelModel()) {
                 @Override
                 public boolean isVisible() {
-                    return super.isVisible() && (formSettings == null || formSettings.isShowLabel());
+                    return super.isVisible() && settings.isShowLabel() && (formSettings == null || formSettings.isShowLabel());
                 }
 
                 @Override
@@ -59,28 +59,29 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
                     tag.getAttributes().put(FormConstants.TITLE, getLabelModel().getObject());
                 }
             };
-            if (getLabelClass() != null) {
-                label.add(new CssClassNameAppender(getLabelClass()));
+            String labelClass = getLabelClass(settings);
+            if (labelClass != null) {
+                label.add(new CssClassNameAppender(labelClass));
             }
         }
         return label;
     }
 
     @Override
-    public CheckBoxPanel addComponents() {
+    public CheckBoxPanel addComponents(CheckBoxSettings settings) {
         CheckBox _c = getComponent();
         // System.out.println(_c.getMarkupId());
-        this.add(getComponentContainer().add(_c));
-        this.add(getLabel());
-        this.add(getComponentContainer().add(new Label(CHECKBOXLABEL, getLabelModel()) {
+        this.add(getComponentContainer(settings).add(_c));
+        this.add(getLabel(settings));
+        this.add(getComponentContainer(settings).add(new Label(CHECKBOXLABEL, getLabelModel()) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);
                 tag.getAttributes().put(FOR, _c.getMarkupId());
             }
         }.setVisible(getComponentSettings().isLabelBehind())));
-        this.add(getComponentContainer().add(getRequiredMarker().setVisible(false)));
-        this.add(getComponentContainer().add(getFeedback()));
+        this.add(getComponentContainer(settings).add(getRequiredMarker().setVisible(false)));
+        this.add(getComponentContainer(settings).add(getFeedback()));
         return this;
     }
 }

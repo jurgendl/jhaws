@@ -87,31 +87,31 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         return super.add(childs);
     }
 
-    public FormRowPanelParent<P, T, C, ElementSettings> addComponents() {
-        Label _label = getLabel();
-        add(_label);
-        add(getComponentContainer());
+    public FormRowPanelParent<P, T, C, ElementSettings> addComponents(ElementSettings settings) {
+        add(getLabel(settings));
+        add(getComponentContainer(settings));
         C _component = getComponent();
-        getComponentContainer().add(_component);
-        getComponentContainer().add(getRequiredMarker());
-        getComponentContainer().add(getFeedback());
+        getComponentContainer(settings).add(_component);
+        getComponentContainer(settings).add(getRequiredMarker());
+        getComponentContainer(settings).add(getFeedback());
         return this;
     }
 
     protected WebMarkupContainer componentContainer;
 
-    public String getLabelClass() {
+    public String getLabelClass(ElementSettings settings) {
         return null;
     }
 
-    public String getComponentClass() {
+    public String getComponentClass(ElementSettings settings) {
         return null;
     }
 
-    public WebMarkupContainer getComponentContainer() {
+    public WebMarkupContainer getComponentContainer(ElementSettings settings) {
         if (componentContainer == null) {
             componentContainer = new WebMarkupContainer("componentContainer");
-            if (getComponentClass() != null) componentContainer.add(new CssClassNameAppender(getComponentClass()));
+            String componentClass = getComponentClass(settings);
+            if (componentClass != null) componentContainer.add(new CssClassNameAppender(componentClass));
         }
         return componentContainer;
     }
@@ -120,7 +120,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
     public FormRowPanelParent<P, T, C, ElementSettings> afterAddComponents() {
         // jsr bean validation
         this.getComponent().add(new PropertyValidator<T>());
-        this.getComponent().setLabel((IModel<String>) this.getLabel().getDefaultModel());
+        this.getComponent().setLabel((IModel<String>) this.getLabel(null).getDefaultModel());
         this.setupRequiredBehavior();
         this.setupId();
         return this;
@@ -165,12 +165,12 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         return this.getComponent();
     }
 
-    public Label getLabel() {
+    public Label getLabel(ElementSettings settings) {
         if (this.label == null) {
             this.label = new Label(FormConstants.LABEL, this.getLabelModel()) {
                 @Override
                 public boolean isVisible() {
-                    return super.isVisible()
+                    return super.isVisible() && settings.isShowLabel()
                             && ((FormRowPanelParent.this.formSettings == null) || FormRowPanelParent.this.formSettings.isShowLabel());
                 }
 
@@ -182,7 +182,8 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
                     tag.getAttributes().put(FormConstants.TITLE, FormRowPanelParent.this.getLabelModel().getObject());
                 }
             };
-            if (getLabelClass() != null) label.add(new CssClassNameAppender(getLabelClass()));
+            String labelClass = getLabelClass(settings);
+            if (labelClass != null) label.add(new CssClassNameAppender(labelClass));
         }
         return this.label;
     }

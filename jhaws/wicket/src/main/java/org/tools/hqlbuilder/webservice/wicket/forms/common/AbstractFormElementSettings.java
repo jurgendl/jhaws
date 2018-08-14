@@ -20,6 +20,12 @@ public abstract class AbstractFormElementSettings<T extends AbstractFormElementS
 
     protected boolean inheritId = false;
 
+    protected boolean showLabel = true;
+
+    protected String labelClass;
+
+    protected String componentClass;
+
     public AbstractFormElementSettings() {
         super();
     }
@@ -135,5 +141,32 @@ public abstract class AbstractFormElementSettings<T extends AbstractFormElementS
         } catch (NoSuchMethodException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public boolean isShowLabel() {
+        return this.showLabel;
+    }
+
+    public T setShowLabel(boolean showLabel) {
+        this.showLabel = showLabel;
+        return this.castThis();
+    }
+
+    public String getLabelClass() {
+        return this.labelClass;
+    }
+
+    public T setLabelClass(String labelClass) {
+        this.labelClass = labelClass;
+        return this.castThis();
+    }
+
+    public String getComponentClass() {
+        return this.componentClass;
+    }
+
+    public T setComponentClass(String componentClass) {
+        this.componentClass = componentClass;
+        return this.castThis();
     }
 }

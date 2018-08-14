@@ -37,7 +37,7 @@ public class RangeFieldPanel<N extends Number & Comparable<N>> extends DefaultFo
     }
 
     @Override
-    public FormRowPanel<N, N, RangeTextField<N>, RangeFieldSettings<N>> addComponents() {
+    public FormRowPanel<N, N, RangeTextField<N>, RangeFieldSettings<N>> addComponents(RangeFieldSettings<N> settings) {
         output = new Output(VALUE_OUTPUT, getValueModel()) {
             private static final long serialVersionUID = 2019925551669937151L;
 
@@ -47,8 +47,8 @@ public class RangeFieldPanel<N extends Number & Comparable<N>> extends DefaultFo
                 tag.getAttributes().put(FOR, getPropertyName());
             }
         };
-        add(getComponentContainer().add(output.add(new CssClassNameAppender(PrimeUI.puiinputtext))));
-        super.addComponents();
+        add(getComponentContainer(settings).add(output.add(new CssClassNameAppender(PrimeUI.puiinputtext))));
+        super.addComponents(settings);
         return this;
     }
 
