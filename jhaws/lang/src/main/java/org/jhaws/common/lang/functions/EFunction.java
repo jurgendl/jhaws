@@ -4,8 +4,8 @@ import java.util.function.Function;
 
 @FunctionalInterface
 public interface EFunction<T, R> extends SFunction<T, R> {
-    public static <T, R> Function<T, R> enhance(EFunction<T, R> consumer) {
-        return consumer::apply;
+    public static <T, R> Function<T, R> enhance(EFunction<T, R> function) {
+        return function::apply;
     }
 
     @Override

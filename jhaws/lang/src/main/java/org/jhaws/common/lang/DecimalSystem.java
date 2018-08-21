@@ -72,11 +72,11 @@ public class DecimalSystem {
         List<String> tmp = data.get(locale);
         if (tmp == null && locale.getVariant() != null) {
             locale = new Locale(locale.getLanguage(), locale.getCountry());
-            tmp = data.get(data);
+            tmp = data.get(locale);
         }
         if (tmp == null && locale.getCountry() != null) {
             locale = new Locale(locale.getLanguage());
-            tmp = data.get(data);
+            tmp = data.get(locale);
         }
         if (tmp == null) {
             tmp = data.get(null);

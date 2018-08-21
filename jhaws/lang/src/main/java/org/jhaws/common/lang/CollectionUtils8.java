@@ -49,9 +49,13 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Function;
 import java.util.function.IntFunction;
+import java.util.function.IntSupplier;
+import java.util.function.LongSupplier;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -67,6 +71,16 @@ import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.jhaws.common.lang.functions.EBiConsumer;
+import org.jhaws.common.lang.functions.EBooleanSupplier;
+import org.jhaws.common.lang.functions.EConsumer;
+import org.jhaws.common.lang.functions.EDoubleSupplier;
+import org.jhaws.common.lang.functions.EFunction;
+import org.jhaws.common.lang.functions.EIntSupplier;
+import org.jhaws.common.lang.functions.ELongSupplier;
+import org.jhaws.common.lang.functions.EPredicate;
+import org.jhaws.common.lang.functions.ERunnable;
+import org.jhaws.common.lang.functions.ESupplier;
 
 // http://infotechgems.blogspot.be/2011/11/java-collections-performance-time.html
 // TODO https://www.techempower.com/blog/2016/10/19/efficient-multiple-stream-concatenation-in-java/
@@ -2150,5 +2164,45 @@ public interface CollectionUtils8 {
         return t -> {
             throw exception.apply(t);
         };
+    }
+
+    public static BooleanSupplier enhanceBooleanSupplier(EBooleanSupplier supplier) {
+        return EBooleanSupplier.enhance(supplier);
+    }
+
+    public static <T> Consumer<T> enhanceConsumer(EConsumer<T> consumer) {
+        return EConsumer.enhance(consumer);
+    }
+
+    public static <T, U> BiConsumer<T, U> enhanceBiConsumer(EBiConsumer<T, U> consumer) {
+        return EBiConsumer.enhance(consumer);
+    }
+
+    public static DoubleSupplier enhanceDoubleSupplier(EDoubleSupplier supplier) {
+        return EDoubleSupplier.enhance(supplier);
+    }
+
+    public static <T, R> Function<T, R> enhanceFunction(EFunction<T, R> function) {
+        return EFunction.enhance(function);
+    }
+
+    public static IntSupplier enhanceIntegerSupplier(EIntSupplier supplier) {
+        return EIntSupplier.enhance(supplier);
+    }
+
+    public static LongSupplier enhanceLongSupplier(ELongSupplier supplier) {
+        return ELongSupplier.enhance(supplier);
+    }
+
+    public static <T> Predicate<T> enhancePredicate(EPredicate<T> predicate) {
+        return EPredicate.enhance(predicate);
+    }
+
+    public static Runnable enhanceRunnable(ERunnable runnable) {
+        return ERunnable.enhance(runnable);
+    }
+
+    public static <T> Supplier<T> enhanceSupplier(ESupplier<T> predicate) {
+        return ESupplier.enhance(predicate);
     }
 }
