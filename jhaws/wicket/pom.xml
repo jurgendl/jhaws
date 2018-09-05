@@ -39,7 +39,7 @@
         <version.guava>18.0</version.guava>
         <version.wro4j>1.7.7</version.wro4j>
         <version.yui>2.4.7</version.yui>
-        <version.commons-beanutils>1.9.2</version.commons-beanutils><!-- recent version, keep up to date -->
+        <version.commons-beanutils>1.9.3</version.commons-beanutils><!-- recent version, keep up to date -->
         <version.commons-codec>1.10</version.commons-codec><!-- recent version, keep up to date -->
     </properties>
     <dependencyManagement>
