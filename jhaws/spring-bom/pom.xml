@@ -26,8 +26,8 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.spring>5.0.3.RELEASE</version.spring><!-- keep up to date 4.x.x; 4.3.14.RELEASE -->
-        <version.spring-security>5.0.1.RELEASE</version.spring-security><!-- keep up to date 4.x.x, does not follow Spring version; 4.2.3.RELEASE -->
+        <version.spring>5.0.8.RELEASE</version.spring><!-- keep up to date 4.x.x; 4.3.14.RELEASE -->
+        <version.spring-security>5.0.7.RELEASE</version.spring-security><!-- keep up to date 4.x.x, does not follow Spring version; 4.2.3.RELEASE -->
         <!-- <version.spring-ws>2.3.0.RELEASE</version.spring-ws> --><!-- keep up to date 2.x.x, does not follow Spring version -->
         <version.spring.ldap>2.3.2.RELEASE</version.spring.ldap>
     </properties>
