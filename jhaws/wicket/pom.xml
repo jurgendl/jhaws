@@ -37,7 +37,7 @@
         <version.commons-lang>2.6</version.commons-lang><!-- stale -->
         <version.cglib>3.2.7</version.cglib><!-- dead project, Spring includes fork -->
         <version.guava>18.0</version.guava>
-        <version.wro4j>1.7.7</version.wro4j>
+        <version.wro4j>1.8.0</version.wro4j>
         <version.yui>2.4.7</version.yui>
         <version.commons-beanutils>1.9.3</version.commons-beanutils><!-- recent version, keep up to date -->
         <version.commons-codec>1.10</version.commons-codec><!-- recent version, keep up to date -->
@@ -250,6 +250,7 @@
             <artifactId>guava</artifactId>
             <version>${version.guava}</version>
         </dependency>
+        <!-- https://wro4j.readthedocs.io/en/stable/AvailableProcessors/ -->
         <dependency>
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-extensions</artifactId>
@@ -262,6 +263,90 @@
                 <exclusion>
                     <groupId>commons-beanutils</groupId>
                     <artifactId>commons-beanutils</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>nz.co.edmi</groupId>
+                    <artifactId>bourbon-gem-jar</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.sommeri</groupId>
+                    <artifactId>less4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>emberjs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>jslint</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>coffee-script</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>handlebars</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>envjs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>less</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>jshint</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.lltyk</groupId>
+                    <artifactId>dojo-shrinksafe</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mozilla</groupId>
+                    <artifactId>rhino</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>json2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>webjars-locator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.gmaven.runtime</groupId>
+                    <artifactId>gmaven-runtime-1.7</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.javascript</groupId>
+                    <artifactId>closure-compiler</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
