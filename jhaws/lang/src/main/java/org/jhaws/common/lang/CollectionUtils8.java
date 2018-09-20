@@ -1282,10 +1282,20 @@ public interface CollectionUtils8 {
     }
 
     public static <T> String join(String delimiter, Stream<T> stream) {
-        stream = stream.filter(Objects::nonNull);
-        Stream<String> _stream = stream.map(String::valueOf);
-        _stream = _stream.filter(StringUtils::isNotBlank);
-        return _stream.collect(Collectors.joining(delimiter));
+        return stream//
+                .filter(Objects::nonNull)//
+                .map(String::valueOf)//
+                .map(String::trim)//
+                .filter(StringUtils::isNotBlank)//
+                .collect(Collectors.joining(delimiter));
+    }
+
+    public static <T> String join(String delimiter, boolean skipNull, boolean trim, Stream<T> stream) {
+        if (skipNull) stream = stream.filter(Objects::nonNull);
+        Stream<String> stream2 = stream.map(String::valueOf);
+        if (trim) stream2 = stream2.map(String::trim);
+        if (skipNull) stream2 = stream2.filter(StringUtils::isNotBlank);
+        return stream2.collect(Collectors.joining(delimiter));
     }
 
     public static Stream<String> split(String string, String delimiter) {
