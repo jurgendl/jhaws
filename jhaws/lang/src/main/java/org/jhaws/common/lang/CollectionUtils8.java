@@ -1261,46 +1261,30 @@ public interface CollectionUtils8 {
         };
     }
 
-    public static <T> String joinArray(@SuppressWarnings("unchecked") T... strings) {
-        return joinArray(" ", true, strings);
-    }
-
-    public static <T> String joinArray(boolean skipBlanks, @SuppressWarnings("unchecked") T... strings) {
-        return joinArray(" ", skipBlanks, strings);
-    }
-
     public static <T> String joinArray(String delimiter, T[] strings) {
-        return join(streamArray(strings), delimiter, true);
+        return join(delimiter, streamArray(strings));
     }
 
-    public static <T> String joinArray(String delimiter, boolean skipBlanks, @SuppressWarnings("unchecked") T... strings) {
-        return join(streamArray(strings), delimiter, skipBlanks);
+    public static <T> String joinArray(@SuppressWarnings("unchecked") T... strings) {
+        return join(" ", streamArray(strings));
     }
 
     public static <T> String join(Collection<T> strings) {
-        return join(strings, " ", true);
+        return join(" ", stream(strings));
     }
 
-    public static <T> String join(Collection<T> strings, boolean skipBlanks) {
-        return join(strings, " ", skipBlanks);
+    public static <T> String join(String delimiter, Collection<T> strings) {
+        return join(delimiter, stream(strings));
     }
 
-    public static <T> String join(Collection<T> strings, String delimiter) {
-        return join(stream(strings), delimiter, true);
+    public static <T> String join(Stream<T> stream) {
+        return join(" ", stream);
     }
 
-    public static <T> String join(Collection<T> strings, String delimiter, boolean skipBlanks) {
-        return join(stream(strings), delimiter, skipBlanks);
-    }
-
-    public static <T> String join(Stream<T> stream, boolean skipBlanks) {
-        return join(stream, " ", skipBlanks);
-    }
-
-    public static <T> String join(Stream<T> stream, String delimiter, boolean skipBlanks) {
-        if (skipBlanks) stream = stream.filter(Objects::nonNull);
+    public static <T> String join(String delimiter, Stream<T> stream) {
+        stream = stream.filter(Objects::nonNull);
         Stream<String> _stream = stream.map(String::valueOf);
-        if (skipBlanks) _stream = _stream.filter(StringUtils::isNotBlank);
+        _stream = _stream.filter(StringUtils::isNotBlank);
         return _stream.collect(Collectors.joining(delimiter));
     }
 

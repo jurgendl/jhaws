@@ -371,7 +371,7 @@ public class ExifTool implements MediaCte {
             throw new IllegalArgumentException();
         }
         List<String> command = Arrays.asList(command(exif), "-Comment=\"" + comment + "\"", path.getAbsolutePath());
-        String jc = join(command, false);
+        String jc = join(command); // FIXME JOIN FALSE
         logger.trace("{}", jc);
         callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
         path.getParentPath().child(path.getFileNameString() + "_original").delete();
@@ -382,7 +382,7 @@ public class ExifTool implements MediaCte {
             throw new IllegalArgumentException();
         }
         List<String> command = Arrays.asList(command(exif), "-Comment", path.getAbsolutePath());
-        String jc = join(command, false);
+        String jc = join(command);// FIXME JOIN FALSE
         logger.trace("{}", jc);
         return callProcess(null, false, command, path.getParentPath(), new Lines()).lines()
                 .stream()
@@ -397,7 +397,7 @@ public class ExifTool implements MediaCte {
             throw new IllegalArgumentException();
         }
         List<String> command = Arrays.asList(command(exif), "-Software=\"" + program + "\"", path.getAbsolutePath());
-        String jc = join(command, false);
+        String jc = join(command);// FIXME JOIN FALSE
         logger.trace("{}", jc);
         callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
         path.getParentPath().child(path.getFileNameString() + "_original").delete();
@@ -408,7 +408,7 @@ public class ExifTool implements MediaCte {
             return null;
         }
         List<String> command = Arrays.asList(command(exif), "-Software", path.getAbsolutePath());
-        String jc = join(command, false);
+        String jc = join(command);// FIXME JOIN FALSE
         logger.trace("{}", jc);
         return callProcess(null, false, command, path.getParentPath(), new Lines()).lines()
                 .stream()
@@ -436,14 +436,16 @@ public class ExifTool implements MediaCte {
         try {
             if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path) || qtFilter.accept(path)) {
                 List<String> command = Arrays.asList(command(exif), "-charset", "utf8", "-q", "-json", path.getAbsolutePath());
-                String jc = join(command, false);
+                String jc = join(command);// FIXME JOIN FALSE
                 logger.trace("{}", jc);
 
                 List<String> lines = callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
                 // lines.forEach(System.out::println);
                 @SuppressWarnings("unchecked")
                 Map<String, Object> tmp = (Map<String, Object>) ((Map<String, Object>) JavaScript.eval(lines.stream().collect(Collectors.joining())))
-                        .values().iterator().next();
+                        .values()
+                        .iterator()
+                        .next();
                 TreeMap<String, String> all = new TreeMap<String, String>();
                 tmp.keySet().forEach(k -> all.put(k, tmp.get(k).toString()));
                 exifinfo.setAll(new LinkedHashMap<>(all));
