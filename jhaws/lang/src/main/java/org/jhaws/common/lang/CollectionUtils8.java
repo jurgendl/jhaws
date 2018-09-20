@@ -1262,11 +1262,11 @@ public interface CollectionUtils8 {
     }
 
     public static <T> String joinArray(@SuppressWarnings("unchecked") T... strings) {
-        return joinArray(strings, " ", true);
+        return joinArray(" ", true, strings);
     }
 
     public static <T> String joinArray(boolean skipBlanks, @SuppressWarnings("unchecked") T... strings) {
-        return joinArray(strings, " ", skipBlanks);
+        return joinArray(" ", skipBlanks, strings);
     }
 
     public static <T> String joinArray(String delimiter, T[] strings) {
@@ -1298,6 +1298,7 @@ public interface CollectionUtils8 {
     }
 
     public static <T> String join(Stream<T> stream, String delimiter, boolean skipBlanks) {
+        if (skipBlanks) stream = stream.filter(Objects::nonNull);
         Stream<String> _stream = stream.map(String::valueOf);
         if (skipBlanks) _stream = _stream.filter(StringUtils::isNotBlank);
         return _stream.collect(Collectors.joining(delimiter));
