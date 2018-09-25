@@ -114,6 +114,7 @@ public class ClosestColorname {
         }
     }
 
+    @SuppressWarnings("serial")
     private static class ColorDiff extends KeyValue<String, Float> implements Comparable<ColorDiff> {
         public ColorDiff(String key, Float value) {
             super(key, value);

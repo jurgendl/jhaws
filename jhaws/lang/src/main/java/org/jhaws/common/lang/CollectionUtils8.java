@@ -1265,7 +1265,7 @@ public interface CollectionUtils8 {
         return join(delimiter, streamArray(strings));
     }
 
-    public static <T> String joinArray(@SuppressWarnings("unchecked") T... strings) {
+    public static <T> String joinArray(T[] strings) {
         return join(" ", streamArray(strings));
     }
 
