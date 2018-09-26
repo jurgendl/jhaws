@@ -1501,6 +1501,11 @@ public interface CollectionUtils8 {
         return streamOfStreams.flatMap(id());
     }
 
+    public static <T> Stream<T> flatMapArrays(T[][] streamOfStreams) {
+        Stream<Stream<T>> b = streamArray(streamOfStreams).map(a -> streamArray(a));
+        return flatMapStreams(b);
+    }
+
     public static <T> Opt<T> eager(T value) {
         return Opt.eager(value);
     }
