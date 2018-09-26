@@ -266,14 +266,14 @@
             <artifactId>wro4j-extensions</artifactId>
             <version>1.8.0</version>
             <exclusions><!-- https://wro4j.readthedocs.io/en/stable/AvailableProcessors/ -->
-                <dependency>
+                <exclusion>
                   <groupId>org.jruby</groupId>
                   <artifactId>jruby-core</artifactId>
-                </dependency>
-                <dependency>
+                </exclusion>
+                <exclusion>
                   <groupId>org.jruby</groupId>
                   <artifactId>jruby-stdlib</artifactId>
-                </dependency>
+                </exclusion>
                 <exclusion>
                     <groupId>junit</groupId>
                     <artifactId>junit</artifactId>

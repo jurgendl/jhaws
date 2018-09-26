@@ -145,7 +145,7 @@ public class FfmpegTool implements MediaCte {
                 command.add("-preset");
                 command.add("default");
                 command.add(command(output));
-                logger.info("{}", join(command, false));
+                logger.info("{}", join(command));// FIXME JOIN FALSE
                 try {
                     silentcall(null, lines, FilePath.getTempDirectory(), command);
                     if (!hwAccel.contains("nvenc")) {
@@ -183,7 +183,7 @@ public class FfmpegTool implements MediaCte {
                 command.add("-preset");
                 command.add("default");
                 command.add(command(output));
-                logger.info("{}", join(command, false));
+                logger.info("{}", join(command));// FIXME JOIN FALSE
                 try {
                     lines = new Lines();
                     silentcall(null, lines, FilePath.getTempDirectory(), command);
@@ -1169,12 +1169,12 @@ public class FfmpegTool implements MediaCte {
             consumers = consumers.andThen(listener);
         }
         if (log) {
-            logger.info("start - {}", join(command, false));
+            logger.info("start - {}", join(command));// FIXME JOIN FALSE
         }
         long start = System.currentTimeMillis();
         Processes.callProcess(processHolder, true, command, dir, consumers);
         if (log) {
-            logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command, false));
+            logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));// FIXME JOIN FALSE
         }
         return lines;
     }
@@ -1189,20 +1189,14 @@ public class FfmpegTool implements MediaCte {
 
     public List<StreamType> videos(FfprobeType finfo) {
         return finfo == null ? null
-                : finfo.getStreams()
-                        .getStream()
-                        .stream()
-                        .filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType()))
-                        .collect(Collectors.toList());
+                : finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(
+                        Collectors.toList());
     }
 
     public List<StreamType> audios(FfprobeType finfo) {
         return finfo == null ? null
-                : finfo.getStreams()
-                        .getStream()
-                        .stream()
-                        .filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType()))
-                        .collect(Collectors.toList());
+                : finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(
+                        Collectors.toList());
     }
 
     protected String command(FilePath f) {
