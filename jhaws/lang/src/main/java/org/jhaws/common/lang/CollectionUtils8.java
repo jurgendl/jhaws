@@ -1329,8 +1329,30 @@ public interface CollectionUtils8 {
         return first.equals(second);
     }
 
+    /**
+     * staat geen null values in keys toe (alhoewel een map dat wel toe laat)
+     */
     public static <V, K> Map<K, List<V>> groupBy(Stream<V> stream, Function<V, K> groupBy) {
         return stream.collect(Collectors.groupingBy(groupBy));
+    }
+
+    /**
+     * workaround om null values in key toe te laten
+     * 
+     * @see https://stackoverflow.com/questions/22625065/collectors-groupingby-doesnt-accept-null-keys
+     */
+    public static <V, K> Map<K, List<V>> groupByAcceptsNull(Stream<V> stream, Function<V, K> groupBy) {
+        return stream//
+                .collect(Collectors.groupingBy(v -> Optional.ofNullable(groupBy.apply(v))))//
+                .entrySet()//
+                .stream()//
+                .collect(//
+                        Collectors.toMap(//
+                                entry -> entry.getKey().orElse(null)//
+                                , entry -> entry.getValue()//
+                        // merge function doesn't matter, key is always unique
+                        )//
+        );
     }
 
     public static <T> Comparator<T> dummyComparator() {
