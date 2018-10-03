@@ -7,137 +7,109 @@ import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.jhaws.common.io.IODirectory;
-import org.jhaws.common.io.IOFile;
+import org.jhaws.common.io.FilePath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sqlite.SQLiteConfig;
 
 @Deprecated
 public class PreloadWinChromeCookies implements CookieStoreInterceptor {
-    private static final Logger logger = LoggerFactory.getLogger(PreloadWinChromeCookies.class);
+	private static final Logger logger = LoggerFactory.getLogger(PreloadWinChromeCookies.class);
 
-    protected static final boolean windows = (System.getProperty("os.name") != null) && System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-3$
+	protected static final boolean windows = (System.getProperty("os.name") != null)
+			&& System.getProperty("os.name").toLowerCase().contains("win"); //$NON-NLS-2$
 
-    private static final boolean driver;
+	private static final boolean driver;
 
-    static {
-        boolean _driver;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            _driver = true;
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            _driver = false;
-        }
-        driver = _driver;
-    }
+	static {
+		boolean _driver;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			_driver = true;
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+			_driver = false;
+		}
+		driver = _driver;
+	}
 
-    /** domainsLoaded */
-    private HashSet<String> domainsLoaded = new HashSet<>();
+	private Boolean failed;
 
-    /** failed */
-    private boolean failed = false;
+	public PreloadWinChromeCookies() {
+		if (!PreloadWinChromeCookies.windows) {
+			throw new RuntimeException("not windows");
+		}
 
-    /**
-     * Creates a new PreloadWinChromeCookies object.
-     */
-    public PreloadWinChromeCookies() {
-        if (!PreloadWinChromeCookies.windows) {
-            throw new RuntimeException("not windows");
-        }
+		if (!PreloadWinChromeCookies.driver) {
+			throw new RuntimeException("sqllite");
+		}
 
-        if (!PreloadWinChromeCookies.driver) {
-            throw new RuntimeException("sqllite");
-        }
+	}
 
-    }
+	@Override
+	public void beforeAddCookie(CookieStore store) {
+		//
+	}
 
-    /**
-     *
-     * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeAddCookie(util.html.client.cookies.PersistentCookieStore)
-     */
-    @Override
-    public void beforeAddCookie(CookieStore store) {
-        //
-    }
+	@Override
+	public void beforeClear(CookieStore store) {
+		//
+	}
 
-    /**
-     *
-     * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClear(util.html.client.cookies.PersistentCookieStore)
-     */
-    @Override
-    public void beforeClear(CookieStore store) {
-        //
-    }
+	@Override
+	public void beforeClearExpired(CookieStore store, Date date) {
+		//
+	}
 
-    /**
-     *
-     * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeClearExpired(util.html.client.cookies.PersistentCookieStore,
-     *      java.util.Date)
-     */
-    @Override
-    public void beforeClearExpired(CookieStore store, Date date) {
-        //
-    }
+	@Override
+	public synchronized void beforeGetCookies(CookieStore store) {
+		try {
+			if (failed == null) {
+				FilePath ffr = new FilePath(CookieStoreInterceptor.user_home.toFile(),
+						"AppData/Local/Google/Chrome/User Data/Default/");
+				FilePath ff3c = ffr.child("Cookies");
+				FilePath ff3cc = ffr.child("Cookies_copy");
+				ff3c.copyTo(ff3cc);
+				SQLiteConfig config = new SQLiteConfig();
+				config.setReadOnly(true);
+				String url = "jdbc:sqlite:/" + ff3cc.getAbsolutePath().replace('\\', '/');
+				String query = "select name, value, host_key, path, expires_utc from cookies";
+				Connection con = DriverManager.getConnection(url, config.toProperties());
+				con.setAutoCommit(false);
 
-    /**
-     *
-     * @see org.jhaws.common.net.client.obsolete.CookieStoreInterceptor#beforeGetCookies(util.html.client.cookies.PersistentCookieStore)
-     */
-    @Override
-    public synchronized void beforeGetCookies(CookieStore store) {
-        try {
-            if (this.failed) {
-                return;
-            }
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(query);
 
-            String domain = null;// store.getClient().getDomain();
+				while (rs.next()) {
+					String name = rs.getString(1);
+					String value = rs.getString(2);
+					String host = rs.getString(3);
+					String path = rs.getString(4);
+					String expiry = rs.getObject(5).toString();
+					if (host.startsWith("."))
+						host = host.substring(1);
 
-            if (this.domainsLoaded.contains(domain)) {
-                return;
-            }
+					GregorianCalendar gc = new GregorianCalendar();
+					gc.setTimeInMillis(Long.parseLong(expiry) / 1000);
+					gc.set(Calendar.YEAR, gc.get(Calendar.YEAR) - 369);
 
-            this.domainsLoaded.add(domain);
+					BasicClientCookie cookie = new BasicClientCookie(name, value);
+					cookie.setVersion(0);
+					cookie.setDomain(host);
+					cookie.setPath(path);
+					cookie.setExpiryDate(gc.getTime());
 
-            IODirectory ffr = new IODirectory(CookieStoreInterceptor.user_home.toFile(),
-                    "Local Settings/Application Data/Google/Chrome/User Data/Default");
-            IOFile ff3c = new IOFile(ffr, "Cookies");
-            String url = "jdbc:sqlite:/" + ff3c.getAbsolutePath().replace('\\', '/');
-            String query = "select name, value, host_key, path, expires_utc from cookies where host_key like '" + domain + "%' or host_key like '."
-                    + domain + "%' or host_key like 'www." + domain + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
-            Connection con = DriverManager.getConnection(url, null, null);
-            // con.setReadOnly(true);
-            con.setAutoCommit(false);
-
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-
-            while (rs.next()) {
-                String name = rs.getString(1);
-                String value = rs.getString(2);
-                String host = rs.getString(3);
-                String path = rs.getString(4);
-                String expiry = rs.getObject(5).toString();
-
-                GregorianCalendar gc = new GregorianCalendar();
-                gc.setTimeInMillis(Long.parseLong(expiry) / 1000);
-                gc.set(Calendar.YEAR, gc.get(Calendar.YEAR) - 369);
-
-                BasicClientCookie cookie = new BasicClientCookie(name, value);
-                cookie.setVersion(0);
-                cookie.setDomain(host);
-                cookie.setPath(path);
-                cookie.setExpiryDate(gc.getTime());
-
-                store.addCookie(cookie);
-            }
-        } catch (Exception e) {
-            PreloadWinChromeCookies.logger.error(ExceptionUtils.getStackTrace(e));
-            this.failed = true;
-        }
-    }
+					System.out.println(cookie);
+					store.addCookie(cookie);
+				}
+				this.failed = false;
+			}
+		} catch (Exception e) {
+			PreloadWinChromeCookies.logger.error(ExceptionUtils.getStackTrace(e));
+			this.failed = true;
+		}
+	}
 }

@@ -13,6 +13,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -33,6 +34,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -42,6 +44,7 @@ import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.config.RequestConfig.Builder;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -68,6 +71,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.StringUtils;
@@ -183,7 +187,12 @@ public class HTTPClient implements Closeable {
 		return requestConfig;
 	}
 
-	private ThreadLocal<List<URI>> chain;
+	private final ThreadLocal<List<URI>> chain = new ThreadLocal<List<URI>>() {
+		@Override
+		protected java.util.List<URI> initialValue() {
+			return new ArrayList<>();
+		};
+	};
 
 	public RedirectStrategy getRedirectStrategy() {
 		if (redirectStrategy == null) {
@@ -192,7 +201,8 @@ public class HTTPClient implements Closeable {
 				public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context)
 						throws ProtocolException {
 					HttpUriRequest redirect = super.getRedirect(request, response, context);
-					chain.get().add(redirect.getURI());
+					if (chain != null)
+						chain.get().add(redirect.getURI());
 					return redirect;
 				}
 
@@ -305,12 +315,7 @@ public class HTTPClient implements Closeable {
 			prepareRequest(params, req);
 		}
 
-		chain = new ThreadLocal<List<URI>>() {
-			@Override
-			protected java.util.List<URI> initialValue() {
-				return new ArrayList<>();
-			};
-		};
+		chain.get().clear();
 
 		URI uri = req.getURI();
 		logger.trace("{}", uri);
@@ -380,6 +385,10 @@ public class HTTPClient implements Closeable {
 		return response;
 	}
 
+	public ThreadLocal<List<URI>> getChain() {
+		return this.chain;
+	}
+
 	public Response get(GetRequest get) {
 		return execute(get, createGet(get), get.getOut());
 	}
@@ -441,10 +450,21 @@ public class HTTPClient implements Closeable {
 			req = new HttpPost(post.getUri());
 			HttpEntity body = new InputStreamEntity(post.getStream().get());
 			HttpPost.class.cast(req).setEntity(body);
+		} else if (post.isUrlEncodedFormEntity()) {
+			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			post.getFormValues().entrySet()
+					.forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
+			try {
+				builder.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
+			} catch (UnsupportedEncodingException ex) {
+				throw new RuntimeException(ex);
+			}
+			req = builder.build();
 		} else {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-			post.getFormValues().entrySet().forEach(
-					entry -> entry.getValue().forEach(element -> builder.addParameter(entry.getKey(), element)));
+			post.getFormValues().entrySet()
+					.forEach(kv -> kv.getValue().forEach(v -> builder.addParameter(kv.getKey(), v)));
 			req = builder.build();
 		}
 		return req;
