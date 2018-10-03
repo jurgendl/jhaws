@@ -470,6 +470,10 @@ public class HTTPClient implements Closeable {
 		return req;
 	}
 
+	public Response head(String head) {
+		return head(new HeadRequest(head));
+	}
+
 	public Response head(HeadRequest head) {
 		return execute(head, createHead(head), head.getOut());
 	}
