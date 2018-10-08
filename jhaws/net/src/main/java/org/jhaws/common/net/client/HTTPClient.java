@@ -309,6 +309,8 @@ public class HTTPClient implements Closeable {
 		return execute(params, req, null);
 	}
 
+	protected URI uri;
+
 	public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req,
 			OutputStream out) {
 		if (params != null) {
@@ -319,6 +321,12 @@ public class HTTPClient implements Closeable {
 
 		URI uri = req.getURI();
 		logger.trace("{}", uri);
+
+		if (StringUtils.isNotBlank(params.getReferer())) {
+			req.addHeader("Referer", params.getReferer());
+		} else {
+			req.addHeader("Referer", uri.toASCIIString());
+		}
 
 		HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
 		Response response = null;
