@@ -1,5 +1,6 @@
 package org.jhaws.common.lang;
 
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,6 +17,10 @@ public class Pair<P> extends KeyValue<P, P> implements Comparable<Pair<P>> {
 
     public Pair() {
         super();
+    }
+
+    public Pair(Entry<P, P> entry) {
+        super(entry);
     }
 
     public Pair(P keyValue) {

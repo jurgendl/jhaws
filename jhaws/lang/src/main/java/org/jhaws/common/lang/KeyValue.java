@@ -21,6 +21,10 @@ public class KeyValue<K, V> extends Value<V> implements Map.Entry<K, V> {
         super();
     }
 
+    public KeyValue(Map.Entry<K, V> entry) {
+        this(entry.getKey(), entry.getValue());
+    }
+
     public KeyValue(K key, V value) {
         super(value);
         this.key = key;
