@@ -47,18 +47,25 @@
 				</ul>
 				<wicket:enclosure child="searchbar">
 					&nbsp;
-					<form class="form-inline my-2 my-lg-0">
+					<form class="form-inline my-2 my-lg-0 needs-validation" novalidate>
 						<div wicket:id="searchbar" class="input-group input-group-sm">
-							<input type="text" class="form-control form-control-sm" placeholder="Search for...">
+							<input required type="text" class="form-control form-control-sm" placeholder="Search for...">
 							<div class="input-group-append">
-								<button class="btn btn-info btn-sm" type="button"><i class="fa-fw fas fa-search"></i></button>
+								<button class="btn btn-info btn-sm" type="submit"><i class="fa-fw fas fa-search"></i></button>
 							</div>
 						</div>
 					</form>
 				</wicket:enclosure>
 				<wicket:enclosure child="userButton">
 					&nbsp;
-					<button wicket:id="userButton" style="width:2.2rem" class="back-to-top btn btn-sm btn-info"><span class="fa-fw fas fa-user"></span></button>
+					<div class="btn-group dropleft">
+					  <button wicket:id="userButton" style="width:2.2rem" class="btn btn-sm btn-info dropdown-toggle hide-dropdown-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa-fw fas fa-user"></span></button>
+					  <div class="dropdown-menu p-1">
+					    <a class="dropdown-item p-1" href="#">Log In</a>
+					    <div class="dropdown-divider"></div>
+					    <a class="dropdown-item p-1" href="#">Register</a>
+					  </div>
+					</div>
 				</wicket:enclosure>
 				<wicket:enclosure child="backToTopButton">
 					&nbsp;

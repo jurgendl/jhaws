@@ -654,3 +654,8 @@ div.rating-input a.rating-clear {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* dropdown buttons without text, only icon, should not have dropdown arrow */
+.dropdown-toggle.hide-dropdown-arrow::after, .dropdown-toggle.hide-dropdown-arrow::before {
+	display: none !important;
+}
