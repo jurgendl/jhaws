@@ -27,7 +27,7 @@
         <!-- versions -->
         <version.junit>4.12</version.junit>
         <version.commons.lang3>3.4</version.commons.lang3>
-        <version.bouncycastle>1.56</version.bouncycastle>
+        <version.bouncycastle>1.60</version.bouncycastle>
         <version.httpcomponents>4.5.5</version.httpcomponents>
         <version.httpcomponents.nio>4.4.9</version.httpcomponents.nio>
         <version.httpcomponents.cache>4.1.3</version.httpcomponents.cache>
