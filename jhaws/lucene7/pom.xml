@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.junit>4.12</version.junit>
-        <version.lucene>7.2.1</version.lucene>
+        <version.lucene>7.5.0</version.lucene>
     </properties>
     <dependencyManagement>
         <dependencies>
