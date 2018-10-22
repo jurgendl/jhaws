@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.junit>4.12</version.junit>
-        <version.commons.lang3>3.4</version.commons.lang3>
+        <version.commons.lang3>3.8.1</version.commons.lang3>
         <version.javassist>3.20.0-GA</version.javassist>
         <version.lambdaj>2.4</version.lambdaj><!-- 2.3.3 -->
         <version.cglib>3.2.8</version.cglib>

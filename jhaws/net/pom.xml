@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.junit>4.12</version.junit>
-        <version.commons.lang3>3.4</version.commons.lang3>
+        <version.commons.lang3>3.8.1</version.commons.lang3>
         <version.bouncycastle>1.60</version.bouncycastle>
         <version.httpcomponents>4.5.5</version.httpcomponents>
         <version.httpcomponents.nio>4.4.9</version.httpcomponents.nio>
