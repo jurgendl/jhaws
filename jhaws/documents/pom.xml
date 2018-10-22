@@ -27,7 +27,7 @@
         <!-- versions -->
         <version.junit>4.12</version.junit>
         <version.poi>3.17</version.poi>
-        <version.commons.codec>1.10</version.commons.codec>
+        <version.commons.codec>1.11</version.commons.codec>
         <version.httpcomponents>4.5.5</version.httpcomponents>
         <version.httpcomponents.nio>4.4.9</version.httpcomponents.nio>
         <version.httpcomponents.cache>4.1.3</version.httpcomponents.cache>
