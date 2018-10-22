@@ -36,6 +36,7 @@
         <version.poi>3.17</version.poi>
         <version.junit>4.12</version.junit>
         <version.ostermiller>1.07.00</version.ostermiller>
+		<version.commons-collections4>4.2</version.commons-collections4>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -64,6 +65,11 @@
             <groupId>org.jhaws.common</groupId>
             <artifactId>jhaws-media</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${version.commons-collections4}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>

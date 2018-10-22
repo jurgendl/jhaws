@@ -36,6 +36,7 @@
             with version 6.16.0 -->
         <version.wicket.bootstrap>0.10.16</version.wicket.bootstrap><!-- https://github.com/l0rdn1kk0n/wicket-bootstrap -->
         <version.commons-collections>3.2.2</version.commons-collections><!-- stale -->
+        <version.commons-collections4>4.2</version.commons-collections4>
         <version.commons-lang>2.6</version.commons-lang><!-- stale -->
         <version.cglib>3.2.8</version.cglib><!-- dead project, Spring includes fork -->
         <version.guava>18.0</version.guava>
@@ -105,6 +106,11 @@
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
             <version>${version.commons-collections}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>${version.commons-collections4}</version>
         </dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
