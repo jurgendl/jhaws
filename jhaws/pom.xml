@@ -312,7 +312,7 @@
 					<failBuildOnCVSS>8</failBuildOnCVSS>
 					<externalReport>false</externalReport>
                     <suppressionFiles>
-                        <suppressionFile>owasp-igore.xml</suppressionFile>
+                        <suppressionFile>owasp-ignore.xml</suppressionFile>
                     </suppressionFiles>
                 </configuration>
 			</plugin>
