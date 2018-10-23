@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
+   <suppress>
+      <notes><![CDATA[
+      file name: logback-ext-spring-0.1.5.jar
+      ]]></notes>
+      <gav regex="true">^org\.logback-extensions:logback-ext-spring:.*$</gav>
+      <cve>CVE-2017-5929</cve>
+   </suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: bzip2-0.9.1.jar
+   ]]></notes>
+   <gav regex="true">^org\.itadaki:bzip2:.*$</gav>
+   <cpe>cpe:/a:bzip:bzip2</cpe>
+</suppress>
+</suppressions>

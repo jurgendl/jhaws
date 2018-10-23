@@ -301,7 +301,7 @@
 				</reportSets>
 			</plugin>
 			<plugin>
-				<!--http://jeremylong.github.io/DependencyCheck/dependency-check-maven/usage.html-->
+				<!--https://jeremylong.github.io/DependencyCheck/dependency-check-maven/index.html-->
 				<!--https://www.owasp.org/index.php/OWASP_Dependency_Check-->
 				<!--https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities-->
 				<groupId>org.owasp</groupId>
@@ -311,7 +311,10 @@
 				<configuration>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
 					<externalReport>false</externalReport>
-				</configuration>
+                    <suppressionFiles>
+                        <suppressionFile>owasp-igore.xml</suppressionFile>
+                    </suppressionFiles>
+                </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
