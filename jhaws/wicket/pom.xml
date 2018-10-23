@@ -250,7 +250,7 @@
           <groupId>com.google.protobuf</groupId>
           <artifactId>protobuf-java</artifactId>
           <version>3.6.1</version>
-          <type>bundle</type>
+          <!-- <type>bundle</type> -->
         </dependency>
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
