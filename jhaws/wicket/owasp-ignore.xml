@@ -78,5 +78,12 @@
    <gav regex="true">^org\.jruby:jruby-stdlib:.*$</gav>
    <cpe>cpe:/a:jruby:jruby</cpe>
 </suppress>
+<suppress>
+   <notes><![CDATA[
+   file name: jruby-stdlib-9.2.0.0.jar: jruby.dll
+   ]]></notes>
+   <sha1>f7bc8e0d88bb808575687f90daa2a335e5dcf3fe</sha1>
+   <cpe>cpe:/a:jruby:jruby</cpe>
+</suppress>
 
 </suppressions>
