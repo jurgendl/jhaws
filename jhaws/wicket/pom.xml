@@ -253,6 +253,11 @@
           <!-- <type>bundle</type> -->
         </dependency>
         <dependency>
+          <groupId>com.google.javascript</groupId>
+          <artifactId>closure-compiler</artifactId>
+          <version>v20181008</version>
+        </dependency>
+        <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-extensions</artifactId>
             <version>${version.wicket.bootstrap}</version>
