@@ -30,7 +30,7 @@
         <version.slf4j>1.7.21</version.slf4j><!-- recent version, keep up to date -->
         <version.logback>1.2.3</version.logback><!-- recent version, keep up to date -->
         <version.janino>2.7.8</version.janino><!-- recent version, keep up to date -->
-        <version.logback.spring>0.1.2</version.logback.spring>
+        <version.logback.spring>0.1.5</version.logback.spring>
     </properties>
     <dependencies>
         <dependency>
