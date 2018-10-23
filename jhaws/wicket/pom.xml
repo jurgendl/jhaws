@@ -245,6 +245,13 @@
             <artifactId>wicketstuff-inmethod-grid</artifactId>
             <version>${version.wicket.stuff}</version>
         </dependency>
+        <!-- wicket-bootstrap-extensions -->
+        <dependency>
+          <groupId>com.google.protobuf</groupId>
+          <artifactId>protobuf-java</artifactId>
+          <version>3.6.1</version>
+          <type>bundle</type>
+        </dependency>
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-extensions</artifactId>
