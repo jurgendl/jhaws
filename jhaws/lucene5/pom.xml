@@ -49,6 +49,7 @@
             <groupId>com.github.zengde</groupId>
             <artifactId>lire</artifactId>
             <version>1.0b2</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
