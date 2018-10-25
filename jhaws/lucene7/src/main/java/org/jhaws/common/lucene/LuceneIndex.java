@@ -4,15 +4,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.lucene.document.Field.Store.NO;
 import static org.apache.lucene.document.Field.Store.YES;
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
-import static org.jhaws.common.lang.CollectionUtils8.collectList;
-import static org.jhaws.common.lang.CollectionUtils8.groupBy;
-import static org.jhaws.common.lang.CollectionUtils8.match;
-import static org.jhaws.common.lang.CollectionUtils8.notContainedIn;
-import static org.jhaws.common.lang.CollectionUtils8.optional;
-import static org.jhaws.common.lang.CollectionUtils8.split;
-import static org.jhaws.common.lang.CollectionUtils8.stream;
-import static org.jhaws.common.lang.CollectionUtils8.streamDeepValues;
-import static org.jhaws.common.lang.CollectionUtils8.toList;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -128,7 +119,7 @@ public class LuceneIndex implements Closeable {
     }
 
     protected Directory getIndex() {
-        return optional(index, this::createIndex);
+        return CollectionUtils8.optional(index, this::createIndex);
     }
 
     protected Directory createIndex() {
@@ -239,7 +230,7 @@ public class LuceneIndex implements Closeable {
     }
 
     protected Analyzer getIndexAnalyzer() {
-        return optional(indexAnalyzer, this::createIndexAnalyzer);
+        return CollectionUtils8.optional(indexAnalyzer, this::createIndexAnalyzer);
     }
 
     protected Analyzer createSearchAnalyzer() {
@@ -247,7 +238,7 @@ public class LuceneIndex implements Closeable {
     }
 
     public Analyzer getSearchAnalyzer() {
-        return optional(searchAnalyzer, this::createSearchAnalyzer);
+        return CollectionUtils8.optional(searchAnalyzer, this::createSearchAnalyzer);
     }
 
     protected synchronized IndexWriter createIndexWriter() {
@@ -261,7 +252,7 @@ public class LuceneIndex implements Closeable {
     protected IndexWriter getIndexWriter() {
         activity = System.currentTimeMillis();
         // fixDocVersion();
-        return optional(indexWriter, this::createIndexWriter);
+        return CollectionUtils8.optional(indexWriter, this::createIndexWriter);
     }
 
     protected IndexWriterConfig createIndexWriterConfig() {
@@ -285,7 +276,7 @@ public class LuceneIndex implements Closeable {
     protected DirectoryReader getIndexReader() {
         activity = System.currentTimeMillis();
         // fixDocVersion();
-        return optional(indexReader, this::createIndexReader);
+        return CollectionUtils8.optional(indexReader, this::createIndexReader);
     }
 
     protected IndexSearcher createIndexSearcher() {
@@ -293,7 +284,7 @@ public class LuceneIndex implements Closeable {
     }
 
     protected IndexSearcher getIndexSearcher() {
-        return optional(indexSearcher, this::createIndexSearcher);
+        return CollectionUtils8.optional(indexSearcher, this::createIndexSearcher);
     }
 
     public void shutDown() {
@@ -390,25 +381,25 @@ public class LuceneIndex implements Closeable {
             // if (f.getVersion() == null) f.setVersion(docVersion);
         });
 
-        Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
-        Consumer<F> onCreate = optional(onCreateOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
-        BiConsumer<F, F> onRematch2 = optional(onRematchOptional, (Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
+        Consumer<F> onDelete = CollectionUtils8.optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
+        Consumer<F> onCreate = CollectionUtils8.optional(onCreateOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
+        BiConsumer<F, F> onRematch2 = CollectionUtils8.optional(onRematchOptional, (Supplier<BiConsumer<F, F>>) CollectionUtils8::biconsume);
         Consumer<Map.Entry<F, F>> onRematch = p -> onRematch2.accept(p.getKey(), p.getValue());
 
         List<F> delete = indexed.stream()
                 .parallel() //
-                .filter(notContainedIn(fetched))
-                .collect(collectList());
+                .filter(CollectionUtils8.notContainedIn(fetched))
+                .collect(CollectionUtils8.collectList());
         List<F> create = fetched.stream()
                 .parallel() //
-                .filter(notContainedIn(indexed))
-                .collect(collectList());
+                .filter(CollectionUtils8.notContainedIn(indexed))
+                .collect(CollectionUtils8.collectList());
 
-        List<Map.Entry<F, F>> match = match(indexed, fetched);
+        List<Map.Entry<F, F>> match = CollectionUtils8.match(indexed, fetched);
         List<Map.Entry<F, F>> redo = match.stream()
                 .parallel() //
                 .filter(p -> p.getValue().getLastmodified() != null && p.getValue().getLastmodified().isAfter(p.getKey().getLastmodified()))
-                .collect(collectList());
+                .collect(CollectionUtils8.collectList());
         if (forceRedoOptional != null) {
             forceRedoOptional.forceRedo(match, redo);
         }
@@ -465,22 +456,22 @@ public class LuceneIndex implements Closeable {
     }
 
     public <F extends Indexable<? super F>> void delete(@SuppressWarnings("unchecked") F... indexables) {
-        delete(toList(indexables));
+        delete(CollectionUtils8.toList(indexables));
     }
 
     public <F extends Indexable<? super F>> void delete(Collection<F> indexables) {
         deleteDocs(indexables.stream()
                 .parallel() //
                 .map(Indexable::indexable)
-                .collect(collectList()));
+                .collect(CollectionUtils8.collectList()));
     }
 
     protected void deleteDocs(Document... docs) {
-        deleteDocs(toList(docs));
+        deleteDocs(CollectionUtils8.toList(docs));
     }
 
     protected void deleteDocs(Collection<Document> docs) {
-        split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(
+        CollectionUtils8.split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(
                 w -> batch.stream().forEach(EConsumer.enhance(doc -> w.deleteDocuments(uuidQuery(doc.get(DOC_UUID).toString()))))));
     }
 
@@ -492,7 +483,7 @@ public class LuceneIndex implements Closeable {
         if (dir.isEmpty()) return new ArrayList<>();
         ScoreDoc[] scoreDocs = score(query, max).scoreDocs;
         logger.info("{} -> #{}", query, scoreDocs.length);
-        return toList(scoreDocs);
+        return CollectionUtils8.toList(scoreDocs);
     }
 
     public TopDocs score(Query query, int max) {
@@ -536,23 +527,23 @@ public class LuceneIndex implements Closeable {
     public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy, Comparator<Document> comparator, Consumer<Document> after) {
         Consumer<Document> deleter = doc -> deleteDocs(doc);
         Consumer<Document> action = after == null ? deleter : deleter.andThen(after);
-        streamDeepValues(groupBy(stream(search(query, max)).map(hit -> getDoc(hit)), groupBy))
+        CollectionUtils8.streamDeepValues(CollectionUtils8.groupBy(CollectionUtils8.stream(search(query, max)).map(hit -> getDoc(hit)), groupBy))
                 .forEach(stream -> stream.sorted(comparator).skip(1).forEach(action));
     }
 
     public void addIndexable(Indexable<?>... indexables) {
-        addIndexables(toList(indexables));
+        addIndexables(CollectionUtils8.toList(indexables));
     }
 
     public void addIndexables(Collection<Indexable<?>> indexables) {
         addDocs(indexables.stream()
                 .parallel() //
                 .map(Indexable::indexable)
-                .collect(collectList()));
+                .collect(CollectionUtils8.collectList()));
     }
 
     public void addDocs(Document... docs) {
-        List<Document> list = toList(docs);
+        List<Document> list = CollectionUtils8.toList(docs);
         addDocs(list);
     }
 
@@ -566,11 +557,12 @@ public class LuceneIndex implements Closeable {
         // .parallel() //
         // .filter(d -> d.getField(DOC_VERSION) == null)
         // .forEach(this::version);
-        split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(w -> w.addDocuments(batch)));
+        CollectionUtils8.split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(w -> w.addDocuments(batch)));
     }
 
     public <F extends Indexable<? super F>> List<F> searchAll(Supplier<F> indexable) {
-        return searchAllDocs().stream().filter(doc -> doc.getField(LUCENE_METADATA) == null).map(doc -> get(doc, indexable)).collect(collectList());
+        return searchAllDocs().stream().filter(doc -> doc.getField(LUCENE_METADATA) == null).map(doc -> get(doc, indexable)).collect(
+                CollectionUtils8.collectList());
     }
 
     public List<Document> searchAllDocs() {
