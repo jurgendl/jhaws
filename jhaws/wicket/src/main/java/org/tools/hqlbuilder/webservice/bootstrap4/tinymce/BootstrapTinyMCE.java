@@ -14,8 +14,12 @@ public class BootstrapTinyMCE {
             "js/tinymce/jquery.tinymce.min.js");
 
     // Prevent Bootstrap dialog from blocking focusin
-    public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem.forScript(
-            " ; $(document).on('focusin', function(e) { if ($(e.target).closest(\".mce-window\").length) { e.stopImmediatePropagation(); } }); ; tinymce.init({ selector : '.tinymce' }) ; ");
+    public static OnDomReadyHeaderItem factory() {
+        return OnDomReadyHeaderItem.forScript(
+                " ; $(document).on('focusin', function(e) { if ($(e.target).closest(\".mce-window\").length) { e.stopImmediatePropagation(); } }); ; tinymce.init({ selector : '.tinymce', plugins: 'visualchars,textcolor', toolbar: '"
+                        + "forecolor backcolor"// textcolor
+                        + "' }) ; ");
+    }
 
     static {
         JS_JQUERY.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());

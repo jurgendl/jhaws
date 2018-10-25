@@ -451,7 +451,7 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_JQUERY));
-        response.render(BootstrapTinyMCE.FACTORY);
+        response.render(BootstrapTinyMCE.factory());
 
         response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));
