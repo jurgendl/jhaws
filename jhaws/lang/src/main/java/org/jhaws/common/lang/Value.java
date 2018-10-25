@@ -132,4 +132,24 @@ public class Value<T> implements Serializable, Supplier<T> {
         }
         return this;
     }
+
+    public Value<T> consume(Consumer<T> consume) {
+        return consume(t -> true, consume);
+    }
+
+    public Value<T> consume(Predicate<T> when, Consumer<T> consume) {
+        if (when.test(value)) {
+            consume.accept(value);
+        }
+        return this;
+    }
+
+    public Value<T> consume(Predicate<T> when, Consumer<T> consume, Producer<T> elseOperation) {
+        if (when.test(value)) {
+            consume.accept(value);
+        } else {
+            value = elseOperation.produce();
+        }
+        return this;
+    }
 }

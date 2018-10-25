@@ -235,35 +235,6 @@ public interface CollectionUtils8 {
         /** ga verder reusable = lazy */
         default <X> OptReusable<T, X> lazy(Function<T, X> getter) {
             return reusable(getter);
-        };
-
-        /** geeft waarde terug */
-        @Override
-        T get();
-
-        /** voert {@link #opt(Function)} uit en dan {@link #get()} */
-        default <X> X get(Function<T, X> get) {
-            return opt(get).get();
-        }
-
-        /**
-         * voert {@link #get()} uit en wanneer null, voert {@link Supplier} uit en geeft die waarde
-         */
-        default T or(Supplier<T> supplier) {
-            return Optional.ofNullable(get()).orElseGet(supplier);
-        }
-
-        /** voert {@link #get()} uit en wanneer null, geeft meegegeven waarde */
-        default T or(T value) {
-            return Optional.ofNullable(get()).orElse(value);
-        }
-
-        default T orNull() {
-            return or((T) null);
-        }
-
-        default T or(Opt<T> supplier) {
-            return or(supplier.get());
         }
 
         default <X> OptEager<X> map(Function<T, X> map) {
@@ -327,6 +298,65 @@ public interface CollectionUtils8 {
             if (value != null) {
                 consumer.accept(value);
             }
+        }
+
+        /** geeft waarde terug */
+        @Override
+        T get();
+
+        /** voert {@link #opt(Function)} uit en dan {@link #get()} */
+        default <X> X get(Function<T, X> get) {
+            return opt(get).get();
+        }
+
+        /**
+         * voert {@link #get()} uit en wanneer null, voert {@link Supplier} uit en geeft die waarde
+         */
+        default T or(Supplier<T> supplier) {
+            return Optional.ofNullable(get()).orElseGet(supplier);
+        }
+
+        /** voert {@link #get()} uit en wanneer null, geeft meegegeven waarde */
+        default T or(T value) {
+            return Optional.ofNullable(get()).orElse(value);
+        }
+
+        default T orNull() {
+            return or((T) null);
+        }
+
+        default T or(Opt<T> supplier) {
+            return or(supplier.get());
+        }
+
+        /** wrap in Value */
+        default Value<T> getValue() {
+            return new Value<>(get());
+        }
+
+        /** wrap in Value */
+        default <X> Value<X> getValue(Function<T, X> get) {
+            return new Value<>(get(get));
+        }
+
+        /** wrap in Value */
+        default Value<T> orValue(Supplier<T> supplier) {
+            return new Value<>(or(supplier));
+        }
+
+        /** wrap in Value */
+        default Value<T> orValue(T value) {
+            return new Value<>(or(value));
+        }
+
+        /** wrap in Value */
+        default Value<T> orNullValue() {
+            return new Value<>(orNull());
+        }
+
+        /** wrap in Value */
+        default Value<T> orValue(Opt<T> supplier) {
+            return new Value<>(or(supplier));
         }
     }
 
