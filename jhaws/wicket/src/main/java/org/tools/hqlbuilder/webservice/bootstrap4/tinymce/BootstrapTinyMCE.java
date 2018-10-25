@@ -6,7 +6,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // https://www.tinymce.com/
 // https://www.tinymce.com/docs/integrations/bootstrap/
-// 4.7.1 community
+// 4.8.3 community
 public class BootstrapTinyMCE {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapTinyMCE.class, "js/tinymce/tinymce.min.js");
 
