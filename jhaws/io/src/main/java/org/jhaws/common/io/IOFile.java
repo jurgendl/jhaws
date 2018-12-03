@@ -1424,6 +1424,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
      *
      * @throws IOException
      */
+    @SuppressWarnings("resource")
     public IOFile niocopy(IOFile target, boolean blocks) throws IOException {
         try (FileChannel inChannel = new FileInputStream(this).getChannel(); FileChannel outChannel = new FileOutputStream(target).getChannel()) {
             if (blocks) {

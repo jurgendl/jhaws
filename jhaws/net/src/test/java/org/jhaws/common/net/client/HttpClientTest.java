@@ -25,6 +25,7 @@ import org.junit.Test;
  * @see https://docs.jboss.org/resteasy/docs/3.0.9.Final/userguide/pdf/resteasy- reference-guide-en-US.pdf
  * @see http://www.baeldung.com/httpclient-multipart-upload
  */
+@Deprecated
 public class HttpClientTest {
     private static TestRestServer server;
 
