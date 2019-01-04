@@ -73,6 +73,7 @@ import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.net.NetHelper;
@@ -105,9 +106,9 @@ public class HTTPClient implements Closeable {
 	public static final String CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36";
 
 	/**
-	 * Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2;
-	 * .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC
-	 * 6.0; .NET4.0C; .NET4.0E)
+	 * Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0;
+	 * SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media
+	 * Center PC 6.0; .NET4.0C; .NET4.0E)
 	 */
 	public static final String IEXPLORER = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)";
 
@@ -380,8 +381,10 @@ public class HTTPClient implements Closeable {
 					entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
 			response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
 			response.setFilename(NetHelper.getName(uris.get(uris.size() - 1)));
+			@SuppressWarnings("deprecation")
+			String contentCharSet = EntityUtils.getContentCharSet(entity);
+			response.setCharset(contentCharSet);
 		}
-		response.setCharset(charSet);
 		try {
 			Header dateHeader = httpResponse.getFirstHeader("Date");
 			if (dateHeader != null && StringUtils.isNotBlank(String.valueOf(dateHeader))) {
@@ -609,7 +612,8 @@ public class HTTPClient implements Closeable {
 	}
 
 	// @SuppressWarnings("deprecation")
-	// protected void prepareRequest_singleCookieHeader(AbstractRequest<? extends
+	// protected void prepareRequest_singleCookieHeader(AbstractRequest<?
+	// extends
 	// AbstractRequest<?>> params, HttpUriRequest req) {
 	// req.setHeader(org.apache.http.cookie.params.CookieSpecPNames.SINGLE_COOKIE_HEADER,
 	// Boolean.TRUE.toString());
