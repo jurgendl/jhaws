@@ -49,6 +49,9 @@ public class BootstrapTinyMCE {
     public static final JavaScriptResourceReference JS_PLUGIN_PASTE = new JavaScriptResourceReference(BootstrapTinyMCE.class,
             "js/tinymce/plugins/paste/plugin.js");
 
+    public static final JavaScriptResourceReference JS_PLUGIN_WORDCOUNT = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/wordcount/plugin.js");
+
     public static final JavaScriptResourceReference JS_PLUGIN_ANCHOR = new JavaScriptResourceReference(BootstrapTinyMCE.class,
             "js/tinymce/plugins/anchor/plugin.js");
 
@@ -63,6 +66,18 @@ public class BootstrapTinyMCE {
 
     public static final JavaScriptResourceReference JS_PLUGIN_MEDIA = new JavaScriptResourceReference(BootstrapTinyMCE.class,
             "js/tinymce/plugins/media/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_HR = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/hr/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_IMAGE = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/image/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_IMAGETOOLS = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/imagetools/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_INSERTDATETIME = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/insertdatetime/plugin.js");
 
     // Prevent Bootstrap dialog from blocking focusin
     public static final String FIX_SCRIPT = " ; $(document).on('focusin', function(e) { if ($(e.target).closest(\".mce-window\").length) { e.stopImmediatePropagation(); } }); ";
@@ -80,11 +95,16 @@ public class BootstrapTinyMCE {
         JS_PLUGIN_TABLE.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_VISUALCHARS.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_PASTE.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_WORDCOUNT.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_ANCHOR.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_CHARMAP.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_TEXTCOLOR.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_COLORPICKER.addJavaScriptResourceReferenceDependency(JS_PLUGIN_TEXTCOLOR);
         JS_PLUGIN_MEDIA.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_HR.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_IMAGE.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_IMAGETOOLS.addJavaScriptResourceReferenceDependency(JS_PLUGIN_IMAGE);
+        JS_PLUGIN_INSERTDATETIME.addJavaScriptResourceReferenceDependency(JS);
     }
 
     public static String factory() {
