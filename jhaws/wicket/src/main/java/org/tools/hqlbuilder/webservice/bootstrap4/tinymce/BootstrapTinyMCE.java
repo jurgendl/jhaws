@@ -7,6 +7,7 @@ import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
+// TODO https://www.tiny.cloud/docs/demo/local-upload/
 // https://www.tinymce.com/
 // https://www.tiny.cloud/docs/plugins/
 // https://www.tinymce.com/docs/integrations/bootstrap/
