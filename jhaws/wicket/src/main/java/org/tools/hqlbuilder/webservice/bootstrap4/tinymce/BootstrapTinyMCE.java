@@ -79,6 +79,9 @@ public class BootstrapTinyMCE {
     public static final JavaScriptResourceReference JS_PLUGIN_INSERTDATETIME = new JavaScriptResourceReference(BootstrapTinyMCE.class,
             "js/tinymce/plugins/insertdatetime/plugin.js");
 
+    public static final JavaScriptResourceReference JS_PLUGIN_HELP = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/help/plugin.js");
+
     // Prevent Bootstrap dialog from blocking focusin
     public static final String FIX_SCRIPT = " ; $(document).on('focusin', function(e) { if ($(e.target).closest(\".mce-window\").length) { e.stopImmediatePropagation(); } }); ";
 
@@ -105,6 +108,7 @@ public class BootstrapTinyMCE {
         JS_PLUGIN_IMAGE.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_IMAGETOOLS.addJavaScriptResourceReferenceDependency(JS_PLUGIN_IMAGE);
         JS_PLUGIN_INSERTDATETIME.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_HELP.addJavaScriptResourceReferenceDependency(JS);
     }
 
     public static String factory() {
