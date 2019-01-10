@@ -454,12 +454,18 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_LINK));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_CODE));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_LISTS));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_ADVLIST));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_AUTOLINK));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_PRINT));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_TABLE));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_PASTE));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_CHARMAP));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_ANCHOR));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_COLORPICKER));
+        response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_MEDIA));
 
         response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));

@@ -8,6 +8,7 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // https://www.tinymce.com/
+// https://www.tiny.cloud/docs/plugins/
 // https://www.tinymce.com/docs/integrations/bootstrap/
 // 4.9.2 (2018-12-17) community
 public class BootstrapTinyMCE {
@@ -27,6 +28,9 @@ public class BootstrapTinyMCE {
     public static final JavaScriptResourceReference JS_PLUGIN_LISTS = new JavaScriptResourceReference(BootstrapTinyMCE.class,
             "js/tinymce/plugins/lists/plugin.js");
 
+    public static final JavaScriptResourceReference JS_PLUGIN_ADVLIST = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/advlist/plugin.js");
+
     public static final JavaScriptResourceReference JS_PLUGIN_AUTOLINK = new JavaScriptResourceReference(BootstrapTinyMCE.class,
             "js/tinymce/plugins/autolink/plugin.js");
 
@@ -45,6 +49,21 @@ public class BootstrapTinyMCE {
     public static final JavaScriptResourceReference JS_PLUGIN_PASTE = new JavaScriptResourceReference(BootstrapTinyMCE.class,
             "js/tinymce/plugins/paste/plugin.js");
 
+    public static final JavaScriptResourceReference JS_PLUGIN_ANCHOR = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/anchor/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_CHARMAP = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/charmap/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_TEXTCOLOR = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/textcolor/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_COLORPICKER = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/colorpicker/plugin.js");
+
+    public static final JavaScriptResourceReference JS_PLUGIN_MEDIA = new JavaScriptResourceReference(BootstrapTinyMCE.class,
+            "js/tinymce/plugins/media/plugin.js");
+
     // Prevent Bootstrap dialog from blocking focusin
     public static final String FIX_SCRIPT = " ; $(document).on('focusin', function(e) { if ($(e.target).closest(\".mce-window\").length) { e.stopImmediatePropagation(); } }); ";
 
@@ -54,12 +73,18 @@ public class BootstrapTinyMCE {
         JS_PLUGIN_LINK.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_CODE.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_LISTS.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_ADVLIST.addJavaScriptResourceReferenceDependency(JS_PLUGIN_LISTS);
         JS_PLUGIN_AUTOLINK.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_PRINT.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_SEARCHREPLACE.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_TABLE.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_VISUALCHARS.addJavaScriptResourceReferenceDependency(JS);
         JS_PLUGIN_PASTE.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_ANCHOR.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_CHARMAP.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_TEXTCOLOR.addJavaScriptResourceReferenceDependency(JS);
+        JS_PLUGIN_COLORPICKER.addJavaScriptResourceReferenceDependency(JS_PLUGIN_TEXTCOLOR);
+        JS_PLUGIN_MEDIA.addJavaScriptResourceReferenceDependency(JS);
     }
 
     public static String factory() {
