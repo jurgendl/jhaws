@@ -8,7 +8,7 @@ tinymce.init({
 	selector:'.tinymce'
 	,menubar:'file edit insert view format table tools help'
 	,toolbar:'undo redo | styleselect | bold italic underline strikethrough subscript superscript outdent indent numlist bullist link anchor | alignleft aligncenter alignright alignjustify | table | insertdatetime | forecolor backcolor | charmap | image | visualchars | print | removeformat'
-	,plugins:"anchor,link,code,lists,advlist,autolink,print,searchreplace,table,visualchars,paste,charmap,textcolor,colorpicker,media,hr,image,imagetools,insertdatetime,wordcount,help"
+	,plugins:"anchor,link,code,lists,advlist,autolink,print,searchreplace,table,visualchars,paste,charmap,textcolor,colorpicker,media,hr,image,insertdatetime,wordcount,help,preview"
 	,branding:false
 	,theme:'modern'
 	,setup:function(editor){
