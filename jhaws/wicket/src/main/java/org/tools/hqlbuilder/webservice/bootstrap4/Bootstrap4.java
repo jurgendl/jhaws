@@ -6,10 +6,11 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
+// v4.2.1 (previous: v4.1.3)
+//
 // http://getbootstrap.com/
 // https://hackerthemes.com/bootstrap-cheatsheet/
 // https://bootsnipp.com/tags/4.0.0
-// 4 beta 3
 //
 //
 // https://bootsnipp.com/snippets/gv6Pe
@@ -26,7 +27,6 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 //
 // https://codepen.io/Funstarter/pen/pJZooM
 public class Bootstrap4 {
-    // v4.2.1 < v4.1.3
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.js");
 
     // IE10 viewport hack for Surface/desktop Windows 8 bug
