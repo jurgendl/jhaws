@@ -254,8 +254,14 @@ public abstract class DefaultWebPage extends WebPage {
             protected void populateItem(ListItem<NavBarLink> item) {
                 // item.add(new CssClassNameAppender("active"));
                 NavBarLink main = item.getModelObject();
-                BookmarkablePageLink<String> link = new BookmarkablePageLink<String>("navbaritemlink", main.getInternalPage(),
-                        main.getInternalPageParameters());
+
+                WebMarkupContainer link;
+                if (main.getChildLinks().isEmpty()) {
+                    link = new BookmarkablePageLink<String>("navbaritemlink", main.getInternalPage(), main.getInternalPageParameters());
+                } else {
+                    link = new WebMarkupContainer("navbaritemlink");
+                }
+
                 WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbaritemicon");
                 if (StringUtils.isNotBlank(main.getIcon())) {
                     navbaritemicon.add(new CssClassNameModifier(main.getIcon()));
@@ -266,6 +272,7 @@ public abstract class DefaultWebPage extends WebPage {
                 item.add(link);
 
                 WebMarkupContainer navbardropdown = new WebMarkupContainer("navbardropdown");
+                navbardropdown.add(new AttributeModifier("aria-labelledby", link.getMarkupId()));
                 if (main.getChildLinks().isEmpty()) {
                     navbardropdown.setVisible(false);
                 } else {
