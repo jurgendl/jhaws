@@ -45,8 +45,14 @@ public class Bootstrap4 {
     // CssResourceReference(Bootstrap4.class,
     // "css/bootstrap-reboot.css");
 
-    public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem
-            .forScript(new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll());
+    private static String FACTORY;
+
+    public static OnDomReadyHeaderItem factory() {
+        if (FACTORY == null) {
+            FACTORY = new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll();
+        }
+        return OnDomReadyHeaderItem.forScript(FACTORY);
+    }
 
     static {
         JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());

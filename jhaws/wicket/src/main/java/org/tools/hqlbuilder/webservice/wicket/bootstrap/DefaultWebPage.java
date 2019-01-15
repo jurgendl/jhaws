@@ -423,7 +423,7 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_POPPER));
         response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS));
         response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_IE10FIX));
-        response.render(Bootstrap4.FACTORY);
+        response.render(Bootstrap4.factory());
 
         // response.render(CssHeaderItem.forReference(FontAwesome.CSS4));
         // response.render(CssHeaderItem.forReference(FontAwesome.CSS5SVG));

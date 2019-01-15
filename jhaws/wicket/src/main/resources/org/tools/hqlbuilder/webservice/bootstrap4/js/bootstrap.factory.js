@@ -17,8 +17,8 @@ $('[data-toggle="tooltip"]').tooltip();
  * ; // $('.disabled').click(function(e){ e.preventDefault(); });
  */
 
-
-
+;
+$('.toast').toast('show');
 
 
 /**
