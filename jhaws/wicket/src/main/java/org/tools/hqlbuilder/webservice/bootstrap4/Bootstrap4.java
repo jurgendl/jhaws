@@ -7,6 +7,7 @@ import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // v4.2.1 (previous: v4.1.3)
+// https://blog.getbootstrap.com/2018/12/21/bootstrap-4-2-1/
 //
 // http://getbootstrap.com/
 // https://hackerthemes.com/bootstrap-cheatsheet/

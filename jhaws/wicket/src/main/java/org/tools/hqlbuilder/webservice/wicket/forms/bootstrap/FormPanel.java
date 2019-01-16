@@ -146,6 +146,10 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
         return this.addDefaultRow(new CheckBoxPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
     }
 
+    public TogglePanel addToggle(Boolean propertyPath, CheckBoxSettings componentSettings) {
+        return this.addDefaultRow(new TogglePanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+    }
+
     public <F extends Serializable> RadioButtonsPanel<F> addRadioButtons(F propertyPath, FormElementSettings componentSettings,
             IModel<List<F>> choices, IChoiceRenderer<F> renderer) {
         return this.addDefaultRow(
