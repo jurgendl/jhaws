@@ -31,6 +31,8 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://startbootstrap.com/bootstrap-resources
 //
 // https://codexui.com/components/
+//
+// https://clipboardjs.com/
 public class Bootstrap4 {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.js");
 
