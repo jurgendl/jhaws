@@ -27,6 +27,10 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // http://formvalidation.io/examples/bootstrap-multiselect/
 //
 // https://codepen.io/Funstarter/pen/pJZooM
+//
+// https://startbootstrap.com/bootstrap-resources
+//
+// https://codexui.com/components/
 public class Bootstrap4 {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.js");
 
