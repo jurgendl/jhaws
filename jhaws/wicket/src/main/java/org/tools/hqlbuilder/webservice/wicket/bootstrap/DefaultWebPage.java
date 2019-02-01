@@ -249,6 +249,10 @@ public abstract class DefaultWebPage extends WebPage {
         navbarbrandlink.setVisible(false);
         navbar.add(navbarbrandlink);
 
+        if (navs == null || navs.isEmpty()) {
+            navs.add(new NavBarLink("Home", "fa-fw fas fa-home", getClass(), null));
+        }
+
         navbar.add(new ListView<NavBarLink>("navbaritems", navs) {
             @Override
             protected void populateItem(ListItem<NavBarLink> item) {
@@ -399,6 +403,7 @@ public abstract class DefaultWebPage extends WebPage {
     protected Component addBreadcrumb(PageParameters parameters, MarkupContainer html, String id) {
         WebMarkupContainer breadcrumb = new WebMarkupContainer(id);
         html.add(breadcrumb);
+        breadcrumb.setVisible(false);
         return breadcrumb;
     }
 

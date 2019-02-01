@@ -34,7 +34,8 @@ public class FileStoreResourceImpl implements FileStoreResource {
     private FileService fileService;
 
     /**
-     * @see FileStoreResource.JQueryFileUploadRest#deleteUpload(java.lang.String)
+     * 
+     * @see org.tools.hqlbuilder.webservice.resteasy.resources.FileStoreResource#deleteUpload(java.lang.String)
      */
     @Override
     public DeleteResult deleteUpload(String name) {
@@ -49,7 +50,8 @@ public class FileStoreResourceImpl implements FileStoreResource {
     }
 
     /**
-     * @see FileStoreResource.JQueryFileUploadRest#download(java.lang.String)
+     * 
+     * @see org.tools.hqlbuilder.webservice.resteasy.resources.FileStoreResource#download(java.lang.String)
      */
     @Override
     public StreamingOutput download(String name) {
@@ -65,7 +67,8 @@ public class FileStoreResourceImpl implements FileStoreResource {
     }
 
     /**
-     * @see FileStoreResource.JQueryFileUploadRest#getUploads()
+     * 
+     * @see org.tools.hqlbuilder.webservice.resteasy.resources.FileStoreResource#getUploads()
      */
     @Override
     public UploadResult getUploads() {
@@ -77,7 +80,8 @@ public class FileStoreResourceImpl implements FileStoreResource {
     }
 
     /**
-     * @see FileStoreResource.JQueryFileUploadRest#upload(javax.servlet.http.HttpServletRequest,
+     * 
+     * @see org.tools.hqlbuilder.webservice.resteasy.resources.FileStoreResource#upload(javax.servlet.http.HttpServletRequest,
      *      org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput)
      */
     @Override

@@ -13,6 +13,14 @@ public class FileMeta {
 
     public String deleteType = "DELETE";
 
+    public FileMeta() {
+        super();
+    }
+
+    public FileMeta(String name) {
+        this.name = name;
+    }
+
     public String getDeleteType() {
         return deleteType;
     }

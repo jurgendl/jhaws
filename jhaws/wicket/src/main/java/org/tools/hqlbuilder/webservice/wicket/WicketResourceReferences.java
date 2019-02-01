@@ -112,6 +112,8 @@ public class WicketResourceReferences extends JQueryLibrarySettings {
         if (init) {
             setJQueryUIReference(JQueryUIResourceReference.get());// redirect to default
             setJQueryReference(JQueryResourceReference.get());// redirect to default
+            // setJQueryReference(org.tools.hqlbuilder.webservice.jquery2.JQuery2.JS);// v2
+            // setJQueryReference(org.tools.hqlbuilder.webservice.jquery3.JQuery3.JS);// v3
             setWicketEventReference(WicketEventJQueryResourceReference.get());// redirect to default
             setWicketAjaxReference(WicketAjaxJQueryResourceReference.get());// redirect to default
             setWicketAjaxDebugReference(WicketAjaxDebugJQueryResourceReference.get());// redirect to default

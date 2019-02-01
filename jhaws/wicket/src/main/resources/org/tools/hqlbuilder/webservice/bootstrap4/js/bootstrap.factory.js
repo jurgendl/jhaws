@@ -25,6 +25,7 @@ $('.toast').toast('show');
  * Bootstrap v4 Beta-2 add filename in custom input file dinamic and restore default "fake placeholder" in "Event.RESET"
  * Based on this issue: @see {https://github.com/twbs/bootstrap/issues/20813} - original as jQuery
  */
+/*
 let customInputs = document.querySelectorAll('input[type="file"][data-toggle="custom-file"]');
 if ( customInputs.length > 0 ) {
     for (let i = 0; i < customInputs.length; i++) {
@@ -60,3 +61,4 @@ if ( customInputs.length > 0 ) {
          }
     }
 }
+*/
