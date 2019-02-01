@@ -31,6 +31,7 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.bootstrap4.colorpicker.BootstrapColorPicker;
+import org.tools.hqlbuilder.webservice.bootstrap4.customfileinput.CustomFileInput;
 import org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus.BootstrapTempusDominusDateTimePicker;
 import org.tools.hqlbuilder.webservice.bootstrap4.multiselect.MultiSelect;
 import org.tools.hqlbuilder.webservice.bootstrap4.slider.BootstrapSlider;
@@ -498,6 +499,8 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(MultiSelect.CSS));
         response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
         response.render(MultiSelect.JS_FACTORY);
+
+        response.render(JavaScriptHeaderItem.forReference(CustomFileInput.JS));
 
         // response.render(JavaScriptHeaderItem.forReference(BootstrapConfirmation.JS));
         // response.render(OnLoadHeaderItem.forScript(";$('[data-toggle=confirmation]').confirmation({rootSelector:'[data-toggle=confirmation]'});"));

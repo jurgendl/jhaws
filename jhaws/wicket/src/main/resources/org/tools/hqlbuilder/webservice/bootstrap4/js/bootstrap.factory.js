@@ -1,5 +1,5 @@
-; // https://www.codeply.com/go/SkIJQ5LqKp/custom-file-input
-/*$('.custom-file-input').on('change', function() {
+// https://www.codeply.com/go/SkIJQ5LqKp/custom-file-input
+/*;$('.custom-file-input').on('change', function() {
 	let fileName = $(this).val();
 	console.log('file selected: '+fileName);
 	let fileName = fileName.indexOf('/');
@@ -10,18 +10,21 @@
 	$(this).next('.form-control-file').addClass('selected').html(fileName);
 });*/
 
-; //
-$('[data-toggle="tooltip"]').tooltip();
+;$('[data-toggle="tooltip"]').tooltip();
+
+// ;$('.disabled').click(function(e){ e.preventDefault(); });
+
+;$('.toast').toast('show');
+
+; try {
+	bsCustomFileInput.init();
+} catch (e) {
+    if (e instanceof ReferenceError) {
+        console.log('reference error: requires bs-custom-file-input.js')
+    }
+} ;
 
 /*
- * ; // $('.disabled').click(function(e){ e.preventDefault(); });
- */
-
-;
-$('.toast').toast('show');
-
-
-/**
  * Bootstrap v4 Beta-2 add filename in custom input file dinamic and restore default "fake placeholder" in "Event.RESET"
  * Based on this issue: @see {https://github.com/twbs/bootstrap/issues/20813} - original as jQuery
  */

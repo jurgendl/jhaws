@@ -49,9 +49,9 @@ public class Bootstrap4 {
     private static String FACTORY;
 
     public static OnDomReadyHeaderItem factory() {
-        if (FACTORY == null) {
-            FACTORY = new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll();
-        }
+        // if (FACTORY == null) {
+        FACTORY = new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll();
+        // }
         return OnDomReadyHeaderItem.forScript(FACTORY);
     }
 
