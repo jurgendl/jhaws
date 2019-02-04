@@ -16,17 +16,20 @@ public class SimpleMemoryFileService implements FileService {
     private Map<FileMeta, byte[]> files = new HashMap<>();
 
     /**
-     * @see jquery_file_upload.FileService#add(jquery_file_upload.FileMeta, java.io.InputStream)
+     * 
+     * @see org.tools.hqlbuilder.service.filestore.FileService#add(org.tools.hqlbuilder.model.filestore.FileMeta, java.io.InputStream)
      */
     @Override
     public int add(FileMeta file, InputStream inputStream) throws IOException {
         byte[] byteArray = IOUtils.toByteArray(inputStream);
         files.put(file, byteArray);
+        file.size = byteArray.length;
         return byteArray.length;
     }
 
     /**
-     * @see jquery_file_upload.FileService#deleteFiles(java.lang.String)
+     * 
+     * @see org.tools.hqlbuilder.service.filestore.FileService#deleteFiles(java.lang.String)
      */
     @Override
     public List<FileMeta> deleteFiles(String name) {
@@ -36,7 +39,8 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * @see jquery_file_upload.FileService#getFile(java.lang.String)
+     * 
+     * @see org.tools.hqlbuilder.service.filestore.FileService#getFile(java.lang.String)
      */
     @Override
     public FileMeta getFile(String name) throws IOException {
@@ -48,7 +52,8 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * @see jquery_file_upload.FileService#getFiles()
+     * 
+     * @see org.tools.hqlbuilder.service.filestore.FileService#getFiles()
      */
     @Override
     public List<FileMeta> getFiles() {
@@ -56,7 +61,8 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * @see jquery_file_upload.FileService#getFiles(java.lang.String)
+     * 
+     * @see org.tools.hqlbuilder.service.filestore.FileService#getFiles(java.lang.String)
      */
     @Override
     public List<FileMeta> getFiles(String name) {
@@ -64,18 +70,26 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * @see jquery_file_upload.FileService#readFile(jquery_file_upload.FileMeta, java.io.OutputStream)
+     * 
+     * @see org.tools.hqlbuilder.service.filestore.FileService#readFile(org.tools.hqlbuilder.model.filestore.FileMeta, java.io.OutputStream)
      */
     @Override
     public void readFile(FileMeta file, OutputStream out) throws IOException {
         out.write(files.get(file));
+        out.flush();
     }
 
     /**
-     * @see jquery_file_upload.FileService#remove(jquery_file_upload.FileMeta)
+     * 
+     * @see org.tools.hqlbuilder.service.filestore.FileService#remove(org.tools.hqlbuilder.model.filestore.FileMeta)
      */
     @Override
     public void remove(FileMeta file) {
         files.remove(file);
+    }
+
+    @Override
+    public byte[] readFileFully(FileMeta file) throws IOException {
+        return files.get(file);
     }
 }

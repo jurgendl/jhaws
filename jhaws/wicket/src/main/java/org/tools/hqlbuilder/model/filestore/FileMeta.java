@@ -17,6 +17,12 @@ public class FileMeta {
         super();
     }
 
+    public FileMeta(String name, long size) {
+        super();
+        this.name = name;
+        this.size = size;
+    }
+
     public FileMeta(String name) {
         this.name = name;
     }
