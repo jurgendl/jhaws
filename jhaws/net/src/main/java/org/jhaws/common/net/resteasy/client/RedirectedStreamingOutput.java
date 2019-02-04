@@ -14,6 +14,10 @@ public class RedirectedStreamingOutput implements StreamingOutput {
         this.input = input;
     }
 
+    public InputStream getInput() {
+        return this.input;
+    }
+
     /**
      * @see javax.ws.rs.core.StreamingOutput#write(java.io.OutputStream)
      */

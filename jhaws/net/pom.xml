@@ -223,7 +223,6 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-client</artifactId>
             <version>${version.resteasy}</version>
-            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.logging</groupId>
@@ -235,7 +234,6 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxb-provider</artifactId>
             <version>${version.resteasy}</version>
-            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.logging</groupId>
@@ -247,7 +245,17 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-json-p-provider</artifactId>
             <version>${version.resteasy}</version>
-            <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jackson-provider</artifactId>
+            <version>${version.resteasy}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.logging</groupId>
@@ -259,7 +267,6 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-multipart-provider</artifactId>
             <version>${version.resteasy}</version>
-            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.logging</groupId>
@@ -275,7 +282,6 @@
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>tjws</artifactId>
             <version>${version.resteasy}</version>
-            <optional>true</optional>
             <exclusions>
                 <exclusion>
                     <groupId>org.jboss.logging</groupId>

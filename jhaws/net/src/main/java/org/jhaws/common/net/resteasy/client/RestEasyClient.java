@@ -81,7 +81,6 @@ public class RestEasyClient<R> {
             throw new RuntimeException(ex);
         }
         ProxyObject.class.cast(instance).setHandler(new MethodHandler() {
-
             @SuppressWarnings("deprecation")
             @Override
             public Object invoke(Object self, Method method, Method forwarder, Object[] args) throws Throwable {
@@ -264,7 +263,8 @@ public class RestEasyClient<R> {
                     }
                     Object entity = response.getEntity();
                     if (stream) {
-                        entity = new RedirectedStreamingOutput(InputStream.class.cast(entity));
+                        InputStream in = InputStream.class.cast(entity);
+                        entity = new RedirectedStreamingOutput(in);
                     }
                     return entity;
                 } catch (org.jboss.resteasy.spi.UnhandledException ex) {
