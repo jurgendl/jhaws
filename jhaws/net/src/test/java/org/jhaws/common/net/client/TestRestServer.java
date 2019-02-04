@@ -11,10 +11,8 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.plugins.server.embedded.SecurityDomain;
-import org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 
-@Deprecated
 public class TestRestServer implements AutoCloseable {
     int port;
 
@@ -22,7 +20,8 @@ public class TestRestServer implements AutoCloseable {
 
     Set<Class<?>> classes = new HashSet<>();
 
-    TJWSEmbeddedJaxrsServer server;
+    @SuppressWarnings("deprecation")
+    org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer server;
 
     SecurityDomain securityDomain;
 
@@ -60,9 +59,10 @@ public class TestRestServer implements AutoCloseable {
         this.resteasyClient = new ResteasyClientBuilder().build();
     }
 
+    @SuppressWarnings("deprecation")
     private void start() throws IOException {
         port = findFreePort();
-        server = new TJWSEmbeddedJaxrsServer();
+        server = new org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer();
         server.setPort(port);
         server.setBindAddress(bindAddress);
         server.setSecurityDomain(securityDomain);
@@ -102,6 +102,7 @@ public class TestRestServer implements AutoCloseable {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void close() {
         if (server != null) {

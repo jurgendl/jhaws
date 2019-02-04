@@ -32,7 +32,7 @@
         <version.httpcomponents.nio>4.4.10</version.httpcomponents.nio>
         <version.httpcomponents.cache>4.1.4</version.httpcomponents.cache>
         <version.resteasy>3.6.2.Final</version.resteasy>
-        <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs>
+        <!-- <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs> -->
         <version.xhtmlrenderer>9.1.16</version.xhtmlrenderer>
     </properties>
     <dependencyManagement>
@@ -53,25 +53,25 @@
             <version>${version.junit}</version>
             <scope>test</scope>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
             <version>3.3.0.Final</version>
             <scope>test</scope>
-        </dependency> -->
+        </dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.11</version>
 		</dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jhaws-logging</artifactId>
+            <groupId>org.jhaws.common</groupId>
+            <artifactId>jhaws-io</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
-            <artifactId>jhaws-io</artifactId>
+            <artifactId>jhaws-logging</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -197,11 +197,17 @@
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>jaxrs-api</artifactId>
             <version>${version.resteasy.jaxrs}</version>
-        </dependency>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.logging</groupId>
+                    <artifactId>jboss-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency> -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-wadl</artifactId>

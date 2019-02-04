@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.resteasy>3.6.2.Final</version.resteasy>
-        <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs><!-- version 3.0.17.Final does not exists // 3.1.4.Final -->
+        <!-- <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs> --><!-- version 3.0.17.Final does not exists // 3.1.4.Final -->
         <version.jackson>2.9.6</version.jackson><!-- 2.4.1 // 2.6.3 // 2.7.x gives problems // wanne go to 2.9.6 -->
         <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problems -->
     </properties>
@@ -136,7 +136,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>jaxrs-api</artifactId>
             <version>${version.resteasy.jaxrs}</version>
@@ -146,7 +146,7 @@
                     <artifactId>jboss-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxb-provider</artifactId>
