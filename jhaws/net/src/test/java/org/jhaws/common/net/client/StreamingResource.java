@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
@@ -102,11 +103,17 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public StreamingOutput downloadFileBin(String file) {
+    public StreamingOutput downloadFileBin(HttpServletResponse response, String file) {
         System.out.println(new Date());
         try {
-            ByteArrayInputStream in = new ByteArrayInputStream(data.get(file));
-            return out -> write(in, out);
+            response.addIntHeader(HttpHeaders.CONTENT_LENGTH, (int) (long) len.get(file));
+            InputStream in = new ByteArrayInputStream(data.get(file));
+            return new StreamingOutput() {
+                @Override
+                public void write(OutputStream out) throws IOException, WebApplicationException {
+                    StreamingResource.this.write(in, out);
+                }
+            };
         } catch (RuntimeException ex) {
             throw new WebApplicationException(ex);
         } finally {

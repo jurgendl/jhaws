@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.io.IOUtils;
@@ -190,31 +189,17 @@ public class StreamHttpClientTest {
         }
     }
 
-    // FIXME
-    // @Test
-    // public void testDownloadFile() {
-    // try {
-    // ResteasyClient client = client();
-    // ResteasyWebTarget target = client.target(getBase().build().toASCIIString());
-    // Builder request = target.path(StreamingResource.DOWNLOAD_FILE).queryParam("file", "pom.xml").request();
-    // Invocation get = request.buildGet();
-    // Response response = get.invoke();
-    // Assert.assertEquals(200, response.getStatus());
-    // InputStream readEntity = response.readEntity(InputStream.class);
-    // System.out.println(response.getLength());
-    // System.out.println(readEntity.available());
-    // System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
-    // } catch (Exception ex) {
-    // ex.printStackTrace();
-    // Assert.fail();
-    // }
-    // }
-
     @Test
-    public void testDownloadFileProxy() {
+    public void testDownloadFile() {
         try {
-            StreamingOutput result = proxy.downloadFileBin("pom.xml");
-            System.out.println();
+            ResteasyClient client = client();
+            ResteasyWebTarget target = client.target(getBase().build().toASCIIString());
+            Builder request = target.path(StreamingResource.DOWNLOAD_FILE).queryParam("file", "pom.xml").request();
+            Invocation get = request.buildGet();
+            Response response = get.invoke();
+            Assert.assertEquals(200, response.getStatus());
+            InputStream readEntity = response.readEntity(InputStream.class);
+            System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail();
@@ -249,8 +234,6 @@ public class StreamHttpClientTest {
             Response response = get.invoke();
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
-            System.out.println(response.getLength());
-            System.out.println(readEntity.available());
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();

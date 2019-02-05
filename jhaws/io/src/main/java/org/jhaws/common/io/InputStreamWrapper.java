@@ -14,4 +14,8 @@ public class InputStreamWrapper extends InputStream {
     public int read() throws IOException {
         return wrapped.read();
     }
+
+    public InputStream getWrapped() {
+        return this.wrapped;
+    }
 }

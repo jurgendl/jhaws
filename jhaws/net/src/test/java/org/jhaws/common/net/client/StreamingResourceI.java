@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -58,7 +59,7 @@ public interface StreamingResourceI {
     @GET
     @Path(DOWNLOAD_FILE)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    StreamingOutput downloadFileBin(@QueryParam("file") String file);
+    StreamingOutput downloadFileBin(@Context HttpServletResponse response, @QueryParam("file") String file);
 
     @GET
     @Path(DOWNLOAD_FILE_ALT)

@@ -14,4 +14,9 @@ public class OutputStreamWrapper extends OutputStream {
     public void write(int b) throws IOException {
         outputStream.write(b);
     }
+
+    public OutputStream getOutputStream() {
+        return this.outputStream;
+    }
+
 }
