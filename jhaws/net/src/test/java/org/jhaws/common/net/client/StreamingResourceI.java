@@ -24,11 +24,13 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 // @Pretty
 // @GZIP
 public interface StreamingResourceI {
+    static final String PATH = "/files";
+
     static final String LIST = "/list";
 
-    static final String DOWNLOAD_FILE = "/downloadfile";
+    static final String DOWNLOAD_STREAM = "/downloadstream";
 
-    static final String DOWNLOAD_FILE_ALT = "/downloadfilealt";
+    static final String DOWNLOAD_STREAM_IN_RESPONSE = "/downloadstreaminresponse";
 
     static final String UPLOAD_FORM = "/uploadform";
 
@@ -36,35 +38,34 @@ public interface StreamingResourceI {
 
     static final String DOWNLOAD_FORM = "/downloadform";
 
-    static final String UPLOAD_BINARY = "/uploadbin";
-
-    static final String PATH = "/files";
+    static final String UPLOAD_STREAM = "/uploadstream";
 
     @POST
     @Path(UPLOAD_FORM)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    Response uploadFileForm(@Context HttpServletRequest request, MultipartFormDataInput input);
+    @Produces(MediaType.TEXT_PLAIN)
+    Response uploadForm(@Context HttpServletRequest request, MultipartFormDataInput input);
 
     @POST
     @Path(DOWNLOAD_FORM)
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    Response downloadFileForm(@FormParam("file") String file);
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    Response downloadForm(@FormParam("file") String file);
 
     @GET
     @Path(DOWNLOAD_GET)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    Response downloadFileGet(@QueryParam("file") String file);
+    Response downloadGet(@QueryParam("file") String file);
 
     @GET
-    @Path(DOWNLOAD_FILE)
+    @Path(DOWNLOAD_STREAM)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    StreamingOutput downloadFileBin(@Context HttpServletResponse response, @QueryParam("file") String file);
+    StreamingOutput downloadStream(@Context HttpServletResponse response, @QueryParam("file") String file);
 
     @GET
-    @Path(DOWNLOAD_FILE_ALT)
+    @Path(DOWNLOAD_STREAM_IN_RESPONSE)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    Response downloadFileBinAlt(@QueryParam("file") String file);
+    Response downloadStreamInResponse(@QueryParam("file") String file);
 
     @GET
     @Path(LIST)
@@ -72,7 +73,8 @@ public interface StreamingResourceI {
     List<String> list();
 
     @POST
+    @Path(UPLOAD_STREAM)
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    @Path(UPLOAD_BINARY)
-    String uploadFileBin(@HeaderParam("file") String fileName, InputStream data);
+    @Produces(MediaType.TEXT_PLAIN)
+    String uploadStream(@HeaderParam("file") String fileName, InputStream data);
 }

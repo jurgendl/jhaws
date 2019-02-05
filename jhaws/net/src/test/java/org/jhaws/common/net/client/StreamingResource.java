@@ -48,7 +48,7 @@ public class StreamingResource implements StreamingResourceI {
     // Response uploadFile(@MultipartForm POJO form)
 
     @Override
-    public Response uploadFileForm(HttpServletRequest request, MultipartFormDataInput input) {
+    public Response uploadForm(HttpServletRequest request, MultipartFormDataInput input) {
         System.out.println(new Date());
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("attachment");
@@ -72,7 +72,7 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public Response downloadFileForm(String file) {
+    public Response downloadForm(String file) {
         System.out.println(new Date());
         Response dl = dl(file);
         System.out.println(new Date());
@@ -95,7 +95,7 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public Response downloadFileGet(String file) {
+    public Response downloadGet(String file) {
         System.out.println(new Date());
         Response dl = dl(file);
         System.out.println(new Date());
@@ -103,7 +103,7 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public StreamingOutput downloadFileBin(HttpServletResponse response, String file) {
+    public StreamingOutput downloadStream(HttpServletResponse response, String file) {
         System.out.println(new Date());
         try {
             response.addIntHeader(HttpHeaders.CONTENT_LENGTH, (int) (long) len.get(file));
@@ -122,7 +122,7 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public Response downloadFileBinAlt(String file) {
+    public Response downloadStreamInResponse(String file) {
         System.out.println(new Date());
         try {
             InputStream in = new ByteArrayInputStream(data.get(file));
@@ -174,7 +174,7 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public String uploadFileBin(String fileName, InputStream in) {
+    public String uploadStream(String fileName, InputStream in) {
         System.out.println(new Date());
         try {
             len.put(fileName, (long) in.available());
