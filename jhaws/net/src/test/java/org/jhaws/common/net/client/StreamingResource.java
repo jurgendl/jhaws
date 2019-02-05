@@ -140,6 +140,7 @@ public class StreamingResource implements StreamingResourceI {
             // class1.putDataOnOutputStream(cbb.getOutputStream());
             // class2.processDataFromInputStream(cbb.getInputStream());
             org.apache.commons.io.IOUtils.copy(in, out);
+            out.flush();
         } catch (RuntimeException | IOException ex) {
             throw new WebApplicationException(ex);
         }

@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.io.IOUtils;
@@ -212,14 +213,8 @@ public class StreamHttpClientTest {
     @Test
     public void testDownloadFileProxy() {
         try {
-            proxy.downloadFileBin("pom.xml");
-            // ResteasyClient client = client();
-            // ResteasyWebTarget target = client.target(BASE);
-            // StreamingResourceI simple = target.proxy(StreamingResourceI.class);
-            // StreamingOutput result = simple.downloadFileBin("pom.xml");
-            // ByteArrayOutputStream output = new ByteArrayOutputStream();
-            // result.write(output);
-            // System.out.println(new String(output.toByteArray()));
+            StreamingOutput result = proxy.downloadFileBin("pom.xml");
+            System.out.println();
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail();
