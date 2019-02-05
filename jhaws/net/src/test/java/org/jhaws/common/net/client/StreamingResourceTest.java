@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class StreamHttpClientTest {
+public class StreamingResourceTest {
     private static TestRestServer server;
 
     private static HTTPClient hc;
@@ -223,9 +223,10 @@ public class StreamHttpClientTest {
     @Test
     public void test_DownloadStream() {
         if (!runDirect) return;
+        Response response = null;
         try {
-            Response response = target().path(StreamingResource.DOWNLOAD_STREAM)
-                    .queryParam("file", file.getFileNameString())
+            response = target().path(StreamingResource.DOWNLOAD_STREAM)
+                    .queryParam("file", file.getFileName().toString())
                     .request()
                     .buildGet()
                     .invoke();
@@ -235,6 +236,8 @@ public class StreamHttpClientTest {
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
         }
     }
 
