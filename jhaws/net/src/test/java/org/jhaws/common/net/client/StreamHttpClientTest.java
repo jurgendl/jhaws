@@ -16,7 +16,6 @@ import javax.ws.rs.core.UriBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
@@ -81,24 +80,22 @@ public class StreamHttpClientTest {
         }
     }
 
-    private ResteasyClient client;
-
-    private ResteasyClient client() {
-        if (client == null) client = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build())).build();
-        return client;
-    }
-
     private ResteasyWebTarget target;
 
     private ResteasyWebTarget target() {
-        if (target == null) target = client().target(getBaseInclResourcePath());
+        if (target == null) target = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build()))
+                .build()
+                .target(getBaseInclResourcePath());
         return target;
     }
 
-    private StreamingResourceI proxy;
+    private static StreamingResourceI proxy;
 
-    private StreamingResourceI proxy() {
-        if (proxy == null) proxy = client().target(server.baseUri()).proxy(StreamingResourceI.class);
+    private static StreamingResourceI proxy() {
+        if (proxy == null) proxy = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build()))
+                .build()
+                .target(server.baseUri())
+                .proxy(StreamingResourceI.class);
         return proxy;
     }
 
