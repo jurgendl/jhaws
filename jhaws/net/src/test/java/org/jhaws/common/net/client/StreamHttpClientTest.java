@@ -80,9 +80,9 @@ public class StreamHttpClientTest {
         }
     }
 
-    private ResteasyWebTarget target;
+    private static ResteasyWebTarget target;
 
-    private ResteasyWebTarget target() {
+    private static ResteasyWebTarget target() {
         if (target == null) target = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build()))
                 .build()
                 .target(getBaseInclResourcePath());
@@ -195,22 +195,22 @@ public class StreamHttpClientTest {
         }
     }
 
-    @Test
-    public void test_DownloadStream() {
-        try {
-            Response response = target().path(StreamingResource.DOWNLOAD_STREAM)
-                    .queryParam("file", file.getFileNameString())
-                    .request()
-                    .buildGet()
-                    .invoke();
-            Assert.assertEquals(200, response.getStatus());
-            InputStream readEntity = response.readEntity(InputStream.class);
-            System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail();
-        }
-    }
+    // @Test
+    // public void test_DownloadStream() {
+    // try {
+    // Response response = target().path(StreamingResource.DOWNLOAD_STREAM)
+    // .queryParam("file", file.getFileNameString())
+    // .request()
+    // .buildGet()
+    // .invoke();
+    // Assert.assertEquals(200, response.getStatus());
+    // InputStream readEntity = response.readEntity(InputStream.class);
+    // System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
+    // } catch (Exception ex) {
+    // ex.printStackTrace();
+    // Assert.fail();
+    // }
+    // }
 
     @Test
     public void proxy_UploadStream() {
