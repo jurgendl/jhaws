@@ -58,13 +58,12 @@ public class StreamingResource implements StreamingResourceI {
                 String fileName = getFileName(header);
                 System.out.println(fileName);
                 InputStream inputStream = inputPart.getBody(InputStream.class, null);
-                int length = inputStream.available();
-                len.put(fileName, (long) length);
-                data.put(fileName, IOUtils.readFully(inputStream, length));
+                data.put(fileName, IOUtils.toByteArray(inputStream));
+                len.put(fileName, (long) data.get(fileName).length);
                 if (s.length() > 1) {
                     s.append(",");
                 }
-                s.append("\"").append(fileName).append(":").append(length).append("\"");
+                s.append("\"").append(fileName).append(":").append(len.get(fileName)).append("\"");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return Response.status(500).entity("" + ex).build();
@@ -177,17 +176,16 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public String uploadStream(String fileName, InputStream in) {
+    public String uploadStream(String fileName, InputStream inputStream) {
         System.out.println(new Date());
         StringBuilder s = new StringBuilder("[");
         try {
-            long length = (long) in.available();
-            len.put(fileName, length);
-            data.put(fileName, IOUtils.readFully(in, in.available()));
+            data.put(fileName, IOUtils.toByteArray(inputStream));
+            len.put(fileName, (long) data.get(fileName).length);
             if (s.length() > 1) {
                 s.append(",");
             }
-            s.append("\"").append(fileName).append(":").append(length).append("\"");
+            s.append("\"").append(fileName).append(":").append(len.get(fileName)).append("\"");
         } catch (RuntimeException | IOException ex) {
             throw new WebApplicationException(ex);
         }
