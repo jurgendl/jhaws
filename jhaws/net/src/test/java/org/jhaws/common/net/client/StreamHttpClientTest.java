@@ -25,8 +25,11 @@ import org.jhaws.common.net.resteasy.MultipartFormDataOutputEntity;
 import org.jhaws.common.net.resteasy.client.RestEasyClient;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StreamHttpClientTest {
     private static TestRestServer server;
 
@@ -38,6 +41,10 @@ public class StreamHttpClientTest {
     private static StreamingResourceI otherproxy;
 
     private static FilePath file;
+
+    private boolean runProxy = true;
+
+    private boolean runDirect = false;
 
     static {
         try {
@@ -101,6 +108,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void test_UploadForm() {
+        if (!runDirect) return;
         try {
             MultipartFormDataOutput mdo = new MultipartFormDataOutput();
             mdo.addFormData("attachment", file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM_TYPE, file.getFileNameString());
@@ -115,6 +123,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void proxy_List() {
+        if (!runProxy) return;
         try {
             System.out.println(proxy().list());
         } catch (Exception ex) {
@@ -125,6 +134,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void test_List() {
+        if (!runDirect) return;
         try {
             String response = target().path(StreamingResource.LIST).request().get(String.class);
             System.out.println(response);
@@ -139,6 +149,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void test_DownloadGet() {
+        if (!runDirect) return;
         try {
             Response response = target().path(StreamingResource.DOWNLOAD_GET)
                     .queryParam("file", file.getFileNameString())
@@ -156,6 +167,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void proxy_DownloadGet() {
+        if (!runProxy) return;
         try {
             Response response = proxy().downloadGet(file.getFileNameString());
             Assert.assertEquals(200, response.getStatus());
@@ -169,6 +181,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void test_DownloadForm() {
+        if (!runDirect) return;
         try {
             MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
             formData.add("file", file.getFileNameString());
@@ -184,6 +197,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void proxy_DownloadForm() {
+        if (!runProxy) return;
         try {
             Response response = proxy().downloadForm(file.getFileNameString());
             Assert.assertEquals(200, response.getStatus());
@@ -195,25 +209,27 @@ public class StreamHttpClientTest {
         }
     }
 
-    // @Test
-    // public void test_DownloadStream() {
-    // try {
-    // Response response = target().path(StreamingResource.DOWNLOAD_STREAM)
-    // .queryParam("file", file.getFileNameString())
-    // .request()
-    // .buildGet()
-    // .invoke();
-    // Assert.assertEquals(200, response.getStatus());
-    // InputStream readEntity = response.readEntity(InputStream.class);
-    // System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
-    // } catch (Exception ex) {
-    // ex.printStackTrace();
-    // Assert.fail();
-    // }
-    // }
+    @Test
+    public void test_DownloadStream() {
+        if (!runDirect) return;
+        try {
+            Response response = target().path(StreamingResource.DOWNLOAD_STREAM)
+                    .queryParam("file", file.getFileNameString())
+                    .request()
+                    .buildGet()
+                    .invoke();
+            Assert.assertEquals(200, response.getStatus());
+            InputStream readEntity = response.readEntity(InputStream.class);
+            System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail();
+        }
+    }
 
     @Test
     public void proxy_UploadStream() {
+        if (!runProxy) return;
         try {
             String reponse = proxy().uploadStream(file.getFileNameString(), file.newBufferedInputStream());
             System.out.println(reponse);
@@ -225,6 +241,7 @@ public class StreamHttpClientTest {
 
     @Test
     public void test_DownloadStreamInResponse() {
+        if (!runDirect) return;
         try {
             Response response = target().path(StreamingResource.DOWNLOAD_STREAM_IN_RESPONSE)
                     .queryParam("file", file.getFileNameString())
