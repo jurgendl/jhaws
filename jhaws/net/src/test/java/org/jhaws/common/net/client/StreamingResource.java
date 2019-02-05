@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,23 +51,27 @@ public class StreamingResource implements StreamingResourceI {
         System.out.println(new Date());
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("attachment");
-        List<String> fileNames = new ArrayList<>();
+        StringBuilder s = new StringBuilder("[");
         for (InputPart inputPart : inputParts) {
             try {
                 MultivaluedMap<String, String> header = inputPart.getHeaders();
                 String fileName = getFileName(header);
                 System.out.println(fileName);
-                fileNames.add(fileName);
                 InputStream inputStream = inputPart.getBody(InputStream.class, null);
-                len.put(fileName, (long) inputStream.available());
-                data.put(fileName, IOUtils.readFully(inputStream, inputStream.available()));
+                int length = inputStream.available();
+                len.put(fileName, (long) length);
+                data.put(fileName, IOUtils.readFully(inputStream, length));
+                if (s.length() > 1) {
+                    s.append(",");
+                }
+                s.append("\"").append(fileName).append(":").append(length).append("\"");
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return Response.status(500).entity("" + ex).build();
             }
         }
         System.out.println(new Date());
-        return Response.status(200).entity("Uploaded files : " + fileNames).build();
+        return Response.status(200).entity(s.append("]")).build();
     }
 
     @Override
@@ -176,13 +179,19 @@ public class StreamingResource implements StreamingResourceI {
     @Override
     public String uploadStream(String fileName, InputStream in) {
         System.out.println(new Date());
+        StringBuilder s = new StringBuilder("[");
         try {
-            len.put(fileName, (long) in.available());
+            long length = (long) in.available();
+            len.put(fileName, length);
             data.put(fileName, IOUtils.readFully(in, in.available()));
+            if (s.length() > 1) {
+                s.append(",");
+            }
+            s.append("\"").append(fileName).append(":").append(length).append("\"");
         } catch (RuntimeException | IOException ex) {
             throw new WebApplicationException(ex);
         }
         System.out.println(new Date());
-        return null;
+        return s.append("]").toString();
     }
 }

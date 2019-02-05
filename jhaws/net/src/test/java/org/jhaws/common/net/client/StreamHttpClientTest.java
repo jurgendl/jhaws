@@ -86,10 +86,12 @@ public class StreamHttpClientTest {
     @Test
     public void test_UploadForm() {
         try {
+            // FIXME only 1024
             MultipartFormDataOutput mdo = new MultipartFormDataOutput();
             mdo.addFormData("attachment", file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM_TYPE, file.getFileNameString());
-            Response r = target().path(StreamingResource.UPLOAD_FORM).request().post(MultipartFormDataOutputEntity.entity(mdo));
-            Assert.assertEquals(200, r.getStatus());
+            Response response = target().path(StreamingResource.UPLOAD_FORM).request().post(MultipartFormDataOutputEntity.entity(mdo));
+            Assert.assertEquals(200, response.getStatus());
+            System.out.println(response.readEntity(String.class));
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail();
@@ -99,9 +101,7 @@ public class StreamHttpClientTest {
     @Test
     public void proxy_List() {
         try {
-            ResteasyClient client = client();
-            ResteasyWebTarget target = client.target(server.baseUri());
-            StreamingResourceI simple = target.proxy(StreamingResourceI.class);
+            StreamingResourceI simple = client().target(server.baseUri()).proxy(StreamingResourceI.class);
             System.out.println(simple.list());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -141,9 +141,7 @@ public class StreamHttpClientTest {
     @Test
     public void proxy_DownloadGet() {
         try {
-            ResteasyClient client = client();
-            ResteasyWebTarget target = client.target(server.baseUri());
-            StreamingResourceI simple = target.proxy(StreamingResourceI.class);
+            StreamingResourceI simple = client().target(server.baseUri()).proxy(StreamingResourceI.class);
             Response response = simple.downloadGet(file.getFileNameString());
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
@@ -174,9 +172,7 @@ public class StreamHttpClientTest {
     @Test
     public void proxy_DownloadForm() {
         try {
-            ResteasyClient client = client();
-            ResteasyWebTarget target = client.target(server.baseUri());
-            StreamingResourceI simple = target.proxy(StreamingResourceI.class);
+            StreamingResourceI simple = client().target(server.baseUri()).proxy(StreamingResourceI.class);
             Response response = simple.downloadForm(file.getFileNameString());
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
@@ -219,10 +215,9 @@ public class StreamHttpClientTest {
     @Test
     public void proxy_UploadStream() {
         try {
-            ResteasyClient client = client();
-            ResteasyWebTarget target = client.target(server.baseUri());
-            StreamingResourceI simple = target.proxy(StreamingResourceI.class);
-            simple.uploadStream(file.getFileNameString(), file.newBufferedInputStream());
+            StreamingResourceI simple = client().target(server.baseUri()).proxy(StreamingResourceI.class);
+            String reponse = simple.uploadStream(file.getFileNameString(), file.newBufferedInputStream());
+            System.out.println(reponse);
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail();
