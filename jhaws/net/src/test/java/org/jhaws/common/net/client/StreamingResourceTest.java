@@ -273,4 +273,41 @@ public class StreamingResourceTest {
             if (response != null) response.close();
         }
     }
+
+    @Test
+    public void proxy_DownloadStreamInResponse() {
+        Response response = null;
+        try {
+            response = proxy().downloadStreamInResponse(file.getFileName().toString());
+            Assert.assertEquals(200, response.getStatus());
+            InputStream readEntity = response.readEntity(InputStream.class);
+            System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
+        }
+    }
+
+    @Test
+    public void test_UploadStream() {
+        if (!runDirect) return;
+        Response response = null;
+        try {
+            response = target().path(StreamingResource.UPLOAD_STREAM)
+                    .request()
+                    .header("file", file.getFileNameString())
+                    .buildPost(Entity.entity(file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM))
+                    .invoke();
+            Assert.assertEquals(200, response.getStatus());
+            String s = response.readEntity(String.class);
+            System.out.println(s);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
+        }
+    }
 }
