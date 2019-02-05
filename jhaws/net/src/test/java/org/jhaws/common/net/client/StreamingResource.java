@@ -174,7 +174,7 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public void uploadFileBin(String fileName, InputStream in) {
+    public String uploadFileBin(String fileName, InputStream in) {
         System.out.println(new Date());
         try {
             len.put(fileName, (long) in.available());
@@ -183,5 +183,6 @@ public class StreamingResource implements StreamingResourceI {
             throw new WebApplicationException(ex);
         }
         System.out.println(new Date());
+        return null;
     }
 }

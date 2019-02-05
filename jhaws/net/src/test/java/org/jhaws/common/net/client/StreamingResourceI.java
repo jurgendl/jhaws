@@ -74,5 +74,5 @@ public interface StreamingResourceI {
     @POST
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @Path(UPLOAD_BINARY)
-    void uploadFileBin(@HeaderParam("file") String fileName, InputStream data);
+    String uploadFileBin(@HeaderParam("file") String fileName, InputStream data);
 }

@@ -56,6 +56,10 @@ public class RestEasyClient<R> {
 
     private ResteasyProviderFactory resteasyProvider;
 
+    public RestEasyClient(URI serviceUrl, Class<R> resourceClass) {
+        this(serviceUrl.toASCIIString(), resourceClass);
+    }
+
     public RestEasyClient(String serviceUrl, Class<R> resourceClass) {
         this(resourceClass);
         this.serviceUrl = serviceUrl;
