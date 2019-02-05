@@ -1,10 +1,10 @@
 package org.jhaws.common.net.client;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -48,7 +49,6 @@ public class StreamingResource implements StreamingResourceI {
 
     @Override
     public Response uploadForm(HttpServletRequest request, MultipartFormDataInput input) {
-        System.out.println(new Date());
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("attachment");
         StringBuilder s = new StringBuilder("[");
@@ -69,97 +69,56 @@ public class StreamingResource implements StreamingResourceI {
                 return Response.status(500).entity("" + ex).build();
             }
         }
-        System.out.println(new Date());
+
         return Response.status(200).entity(s.append("]")).build();
     }
 
     @Override
     public Response downloadForm(String file) {
-        System.out.println(new Date());
-        Response dl = dl(file);
-        System.out.println(new Date());
-        return dl;
+        return response(file);
     }
 
-    private Response dl(String file) {
-        System.out.println(new Date());
-        try {
-            ResponseBuilder response = Response.ok(new ByteArrayInputStream(data.get(file)));
-            response.header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + file);
-            response.header(HttpHeaders.CONTENT_LENGTH, len.get(file));
-            return response.build();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return Response.status(500).entity("" + ex).build();
-        } finally {
-            System.out.println(new Date());
-        }
+    private Response response(String file) {
+        StreamingOutput entity = stream(file);
+        ResponseBuilder response = Response.ok(entity, MediaType.APPLICATION_OCTET_STREAM);
+        response.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file + "\"");
+        response.header(HttpHeaders.CONTENT_LENGTH, data.get(file).length);
+        return response.build();
+    }
+
+    private StreamingOutput stream(String file) {
+        InputStream in = new BufferedInputStream(new ByteArrayInputStream(data.get(file)));
+        StreamingOutput entity = new StreamingOutput() {
+            @Override
+            public void write(OutputStream out) throws IOException, WebApplicationException {
+                org.apache.commons.io.IOUtils.copy(in, out);
+                out.flush();
+                out.close();
+            }
+        };
+        return entity;
     }
 
     @Override
     public Response downloadGet(String file) {
-        System.out.println(new Date());
-        Response dl = dl(file);
-        System.out.println(new Date());
-        return dl;
+        return response(file);
     }
 
     @Override
     public StreamingOutput downloadStream(HttpServletResponse response, String file) {
-        System.out.println(new Date());
-        try {
-            response.addIntHeader(HttpHeaders.CONTENT_LENGTH, (int) (long) len.get(file));
-            InputStream in = new ByteArrayInputStream(data.get(file));
-            return new StreamingOutput() {
-                @Override
-                public void write(OutputStream out) throws IOException, WebApplicationException {
-                    StreamingResource.this.write(in, out);
-                }
-            };
-        } catch (RuntimeException ex) {
-            throw new WebApplicationException(ex);
-        } finally {
-            System.out.println(new Date());
-        }
+        response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file + "\"");
+        response.addIntHeader(HttpHeaders.CONTENT_LENGTH, (int) (long) len.get(file));
+        return stream(file);
     }
 
     @Override
     public Response downloadStreamInResponse(String file) {
-        System.out.println(new Date());
-        try {
-            InputStream in = new ByteArrayInputStream(data.get(file));
-            ResponseBuilder response = Response.ok().entity(new StreamingOutput() {
-                @Override
-                public void write(OutputStream out) throws IOException, WebApplicationException {
-                    StreamingResource.this.write(in, out);
-                }
-            });
-            response.header(HttpHeaders.CONTENT_LENGTH, len.get(file));
-            return response.build();
-        } catch (RuntimeException ex) {
-            throw new WebApplicationException(ex);
-        } finally {
-            System.out.println(new Date());
-        }
-    }
-
-    private void write(InputStream in, OutputStream out) throws WebApplicationException {
-        try {
-            // CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
-            // class1.putDataOnOutputStream(cbb.getOutputStream());
-            // class2.processDataFromInputStream(cbb.getInputStream());
-            org.apache.commons.io.IOUtils.copy(in, out);
-            out.flush();
-        } catch (RuntimeException | IOException ex) {
-            throw new WebApplicationException(ex);
-        }
+        return response(file);
     }
 
     @Override
     public List<String> list() {
-        System.out.println(new Date());
         List<String> list = data.keySet().stream().map(fileName -> fileName + ":" + len.get(fileName)).collect(Collectors.toList());
-        System.out.println(new Date());
         return list;
     }
 
@@ -177,7 +136,6 @@ public class StreamingResource implements StreamingResourceI {
 
     @Override
     public String uploadStream(String fileName, InputStream inputStream) {
-        System.out.println(new Date());
         StringBuilder s = new StringBuilder("[");
         try {
             data.put(fileName, IOUtils.toByteArray(inputStream));
@@ -189,7 +147,6 @@ public class StreamingResource implements StreamingResourceI {
         } catch (RuntimeException | IOException ex) {
             throw new WebApplicationException(ex);
         }
-        System.out.println(new Date());
         return s.append("]").toString();
     }
 }

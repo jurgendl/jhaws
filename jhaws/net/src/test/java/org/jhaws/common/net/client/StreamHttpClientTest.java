@@ -44,7 +44,7 @@ public class StreamHttpClientTest {
 
     private boolean runProxy = true;
 
-    private boolean runDirect = false;
+    private boolean runDirect = true;
 
     static {
         try {
@@ -99,7 +99,7 @@ public class StreamHttpClientTest {
     private static StreamingResourceI proxy;
 
     private static StreamingResourceI proxy() {
-        if (proxy == null) proxy = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build()))
+        if (proxy == null) proxy = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(/* HttpClientBuilder.create().build() */))
                 .build()
                 .target(server.baseUri())
                 .proxy(StreamingResourceI.class);
@@ -109,15 +109,18 @@ public class StreamHttpClientTest {
     @Test
     public void test_UploadForm() {
         if (!runDirect) return;
+        Response response = null;
         try {
             MultipartFormDataOutput mdo = new MultipartFormDataOutput();
             mdo.addFormData("attachment", file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM_TYPE, file.getFileNameString());
-            Response response = target().path(StreamingResource.UPLOAD_FORM).request().post(MultipartFormDataOutputEntity.entity(mdo));
+            response = target().path(StreamingResource.UPLOAD_FORM).request().post(MultipartFormDataOutputEntity.entity(mdo));
             Assert.assertEquals(200, response.getStatus());
             System.out.println(response.readEntity(String.class));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
         }
     }
 
@@ -128,7 +131,7 @@ public class StreamHttpClientTest {
             System.out.println(proxy().list());
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
         }
     }
 
@@ -143,69 +146,77 @@ public class StreamHttpClientTest {
             Assert.assertTrue(JsonString.class.cast(a.get(0)).getString().contains(file.getFileNameString()));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
         }
     }
 
     @Test
     public void test_DownloadGet() {
         if (!runDirect) return;
+        Response response = null;
         try {
-            Response response = target().path(StreamingResource.DOWNLOAD_GET)
-                    .queryParam("file", file.getFileNameString())
-                    .request()
-                    .buildGet()
-                    .invoke();
+            response = target().path(StreamingResource.DOWNLOAD_GET).queryParam("file", file.getFileNameString()).request().buildGet().invoke();
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
         }
     }
 
     @Test
     public void proxy_DownloadGet() {
         if (!runProxy) return;
+        Response response = null;
         try {
-            Response response = proxy().downloadGet(file.getFileNameString());
+            response = proxy().downloadGet(file.getFileNameString());
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
         }
     }
 
     @Test
     public void test_DownloadForm() {
         if (!runDirect) return;
+        Response response = null;
         try {
             MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
             formData.add("file", file.getFileNameString());
-            Response response = target().path(StreamingResource.DOWNLOAD_FORM).request().buildPost(Entity.form(formData)).invoke();
+            response = target().path(StreamingResource.DOWNLOAD_FORM).request().buildPost(Entity.form(formData)).invoke();
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
         }
     }
 
     @Test
     public void proxy_DownloadForm() {
         if (!runProxy) return;
+        Response response = null;
         try {
-            Response response = proxy().downloadForm(file.getFileNameString());
+            response = proxy().downloadForm(file.getFileNameString());
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
         }
     }
 
@@ -223,7 +234,7 @@ public class StreamHttpClientTest {
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
         }
     }
 
@@ -235,15 +246,16 @@ public class StreamHttpClientTest {
             System.out.println(reponse);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
         }
     }
 
     @Test
     public void test_DownloadStreamInResponse() {
         if (!runDirect) return;
+        Response response = null;
         try {
-            Response response = target().path(StreamingResource.DOWNLOAD_STREAM_IN_RESPONSE)
+            response = target().path(StreamingResource.DOWNLOAD_STREAM_IN_RESPONSE)
                     .queryParam("file", file.getFileNameString())
                     .request()
                     .buildGet()
@@ -253,7 +265,9 @@ public class StreamHttpClientTest {
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
         } catch (Exception ex) {
             ex.printStackTrace();
-            Assert.fail();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
         }
     }
 }
