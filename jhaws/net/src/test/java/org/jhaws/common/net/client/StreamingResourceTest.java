@@ -37,12 +37,13 @@ public class StreamingResourceTest {
 
     private static StreamingResource testResource;
 
-    @SuppressWarnings("unused")
     private static StreamingResourceI otherproxy;
 
     private static FilePath file;
 
     private boolean runProxy = true;
+
+    private boolean runOtherProxy = true;
 
     private boolean runDirect = true;
 
@@ -136,6 +137,17 @@ public class StreamingResourceTest {
     }
 
     @Test
+    public void oproxy_List() {
+        if (!runOtherProxy) return;
+        try {
+            System.out.println(otherproxy.list());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail("" + ex);
+        }
+    }
+
+    @Test
     public void test_List() {
         if (!runDirect) return;
         try {
@@ -185,6 +197,23 @@ public class StreamingResourceTest {
     }
 
     @Test
+    public void oproxy_DownloadGet() {
+        if (!runOtherProxy) return;
+        Response response = null;
+        try {
+            response = otherproxy.downloadGet(file.getFileNameString());
+            Assert.assertEquals(200, response.getStatus());
+            InputStream readEntity = (InputStream) response.getEntity();
+            System.out.println(new String(IOUtils.readFully(readEntity, (int) (long) RestEasyClient.getFileSize(response))));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
+        }
+    }
+
+    @Test
     public void test_DownloadForm() {
         if (!runDirect) return;
         Response response = null;
@@ -212,6 +241,23 @@ public class StreamingResourceTest {
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
+        }
+    }
+
+    @Test
+    public void oproxy_DownloadForm() {
+        if (!runOtherProxy) return;
+        Response response = null;
+        try {
+            response = otherproxy.downloadForm(file.getFileNameString());
+            Assert.assertEquals(200, response.getStatus());
+            InputStream readEntity = (InputStream) response.getEntity();
+            System.out.println(new String(IOUtils.readFully(readEntity, (int) (long) RestEasyClient.getFileSize(response))));
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail("" + ex);
@@ -254,6 +300,18 @@ public class StreamingResourceTest {
     }
 
     @Test
+    public void oproxy_UploadStream() {
+        if (!runOtherProxy) return;
+        try {
+            String reponse = otherproxy.uploadStream(file.getFileNameString(), file.newBufferedInputStream());
+            System.out.println(reponse);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail("" + ex);
+        }
+    }
+
+    @Test
     public void test_DownloadStreamInResponse() {
         if (!runDirect) return;
         Response response = null;
@@ -276,12 +334,30 @@ public class StreamingResourceTest {
 
     @Test
     public void proxy_DownloadStreamInResponse() {
+        if (!runProxy) return;
         Response response = null;
         try {
             response = proxy().downloadStreamInResponse(file.getFileName().toString());
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Assert.fail("" + ex);
+        } finally {
+            if (response != null) response.close();
+        }
+    }
+
+    @Test
+    public void oproxy_DownloadStreamInResponse() {
+        if (!runOtherProxy) return;
+        Response response = null;
+        try {
+            response = otherproxy.downloadStreamInResponse(file.getFileName().toString());
+            Assert.assertEquals(200, response.getStatus());
+            InputStream readEntity = (InputStream) response.getEntity();
+            System.out.println(new String(IOUtils.readFully(readEntity, (int) (long) RestEasyClient.getFileSize(response))));
         } catch (Exception ex) {
             ex.printStackTrace();
             Assert.fail("" + ex);

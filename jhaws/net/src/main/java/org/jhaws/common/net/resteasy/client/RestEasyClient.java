@@ -1,6 +1,5 @@
 package org.jhaws.common.net.resteasy.client;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -25,6 +24,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriBuilder;
 
@@ -36,7 +38,9 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.BasicHttpContext;
+import org.jboss.resteasy.client.core.BaseClientResponse;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.jboss.resteasy.util.HttpResponseCodes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,10 +137,10 @@ public class RestEasyClient<R> {
                         if (parameterAnnotation instanceof QueryParam) {
                             QueryParam queryParam = QueryParam.class.cast(parameterAnnotation);
                             String name = queryParam.value();
-                            Object values = args[i];
-                            uriBuilder.queryParam(name, values);
+                            Object value = args[i];
+                            uriBuilder.queryParam(name, value);
                             notAcceptedParameters.remove(args[i]);
-                            logger.debug("QueryParam[" + name + "=" + values);
+                            logger.debug("QueryParam[" + name + "=" + value);
                         }
                         if (parameterAnnotation instanceof PathParam) {
                             PathParam pathParam = PathParam.class.cast(parameterAnnotation);
@@ -205,12 +209,11 @@ public class RestEasyClient<R> {
                     request.accept(produces.value()[0]);
                 }
                 if (consumes != null && consumes.value() != null && consumes.value().length > 0) {
-                    if (notAcceptedParameters.size() != 1) {
-                        throw new IllegalArgumentException("body: " + notAcceptedParameters);
-                    }
-                    Object data = notAcceptedParameters.get(0);
-                    if (data != null) {
-                        request.body(consumes.value()[0], data);
+                    if (notAcceptedParameters.size() == 1) {
+                        Object data = notAcceptedParameters.get(0);
+                        if (data != null) {
+                            request.body(consumes.value()[0], data);
+                        }
                     }
                 }
                 try {
@@ -237,11 +240,49 @@ public class RestEasyClient<R> {
                         } else {
                             throw new IllegalArgumentException();
                         }
+                        if (response.getStatus() == HttpResponseCodes.SC_NO_CONTENT) {
+                            return null;
+                        }
                         if (response != null && !(200 <= response.getStatus() && response.getStatus() <= 299)) {
                             String errorpage = response.getEntity(String.class);
                             throw new HttpResponseException(response.getStatus(), errorpage);
                         }
                         return null;
+                    }
+                    if (Response.class.equals(returnType)) {
+                        if (get != null) {
+                            response = request.get();
+                        } else if (put != null) {
+                            response = request.put();
+                        } else if (post != null) {
+                            response = request.post();
+                        } else if (delete != null) {
+                            response = request.delete();
+                        } else if (head != null) {
+                            response = request.head();
+                        } else if (options != null) {
+                            response = request.options();
+                        } else {
+                            throw new IllegalArgumentException();
+                        }
+                        if (response.getStatus() == HttpResponseCodes.SC_NO_CONTENT) {
+                            return null;
+                        }
+                        if (!(200 <= response.getStatus() && response.getStatus() <= 299)) {
+                            String errorpage = response.getEntity(String.class);
+                            throw new HttpResponseException(response.getStatus(), errorpage);
+                        }
+                        if (MediaType.APPLICATION_OCTET_STREAM_TYPE.equals(response.getMediaType())) {
+                            // getFilename(response);
+                            // getFileSize(response);
+
+                            // fixes "response.getEntity();" which is the only method available in Response interface
+                            @SuppressWarnings("unchecked")
+                            org.jboss.resteasy.client.core.BaseClientResponse<InputStream> _response = (BaseClientResponse<InputStream>) response;
+                            _response.setReturnType(InputStream.class);
+                        }
+                        // response.getEntity(InputStream.class);
+                        return response;
                     }
                     if (get != null) {
                         response = request.get(returnType);
@@ -258,8 +299,8 @@ public class RestEasyClient<R> {
                     } else {
                         throw new IllegalArgumentException();
                     }
-                    if (response == null) {
-                        throw new IOException("no response");
+                    if (response.getStatus() == HttpResponseCodes.SC_NO_CONTENT) {
+                        return null;
                     }
                     if (!(200 <= response.getStatus() && response.getStatus() <= 299)) {
                         String errorpage = response.getEntity(String.class);
@@ -319,5 +360,24 @@ public class RestEasyClient<R> {
 
     public void setResteasyProvider(ResteasyProviderFactory resteasyProvider) {
         this.resteasyProvider = resteasyProvider;
+    }
+
+    public static <T> String getFilename(Response response) {
+        try {
+            String disposition = response.getHeaders().get(HttpHeaders.CONTENT_DISPOSITION).get(0).toString();
+            return disposition.split(";")[1].split("=")[1].replace("\"", "").trim();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static <T> Long getFileSize(Response response) {
+        try {
+            return Long.parseLong(response.getHeaders().get(HttpHeaders.CONTENT_LENGTH).get(0).toString());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

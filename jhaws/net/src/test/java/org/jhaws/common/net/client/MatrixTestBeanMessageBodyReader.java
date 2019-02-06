@@ -13,13 +13,12 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.Provider;
 
 import net.sf.cglib.beans.BeanGenerator;
 import net.sf.cglib.core.NamingPolicy;
 import net.sf.cglib.core.Predicate;
 
-@Provider
+// @Provider
 // @Consumes
 public class MatrixTestBeanMessageBodyReader implements MessageBodyReader<MatrixTestBeanI> {
     @Override
