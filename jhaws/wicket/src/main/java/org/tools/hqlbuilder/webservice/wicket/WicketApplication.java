@@ -38,6 +38,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.convert.converter.DateConverter;
 import org.apache.wicket.util.time.Duration;
+import org.jhaws.common.io.FilePath.Filters.AudioFilter;
+import org.jhaws.common.io.FilePath.Filters.ImageFilter;
+import org.jhaws.common.io.FilePath.Filters.VideoFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -250,9 +253,11 @@ public class WicketApplication extends WebApplication {
 		this.getExceptionSettings().setUnexpectedExceptionDisplay(
 				inDevelopment ? IExceptionSettings.SHOW_EXCEPTION_PAGE : IExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
 		/*
-		 * getApplicationSettings().setPageExpiredErrorPage(MyExpiredPage.class) ;
-		 * getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class );
-		 * getApplicationSettings().setInternalErrorPage(MyInternalErrorPage. class);
+		 * getApplicationSettings().setPageExpiredErrorPage(MyExpiredPage.class)
+		 * ;
+		 * getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class
+		 * ); getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.
+		 * class);
 		 */
 
 		// http://wicketguide.comsysto.com/guide/chapter19.html#chapter19_4
@@ -260,10 +265,9 @@ public class WicketApplication extends WebApplication {
 		if (packageResourceGuard instanceof SecurePackageResourceGuard) {
 			SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
 			guard.addPattern("+*.scss");
-			guard.addPattern("+*.mp4");
-			guard.addPattern("+*.flv");
-			guard.addPattern("+*.ogg");
-			guard.addPattern("+*.webm");
+			new ImageFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
+			new VideoFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
+			new AudioFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
 			guard.addPattern("+*.map");
 			guard.addPattern("+*.tag");
 		}
@@ -433,7 +437,7 @@ public class WicketApplication extends WebApplication {
 
 	/**
 	 * @see org.apache.wicket.protocol.http.WebApplication#newSession(org.apache.wicket.request.Request,
-	 *      org.apache.wicket.request.Response)
+	 * org.apache.wicket.request.Response)
 	 */
 	@Override
 	final public Session newSession(Request request, Response response) {

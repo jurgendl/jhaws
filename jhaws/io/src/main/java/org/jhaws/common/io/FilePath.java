@@ -524,6 +524,14 @@ public class FilePath implements Path, Externalizable {
 			}
 		}
 
+		// https://en.wikipedia.org/wiki/Audio_file_format
+		public static class AudioFilter extends Filters.ExtensionFilter {
+			public AudioFilter() {
+				super("ogg", "oga", "mp3", "m4a", "mpa", "aa", "3gp", "aac", "aax", "act", "aiff", "amr", "ape", "au",
+						"wav", "wv", "wma");
+			}
+		}
+
 		public static class Html5VideoFilter extends Filters.ExtensionFilter {
 			public Html5VideoFilter() {
 				super("flv", "webm", "mp4");
@@ -1106,14 +1114,12 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * convers a filename to a legal filename for given operating system, too long
-	 * parts are chopped, illegal characters are replaced by the character <i>_</i>
-	 * , a missing extensions is adapted to extension <i>ext</i>
+	 * convers a filename to a legal filename for given operating system, too
+	 * long parts are chopped, illegal characters are replaced by the character
+	 * <i>_</i> , a missing extensions is adapted to extension <i>ext</i>
 	 *
-	 * @param filename
-	 *            : String : current name
-	 * @param os
-	 *            : int : operating system
+	 * @param filename : String : current name
+	 * @param os : int : operating system
 	 *
 	 * @return : String : converted name
 	 */
@@ -1136,28 +1142,24 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * if file does not exists, return it<br>
-	 * if file exists and does not end on _9999 (any number), adds _0000 and does
-	 * index checking<br>
+	 * if file exists and does not end on _9999 (any number), adds _0000 and
+	 * does index checking<br>
 	 * if file exists and does end on _9999 (any number), and does index
 	 * checking<br>
 	 * <br>
 	 * index checking:<br>
 	 * if file exists, return it<br>
-	 * if file does not exists, adds 1 to the index (_0000 goes to _0001) and does
-	 * further index again
+	 * if file does not exists, adds 1 to the index (_0000 goes to _0001) and
+	 * does further index again
 	 *
-	 * @param parent
-	 *            : String : the location (path only) of the target file
-	 * @param outFileName
-	 *            : String : the name of the target file (without extension and .
-	 *            before extension)
-	 * @param sep
-	 *            : String : characters sperating filename from index (example: _ )
-	 * @param format
-	 *            : String : number of positions character 0 (example: 0000 )
-	 * @param extension
-	 *            : String : the extension of the target file (without . before
-	 *            extension), see class constants FORMAT... for possibilities
+	 * @param parent : String : the location (path only) of the target file
+	 * @param outFileName : String : the name of the target file (without
+	 * extension and . before extension)
+	 * @param sep : String : characters sperating filename from index (example:
+	 * _ )
+	 * @param format : String : number of positions character 0 (example: 0000 )
+	 * @param extension : String : the extension of the target file (without .
+	 * before extension), see class constants FORMAT... for possibilities
 	 *
 	 * @return : IOFile : new indexed File
 	 */
@@ -1645,10 +1647,8 @@ public class FilePath implements Path, Externalizable {
 	/**
 	 * compares two files binary, reads only first limit bytes
 	 *
-	 * @param file
-	 *            : Path : file to compare to
-	 * @param limit
-	 *            : int : maximum size when comparing files
+	 * @param file : Path : file to compare to
+	 * @param limit : int : maximum size when comparing files
 	 *
 	 * @return : boolean : file is equal or not
 	 */
@@ -1702,8 +1702,8 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * flattens this directory, copies all files in all subdirectories to this
-	 * directory, deletes doubles, rename if file already exists and isn't the same,
-	 * delete all subdirectories afterwards
+	 * directory, deletes doubles, rename if file already exists and isn't the
+	 * same, delete all subdirectories afterwards
 	 */
 	public FilePath flatten() {
 		final FilePath root = this;
@@ -2259,8 +2259,8 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * {@link #newFileIndex(String, String, String, String, String)} but with
-	 * separator set to '_' and format to '0000' and the other parameters derived
-	 * from given File
+	 * separator set to '_' and format to '0000' and the other parameters
+	 * derived from given File
 	 */
 	public FilePath newFileIndex() {
 		if (this.notExists()) {
@@ -2468,7 +2468,7 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * @see java.nio.file.Path#register(java.nio.file.WatchService,
-	 *      java.nio.file.WatchEvent.Kind[])
+	 * java.nio.file.WatchEvent.Kind[])
 	 */
 	@Override
 	public WatchKey register(WatchService watcher, Kind<?>... events) {
@@ -2481,7 +2481,7 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * @see java.nio.file.Path#register(java.nio.file.WatchService,
-	 *      java.nio.file.WatchEvent.Kind[], java.nio.file.WatchEvent.Modifier[])
+	 * java.nio.file.WatchEvent.Kind[], java.nio.file.WatchEvent.Modifier[])
 	 */
 	@Override
 	public WatchKey register(WatchService watcher, Kind<?>[] events, Modifier... modifiers) {
@@ -3090,11 +3090,10 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * downloads a file from the web to a local file when it does not exists or is
-	 * older, binary copy
+	 * downloads a file from the web to a local file when it does not exists or
+	 * is older, binary copy
 	 *
-	 * @param urlSourceFile
-	 *            : URL : file on the web
+	 * @param urlSourceFile : URL : file on the web
 	 */
 	public FilePath write(URL url) {
 		if (this.exists()) {
