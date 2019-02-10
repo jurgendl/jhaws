@@ -659,3 +659,8 @@ div.rating-input a.rating-clear {
 .dropdown-toggle.hide-dropdown-arrow::after, .dropdown-toggle.hide-dropdown-arrow::before {
 	display: none !important;
 }
+
+/* breadcrumb seperator */
+.breadcrumb > .breadcrumb-item+.breadcrumb-item::before {
+	content: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPjxwYXRoIGQ9Ik0yLjUgMEwxIDEuNSAzLjUgNCAxIDYuNSAyLjUgOGw0LTQtNC00eiIgZmlsbD0iY3VycmVudENvbG9yIi8+PC9zdmc+);
+}
