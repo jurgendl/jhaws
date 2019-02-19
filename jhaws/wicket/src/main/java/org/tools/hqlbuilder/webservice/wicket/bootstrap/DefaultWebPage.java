@@ -504,6 +504,7 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(CustomFileInput.JS));
 
         response.render(JavaScriptHeaderItem.forReference(ClipboardJs.JS));
+        response.render(OnDomReadyHeaderItem.forScript(ClipboardJs.factory()));
 
         // response.render(JavaScriptHeaderItem.forReference(BootstrapConfirmation.JS));
         // response.render(OnLoadHeaderItem.forScript(";$('[data-toggle=confirmation]').confirmation({rootSelector:'[data-toggle=confirmation]'});"));

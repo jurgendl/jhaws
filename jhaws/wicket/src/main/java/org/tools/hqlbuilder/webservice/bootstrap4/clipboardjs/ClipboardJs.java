@@ -9,4 +9,10 @@ public class ClipboardJs {
     static {
         JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
     }
+
+    public static final String CLASS = "clipboard";
+
+    public static String factory() {
+        return ";new ClipboardJS('." + CLASS + "');";
+    }
 }
