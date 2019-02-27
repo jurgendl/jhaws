@@ -1,5 +1,10 @@
 package org.jhaws.common.net.client;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import org.apache.http.client.protocol.HttpClientContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class HttpClientTestSimple {
@@ -33,12 +38,15 @@ public class HttpClientTestSimple {
     @Test
     public void testMultiThreaded() {
         try (HTTPClient h = new HTTPClient()) {
-            Thread[] threads = new Thread[50];
+            Thread[] threads = new Thread[10];
+            HttpClientContext[] context = new HttpClientContext[threads.length];
             for (int i = 0; i < threads.length; i++) {
+                final int j = i;
                 threads[i] = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         System.out.println(h.get("http://www.google.com").getContentString());
+                        context[j] = h.getContext(null);
                     }
                 });
             }
@@ -53,6 +61,7 @@ public class HttpClientTestSimple {
                     //
                 }
             }
+            Assert.assertEquals(threads.length, new HashSet<>(Arrays.asList(context)).size());
         }
     }
 }
