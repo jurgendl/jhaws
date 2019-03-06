@@ -4,6 +4,7 @@ import static org.jhaws.common.lang.CollectionUtils8.join;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.time.Duration;
@@ -509,13 +510,15 @@ public class FfmpegTool implements MediaCte {
 
     protected RemuxCfg config(RemuxDefaultsCfg defaults, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
         RemuxCfg cfg = new RemuxCfg();
-        if (defaults != null) cfg.defaults = defaults;
+        if (defaults != null) {
+            cfg.defaults = defaults;
+        }
         cfg.output = output;
         if (input != null) {
             cfg.input = new RemuxInput();
             cfg.input.input = input;
             cfg.input.info = info(input);
-            cfg.input.hq = input.getFileSize() > 100 * 1024 * 1024;
+            cfg.input.hq = input.getFileSize() >= defaults.hqTreshold;
             StreamType videostreaminfo = video(cfg.input.info);
             StreamType audiostreaminfo = audio(cfg.input.info);
             cfg.input.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.input.info.getFormat().getBitRate() / 1000)
@@ -609,10 +612,15 @@ public class FfmpegTool implements MediaCte {
         }
     }
 
-    public static class RemuxDefaultsCfg {
+    public static class RemuxDefaultsCfg implements Serializable {
+        private static final long serialVersionUID = -5591850342277728402L;
+
+        final public List<String> tune = new ArrayList<>(Arrays.asList("film", "zerolatency"));
+
         // HQ 18-23-28 LQ
         public int cfrHQ = 18;
 
+        // HQ 18-23-28 LQ
         public int cfrLQ = 23;
 
         public int vidRateHQ = 3000;
@@ -623,8 +631,6 @@ public class FfmpegTool implements MediaCte {
 
         public String presetLQ = "medium";
 
-        final public List<String> tune = new ArrayList<>(Arrays.asList("film", "zerolatency"));
-
         public int qmin = 10;
 
         public int qmax = 51;
@@ -634,11 +640,14 @@ public class FfmpegTool implements MediaCte {
         /* LQ 1-4 HQ */
         public float vidRateQHQ = 2.7f;
 
+        /* LQ 1-4 HQ */
         public float vidRateQLQ = 2.2f;
 
         public float vidRateQ = 0.7f;
 
         public boolean twopass = false;
+
+        public int hqTreshold = 100 * 1024 * 1024;
 
         @Override
         public String toString() {
@@ -1189,14 +1198,20 @@ public class FfmpegTool implements MediaCte {
 
     public List<StreamType> videos(FfprobeType finfo) {
         return finfo == null ? null
-                : finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(
-                        Collectors.toList());
+                : finfo.getStreams()
+                        .getStream()
+                        .stream()
+                        .filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType()))
+                        .collect(Collectors.toList());
     }
 
     public List<StreamType> audios(FfprobeType finfo) {
         return finfo == null ? null
-                : finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(
-                        Collectors.toList());
+                : finfo.getStreams()
+                        .getStream()
+                        .stream()
+                        .filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType()))
+                        .collect(Collectors.toList());
     }
 
     protected String command(FilePath f) {
