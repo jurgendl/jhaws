@@ -807,6 +807,9 @@ public class FfmpegTool implements MediaCte {
 
         public Integer repeat;
 
+        // force if no changes at all (vcopy=true && acopy=true)
+        public boolean forceRemux = false;
+
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -828,7 +831,7 @@ public class FfmpegTool implements MediaCte {
         if (cfg.repeat != null && cfg.repeat <= 1) cfg.repeat = null;
         if (cfg.acopy == null) cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
         if (cfg.vcopy == null) cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
-        if (cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension())) cfg.vcopy = false;
+        if (cfg.forceRemux && cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension())) cfg.vcopy = false;
         if (cfg.hq == null) cfg.hq = cfg.input != null ? cfg.input.hq : true;
         if (cfg.repeat != null) cfg.vcopy = false;
         if (cfg.repeat != null) cfg.acopy = false;
@@ -928,6 +931,7 @@ public class FfmpegTool implements MediaCte {
             command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 4)));
         }
         if (!cfg.vcopy && cfg.fixes.fixNotHighProfile) {
+            logger.warn("fix not High Profile 4.2 not possible unless remuxing video");
             command.add("-profile:v");
             command.add("high");
             command.add("-level");
@@ -977,6 +981,7 @@ public class FfmpegTool implements MediaCte {
                         command.add(MP3C);
                         if (cfg.fixes.fixAudioRate) {
                             // muxing mp3 at 11025hz is not supported
+                            logger.warn("fix for 'muxing mp3 at ?hz is not supported'");
                             command.add("-ar");
                             command.add("44100");
                         }
@@ -1020,7 +1025,9 @@ public class FfmpegTool implements MediaCte {
     }
 
     protected int vidrate(RemuxCfg cfg) {
-        if (cfg.vidrate > 0) return cfg.vidrate;
+        if (cfg.vidrate > 0) {
+            return cfg.vidrate;
+        }
         // ...What_bitrate_should_I_use...
         if (cfg.input.wh != null) {
             cfg.vidrate = (int) ((cfg.hq ? cfg.defaults.vidRateQHQ : cfg.defaults.vidRateQLQ) * cfg.input.wh[0]
