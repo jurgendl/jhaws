@@ -182,6 +182,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
                     tag.getAttributes().put(FormConstants.TITLE, FormRowPanelParent.this.getLabelModel().getObject());
                 }
             };
+            label.setEscapeModelStrings(false);
             String labelClass = getLabelClass(settings);
             if (labelClass != null) label.add(new CssClassNameAppender(labelClass));
         }

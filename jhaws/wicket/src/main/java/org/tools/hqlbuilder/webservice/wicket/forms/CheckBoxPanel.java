@@ -56,6 +56,7 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
                     tag.getAttributes().put(FOR, getComponent().getMarkupId() + "before");
                 }
             };
+            label.setEscapeModelStrings(false);
         }
         return label;
     }

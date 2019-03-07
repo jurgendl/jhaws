@@ -88,6 +88,7 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox
                     tag.getAttributes().put(FormConstants.TITLE, getLabelModel().getObject());
                 }
             };
+            label.setEscapeModelStrings(false);
             String labelClass = getLabelClass(settings);
             if (labelClass != null) {
                 label.add(new CssClassNameAppender(labelClass));

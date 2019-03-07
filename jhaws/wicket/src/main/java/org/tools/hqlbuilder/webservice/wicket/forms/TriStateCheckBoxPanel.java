@@ -71,6 +71,7 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, HiddenFi
                     tag.getAttributes().put(FOR, getComponent().getMarkupId() + "before");
                 }
             };
+            label.setEscapeModelStrings(false);
         }
         return label;
     }
