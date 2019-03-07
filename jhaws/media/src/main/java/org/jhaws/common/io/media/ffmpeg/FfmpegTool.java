@@ -833,8 +833,10 @@ public class FfmpegTool implements MediaCte {
         if (cfg.vcopy == null) cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
         if (cfg.forceRemux && cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension())) cfg.vcopy = false;
         if (cfg.hq == null) cfg.hq = cfg.input != null ? cfg.input.hq : true;
-        if (cfg.repeat != null) cfg.vcopy = false;
-        if (cfg.repeat != null) cfg.acopy = false;
+        if (cfg.repeat != null) {
+            cfg.vcopy = false;
+            cfg.acopy = false;
+        }
 
         List<String> accel = getHwAccel();
         List<String> command = new ArrayList<>();
