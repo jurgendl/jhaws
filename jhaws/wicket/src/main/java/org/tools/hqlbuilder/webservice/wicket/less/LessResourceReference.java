@@ -28,6 +28,8 @@ import ro.isdc.wro.extensions.processor.css.RhinoLessCssProcessor;
 import ro.isdc.wro.model.resource.processor.ResourcePreProcessor;
 import ro.isdc.wro.model.resource.processor.impl.css.JawrCssMinifierProcessor;
 
+// install node.js
+// npm install less
 /**
  * response.render(CssHeaderItem.forReference(new
  * lessResourceReference(WicketCSSRoot.class, "table.less")));
@@ -201,11 +203,15 @@ public class LessResourceReference extends StreamResourceReference implements IR
 
 	public static void main(String[] args) {
 		try {
-			RhinoLessCssProcessor less = new RhinoLessCssProcessor();
+			// ro.isdc.wro.extensions.processor.css.LessCssProcessor
+			// ro.isdc.wro.extensions.processor.css.RhinoLessCssProcessor
+			// ro.isdc.wro.extensions.processor.css.NodeLessCssProcessor
+			NodeLessCssProcessor less = new NodeLessCssProcessor();
 			InputStream in = SassResourceReference.class.getClassLoader()
 					.getResourceAsStream("org/tools/hqlbuilder/webservice/bootstrap4/social/brand.less");
 			ByteArrayOutputStream outtmp = new ByteArrayOutputStream();
 			IOUtils.copy(in, outtmp);
+			System.out.println(new String(outtmp.toByteArray()));
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 			less.process(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(outtmp.toByteArray()))),
 					new BufferedWriter(new OutputStreamWriter(out)));
