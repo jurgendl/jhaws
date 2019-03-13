@@ -23,8 +23,8 @@ public class MetaPool extends Pool<PoolMeta> {
     }
 
     @Override
-    protected void afterExecute(Job<PoolMeta> job) {
-        super.afterExecute(job);
+    protected void afterExecute(Job<PoolMeta> job, Throwable error) {
+        super.afterExecute(job, error);
         job.getMeta().completed = System.currentTimeMillis();
     }
 }

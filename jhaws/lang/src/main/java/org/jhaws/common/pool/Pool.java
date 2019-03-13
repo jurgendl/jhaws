@@ -12,6 +12,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Pool<M> {
     protected static final AtomicInteger id = new AtomicInteger();
@@ -20,11 +21,7 @@ public class Pool<M> {
 
     protected ThreadFactory threadFactory;
 
-    protected List<Job<M>> current;
-
-    protected List<Job<M>> completed;
-
-    protected List<Job<M>> queued;
+    protected List<Job<M>> all;
 
     protected BlockingQueue<Task<M>> queue;
 
@@ -58,33 +55,20 @@ public class Pool<M> {
     }
 
     public Task<M> addJob(Runnable runnable, M meta) {
-        Job<M> task = new Job<>(runnable, meta);
-        return addJob(task);
+        Job<M> job = new Job<>(runnable, meta);
+        return addJob(job);
     }
 
-    public Task<M> addJob(Job<M> task) {
-        return (Task<M>) getThreadPoolExecutor().submit(task);
+    public Task<M> addJob(Job<M> job) {
+        getAll().add(job);
+        return (Task<M>) getThreadPoolExecutor().submit(job);
     }
 
-    public List<Job<M>> getCurrent() {
-        if (current == null) {
-            current = Collections.synchronizedList(new ArrayList<Job<M>>());
+    public List<Job<M>> getAll() {
+        if (all == null) {
+            all = Collections.synchronizedList(new ArrayList<Job<M>>());
         }
-        return current;
-    }
-
-    public List<Job<M>> getCompleted() {
-        if (completed == null) {
-            completed = Collections.synchronizedList(new ArrayList<Job<M>>());
-        }
-        return completed;
-    }
-
-    public List<Job<M>> getQueued() {
-        if (queued == null) {
-            queued = Collections.synchronizedList(new ArrayList<Job<M>>());
-        }
-        return queued;
+        return all;
     }
 
     protected BlockingQueue<Task<M>> getQueue() {
@@ -94,16 +78,19 @@ public class Pool<M> {
         return queue;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes", "cast" })
     public synchronized void afterPropertiesSet() {
         if (threadPoolExecutor != null) throw new UnsupportedOperationException("past creation");
-        threadPoolExecutor = new ThreadPoolExecutor(size, size, 0L, TimeUnit.MILLISECONDS, (BlockingQueue<Runnable>) (BlockingQueue) getQueue(),
-                getThreadFactory()) {
+        @SuppressWarnings("unchecked")
+        BlockingQueue<Runnable> q = (BlockingQueue<Runnable>) (BlockingQueue<?>) getQueue();
+        threadPoolExecutor = new ThreadPoolExecutor(size, size, 0L, TimeUnit.MILLISECONDS, q, getThreadFactory()) {
             @Override
             protected <U> FutureTask<U> newTaskFor(Callable<U> callable) {
-                Job job = Job.class.cast(callable);
-                Pool.this.whenQueued(job);
-                return new Task(getCompleted(), job);
+                @SuppressWarnings("unchecked")
+                Job<M> job1 = Job.class.cast(callable);
+                whenQueued(job1);
+                @SuppressWarnings("unchecked")
+                Job<U> job2 = Job.class.cast(callable);
+                return new Task<U>(job2);
             }
 
             @Override
@@ -111,16 +98,22 @@ public class Pool<M> {
                 throw new UnsupportedOperationException();
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void beforeExecute(Thread t, Runnable r) {
-                Pool.this.beforeExecute(Task.class.cast(r).getCallable());
+                @SuppressWarnings("rawtypes")
+                Task task = Task.class.cast(r);
+                Pool.this.beforeExecute(task.getCallable());
                 super.beforeExecute(t, r);
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void afterExecute(Runnable r, Throwable t) {
                 super.afterExecute(r, t);
-                Pool.this.afterExecute(Task.class.cast(r).getCallable());
+                @SuppressWarnings("rawtypes")
+                Task task = Task.class.cast(r);
+                Pool.this.afterExecute(task.getCallable(), t);
                 if (t != null) {
                     t.printStackTrace();
                 }
@@ -137,20 +130,24 @@ public class Pool<M> {
 
     protected void whenQueued(Job<M> job) {
         job.setQueued(System.currentTimeMillis());
-        getQueued().add(job);
+        job.setState(JobState.QUEUED);
         listeners.forEach(l -> l.queued(this, job));
     }
 
     protected void beforeExecute(Job<M> job) {
-        getQueued().remove(job);
         job.setStarted(System.currentTimeMillis());
-        getCurrent().add(job);
+        job.setState(JobState.EXECUTING);
         listeners.forEach(l -> l.started(this, job));
     }
 
-    protected void afterExecute(Job<M> job) {
-        getCurrent().remove(job);
+    protected void afterExecute(Job<M> job, Throwable error) {
         job.setFinished(System.currentTimeMillis());
+        if (error != null) {
+            job.setError(error);
+            // job.setState(JobState.ERROR);
+        } else {
+            // job.setState(JobState.DONE);
+        }
         listeners.forEach(l -> l.ended(this, job));
     }
 
@@ -269,5 +266,32 @@ public class Pool<M> {
     public Pool<M> autoShutdown(boolean enabled) {
         setAutoShutdown(enabled);
         return this;
+    }
+
+    public void remove(Task<M> task) {
+        task.cancel(true);
+        // Job<M> job = task.getCallable();
+        // job.setState(JobState.CANCELLED);
+        getThreadPoolExecutor().purge();
+    }
+
+    public List<Job<M>> getCurrent() {
+        return all.stream().filter(job -> job.getState() == JobState.EXECUTING).collect(Collectors.toList());
+    }
+
+    public List<Job<M>> getCompleted() {
+        return all.stream().filter(job -> job.getState() == JobState.DONE).collect(Collectors.toList());
+    }
+
+    public List<Job<M>> getQueued() {
+        return all.stream().filter(job -> job.getState() == JobState.QUEUED).collect(Collectors.toList());
+    }
+
+    public List<Job<M>> getFailed() {
+        return all.stream().filter(job -> job.getState() == JobState.ERROR).collect(Collectors.toList());
+    }
+
+    public List<Job<M>> getCancelled() {
+        return all.stream().filter(job -> job.getState() == JobState.CANCELLED).collect(Collectors.toList());
     }
 }

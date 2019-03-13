@@ -3,6 +3,8 @@ package org.jhaws.common.pool;
 import java.util.concurrent.Callable;
 
 public class Job<M> implements Callable<M> {
+    private JobState state;
+
     private M meta;
 
     private Runnable runnable;
@@ -12,6 +14,8 @@ public class Job<M> implements Callable<M> {
     private Long started;
 
     private Long finished;
+
+    private Throwable error;
 
     public Job(Runnable runnable, M meta) {
         this.runnable = runnable;
@@ -61,5 +65,26 @@ public class Job<M> implements Callable<M> {
 
     protected void setQueued(Long queued) {
         this.queued = queued;
+    }
+
+    public Throwable getError() {
+        return this.error;
+    }
+
+    protected void setError(Throwable error) {
+        this.error = error;
+    }
+
+    public JobState getState() {
+        return this.state;
+    }
+
+    protected void setState(JobState newstate) {
+        if (!JobState.accepts(state, newstate)) {
+            System.out.println(this + " :: " + state + " !!!> " + newstate);
+            return;
+        }
+        System.out.println(this + " :: " + state + " > " + newstate);
+        this.state = newstate;
     }
 }
