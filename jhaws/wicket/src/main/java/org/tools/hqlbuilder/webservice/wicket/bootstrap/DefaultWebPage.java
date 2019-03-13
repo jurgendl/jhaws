@@ -475,6 +475,8 @@ public abstract class DefaultWebPage extends WebPage {
 		// FIXME response.render(CssHeaderItem.forReference(new
 		// LessResourceReference(DefaultWebPage.class,
 		// "org/tools/hqlbuilder/webservice/bootstrap4/social/brand.less")));
+		response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class,
+				"org/tools/hqlbuilder/webservice/bootstrap4/social/brand.css")));
 
 		response.render(CssHeaderItem.forReference(BLazy.CSS));
 		response.render(JavaScriptHeaderItem.forReference(BLazy.JS));

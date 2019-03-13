@@ -29,7 +29,8 @@ import ro.isdc.wro.model.resource.processor.ResourcePreProcessor;
 import ro.isdc.wro.model.resource.processor.impl.css.JawrCssMinifierProcessor;
 
 // install node.js
-// npm install less
+// ((npm install less))
+// npm install -g less
 /**
  * response.render(CssHeaderItem.forReference(new
  * lessResourceReference(WicketCSSRoot.class, "table.less")));
