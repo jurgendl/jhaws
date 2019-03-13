@@ -265,6 +265,7 @@ public class WicketApplication extends WebApplication {
 		if (packageResourceGuard instanceof SecurePackageResourceGuard) {
 			SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
 			guard.addPattern("+*.scss");
+			guard.addPattern("+*.less");
 			new ImageFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
 			new VideoFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
 			new AudioFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));

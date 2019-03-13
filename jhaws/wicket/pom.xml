@@ -287,7 +287,7 @@
         <dependency>
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-extensions</artifactId>
-            <version>1.8.0</version>
+            <version>${version.wro4j}</version>
             <exclusions><!-- https://wro4j.readthedocs.io/en/stable/AvailableProcessors/ -->
                 <exclusion>
                   <groupId>org.jruby</groupId>
@@ -352,11 +352,11 @@
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>envjs</artifactId>
-                </exclusion>
+                </exclusion><!-- 
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>less</artifactId>
-                </exclusion>
+                </exclusion> -->
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>jshint</artifactId>
@@ -364,11 +364,11 @@
                 <exclusion>
                     <groupId>com.github.lltyk</groupId>
                     <artifactId>dojo-shrinksafe</artifactId>
-                </exclusion>
+                </exclusion><!-- 
                 <exclusion>
                     <groupId>org.mozilla</groupId>
                     <artifactId>rhino</artifactId>
-                </exclusion>
+                </exclusion> -->
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>json2</artifactId>
@@ -392,11 +392,22 @@
             </exclusions>
         </dependency>
         <!-- ======================== WRO4J - Sass - scss ======================== -->
-		<dependency>
+		<!-- <dependency>
+		  <groupId>org.mozilla</groupId>
+		  <artifactId>rhino</artifactId>
+		  <version>1.7.10</version>
+		</dependency> -->
+		<!-- <dependency>
 		    <groupId>com.yahoo.platform.yui</groupId>
 		    <artifactId>yuicompressor</artifactId>
-		    <version>2.4.8</version>
-		</dependency>
+		    <version>2.4.8</version> -->
+		    <!-- <exclusions>
+		    	<exclusion>
+		    		<groupId>rhino</groupId>
+		    		<artifactId>js</artifactId>
+		    	</exclusion>
+		    </exclusions> -->
+		<!-- </dependency> -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>

@@ -472,6 +472,9 @@ public abstract class DefaultWebPage extends WebPage {
 		// response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_SOCIAL_CSS));
 		// response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_CSS));
 		// response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_HOVER_CSS));
+		// FIXME response.render(CssHeaderItem.forReference(new
+		// LessResourceReference(DefaultWebPage.class,
+		// "org/tools/hqlbuilder/webservice/bootstrap4/social/brand.less")));
 
 		response.render(CssHeaderItem.forReference(BLazy.CSS));
 		response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
