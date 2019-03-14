@@ -6,7 +6,7 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
-// v4.2.1 (previous: v4.1.3)
+// v4.3.1 (previous: v4.2.1-v4.1.3)
 // https://blog.getbootstrap.com/2018/12/21/bootstrap-4-2-1/
 //
 // http://getbootstrap.com/
@@ -32,38 +32,40 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 //
 // https://codexui.com/components/
 public class Bootstrap4 {
-    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.js");
+	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class,
+			"js/bootstrap.js");
 
-    // IE10 viewport hack for Surface/desktop Windows 8 bug
-    public static final JavaScriptResourceReference JS_IE10FIX = new JavaScriptResourceReference(Bootstrap4.class,
-            "js/ie10-viewport-bug-workaround.js");
+	// IE10 viewport hack for Surface/desktop Windows 8 bug
+	public static final JavaScriptResourceReference JS_IE10FIX = new JavaScriptResourceReference(Bootstrap4.class,
+			"js/ie10-viewport-bug-workaround.js");
 
-    public static final JavaScriptResourceReference JS_POPPER = new JavaScriptResourceReference(Bootstrap4.class, "js/popper.min.js");
+	public static final JavaScriptResourceReference JS_POPPER = new JavaScriptResourceReference(Bootstrap4.class,
+			"js/popper.min.js");
 
-    public static final CssResourceReference CSS = new CssResourceReference(Bootstrap4.class, "css/bootstrap.css");
+	public static final CssResourceReference CSS = new CssResourceReference(Bootstrap4.class, "css/bootstrap.css");
 
-    // public static final CssResourceReference CSS_GRID = new
-    // CssResourceReference(Bootstrap4.class,
-    // "css/bootstrap-grid.css");
-    //
-    // public static final CssResourceReference CSS_REBOOT = new
-    // CssResourceReference(Bootstrap4.class,
-    // "css/bootstrap-reboot.css");
+	// public static final CssResourceReference CSS_GRID = new
+	// CssResourceReference(Bootstrap4.class,
+	// "css/bootstrap-grid.css");
+	//
+	// public static final CssResourceReference CSS_REBOOT = new
+	// CssResourceReference(Bootstrap4.class,
+	// "css/bootstrap-reboot.css");
 
-    private static String FACTORY;
+	private static String FACTORY;
 
-    public static OnDomReadyHeaderItem factory() {
-        // if (FACTORY == null) {
-        FACTORY = new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll();
-        // }
-        return OnDomReadyHeaderItem.forScript(FACTORY);
-    }
+	public static OnDomReadyHeaderItem factory() {
+		// if (FACTORY == null) {
+		FACTORY = new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll();
+		// }
+		return OnDomReadyHeaderItem.forScript(FACTORY);
+	}
 
-    static {
-        JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-        JS_IE10FIX.addJavaScriptResourceReferenceDependency(JS);
-        JS.addJavaScriptResourceReferenceDependency(JS_POPPER);
-        // CSS_GRID.addCssResourceReferenceDependency(CSS);
-        // CSS_REBOOT.addCssResourceReferenceDependency(CSS);
-    }
+	static {
+		JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+		JS_IE10FIX.addJavaScriptResourceReferenceDependency(JS);
+		JS.addJavaScriptResourceReferenceDependency(JS_POPPER);
+		// CSS_GRID.addCssResourceReferenceDependency(CSS);
+		// CSS_REBOOT.addCssResourceReferenceDependency(CSS);
+	}
 }
