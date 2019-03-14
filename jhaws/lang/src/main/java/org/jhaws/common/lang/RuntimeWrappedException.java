@@ -5,4 +5,8 @@ public class RuntimeWrappedException extends RuntimeException {
     public RuntimeWrappedException(Exception exception) {
         super(exception);
     }
+
+    public RuntimeWrappedException() {
+        super();
+    }
 }

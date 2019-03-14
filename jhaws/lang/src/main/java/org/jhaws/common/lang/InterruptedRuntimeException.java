@@ -6,4 +6,7 @@ public class InterruptedRuntimeException extends RuntimeWrappedException {
         super(exception);
     }
 
+    public InterruptedRuntimeException() {
+        super();
+    }
 }
