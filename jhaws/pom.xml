@@ -196,7 +196,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.7.1</version>
 				<configuration>
 					<locales>en</locales>
 					<generateSitemap>true</generateSitemap>
@@ -333,6 +333,22 @@
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.10.0</version>
 				<configuration>
+                    <rulesets>
+                        <ruleset>/rulesets/basic.xml</ruleset>
+                        <ruleset>/rulesets/unusedcode.xml</ruleset>
+                        <ruleset>/rulesets/coupling.xml</ruleset>
+                        <!--<ruleset>/rulesets/optimizations.xml</ruleset> -->
+                        <ruleset>/rulesets/design.xml</ruleset>
+                        <ruleset>/rulesets/sunsecure.xml</ruleset>
+                        <ruleset>/rulesets/strictexception.xml</ruleset>
+                        <ruleset>/rulesets/javabeans.xml</ruleset>
+                        <ruleset>/rulesets/strings.xml</ruleset>
+                        <ruleset>/rulesets/imports.xml</ruleset>
+                        <ruleset>/rulesets/clone.xml</ruleset>
+                        <!--<ruleset>/rulesets/naming.xml</ruleset> -->
+                        <ruleset>/rulesets/junit.xml</ruleset>
+                        <ruleset>/rulesets/codesize.xml</ruleset>
+                    </rulesets>
 					<!--<targetjdk>${targetJdk}</targetjdk>-->
 					<format>xml</format>
 					<linkXref>true</linkXref>
