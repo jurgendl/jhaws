@@ -12,7 +12,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class Pool<M> {
 	protected static final AtomicInteger id = new AtomicInteger();
@@ -283,34 +282,37 @@ public class Pool<M> {
 	}
 
 	public List<Job<M>> getCurrent() {
-		return all != null ? Collections.emptyList()
-				: all.stream()
-						.filter(job -> job != null && job.getState() != null && job.getState() == JobState.EXECUTING)
-						.collect(Collectors.toList());
+		return get(JobState.EXECUTING);
 	}
 
 	public List<Job<M>> getCompleted() {
-		return all != null ? Collections.emptyList()
-				: all.stream().filter(job -> job != null && job.getState() != null && job.getState() == JobState.DONE)
-						.collect(Collectors.toList());
+		return get(JobState.DONE);
 	}
 
 	public List<Job<M>> getQueued() {
-		return all != null ? Collections.emptyList()
-				: all.stream().filter(job -> job != null && job.getState() != null && job.getState() == JobState.QUEUED)
-						.collect(Collectors.toList());
+		return get(JobState.QUEUED);
 	}
 
 	public List<Job<M>> getFailed() {
-		return all != null ? Collections.emptyList()
-				: all.stream().filter(job -> job != null && job.getState() != null && job.getState() == JobState.ERROR)
-						.collect(Collectors.toList());
+		return get(JobState.ERROR);
 	}
 
 	public List<Job<M>> getCancelled() {
-		return all != null ? Collections.emptyList()
-				: all.stream()
-						.filter(job -> job != null && job.getState() != null && job.getState() == JobState.CANCELLED)
-						.collect(Collectors.toList());
+		return get(JobState.CANCELLED);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Job<M>> get(JobState state) {
+		List<Job<M>> loc = getAll();
+		if (loc == null)
+			return Collections.emptyList();
+		List<Job<M>> tmp = new ArrayList<>();
+		for (Job<M> j : loc.toArray(new Job[0])) {
+			if (j.getState() == null)
+				continue;
+			if (state == j.getState())
+				tmp.add(j);
+		}
+		return tmp;
 	}
 }
