@@ -283,32 +283,34 @@ public class Pool<M> {
 	}
 
 	public List<Job<M>> getCurrent() {
-		return all != null ? null
+		return all != null ? Collections.emptyList()
 				: all.stream()
 						.filter(job -> job != null && job.getState() != null && job.getState() == JobState.EXECUTING)
 						.collect(Collectors.toList());
 	}
 
 	public List<Job<M>> getCompleted() {
-		return all != null ? null
+		return all != null ? Collections.emptyList()
 				: all.stream().filter(job -> job != null && job.getState() != null && job.getState() == JobState.DONE)
 						.collect(Collectors.toList());
 	}
 
 	public List<Job<M>> getQueued() {
-		return all != null ? null
+		return all != null ? Collections.emptyList()
 				: all.stream().filter(job -> job != null && job.getState() != null && job.getState() == JobState.QUEUED)
 						.collect(Collectors.toList());
 	}
 
 	public List<Job<M>> getFailed() {
-		return all != null ? null
+		return all != null ? Collections.emptyList()
 				: all.stream().filter(job -> job != null && job.getState() != null && job.getState() == JobState.ERROR)
 						.collect(Collectors.toList());
 	}
 
 	public List<Job<M>> getCancelled() {
-		return all.stream().filter(job -> job != null && job.getState() != null && job.getState() == JobState.CANCELLED)
-				.collect(Collectors.toList());
+		return all != null ? Collections.emptyList()
+				: all.stream()
+						.filter(job -> job != null && job.getState() != null && job.getState() == JobState.CANCELLED)
+						.collect(Collectors.toList());
 	}
 }
