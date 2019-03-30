@@ -441,7 +441,7 @@ public class WicketApplication extends WebApplication {
 	 * org.apache.wicket.request.Response)
 	 */
 	@Override
-	final public Session newSession(Request request, Response response) {
+	public Session newSession(Request request, Response response) {
 		WicketSession wicketSession = this.createSession(request, response);
 		WicketApplication.logger.trace("creating new session {}", wicketSession);
 		return wicketSession;
