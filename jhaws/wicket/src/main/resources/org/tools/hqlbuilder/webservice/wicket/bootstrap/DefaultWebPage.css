@@ -518,9 +518,11 @@ img.niceimage {
 	height: calc(1.8125rem + 2px);
 }
 
+/*
 .custom-control-input:disabled ~ .custom-control-label:before {
 	background-color: rgba(166, 209, 255, 0.98) !important;
 }
+*/
 
 /* */
 .modal-header .close { margin: 0px !important; padding: 0px !important; }
