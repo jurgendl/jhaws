@@ -8,6 +8,14 @@
 		.feedbackPanel .alert {
 			margin: 1rem 0;
 		}
+		.feedbackPanel .alert-dismissible .close {
+			/*height: 100%;
+			vertical-align: middle;
+			margin: 1rem 0 1rem;*/
+			margin: 1rem;
+			padding: 0;
+			font-size: medium;
+		}
 	</style>
 	</wicket:head>
 	<wicket:panel>
@@ -18,8 +26,8 @@
 		</ul>
 		<wicket:fragment wicket:id="feedbackinternal">
 			<span wicket:id="message"></span>
-			<button style="margin-top:-.175em" type="button" class="close" data-dismiss="alert" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<i class="fas fa-fw fa-window-close" aria-hidden="true"></i>
 			</button>
 		</wicket:fragment>
 	</wicket:panel>
