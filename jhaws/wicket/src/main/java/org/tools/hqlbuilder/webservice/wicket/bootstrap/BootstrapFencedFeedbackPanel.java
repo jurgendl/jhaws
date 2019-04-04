@@ -29,7 +29,9 @@ import org.apache.wicket.markup.html.panel.Fragment;
  */
 @SuppressWarnings("serial")
 public class BootstrapFencedFeedbackPanel extends FeedbackPanel {
-    private static final MetaDataKey<Integer> FENCE_KEY = new MetaDataKey<Integer>() {};
+    private static final MetaDataKey<Integer> FENCE_KEY = new MetaDataKey<Integer>() {
+        //
+    };
 
     private final Component fence;
 
