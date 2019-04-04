@@ -133,6 +133,7 @@ public class BootstrapFencedFeedbackPanel extends FeedbackPanel {
         return fragment;
     }
 
+    @Override
     protected String getCSSClass(org.apache.wicket.feedback.FeedbackMessage message) {
         String feedbackCss = getFeedbackCss(message);
         return feedbackCss == null ? super.getCSSClass(message) : feedbackCss;
