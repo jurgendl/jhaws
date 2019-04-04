@@ -27,7 +27,7 @@ import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.FeedbackPanel;
+import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
@@ -454,7 +454,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
     }
 
     protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String string) {
-        FeedbackPanel feedbackPanel = new FeedbackPanel(string);
+        BootstrapFencedFeedbackPanel feedbackPanel = new BootstrapFencedFeedbackPanel(string, this);
         return feedbackPanel;
     }
 

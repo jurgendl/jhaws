@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tools.hqlbuilder.webservice.wicket.HtmlEvent.HtmlFormEvent;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.FeedbackPanel;
+import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
@@ -47,7 +47,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
     protected String propertyName;
 
-    protected FeedbackPanel feedbackPanel;
+    protected BootstrapFencedFeedbackPanel feedbackPanel;
 
     protected C component;
 
@@ -138,9 +138,9 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         return this.componentSettings;
     }
 
-    protected FeedbackPanel getFeedback() {
+    protected BootstrapFencedFeedbackPanel getFeedback() {
         if (this.feedbackPanel == null) {
-            this.feedbackPanel = new FeedbackPanel(FormConstants.FEEDBACK_ID, this.component);
+            this.feedbackPanel = new BootstrapFencedFeedbackPanel(FormConstants.FEEDBACK_ID, this.component);
         }
         return this.feedbackPanel;
     }

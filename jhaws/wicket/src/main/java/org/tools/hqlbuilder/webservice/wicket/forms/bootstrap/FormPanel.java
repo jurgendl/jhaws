@@ -16,7 +16,7 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.FeedbackPanel;
+import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
@@ -59,7 +59,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
     }
 
     protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {
-        FeedbackPanel feedbackPanel = new FeedbackPanel(id);
+        BootstrapFencedFeedbackPanel feedbackPanel = new BootstrapFencedFeedbackPanel(id, this);
         return feedbackPanel;
     }
 
