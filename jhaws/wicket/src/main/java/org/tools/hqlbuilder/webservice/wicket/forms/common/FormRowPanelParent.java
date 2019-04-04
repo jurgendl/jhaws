@@ -10,14 +10,11 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.bean.validation.PropertyValidator;
 import org.apache.wicket.behavior.Behavior;
-import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
-import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.PasswordTextField;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -25,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tools.hqlbuilder.webservice.wicket.HtmlEvent.HtmlFormEvent;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
+import org.tools.hqlbuilder.webservice.wicket.bootstrap.FeedbackPanel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
@@ -140,23 +138,9 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         return this.componentSettings;
     }
 
-    protected String getFeedbackMessageCSSClass(final FeedbackMessage message) {
-        return "feedbackPanel" + message.getLevelAsString();
-    }
-
     protected FeedbackPanel getFeedback() {
         if (this.feedbackPanel == null) {
-            this.feedbackPanel = new FeedbackPanel(FormConstants.FEEDBACK_ID, new ComponentFeedbackMessageFilter(this.component)) {
-                @Override
-                public boolean isVisible() {
-                    return super.isVisible() && this.anyMessage();
-                }
-
-                protected String getCSSClass(final FeedbackMessage message) {
-                    return getFeedbackMessageCSSClass(message);
-                }
-            };
-            this.feedbackPanel.setOutputMarkupId(true);
+            this.feedbackPanel = new FeedbackPanel(FormConstants.FEEDBACK_ID, this.component);
         }
         return this.feedbackPanel;
     }

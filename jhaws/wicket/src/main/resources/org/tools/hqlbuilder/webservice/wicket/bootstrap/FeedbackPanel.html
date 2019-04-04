@@ -1,0 +1,24 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<body>
+	<wicket:head>
+	<style>
+		.feedbackPanel .alert .alert {
+			border: hidden;
+		}
+	</style>
+	</wicket:head>
+	<wicket:panel>
+		<ul wicket:id="feedbackul" class="feedbackPanel list-unstyled mb-0 w-100" style="padding-left: 5px; padding-right: 5px">
+			<li wicket:id="messages">
+				<div class="alert alert-dismissible fade show" role="alert" wicket:id="message">A message</div>
+			</li>
+		</ul>
+		<wicket:fragment wicket:id="feedbackinternal">
+			<span wicket:id="message"></span>
+			<button style="margin-top:-.175em" type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</wicket:fragment>
+	</wicket:panel>
+</body>
+</html>

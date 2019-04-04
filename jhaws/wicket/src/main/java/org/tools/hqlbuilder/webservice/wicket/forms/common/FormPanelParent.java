@@ -16,7 +16,6 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.StatelessForm;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
@@ -28,6 +27,7 @@ import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
+import org.tools.hqlbuilder.webservice.wicket.bootstrap.FeedbackPanel;
 
 import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
@@ -453,14 +453,8 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
         return this.form;
     }
 
-    protected FeedbackPanel newFeedbackPanel(String string) {
-        FeedbackPanel feedbackPanel = new FeedbackPanel(string) {
-            protected String getCSSClass(org.apache.wicket.feedback.FeedbackMessage message) {
-                String feedbackCss = getFeedbackCss(message);
-                return feedbackCss == null ? super.getCSSClass(message) : feedbackCss;
-            }
-        };
-        feedbackPanel.setEscapeModelStrings(false);
+    protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String string) {
+        FeedbackPanel feedbackPanel = new FeedbackPanel(string);
         return feedbackPanel;
     }
 
@@ -492,10 +486,6 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
         }
 
         return rowpanel;
-    }
-
-    protected String getFeedbackCss(org.apache.wicket.feedback.FeedbackMessage message) {
-        return null;
     }
 
     public void newRow() {
