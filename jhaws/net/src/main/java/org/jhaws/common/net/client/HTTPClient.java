@@ -137,6 +137,8 @@ public class HTTPClient implements Closeable {
 
 	protected final ThreadLocal<URI> preemptiveCPBaseUrl = new ThreadLocal<>();
 
+	protected boolean throwException = true;
+
 	protected final ThreadLocal<HttpClientContext> context = new ThreadLocal<HttpClientContext>() {
 		@Override
 		protected HttpClientContext initialValue() {
@@ -183,8 +185,9 @@ public class HTTPClient implements Closeable {
 		return userAgent;
 	}
 
-	public void setUserAgent(String userAgent) {
+	public HTTPClient setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
+		return this;
 	}
 
 	public RequestConfig getRequestConfig() {
@@ -352,6 +355,9 @@ public class HTTPClient implements Closeable {
 		Response response = null;
 		try (CloseableHttpResponse httpResponse = getHttpClient().execute(targetHost, req, getContext(uri))) {
 			response = buildResponse(req, httpResponse, out);
+			if (throwException && 500 <= response.getStatusCode() && response.getStatusCode() <= 599) {
+				throw new HttpException(response, response.getStatusCode(), response.getStatusText());
+			}
 			consumeQuietly(httpResponse.getEntity());
 		} catch (IOException ioex) {
 			throw new UncheckedIOException(ioex);
@@ -671,32 +677,37 @@ public class HTTPClient implements Closeable {
 		return org.jhaws.common.net.client.CookieStore.class.cast(getCookieStore());
 	}
 
-	public void setCookieStore(org.apache.http.client.CookieStore cookieStore) {
+	public HTTPClient setCookieStore(org.apache.http.client.CookieStore cookieStore) {
 		this.cookieStore = cookieStore;
+		return this;
 	}
 
 	public long getDownloaded() {
 		return downloaded;
 	}
 
-	public void setRequestConfig(RequestConfig requestConfig) {
+	public HTTPClient setRequestConfig(RequestConfig requestConfig) {
 		this.requestConfig = requestConfig;
+		return this;
 	}
 
-	public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
+	public HTTPClient setRedirectStrategy(RedirectStrategy redirectStrategy) {
 		this.redirectStrategy = redirectStrategy;
+		return this;
 	}
 
-	public void setConnectionManager(HttpClientConnectionManager connectionManager) {
+	public HTTPClient setConnectionManager(HttpClientConnectionManager connectionManager) {
 		this.connectionManager = connectionManager;
+		return this;
 	}
 
 	public String getAcceptLanguage() {
 		return this.acceptLanguage;
 	}
 
-	public void setAcceptLanguage(String acceptLanguage) {
+	public HTTPClient setAcceptLanguage(String acceptLanguage) {
 		this.acceptLanguage = acceptLanguage;
+		return this;
 	}
 
 	public void addAuthentication(HTTPClientAuth httpClientAuth) {
@@ -735,8 +746,9 @@ public class HTTPClient implements Closeable {
 		return this.defaultCredentialsProvider;
 	}
 
-	public void setDefaultCredentialsProvider(CredentialsProvider credentialsProvider) {
+	public HTTPClient setDefaultCredentialsProvider(CredentialsProvider credentialsProvider) {
 		this.defaultCredentialsProvider = credentialsProvider;
+		return this;
 	}
 
 	protected CredentialsProvider getPreemptiveCredentialsProvider() {
@@ -766,8 +778,9 @@ public class HTTPClient implements Closeable {
 		return this.preemptiveCredentialsProvider;
 	}
 
-	public void setPreemptiveCredentialsProvider(CredentialsProvider credentialsProvider) {
+	public HTTPClient setPreemptiveCredentialsProvider(CredentialsProvider credentialsProvider) {
 		this.preemptiveCredentialsProvider = credentialsProvider;
+		return this;
 	}
 
 	public HttpClientContext getContext(URI preemptiveCPBaseUrl) {
@@ -775,7 +788,18 @@ public class HTTPClient implements Closeable {
 		return context.get();
 	}
 
-	public void setHttpClient(CloseableHttpClient httpClient) {
+	public HTTPClient setHttpClient(CloseableHttpClient httpClient) {
 		this.httpClient = httpClient;
+		return this;
 	}
+
+	public boolean isThrowException() {
+		return this.throwException;
+	}
+
+	public HTTPClient setThrowException(boolean throwException) {
+		this.throwException = throwException;
+		return this;
+	}
+
 }
