@@ -1,14 +1,13 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.bootbox;
 
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.SubmitLink;
+import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 
 // <a class="btn btn-primary" wicket:id="submit">submit</a>
 // form.add(new ConfirmationSubmitLink("submit", Model.of("confirmationmessage")).addConfirmation());
 /** MOET OP EEN A HREF / BUTTON / INPUT TYPE=SUBMIT STAAN */
 @SuppressWarnings("serial")
-public class ConfirmationSubmitLink extends SubmitLink {
+public class ConfirmationLink<T> extends Link<T> {
     private IModel<String> okButton;
 
     private IModel<String> cancelButton;
@@ -21,24 +20,16 @@ public class ConfirmationSubmitLink extends SubmitLink {
 
     private IModel<String> message;
 
-    public ConfirmationSubmitLink(String id, Form<?> form) {
-        super(id, form);
-    }
-
-    public ConfirmationSubmitLink(String id, IModel<?> model, Form<?> form) {
-        super(id, model, form);
-    }
-
-    public ConfirmationSubmitLink(String id, IModel<?> model) {
-        super(id, model);
-    }
-
-    public ConfirmationSubmitLink(String id) {
+    public ConfirmationLink(String id) {
         super(id);
     }
 
+    public ConfirmationLink(String id, IModel<T> model) {
+        super(id, model);
+    }
+
     /** MOET OPGEROEPEN WORDEN OM BIJ TOEVOEGEN VAN DEZE LINK */
-    public ConfirmationSubmitLink addConfirmation() {
+    public ConfirmationLink<T> addConfirmation() {
         BootboxJavascriptEventConfirmation bootboxJavascriptEventConfirmation = new BootboxJavascriptEventConfirmation();
         bootboxJavascriptEventConfirmation.setMessage(message);
         bootboxJavascriptEventConfirmation.setTitle(title);
@@ -56,7 +47,7 @@ public class ConfirmationSubmitLink extends SubmitLink {
         return this.okButton;
     }
 
-    public ConfirmationSubmitLink setOkButton(IModel<String> okButton) {
+    public ConfirmationLink<T> setOkButton(IModel<String> okButton) {
         this.okButton = okButton;
         return this;
     }
@@ -65,7 +56,7 @@ public class ConfirmationSubmitLink extends SubmitLink {
         return this.cancelButton;
     }
 
-    public ConfirmationSubmitLink setCancelButton(IModel<String> cancelButton) {
+    public ConfirmationLink<T> setCancelButton(IModel<String> cancelButton) {
         this.cancelButton = cancelButton;
         return this;
     }
@@ -74,7 +65,7 @@ public class ConfirmationSubmitLink extends SubmitLink {
         return this.okButtonIcon;
     }
 
-    public ConfirmationSubmitLink setOkButtonIcon(IModel<String> okButtonIcon) {
+    public ConfirmationLink<T> setOkButtonIcon(IModel<String> okButtonIcon) {
         this.okButtonIcon = okButtonIcon;
         return this;
     }
@@ -83,7 +74,7 @@ public class ConfirmationSubmitLink extends SubmitLink {
         return this.cancelButtonIcon;
     }
 
-    public ConfirmationSubmitLink setCancelButtonIcon(IModel<String> cancelButtonIcon) {
+    public ConfirmationLink<T> setCancelButtonIcon(IModel<String> cancelButtonIcon) {
         this.cancelButtonIcon = cancelButtonIcon;
         return this;
     }
@@ -92,7 +83,7 @@ public class ConfirmationSubmitLink extends SubmitLink {
         return this.title;
     }
 
-    public ConfirmationSubmitLink setTitle(IModel<String> title) {
+    public ConfirmationLink<T> setTitle(IModel<String> title) {
         this.title = title;
         return this;
     }
@@ -101,9 +92,14 @@ public class ConfirmationSubmitLink extends SubmitLink {
         return this.message;
     }
 
-    public ConfirmationSubmitLink setMessage(IModel<String> message) {
+    public ConfirmationLink<T> setMessage(IModel<String> message) {
         this.message = message;
         return this;
+    }
+
+    @Override
+    public void onClick() {
+        //
     }
 
     // @Override

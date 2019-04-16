@@ -2,12 +2,11 @@ package org.tools.hqlbuilder.webservice.bootstrap4.bootbox;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.model.IModel;
 
 @SuppressWarnings("serial")
-public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
+public class ConfirmationAjaxLink<T> extends AjaxLink<T> {
     private IModel<String> okButton;
 
     private IModel<String> cancelButton;
@@ -20,17 +19,8 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
 
     private IModel<String> message;
 
-    public ConfirmationAjaxSubmitLink(String id, Form<?> form) {
-        super(id, form);
-    }
-
-    public ConfirmationAjaxSubmitLink(String id) {
+    public ConfirmationAjaxLink(String id) {
         super(id);
-    }
-
-    @Override
-    protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-        target.add(form);
     }
 
     @Override
@@ -52,7 +42,7 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
         return this.okButton;
     }
 
-    public ConfirmationAjaxSubmitLink setOkButton(IModel<String> okButton) {
+    public ConfirmationAjaxLink<T> setOkButton(IModel<String> okButton) {
         this.okButton = okButton;
         return this;
     }
@@ -61,7 +51,7 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
         return this.cancelButton;
     }
 
-    public ConfirmationAjaxSubmitLink setCancelButton(IModel<String> cancelButton) {
+    public ConfirmationAjaxLink<T> setCancelButton(IModel<String> cancelButton) {
         this.cancelButton = cancelButton;
         return this;
     }
@@ -70,7 +60,7 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
         return this.okButtonIcon;
     }
 
-    public ConfirmationAjaxSubmitLink setOkButtonIcon(IModel<String> okButtonIcon) {
+    public ConfirmationAjaxLink<T> setOkButtonIcon(IModel<String> okButtonIcon) {
         this.okButtonIcon = okButtonIcon;
         return this;
     }
@@ -79,7 +69,7 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
         return this.cancelButtonIcon;
     }
 
-    public ConfirmationAjaxSubmitLink setCancelButtonIcon(IModel<String> cancelButtonIcon) {
+    public ConfirmationAjaxLink<T> setCancelButtonIcon(IModel<String> cancelButtonIcon) {
         this.cancelButtonIcon = cancelButtonIcon;
         return this;
     }
@@ -88,7 +78,7 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
         return this.title;
     }
 
-    public ConfirmationAjaxSubmitLink setTitle(IModel<String> title) {
+    public ConfirmationAjaxLink<T> setTitle(IModel<String> title) {
         this.title = title;
         return this;
     }
@@ -97,7 +87,7 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
         return this.message;
     }
 
-    public ConfirmationAjaxSubmitLink setMessage(IModel<String> message) {
+    public ConfirmationAjaxLink<T> setMessage(IModel<String> message) {
         this.message = message;
         return this;
     }
@@ -108,4 +98,9 @@ public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
     // response.render(JavaScriptHeaderItem.forReference(BootBox.JS));
     // response.render(JavaScriptHeaderItem.forReference(BootBox.JS_LOCALE));
     // }
+
+    @Override
+    public void onClick(AjaxRequestTarget target) {
+        //
+    }
 }
