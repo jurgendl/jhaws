@@ -9,11 +9,6 @@ import org.apache.wicket.model.Model;
 // response.render(JavaScriptHeaderItem.forReference(BootBox.JS_LOCALE));
 // }
 //
-// werkt op alle niet ajax actions die een form committen "input type=submit", "a href", "button"
-// TODO variant voor ajax form submits maken
-// TODO variant voor niet form submits voor ajax en niet ajax
-// PS ajax wil hier enkel wicket ajax calls zeggen want sumits van form in forms gebeuren zowiezo via javascript
-//
 // vb
 // bootbox.confirm({"locale":"nl","onEscape":"true","message":"message","buttons":{"confirm":{"label":"Ok","className":"btn-default"},"cancel":{"label":"Cancel","className":"btn-primary"}},"callback":function(result){if(result){var
 // e=document.getElementById('form5_hf_0'); e.name='effectContainer:content:contentpanel:form:submit1'; e.value='x';var

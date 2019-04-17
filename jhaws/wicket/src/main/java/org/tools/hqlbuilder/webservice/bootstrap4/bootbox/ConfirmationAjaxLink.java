@@ -7,17 +7,7 @@ import org.apache.wicket.model.IModel;
 
 @SuppressWarnings("serial")
 public class ConfirmationAjaxLink<T> extends AjaxLink<T> {
-    private IModel<String> okButton;
-
-    private IModel<String> cancelButton;
-
-    private IModel<String> okButtonIcon;
-
-    private IModel<String> cancelButtonIcon;
-
-    private IModel<String> title;
-
-    private IModel<String> message;
+    private BootBoxHelper builder = new BootBoxHelper();
 
     public ConfirmationAjaxLink(String id) {
         super(id);
@@ -27,69 +17,15 @@ public class ConfirmationAjaxLink<T> extends AjaxLink<T> {
     protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
         super.updateAjaxAttributes(attributes);
 
-        BootBoxAjaxCallListener bootBoxAjaxCallListener = new BootBoxAjaxCallListener();
-        bootBoxAjaxCallListener.setMessage(message);
-        bootBoxAjaxCallListener.setTitle(title);
-        bootBoxAjaxCallListener.setOkButton(okButton);
-        bootBoxAjaxCallListener.setOkButtonIcon(okButtonIcon);
-        bootBoxAjaxCallListener.setCancelButton(cancelButton);
-        bootBoxAjaxCallListener.setCancelButtonIcon(cancelButtonIcon);
+        BootBoxAjaxCallListener handler = new BootBoxAjaxCallListener();
+        handler.setMessage(builder.getMessage());
+        handler.setTitle(builder.getTitle());
+        handler.setOkButton(builder.getOkButton());
+        handler.setOkButtonIcon(builder.getOkButtonIcon());
+        handler.setCancelButton(builder.getCancelButton());
+        handler.setCancelButtonIcon(builder.getCancelButtonIcon());
 
-        attributes.getAjaxCallListeners().add(bootBoxAjaxCallListener);
-    }
-
-    public IModel<String> getOkButton() {
-        return this.okButton;
-    }
-
-    public ConfirmationAjaxLink<T> setOkButton(IModel<String> okButton) {
-        this.okButton = okButton;
-        return this;
-    }
-
-    public IModel<String> getCancelButton() {
-        return this.cancelButton;
-    }
-
-    public ConfirmationAjaxLink<T> setCancelButton(IModel<String> cancelButton) {
-        this.cancelButton = cancelButton;
-        return this;
-    }
-
-    public IModel<String> getOkButtonIcon() {
-        return this.okButtonIcon;
-    }
-
-    public ConfirmationAjaxLink<T> setOkButtonIcon(IModel<String> okButtonIcon) {
-        this.okButtonIcon = okButtonIcon;
-        return this;
-    }
-
-    public IModel<String> getCancelButtonIcon() {
-        return this.cancelButtonIcon;
-    }
-
-    public ConfirmationAjaxLink<T> setCancelButtonIcon(IModel<String> cancelButtonIcon) {
-        this.cancelButtonIcon = cancelButtonIcon;
-        return this;
-    }
-
-    public IModel<String> getTitle() {
-        return this.title;
-    }
-
-    public ConfirmationAjaxLink<T> setTitle(IModel<String> title) {
-        this.title = title;
-        return this;
-    }
-
-    public IModel<String> getMessage() {
-        return this.message;
-    }
-
-    public ConfirmationAjaxLink<T> setMessage(IModel<String> message) {
-        this.message = message;
-        return this;
+        attributes.getAjaxCallListeners().add(handler);
     }
 
     // @Override
@@ -102,5 +38,59 @@ public class ConfirmationAjaxLink<T> extends AjaxLink<T> {
     @Override
     public void onClick(AjaxRequestTarget target) {
         //
+    }
+
+    public IModel<String> getOkButton() {
+        return this.builder.getOkButton();
+    }
+
+    public ConfirmationAjaxLink<T> setOkButton(IModel<String> okButton) {
+        this.builder.setOkButton(okButton);
+        return this;
+    }
+
+    public IModel<String> getCancelButton() {
+        return this.builder.getCancelButton();
+    }
+
+    public ConfirmationAjaxLink<T> setCancelButton(IModel<String> cancelButton) {
+        this.builder.setCancelButton(cancelButton);
+        return this;
+    }
+
+    public IModel<String> getOkButtonIcon() {
+        return this.builder.getOkButtonIcon();
+    }
+
+    public ConfirmationAjaxLink<T> setOkButtonIcon(IModel<String> okButtonIcon) {
+        this.builder.setOkButtonIcon(okButtonIcon);
+        return this;
+    }
+
+    public IModel<String> getCancelButtonIcon() {
+        return this.builder.getCancelButtonIcon();
+    }
+
+    public ConfirmationAjaxLink<T> setCancelButtonIcon(IModel<String> cancelButtonIcon) {
+        this.builder.setCancelButtonIcon(cancelButtonIcon);
+        return this;
+    }
+
+    public IModel<String> getTitle() {
+        return this.builder.getTitle();
+    }
+
+    public ConfirmationAjaxLink<T> setTitle(IModel<String> title) {
+        this.builder.setTitle(title);
+        return this;
+    }
+
+    public IModel<String> getMessage() {
+        return this.builder.getMessage();
+    }
+
+    public ConfirmationAjaxLink<T> setMessage(IModel<String> message) {
+        this.builder.setMessage(message);
+        return this;
     }
 }
