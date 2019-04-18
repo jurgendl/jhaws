@@ -1,7 +1,5 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
-import org.tools.hqlbuilder.webservice.wicket.forms.AbstractNumberFieldSettings;
-
 @SuppressWarnings("serial")
 public class RatingFieldSettings extends AbstractNumberFieldSettings<Integer, RatingFieldSettings> {
     protected Boolean clearable = Boolean.TRUE;

@@ -1,6 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
-
-import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 public abstract class AbstractNumberFieldSettings<N extends Number & Comparable<N>, T extends AbstractNumberFieldSettings<N, T>>
         extends AbstractFormElementSettings<T> {

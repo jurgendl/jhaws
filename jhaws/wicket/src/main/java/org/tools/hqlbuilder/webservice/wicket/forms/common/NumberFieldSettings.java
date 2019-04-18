@@ -1,7 +1,5 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
-import org.tools.hqlbuilder.webservice.wicket.forms.AbstractNumberFieldSettings;
-
 public class NumberFieldSettings<N extends Number & Comparable<N>> extends AbstractNumberFieldSettings<N, NumberFieldSettings<N>> {
     private static final long serialVersionUID = 3281551248020647957L;
 

@@ -1,6 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.forms;
-
-import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSettings;
+package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 public abstract class AbstractTextAreaSettings<T extends AbstractTextAreaSettings<T>> extends AbstractFormElementSettings<T> {
     private static final long serialVersionUID = 6279323396756540215L;

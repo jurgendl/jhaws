@@ -1,7 +1,5 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
-import org.tools.hqlbuilder.webservice.wicket.forms.AbstractTextAreaSettings;
-
 @SuppressWarnings("serial")
 public class TextAreaSettings extends AbstractTextAreaSettings<TextAreaSettings> {
     protected Integer minlength;
