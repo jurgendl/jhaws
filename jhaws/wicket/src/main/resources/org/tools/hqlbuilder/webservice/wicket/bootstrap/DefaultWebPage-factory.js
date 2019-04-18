@@ -5,7 +5,7 @@ $('[data-toggle="popover"]').popover({ html: true, delay: { "show": 50, "hide": 
 $('.popover-dismiss').popover({ html: true, trigger: 'focus', delay: { "show": 50, "hide": 500 } });
 
 /* activate bootstrap tooltips */
-$('[data-toggle="tooltip"]').tooltip();
+$('[data-toggle="tooltip"]').tooltip({ html: true, delay: { "show": 50, "hide": 50 } });
 
 /* activate bootstrap validation */
 (function() {
