@@ -35,3 +35,4 @@ org.eclipse.wst.common.project.facet.core.xml
 /jhaws/lucene7/cmds.bat
 /jhaws/wicket/replace.txt
 /jhaws/wicket/replaces.sh
+cmds.bat
