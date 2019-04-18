@@ -1,1 +1,0 @@
-$('.tristate').tristate({ init: function(state, value) { $('#'+this.attr('for')).val(state); }, change: function(state, value) { $('#'+this.attr('for')).val(state); } });

@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.velocity;
 
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 /**
@@ -15,7 +16,7 @@ public class Velocity {
 
     static {
         try {
-            // VELOCITY_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+            VELOCITY_JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
         } catch (Exception ex) {
             //
         }

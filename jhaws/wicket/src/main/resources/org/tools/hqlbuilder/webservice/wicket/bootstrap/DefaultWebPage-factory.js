@@ -1,10 +1,11 @@
 /* ============= DefaultWebPage-factory.js ============= */
 
 /* activate bootstrap popover icons */
+$('[data-toggle="popover"]').popover({ html: true, delay: { "show": 50, "hide": 50 } });
+$('.popover-dismiss').popover({ html: true, trigger: 'focus', delay: { "show": 50, "hide": 500 } });
 
-$('[data-toggle="popover"]').popover();
-
-$('.popover-dismiss').popover({ trigger: 'focus' });
+/* activate bootstrap tooltips */
+$('[data-toggle="tooltip"]').tooltip();
 
 /* activate bootstrap validation */
 (function() {
@@ -24,7 +25,6 @@ $('.popover-dismiss').popover({ trigger: 'focus' });
     });
   }, false);
 })();
-
 // activate with $('form').preventDoubleSubmission();
 //jQuery plugin to prevent double submission of forms
 jQuery.fn.preventDoubleSubmission = function() {

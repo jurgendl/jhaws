@@ -9,14 +9,6 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 public class OwlCarousel {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(OwlCarousel.class, "owl.carousel.js");
 
-    static {
-        try {
-            // OwlCarousel.JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
-        } catch (Exception ex) {
-            //
-        }
-    }
-
     public static final CssResourceReference CSS1 = new CssResourceReference(OwlCarousel.class, "owl.carousel.css");
 
     public static final CssResourceReference CSS2 = new CssResourceReference(OwlCarousel.class, "owl.theme.css");

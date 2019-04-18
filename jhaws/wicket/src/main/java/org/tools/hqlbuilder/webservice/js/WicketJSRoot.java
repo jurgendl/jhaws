@@ -13,13 +13,7 @@ import ro.isdc.wro.extensions.processor.js.UglifyJsProcessor;
 
 public class WicketJSRoot {
     public static void main(String[] args) {
-        // minify(JQueryDatePicker.class, "", new String[] { "JQDatePicker" });
-        // minify(Colors.class, "", new String[] { "colors" });
-        // minify(Spectrum.class, "", new String[] { "spectrum" });
-        // minify(PrimeUI.class, "", new String[] { "primeui-factory" });
-        // minify(JQueryUI.class, "", new String[] { "jquery-ui-factory" });
         WicketJSRoot.minify(WicketJSRoot.class, "", new String[] { "general.js" });
-        // WicketJSRoot.minify(PrimeUI.class, "", new String[] { "primeui-1.1-custom" });
     }
 
     protected static void minify(Class<?> root, String path, String[] sources) {
