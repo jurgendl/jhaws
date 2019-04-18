@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload;
 
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -39,7 +38,7 @@ public class JQueryFileUpload {
 
     static {
         try {
-            JS_JQUI.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+            // JS_JQUI.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
         } catch (Exception e) {
             //
         }

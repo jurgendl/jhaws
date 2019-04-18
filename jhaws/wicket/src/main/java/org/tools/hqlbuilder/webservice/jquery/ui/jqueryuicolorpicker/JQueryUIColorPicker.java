@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.jqueryuicolorpicker;
 
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -17,7 +16,7 @@ public class JQueryUIColorPicker {
 
     static {
         try {
-            JQUERY_COLORPICKER_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+            // JQUERY_COLORPICKER_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
         } catch (Exception ex) {
             //
         }

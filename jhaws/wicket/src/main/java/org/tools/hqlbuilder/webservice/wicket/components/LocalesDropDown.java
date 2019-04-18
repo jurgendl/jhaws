@@ -18,7 +18,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
-import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 public class LocalesDropDown extends DropDownChoice<Locale> {
@@ -119,7 +118,7 @@ public class LocalesDropDown extends DropDownChoice<Locale> {
         if (!isEnabledInHierarchy()) {
             return;
         }
-        response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_JS));
+        // response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_JS));
         response.render(CssHeaderItem.forReference(FLAGS_CSS));
         {
             StringBuilder script = new StringBuilder("var options_").append(getMarkupId()).append(" = new Array(\n");

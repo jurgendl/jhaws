@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.multiselect;
 
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -18,7 +17,7 @@ public class JQueryUIMultiSelect {
 
     static {
         try {
-            JQueryUIMultiSelect_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+            // JQueryUIMultiSelect_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
         } catch (Exception ex) {
             //
         }

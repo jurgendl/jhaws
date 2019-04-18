@@ -3,13 +3,10 @@ package org.tools.hqlbuilder.webservice.wicket.components;
 import java.io.Serializable;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 
 /**
  * <span wicket:id="growl"></span>
@@ -30,7 +27,7 @@ public class Growl extends Panel {
         setOutputMarkupId(false);
         Label growler = new Label(GROWL_MESSAGE, Model.of(""));
         growler.setMarkupId(GROWL_MESSAGE);
-        growler.add(AttributeAppender.append("class", PrimeUI.puigrowl));
+        // growler.add(AttributeAppender.append("class", PrimeUI.puigrowl));
         add(growler);
     }
 
@@ -40,7 +37,7 @@ public class Growl extends Panel {
         if (!isEnabledInHierarchy()) {
             return;
         }
-        response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
+        // response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_FACTORY_JS));
     }
 
     public String message(AjaxRequestTarget target, GrowlMessage... message) {

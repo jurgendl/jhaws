@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.tagit;
 
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -12,7 +11,7 @@ public class TagIt {
 
     static {
         try {
-            TAG_IT_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+            // TAG_IT_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
         } catch (Exception ex) {
             //
         }

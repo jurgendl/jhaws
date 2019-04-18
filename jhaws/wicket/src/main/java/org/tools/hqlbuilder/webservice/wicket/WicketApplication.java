@@ -53,7 +53,6 @@ import org.tools.hqlbuilder.common.icons.WicketIconsRoot;
 import org.tools.hqlbuilder.webservice.WicketRoot;
 import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
 import org.tools.hqlbuilder.webservice.css.WicketCSSRoot;
-import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.js.GoogleLogin;
 import org.tools.hqlbuilder.webservice.js.WicketJSRoot;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
@@ -359,7 +358,6 @@ public class WicketApplication extends WebApplication {
                 WicketApplication.logger.error("{}", ex);
             }
         }
-        PrimeUI.mountImages(this);
     }
 
     protected void mountPages() {

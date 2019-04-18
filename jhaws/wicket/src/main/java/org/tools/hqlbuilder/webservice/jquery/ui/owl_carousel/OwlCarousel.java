@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.owl_carousel;
 
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -12,7 +11,7 @@ public class OwlCarousel {
 
     static {
         try {
-            OwlCarousel.JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+            // OwlCarousel.JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
         } catch (Exception ex) {
             //
         }

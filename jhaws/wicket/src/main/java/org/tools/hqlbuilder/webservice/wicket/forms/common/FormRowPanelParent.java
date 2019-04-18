@@ -15,7 +15,6 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -340,11 +339,11 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
     }
 
     protected void setupRequiredBehavior() {
-        C c = this.getComponent();
-        if (this.formSettings.isAjax() && this.formSettings.isLiveValidation() && !(c instanceof PasswordTextField)
-                && !(c instanceof com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker)) {
-            // c.add(setupDynamicRequiredBehavior());
-        }
+        // C c = this.getComponent();
+        // if (this.formSettings.isAjax() && this.formSettings.isLiveValidation() && !(c instanceof PasswordTextField)
+        // && !(c instanceof com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker)) {
+        // // c.add(setupDynamicRequiredBehavior());
+        // }
     }
 
     public FormRowPanelParent<P, T, C, ElementSettings> setValueModel(IModel<T> valueModel) {

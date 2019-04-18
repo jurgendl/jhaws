@@ -1,7 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -22,8 +21,6 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.AbstractFormElementSe
 import org.tools.hqlbuilder.webservice.wicket.forms.common.DatePickerSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormRowPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import com.googlecode.wicket.jquery.core.utils.LocaleUtils;
 
 @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel {
@@ -115,7 +112,7 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
     }
 
     public static String dateformat(Locale locale) {
-        return LocaleUtils.getLocaleDatePattern(locale, DateFormat.SHORT);
+        return null;// FIXME
     }
 
     @Override

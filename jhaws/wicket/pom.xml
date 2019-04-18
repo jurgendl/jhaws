@@ -188,31 +188,31 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>com.googlecode.wicket-jquery-ui</groupId>
             <artifactId>wicket-jquery-ui</artifactId>
             <version>${version.wicket.jquery.ui}</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>com.googlecode.wicket-jquery-ui</groupId>
             <artifactId>wicket-jquery-ui-core</artifactId>
             <version>${version.wicket.jquery.ui}</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>com.googlecode.wicket-jquery-ui</groupId>
             <artifactId>wicket-jquery-ui-calendar</artifactId>
             <version>${version.wicket.jquery.ui}</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>com.googlecode.wicket-jquery-ui</groupId>
             <artifactId>wicket-jquery-ui-plugins</artifactId>
             <version>${version.wicket.jquery.ui}</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>com.googlecode.wicket-jquery-ui</groupId>
             <artifactId>wicket-kendo-ui</artifactId>
             <version>${version.wicket.jquery.ui}</version>
-        </dependency>
+        </dependency> -->
         <!-- <dependency> <groupId>org.wicketstuff</groupId> <artifactId>wicketstuff-serializer-kryo2</artifactId> <version>${version.wicket.core}</version> 
             </dependency> -->
         <dependency>

@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.tristate;
 
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 /**
@@ -12,7 +11,7 @@ public class TriState {
 
     static {
         try {
-            TRISTATE_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
+            // TRISTATE_JS.addJavaScriptResourceReferenceDependency(JQueryUI.getJQueryUIReference());
         } catch (Exception ex) {
             //
         }

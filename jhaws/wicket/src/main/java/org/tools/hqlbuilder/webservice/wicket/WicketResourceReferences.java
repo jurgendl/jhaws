@@ -7,28 +7,16 @@ import java.util.regex.Pattern;
 import org.apache.wicket.ajax.WicketAjaxDebugJQueryResourceReference;
 import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
-import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.resource.JQueryResourceReference;
 
-import com.googlecode.wicket.jquery.core.resource.JQueryGlobalizeResourceReference;
-import com.googlecode.wicket.jquery.core.settings.JQueryLibrarySettings;
-import com.googlecode.wicket.jquery.ui.plugins.emoticons.resource.EmoticonsJavaScriptResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.emoticons.resource.EmoticonsStyleSheetResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.fixedheadertable.resource.FixedHeaderTableJavaScriptResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.fixedheadertable.resource.FixedHeaderTableStyleSheetResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.wysiwyg.resource.BootstrapDropDownJavaScriptResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.wysiwyg.resource.BootstrapWysiwygJavaScriptResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.wysiwyg.resource.EditorStyleSheetResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.wysiwyg.resource.JQueryHotKeysJavaScriptResourceReference;
-import com.googlecode.wicket.jquery.ui.plugins.wysiwyg.resource.PrettifyJavaScriptResourceReference;
-import com.googlecode.wicket.jquery.ui.resource.JQueryUIResourceReference;
-
 /**
  * combination of resource references with public getters and setters
  */
-public class WicketResourceReferences extends JQueryLibrarySettings {
+public class WicketResourceReferences extends
+        // com.googlecode.wicket.jquery.core.settings.JQueryLibrarySettings
+        org.apache.wicket.settings.def.JavaScriptLibrarySettings {
     /** if possible load resources from CDN when they match any of the patterns in this list */
     protected final List<Pattern> acceptedCDNPatterns = new ArrayList<>();
 
@@ -110,14 +98,14 @@ public class WicketResourceReferences extends JQueryLibrarySettings {
 
     public WicketResourceReferences(boolean init) {
         if (init) {
-            setJQueryUIReference(JQueryUIResourceReference.get());// redirect to default
+            setJQueryUIReference(null /* XYZ JQueryUIResourceReference.get() */);// redirect to default
             setJQueryReference(JQueryResourceReference.get());// redirect to default
             // setJQueryReference(org.tools.hqlbuilder.webservice.jquery2.JQuery2.JS);// v2
             // setJQueryReference(org.tools.hqlbuilder.webservice.jquery3.JQuery3.JS);// v3
             setWicketEventReference(WicketEventJQueryResourceReference.get());// redirect to default
             setWicketAjaxReference(WicketAjaxJQueryResourceReference.get());// redirect to default
             setWicketAjaxDebugReference(WicketAjaxDebugJQueryResourceReference.get());// redirect to default
-            setJQueryGlobalizeReference(JQueryGlobalizeResourceReference.get()); // this one is not set by default
+            //// setJQueryGlobalizeReference(JQueryGlobalizeResourceReference.get()); // this one is not set by default
             // setKendoUICommonStyleSheetReference(KendoUI.KENDO_COMMON_CSS); //
             // this one is not set by default
             // setKendoUIThemeStyleSheetReference(KendoUI.KENDO_DEFAULT_CSS); //
@@ -138,14 +126,16 @@ public class WicketResourceReferences extends JQueryLibrarySettings {
             // redirect to default
             // setConsoleJavaScriptReference(ConsoleJavaScriptResourceReference.get());//
             // redirect to default
-            setFixedHeaderTableStyleSheetReference(FixedHeaderTableStyleSheetResourceReference.get());// redirect to default
-            setFixedHeaderTableJavaScriptReference(FixedHeaderTableJavaScriptResourceReference.get());// redirect to default
-            setBootstrapDropDownJavaScriptReference(BootstrapDropDownJavaScriptResourceReference.get());// redirect to default
-            setBootstrapWysiwygJavaScriptReference(BootstrapWysiwygJavaScriptResourceReference.get());// redirect to default
-            setJQueryHotKeysJavaScriptReference(JQueryHotKeysJavaScriptResourceReference.get());// redirect to default
-            setPrettifyJavaScriptReference(PrettifyJavaScriptResourceReference.get());// redirect to default
-            setEmoticonsStyleSheetReference(EmoticonsStyleSheetResourceReference.get());// redirect to default
-            setEmoticonsJavaScriptReference(EmoticonsJavaScriptResourceReference.get());// redirect to default
+
+            //
+            // setFixedHeaderTableStyleSheetReference(FixedHeaderTableStyleSheetResourceReference.get());// redirect to default
+            // setFixedHeaderTableJavaScriptReference(FixedHeaderTableJavaScriptResourceReference.get());// redirect to default
+            // setBootstrapDropDownJavaScriptReference(BootstrapDropDownJavaScriptResourceReference.get());// redirect to default
+            // setBootstrapWysiwygJavaScriptReference(BootstrapWysiwygJavaScriptResourceReference.get());// redirect to default
+            // setJQueryHotKeysJavaScriptReference(JQueryHotKeysJavaScriptResourceReference.get());// redirect to default
+            // setPrettifyJavaScriptReference(PrettifyJavaScriptResourceReference.get());// redirect to default
+            // setEmoticonsStyleSheetReference(EmoticonsStyleSheetResourceReference.get());// redirect to default
+            // setEmoticonsJavaScriptReference(EmoticonsJavaScriptResourceReference.get());// redirect to default
         }
     }
 
@@ -264,14 +254,10 @@ public class WicketResourceReferences extends JQueryLibrarySettings {
         return this.jQueryUIReference;
     }
 
-    /**
-     * @see com.googlecode.wicket.jquery.core.settings.IJQueryLibrarySettings#getJQueryGlobalizeReference()
-     */
-
-    @Override
-    public ResourceReference getJQueryGlobalizeReference() {
-        return this.jQueryGlobalizeReference;
-    }
+    // @Override
+    // public ResourceReference getJQueryGlobalizeReference() {
+    // return this.jQueryGlobalizeReference;
+    // }
 
     /**
      * @see org.apache.wicket.settings.IJavaScriptLibrarySettings#setJQueryReference(org.apache.wicket.request.resource.ResourceReference)
@@ -312,14 +298,10 @@ public class WicketResourceReferences extends JQueryLibrarySettings {
         this.jQueryUIReference = jQueryUIReference;
     }
 
-    /**
-     * @see com.googlecode.wicket.jquery.core.settings.IJQueryLibrarySettings#setJQueryGlobalizeReference(org.apache.wicket.request.resource.ResourceReference)
-     */
-
-    @Override
-    public void setJQueryGlobalizeReference(ResourceReference jQueryGlobalizeReference) {
-        this.jQueryGlobalizeReference = jQueryGlobalizeReference;
-    }
+    // @Override
+    // public void setJQueryGlobalizeReference(ResourceReference jQueryGlobalizeReference) {
+    // this.jQueryGlobalizeReference = jQueryGlobalizeReference;
+    // }
 
     /**
      * @see com.googlecode.wicket.jquery.ui.plugins.sfmenu.settings.ISuperfishLibrarySettings#getSuperfishStyleSheetReference()
@@ -409,13 +391,9 @@ public class WicketResourceReferences extends JQueryLibrarySettings {
     // return com.googlecode.wicket.jquery.ui.plugins.wysiwyg.resource.BootstrapResponsiveStyleSheetResourceReference.get();
     // }
 
-    /**
-     * @see com.googlecode.wicket.jquery.ui.plugins.wysiwyg.settings.IWysiwygLibrarySettings#getEditorStyleSheetReference()
-     */
-
-    public CssResourceReference getEditorStyleSheetReference() {
-        return EditorStyleSheetResourceReference.get();
-    }
+    // public CssResourceReference getEditorStyleSheetReference() {
+    // return EditorStyleSheetResourceReference.get();
+    // }
 
     /**
      * @see com.googlecode.wicket.jquery.ui.plugins.wysiwyg.settings.IWysiwygLibrarySettings#getBootstrapDropDownJavaScriptReference()
