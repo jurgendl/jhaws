@@ -3,6 +3,7 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.markup.ComponentTag;
@@ -12,8 +13,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.DropDownSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/dropdown.html
@@ -42,7 +41,7 @@ public class DropDownPanel<T extends Serializable> extends SelectPanel<T, Select
                 onFormComponentTag(tag);
             }
         };
-        select.add(new CssClassNameAppender(PrimeUI.puidropdown));
+        select.add(AttributeAppender.append("class", PrimeUI.puidropdown));
         return select;
     }
 

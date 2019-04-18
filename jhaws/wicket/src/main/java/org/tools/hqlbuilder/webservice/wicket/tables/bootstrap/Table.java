@@ -20,6 +20,7 @@ import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigation
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationIncrementLink;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationLink;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxFallbackOrderByLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -56,6 +57,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.string.Strings;
+import org.jhaws.common.web.wicket.AttributeRemover;
 import org.tools.hqlbuilder.webservice.jquery.ui.tablesorter.TableSorter;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
@@ -66,9 +68,6 @@ import org.tools.hqlbuilder.webservice.wicket.components.LinkPanel;
 import org.tools.hqlbuilder.webservice.wicket.components.LinkPanel.LinkType;
 import org.tools.hqlbuilder.webservice.wicket.tables.common.DataProvider;
 import org.tools.hqlbuilder.webservice.wicket.tables.common.Side;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 /**
  * @see https://www.packtpub.com/article/apache-wicket-displaying-data-using-datatable
@@ -407,13 +406,17 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         }
 
         protected void modifyButtonLinkActiveBehavior(final AbstractLink link) {
-            link.add(new CssClassNameAppender(Table.this.CSS_ACTIVE_STYLE) {
+            link.add(new AttributeAppender("class", Table.this.CSS_ACTIVE_STYLE) {
+                private static final long serialVersionUID = 1L;
+
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && !link.isEnabled();
                 }
-            });
-            link.add(new CssClassNameRemover(Table.this.CSS_ACTIVE_STYLE) {
+            }.setSeparator(" "));
+            link.add(new AttributeRemover("class", Table.this.CSS_ACTIVE_STYLE) {
+                private static final long serialVersionUID = 1L;
+
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && link.isEnabled();
@@ -422,13 +425,17 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         }
 
         protected void modifyButtonLinkDisableBehavior(final AbstractLink link) {
-            link.add(new CssClassNameAppender(Table.this.CSS_DISABLED_STYLE) {
+            link.add(new AttributeAppender("class", Table.this.CSS_DISABLED_STYLE) {
+                private static final long serialVersionUID = 1L;
+
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && !link.isEnabled();
                 }
-            });
-            link.add(new CssClassNameRemover(Table.this.CSS_DISABLED_STYLE) {
+            }.setSeparator(" "));
+            link.add(new AttributeRemover("class", Table.this.CSS_DISABLED_STYLE) {
+                private static final long serialVersionUID = 1L;
+
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && link.isEnabled();

@@ -1,16 +1,15 @@
 package org.tools.hqlbuilder.webservice.wicket;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.jhaws.common.web.wicket.AttributeRemover;
 import org.tools.hqlbuilder.webservice.jquery.ui.flowplayer.FlowPlayer;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings("serial")
 public class FlowPlayerPanel extends Panel {
@@ -33,7 +32,7 @@ public class FlowPlayerPanel extends Panel {
         WebMarkupContainer flowplayer = new WebMarkupContainer("flowplayer");
 
         if (_config.isSplash()) {
-            flowplayer.add(new CssClassNameAppender("is-splash"));
+            flowplayer.add(AttributeAppender.append("class", "is-splash"));
             if (_config.getSplashFile().exists()) {
                 if (_config.getW() != 0 && _config.getH() != 0) {
                     flowplayer.add(new AttributeModifier("style",
@@ -56,7 +55,7 @@ public class FlowPlayerPanel extends Panel {
                 }
             }
         } else {
-            flowplayer.add(new CssClassNameRemover("is-splash"));
+            flowplayer.add(AttributeRemover.remove("class", "is-splash"));
             if (_config.getW() != null && _config.getH() != null && _config.getW() != 0 && _config.getH() != 0) {
                 flowplayer.add(new AttributeModifier("style", ";background-size:cover;background-position-x:center"
                 // + ";max-width:" + _config.getW() + "px"

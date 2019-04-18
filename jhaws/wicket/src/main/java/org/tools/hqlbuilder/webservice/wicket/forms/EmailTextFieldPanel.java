@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.validation.validator.RfcCompliantEmailAddressValidator;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -9,8 +10,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/inputtext.html
@@ -33,7 +32,7 @@ public class EmailTextFieldPanel extends DefaultFormRowPanel<String, EmailTextFi
                 onFormComponentTag(tag);
             }
         };
-        emailTextField.add(new CssClassNameAppender(PrimeUI.puiinputtext));
+        emailTextField.add(AttributeAppender.append("class", PrimeUI.puiinputtext));
         return emailTextField;
     }
 

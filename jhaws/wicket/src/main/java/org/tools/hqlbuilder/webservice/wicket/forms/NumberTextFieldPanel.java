@@ -2,6 +2,7 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 
 import static org.tools.hqlbuilder.webservice.wicket.WebHelper.tag;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -10,8 +11,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.NumberFieldSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/spinner.html
@@ -38,7 +37,7 @@ public class NumberTextFieldPanel<N extends Number & Comparable<N>> extends Defa
                 tag(tag, "step", settings.getStep());
             }
         };
-        textField.add(new CssClassNameAppender(PrimeUI.puispinner));
+        textField.add(AttributeAppender.append("class", PrimeUI.puispinner));
         return textField;
     }
 

@@ -8,11 +8,13 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.jhaws.common.web.wicket.AttributeRemover;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
 import org.tools.hqlbuilder.webservice.wicket.converter.ModelConverter;
@@ -22,9 +24,6 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormRowPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import com.googlecode.wicket.jquery.core.utils.LocaleUtils;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel {
@@ -87,12 +86,12 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
         if (DatePickerSettings.class.cast(getComponentSettings()).getType() != null) {
             switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
                 case datetime:
-                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate")); // remove default
-                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominusdatetime")); // add correct one
+                    tempusdominuspicker.add(AttributeRemover.remove("class", "tempusdominusdate")); // remove default
+                    tempusdominuspicker.add(AttributeAppender.append("class", "tempusdominusdatetime")); // add correct one
                     break;
                 case time:
-                    tempusdominuspicker.add(new CssClassNameRemover("tempusdominusdate")); // remove default
-                    tempusdominuspicker.add(new CssClassNameAppender("tempusdominustime")); // add correct one
+                    tempusdominuspicker.add(AttributeRemover.remove("class", "tempusdominusdate")); // remove default
+                    tempusdominuspicker.add(AttributeAppender.append("class", "tempusdominustime")); // add correct one
                     break;
                 default:
                 case date:

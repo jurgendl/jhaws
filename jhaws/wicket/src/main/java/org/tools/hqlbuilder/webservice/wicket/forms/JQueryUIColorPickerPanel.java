@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -10,8 +11,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.jqueryuicolorpicker.JQueryUIColorPicker;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://vanderlee.github.io/colorpicker/
@@ -48,7 +47,7 @@ public class JQueryUIColorPickerPanel extends DefaultFormRowPanel<String, TextFi
                 onFormComponentTag(tag);
             }
         };
-        textField.add(new CssClassNameAppender(PrimeUI.puiinputtext + " " + JQueryUIColorPicker.jquicolorpicker));
+        textField.add(AttributeAppender.append("class", PrimeUI.puiinputtext + " " + JQueryUIColorPicker.jquicolorpicker));
         return textField;
     }
 

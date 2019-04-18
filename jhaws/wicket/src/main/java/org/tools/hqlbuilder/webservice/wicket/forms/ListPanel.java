@@ -5,6 +5,7 @@ import static org.tools.hqlbuilder.webservice.wicket.WebHelper.tag;
 import java.io.Serializable;
 import java.util.List;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.markup.ComponentTag;
@@ -14,8 +15,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/listbox.html
@@ -49,7 +48,7 @@ public class ListPanel<T extends Serializable> extends SelectPanel<T, Select<T>,
                 tag(tag, "style", "height: auto");
             }
         };
-        select.add(new CssClassNameAppender(PrimeUI.puilistbox));
+        select.add(AttributeAppender.append("class", PrimeUI.puilistbox));
         return select;
     }
 

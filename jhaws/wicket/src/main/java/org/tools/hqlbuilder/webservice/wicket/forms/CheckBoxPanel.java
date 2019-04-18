@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -8,8 +9,6 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://jqueryui.com/button/
@@ -28,9 +27,9 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
         CheckBox checkBox = new CheckBox(VALUE, model);
         if (getComponentSettings().isNice()) {
             if (formSettings.isPreferPrime()) {
-                checkBox.add(new CssClassNameAppender(PrimeUI.puicheckbox));
+                checkBox.add(AttributeAppender.append("class", PrimeUI.puicheckbox));
             } else {
-                checkBox.add(new CssClassNameAppender(JQueryUI.jquibutton));
+                checkBox.add(AttributeAppender.append("class", JQueryUI.jquibutton));
             }
         }
         return checkBox;
@@ -71,7 +70,7 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
                 super.onComponentTag(tag);
                 tag.getAttributes().put(FOR, getComponent().getMarkupId());
             }
-        }.add(new CssClassNameAppender(PrimeUI.puibutton)).setVisible(getComponentSettings().isLabelBehind())));
+        }.add(AttributeAppender.append("class", PrimeUI.puibutton)).setVisible(getComponentSettings().isLabelBehind())));
         this.add(getComponentContainer(settings).add(getRequiredMarker().setVisible(false)));
         this.add(getComponentContainer(settings).add(getFeedback()));
         return this;

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -48,9 +49,6 @@ import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwe
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 import org.tools.hqlbuilder.webservice.wicket.components.ExternalLink;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameModifier;
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
@@ -271,7 +269,7 @@ public abstract class DefaultWebPage extends WebPage {
         navbar.add(new ListView<NavBarLink>("navbaritems", navs) {
             @Override
             protected void populateItem(ListItem<NavBarLink> item) {
-                // item.add(new CssClassNameAppender("active"));
+                // item.add(AttributeAppender.append("class","active"));
                 NavBarLink main = item.getModelObject();
 
                 WebMarkupContainer link;
@@ -283,14 +281,14 @@ public abstract class DefaultWebPage extends WebPage {
 
                 WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbaritemicon");
                 if (StringUtils.isNotBlank(main.getIcon())) {
-                    navbaritemicon.add(new CssClassNameModifier(main.getIcon()));
+                    navbaritemicon.add(AttributeAppender.replace("class", main.getIcon()));
                 }
                 if (StringUtils.isNotBlank(main.getStyle())) {
                     navbaritemicon.add(new AttributeModifier("style", main.getStyle()));
                 }
                 link.add(navbaritemicon);
                 link.add(new Label("navbaritemlabel", main.getLabel()));
-                // link.add(new CssClassNameAppender("disabled"));
+                // link.add(AttributeAppender.append("class","disabled"));
                 item.add(link);
 
                 WebMarkupContainer navbardropdown = new WebMarkupContainer("navbardropdown");
@@ -298,8 +296,8 @@ public abstract class DefaultWebPage extends WebPage {
                 if (main.getChildLinks().isEmpty()) {
                     navbardropdown.setVisible(false);
                 } else {
-                    item.add(new CssClassNameAppender("dropdown"));
-                    link.add(new CssClassNameAppender("dropdown-toggle"));
+                    item.add(AttributeAppender.append("class", "dropdown"));
+                    link.add(AttributeAppender.append("class", "dropdown-toggle"));
                     link.add(new AttributeModifier("data-toggle", "dropdown"));
                     link.add(new AttributeModifier("aria-haspopup", "true"));
                     link.add(new AttributeModifier("aria-expanded", "false"));
@@ -308,20 +306,20 @@ public abstract class DefaultWebPage extends WebPage {
                 navbardropdown.add(new ListView<NavBarLink>("navbardropdownitems", main.getChildLinks()) {
                     @Override
                     protected void populateItem(ListItem<NavBarLink> subitem) {
-                        // subitem.add(new CssClassNameAppender("active"));
+                        // subitem.add(AttributeAppender.append("class","active"));
                         NavBarLink sub = subitem.getModelObject();
                         BookmarkablePageLink<String> sublink = new BookmarkablePageLink<String>("navbardropdownitemlink", sub.getInternalPage(),
                                 sub.getInternalPageParameters());
                         WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbardropdownitemicon");
                         if (StringUtils.isNotBlank(sub.getIcon())) {
-                            navbaritemicon.add(new CssClassNameModifier(sub.getIcon()));
+                            navbaritemicon.add(AttributeAppender.replace("class", sub.getIcon()));
                         }
                         if (StringUtils.isNotBlank(sub.getStyle())) {
                             navbaritemicon.add(new AttributeModifier("style", sub.getStyle()));
                         }
                         sublink.add(navbaritemicon);
                         sublink.add(new Label("navbardropdownitemlabel", sub.getLabel()));
-                        // sublink.add(new CssClassNameAppender("disabled"));
+                        // sublink.add(AttributeAppender.append("class","disabled"));
                         subitem.add(sublink);
                     }
                 });

@@ -2,6 +2,7 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 
 import static org.tools.hqlbuilder.webservice.wicket.WebHelper.tag;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -11,8 +12,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://demosthenes.info/blog/757/Playing-With-The-HTML5-range-Slider-Input
@@ -47,7 +46,7 @@ public class RangeFieldPanel<N extends Number & Comparable<N>> extends DefaultFo
                 tag.getAttributes().put(FOR, getPropertyName());
             }
         };
-        add(getComponentContainer(settings).add(output.add(new CssClassNameAppender(PrimeUI.puiinputtext))));
+        add(getComponentContainer(settings).add(output.add(AttributeAppender.append("class",PrimeUI.puiinputtext))));
         super.addComponents(settings);
         return this;
     }

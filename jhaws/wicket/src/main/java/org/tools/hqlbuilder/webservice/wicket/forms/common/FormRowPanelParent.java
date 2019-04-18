@@ -9,6 +9,7 @@ import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.bean.validation.PropertyValidator;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -18,14 +19,12 @@ import org.apache.wicket.markup.html.form.PasswordTextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.jhaws.common.web.wicket.AttributeRemover;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tools.hqlbuilder.webservice.wicket.HtmlEvent.HtmlFormEvent;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings("serial")
 public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, ElementSettings extends AbstractFormElementSettings<ElementSettings>>
@@ -109,7 +108,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         if (componentContainer == null) {
             componentContainer = new WebMarkupContainer("componentContainer");
             String componentClass = getComponentClass(settings);
-            if (componentClass != null) componentContainer.add(new CssClassNameAppender(componentClass));
+            if (componentClass != null) componentContainer.add(AttributeAppender.append("class", componentClass));
         }
         return componentContainer;
     }
@@ -168,7 +167,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
             };
             label.setEscapeModelStrings(false);
             String labelClass = getLabelClass(settings);
-            if (labelClass != null) label.add(new CssClassNameAppender(labelClass));
+            if (labelClass != null) label.add(AttributeAppender.append("class", labelClass));
         }
         return this.label;
     }
@@ -275,16 +274,16 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
             @Override
             protected void onError(AjaxRequestTarget ajaxRequestTarget, RuntimeException e) {
                 C c = FormRowPanelParent.this.getComponent();
-                c.add(new CssClassNameRemover(FormRowPanelParent.this.formSettings.getValidClass()));
-                c.add(new CssClassNameAppender(FormRowPanelParent.this.formSettings.getInvalidClass()));
+                c.add(AttributeRemover.remove("class", FormRowPanelParent.this.formSettings.getValidClass()));
+                c.add(AttributeAppender.append("class", FormRowPanelParent.this.formSettings.getInvalidClass()));
                 ajaxRequestTarget.add(c, FormRowPanelParent.this.getFeedback());
             }
 
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 C c = FormRowPanelParent.this.getComponent();
-                c.add(new CssClassNameRemover(FormRowPanelParent.this.formSettings.getInvalidClass()));
-                c.add(new CssClassNameAppender(FormRowPanelParent.this.formSettings.getValidClass()));
+                c.add(AttributeRemover.remove("class", FormRowPanelParent.this.formSettings.getInvalidClass()));
+                c.add(AttributeAppender.append("class", FormRowPanelParent.this.formSettings.getValidClass()));
                 ajaxRequestTarget.add(c, FormRowPanelParent.this.getFeedback());
             }
         };
@@ -321,9 +320,9 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
             component.setRequired(this.componentSettings.isRequired());
             if (StringUtils.isNotBlank(this.formSettings.getRequiredClass())) {
                 if (this.componentSettings.isRequired()) {
-                    component.add(new CssClassNameAppender(this.formSettings.getRequiredClass()));
+                    component.add(AttributeAppender.append("class", this.formSettings.getRequiredClass()));
                 } else {
-                    component.add(new CssClassNameRemover(this.formSettings.getRequiredClass()));
+                    component.add(AttributeRemover.remove("class", this.formSettings.getRequiredClass()));
                 }
             }
         } catch (WicketRuntimeException ex) {

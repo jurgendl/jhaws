@@ -1,14 +1,13 @@
 package org.tools.hqlbuilder.webservice.wicket.components;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * <span wicket:id="notify"></span>
@@ -33,14 +32,14 @@ public class Notify extends Panel {
             Label notifytop = new Label(NOTIFY_TOP, Model.of(""));
             notifytop.setMarkupId(NOTIFY_TOP);
             notifytop.setOutputMarkupId(true);
-            notifytop.add(new CssClassNameAppender(PrimeUI.puinotifytop));
+            notifytop.add(AttributeAppender.append("class", PrimeUI.puinotifytop));
             add(notifytop);
         }
         {
             Label notifybottom = new Label(NOTIFY_BOTTOM, Model.of(""));
             notifybottom.setMarkupId(NOTIFY_BOTTOM);
             notifybottom.setOutputMarkupId(true);
-            notifybottom.add(new CssClassNameAppender(PrimeUI.puinotifybottom));
+            notifybottom.add(AttributeAppender.append("class", PrimeUI.puinotifybottom));
             add(notifybottom);
         }
     }

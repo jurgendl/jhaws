@@ -13,8 +13,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
 
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-
 public class SocialPanel extends Panel {
     private static final long serialVersionUID = -298324858422498953L;
 
@@ -68,18 +66,18 @@ public class SocialPanel extends Panel {
 
         switch (settings.getForm()) {
             case bar:
-                socialbutton.add(new CssClassNameAppender("socialbar"));
+                socialbutton.add(AttributeAppender.append("class", "socialbar"));
                 break;
             case pin:
-                socialbutton.add(new CssClassNameAppender("socialpin"));
+                socialbutton.add(AttributeAppender.append("class", "socialpin"));
                 break;
             default:
             case button:
-                socialbutton.add(new CssClassNameAppender("socialbtn"));
+                socialbutton.add(AttributeAppender.append("class", "socialbtn"));
                 break;
         }
 
-        socialbutton.add(new CssClassNameAppender(socialId + "-color"));
+        socialbutton.add(AttributeAppender.append("class", socialId + "-color"));
 
         WebMarkupContainer icon = new WebMarkupContainer("icon");
         socialbutton.add(icon);
@@ -88,18 +86,18 @@ public class SocialPanel extends Panel {
         socialbutton.add(label);
         switch (settings.getForm()) {
             case bar:
-                icon.add(new CssClassNameAppender("zocial-" + socialId));
+                icon.add(AttributeAppender.append("class", "zocial-" + socialId));
                 icon.add(new AttributeAppender("data-text", socialId));
                 break;
             case pin:
-                socialbutton.add(new CssClassNameAppender("zocial-" + socialId));
+                socialbutton.add(AttributeAppender.append("class", "zocial-" + socialId));
                 socialbutton.add(new AttributeAppender("data-text", socialId));
                 socialbutton.add(icon.setVisible(false));
                 socialbutton.add(label.setVisible(false));
                 break;
             default:
             case button:
-                socialbutton.add(new CssClassNameAppender("zocial-" + socialId));
+                socialbutton.add(AttributeAppender.append("class", "zocial-" + socialId));
                 socialbutton.add(new AttributeAppender("data-text", socialId));
                 socialbutton.add(icon.setVisible(false));
                 socialbutton.add(label.setVisible(false));

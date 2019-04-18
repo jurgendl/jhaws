@@ -32,7 +32,7 @@
         <version.wicket.core>6.29.0</version.wicket.core><!-- keep up to date 6.x.x -->
         <version.wicket.stuff>6.28.0</version.wicket.stuff><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
         <version.wicket.jquery.ui>6.29.0</version.wicket.jquery.ui><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
-        <version.wicket.bootstrap>0.9.21</version.wicket.bootstrap><!-- https://github.com/l0rdn1kk0n/wicket-bootstrap -->
+        <!-- <version.wicket.bootstrap>0.9.21</version.wicket.bootstrap> --><!-- https://github.com/l0rdn1kk0n/wicket-bootstrap -->
         <version.commons-collections>3.2.2</version.commons-collections><!-- stale -->
         <version.commons-collections4>4.2</version.commons-collections4>
         <version.commons-lang>2.6</version.commons-lang><!-- stale -->
@@ -235,16 +235,16 @@
             <artifactId>wicketstuff-tinymce</artifactId>
             <version>${version.wicket.stuff}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-googlecharts</artifactId>
             <version>${version.wicket.stuff}</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+        <!-- <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-inmethod-grid</artifactId>
             <version>${version.wicket.stuff}</version>
-        </dependency>
+        </dependency> -->
         <!-- wicket-bootstrap-extensions -->
         <dependency>
           <groupId>com.google.protobuf</groupId>
@@ -257,7 +257,7 @@
           <artifactId>closure-compiler</artifactId>
           <version>v20181008</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-extensions</artifactId>
             <version>${version.wicket.bootstrap}</version>
@@ -267,7 +267,7 @@
                     <artifactId>javassist</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

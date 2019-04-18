@@ -3,6 +3,7 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 import java.util.Locale;
 
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -14,8 +15,6 @@ import org.apache.wicket.util.convert.converter.BooleanConverter;
 import org.tools.hqlbuilder.webservice.jquery.ui.tristate.TriState;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TriStateCheckBoxSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://jqueryui.com/button/
@@ -144,7 +143,7 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, HiddenFi
             }
         };
         checkBox.add(new AttributeModifier("for", getComponent().getMarkupId()));
-        checkBox.add(new CssClassNameAppender("tristate"));
+        checkBox.add(AttributeAppender.append("class", "tristate"));
         return checkBox;
     }
 

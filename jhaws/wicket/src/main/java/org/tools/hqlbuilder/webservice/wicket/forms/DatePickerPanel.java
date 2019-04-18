@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -25,8 +26,6 @@ import com.googlecode.wicket.jquery.core.Options;
 import com.googlecode.wicket.jquery.core.utils.LocaleUtils;
 import com.googlecode.wicket.jquery.ui.form.datepicker.AjaxDatePicker;
 import com.googlecode.wicket.jquery.ui.form.datepicker.DatePicker;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://api.jqueryui.com/datepicker/
@@ -87,7 +86,7 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
                 onFormComponentTag(tag);
             }
         };
-        ajaxDatePicker.add(new CssClassNameAppender(PrimeUI.puiinputtext));
+        ajaxDatePicker.add(AttributeAppender.append("class",PrimeUI.puiinputtext));
         return ajaxDatePicker;
     }
 

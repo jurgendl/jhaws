@@ -3,6 +3,7 @@ package org.tools.hqlbuilder.webservice.wicket.components;
 import java.util.List;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -14,8 +15,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://jqueryui.com/accordion/
@@ -42,7 +41,7 @@ public class Accordion extends Panel {
         this.preferPrime = preferPrime;
 
         WebMarkupContainer accordionparent = new WebMarkupContainer(ACCORDION_ID);
-        accordionparent.add(new CssClassNameAppender(PrimeUI.puiaccordion));
+        accordionparent.add(AttributeAppender.append("class", PrimeUI.puiaccordion));
         accordionparent.setOutputMarkupId(true);
         add(accordionparent);
 
@@ -76,9 +75,9 @@ public class Accordion extends Panel {
             }
         };
         if (preferPrime) {
-            accordion.add(new CssClassNameAppender(PrimeUI.puiaccordion));
+            accordion.add(AttributeAppender.append("class", PrimeUI.puiaccordion));
         } else {
-            accordion.add(new CssClassNameAppender(JQueryUI.jquiaccordion));
+            accordion.add(AttributeAppender.append("class", JQueryUI.jquiaccordion));
         }
         accordionparent.add(accordion);
     }

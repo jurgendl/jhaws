@@ -2,6 +2,7 @@ package org.tools.hqlbuilder.webservice.wicket.forms;
 
 import java.io.Serializable;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -10,8 +11,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/inputtext.html
@@ -34,7 +33,7 @@ public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<
                 onFormComponentTag(tag);
             }
         };
-        textField.add(new CssClassNameAppender(PrimeUI.puiinputtext));
+        textField.add(AttributeAppender.append("class", PrimeUI.puiinputtext));
         return textField;
     }
 

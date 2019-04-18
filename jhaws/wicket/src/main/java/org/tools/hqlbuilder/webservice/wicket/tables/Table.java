@@ -20,6 +20,7 @@ import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigation
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationIncrementLink;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationLink;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.sort.AjaxFallbackOrderByLink;
 import org.apache.wicket.extensions.ajax.markup.html.repeater.data.table.AjaxFallbackDefaultDataTable;
@@ -55,6 +56,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.util.string.Strings;
+import org.jhaws.common.web.wicket.AttributeRemover;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.jquery.ui.tablesorter.TableSorter;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.WeLoveIcons;
@@ -65,9 +67,6 @@ import org.tools.hqlbuilder.webservice.wicket.components.LinkPanel;
 import org.tools.hqlbuilder.webservice.wicket.components.LinkPanel.LinkType;
 import org.tools.hqlbuilder.webservice.wicket.tables.common.DataProvider;
 import org.tools.hqlbuilder.webservice.wicket.tables.common.Side;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 /**
  * @see https ://www.packtpub.com/article/apache-wicket-displaying-data-using-datatable
@@ -97,6 +96,7 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             }
             if (dataProvider.canDelete()) {
                 AjaxFallbackButton deleteLink = new AjaxFallbackButton(Table.ACTIONS_DELETE_ID, form) {
+
                     private static final long serialVersionUID = 8838151595047275051L;
 
                     @Override
@@ -384,7 +384,7 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             IModel<Boolean> dataModel = this.getDataModel(rowModel);
             CheckBoxPanel checkBoxPanel = new CheckBoxPanel(componentId, dataModel, null);
             checkBoxPanel.getField().setEnabled(false);
-            checkBoxPanel.getField().add(new CssClassNameAppender(PrimeUI.puicheckbox));
+            checkBoxPanel.getField().add(AttributeModifier.append("class", PrimeUI.puicheckbox));
             item.add(checkBoxPanel);
         }
     }
@@ -440,16 +440,16 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         }
 
         protected void modifyButtonLinkActiveBehavior(final AbstractLink link) {
-            link.add(new CssClassNameAppender(Table.this.CSS_ACTIVE_STYLE) {
-                private static final long serialVersionUID = -4390935870504634276L;
+            link.add(new AttributeAppender("class", Table.this.CSS_ACTIVE_STYLE) {
+                private static final long serialVersionUID = 1L;
 
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && !link.isEnabled();
                 }
-            });
-            link.add(new CssClassNameRemover(Table.this.CSS_ACTIVE_STYLE) {
-                private static final long serialVersionUID = -6666736063912700264L;
+            }.setSeparator(" "));
+            link.add(new AttributeRemover("class", Table.this.CSS_ACTIVE_STYLE) {
+                private static final long serialVersionUID = 1L;
 
                 @Override
                 public boolean isEnabled(Component component) {
@@ -459,16 +459,16 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         }
 
         protected void modifyButtonLinkDisableBehavior(final AbstractLink link) {
-            link.add(new CssClassNameAppender(Table.this.CSS_DISABLED_STYLE) {
-                private static final long serialVersionUID = -8703931679380496079L;
+            link.add(new AttributeAppender("class", Table.this.CSS_DISABLED_STYLE) {
+                private static final long serialVersionUID = 1L;
 
                 @Override
                 public boolean isEnabled(Component component) {
                     return super.isEnabled(component) && !link.isEnabled();
                 }
-            });
-            link.add(new CssClassNameRemover(Table.this.CSS_DISABLED_STYLE) {
-                private static final long serialVersionUID = -7077515156924411650L;
+            }.setSeparator(" "));
+            link.add(new AttributeRemover("class", Table.this.CSS_DISABLED_STYLE) {
+                private static final long serialVersionUID = 1L;
 
                 @Override
                 public boolean isEnabled(Component component) {

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -19,8 +20,6 @@ import org.apache.wicket.util.string.Strings;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/picklist.html
@@ -159,7 +158,7 @@ public class PickListPanel<T extends Serializable> extends FormRowPanel<Collecti
         if (pickList == null) {
             pickList = new WebMarkupContainer(PICKLISTID);
             pickList.setOutputMarkupId(true);
-            pickList.add(new CssClassNameAppender(PrimeUI.puipicklist));
+            pickList.add(AttributeAppender.append("class", PrimeUI.puipicklist));
         }
         return pickList;
     }

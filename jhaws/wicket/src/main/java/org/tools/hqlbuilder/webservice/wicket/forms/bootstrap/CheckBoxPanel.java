@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -8,8 +9,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.CheckBoxSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 @SuppressWarnings("serial")
 public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckBoxSettings> {
@@ -62,7 +61,7 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
             };
             String labelClass = getLabelClass(settings);
             if (labelClass != null) {
-                label.add(new CssClassNameAppender(labelClass));
+                label.add(AttributeAppender.append("class", labelClass));
             }
             label.setEscapeModelStrings(false);
         }

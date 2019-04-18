@@ -4,6 +4,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.SubmitLink;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -14,8 +15,6 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
 import org.tools.hqlbuilder.webservice.wicket.actions.OnAction;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 public class LabeledLinkPanel extends Panel {
     public static final String LINK_ID = "link";
@@ -61,7 +60,7 @@ public class LabeledLinkPanel extends Panel {
                 onAction.doAction(null);
             }
         };
-        submitLink.add(new CssClassNameAppender(JQueryUI.jquibutton));
+        submitLink.add(AttributeAppender.append("class", JQueryUI.jquibutton));
         Component labelFragment = getLabel(labelModel).setOutputMarkupPlaceholderTag(false);
         submitLink.add(labelFragment);
         return submitLink;

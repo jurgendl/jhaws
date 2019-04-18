@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -16,8 +17,6 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 import com.googlecode.wicket.jquery.core.renderer.ITextRenderer;
 import com.googlecode.wicket.jquery.ui.form.autocomplete.AutoCompleteTextField;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/inputtext.html
@@ -75,7 +74,7 @@ public class AutoCompleteTextFieldPanel<T extends Serializable> extends DefaultF
                 return show;
             }
         };
-        textField.add(new CssClassNameAppender(PrimeUI.puiinputtext));
+        textField.add(AttributeAppender.append("class", PrimeUI.puiinputtext));
         return textField;
     }
 

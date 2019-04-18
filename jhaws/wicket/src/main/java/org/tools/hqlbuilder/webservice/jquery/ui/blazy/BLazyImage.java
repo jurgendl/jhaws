@@ -3,6 +3,7 @@ package org.tools.hqlbuilder.webservice.jquery.ui.blazy;
 import java.net.URI;
 import java.net.URL;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -14,8 +15,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.components.ExternalImage;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 public class BLazyImage extends Image {
     private static final long serialVersionUID = 2477527041537407931L;
@@ -64,7 +63,7 @@ public class BLazyImage extends Image {
     }
 
     public static Image adjustImage(Image image) {
-        image.add(new CssClassNameAppender(BLazy.BLAZY_CLASS));
+        image.add(AttributeAppender.append("class", BLazy.BLAZY_CLASS));
         return image;
     }
 

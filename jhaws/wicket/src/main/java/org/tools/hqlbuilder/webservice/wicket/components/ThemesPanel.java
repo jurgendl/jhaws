@@ -63,7 +63,7 @@ public class ThemesPanel extends Panel {
             }
         };
         themeForm.setMarkupId(themeForm.getId());
-        // changeTheme.add(new CssClassNameAppender(PrimeUI.puidropdown));
+        // changeTheme.add(AttributeAppender.append("class",PrimeUI.puidropdown));
         add(themeForm.add(changeTheme));
     }
 

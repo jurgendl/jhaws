@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -8,8 +9,6 @@ import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormElementSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/password.html
@@ -33,7 +32,7 @@ public class PasswordTextFieldPanel extends DefaultFormRowPanel<String, Password
                 onFormComponentTag(tag);
             }
         };
-        passwordTextField.add(new CssClassNameAppender(PrimeUI.puipassword));
+        passwordTextField.add(AttributeAppender.append("class", PrimeUI.puipassword));
         return passwordTextField;
     }
 

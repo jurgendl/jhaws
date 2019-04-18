@@ -2,6 +2,7 @@ package org.tools.hqlbuilder.webservice.wicket;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -9,10 +10,8 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
+import org.jhaws.common.web.wicket.AttributeRemover;
 import org.tools.hqlbuilder.webservice.jquery.ui.flowplayer.FlowPlayer7;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameRemover;
 
 @SuppressWarnings("serial")
 public class FlowPlayer7Panel extends Panel {
@@ -38,20 +37,20 @@ public class FlowPlayer7Panel extends Panel {
         WebMarkupContainer flowplayer = new WebMarkupContainer("flowplayer");
         flowplayer.add(new AttributeModifier("data-swf", FlowPlayer7.urlhls()));
 
-        // flowplayer.add(new CssClassNameAppender("fp-slim-toggle"));
-        // flowplayer.add(new CssClassNameAppender("fp-mute"));
-        // flowplayer.add(new CssClassNameAppender("is-closeable"));
+        // flowplayer.add(AttributeAppender.append("class","fp-slim-toggle"));
+        // flowplayer.add(AttributeAppender.append("class","fp-mute"));
+        // flowplayer.add(AttributeAppender.append("class","is-closeable"));
         if (size) {
             flowplayer.add(new AttributeModifier("data-ratio", (float) (int) _config.getH() / _config.getW()));
         }
         // fixed controls
-        // flowplayer.add(new CssClassNameAppender("no-toggle"));
+        // flowplayer.add(AttributeAppender.append("class","no-toggle"));
         // angular icons
-        // flowplayer.add(new CssClassNameAppender("fp-edgy"));
+        // flowplayer.add(AttributeAppender.append("class","fp-edgy"));
         // outline icons
-        // flowplayer.add(new CssClassNameAppender("fp-outlined"));
+        // flowplayer.add(AttributeAppender.append("class","fp-outlined"));
         // if (Boolean.TRUE.equals(_config.getMinimal())) {
-        // flowplayer.add(new CssClassNameAppender("fp-minimal"));
+        // flowplayer.add(AttributeAppender.append("class","fp-minimal"));
         // }
 
         // if (_config.getSplashFile().exists()) {
@@ -59,7 +58,7 @@ public class FlowPlayer7Panel extends Panel {
         // }
 
         if (_config.isSplash()) {
-            flowplayer.add(new CssClassNameAppender("is-splash"));
+            flowplayer.add(AttributeAppender.append("class", "is-splash"));
             if (_config.getSplashFile().exists()) {
                 if (size) {
                     flowplayer.add(new AttributeModifier("style",
@@ -74,7 +73,7 @@ public class FlowPlayer7Panel extends Panel {
                 }
             }
         } else {
-            flowplayer.add(new CssClassNameRemover("is-splash"));
+            flowplayer.add(AttributeRemover.remove("class", "is-splash"));
             if (size) {
                 flowplayer.add(new AttributeModifier("style", ";background-size:cover;background-position-x:center"));
             } else {

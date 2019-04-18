@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.extensions.markup.html.form.select.SelectOptions;
@@ -18,8 +19,6 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormRowPanelParent;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.renderer.DefaultOptionRenderer;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.behavior.CssClassNameAppender;
 
 /**
  * @see http://www.primefaces.org/primeui/listbox.html
@@ -61,7 +60,7 @@ public class MultiListPanel<O extends Serializable, T extends Collection<O>> ext
         };
         SelectOptions<O> options = new SelectOptions<>("options", this.choices, this.renderer);
         select.add(options);
-        select.add(new CssClassNameAppender(PrimeUI.puilistbox));
+        select.add(AttributeAppender.append("class", PrimeUI.puilistbox));
         return select;
     }
 
