@@ -1,14 +1,10 @@
 package org.tools.hqlbuilder.webservice.wicket;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.injection.Injector;
-import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -20,10 +16,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryui.JQueryUI;
-import org.tools.hqlbuilder.webservice.jquery.ui.jqueryuithemes.JQueryUIThemes;
-import org.tools.hqlbuilder.webservice.jquery.ui.primeui.PrimeUI;
-import org.tools.hqlbuilder.webservice.js.WicketJSRoot;
 
 @SuppressWarnings("serial")
 public class DefaultWebPage extends WebPage {
@@ -63,7 +55,7 @@ public class DefaultWebPage extends WebPage {
         // check if ads are not blocked
         try {
             this.add(new CheckAdsEnabled());
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             this.add(new EmptyPanel("check.ads.enabled").setVisible(false));
         }
 
@@ -84,58 +76,19 @@ public class DefaultWebPage extends WebPage {
     }
 
     protected void addDefaultResources(IHeaderResponse response) {
-        Arrays.stream(WicketApplication.get().CSS_BUNDLE_ITEMS).forEach(css -> {
-            System.out.println(css);
-            response.render(CssHeaderItem.forReference(css));
-        });
-        // response.render(CssHeaderItem.forReference(WicketCSSRoot.CLEARFIX));
-        // response.render(CssHeaderItem.forReference(WicketCSSRoot.NORMALIZE));
-        // response.render(CssHeaderItem.forReference(WicketCSSRoot.GENERAL));
-
-        Arrays.stream(WicketApplication.get().JS_BUNDLE_ITEMS).forEach(js -> {
-            System.out.println(js);
-            response.render(JavaScriptHeaderItem.forReference(js));
-        });
-        // response.render(JavaScriptHeaderItem.forReference(JQueryUI.getJQueryUIReference()));
-
-        // FIXME
-        // response.render(JavaScriptHeaderItem.forReference(Scrollator.SCROLLATOR_JS));
-        // response.render(CssHeaderItem.forReference(Scrollator.SCROLLATOR_CSS));
-        // response.render(OnDomReadyHeaderItem.forScript(Scrollator.SCROLLATOR_FACTORY_JS));
-
-        // response.render(JavaScriptHeaderItem.forReference(Velocity.VELOCITY_JS));
-
-        response.render(JavaScriptHeaderItem.forReference(WicketJSRoot.GENERAL));
+        // none by default
     }
 
     protected void addDynamicResources(IHeaderResponse response) {
-        //
+        // none by default
     }
 
     protected void addPageResources(IHeaderResponse response) {
         // none by default
     }
 
-    /**
-     * add jquery-ui/prime-ui theme resources
-     *
-     * @see {@link WicketSession#getJQueryUITheme()}
-     */
     protected void addThemeResources(IHeaderResponse response) {
-        String jQueryUITheme = WicketSession.get().getJQueryUITheme();
-        if (StringUtils.isNotBlank(jQueryUITheme) && JQueryUIThemes.getThemes().contains(jQueryUITheme)) {
-            response.render(CssHeaderItem.forReference(JQueryUIThemes.base(jQueryUITheme)));
-            response.render(CssHeaderItem.forReference(JQueryUIThemes.theme(jQueryUITheme)));
-        } else {
-            response.render(CssHeaderItem.forReference(JQueryUI.JQUERY_UI_CSS));
-            response.render(CssHeaderItem.forReference(JQueryUI.JQUERY_UI_THEME_CSS));
-        }
-        {
-            response.render(CssHeaderItem.forReference(PrimeUI.PRIME_UI_CSS));
-            if (StringUtils.isNotBlank(jQueryUITheme)) {
-                response.render(CssHeaderItem.forReference(PrimeUI.forJQueryUITheme(jQueryUITheme)));
-            }
-        }
+        // none by default
     }
 
     protected void addUserResources(IHeaderResponse response) {

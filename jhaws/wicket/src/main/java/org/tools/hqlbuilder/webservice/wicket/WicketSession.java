@@ -19,10 +19,6 @@ public class WicketSession extends WebSession {
 
     public static final String LOCALE = "locale";
 
-    public static final String THEME = "theme";
-
-    protected String jqueryUITheme;
-
     protected Cookies cookies = new Cookies();
 
     public WicketSession(Request request) {
@@ -35,8 +31,6 @@ public class WicketSession extends WebSession {
         try {
             // fallback to default/session in #setLocaleFromCookie
             setLocaleFromCookie(cookies.loadCookie(LOCALE));
-            // can be null (default?)
-            jqueryUITheme = cookies.loadCookie(THEME);
         } catch (RuntimeException ex) {
             ex.printStackTrace();
         }
@@ -61,26 +55,17 @@ public class WicketSession extends WebSession {
         return WicketSession.class.cast(Session.get());
     }
 
-    public synchronized String getJQueryUITheme() {
-        return this.jqueryUITheme;
-    }
-
-    public synchronized void setJQueryUITheme(String theme) {
-        this.jqueryUITheme = theme;
-        cookies.saveCookie(THEME, theme, 365);
-    }
-
     @Override
     public void setLocale(Locale locale) {
         super.setLocale(locale);
         cookies.saveCookie(LOCALE, locale == null ? "en" : locale.toString(), 365);
     }
 
-    @Override
-    public Locale getLocale() {
-        Locale locale = super.getLocale();
-        return locale;
-    }
+    // @Override
+    // public Locale getLocale() {
+    // Locale locale = super.getLocale();
+    // return locale;
+    // }
 
     public Cookies getCookies() {
         return this.cookies;
