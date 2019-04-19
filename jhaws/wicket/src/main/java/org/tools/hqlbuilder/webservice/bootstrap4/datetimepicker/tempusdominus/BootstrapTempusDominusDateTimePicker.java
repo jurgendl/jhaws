@@ -9,7 +9,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // https://github.com/tempusdominus/bootstrap-4
 // https://tempusdominus.github.io/bootstrap-4/
-// 5.0.0 alpha18
+// 5.1.2
 public class BootstrapTempusDominusDateTimePicker {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapTempusDominusDateTimePicker.class,
             "js/tempusdominus-bootstrap-4.js");
