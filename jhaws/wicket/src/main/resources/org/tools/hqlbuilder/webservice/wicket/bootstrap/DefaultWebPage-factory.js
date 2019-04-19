@@ -1,5 +1,8 @@
 /* ============= DefaultWebPage-factory.js ============= */
 
+/* activate bootstrap toast messages */
+$('.toast').toast();
+
 /* activate bootstrap popover icons */
 $('[data-toggle="popover"]').popover({ html: true, delay: { "show": 50, "hide": 50 } });
 $('.popover-dismiss').popover({ html: true, trigger: 'focus', delay: { "show": 50, "hide": 500 } });
@@ -7,7 +10,7 @@ $('.popover-dismiss').popover({ html: true, trigger: 'focus', delay: { "show": 5
 /* activate bootstrap tooltips */
 $('[data-toggle="tooltip"]').tooltip({ html: true, delay: { "show": 50, "hide": 50 } });
 
-/* activate bootstrap validation */
+/* activate bootstrap form validation */
 (function() {
   'use strict';
   window.addEventListener('load', function() {

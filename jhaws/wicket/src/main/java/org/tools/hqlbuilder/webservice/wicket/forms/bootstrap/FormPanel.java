@@ -7,14 +7,9 @@ import java.util.List;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.head.CssHeaderItem;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
@@ -36,26 +31,10 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.TextFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TriStateCheckBoxSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TypeAheadTextFieldSettings;
 
-// TODO validation https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
-    public static final CssResourceReference FORM_CSS = new CssResourceReference(FormPanel.class, "form.css");
-
-    public static final JavaScriptResourceReference FORM_JS = new JavaScriptResourceReference(FormPanel.class, "form.js");
-
     public FormPanel(String id, FormActions<T> formActions, FormSettings formSettings) {
         super(id, formActions, formSettings);
-        bootstrap = true;
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
-        if (!this.isEnabledInHierarchy()) {
-            return;
-        }
-        response.render(CssHeaderItem.forReference(FormPanel.FORM_CSS));
-        response.render(JavaScriptHeaderItem.forReference(FormPanel.FORM_JS));
     }
 
     protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {

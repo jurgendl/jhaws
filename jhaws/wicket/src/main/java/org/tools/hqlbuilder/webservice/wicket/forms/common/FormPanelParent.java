@@ -50,8 +50,6 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
     protected int count = 0;
 
-    protected boolean bootstrap;
-
     public FormPanelParent(String id, FormActions<T> formActions) {
         this(id, formActions, null);
     }
@@ -329,16 +327,16 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
             this.form.add(formHeader);
 
             WebMarkupContainer formBody = new WebMarkupContainer(FormConstants.FORM_BODY);
-            if (bootstrap) WebHelper.hide(formBody);
+            WebHelper.hide(formBody); // TODO
             this.form.add(formBody);
 
             WebMarkupContainer formFieldSet = new WebMarkupContainer(FormConstants.FORM_FIELDSET);
-            if (bootstrap) WebHelper.hide(formFieldSet);
+            WebHelper.hide(formFieldSet); // TODO
             formBody.add(formFieldSet);
             String fieldSetLegend = this.getFormSettings().getFieldSetLegend();
             Label formFieldSetLegend = new Label(FormConstants.FORM_FIELDSET_LEGEND,
                     fieldSetLegend == null ? Model.of("") : new ResourceModel(fieldSetLegend));
-            if (bootstrap) WebHelper.hide(formFieldSetLegend);
+            WebHelper.hide(formFieldSetLegend); // TODO
             formFieldSet.add(formFieldSetLegend.setVisible(fieldSetLegend != null));
             formFieldSet.add(this.getRowRepeater());
 
@@ -430,7 +428,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
                     return "WebMarkupContainer:" + FormConstants.FORM_FOOTER;
                 }
             };
-            if (bootstrap) WebHelper.hide(formFooter);
+            WebHelper.hide(formFooter); // TODO
             this.form.add(formFooter);
 
             switch (getFormSettings().getShowMessages()) {
