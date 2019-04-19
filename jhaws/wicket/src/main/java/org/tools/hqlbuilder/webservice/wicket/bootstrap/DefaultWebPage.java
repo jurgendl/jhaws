@@ -41,6 +41,7 @@ import org.tools.hqlbuilder.webservice.bootstrap4.multiselect.MultiSelect;
 import org.tools.hqlbuilder.webservice.bootstrap4.slider.BootstrapSlider;
 import org.tools.hqlbuilder.webservice.bootstrap4.tags.BootstrapTags;
 import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
+import org.tools.hqlbuilder.webservice.bootstrap4.toast.BootstrapToasts;
 import org.tools.hqlbuilder.webservice.jquery.ui.blazy.BLazy;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
@@ -126,7 +127,7 @@ public abstract class DefaultWebPage extends WebPage {
         // check if ads are not blocked
         try {
             html.add(new CheckAdsEnabled());
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             html.add(new EmptyPanel("check.ads.enabled").setVisible(false));
         }
 
@@ -466,12 +467,8 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(CssHeaderItem.forReference(FontAwesome.CSS5));
 
-        // response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_CSS));
-        // response.render(CssHeaderItem.forReference(WeLoveIcons.WE_LOVE_ICONS_SOCIAL_CSS));
-        // response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_CSS));
-        // response.render(CssHeaderItem.forReference(WeLoveIcons.SOCIAL_COLORS_HOVER_CSS));
-        // FIXME response.render(CssHeaderItem.forReference(new
-        // LessResourceReference(DefaultWebPage.class,
+        // FIXME
+        // response.render(CssHeaderItem.forReference(new LessResourceReference(DefaultWebPage.class,
         // "org/tools/hqlbuilder/webservice/bootstrap4/social/brand.less")));
         response.render(CssHeaderItem.forReference(new CssResourceReference(Bootstrap4.class, "social/brand.css")));
 
@@ -540,6 +537,9 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(JavaScriptHeaderItem.forReference(ClipboardJs.JS));
         response.render(OnDomReadyHeaderItem.forScript(ClipboardJs.factory()));
+
+        response.render(JavaScriptHeaderItem.forReference(BootstrapToasts.JS));
+        response.render(CssHeaderItem.forReference(BootstrapToasts.CSS));
 
         // response.render(JavaScriptHeaderItem.forReference(BootstrapConfirmation.JS));
         // response.render(OnLoadHeaderItem.forScript(";$('[data-toggle=confirmation]').confirmation({rootSelector:'[data-toggle=confirmation]'});"));
