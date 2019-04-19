@@ -6,7 +6,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // http://seiyria.com/bootstrap-slider/
 // https://github.com/seiyria/bootstrap-slider
-// 9.9.0
+// 10.6.1
 public class BootstrapSlider {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapSlider.class, "js/bootstrap-slider.js");
 
