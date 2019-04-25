@@ -439,11 +439,6 @@ kbd, code {
 	height: 1rem;
 }
 
-/* */
-. {
-	padding: 0.15rem 0.3rem;
-}
-
 /* https://github.com/FortAwesome/Font-Awesome/issues/671 */
 /* http://jsfiddle.net/tagliala/96ULe/3/ */
 .fa-spin, .fa-pulse {
@@ -676,4 +671,13 @@ div.rating-input a.rating-clear {
 /* smaller alerts */
 .alert {
 	padding: 0.5rem .75rem !important;
+}
+
+/* non transparent toasts */
+.toast {
+	background-color: rgba(255, 255, 255, 1) !important;
+	-webkit-box-shadow: 2px 4px 9px 1px rgba(0,0,0,0.67);
+	-moz-box-shadow: 2px 4px 9px 1px rgba(0,0,0,0.67);
+	box-shadow: 2px 4px 9px 1px rgba(0,0,0,0.67);
+	border: none;
 }
