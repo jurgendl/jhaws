@@ -681,3 +681,35 @@ div.rating-input a.rating-clear {
 	box-shadow: 2px 4px 9px 1px rgba(0,0,0,0.67);
 	border: none;
 }
+
+/* outline text */
+.outline-dark
+, .outline-dark-hover:hover
+, .outline-dark-hover-container:hover :before
+, .outline-dark-hover-container:hover :after
+    {
+    text-shadow:
+        1px 0px 2px rgba(0, 0, 0, .75),
+        0px 1px 2px rgba(0, 0, 0, .75),
+        -1px 0px 2px rgba(0, 0, 0, .75),
+        0px -1px 2px rgba(0, 0, 0, .75),
+        1px -1px 2px rgba(0, 0, 0, .75),
+        -1px 1px 2px rgba(0, 0, 0, .75),
+        -1px 1px 2px rgba(0, 0, 0, .75),
+        1px -1px 2px rgba(0, 0, 0, .75);
+}
+.outline-light
+, .outline-light-hover:hover
+, .outline-light-hover-container:hover :before
+, .outline-light-hover-container:hover :after
+    {
+    text-shadow:
+        1px 0px 2px rgba(255, 255, 255, .75),
+        0px 1px 2px rgba(255, 255, 255, .75),
+        -1px 0px 2px rgba(255, 255, 255, .75),
+        0px -1px 2px rgba(255, 255, 255, .75),
+        1px -1px 2px rgba(255, 255, 255, .75),
+        -1px 1px 2px rgba(255, 255, 255, .75),
+        -1px 1px 2px rgba(255, 255, 255, .75),
+        1px -1px 2px rgba(255, 255, 255, .75);
+}
