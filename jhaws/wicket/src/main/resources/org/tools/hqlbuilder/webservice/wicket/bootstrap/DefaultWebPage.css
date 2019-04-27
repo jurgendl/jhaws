@@ -555,17 +555,17 @@ img.niceimage {
 	}
 }
 .sticky {
-  position: -webkit-sticky;
-  position: -moz-sticky;
-  position: -o-sticky;
-  position: -ms-sticky;
-  position: sticky;
-  top: 3.55rem;
-  z-index: 999; /* should be less than 1000 of navbar menu */
-  background-color: white;
-  -webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
-  -moz-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
-  box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);  
+	position: -webkit-sticky;
+	position: -moz-sticky;
+	position: -o-sticky;
+	position: -ms-sticky;
+	position: sticky;
+	top: 3.55rem;
+	z-index: 999; /* should be less than 1000 of navbar menu */
+	-webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
+	-moz-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
+	box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
+	background-color: inherit;
 }
 @media (max-width: 575.98px) {
 	.sticky {
