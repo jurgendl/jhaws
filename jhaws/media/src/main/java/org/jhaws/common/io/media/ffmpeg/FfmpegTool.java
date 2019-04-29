@@ -1323,6 +1323,26 @@ public class FfmpegTool implements MediaCte {
 		}, out.getParentPath(), command);
 	}
 
+	public void hls(String hls, FilePath out) {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-i");
+		command.add(hls);
+		command.add("-c:a");
+		command.add("copy");
+		command.add("-c:v");
+		command.add("copy");
+		command.add(command(out));
+		System.out.println(command.stream().collect(Collectors.joining(" ")));
+		call(null, new Lines() {
+			@Override
+			public void accept(String t) {
+				System.out.println("> " + t);
+				super.accept(t);
+			}
+		}, out.getParentPath(), command);
+	}
+
 	// public List<String> listDevices() {
 	// // https://trac.ffmpeg.org/wiki/DirectShow
 	// // ffmpeg -list_devices true -f dshow -i dummy
