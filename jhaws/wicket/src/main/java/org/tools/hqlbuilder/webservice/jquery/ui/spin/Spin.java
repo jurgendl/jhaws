@@ -7,9 +7,9 @@ import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 public class Spin {
 	public static final String HTML = "<span id=\"spinnercontainer\" class=\"visible\"><div class=\"loader loader-bouncing is-active\"></div></span>";
 
-	public static final String HIDE = "$('#spinnercontainer').removeClass('visible').addClass('invisible');";
+	public static final String HIDE = ";$('#spinnercontainer').removeClass('visible').addClass('invisible');";
 
-	public static final String SHOW = "$('#spinnercontainer').removeClass('invisible').addClass('visible');";
+	public static final String SHOW = ";$('#spinnercontainer').removeClass('invisible').addClass('visible');";
 
 	public static CssResourceReference SPIN_CSS = new CssResourceReference(Spin.class, "spin.css");
 
