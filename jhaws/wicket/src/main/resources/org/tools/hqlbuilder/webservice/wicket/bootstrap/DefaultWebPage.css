@@ -28,19 +28,8 @@
 /*Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif*/
 /*GillSans, Calibri, Trebuchet, sans-serif*/
 
-/* ======================== body ======================== */
-body {
-	/*padding-top: 5rem;*/
-	/*background-color: rgb(238, 238, 238);*/
-	/*font-size: 14px;
-	font-family: 'Open Sans', Geneva, 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
-	font-weight: 400;*/
-	/*overflow-x: hidden;*/
-	
-}
 
 /* ======================== scrollbar ======================== */
-
 /* http://www.ourtuts.com/how-to-customize-browser-scrollbars-using-css3/ */
 /* https://css-tricks.com/examples/WebKitScrollbars/ */
 /* https://css-tricks.com/custom-scrollbars-in-webkit/ */
@@ -48,12 +37,10 @@ body {
 ::-webkit-scrollbar {
 	width: 10px;
 }
-
 ::-webkit-scrollbar-button {
 	width: 10px;
 	height: 1px;
 }
-
 ::-webkit-scrollbar-track {
 	background: rgb(250, 250, 250);
 	border: thin solid rgb(200, 200, 200);
@@ -62,7 +49,6 @@ body {
 	-webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
 	box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1) inset;
 }
-
 ::-webkit-scrollbar-thumb {
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
@@ -71,24 +57,12 @@ body {
 	box-shadow: 0px 0px 3px rgba(0, 0, 0, .1) inset;
 	background: rgb(180, 180, 180);
 }
-
 ::-webkit-scrollbar-thumb:hover {
 	background: rgb(210, 210, 210);
 }
-
 ::-webkit-scrollbar-thumb:window-inactive {
 	
 }
-
-/* ======================== box sizing ======================== */
-
-/*
-*, *:before, *:after {
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-}
-*/
 
 /* ======================== rotated ======================== */
 .rotate45 {
@@ -98,7 +72,6 @@ body {
 	-o-transform: rotate(45deg);
 	transform: rotate(45deg);
 }
-
 .rotate90 {
 	-ms-transform: rotate(90deg);
 	-webkit-transform: rotate(90deg);
@@ -106,7 +79,6 @@ body {
 	-o-transform: rotate(90deg);
 	transform: rotate(90deg);
 }
-
 .rotate135 {
 	-ms-transform: rotate(135deg);
 	-webkit-transform: rotate(135deg);
@@ -114,7 +86,6 @@ body {
 	-o-transform: rotate(135deg);
 	transform: rotate(135deg);
 }
-
 .rotate180 {
 	-ms-transform: rotate(180deg);
 	-webkit-transform: rotate(180deg);
@@ -122,7 +93,6 @@ body {
 	-o-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
-
 .rotate225 {
 	-ms-transform: rotate(225deg);
 	-webkit-transform: rotate(225deg);
@@ -130,7 +100,6 @@ body {
 	-o-transform: rotate(225deg);
 	transform: rotate(225deg);
 }
-
 .rotate270 {
 	-ms-transform: rotate(270deg);
 	-webkit-transform: rotate(270deg);
@@ -138,7 +107,6 @@ body {
 	-o-transform: rotate(270deg);
 	transform: rotate(270deg);
 }
-
 .rotate315 {
 	-ms-transform: rotate(315deg);
 	-webkit-transform: rotate(315deg);
@@ -146,7 +114,6 @@ body {
 	-o-transform: rotate(315deg);
 	transform: rotate(315deg);
 }
-
 .rotate360 {
 	-ms-transform: rotate(360deg);
 	-webkit-transform: rotate(360deg);
@@ -183,7 +150,6 @@ body {
 	-ms-animation-duration: 0.25s;
 	-o-animation-duration: 0.25s;
 }
-
 .rotatingfaster {
 	-webkit-filter: blur(0);
 	-webkit-transform-origin: 50% 50%;
@@ -207,7 +173,6 @@ body {
 	-ms-animation-duration: 0.75s;
 	-o-animation-duration: 0.75s;
 }
-
 .rotating, .rotatingnormal {
 	-webkit-filter: blur(0);
 	-webkit-transform-origin: 50% 50%;
@@ -231,7 +196,6 @@ body {
 	-ms-animation-duration: 1.5s;
 	-o-animation-duration: 1.5s;
 }
-
 .rotatingslower {
 	-webkit-filter: blur(0);
 	-webkit-transform-origin: 50% 50%;
@@ -255,7 +219,6 @@ body {
 	-ms-animation-duration: 3s;
 	-o-animation-duration: 3s;
 }
-
 .rotatingslowest {
 	-webkit-filter: blur(0);
 	-webkit-transform-origin: 50% 50%;
@@ -462,7 +425,7 @@ kbd, code {
 	width: 100% !important;
 }
 
-/* */
+/* niceimage */
 .niceimage {
 	border-width:1px;
 	border-style:solid;
@@ -508,7 +471,7 @@ img.niceimage {
 	overflow: hidden;
 }
 
-/* */
+/* custom select */
 .custom-select[multiple].custom-select-sm {
 	height: calc(1.8125rem + 2px);
 }
@@ -574,9 +537,12 @@ img.niceimage {
 	}
 }
 
-/** rating V2 (transparent clear text) */
+/** rating by stars */
 div.rating-input a.rating-clear {
 	color: rgba(0, 0, 0, 0) !important;
+}
+div.rating-input {
+	overflow: hidden;
 }
 
 /* ... */
@@ -662,8 +628,9 @@ div.rating-input a.rating-clear {
 	content: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPjxwYXRoIGQ9Ik0yLjUgMEwxIDEuNSAzLjUgNCAxIDYuNSAyLjUgOGw0LTQtNC00eiIgZmlsbD0iY3VycmVudENvbG9yIi8+PC9zdmc+);
 }
 
-/**/
-.col-form-label, .no-wrap-label {
+/* ellipsis on overflow */
+.col-form-label, .no-wrap-label, .ellipsis {
+	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
@@ -733,6 +700,14 @@ div.rating-input a.rating-clear {
 	margin-top: .5em !important;
 }
 
-.btn, .dropdown-menu, .form-control, .input-group-text, .custom-select, .toast {
+/* no rounded corners */
+.btn
+, .dropdown-menu
+, .form-control
+, .input-group-text
+, .custom-select
+, .toast
+, .modal-content
+, .custom-checkbox .custom-control-label::before {
 	border-radius: 0 !important;
 }
