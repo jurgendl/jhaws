@@ -673,13 +673,17 @@ div.rating-input a.rating-clear {
 	padding: 0.5rem .75rem !important;
 }
 
-/* non transparent toasts */
+/* toasts */
 .toast {
 	background-color: rgba(255, 255, 255, 1) !important;
 	-webkit-box-shadow: 2px 4px 9px 1px rgba(0,0,0,0.67);
 	-moz-box-shadow: 2px 4px 9px 1px rgba(0,0,0,0.67);
 	box-shadow: 2px 4px 9px 1px rgba(0,0,0,0.67);
 	border: none;
+	transition: all 1s ease-in-out;
+}
+#toast-wrapper {
+	margin-top: 3.82em;
 }
 
 /* outline text */
@@ -712,4 +716,23 @@ div.rating-input a.rating-clear {
         -1px 1px 2px rgba(255, 255, 255, .75),
         -1px 1px 2px rgba(255, 255, 255, .75),
         1px -1px 2px rgba(255, 255, 255, .75);
+}
+
+/* spinner */
+.dropdown-menu.show {
+	z-index: 9999 !important;
+}
+.loader.is-active {
+	background-color: rgba(0,0,0,.5) !important;
+	top: 3.50rem;
+	z-index: 9998 !important;
+}
+
+/* dropdown menus below menu */
+.dropdown-menu.show {
+	margin-top: .5em !important;
+}
+
+.btn, .dropdown-menu, .form-control, .input-group-text, .custom-select, .toast {
+	border-radius: 0 !important;
 }

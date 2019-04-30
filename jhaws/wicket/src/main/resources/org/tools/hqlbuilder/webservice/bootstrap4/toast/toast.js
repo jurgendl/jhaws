@@ -68,7 +68,7 @@
             delay_or_autohide = 'data-delay="' + delay + '"';
         }
 
-        let html = '<div class="toast" role="alert" aria-live="assertive" aria-atomic="true" ' + delay_or_autohide + '>';
+        let html = '<div data-animation="true" class="toast" role="alert" aria-live="assertive" aria-atomic="true" ' + delay_or_autohide + '>';
         html += '<div class="toast-header ' + bg_header_class + ' ' + fg_header_class + '">';
 
         if (typeof img !== 'undefined') {
