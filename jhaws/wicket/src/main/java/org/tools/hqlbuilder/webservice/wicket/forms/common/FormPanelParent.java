@@ -27,6 +27,7 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 
@@ -115,8 +116,8 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 					+ "$('#" + submitId + "').children('.fa-check')"//
 					+ ".removeClass('fa-check')"//
 					+ ".addClass('fa-compass fa-spin')"//
-					// + ".addClass('spinner')"//
 					+ ";"//
+					+ (getFormSettings().isSpinner() ? Spin.SHOW : "")//
 					+ "return true;"//
 					+ "});";
 			response.render(OnDomReadyHeaderItem.forScript(javaScript));
@@ -463,6 +464,9 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			@Override
 			protected void onAfterSubmit(AjaxRequestTarget target, Form<?> f) {
 				getFormActions().afterSubmit(target, (Form<T>) f, getFormModel());
+				if (getFormSettings().isSpinner()) {
+					target.appendJavaScript(Spin.HIDE);
+				}
 			}
 
 			@Override
