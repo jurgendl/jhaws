@@ -496,11 +496,6 @@ img.niceimage {
 	height: 5px;
 }
 
-/* bootstrap; smaller navbar toggle btn */
-.navbar-toggler {
-	font-size: 0.75rem !important;
-}
-
 /**/
 @media (max-width: 575.98px) {
 	.back-to-top {
@@ -508,14 +503,15 @@ img.niceimage {
 	}
 }
 
-/* sticky top and navbar space behind: same value (padding)top */
-.navbarwhitebehind {
-	padding-top:3.55rem;
+/* navbar: smaller navbar toggler; sticky top and navbar space behind: same value (padding)top */
+.navbar-toggler {
+	font-size: 0.75rem !important;
 }
-@media (max-width: 575.98px) {
-	.navbarwhitebehind {
-		padding-top:2.7rem;
-	}
+.navbar {
+	height: 3.55rem;
+}
+.navbarwhitebehind {
+	padding-top: 3.55rem;
 }
 .sticky {
 	position: -webkit-sticky;
@@ -524,15 +520,20 @@ img.niceimage {
 	position: -ms-sticky;
 	position: sticky;
 	top: 3.55rem;
-	z-index: 999; /* should be less than 1000 of navbar menu */
+	z-index: 900; /* should be less than 1000 of navbar menu */
 	-webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
 	box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
 	background-color: inherit;
 }
-@media (max-width: 575.98px) {
+@media (max-width: 575.98px) { /* small */
+	.navbar {
+		height: auto;
+	}
+	.navbarwhitebehind {
+		padding-top: 2.7rem;
+	}
 	.sticky {
-		/*top:2.7rem;*/
 		display: none !important;
 	}
 }

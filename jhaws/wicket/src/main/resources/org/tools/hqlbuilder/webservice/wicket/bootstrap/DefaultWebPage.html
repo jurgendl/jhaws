@@ -27,7 +27,7 @@
 	<div class="navbarwhitebehind" wicket:id="navbar">
 		<nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
 			<a wicket:id="navbarbrandlink" class="navbar-brand" href="#">
-				<span wicket:id="navbarbrandicon"></span>&nbsp;<span wicket:id="navbarbrandlabel"></span>
+				<span wicket:id="navbarbrandicon"></span><span class="ml-1" wicket:id="navbarbrandlabel"></span>
 			</a>
 			<button class="navbar-toggler btn-sm" type="button" data-toggle="collapse" data-target="#navbarsid" aria-controls="navbarsid" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -36,19 +36,16 @@
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item dropdown" wicket:id="navbaritems">
 						<a wicket:id="navbaritemlink" class="nav-link" href="#">
-							<span wicket:id="navbaritemicon"></span>&nbsp;
-							<span wicket:id="navbaritemlabel"></span>
+							<span wicket:id="navbaritemicon"></span><span class="ml-1" wicket:id="navbaritemlabel"></span>
 						</a>
 						<div wicket:id="navbardropdown" class="dropdown-menu" aria-labelledby="navbaritemlink">
 							<span wicket:id="navbardropdownitems">
-								<a wicket:id="navbardropdownitemlink" class="dropdown-item" href="#"><span wicket:id="navbardropdownitemicon"></span>&nbsp;<span wicket:id="navbardropdownitemlabel"></span></a>
+								<a wicket:id="navbardropdownitemlink" class="dropdown-item" href="#"><span wicket:id="navbardropdownitemicon"></span><span class="ml-1" wicket:id="navbardropdownitemlabel"></span></a>
 							</span>
 						</div>
 					</li>
-				</ul>
-				<wicket:enclosure child="searchbar">
-					&nbsp;
-					<form class="form-inline my-2 my-lg-0 needs-validation" novalidate>
+				</ul><wicket:enclosure child="searchbar">
+					<form class="form-inline my-2 my-lg-0 needs-validation ml-1" novalidate>
 						<div wicket:id="searchbar" class="input-group input-group-sm">
 							<input required type="text" class="form-control form-control-sm" placeholder="Search for...">
 							<div class="input-group-append">
@@ -56,10 +53,8 @@
 							</div>
 						</div>
 					</form>
-				</wicket:enclosure>
-				<wicket:enclosure child="userButton">
-					&nbsp;
-					<div class="btn-group dropleft">
+				</wicket:enclosure><wicket:enclosure child="userButton">
+					<div class="btn-group dropleft ml-1">
 					  <button wicket:id="userButton" style="width:2.2rem" class="btn btn-sm btn-info dropdown-toggle hide-dropdown-arrow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa-fw fas fa-user"></span></button>
 					  <div class="dropdown-menu p-1">
 					    <a class="dropdown-item p-1" href="#">Log In</a>
@@ -67,12 +62,9 @@
 					    <a class="dropdown-item p-1" href="#">Register</a>
 					  </div>
 					</div>
-				</wicket:enclosure>
-				<wicket:enclosure child="backToTopButton">
-					&nbsp;
-					<button wicket:id="backToTopButton" style="width:2.2rem;display:none;cursor:pointer;" class="back-to-top btn btn-sm btn-outline-info" onclick="topFunction()" id="back-to-top" title="Go to top"><span class="fa-fw fas fa-chevron-up"></span></button>
-				</wicket:enclosure>
-			</div>
+				</wicket:enclosure><wicket:enclosure child="backToTopButton">
+					<button wicket:id="backToTopButton" style="width:2.2rem;display:none;cursor:pointer;" class="back-to-top btn btn-sm btn-outline-info ml-1" onclick="topFunction()" id="back-to-top" title="Go to top"><span class="fa-fw fas fa-chevron-up"></span></button>
+				</wicket:enclosure></div>
 		</nav>
 	</div>
 
