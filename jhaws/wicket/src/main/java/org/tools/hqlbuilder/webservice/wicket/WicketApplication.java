@@ -55,6 +55,7 @@ import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
 import org.tools.hqlbuilder.webservice.css.WicketCSSRoot;
 import org.tools.hqlbuilder.webservice.js.GoogleLogin;
 import org.tools.hqlbuilder.webservice.js.WicketJSRoot;
+import org.tools.hqlbuilder.webservice.wicket.bootstrap.WebSettings;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.htmlcompressor.HtmlCompressingMarkupFactory;
 import org.wicketstuff.logback.ConfiguratorPage;
@@ -64,6 +65,8 @@ import org.wicketstuff.logback.ConfiguratorPage;
 // getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class);
 // getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.class);
 public class WicketApplication extends WebApplication {
+	private static transient WebSettings SETTINGS;
+
 	public final class DateTimeConverter extends DateConverter {
 		private static final long serialVersionUID = -6075171947424780395L;
 
@@ -486,5 +489,12 @@ public class WicketApplication extends WebApplication {
 
 	public void setGoogleSigninClientId(String googleSigninClientId) {
 		this.googleSigninClientId = googleSigninClientId;
+	}
+
+	public static WebSettings getSettings() {
+		if (SETTINGS == null) {
+			SETTINGS = new WebSettings();
+		}
+		return SETTINGS;
 	}
 }

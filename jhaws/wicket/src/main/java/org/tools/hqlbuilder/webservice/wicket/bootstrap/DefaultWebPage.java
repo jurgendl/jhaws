@@ -110,48 +110,34 @@ public abstract class DefaultWebPage extends WebPage {
 		addFacebookOpenGraph(parameters, html, true);
 
 		// title
-		html.add(new Label("page.title", getPageTitle(parameters)));
+		addTitle(parameters, html, "page.title");
+
+		// spinner
+		addSpinner(html, "spinnercontainer", "spinner");
 
 		// shortcut icon
-		html.add(new WebMarkupContainer("shortcutIcon")
-				.add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
-				.setVisible(StringUtils.isNotBlank(WicketApplication.get().getShortcutIcon())));
+		addShortcutIcon(html, "shortcutIcon");
 
 		// wicket/ajax debug bars
-		html.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig()
-				? new DebugBar("debug")
-				: new EmptyPanel("debug").setVisible(false));
+		addWicketDebuggers(html, "debug");
 
 		// check if javascript is enabled
-		html.add(new CheckJavaScriptEnabled());
+		addCheckJavascript(html);
 
 		// check if cookies are enabled
-		html.add(new CheckCookiesEnabled());
+		addCheckCookies(html);
 
 		// check if ads are not blocked
-		try {
-			html.add(new CheckAdsEnabled());
-		} catch (Exception ex) {
-			html.add(new EmptyPanel("check.ads.enabled").setVisible(false));
-		}
+		addCkechAddBlock(html);
 
 		// add header response (javascript) down below on page
-		if (WicketApplication.get().isJavascriptAtBottom()) {
-			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
-		} else {
-			html.add(new EmptyPanel("footer-container").setVisible(false));
-		}
+		addJavasScriptOnBottom(html);
 
 		// meta description
-		html.add(new WebMarkupContainer("meta_description").setVisible(false));
+		addMetaDescription(html);
 
 		// add google meta tags
-		String googleSigninClientId = WicketApplication.get().getGoogleSigninClientId();
-		html.add(new WebMarkupContainer("meta_google_signin_scope")
-				.setVisible(StringUtils.isNotBlank(googleSigninClientId)));
-		html.add(new WebMarkupContainer("meta_google_signin_client_id")
-				.add(new AttributeModifier("content", googleSigninClientId))
-				.setVisible(StringUtils.isNotBlank(googleSigninClientId)));
+		addGoogleId(html);
 
 		// navbar
 		addNavigationBar(parameters, html, "navbar");
@@ -164,6 +150,64 @@ public abstract class DefaultWebPage extends WebPage {
 
 		// statusbar
 		addStatusBar(parameters, html, "statusbar", "statusbarcontent");
+	}
+
+	protected void addTitle(PageParameters parameters, MarkupContainer html, String id) {
+		html.add(new Label(id, getPageTitle(parameters)));
+	}
+
+	protected void addGoogleId(MarkupContainer html) {
+		String googleSigninClientId = WicketApplication.get().getGoogleSigninClientId();
+		html.add(new WebMarkupContainer("meta_google_signin_scope")
+				.setVisible(StringUtils.isNotBlank(googleSigninClientId)));
+		html.add(new WebMarkupContainer("meta_google_signin_client_id")
+				.add(new AttributeModifier("content", googleSigninClientId))
+				.setVisible(StringUtils.isNotBlank(googleSigninClientId)));
+	}
+
+	protected void addMetaDescription(MarkupContainer html) {
+		html.add(new WebMarkupContainer("meta_description").setVisible(false));
+	}
+
+	protected void addJavasScriptOnBottom(MarkupContainer html) {
+		if (WicketApplication.get().isJavascriptAtBottom()) {
+			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
+		} else {
+			html.add(new EmptyPanel("footer-container").setVisible(false));
+		}
+	}
+
+	protected void addCkechAddBlock(MarkupContainer html) {
+		try {
+			html.add(new CheckAdsEnabled());
+		} catch (Exception ex) {
+			html.add(new EmptyPanel("check.ads.enabled").setVisible(false));
+		}
+	}
+
+	protected void addCheckCookies(MarkupContainer html) {
+		html.add(new CheckCookiesEnabled());
+	}
+
+	protected void addCheckJavascript(MarkupContainer html) {
+		html.add(new CheckJavaScriptEnabled());
+	}
+
+	protected void addWicketDebuggers(MarkupContainer html, String id) {
+		html.add(WicketApplication.get().isShowDebugbars() && WicketApplication.get().usesDevelopmentConfig()
+				? new DebugBar(id)
+				: new EmptyPanel(id).setVisible(false));
+	}
+
+	protected void addShortcutIcon(MarkupContainer html, String id) {
+		html.add(new WebMarkupContainer(id)
+				.add(new AttributeModifier("href", Model.of(WicketApplication.get().getShortcutIcon())))
+				.setVisible(StringUtils.isNotBlank(WicketApplication.get().getShortcutIcon())));
+	}
+
+	protected void addSpinner(MarkupContainer html, String spinnercontainer, String spinner) {
+		html.add(new WebMarkupContainer(spinnercontainer).add(new WebMarkupContainer(spinner).add(AttributeModifier
+				.replace("class", "loader loader-" + WicketApplication.getSettings().getSpinner() + " is-active"))));
 	}
 
 	public FeedbackPanel getFeedbackPanel() {
@@ -561,7 +605,7 @@ public abstract class DefaultWebPage extends WebPage {
 
 		response.render(CssHeaderItem.forReference(org.tools.hqlbuilder.webservice.css.WicketCSSRoot.ANIMATE));
 
-		response.render(CssHeaderItem.forReference(Spin.SPIN_CSS));
+		response.render(CssHeaderItem.forReference(Spin.css(WicketApplication.getSettings().getSpinner())));
 
 		response.render(
 				CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
