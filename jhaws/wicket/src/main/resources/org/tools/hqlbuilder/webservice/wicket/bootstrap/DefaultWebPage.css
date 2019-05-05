@@ -704,6 +704,7 @@ div.rating-input {
 , .custom-select
 , .toast
 , .modal-content
-, .custom-checkbox .custom-control-label::before {
+, .custom-checkbox .custom-control-label::before
+, .bootstrap-tagsinput {
 	border-radius: 0 !important;
 }
