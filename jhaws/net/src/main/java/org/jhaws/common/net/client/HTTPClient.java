@@ -92,6 +92,11 @@ import org.slf4j.LoggerFactory;
  * @see https://hc.apache.org/httpcomponents-client-4.5.x/tutorial/html/advanced-.html
  */
 public class HTTPClient implements Closeable {
+	static {
+		// fix javax.net.ssl.SSLException: SSL peer shut down incorrectly
+		System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
+	}
+
 	protected static Logger logger = LoggerFactory.getLogger(HTTPClient.class);
 
 	/**
