@@ -716,6 +716,9 @@ div.rating-input {
 }
 
 /* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */
-pre { white-space: pre-wrap }
-pre { word-wrap: break-word; }
-/* pre { overflow-wrap: break-word; } */
+pre {
+	white-space: pre-wrap;
+	margin-bottom: 0px;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
