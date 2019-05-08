@@ -479,6 +479,8 @@ img.niceimage {
 /* confirmation */
 .modal-header .close { margin: 0px !important; padding: 0px !important; }
 .modal-header { display: block !important; }
+.modal-title { display: inline !important; }
+.modal-header, .modal-body, .modal-footer { padding: .4em .8em !important; }
 
 /* bootstrap notification */
 [data-notify="progressbar"] {
