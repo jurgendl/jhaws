@@ -1,8 +1,6 @@
 /* ============= DefaultWebPage-factory.js ============= */
 
 /* activate bootstrap toast messages */
-$('.toast').toast();
-
 /* activate bootstrap popover icons */
 $('[data-toggle="popover"]').popover({ html: true, delay: { "show": 50, "hide": 50 } });
 $('.popover-dismiss').popover({ html: true, trigger: 'focus', delay: { "show": 50, "hide": 500 } });
