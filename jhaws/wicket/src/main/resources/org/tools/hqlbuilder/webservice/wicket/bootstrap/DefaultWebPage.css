@@ -650,6 +650,12 @@ div.rating-input {
 	border: none;
 	transition: all 1s ease-in-out;
 }
+.toast-body {
+	max-height: 75vh;
+	overflow-x: auto;
+	overflow-y: auto;
+	overflow-wrap: break-word;
+}
 #toast-wrapper {
 	margin-top: 3.82em;
 }
@@ -708,3 +714,8 @@ div.rating-input {
 , .bootstrap-tagsinput {
 	border-radius: 0 !important;
 }
+
+/* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */
+pre { white-space: pre-wrap }
+pre { word-wrap: break-word; }
+/* pre { overflow-wrap: break-word; } */
