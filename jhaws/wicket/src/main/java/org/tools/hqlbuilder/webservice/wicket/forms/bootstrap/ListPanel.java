@@ -15,12 +15,12 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.ListSettings;
 @SuppressWarnings("serial")
 public class ListPanel<T extends Serializable> extends SelectPanel<T, Select<T>, ListSettings> {
     public ListPanel(IModel<?> model, T propertyPath, FormSettings formSettings, ListSettings componentSettings, IOptionRenderer<T> renderer,
-            IModel<List<T>> choices) {
+            IModel<? extends List<? extends T>> choices) {
         super(model, propertyPath, formSettings, componentSettings, renderer, choices);
     }
 
     public ListPanel(IModel<?> model, T propertyPath, FormSettings formSettings, ListSettings componentSettings, IOptionRenderer<T> renderer,
-            IModel<List<T>>[] choices, IModel<String>[] groupLabels) {
+            IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(model, propertyPath, formSettings, componentSettings, renderer, choices, groupLabels);
     }
 

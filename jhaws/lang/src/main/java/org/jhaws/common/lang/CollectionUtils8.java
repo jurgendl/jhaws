@@ -1262,13 +1262,20 @@ public interface CollectionUtils8 {
         return stream(new String(text));
     }
 
+    public static Stream<Boolean> stream(Boolean... b) {
+        return IntStream.range(0, b.length).mapToObj(idx -> b[idx]);
+    }
+
     public static Stream<Character> stream(Character[] text) {
         return Arrays.stream(text);
     }
 
     public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
-        return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(
-                collectList());
+        return values.stream()
+                .parallel()
+                .filter(containedIn(keys))
+                .map(value -> new Pair<>(keys.get(keys.indexOf(value)), value))
+                .collect(collectList());
     }
 
     public static <T> T optional(T value, Supplier<T> orElse) {
@@ -1398,7 +1405,7 @@ public interface CollectionUtils8 {
                                 , // order could be important, use LinkedHashMap
                                 newLinkedMap()//
                         )//
-        );
+                );
     }
 
     public static <T> Comparator<T> dummyComparator() {
@@ -2171,8 +2178,10 @@ public interface CollectionUtils8 {
     }
 
     public static <K, V> LinkedHashMap<K, V> sortByValue(Map<K, V> map, Comparator<V> comparator) {
-        return map.entrySet().stream().sorted(Map.Entry.comparingByValue(comparator)).collect(
-                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(comparator))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
     public static <T> List<T> repeat(int times, T object) {

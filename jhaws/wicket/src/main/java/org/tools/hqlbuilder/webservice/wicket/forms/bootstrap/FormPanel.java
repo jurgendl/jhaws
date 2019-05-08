@@ -98,30 +98,30 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
     }
 
     public <F extends Serializable> RadioButtonsAltPanel<F> addRadioButtonsAlt(F propertyPath, FormElementSettings componentSettings,
-            IModel<List<F>> choices, IChoiceRenderer<F> renderer) {
+            IModel<? extends List<? extends F>> choices, IChoiceRenderer<F> renderer) {
         return this.addDefaultRow(
                 new RadioButtonsAltPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices, renderer));
     }
 
     public <F extends Serializable> DropDownPanel<F> addDropDown(F propertyPath, DropDownSettings componentSettings, IOptionRenderer<F> renderer,
-            IModel<List<F>> choices) {
+            IModel<? extends List<? extends F>> choices) {
         return this
                 .addDefaultRow(new DropDownPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
     }
 
     public <F extends Serializable> DropDownPanel<F> addDropDown(F propertyPath, DropDownSettings componentSettings, IOptionRenderer<F> renderer,
-            IModel<List<F>>[] choices, IModel<String>[] groupLabels) {
+            IModel<? extends List<? extends F>>[] choices, IModel<String>[] groupLabels) {
         return this.addDefaultRow(
                 new DropDownPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
     }
 
     public <F extends Serializable> ListPanel<F> addList(F propertyPath, ListSettings componentSettings, IOptionRenderer<F> renderer,
-            IModel<List<F>> choices) {
+            IModel<? extends List<? extends F>> choices) {
         return this.addDefaultRow(new ListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
     }
 
     public <F extends Serializable> ListPanel<F> addList(F propertyPath, ListSettings componentSettings, IOptionRenderer<F> renderer,
-            IModel<List<F>>[] choices, IModel<String>[] groupLabels) {
+            IModel<? extends List<? extends F>>[] choices, IModel<String>[] groupLabels) {
         return this.addDefaultRow(
                 new ListPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices, groupLabels));
     }
@@ -130,7 +130,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
             List<I> propertyPath, //
             MultiSelectSettings componentSettings, //
             IOptionRenderer<I> renderer, //
-            IModel<List<I>> choices//
+            IModel<? extends List<? extends I>> choices//
     ) {
         return this.addDefaultRow(
                 new MultiSelectPanel<I>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer, choices));
@@ -140,7 +140,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
             List<I> propertyPath, //
             MultiSelectSettings componentSettings, //
             IOptionRenderer<I> renderer, //
-            IModel<List<I>>[] choices, //
+            IModel<? extends List<? extends I>>[] choices, //
             IModel<String>[] groupLabels//
     ) {
         return this.addDefaultRow(new MultiSelectPanel<I>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, renderer,
@@ -178,7 +178,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
         return this.addDefaultRow(new HiddenFieldPanel<F>(this.getFormModel(), propertyPath));
     }
 
-    public TagItTextFieldPanel addTagItField(String propertyPath, TagItTextFieldSettings componentSettings, IModel<List<String>> choices) {
+    public TagItTextFieldPanel addTagItField(String propertyPath, TagItTextFieldSettings componentSettings, IModel<? extends List<String>> choices) {
         return this.addDefaultRow(new TagItTextFieldPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings, choices));
     }
 

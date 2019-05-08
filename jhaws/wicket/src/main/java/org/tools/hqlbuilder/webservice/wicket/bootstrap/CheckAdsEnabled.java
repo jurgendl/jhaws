@@ -61,7 +61,7 @@ public class CheckAdsEnabled extends Panel {
         };
         image.setMarkupId(image.getId());
         this.add(image);
-        this.setVisible(WicketApplication.get().isCheckAdsEnabled());
+        this.setVisible(WicketApplication.get().getSettings().isCheckAdsEnabled());
     }
 
     @Override

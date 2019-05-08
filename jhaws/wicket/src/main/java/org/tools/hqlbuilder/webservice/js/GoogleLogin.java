@@ -6,7 +6,7 @@ import java.net.URI;
 import java.util.Properties;
 
 import org.tools.hqlbuilder.webservice.wicket.CachingUrlResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.tools.hqlbuilder.webservice.wicket.settings.WicketAppSettings;
 
 // https://console.developers.google.com/project/
 // https://developers.google.com/identity/sign-in/web/sign-in
@@ -15,10 +15,10 @@ import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 public class GoogleLogin {
     public static final String VALIDATION_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
-    public static CachingUrlResourceReference JS_PLATFORM = new CachingUrlResourceReference(URI.create("http://apis.google.com/js/platform.js"),
+    public static final CachingUrlResourceReference JS_PLATFORM = new CachingUrlResourceReference(URI.create("http://apis.google.com/js/platform.js"),
             "google-platform");
 
-    public static void init(WicketApplication app) {
+    public static void init(WicketAppSettings settings) {
         try {
             // load application key
             Properties p = new Properties();
@@ -27,7 +27,7 @@ public class GoogleLogin {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            app.setGoogleSigninClientId(p.getProperty("google.app.client_id"));
+            settings.setGoogleSigninClientId(p.getProperty("google.app.client_id"));
         } catch (Exception ex) {
             // ex.printStackTrace();
         }

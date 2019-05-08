@@ -31,7 +31,7 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
 
     public static final String OPTION_ID = "option";
 
-    protected IModel<List<T>>[] choices;
+    protected IModel<? extends List<? extends T>>[] choices;
 
     protected IModel<String>[] groupLabels;
 
@@ -39,15 +39,31 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
 
     @SuppressWarnings("unchecked")
     public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer,
-            IModel<List<T>> choices) {
+            IModel<? extends List<? extends T>> choices) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = new IModel[] { choices };
         this.renderer = fallback(renderer);
     }
 
     public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer,
-            IModel<List<T>>[] choices, IModel<String>[] groupLabels) {
+            IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(model, propertyPath, formSettings, componentSettings);
+        this.choices = choices;
+        this.renderer = fallback(renderer);
+        this.groupLabels = groupLabels;
+    }
+
+    @SuppressWarnings("unchecked")
+    public SelectPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer,
+            IModel<? extends List<? extends T>> choices) {
+        super(propertyPath, valueModel, formSettings, componentSettings);
+        this.choices = new IModel[] { choices };
+        this.renderer = fallback(renderer);
+    }
+
+    public SelectPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer,
+            IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+        super(propertyPath, valueModel, formSettings, componentSettings);
         this.choices = choices;
         this.renderer = fallback(renderer);
         this.groupLabels = groupLabels;
@@ -106,7 +122,7 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
         return (C) choice;
     }
 
-    protected SelectOptions<T> createSelectOptions(String id, IModel<List<T>> choicesModel) {
+    protected SelectOptions<T> createSelectOptions(String id, IModel<? extends List<? extends T>> choicesModel) {
         SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
             @Override
             protected SelectOption<T> newOption(final String text, final IModel<? extends T> optModel) {

@@ -16,6 +16,10 @@ public abstract class DefaultFormRowPanel<T, C extends FormComponent<T>, S exten
         super(model, propertyPath, formSettings, componentSettings);
     }
 
+    public DefaultFormRowPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, S componentSettings) {
+        super(propertyPath, valueModel, formSettings, componentSettings);
+    }
+
     @Override
     public FormRowPanelParent<T, T, C, S> setValueModel(IModel<T> model) {
         getComponent().setModel(model);

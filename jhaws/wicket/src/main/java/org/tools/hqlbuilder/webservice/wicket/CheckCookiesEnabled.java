@@ -35,7 +35,8 @@ public class CheckCookiesEnabled extends Panel {
             }
         });
 
-        cookiesQ.setVisible(WicketApplication.get().isCheckCookiesEnabled() && WicketSession.get().getCookies().getUserAllowedCookies() == null);
+        cookiesQ.setVisible(
+                WicketApplication.get().getSettings().isCheckCookiesEnabled() && WicketSession.get().getCookies().getUserAllowedCookies() == null);
         add(cookiesQ);
     }
 
@@ -45,7 +46,7 @@ public class CheckCookiesEnabled extends Panel {
         if (!isEnabledInHierarchy()) {
             return;
         }
-        if (WicketApplication.get().isCheckCookiesEnabled() && WicketSession.get().getCookies().getUserAllowedCookies() == null) {
+        if (WicketApplication.get().getSettings().isCheckCookiesEnabled() && WicketSession.get().getCookies().getUserAllowedCookies() == null) {
             response.render(JavaScriptHeaderItem.forReference(JS));
         }
     }

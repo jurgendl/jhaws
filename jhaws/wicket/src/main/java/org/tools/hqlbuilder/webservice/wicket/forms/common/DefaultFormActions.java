@@ -73,7 +73,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
      */
     @Override
     public T submitObject(T object) {
-        throw new UnsupportedOperationException();
+        return object;
     }
 
     /**

@@ -7,6 +7,6 @@ public class CheckJavaScriptEnabled extends Panel {
 
     public CheckJavaScriptEnabled() {
         super("check.javascript.enabled");
-        setVisible(WicketApplication.get().isCheckJavaScriptEnabled());
+        setVisible(WicketApplication.get().getSettings().isCheckJavaScriptEnabled());
     }
 }

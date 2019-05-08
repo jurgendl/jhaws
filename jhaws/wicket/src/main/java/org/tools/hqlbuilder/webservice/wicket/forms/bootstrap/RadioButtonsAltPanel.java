@@ -10,12 +10,12 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 
 @SuppressWarnings("serial")
 public class RadioButtonsAltPanel<T extends Serializable> extends DefaultFormRowPanel<T, BootstrapRadioChoice<T>, FormElementSettings> {
-    protected IModel<List<T>> choices;
+    protected IModel<? extends List<? extends T>> choices;
 
     protected IChoiceRenderer<T> renderer;
 
     public RadioButtonsAltPanel(IModel<?> model, T propertyPath, FormSettings formSettings, FormElementSettings componentSettings,
-            IModel<List<T>> choices, IChoiceRenderer<T> renderer) {
+            IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
         this.renderer = renderer;
