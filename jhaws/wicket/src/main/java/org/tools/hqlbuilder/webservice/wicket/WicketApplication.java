@@ -28,7 +28,6 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
@@ -53,10 +52,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.tools.hqlbuilder.common.icons.WicketIconsRoot;
 import org.tools.hqlbuilder.webservice.WicketRoot;
-import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
 import org.tools.hqlbuilder.webservice.css.WicketCSSRoot;
 import org.tools.hqlbuilder.webservice.js.GoogleLogin;
-import org.tools.hqlbuilder.webservice.js.WicketJSRoot;
 import org.tools.hqlbuilder.webservice.wicket.settings.WicketAppSettings;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.htmlcompressor.HtmlCompressingMarkupFactory;
@@ -234,32 +231,32 @@ public class WicketApplication extends WebApplication implements InitializingBea
     }
 
     protected void addBundles() {
-        this.getResourceBundles()
-                .addJavaScriptBundle(WicketJSRoot.class, "tinymcebundle.js",
-                        new JavaScriptResourceReference[] {
-                                BootstrapTinyMCE.JS,
-                                BootstrapTinyMCE.JS_JQUERY,
-                                BootstrapTinyMCE.JS_PLUGIN_ADVLIST,
-                                BootstrapTinyMCE.JS_PLUGIN_ANCHOR,
-                                BootstrapTinyMCE.JS_PLUGIN_AUTOLINK,
-                                BootstrapTinyMCE.JS_PLUGIN_CHARMAP,
-                                BootstrapTinyMCE.JS_PLUGIN_CODE,
-                                BootstrapTinyMCE.JS_PLUGIN_COLORPICKER,
-                                BootstrapTinyMCE.JS_PLUGIN_HELP,
-                                BootstrapTinyMCE.JS_PLUGIN_HR,
-                                BootstrapTinyMCE.JS_PLUGIN_IMAGE,
-                                BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME,
-                                BootstrapTinyMCE.JS_PLUGIN_LINK,
-                                BootstrapTinyMCE.JS_PLUGIN_LISTS,
-                                BootstrapTinyMCE.JS_PLUGIN_MEDIA,
-                                BootstrapTinyMCE.JS_PLUGIN_PASTE,
-                                BootstrapTinyMCE.JS_PLUGIN_PREVIEW,
-                                BootstrapTinyMCE.JS_PLUGIN_PRINT,
-                                BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE,
-                                BootstrapTinyMCE.JS_PLUGIN_TABLE,
-                                BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR,
-                                BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS,
-                                BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT });
+        // this.getResourceBundles()
+        // .addJavaScriptBundle(WicketJSRoot.class, "tinymcebundle.js",
+        // new JavaScriptResourceReference[] {
+        // BootstrapTinyMCE.JS,
+        // BootstrapTinyMCE.JS_JQUERY,
+        // BootstrapTinyMCE.JS_PLUGIN_ADVLIST,
+        // BootstrapTinyMCE.JS_PLUGIN_ANCHOR,
+        // BootstrapTinyMCE.JS_PLUGIN_AUTOLINK,
+        // BootstrapTinyMCE.JS_PLUGIN_CHARMAP,
+        // BootstrapTinyMCE.JS_PLUGIN_CODE,
+        // BootstrapTinyMCE.JS_PLUGIN_COLORPICKER,
+        // BootstrapTinyMCE.JS_PLUGIN_HELP,
+        // BootstrapTinyMCE.JS_PLUGIN_HR,
+        // BootstrapTinyMCE.JS_PLUGIN_IMAGE,
+        // BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME,
+        // BootstrapTinyMCE.JS_PLUGIN_LINK,
+        // BootstrapTinyMCE.JS_PLUGIN_LISTS,
+        // BootstrapTinyMCE.JS_PLUGIN_MEDIA,
+        // BootstrapTinyMCE.JS_PLUGIN_PASTE,
+        // BootstrapTinyMCE.JS_PLUGIN_PREVIEW,
+        // BootstrapTinyMCE.JS_PLUGIN_PRINT,
+        // BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE,
+        // BootstrapTinyMCE.JS_PLUGIN_TABLE,
+        // BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR,
+        // BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS,
+        // BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT });
     }
 
     protected void initStore() {

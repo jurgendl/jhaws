@@ -13,6 +13,10 @@ public class ConfirmationAjaxLink<T> extends AjaxLink<T> {
         super(id);
     }
 
+    public ConfirmationAjaxLink(String id, IModel<T> model) {
+        super(id, model);
+    }
+
     @Override
     protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
         super.updateAjaxAttributes(attributes);
