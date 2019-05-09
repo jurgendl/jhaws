@@ -713,7 +713,8 @@ div.rating-input {
 , .toast
 , .modal-content
 , .custom-checkbox .custom-control-label::before
-, .bootstrap-tagsinput {
+, .bootstrap-tagsinput
+, .card {
 	border-radius: 0 !important;
 }
 
