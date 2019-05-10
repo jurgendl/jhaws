@@ -8,7 +8,7 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://highlightjs.org/static/demo/
 // npm install highlight.js
 //
-// alternative https://prismjs.com/
+// https://alistapart.com/article/alternate/
 public class HighlightJs {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(HighlightJs.class, "highlight.pack.js");
 
