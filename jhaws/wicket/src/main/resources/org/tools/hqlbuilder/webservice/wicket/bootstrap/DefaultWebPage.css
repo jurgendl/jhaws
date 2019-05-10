@@ -387,16 +387,6 @@ ul.nested li {
 }
 
 /* */
-kbd, code {
-	padding: .1em .6em;
-}
-
-/* */
-.roundedborder {
-	border-radius: 50%;
-}
-
-/* */
 .sq-1 {
 	width: 1rem;
 	height: 1rem;
@@ -724,8 +714,4 @@ pre {
 	margin-bottom: 0px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
-}
-
-code {
-    padding: 0px !important;
 }
