@@ -449,7 +449,8 @@ public class ExifTool implements MediaCte {
 				Map<String, Object> tmp = (Map<String, Object>) ((Map<String, Object>) JavaScript
 						.eval(lines.stream().collect(Collectors.joining()))).values().iterator().next();
 				TreeMap<String, String> all = new TreeMap<String, String>();
-				tmp.keySet().forEach(k -> all.put(k, tmp.get(k).toString().replace("\r", "").replace("\n", "")));
+				tmp.keySet().forEach(k -> all.put(k,
+						tmp.get(k).toString().replace("\r", " ").replace("\r\n", " ").replace("\n", " ")));
 				exifinfo.setAll(new LinkedHashMap<>(all));
 
 				exifinfo.setW(Integer.parseInt(exifinfo.values("0", IW, W)));
