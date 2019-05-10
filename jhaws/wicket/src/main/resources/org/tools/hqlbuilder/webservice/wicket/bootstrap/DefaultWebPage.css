@@ -725,3 +725,7 @@ pre {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 }
+
+code {
+    padding: 0px !important;
+}
