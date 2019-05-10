@@ -421,9 +421,6 @@ ul.nested li {
 	border-style:solid;
 	padding:5px;
 	margin:5px;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
-	border-radius:3px;
 	border-color:rgba(0,0,0,.3);
 	-webkit-box-shadow:2px 2px 3px 1px rgba(50, 50, 50, 0.5), -1px -1px 1px 0px rgba(50, 50, 50, 0.3);
 	-moz-box-shadow:2px 2px 3px 1px rgba(50, 50, 50, 0.5), -1px -1px 1px 0px rgba(50, 50, 50, 0.3);
@@ -562,39 +559,7 @@ div.rating-input {
   padding: 0.35rem .5rem;
 }
 
-/* pure css spinner */
-/* <span class="spinner"></span> */
-.spinner {
-    display: block;
-    width: 15px;
-    height: 15px;
-    margin: 80px 80px;
-    position: relative;
-    border: 2px solid rgba(0,0,0,0.5);
-    border-top-color: transparent;
-    border-radius: 100%;
-    -webkit-animation: spin 1s infinite linear;
-    -moz-animation: spin 1s infinite linear;
-    -ms-animation: spin 1s infinite linear;
-    -o-animation: spin 1s infinite linear;
-    animation: spin 1s infinite linear;
- }
-.spinner:after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    position: absolute;
-    top: -5px;
-    left: 0px;
-    border: 4px solid transparent;
-    border-bottom-color: rgba(0,0,0,0.5);
-    -webkit-transform: rotate(45deg);
-    -moz-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -o-transform: rotate(45deg);
-    transform: rotate(45deg);
-}
+/* */
 @-webkit-keyframes spin {
     to { -webkit-transform: rotate(360deg); }
 }
