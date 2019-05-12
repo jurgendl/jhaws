@@ -546,6 +546,9 @@ public class FfmpegTool implements MediaCte {
 	}
 
 	protected RemuxCfg config(RemuxDefaultsCfg defaults, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+		if (defaults == null) {
+			defaults = new RemuxDefaultsCfg();
+		}
 		RemuxCfg cfg = new RemuxCfg();
 		if (defaults != null) {
 			cfg.defaults = defaults;
