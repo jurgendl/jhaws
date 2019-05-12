@@ -256,6 +256,7 @@ public class FfmpegTool implements MediaCte {
 			// command.add("-sexagesimal");
 			command.add("-i");
 			command.add(command(input));
+			System.out.println(command.stream().collect(Collectors.joining(" ")));
 			silentcall(null, lines, input.getParentPath(), command);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
 			logger.info("{}", xml);
@@ -1119,11 +1120,11 @@ public class FfmpegTool implements MediaCte {
 		if (output.exists()) {
 			throw new UncheckedIOException(new FileExistsException(output.getAbsolutePath()));
 		}
-		if (!"mp4".equals(video.getExtension())) {
-			FilePath tmp = video.appendExtension("mp4");
-			remux(null, new RemuxDefaultsCfg(), null, video, tmp, null);
-			video = tmp;
-		}
+//		if (!"mp4".equals(video.getExtension())) {
+//			FilePath tmp = video.appendExtension("mp4");
+//			remux(null, new RemuxDefaultsCfg(), null, video, tmp, null);
+//			video = tmp;
+//		}
 		StreamType a = audio(info(audio));
 		Lines lines = new Lines();
 		try {
