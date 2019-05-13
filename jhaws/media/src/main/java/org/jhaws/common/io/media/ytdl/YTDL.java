@@ -54,17 +54,17 @@ public class YTDL {
 				System.out.println("> " + t);
 				super.accept(t);
 			}
-		}, executable.getParentPath(), command);
+		}, tmpFolder, command);
 		if (dl.isEmpty()) {
 			throw new NullPointerException();
 		}
 		if (dl.size() == 1) {
-			FilePath from = new FilePath(executable.getParentPath(), dl.get(0));
-			FilePath to = from.moveTo(targetFolder);
+			FilePath from = new FilePath(tmpFolder, dl.get(0));
+			FilePath to = from.moveTo(targetFolder).newFileIndex();
 			return to;
 		} else if (dl.size() == 2) {
-			FilePath f1 = new FilePath(executable.getParentPath(), dl.get(0));
-			FilePath f2 = new FilePath(executable.getParentPath(), dl.get(1));
+			FilePath f1 = new FilePath(tmpFolder, dl.get(0));
+			FilePath f2 = new FilePath(tmpFolder, dl.get(1));
 			return merge(targetFolder, f1, f2);
 		} else {
 			throw new NullPointerException();
@@ -108,7 +108,7 @@ public class YTDL {
 			throw new NullPointerException();
 		}
 		if (v.getExtension().equalsIgnoreCase("mp4")) {
-			FilePath to = targetFolder.child(v.getName() + ".mp4");
+			FilePath to = targetFolder.child(v.getName() + ".mp4").newFileIndex();
 			ffmpegTool.merge(v, a, to, new Lines() {
 				@Override
 				public void accept(String l) {
@@ -120,7 +120,7 @@ public class YTDL {
 			a.delete();
 			return to;
 		} else {
-			FilePath to1 = targetFolder.child(v.getName() + ".mkv");
+			FilePath to1 = targetFolder.child(v.getName() + ".mkv").newFileIndex();
 			ffmpegTool.merge(v, a, to1, new Lines() {
 				@Override
 				public void accept(String l) {
@@ -128,7 +128,7 @@ public class YTDL {
 					super.accept(l);
 				}
 			});
-			FilePath to2 = to1.appendExtension("mp4");
+			FilePath to2 = to1.appendExtension("mp4").newFileIndex();
 			ffmpegTool.remux(null, new RemuxDefaultsCfg(), x -> System.out::println, to1, to2, cfg -> {
 			});
 			to1.delete();
