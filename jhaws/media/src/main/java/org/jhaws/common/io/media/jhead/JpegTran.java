@@ -11,15 +11,7 @@ import org.jhaws.common.io.console.Processes.Lines;
 
 // http://jpegclub.org/jpegtran/
 public class JpegTran {
-    protected FilePath jpegtran;
-
-    public FilePath getJpegtran() {
-        return this.jpegtran;
-    }
-
-    public void setJpegtran(FilePath jpegtran) {
-        this.jpegtran = jpegtran;
-    }
+    protected FilePath executable;
 
     protected String command(FilePath f) {
         return "\"" + f.getAbsolutePath() + "\"";
@@ -39,10 +31,18 @@ public class JpegTran {
 
     public void rotate(FilePath image, int nr) {
         FilePath tmp = FilePath.getTempDirectory().child(image.getFileNameString());
-        List<String> command = Arrays.asList(command(jpegtran), "-debug", "-rotate", "" + nr, command(image), command(tmp));
+        List<String> command = Arrays.asList(command(executable), "-debug", "-rotate", "" + nr, command(image), command(tmp));
         System.out.println(command.stream().collect(Collectors.joining(" ")));
-        callProcess(null, false, command, jpegtran.getParentPath(), new Lines()).lines().forEach(System.out::println);
+        callProcess(null, false, command, executable.getParentPath(), new Lines()).lines().forEach(System.out::println);
         image.delete();
         tmp.moveTo(image);
+    }
+
+    public FilePath getExecutable() {
+        return this.executable;
+    }
+
+    public void setExecutable(FilePath executable) {
+        this.executable = executable;
     }
 }
