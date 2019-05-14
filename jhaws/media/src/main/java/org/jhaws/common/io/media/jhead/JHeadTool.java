@@ -2,10 +2,15 @@ package org.jhaws.common.io.media.jhead;
 
 import static org.jhaws.common.io.console.Processes.callProcess;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.Utils;
@@ -17,6 +22,10 @@ import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
 
 // http://www.sentex.net/~mwandel/jhead/
 public class JHeadTool extends Tool {
+    public static final String URL = "http://www.sentex.net/~mwandel/jhead/";
+
+    public static final String EXE = "jhead";
+
     public JHeadTool() {
         super(System.getenv("JHEAD"));
     }
@@ -55,14 +64,33 @@ public class JHeadTool extends Tool {
                 executable = f;
             } else {
                 if (Utils.osgroup == OSGroup.Windows) {
-                    executable = f.child("jhead").appendExtension("exe");
+                    executable = f.child(EXE).appendExtension("exe");
                 } else {
-                    executable = f.child("jhead");
+                    executable = f.child(EXE);
                 }
             }
         } else {
-            new IllegalArgumentException().printStackTrace();
-            return;
+            f.createDirectory();
+            if (Utils.osgroup == OSGroup.Windows) {
+                executable = f.child(EXE).appendExtension("exe");
+            } else {
+                executable = f.child(EXE);
+            }
+        }
+
+        if (executable.exists()) {
+            //
+        } else {
+            String tmp = EXE;
+            if (Utils.osgroup == OSGroup.Windows) {
+                tmp = tmp + ".exe";
+            }
+            try (InputStream in = new URL(URL + tmp).openConnection().getInputStream(); OutputStream out = executable.newBufferedOutputStream()) {
+                IOUtils.copy(in, out);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return;
+            }
         }
     }
 }

@@ -33,26 +33,35 @@ public abstract class Tool {
         //
     }
 
-    final public FilePath getExecutable() {
+    public final FilePath getExecutable() {
         return this.executable;
     }
 
-    final public void setExecutable(FilePath executable) {
+    public final void setExecutable(FilePath executable) {
         this.executable = executable;
     }
 
     public final void setPath(String path) {
         if (new EqualsBuilder().append(path, this.path).isEquals()) return;
-        setPathImpl(path);
-        this.path = path;
-        this.version = null;
+        try {
+            setPathImpl(path);
+            this.path = path;
+            this.version = null;
+        } catch (RuntimeException ex) {
+            ex.printStackTrace();
+        }
     }
 
     protected abstract void setPathImpl(String path);
 
     public final String getVersion() {
         if (version == null) {
-            version = getVersionImpl();
+            try {
+                version = getVersionImpl();
+            } catch (RuntimeException ex) {
+                ex.printStackTrace();
+            }
+
         }
         return version;
     }
