@@ -1,148 +1,138 @@
 package org.jhaws.common.io.media.ytdl;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.console.Processes.Lines;
+import org.jhaws.common.io.Utils;
+import org.jhaws.common.io.Utils.OSGroup;
+import org.jhaws.common.io.console.Processes.LinesLog;
+import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
-import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxDefaultsCfg;
-import org.jhaws.common.io.media.ffmpeg.xml.FfprobeType;
 
 // https://github.com/ytdl-org/youtube-dl
-public class YTDL {
-	protected FilePath executable;
+public class YTDL extends Tool {
+    public static final String EXE = "youtube-dl";
 
-	protected FfmpegTool ffmpegTool;
+    public static final String URL = "https://yt-dl.org/downloads/latest/";
 
-	protected String command(FilePath f) {
-		return "\"" + f.getAbsolutePath() + "\"";
-	}
+    protected FilePath executable;
 
-	public FilePath getExecutable() {
-		return this.executable;
-	}
+    public YTDL() {
+        super(System.getenv("YOUTUBEDL"));
+    }
 
-	public void setExecutable(FilePath executable) {
-		this.executable = executable;
-	}
+    public YTDL(String s) {
+        super(s);
+    }
 
-	public FilePath download(String url, FilePath tmpFolder, FilePath targetFolder) {
-		if (executable == null || executable.notExists())
-			throw new NullPointerException();
-		if (tmpFolder == null)
-			tmpFolder = FilePath.getTempDirectory();
-		if (targetFolder == null)
-			targetFolder = FilePath.getTempDirectory();
-		List<String> command = new ArrayList<>();
-		command.add(FfmpegTool.command(executable));
-		command.add("--verbose");
-		command.add("-f");
-		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
-		command.add("bestvideo,bestaudio");
-		command.add("-o");
-		command.add("%(title)s.f%(format_id)s.%(ext)s");
-		command.add(url);
-		List<String> dl = new ArrayList<>();
-		FfmpegTool.call(null, new Lines() {
-			@Override
-			public void accept(String t) {
-				String prefix = "[download] Destination: ";
-				if (t != null && t.startsWith(prefix)) {
-					dl.add(t.substring(prefix.length()));
-				}
-				System.out.println("> " + t);
-				super.accept(t);
-			}
-		}, tmpFolder, command);
-		if (dl.isEmpty()) {
-			throw new NullPointerException();
-		}
-		if (dl.size() == 1) {
-			FilePath from = new FilePath(tmpFolder, dl.get(0));
-			FilePath to = from.moveTo(targetFolder).newFileIndex();
-			return to;
-		} else if (dl.size() == 2) {
-			FilePath f1 = new FilePath(tmpFolder, dl.get(0));
-			FilePath f2 = new FilePath(tmpFolder, dl.get(1));
-			return merge(targetFolder, f1, f2);
-		} else {
-			throw new NullPointerException();
-		}
-	}
+    public YTDL(boolean disableAuto) {
+        super(disableAuto);
+    }
 
-	protected FilePath merge(FilePath targetFolder, FilePath f1, FilePath f2) {
-		FfprobeType i1 = ffmpegTool.info(f1, new Lines());
-		FfprobeType i2 = ffmpegTool.info(f2, new Lines());
-		List<FilePath> as = new ArrayList<>();
-		List<FilePath> vs = new ArrayList<>();
-		if (ffmpegTool.video(i1) != null) {
-			vs.add(f1);
-		}
-		if (ffmpegTool.audio(i1) != null) {
-			as.add(f1);
-		}
-		if (ffmpegTool.video(i2) != null) {
-			vs.add(f2);
-		}
-		if (ffmpegTool.audio(i2) != null) {
-			as.add(f2);
-		}
-		if (as.isEmpty() || vs.isEmpty()) {
-			throw new NullPointerException();
-		}
-		if (as.size() == 2 && vs.size() == 2) {
-			throw new NullPointerException();
-		}
-		FilePath a;
-		FilePath v;
-		if (as.size() == 1) {
-			a = as.get(0);
-			vs.remove(a);
-			v = vs.get(0);
-		} else if (vs.size() == 1) {
-			v = vs.get(0);
-			as.remove(v);
-			a = as.get(0);
-		} else {
-			throw new NullPointerException();
-		}
-		if (v.getExtension().equalsIgnoreCase("mp4")) {
-			FilePath to = targetFolder.child(v.getName() + ".mp4").newFileIndex();
-			ffmpegTool.merge(v, a, to, new Lines() {
-				@Override
-				public void accept(String l) {
-					System.out.println("> " + l);
-					super.accept(l);
-				}
-			});
-			v.delete();
-			a.delete();
-			return to;
-		} else {
-			FilePath to1 = targetFolder.child(v.getName() + ".mkv").newFileIndex();
-			ffmpegTool.merge(v, a, to1, new Lines() {
-				@Override
-				public void accept(String l) {
-					System.out.println("> " + l);
-					super.accept(l);
-				}
-			});
-			FilePath to2 = to1.appendExtension("mp4").newFileIndex();
-			ffmpegTool.remux(null, new RemuxDefaultsCfg(), x -> System.out::println, to1, to2, cfg -> {
-			});
-			to1.delete();
-			v.delete();
-			a.delete();
-			return to2;
-		}
-	}
+    @Override
+    protected void setPathImpl(String path) {
+        if (StringUtils.isBlank(path)) {
+            new NullPointerException().printStackTrace();
+            return;
+        }
+        FilePath f = new FilePath(path);
+        if (f.exists()) {
+            if (f.isFile()) {
+                if (!EXE.equalsIgnoreCase(f.getShortFileName())) {
+                    new IllegalArgumentException().printStackTrace();
+                    return;
+                }
+                executable = f;
+            } else {
+                if (Utils.osgroup == OSGroup.Windows) {
+                    executable = f.child(EXE).appendExtension("exe");
+                } else {
+                    executable = f.child(EXE);
+                }
+            }
+        } else {
+            f.createDirectory();
+            if (Utils.osgroup == OSGroup.Windows) {
+                executable = f.child(EXE).appendExtension("exe");
+            } else {
+                executable = f.child(EXE);
+            }
+        }
 
-	public FfmpegTool getFfmpegTool() {
-		return this.ffmpegTool;
-	}
+        if (executable.exists()) {
+            List<String> command = new ArrayList<>();
+            command.add(FfmpegTool.command(executable));
+            command.add("-U");
+            FfmpegTool.call(null, new LinesLog(), executable.getParentPath(), command);
+        } else {
+            String tmp = EXE;
+            if (Utils.osgroup == OSGroup.Windows) {
+                tmp = tmp + ".exe";
+            }
+            try (InputStream in = new URL(URL + tmp).openConnection().getInputStream(); OutputStream out = executable.newBufferedOutputStream()) {
+                IOUtils.copy(in, out);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return;
+            }
+        }
+    }
 
-	public void setFfmpegTool(FfmpegTool ffmpegTool) {
-		this.ffmpegTool = ffmpegTool;
-	}
+    @Override
+    protected String getVersionImpl() {
+        List<String> command = new ArrayList<>();
+        command.add(FfmpegTool.command(executable));
+        command.add("--version");
+        LinesLog lines = new LinesLog();
+        FfmpegTool.call(null, lines, executable.getParentPath(), command);
+        return lines.lines().get(0);
+    }
+
+    public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder) {
+        if (executable == null || executable.notExists()) throw new NullPointerException();
+        if (tmpFolder == null) tmpFolder = FilePath.getTempDirectory();
+        if (targetFolder == null) targetFolder = FilePath.getTempDirectory();
+        List<String> command = new ArrayList<>();
+        command.add(FfmpegTool.command(executable));
+        command.add("--verbose");
+        command.add("-f");
+        // command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
+        command.add("bestvideo,bestaudio");
+        command.add("-o");
+        command.add("%(title)s.f%(format_id)s.%(ext)s");
+        command.add(url);
+        List<String> dl = new ArrayList<>();
+        FfmpegTool.call(null, new LinesLog() {
+            @Override
+            public void accept(String t) {
+                String prefix = "[download] Destination: ";
+                if (t != null && t.startsWith(prefix)) {
+                    dl.add(t.substring(prefix.length()));
+                }
+                super.accept(t);
+            }
+        }, tmpFolder, command);
+        if (dl.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (dl.size() == 1) {
+            FilePath from = new FilePath(tmpFolder, dl.get(0));
+            FilePath to = from.moveTo(targetFolder).newFileIndex();
+            return Arrays.asList(to);
+        } else if (dl.size() == 2) {
+            FilePath f1 = new FilePath(tmpFolder, dl.get(0));
+            FilePath f2 = new FilePath(tmpFolder, dl.get(1));
+            return Arrays.asList(f1, f2);
+        } else {
+            throw new NullPointerException();
+        }
+    }
 }

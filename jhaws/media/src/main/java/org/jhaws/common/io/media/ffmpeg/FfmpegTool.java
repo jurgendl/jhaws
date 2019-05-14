@@ -22,28 +22,26 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
+import org.jhaws.common.io.console.Processes.LinesLog;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.io.media.MediaCte;
+import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.io.media.ffmpeg.xml.FfprobeType;
 import org.jhaws.common.io.media.ffmpeg.xml.StreamType;
 import org.jhaws.common.io.media.images.ImageTools;
 import org.jhaws.common.lang.BooleanValue;
 import org.jhaws.common.lang.DateTime8;
 import org.jhaws.common.lang.KeyValue;
-import org.jhaws.common.lang.Value;
 import org.jhaws.common.lang.functions.EFunction;
 import org.jhaws.common.pool.Pooled;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @see https://ffmpeg.org/
  * @see https://ffmpeg.zeranoe.com/builds/
  * @see https://trac.ffmpeg.org/
  */
-public class FfmpegTool implements MediaCte {
+public class FfmpegTool extends Tool implements MediaCte {
     public static final String FIX_DIV2 = "scale=trunc(iw/2)*2:trunc(ih/2)*2";
 
     public static final String FORMAT_YUV420P = "format=yuv420p";
@@ -51,15 +49,6 @@ public class FfmpegTool implements MediaCte {
     public static final String VIDEO = "video";
 
     public static final String AUDIO = "audio";
-
-    protected static class FfmpegDebug implements Consumer<String> {
-        @Override
-        public void accept(String t) {
-            logger.debug("{}", t);
-        }
-    }
-
-    protected static final Logger logger = LoggerFactory.getLogger("ffmpeg");
 
     public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
             org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
@@ -125,17 +114,17 @@ public class FfmpegTool implements MediaCte {
         public Object context;
     }
 
-    public FfmpegTool() {
-        super();
+    public FfmpegTool(String s) {
+        super(s);
     }
 
-    public FfmpegTool(FilePath ffmpeg, FilePath ffprobe) {
-        this.ffmpeg = ffmpeg;
-        this.ffprobe = ffprobe;
-    }
-
-    public FfmpegTool(String r) {
-        FilePath root = new FilePath(r);
+    @Override
+    protected void setPathImpl(String s) {
+        if (StringUtils.isBlank(s)) {
+            new NullPointerException().printStackTrace();
+            return;
+        }
+        FilePath root = new FilePath(s);
         if (root.child("ffmpeg.exe").exists()) {
             ffmpeg = root.child("ffmpeg.exe");
             ffprobe = root.child("ffprobe.exe");
@@ -146,6 +135,15 @@ public class FfmpegTool implements MediaCte {
             ffmpeg = root;
             ffmpeg = root.getParentPath().child("ffprobe.exe");
         }
+        executable = ffmpeg;
+    }
+
+    public FfmpegTool() {
+        super(System.getenv("FFMPEG"));
+    }
+
+    public FfmpegTool(boolean disableAuto) {
+        super(disableAuto);
     }
 
     /** dxva2, qsv, nvenc */
@@ -1206,33 +1204,6 @@ public class FfmpegTool implements MediaCte {
         });
     }
 
-    public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command) {
-        return call(processHolder, lines, dir, command, true, null);
-    }
-
-    public static Lines silentcall(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command) {
-        return call(processHolder, lines, dir, command, false, null);
-    }
-
-    public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
-        if (lines == null) lines = new Lines();
-        Consumer<String> consumers = log ? lines.andThen(new FfmpegDebug()) : lines;
-        if (listener != null) {
-            consumers = consumers.andThen(listener);
-        }
-        if (log) {
-            // FIXME JOIN FALSE
-            logger.info("start - {}", join(command));
-        }
-        long start = System.currentTimeMillis();
-        Processes.callProcess(processHolder, true, command, dir, consumers);
-        if (log) {
-            // FIXME JOIN FALSE
-            logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
-        }
-        return lines;
-    }
-
     public StreamType video(FfprobeType finfo) {
         return finfo == null ? null : videos(finfo).stream().findAny().orElse(null);
     }
@@ -1257,18 +1228,6 @@ public class FfmpegTool implements MediaCte {
                         .stream()
                         .filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType()))
                         .collect(Collectors.toList());
-    }
-
-    public static String command(FilePath f) {
-        return escape(f.getAbsolutePath());
-    }
-
-    public static String escape(String string) {
-        return "\"" + string + "\"";
-    }
-
-    protected String and(String... strings) {
-        return Arrays.stream(strings).collect(Collectors.joining(","));
     }
 
     public long frames(StreamType videostreaminfo) {
@@ -1374,12 +1333,68 @@ public class FfmpegTool implements MediaCte {
         command.add("aac_low");
         command.add(command(out));
         System.out.println(command.stream().collect(Collectors.joining(" ")));
-        call(null, new Lines() {
-            @Override
-            public void accept(String t) {
-                System.out.println("> " + t);
-                super.accept(t);
-            }
-        }, out.getParentPath(), command);
+        call(null, new LinesLog(), out.getParentPath(), command);
+    }
+
+    public FilePath mergeUnknowns(FilePath f1, FilePath f2, FilePath output, Lines lines) {
+        FfprobeType i1 = info(f1, new Lines());
+        FfprobeType i2 = info(f2, new Lines());
+        List<FilePath> as = new ArrayList<>();
+        List<FilePath> vs = new ArrayList<>();
+        if (video(i1) != null) {
+            vs.add(f1);
+        }
+        if (audio(i1) != null) {
+            as.add(f1);
+        }
+        if (video(i2) != null) {
+            vs.add(f2);
+        }
+        if (audio(i2) != null) {
+            as.add(f2);
+        }
+        if (as.isEmpty() || vs.isEmpty()) {
+            throw new NullPointerException();
+        }
+        if (as.size() == 2 && vs.size() == 2) {
+            throw new NullPointerException();
+        }
+        FilePath a;
+        FilePath v;
+        if (as.size() == 1) {
+            a = as.get(0);
+            vs.remove(a);
+            v = vs.get(0);
+        } else if (vs.size() == 1) {
+            v = vs.get(0);
+            as.remove(v);
+            a = as.get(0);
+        } else {
+            throw new NullPointerException();
+        }
+        if (v.getExtension().equalsIgnoreCase("mp4")) {
+            FilePath to = output.child(v.getName() + ".mp4").newFileIndex();
+            merge(v, a, to, lines);
+            v.delete();
+            a.delete();
+            return to;
+        } else {
+            FilePath to1 = output.child(v.getName() + ".mkv").newFileIndex();
+            merge(v, a, to1, lines);
+            FilePath to2 = to1.appendExtension("mp4").newFileIndex();
+            remux(null, new RemuxDefaultsCfg(), x -> System.out::println, to1, to2, cfg -> {});
+            to1.delete();
+            v.delete();
+            a.delete();
+            return to2;
+        }
+    }
+
+    @Override
+    protected String getVersionImpl() {
+        List<String> command = Arrays.asList(command(getFfmpeg()), "-version");
+        LinesLog lines = new LinesLog();
+        FfmpegTool.call(null, lines, getFfmpeg().getParentPath(), command);
+        return lines.lines().get(0);
     }
 }

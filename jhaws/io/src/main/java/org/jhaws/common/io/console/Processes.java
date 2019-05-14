@@ -43,6 +43,14 @@ public class Processes {
         }
     }
 
+    public static class LinesLog extends Lines {
+        @Override
+        public void accept(String l) {
+            System.out.println("> " + l);
+            super.accept(l);
+        }
+    }
+
     public static class Text implements Consumer<String> {
         StringBuilder linesText = new StringBuilder();
 
