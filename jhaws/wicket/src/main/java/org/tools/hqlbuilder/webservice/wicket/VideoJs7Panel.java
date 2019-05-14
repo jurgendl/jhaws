@@ -25,6 +25,7 @@ public class VideoJs7Panel extends Panel {
 		super(id);
 		this.config = config;
 		add(createContainer(config));
+		setOutputMarkupId(true);
 	}
 
 	protected WebMarkupContainer createContainer(VideoJs7PanelConfig _config) {
@@ -70,7 +71,8 @@ public class VideoJs7Panel extends Panel {
 		// video.add(new AttributeModifier("style", "width:100% !important;
 		// padding-bottom:"
 		// + (int) (100.0 * config.getH() / _config.getW()) + "% !important"));
-		// video.add(new AttributeModifier("style", "width:100% !important;height:100%
+		// video.add(new AttributeModifier("style", "width:100%
+		// !important;height:100%
 		// !important"));
 
 		return videocontainer;
