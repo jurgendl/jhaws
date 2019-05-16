@@ -669,7 +669,8 @@ div.rating-input {
 , .modal-content
 , .custom-checkbox .custom-control-label::before
 , .bootstrap-tagsinput
-, .card {
+, .card
+, .custom-file-label {
 	border-radius: 0 !important;
 }
 

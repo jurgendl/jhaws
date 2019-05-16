@@ -18,6 +18,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
+import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -61,12 +62,20 @@ public abstract class DefaultWebPage extends WebPage {
 
     public DefaultWebPage(PageParameters parameters) {
         super(parameters);
-        // // html language
-        // WebMarkupContainer html = new WebMarkupContainer("html");
-        // add(html.add(new AttributeModifier("lang",
-        // getSession().getLocale().getLanguage())));
+        setHtmlLanguageTag();
         addDefaultComponents(parameters, this);
         addComponents(parameters, this);
+    }
+
+    protected void setHtmlLanguageTag() {
+        // http://apache-wicket.1842946.n4.nabble.com/How-can-i-change-lang-attribute-in-html-markup-tag-td3222720.html
+        TransparentWebMarkupContainer htmlTag = new TransparentWebMarkupContainer("html");
+        htmlTag.add(new AttributeModifier("lang", getLanguageIsocode()));
+        add(htmlTag);
+    }
+
+    protected String getLanguageIsocode() {
+        return getSession().getLocale().toString();
     }
 
     protected String getPageTitle(PageParameters parameters) {
