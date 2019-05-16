@@ -23,7 +23,6 @@ import org.apache.commons.io.FileExistsException;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.console.Processes.Lines;
-import org.jhaws.common.io.console.Processes.LinesLog;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
@@ -1348,7 +1347,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("aac_low");
 		command.add(command(out));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		call(null, new LinesLog(), out.getParentPath(), command);
+		call(null, new Lines(), out.getParentPath(), command);
 	}
 
 	public FilePath mergeUnknowns(FilePath f1, FilePath f2, FilePath output, Lines lines) {
@@ -1409,7 +1408,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	@Override
 	protected String getVersionImpl() {
 		List<String> command = Arrays.asList(command(getFfmpeg()), "-version");
-		LinesLog lines = new LinesLog();
+		Lines lines = new Lines();
 		FfmpegTool.call(null, lines, getFfmpeg().getParentPath(), command);
 		return lines.lines().get(0);
 	}
