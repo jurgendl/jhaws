@@ -1301,7 +1301,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	// return null; // TODO
 	// }
 
-	public void encodeForYT(FilePath in, FilePath out) {
+	public void encodeForYT(FilePath in, FilePath out, Lines lines) {
 		// https://gist.github.com/mikoim/27e4e0dc64e384adbcb91ff10a2d3678
 		//
 		// -movflags faststart moov atom at the front of the file (Fast Start)
@@ -1347,10 +1347,12 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("aac_low");
 		command.add(command(out));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		call(null, new Lines(), out.getParentPath(), command);
+		call(null, lines, out.getParentPath(), command);
 	}
 
 	public FilePath mergeUnknowns(FilePath f1, FilePath f2, FilePath output, Lines lines) {
+		if (output == null || output.exists() || output.isFile())
+			throw new IllegalArgumentException();
 		FfprobeType i1 = info(f1, new Lines());
 		FfprobeType i2 = info(f2, new Lines());
 		List<FilePath> as = new ArrayList<>();
@@ -1415,7 +1417,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 	// https://www.webtvsolutions.com/support.php?s=ws_webtv_docs&d=clips_video_thumbnails&lang=en
 	// https://stackoverflow.com/questions/20022006/generate-all-the-files-vtt-sprite-for-the-tooltip-thumbnails-options-of-jwp
-	public void thumbs(FilePath input, FilePath outDir, Integer maxw, Integer perSeconds) {
+	public void thumbs(FilePath input, FilePath outDir, Integer maxw, Integer perSeconds, Lines lines) {
 		if (maxw == null)
 			maxw = 200;
 		if (perSeconds != null)
@@ -1436,7 +1438,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-vf");
 		command.add("fps=1/" + perSeconds);
 		command.add("\"" + outDir.getAbsolutePath() + "/tv%03d.png" + "\"");
-		call(null, null, getFfmpeg().getParentPath(), command);
+		call(null, lines, getFfmpeg().getParentPath(), command);
 		int maxw0 = maxw.intValue();
 		double scale = (double) maxw0 / w;
 		List<BufferedImage> list = outDir.list().stream().sorted()
@@ -1445,5 +1447,28 @@ public class FfmpegTool extends Tool implements MediaCte {
 		BufferedImage tile = ImageTools.tile(list, cols);
 		outDir.list().forEach(FilePath::delete);
 		ImageTools.write(tile, outDir.child("tile").createDirectory().child("tile.png"));
+	}
+
+	public void mp3(FilePath in, FilePath out, Lines lines) {
+		if (out == null)
+			out = in.appendExtension("mp3");
+		if (out.isDirectory())
+			out = out.child(in.getFileNameString()).appendExtension("mp3");
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-i");
+		command.add(command(in));
+		command.add("-vn");
+		command.add("-ar");
+		command.add("44100");
+		command.add("-ac");
+		command.add("2");
+		command.add("-ab");
+		command.add("192k");
+		command.add("-f");
+		command.add("mp3");
+		command.add(command(out));
+		call(null, lines, getFfmpeg().getParentPath(), command);
 	}
 }
