@@ -392,7 +392,7 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 		List<String> command = Arrays.asList(command(executable), "-Comment=\"" + comment + "\"",
 				path.getAbsolutePath());
-		String jc = join(command); // FIXME JOIN FALSE
+		String jc = join(command);
 		logger.trace("{}", jc);
 		callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
 		path.getParentPath().child(path.getFileNameString() + "_original").delete();
@@ -403,7 +403,7 @@ public class ExifTool extends Tool implements MediaCte {
 			throw new IllegalArgumentException();
 		}
 		List<String> command = Arrays.asList(command(executable), "-Comment", path.getAbsolutePath());
-		String jc = join(command);// FIXME JOIN FALSE
+		String jc = join(command);
 		logger.trace("{}", jc);
 		return callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream()
 				.filter(l -> l.toLowerCase().startsWith("comment")).map(l -> l.split(":")[1].trim()).findFirst()
@@ -416,7 +416,7 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 		List<String> command = Arrays.asList(command(executable), "-Software=\"" + program + "\"",
 				path.getAbsolutePath());
-		String jc = join(command);// FIXME JOIN FALSE
+		String jc = join(command);
 		logger.trace("{}", jc);
 		callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
 		path.getParentPath().child(path.getFileNameString() + "_original").delete();
@@ -427,7 +427,7 @@ public class ExifTool extends Tool implements MediaCte {
 			return null;
 		}
 		List<String> command = Arrays.asList(command(executable), "-Software", path.getAbsolutePath());
-		String jc = join(command);// FIXME JOIN FALSE
+		String jc = join(command);
 		logger.trace("{}", jc);
 		return callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream()
 				.filter(l -> l.toLowerCase().contains("software")).map(l -> l.split(":")[1].trim()).findFirst()
