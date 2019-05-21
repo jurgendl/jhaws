@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.Utils;
 import org.jhaws.common.io.Utils.OSGroup;
+import org.jhaws.common.io.console.Processes.ExitValueException;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
@@ -115,17 +116,15 @@ public class YTDL extends Tool {
 		command.add("%(title)s.f%(format_id)s.%(ext)s");
 		command.add(url);
 		List<String> dl = new ArrayList<>();
-		FfmpegTool.call(null, new Lines() {
-			@Override
-			public void accept(String t) {
-				String prefix = "[download] Destination: ";
-				if (t != null && t.startsWith(prefix)) {
-					dl.add(t.substring(prefix.length()));
-				}
-				super.accept(t);
-				System.out.println("> " + t);
-			}
-		}, tmpFolder, command);
+		try {
+			dl(tmpFolder, command, dl);
+		} catch (ExitValueException ex) {
+			command = new ArrayList<>();
+			command.add(FfmpegTool.command(executable));
+			command.add("--verbose");
+			command.add(url);
+			dl(tmpFolder, command, dl);
+		}
 		if (dl.isEmpty()) {
 			throw new NullPointerException();
 		}
@@ -140,5 +139,19 @@ public class YTDL extends Tool {
 		} else {
 			throw new NullPointerException();
 		}
+	}
+
+	private void dl(FilePath tmpFolder, List<String> command, List<String> dl) {
+		call(null, new Lines() {
+			@Override
+			public void accept(String t) {
+				String prefix = "[download] Destination: ";
+				if (t != null && t.startsWith(prefix)) {
+					dl.add(t.substring(prefix.length()));
+				}
+				super.accept(t);
+				System.out.println("> " + t);
+			}
+		}, tmpFolder, command);
 	}
 }

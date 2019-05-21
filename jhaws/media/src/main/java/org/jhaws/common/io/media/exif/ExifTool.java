@@ -5,21 +5,28 @@ import static org.jhaws.common.io.console.Processes.callProcess;
 import static org.jhaws.common.lang.CollectionUtils8.collectList;
 import static org.jhaws.common.lang.CollectionUtils8.join;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonNumber;
+import javax.json.JsonObject;
+import javax.json.JsonString;
+import javax.json.JsonStructure;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +37,6 @@ import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
-import org.jhaws.common.js.JavaScript;
 import org.jhaws.common.lang.CollectionUtils8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,9 +146,9 @@ public class ExifTool extends Tool implements MediaCte {
 
 		void setWh(Double wh);
 
-		void setAll(HashMap<String, String> all);
+		void setAll(Map<String, String> all);
 
-		HashMap<String, String> getAll();
+		Map<String, String> getAll();
 
 		String getOrientation();
 
@@ -190,7 +196,7 @@ public class ExifTool extends Tool implements MediaCte {
 
 		private Double wh = 0.0;
 
-		private HashMap<String, String> all = new HashMap<String, String>();
+		private Map<String, String> all = new HashMap<String, String>();
 
 		private String orientation;
 
@@ -347,12 +353,12 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 
 		@Override
-		public HashMap<String, String> getAll() {
+		public Map<String, String> getAll() {
 			return this.all;
 		}
 
 		@Override
-		public void setAll(HashMap<String, String> all) {
+		public void setAll(Map<String, String> all) {
 			this.all = all;
 		}
 
@@ -434,7 +440,10 @@ public class ExifTool extends Tool implements MediaCte {
 
 	// -X = xml, -json
 	public ExifInfo exifInfo(FilePath path, ExifInfo exifinfo) {
-		if (path.notExists() || executable.notExists()) {
+		if (path.notExists()) {
+			throw new IllegalArgumentException();
+		}
+		if (executable.notExists()) {
 			throw new IllegalArgumentException();
 		}
 		if (exifinfo == null) {
@@ -448,19 +457,21 @@ public class ExifTool extends Tool implements MediaCte {
 					|| qtFilter.accept(path)) {
 				List<String> command = Arrays.asList(command(executable), "-charset", "utf8", "-q", "-json",
 						path.getAbsolutePath());
-				String jc = join(command);// FIXME JOIN FALSE
+				String jc = join(command);
 				logger.trace("{}", jc);
 
 				List<String> lines = callProcess(null, false, command, path.getParentPath(), new Lines()).lines()
 						.stream().collect(collectList());
 				// lines.forEach(System.out::println);
+
+				JsonStructure jso = Json
+						.createReader(new InputStreamReader(
+								new ByteArrayInputStream(lines.stream().collect(Collectors.joining(" ")).getBytes())))
+						.read();
 				@SuppressWarnings("unchecked")
-				Map<String, Object> tmp = (Map<String, Object>) ((Map<String, Object>) JavaScript
-						.eval(lines.stream().collect(Collectors.joining()))).values().iterator().next();
-				TreeMap<String, String> all = new TreeMap<String, String>();
-				tmp.keySet().forEach(k -> all.put(k,
-						tmp.get(k).toString().replace("\r", " ").replace("\r\n", " ").replace("\n", " ")));
-				exifinfo.setAll(new LinkedHashMap<>(all));
+				Map<String, Object> all = (Map<String, Object>) jso.asJsonArray().get(0);
+				Map<String, String> all2 = exifinfo.getAll();
+				all.entrySet().forEach(e -> all2.put(e.getKey(), toString(e.getValue())));
 
 				exifinfo.setW(Integer.parseInt(exifinfo.values("0", IW, W)));
 				exifinfo.setH(Integer.parseInt(exifinfo.values("0", IH, H)));
@@ -507,6 +518,23 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 
 		return exifinfo;
+	}
+
+	private String toString(Object value) {
+		if (value instanceof JsonNumber) {
+			return String.valueOf(JsonNumber.class.cast(value).numberValue());
+		}
+		if (value instanceof JsonString) {
+			return JsonString.class.cast(value).getString();
+		}
+		if (value instanceof JsonArray) {
+			return Arrays.stream(JsonArray.class.cast(value).toArray()).map(this::toString)
+					.collect(Collectors.joining(";"));
+		}
+		if (value instanceof JsonObject) {
+			return toString(JsonObject.class.cast(value).asJsonArray());
+		}
+		throw new IllegalArgumentException(value.getClass().getName());
 	}
 
 	public static Duration parseDuration(ExifInfo exif) {
