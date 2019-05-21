@@ -129,12 +129,13 @@ public class YTDL extends Tool {
 			throw new NullPointerException();
 		}
 		if (dl.size() == 1) {
-			FilePath from = new FilePath(tmpFolder, dl.get(0));
-			FilePath to = from.moveTo(targetFolder).newFileIndex();
+			FilePath from = tmpFolder.child(dl.get(0));
+			FilePath to = targetFolder.child(dl.get(0)).newFileIndex();
+			from.renameTo(to);
 			return Arrays.asList(to);
 		} else if (dl.size() == 2) {
-			FilePath f1 = new FilePath(tmpFolder, dl.get(0));
-			FilePath f2 = new FilePath(tmpFolder, dl.get(1));
+			FilePath f1 = tmpFolder.child(dl.get(0));
+			FilePath f2 = tmpFolder.child(dl.get(1));
 			return Arrays.asList(f1, f2);
 		} else {
 			throw new NullPointerException();
