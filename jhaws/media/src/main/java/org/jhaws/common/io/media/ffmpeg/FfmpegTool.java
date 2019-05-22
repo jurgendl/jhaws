@@ -1351,8 +1351,6 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	public FilePath mergeUnknowns(FilePath f1, FilePath f2, FilePath output, Lines lines) {
-		if (output == null || output.exists() || output.isFile())
-			throw new IllegalArgumentException();
 		FfprobeType i1 = info(f1, new Lines());
 		FfprobeType i2 = info(f2, new Lines());
 		List<FilePath> as = new ArrayList<>();
