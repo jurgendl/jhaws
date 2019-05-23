@@ -70,6 +70,10 @@ public class ExifTool extends Tool implements MediaCte {
 
 	private static final String VIDEO4 = "Video Codec Name";
 
+	private static final String VIDEO5 = "VideoCodecID";
+
+	private static final String VIDEO6 = "CodecID";
+
 	private static final String AUDIO1 = "Audio Format";
 
 	private static final String AUDIO2 = "Audio Codec";
@@ -77,6 +81,8 @@ public class ExifTool extends Tool implements MediaCte {
 	private static final String AUDIO3 = "Audio Encoding";
 
 	private static final String AUDIO4 = "Audio Codec Name";
+
+	private static final String AUDIO5 = "AudioCodecID";
 
 	private static final String VFR1 = "Video Frame Rate";
 
@@ -492,8 +498,8 @@ public class ExifTool extends Tool implements MediaCte {
 					}
 
 					exifinfo.setDuration(exifinfo.values(UNKNOWN, DURATION1, DURATION2, DURATION3, DURATION4));
-					exifinfo.setVideo(exifinfo.values(UNKNOWN, VIDEO1, VIDEO3, VIDEO2, VIDEO4));
-					exifinfo.setAudio(exifinfo.values(UNKNOWN, AUDIO1, AUDIO3, AUDIO2, AUDIO4));
+					exifinfo.setVideo(exifinfo.values(UNKNOWN, VIDEO1, VIDEO3, VIDEO2, VIDEO4, VIDEO5, VIDEO6));
+					exifinfo.setAudio(exifinfo.values(UNKNOWN, AUDIO1, AUDIO3, AUDIO2, AUDIO4, AUDIO5));
 					String vfr = exifinfo.value(VFR1);
 					if (StringUtils.isBlank(vfr) || "0".equals(vfr)) {
 						vfr = exifinfo.value(VFR2);
@@ -521,6 +527,7 @@ public class ExifTool extends Tool implements MediaCte {
 		return exifinfo;
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	private String toString(Object value) {
 		if (value instanceof JsonNumber) {
 			return String.valueOf(JsonNumber.class.cast(value).numberValue());
