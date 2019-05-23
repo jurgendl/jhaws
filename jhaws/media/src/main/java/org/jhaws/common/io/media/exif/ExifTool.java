@@ -27,6 +27,7 @@ import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonString;
 import javax.json.JsonStructure;
+import javax.json.JsonValue;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -533,6 +534,14 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 		if (value instanceof JsonObject) {
 			return toString(JsonObject.class.cast(value).asJsonArray());
+		}
+		if (value instanceof JsonValue) {
+			switch (JsonValue.class.cast(value).getValueType()) {
+			case FALSE:
+				return "false";
+			case TRUE:
+				return "true";
+			}
 		}
 		throw new IllegalArgumentException(value.getClass().getName());
 	}
