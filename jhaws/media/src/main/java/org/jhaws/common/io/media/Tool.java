@@ -90,6 +90,11 @@ public abstract class Tool {
 
 	public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log,
 			Consumer<String> listener) {
+		return call(processHolder, lines, dir, command, log, listener, true);
+	}
+
+	public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log,
+			Consumer<String> listener, boolean exit) {
 		if (lines == null)
 			lines = new Lines();
 		Consumer<String> consumers = log ? lines.andThen(new Lines()) : lines;
@@ -97,13 +102,12 @@ public abstract class Tool {
 			consumers = consumers.andThen(listener);
 		}
 		if (log) {
-			// FIXME JOIN FALSE
 			logger.info("start - {}", join(command));
 		}
 		long start = System.currentTimeMillis();
-		Processes.callProcess(processHolder, true, command, dir, consumers);
+		Processes.callProcess(processHolder, exit, command, dir, consumers);
 		if (log) {
-			// FIXME JOIN FALSE
+
 			logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
 		}
 		return lines;
