@@ -19,6 +19,7 @@ import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
 
 // https://github.com/ytdl-org/youtube-dl
+// https://ytdl-org.github.io/youtube-dl/supportedsites.html
 public class YTDL extends Tool {
 	public static final String EXE = "youtube-dl";
 
