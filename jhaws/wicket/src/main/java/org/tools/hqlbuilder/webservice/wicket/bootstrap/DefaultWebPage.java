@@ -583,6 +583,7 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_HELP));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTinyMCE.JS_PLUGIN_PREVIEW));
+        response.render(OnDomReadyHeaderItem.forScript(BootstrapTinyMCE.FACTORY));
 
         response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));

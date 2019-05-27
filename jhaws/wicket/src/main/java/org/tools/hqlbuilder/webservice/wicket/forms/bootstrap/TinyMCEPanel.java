@@ -34,6 +34,6 @@ public class TinyMCEPanel extends DefaultFormRowPanel<String, TextArea<String>, 
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(OnDomReadyHeaderItem.forScript(BootstrapTinyMCE.factory()));
+        response.render(OnDomReadyHeaderItem.forScript(BootstrapTinyMCE.FACTORY));
     }
 }

@@ -1,8 +1,5 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.tinymce;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-
 import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
@@ -112,12 +109,5 @@ public class BootstrapTinyMCE {
         JS_PLUGIN_PREVIEW.addJavaScriptResourceReferenceDependency(JS);
     }
 
-    public static String factory() {
-        try {
-            String factory = new String(new FilePath(BootstrapTinyMCE.class, "tinymce-facory.js").readAllBytes(), "utf-8");
-            return factory;
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
+    public static final String FACTORY = new FilePath(BootstrapTinyMCE.class, "tinymce-facory.js").readAll();
 }
