@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus;
 
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
@@ -17,8 +16,8 @@ public class BootstrapTempusDominusDateTimePicker {
     public static final CssResourceReference CSS = new CssResourceReference(BootstrapTempusDominusDateTimePicker.class,
             "css/tempusdominus-bootstrap-4.css");
 
-    public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem
-            .forScript(new FilePath(BootstrapTempusDominusDateTimePicker.class, "js/tempusdominus-bootstrap-4-factory.js").readAll());
+    public static final String FACTORY = new FilePath(BootstrapTempusDominusDateTimePicker.class, "js/tempusdominus-bootstrap-4-factory.js")
+            .readAll();
 
     static {
         JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);

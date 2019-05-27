@@ -48,6 +48,7 @@ import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.jquery.ui.magnify.Magnify;
 import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.jquery.ui.picturefill.PictureFill;
+import org.tools.hqlbuilder.webservice.jquery.ui.qtip.QTip;
 import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
@@ -56,6 +57,12 @@ import org.tools.hqlbuilder.webservice.wicket.components.ExternalLink;
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
+    protected static final String FACTORY = new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll();
+
+    protected static final JavaScriptResourceReference JS = new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js");
+
+    protected static final CssResourceReference CSS = new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css");
+
     public DefaultWebPage() {
         this(new PageParameters());
     }
@@ -322,7 +329,7 @@ public abstract class DefaultWebPage extends WebPage {
         navbarbrandlink.setVisible(false);
         navbar.add(navbarbrandlink);
 
-        if (navs == null || navs.isEmpty()) {
+        if (navs != null && navs.isEmpty()) {
             navs.add(new NavBarLink("Home", "fa-fw fas fa-home", getClass(), null));
         }
 
@@ -368,7 +375,7 @@ public abstract class DefaultWebPage extends WebPage {
                     protected void populateItem(ListItem<NavBarLink> subitem) {
                         // subitem.add(AttributeAppender.append("class","active"));
                         NavBarLink sub = subitem.getModelObject();
-                        BookmarkablePageLink<String> sublink = new BookmarkablePageLink<String>("navbardropdownitemlink", sub.getInternalPage(),
+                        BookmarkablePageLink<String> sublink = new BookmarkablePageLink<>("navbardropdownitemlink", sub.getInternalPage(),
                                 sub.getInternalPageParameters());
                         WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbardropdownitemicon");
                         if (StringUtils.isNotBlank(sub.getIcon())) {
@@ -508,7 +515,7 @@ public abstract class DefaultWebPage extends WebPage {
         return statusbar;
     }
 
-    abstract protected void addComponents(PageParameters parameters, MarkupContainer html);
+    protected abstract void addComponents(PageParameters parameters, MarkupContainer html);
 
     @Override
     public void renderHead(IHeaderResponse response) {
@@ -522,7 +529,7 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_POPPER));
         response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS));
         response.render(JavaScriptHeaderItem.forReference(Bootstrap4.JS_IE10FIX));
-        response.render(Bootstrap4.factory());
+        response.render(OnDomReadyHeaderItem.forScript(Bootstrap4.FACTORY));
 
         response.render(CssHeaderItem.forReference(FontAwesome.CSS5));
         // response.render(CssHeaderItem.forReference(new
@@ -532,24 +539,24 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(CssHeaderItem.forReference(BLazy.CSS));
         response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
-        response.render(BLazy.FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(BLazy.FACTORY));
 
         response.render(JavaScriptHeaderItem.forReference(PictureFill.JS));
-        response.render(PictureFill.FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(PictureFill.FACTORY));
 
         response.render(JavaScriptHeaderItem.forReference(MomentJs.JS));
         response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_LOCALE));
         response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_I18N));
         response.render(JavaScriptHeaderItem.forReference(MomentJs.JS_PLUGIN_PRECISE_RANGE));
-        response.render(MomentJs.FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(MomentJs.FACTORY));
 
         response.render(CssHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTempusDominusDateTimePicker.JS));
-        response.render(BootstrapTempusDominusDateTimePicker.FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(BootstrapTempusDominusDateTimePicker.FACTORY));
 
         response.render(CssHeaderItem.forReference(BootstrapColorPicker.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapColorPicker.JS));
-        response.render(BootstrapColorPicker.FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(BootstrapColorPicker.FACTORY));
 
         response.render(JavaScriptHeaderItem.forReference(BootBox.JS_LOCALE));
 
@@ -589,12 +596,12 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(CssHeaderItem.forReference(MultiSelect.CSS));
         response.render(JavaScriptHeaderItem.forReference(MultiSelect.JS));
-        response.render(MultiSelect.JS_FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(MultiSelect.FACTORY));
 
         response.render(JavaScriptHeaderItem.forReference(CustomFileInput.JS));
 
         response.render(JavaScriptHeaderItem.forReference(ClipboardJs.JS));
-        response.render(OnDomReadyHeaderItem.forScript(ClipboardJs.factory()));
+        response.render(OnDomReadyHeaderItem.forScript(ClipboardJs.FACTORY));
 
         response.render(JavaScriptHeaderItem.forReference(BootstrapToasts.JS));
         response.render(CssHeaderItem.forReference(BootstrapToasts.CSS));
@@ -606,11 +613,14 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(CssHeaderItem.forReference(Spin.css(WicketApplication.get().getSettings().getSpinner())));
 
-        response.render(CssHeaderItem.forReference(Magnify.MAGNIFY_CSS));
-        response.render(JavaScriptHeaderItem.forReference(Magnify.MAGNIFY_JS));
+        response.render(CssHeaderItem.forReference(Magnify.CSS));
+        response.render(JavaScriptHeaderItem.forReference(Magnify.JS));
 
-        response.render(CssHeaderItem.forReference(new CssResourceReference(DefaultWebPage.class, "DefaultWebPage.css")));
-        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(DefaultWebPage.class, "DefaultWebPage.js")));
-        response.render(OnDomReadyHeaderItem.forScript(new FilePath(DefaultWebPage.class, "DefaultWebPage-factory.js").readAll()));
+        response.render(CssHeaderItem.forReference(QTip.CSS));
+        response.render(JavaScriptHeaderItem.forReference(QTip.JS));
+
+        response.render(CssHeaderItem.forReference(CSS));
+        response.render(JavaScriptHeaderItem.forReference(JS));
+        response.render(OnDomReadyHeaderItem.forScript(FACTORY));
     }
 }

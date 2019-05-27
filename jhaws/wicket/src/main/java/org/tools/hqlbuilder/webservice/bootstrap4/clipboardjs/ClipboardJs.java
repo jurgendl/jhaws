@@ -20,19 +20,18 @@ public class ClipboardJs {
 
     public static final String CLASS = "clipboard";
 
-    public static String factory() {
-        return ";var clipboard = new ClipboardJS('." + CLASS + "');"//
-                + "clipboard.on('success', function(e) {\n" + //
-                "    console.info('Action:', e.action);\n" + //
-                "    console.info('Text:', e.text);\n" + //
-                "    console.info('Trigger:', e.trigger);\n" + //
-                "\n" + //
-                "    e.clearSelection();\n" + //
-                "});\n" + //
-                "\n" + //
-                "clipboard.on('error', function(e) {\n" + //
-                "    console.error('Action:', e.action);\n" + //
-                "    console.error('Trigger:', e.trigger);\n" + //
-                "});";
-    }
+    public static final String FACTORY = //
+            ";var clipboard = new ClipboardJS('." + CLASS + "');"//
+                    + "clipboard.on('success', function(e) {\n" + //
+                    "    console.info('Action:', e.action);\n" + //
+                    "    console.info('Text:', e.text);\n" + //
+                    "    console.info('Trigger:', e.trigger);\n" + //
+                    "\n" + //
+                    "    e.clearSelection();\n" + //
+                    "});\n" + //
+                    "\n" + //
+                    "clipboard.on('error', function(e) {\n" + //
+                    "    console.error('Action:', e.action);\n" + //
+                    "    console.error('Trigger:', e.trigger);\n" + //
+                    "});";
 }

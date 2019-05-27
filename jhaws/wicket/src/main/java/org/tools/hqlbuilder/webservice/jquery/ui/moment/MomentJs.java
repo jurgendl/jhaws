@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -22,7 +21,7 @@ public class MomentJs {
     public static JavaScriptResourceReference JS_I18N = new JavaScriptResourceReference(MomentJs.class, "locales.js")
             .addJavaScriptResourceReferenceDependency(JS);
 
-    public static OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem.forScript(";moment.locale(" + PROP_CURRENT_LANGUAGE + ");");
+    public static String FACTORY = ";moment.locale(" + PROP_CURRENT_LANGUAGE + ");";
 
     // https://codebox.net/pages/moment-date-range-plugin
     // https://github.com/codebox/moment-precise-range/releases

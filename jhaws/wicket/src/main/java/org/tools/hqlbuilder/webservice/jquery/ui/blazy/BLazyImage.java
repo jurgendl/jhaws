@@ -8,6 +8,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -95,7 +96,7 @@ public class BLazyImage extends Image {
 
     public static IHeaderResponse adjustResponse(IHeaderResponse response) {
         response.render(JavaScriptHeaderItem.forReference(BLazy.JS));
-        response.render(BLazy.FACTORY);
+        response.render(OnDomReadyHeaderItem.forScript(BLazy.FACTORY));
         response.render(CssHeaderItem.forReference(BLazy.CSS));
         return response;
     }

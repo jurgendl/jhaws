@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.picturefill;
 
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // https://scottjehl.github.io/picturefill/
@@ -8,5 +7,5 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 public class PictureFill {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(PictureFill.class, "picturefill.js");
 
-    public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem.forScript(";document.createElement('picture');");
+    public static final String FACTORY = ";document.createElement('picture');";
 }

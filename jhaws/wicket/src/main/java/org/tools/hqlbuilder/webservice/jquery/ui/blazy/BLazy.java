@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.blazy;
 
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -15,5 +14,5 @@ public class BLazy {
 
     public static final CssResourceReference CSS = new CssResourceReference(BLazy.class, "blazy.css");
 
-    public static final OnDomReadyHeaderItem FACTORY = OnDomReadyHeaderItem.forScript(";new Blazy({offset:200});");
+    public static final String FACTORY = ";new Blazy({offset:200});";
 }
