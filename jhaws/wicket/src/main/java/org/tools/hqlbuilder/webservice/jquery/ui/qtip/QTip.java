@@ -4,6 +4,7 @@ import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 
+// v3.0.3
 /**
  * @see http://qtip2.com
  */
