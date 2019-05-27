@@ -702,13 +702,18 @@ pre {
 }
 
 /* unstyled link */
-.link-unstyled 
-, .link-unstyled:visited
-, .link-unstyled:hover
-, .link-unstyled:active
-, .link-unstyled:focus
-, .link-unstyled:active:hover
-, .popover-icon {
+a.link-unstyled 
+, a.link-unstyled:visited
+, a.link-unstyled:hover
+, a.link-unstyled:active
+, a.link-unstyled:focus
+, a.link-unstyled:active:hover
+, a.popover-icon
+, a.popover-icon:visited
+, a.popover-icon:hover
+, a.popover-icon:active
+, a.popover-icon:focus
+, a.popover-icon:active:hover {
     font-style: inherit;
     color: inherit;
     background-color: transparent;
