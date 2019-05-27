@@ -397,6 +397,9 @@ ul.nested li {
 .fa-spin, .fa-pulse {
 	-webkit-filter: blur(0) !important;
 }
+.fa-stack {
+	width: 2em !important; /* same as height */
+}
 
 .btn-toolbar.pagination button {
 	width: 3rem;
@@ -712,9 +715,4 @@ pre {
     padding: inherit;
     vertical-align: inherit;
   }
-}
-
-/* fontawesome stacks */
-.fa-stack {
-	width: 2em !important; /* same as height */
 }
