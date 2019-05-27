@@ -346,7 +346,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 						.appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
-				silentcall(act, lines, video.getParentPath(), command);
+				silentcall(act, null, video.getParentPath(), command);
 			}
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
