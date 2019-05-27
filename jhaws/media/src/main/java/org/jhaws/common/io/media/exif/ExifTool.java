@@ -457,7 +457,7 @@ public class ExifTool extends Tool implements MediaCte {
 			exifinfo = new ExifInfoImpl();
 		}
 
-		logger.trace("exif {}", path);
+		logger.debug("exif {}", path);
 
 		try {
 			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path)
