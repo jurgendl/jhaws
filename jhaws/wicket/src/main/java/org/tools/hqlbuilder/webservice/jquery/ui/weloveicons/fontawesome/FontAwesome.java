@@ -9,12 +9,8 @@ import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 // https://fontawesome.com/icons?d=gallery
 // https://fontawesome.com/how-to-use/upgrading-from-4#icon-name-changes-complete-list
 // https://fontawesome.com/how-to-use/svg-with-js
-// 4.7.0
 // 5.8.1
 public class FontAwesome {
-	public static CssResourceReference CSS4 = new CssResourceReference(FontAwesome.class,
-			"font-awesome-4.7.0/css/font-awesome.css");
-
 	public static CssResourceReference CSS5 = new CssResourceReference(FontAwesome.class,
 			"fontawesome-free-5.8.1-web/css/all.css");
 }
