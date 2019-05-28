@@ -461,15 +461,15 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 	}
 
 	protected Component createSubmitLabel(String id) {
-		return new Label(id, new ResourceModel(id)).setRenderBodyOnly(true);
+		return new Label(id, new ResourceModel(id));
 	}
 
 	protected Component createResetLabel(String id) {
-		return new Label(id, new ResourceModel(id)).setRenderBodyOnly(true);
+		return new Label(id, new ResourceModel(id));
 	}
 
 	protected Component createCancelLabel(String id) {
-		return new Label(id, new ResourceModel(id)).setRenderBodyOnly(true);
+		return new Label(id, new ResourceModel(id));
 	}
 
 	protected WebMarkupContainer createSubmit() {

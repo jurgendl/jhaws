@@ -670,11 +670,13 @@ div.rating-input {
 , .custom-select
 , .toast
 , .modal-content
-, .custom-checkbox .custom-control-label::before
 , .bootstrap-tagsinput
 , .card
 , .custom-file-label {
 	/*border-radius: 4px !important;*/
+}
+.custom-checkbox .custom-control-label::before {
+	border-radius: 0px !important;
 }
 
 /* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */
