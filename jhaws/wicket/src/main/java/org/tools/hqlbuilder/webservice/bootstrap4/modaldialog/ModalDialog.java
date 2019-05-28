@@ -17,12 +17,14 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // BootstrapDialog.TYPE_DANGER
 // BootstrapDialog.show({type:...,title:'...',message:'...',buttons:[{{label:'Close',action:function(dialogItself){dialogItself.close();}}]});
 public class ModalDialog {
-    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(ModalDialog.class, "js/bootstrap-dialog.js");
+	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(ModalDialog.class,
+			"js/bootstrap-dialog.js");
 
-    public static final CssResourceReference CSS = new CssResourceReference(ModalDialog.class, "css/bootstrap-dialog.css");
+	public static final CssResourceReference CSS = new CssResourceReference(ModalDialog.class,
+			"css/bootstrap-dialog.css");
 
-    static {
-        JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
-        CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
-    }
+	static {
+		JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
+		// CSS.addCssResourceReferenceDependency(Bootstrap4.getCSS());
+	}
 }

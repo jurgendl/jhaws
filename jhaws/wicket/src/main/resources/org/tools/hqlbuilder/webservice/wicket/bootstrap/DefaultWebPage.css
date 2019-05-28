@@ -674,7 +674,7 @@ div.rating-input {
 , .bootstrap-tagsinput
 , .card
 , .custom-file-label {
-	border-radius: 0 !important;
+	/*border-radius: 4px !important;*/
 }
 
 /* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */

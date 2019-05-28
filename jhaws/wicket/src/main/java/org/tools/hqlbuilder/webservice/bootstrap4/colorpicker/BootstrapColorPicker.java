@@ -11,14 +11,16 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // https://farbelous.github.io/bootstrap-colorpicker/
 // 3.1.1
 public class BootstrapColorPicker {
-    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapColorPicker.class, "js/bootstrap-colorpicker.js");
+	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapColorPicker.class,
+			"js/bootstrap-colorpicker.js");
 
-    public static final CssResourceReference CSS = new CssResourceReference(BootstrapColorPicker.class, "css/bootstrap-colorpicker.css");
+	public static final CssResourceReference CSS = new CssResourceReference(BootstrapColorPicker.class,
+			"css/bootstrap-colorpicker.css");
 
-    public static final String FACTORY = ";$('.colorpicker-component').colorpicker();";
+	public static final String FACTORY = ";$('.colorpicker-component').colorpicker();";
 
-    static {
-        JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
-        CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
-    }
+	static {
+		JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
+		// CSS.addCssResourceReferenceDependency(Bootstrap4.getCSS());
+	}
 }

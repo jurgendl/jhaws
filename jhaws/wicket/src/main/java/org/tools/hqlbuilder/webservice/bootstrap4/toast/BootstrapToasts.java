@@ -21,7 +21,7 @@ public class BootstrapToasts {
 
 	static {
 		JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
-		CSS.addCssResourceReferenceDependency(Bootstrap4.CSS);
+		// CSS.addCssResourceReferenceDependency(Bootstrap4.getCSS());
 	}
 
 	public static enum ToastType {
