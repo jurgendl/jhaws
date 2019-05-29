@@ -1,5 +1,8 @@
 package org.tools.hqlbuilder.webservice.wicket.settings;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -15,6 +18,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.DropDownSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TextFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.renderer.StringOptionRenderer;
+import org.tools.hqlbuilder.webservice.wicket.settings.WicketAppSettings.Theme;
 
 @SuppressWarnings("serial")
 public class SettingsPage extends DefaultWebPage {
@@ -46,7 +50,7 @@ public class SettingsPage extends DefaultWebPage {
     @Override
     protected void onBeforeRender() {
         super.onBeforeRender();
-        Label.class.cast(getPage().get("page.title")).setDefaultModelObject("Web: Settings");
+        Label.class.cast(getPage().get("page.title")).setDefaultModelObject("Application Settings");
     }
 
     @Override
@@ -61,6 +65,8 @@ public class SettingsPage extends DefaultWebPage {
             }
         }, new FormSettings());
         WicketAppSettings p = form.proxy();
+        form.addDropDown(p.getTheme(), new DropDownSettings(), new StringOptionRenderer(),
+                new ListModel<>(Arrays.stream(Theme.values()).map(Theme::id).collect(Collectors.toList())));
         form.addDropDown(p.getSpinner(), new DropDownSettings(), new StringOptionRenderer(), new ListModel<>(Spin.types));
         form.addToggle(p.getCheckAdsEnabled(), new CheckBoxSettings());
         form.addTextField(p.getCacheDuration(), new TextFieldSettings());

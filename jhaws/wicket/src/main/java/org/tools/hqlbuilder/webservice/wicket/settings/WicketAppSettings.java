@@ -1,6 +1,7 @@
 package org.tools.hqlbuilder.webservice.wicket.settings;
 
 import java.io.Serializable;
+import java.util.function.Supplier;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -10,148 +11,182 @@ import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin.SpinType;
 @SuppressWarnings("serial")
 @XmlRootElement(name = "web-app-settings")
 public class WicketAppSettings implements Serializable {
-	public static final JAXBMarshalling JAXB = new JAXBMarshalling(WicketAppSettings.class, WebSettings.class);
+    public static final JAXBMarshalling JAXB = new JAXBMarshalling(WicketAppSettings.class, WebSettings.class);
 
-	protected Boolean diskStore = false;
+    protected Boolean diskStore = false;
 
-	protected Boolean showDebugbars = true;
+    protected Boolean showDebugbars = true;
 
-	protected Boolean checkCookiesEnabled = true;
+    protected Boolean checkCookiesEnabled = true;
 
-	protected Boolean checkJavaScriptEnabled = true;
+    protected Boolean checkJavaScriptEnabled = true;
 
-	protected Boolean checkAdsEnabled = false;
+    protected Boolean checkAdsEnabled = false;
 
-	protected String shortcutIcon;
+    protected String shortcutIcon;
 
-	protected Boolean javascriptAtBottom = true;
+    protected Boolean javascriptAtBottom = true;
 
-	protected String cacheDuration;
+    protected String cacheDuration;
 
-	protected Boolean gatherBrowserInfo = true;
+    protected Boolean gatherBrowserInfo = true;
 
-	protected String googleSigninClientId = "";
+    protected String googleSigninClientId = "";
 
-	@EnumValidator(enumClazz = SpinType.class)
-	protected String spinner = "default";
+    @EnumValidator(enumClazz = SpinType.class)
+    protected String spinner = SpinType._default.id();
 
-	public WicketAppSettings() {
-		super();
-	}
+    @EnumValidator(enumClazz = Theme.class)
+    protected String theme = Theme.defaulting.id();
 
-	public Boolean getDiskStore() {
-		return this.diskStore;
-	}
+    public static enum Theme implements Supplier<String> {
+        defaulting("default"), //
+        creative("creative"), //
+        freelancer("freelancer"), //
+        sbadmin2("sb-admin-2") //
+        ;
 
-	public void setDiskStore(Boolean diskStore) {
-		this.diskStore = diskStore;
-	}
+        private final String id;
 
-	public Boolean getShowDebugbars() {
-		return this.showDebugbars;
-	}
+        private Theme(String id) {
+            this.id = id;
+        }
 
-	public void setShowDebugbars(Boolean showDebugbars) {
-		this.showDebugbars = showDebugbars;
-	}
+        public String id() {
+            return id == null ? name() : id;
+        }
 
-	public Boolean getCheckCookiesEnabled() {
-		return this.checkCookiesEnabled;
-	}
+        @Override
+        public String get() {
+            return id();
+        }
+    }
 
-	public void setCheckCookiesEnabled(Boolean checkCookiesEnabled) {
-		this.checkCookiesEnabled = checkCookiesEnabled;
-	}
+    public WicketAppSettings() {
+        super();
+    }
 
-	public Boolean getCheckJavaScriptEnabled() {
-		return this.checkJavaScriptEnabled;
-	}
+    public Boolean getDiskStore() {
+        return this.diskStore;
+    }
 
-	public void setCheckJavaScriptEnabled(Boolean checkJavaScriptEnabled) {
-		this.checkJavaScriptEnabled = checkJavaScriptEnabled;
-	}
+    public void setDiskStore(Boolean diskStore) {
+        this.diskStore = diskStore;
+    }
 
-	public Boolean getCheckAdsEnabled() {
-		return this.checkAdsEnabled;
-	}
+    public Boolean getShowDebugbars() {
+        return this.showDebugbars;
+    }
 
-	public void setCheckAdsEnabled(Boolean checkAdsEnabled) {
-		this.checkAdsEnabled = checkAdsEnabled;
-	}
+    public void setShowDebugbars(Boolean showDebugbars) {
+        this.showDebugbars = showDebugbars;
+    }
 
-	public String getShortcutIcon() {
-		return this.shortcutIcon;
-	}
+    public Boolean getCheckCookiesEnabled() {
+        return this.checkCookiesEnabled;
+    }
 
-	public void setShortcutIcon(String shortcutIcon) {
-		this.shortcutIcon = shortcutIcon;
-	}
+    public void setCheckCookiesEnabled(Boolean checkCookiesEnabled) {
+        this.checkCookiesEnabled = checkCookiesEnabled;
+    }
 
-	public Boolean getJavascriptAtBottom() {
-		return this.javascriptAtBottom;
-	}
+    public Boolean getCheckJavaScriptEnabled() {
+        return this.checkJavaScriptEnabled;
+    }
 
-	public void setJavascriptAtBottom(Boolean javascriptAtBottom) {
-		this.javascriptAtBottom = javascriptAtBottom;
-	}
+    public void setCheckJavaScriptEnabled(Boolean checkJavaScriptEnabled) {
+        this.checkJavaScriptEnabled = checkJavaScriptEnabled;
+    }
 
-	public String getCacheDuration() {
-		return this.cacheDuration;
-	}
+    public Boolean getCheckAdsEnabled() {
+        return this.checkAdsEnabled;
+    }
 
-	public void setCacheDuration(String cacheDuration) {
-		this.cacheDuration = cacheDuration;
-	}
+    public void setCheckAdsEnabled(Boolean checkAdsEnabled) {
+        this.checkAdsEnabled = checkAdsEnabled;
+    }
 
-	public Boolean getGatherBrowserInfo() {
-		return this.gatherBrowserInfo;
-	}
+    public String getShortcutIcon() {
+        return this.shortcutIcon;
+    }
 
-	public void setGatherBrowserInfo(Boolean gatherBrowserInfo) {
-		this.gatherBrowserInfo = gatherBrowserInfo;
-	}
+    public void setShortcutIcon(String shortcutIcon) {
+        this.shortcutIcon = shortcutIcon;
+    }
 
-	public String getGoogleSigninClientId() {
-		return this.googleSigninClientId;
-	}
+    public Boolean getJavascriptAtBottom() {
+        return this.javascriptAtBottom;
+    }
 
-	public void setGoogleSigninClientId(String googleSigninClientId) {
-		this.googleSigninClientId = googleSigninClientId;
-	}
+    public void setJavascriptAtBottom(Boolean javascriptAtBottom) {
+        this.javascriptAtBottom = javascriptAtBottom;
+    }
 
-	public String getSpinner() {
-		return this.spinner;
-	}
+    public String getCacheDuration() {
+        return this.cacheDuration;
+    }
 
-	public void setSpinner(String spinner) {
-		this.spinner = spinner;
-	}
+    public void setCacheDuration(String cacheDuration) {
+        this.cacheDuration = cacheDuration;
+    }
 
-	public boolean isCheckAdsEnabled() {
-		return Boolean.TRUE.equals(getCheckAdsEnabled());
-	}
+    public Boolean getGatherBrowserInfo() {
+        return this.gatherBrowserInfo;
+    }
 
-	public boolean isCheckCookiesEnabled() {
-		return Boolean.TRUE.equals(getCheckCookiesEnabled());
-	}
+    public void setGatherBrowserInfo(Boolean gatherBrowserInfo) {
+        this.gatherBrowserInfo = gatherBrowserInfo;
+    }
 
-	public boolean isCheckJavaScriptEnabled() {
-		return Boolean.TRUE.equals(getCheckJavaScriptEnabled());
-	}
+    public String getGoogleSigninClientId() {
+        return this.googleSigninClientId;
+    }
 
-	public boolean isJavascriptAtBottom() {
-		return Boolean.TRUE.equals(getJavascriptAtBottom());
-	}
+    public void setGoogleSigninClientId(String googleSigninClientId) {
+        this.googleSigninClientId = googleSigninClientId;
+    }
 
-	public boolean isShowDebugbars() {
-		return Boolean.TRUE.equals(getShowDebugbars());
-	}
+    public String getSpinner() {
+        return this.spinner;
+    }
 
-	public boolean isGatherBrowserInfo() {
-		return Boolean.TRUE.equals(getGatherBrowserInfo());
-	}
+    public void setSpinner(String spinner) {
+        this.spinner = spinner;
+    }
 
-	public boolean isDiskStore() {
-		return Boolean.TRUE.equals(getDiskStore());
-	}
+    public boolean isCheckAdsEnabled() {
+        return Boolean.TRUE.equals(getCheckAdsEnabled());
+    }
+
+    public boolean isCheckCookiesEnabled() {
+        return Boolean.TRUE.equals(getCheckCookiesEnabled());
+    }
+
+    public boolean isCheckJavaScriptEnabled() {
+        return Boolean.TRUE.equals(getCheckJavaScriptEnabled());
+    }
+
+    public boolean isJavascriptAtBottom() {
+        return Boolean.TRUE.equals(getJavascriptAtBottom());
+    }
+
+    public boolean isShowDebugbars() {
+        return Boolean.TRUE.equals(getShowDebugbars());
+    }
+
+    public boolean isGatherBrowserInfo() {
+        return Boolean.TRUE.equals(getGatherBrowserInfo());
+    }
+
+    public boolean isDiskStore() {
+        return Boolean.TRUE.equals(getDiskStore());
+    }
+
+    public String getTheme() {
+        return this.theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
 }

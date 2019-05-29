@@ -25,6 +25,7 @@ import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.memory.HttpSessionDataStore;
 import org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.http.WebResponse;
@@ -228,6 +229,8 @@ public class WicketApplication extends WebApplication implements InitializingBea
             guard.addPattern("+*.map");
             guard.addPattern("+*.tag");
         }
+
+        getSessionListeners().add(session -> logger.trace("new session created {}", session));
     }
 
     protected void addBundles() {
@@ -368,6 +371,7 @@ public class WicketApplication extends WebApplication implements InitializingBea
     public Session newSession(Request request, Response response) {
         WicketSession wicketSession = this.createSession(request, response);
         WicketApplication.logger.trace("creating new session {}", wicketSession);
+        ((ServletWebRequest) request).getContainerRequest().getSession().setMaxInactiveInterval(60 * 60); // 1h
         return wicketSession;
     }
 
@@ -424,6 +428,8 @@ public class WicketApplication extends WebApplication implements InitializingBea
             settings = new WicketAppSettings();
             GoogleLogin.init(settings);
             setSettings(settings);
+            settings.setCacheDuration("none");
+            settings.setShowDebugbars(false);
         }
         return this.settings;
     }
