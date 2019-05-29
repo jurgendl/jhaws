@@ -32,6 +32,7 @@
         <version.httpcomponents.nio>4.4.10</version.httpcomponents.nio>
         <version.httpcomponents.cache>4.1.4</version.httpcomponents.cache>
 		<version.commons-collections4>4.2</version.commons-collections4>
+        <version.tika>1.21</version.tika>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -48,7 +49,7 @@
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-parsers</artifactId>
-            <version>1.19.1</version><!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
+            <version>${version.tika}</version><!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
             <optional>true</optional>
             <exclusions>
                 <exclusion>
@@ -72,7 +73,7 @@
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
-            <version>1.19.1</version><!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
+            <version>${version.tika}</version><!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
             <optional>true</optional>
             <exclusions>
                 <exclusion>
