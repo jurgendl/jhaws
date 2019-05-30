@@ -13,6 +13,8 @@ public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<Type
 
 	protected String remote;
 
+	protected String local;
+
 	protected boolean free = true;
 
 	public TypeAheadTextFieldSettings() {
@@ -74,6 +76,15 @@ public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<Type
 
 	public TypeAheadTextFieldSettings setFree(boolean free) {
 		this.free = free;
+		return this;
+	}
+
+	public String getLocal() {
+		return this.local;
+	}
+
+	public TypeAheadTextFieldSettings setLocal(String local) {
+		this.local = local;
 		return this;
 	}
 }
