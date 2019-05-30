@@ -658,7 +658,6 @@ div.rating-input {
 }
 .loader.is-active {
 	background-color: rgba(0,0,0,.5) !important;
-	top: 3.50rem;
 	z-index: 9998 !important;
 }
 
