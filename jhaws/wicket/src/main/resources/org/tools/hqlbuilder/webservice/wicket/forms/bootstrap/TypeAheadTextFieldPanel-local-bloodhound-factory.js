@@ -8,6 +8,8 @@ var source_$ID$ = new Bloodhound({
 });
 source_$ID$.initialize();
 $('#$ID$').typeahead({
-	items: 20,
+	items: $MAX$,
+	delay : $DELAY$,
+	minLength: $MIN$,
 	source: source_$ID$.ttAdapter()
 });

@@ -1,4 +1,6 @@
 $('#$ID$').typeahead({
-	items: 20,
+	items: $MAX$,
+	delay : $DELAY$,
+	minLength: $MIN$,
 	source: $OPTIONS$
 });

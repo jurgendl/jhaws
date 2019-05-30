@@ -55,45 +55,45 @@ public class TypeAheadTextFieldPanel
 		if (!this.isEnabledInHierarchy()) {
 			return;
 		}
+
 		response.render(
 				JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
 		response.render(JavaScriptHeaderItem
 				.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
+
 		if (StringUtils.isNotBlank(getComponentSettings().getRemote())) {
+			String script = new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-remote-factory.js")
+					.readAll();
 			response.render(OnDomReadyHeaderItem.forScript(
-					new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-remote-factory.js").readAll()//
-							.replace("$URL$", getComponentSettings().getRemote())//
-							.replace("$ID$", getComponent().getMarkupId())//
-							.replace("$DELAY$", String.valueOf(getComponentSettings().getDelay()))//
-							.replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
-			));
+					replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
 		} else if (StringUtils.isNotBlank(getComponentSettings().getLocal())) {
+			String script = new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-local-factory.js")
+					.readAll();
 			response.render(OnDomReadyHeaderItem.forScript(
-					new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-local-factory.js").readAll()//
-							.replace("$OPTIONS$", getComponentSettings().getLocal())//
-							.replace("$ID$", getComponent().getMarkupId())//
-							.replace("$DELAY$", String.valueOf(getComponentSettings().getDelay()))//
-							.replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
-			));
+					replace(script, getComponentSettings()).replace("$OPTIONS$", getComponentSettings().getLocal())));
 		} else if (choices != null && choices.getObject() != null && !choices.getObject().isEmpty()) {
+			String script = new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-local-factory.js")
+					.readAll();
 			response.render(OnDomReadyHeaderItem.forScript(
-					new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-local-factory.js").readAll()//
-							.replace("$OPTIONS$", typeAheadChoices(choices))//
-							.replace("$ID$", getComponent().getMarkupId())//
-							.replace("$DELAY$", String.valueOf(getComponentSettings().getDelay()))//
-							.replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
-			));
+					replace(script, getComponentSettings()).replace("$OPTIONS$", typeAheadChoices(choices))));
 		} else {
-			response.render(OnDomReadyHeaderItem
-					.forScript(new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-factory.js").readAll()//
-							.replace("$ID$", getComponent().getMarkupId())//
-							.replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
-					));
+			throw new IllegalArgumentException();
 		}
+
 //		if (getComponentSettings().isReadOnly()) {
 //			response.render(OnDomReadyHeaderItem.forScript(";$('#" + getComponent().getMarkupId()
 //					+ "').on('beforeItemAdd',function(event){event.cancel=true;}).on('beforeItemRemove',function(event){event.cancel=true;});"));
 //		}
+	}
+
+	protected String replace(String script, TypeAheadTextFieldSettings componentSettings) {
+		return script//
+				.replace("$ID$", getComponent().getMarkupId())//
+				.replace("$DELAY$", String.valueOf(getComponentSettings().getDelay()))//
+				.replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
+				.replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
+				.replace("$MAX$", String.valueOf(getComponentSettings().getMax()))//
+		;
 	}
 
 	public IModel<? extends List<String>> getChoices() {

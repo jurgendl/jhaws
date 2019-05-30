@@ -9,6 +9,8 @@ public class TagItTextFieldSettings extends AbstractFormElementSettings<TagItTex
 
 	protected int minLength = 2;
 
+	protected int max = 10;
+
 	protected long delay = 200;
 
 	protected boolean singleField = true;
@@ -110,4 +112,12 @@ public class TagItTextFieldSettings extends AbstractFormElementSettings<TagItTex
 		return this;
 	}
 
+	public int getMax() {
+		return this.max;
+	}
+
+	public TagItTextFieldSettings setMax(int max) {
+		this.max = max;
+		return this;
+	}
 }

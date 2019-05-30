@@ -5,6 +5,8 @@ public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<Type
 
 	protected boolean caseSensitive = false;
 
+	protected int max = 10;
+
 	protected int minLength = 2;
 
 	protected long delay = 200;
@@ -85,6 +87,15 @@ public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<Type
 
 	public TypeAheadTextFieldSettings setLocal(String local) {
 		this.local = local;
+		return this;
+	}
+
+	public int getMax() {
+		return this.max;
+	}
+
+	public TypeAheadTextFieldSettings setMax(int max) {
+		this.max = max;
 		return this;
 	}
 }

@@ -14,8 +14,8 @@ $('#$ID$').tagsinput({
 	freeInput: $FREE$,
 	delimiter: '$DELIMITER$',
 	typeahead : {
+		items : $MAX$,
 		delay : $DELAY$,
-		items : 20,
 		minLength : $MIN$,
 		fitToElement : false,
 		source : source_$ID$.ttAdapter()
