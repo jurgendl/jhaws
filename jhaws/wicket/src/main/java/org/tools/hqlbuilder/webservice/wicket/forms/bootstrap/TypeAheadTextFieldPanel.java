@@ -14,6 +14,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.FormConstants;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.FormSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TypeAheadTextFieldSettings;
 
+// https://github.com/bassjobsen/typeahead.js-bootstrap4-css
 // https://www.jqueryscript.net/form/jQuery-Bootstrap-4-Typeahead-Plugin.html
 @SuppressWarnings("serial")
 public class TypeAheadTextFieldPanel
