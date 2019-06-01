@@ -80,7 +80,8 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
 			response.render(OnDomReadyHeaderItem
 					.forScript(replace(script, getComponentSettings()).replace("$OPTIONS$", tagItChoices(choices))));
 		} else {
-			throw new IllegalArgumentException();
+			String script = new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-factory.js").readAll();
+			response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings())));
 		}
 
 		if (getComponentSettings().isReadOnly()) {
