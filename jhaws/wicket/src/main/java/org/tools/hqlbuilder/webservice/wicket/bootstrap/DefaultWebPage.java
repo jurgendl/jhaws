@@ -39,6 +39,7 @@ import org.tools.hqlbuilder.webservice.bootstrap4.colorpicker.BootstrapColorPick
 import org.tools.hqlbuilder.webservice.bootstrap4.customfileinput.CustomFileInput;
 import org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus.BootstrapTempusDominusDateTimePicker;
 import org.tools.hqlbuilder.webservice.bootstrap4.multiselect.MultiSelect;
+import org.tools.hqlbuilder.webservice.bootstrap4.popoverx.PopoverX;
 import org.tools.hqlbuilder.webservice.bootstrap4.slider.BootstrapSlider;
 import org.tools.hqlbuilder.webservice.bootstrap4.tags.BootstrapTags;
 import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
@@ -647,11 +648,15 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(QTip.CSS));
         response.render(JavaScriptHeaderItem.forReference(QTip.JS));
 
+        response.render(JavaScriptHeaderItem.forReference(PopoverX.JS));
+        response.render(CssHeaderItem.forReference(PopoverX.CSS));
+
         response.render(CssHeaderItem.forReference(CSS));
         response.render(JavaScriptHeaderItem.forReference(JS));
         response.render(OnDomReadyHeaderItem.forScript(FACTORY));
     }
 
+    /** optional, call in renderhead */
     protected void renderCodeStyling(IHeaderResponse response) {
         // response.render(CssHeaderItem.forReference(new CssResourceReference(HighlightJs.class, "styles/a11y-dark.css")));
         // response.render(JavaScriptHeaderItem.forReference(HighlightJs.JS));
