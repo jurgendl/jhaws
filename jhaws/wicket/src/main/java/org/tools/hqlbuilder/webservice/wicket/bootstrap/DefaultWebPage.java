@@ -355,7 +355,11 @@ public abstract class DefaultWebPage extends WebPage {
                     navbaritemicon.add(new AttributeModifier("style", main.getStyle()));
                 }
                 link.add(navbaritemicon);
-                link.add(new Label("navbaritemlabel", main.getLabel()));
+                Label label = new Label("navbaritemlabel", main.getLabel());
+                if (StringUtils.isNotBlank(main.getCssClass())) {
+                    label.add(new AttributeAppender("class", main.getCssClass(), " "));
+                }
+                link.add(label);
                 // link.add(AttributeAppender.append("class","disabled"));
                 item.add(link);
 
@@ -382,11 +386,15 @@ public abstract class DefaultWebPage extends WebPage {
                         if (StringUtils.isNotBlank(sub.getIcon())) {
                             navbaritemicon.add(AttributeAppender.replace("class", sub.getIcon()));
                         }
-                        if (StringUtils.isNotBlank(sub.getStyle())) {
-                            navbaritemicon.add(new AttributeModifier("style", sub.getStyle()));
+                        if (StringUtils.isNotBlank(sub.getCssClass())) {
+                            navbaritemicon.add(new AttributeAppender("class", sub.getCssClass(), " "));
                         }
                         sublink.add(navbaritemicon);
-                        sublink.add(new Label("navbardropdownitemlabel", sub.getLabel()));
+                        Label label = new Label("navbardropdownitemlabel", sub.getLabel());
+                        if (StringUtils.isNotBlank(sub.getStyle())) {
+                            label.add(new AttributeModifier("style", sub.getStyle()));
+                        }
+                        sublink.add(label);
                         // sublink.add(AttributeAppender.append("class","disabled"));
                         subitem.add(sublink);
                     }
@@ -423,6 +431,8 @@ public abstract class DefaultWebPage extends WebPage {
 
         String style;
 
+        String cssClass;
+
         public NavBarLink() {
             super();
         }
@@ -451,6 +461,11 @@ public abstract class DefaultWebPage extends WebPage {
 
         public void setStyle(String style) {
             this.style = style;
+        }
+
+        public NavBarLink style(String style) {
+            setStyle(style);
+            return this;
         }
 
         public String getExternalURL() {
@@ -499,6 +514,19 @@ public abstract class DefaultWebPage extends WebPage {
 
         public void setLabel(String label) {
             this.label = label;
+        }
+
+        public String getCssClass() {
+            return this.cssClass;
+        }
+
+        public void setCssClass(String cssClass) {
+            this.cssClass = cssClass;
+        }
+
+        public NavBarLink cssClass(String cssClass) {
+            setCssClass(cssClass);
+            return this;
         }
     }
 
