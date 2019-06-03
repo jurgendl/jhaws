@@ -8,6 +8,7 @@ var source_$ID$ = new Bloodhound({
 		url : REST + '$URL$' + '%QUERY'
 	}
 });
+console.log(REST + '$URL$' + '%QUERY');
 source_$ID$.initialize();
 $('#$ID$').typeahead({
 	items: $MAX$,
