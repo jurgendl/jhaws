@@ -723,3 +723,8 @@ a.link-unstyled
 	padding: inherit;
 	vertical-align: inherit;
 }
+
+/* */
+.typeahead.dropdown-menu .dropdown-item {
+	padding: 0.25em 1em;
+}
