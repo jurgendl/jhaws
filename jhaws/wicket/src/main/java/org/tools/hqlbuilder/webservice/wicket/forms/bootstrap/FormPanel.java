@@ -57,15 +57,9 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 				new TextFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
-	public TextFieldPanel<String> addPasswordField(String propertyPath, TextFieldSettings componentSettings) {
-		return this.addDefaultRow(new TextFieldPanel<String>(this.getFormModel(), propertyPath, this.getFormSettings(),
-				componentSettings) {
-			@Override
-			protected void onFormComponentTag(ComponentTag tag) {
-				super.onFormComponentTag(tag);
-				WebHelper.tag(tag, "type", "password");
-			}
-		});
+	public PasswordFieldPanel<String> addPasswordField(String propertyPath, TextFieldSettings componentSettings) {
+		return this.addDefaultRow(new PasswordFieldPanel<String>(this.getFormModel(), propertyPath,
+				this.getFormSettings(), componentSettings));
 	}
 
 	public TextFieldPanel<String> addEmailField(String propertyPath, TextFieldSettings componentSettings) {

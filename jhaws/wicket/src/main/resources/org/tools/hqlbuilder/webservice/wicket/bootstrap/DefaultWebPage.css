@@ -724,3 +724,12 @@ a.link-unstyled
 .typeahead.dropdown-menu .dropdown-item {
 	padding: 0.25em 1em;
 }
+
+/* */
+.field-icon.toggle-password {
+	float: right;
+	margin-left: -25px;
+	margin-top: 12px;
+	position: relative;
+	z-index: 200;
+}
