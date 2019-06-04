@@ -1,4 +1,4 @@
-.wicket_orderNone:not(.unsortable):before, .wicket_orderDown:before, .wicket_orderUp:before {
+.thead .wicket_orderNone:not(.unsortable):before, .wicket_orderDown:before, .wicket_orderUp:before {
 	display: inline-block;
 	font-family: 'Font Awesome 5 Free';
 	font-weight: 900;
@@ -7,7 +7,7 @@
 	-webkit-font-smoothing: antialiased;
 	margin-right: .25rem;
 }
-.wicket_orderNone:not(.unsortable):before {
+.thead .wicket_orderNone:not(.unsortable):before {
 	content: "\f0dc";
 	display: inline-block;
 	font-family: 'Font Awesome 5 Free';
@@ -17,7 +17,7 @@
 	-webkit-font-smoothing: antialiased;
 	margin-right: .25rem;
 }
-.wicket_orderDown:before {
+.thead .wicket_orderDown:before {
 	content: "\f15d";
 	display: inline-block;
 	font-family: 'Font Awesome 5 Free';
@@ -27,7 +27,7 @@
 	-webkit-font-smoothing: antialiased;
 	margin-right: .25rem;
 }
-.wicket_orderUp:before {
+.thead .wicket_orderUp:before {
 	content: "\f15e";
 	display: inline-block;
 	font-family: 'Font Awesome 5 Free';
@@ -37,11 +37,17 @@
 	-webkit-font-smoothing: antialiased;
 	margin-right: .25rem;
 }
-.wicket_orderNone:not(.unsortable) div, .wicket_orderDown div, .wicket_orderUp div {
+.thead .wicket_orderNone:not(.unsortable) div
+,.thead .wicket_orderDown div
+,.thead .wicket_orderUp div {
 	display: inline-block;
 }
 
 .actions
 /*.table > .thead > tr:first-child > th:first-child*/ {
 	width: 6rem;
+}
+
+.pagination .btn {
+	width: 3em;
 }

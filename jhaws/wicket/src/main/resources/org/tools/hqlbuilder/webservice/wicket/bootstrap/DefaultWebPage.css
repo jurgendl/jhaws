@@ -388,10 +388,6 @@ ul.nested li {
 	width: 2em !important; /* same as height */
 }
 
-.btn-toolbar.pagination button {
-	width: 3rem;
-}
-
 .input-group.plain input, .input-group.plain input:hover, .input-group.plain input:active,
 	.input-group.plain input:focus {
 	border-color: rgba(0, 0, 0, 0.15);

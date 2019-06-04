@@ -75,6 +75,8 @@ import org.tools.hqlbuilder.webservice.wicket.tables.common.Side;
  */
 @SuppressWarnings("serial")
 public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<T, String> {
+    public static final CssResourceReference CSS = new CssResourceReference(Table.class, "table.css");
+
     public static abstract class ActionsPanel<T extends Serializable> extends Panel {
         public ActionsPanel(String id, final T object, DataProvider<T> dataProvider) {
             super(id);
@@ -94,6 +96,7 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
             }
             if (dataProvider.canDelete()) {
                 AjaxFallbackButton deleteLink = new AjaxFallbackButton(Table.ACTIONS_DELETE_ID, form) {
+
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> f) {
                         ActionsPanel.this.onDelete(target, object);
@@ -633,7 +636,7 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
         if (!this.isEnabledInHierarchy()) {
             return;
         }
-        response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), getClass().getSimpleName() + ".css")));
+        response.render(CssHeaderItem.forReference(CSS));
         this.renderHeadClientUpdate(response);
         this.renderHeadClientSorting(response);
     }
