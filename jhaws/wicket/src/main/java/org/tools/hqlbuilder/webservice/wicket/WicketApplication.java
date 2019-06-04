@@ -446,7 +446,17 @@ public class WicketApplication extends WebApplication implements InitializingBea
         }
     }
 
+    private String restRelativePath = "/rest";
+
     public static String getRestPath() {
-        return WicketApplication.getApplicationName() + "/rest";
+        return WicketApplication.getApplicationName() + WicketApplication.get().getRestRelativePath();
+    }
+
+    public String getRestRelativePath() {
+        return this.restRelativePath;
+    }
+
+    public void setRestRelativePath(String restRelativePath) {
+        this.restRelativePath = restRelativePath;
     }
 }
