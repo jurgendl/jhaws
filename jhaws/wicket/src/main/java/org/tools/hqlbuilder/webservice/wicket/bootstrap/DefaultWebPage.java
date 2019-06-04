@@ -321,8 +321,26 @@ public abstract class DefaultWebPage extends WebPage {
     protected void addNavigationBar(PageParameters parameters, MarkupContainer html, String id) {
         List<NavBarLink> navs = new ArrayList<>();
         navs.add(new NavBarLink("Home", "fa-fw fas fa-home", DefaultWebPage.class, null));
+        demos(navs);
         navs.add(new NavBarLink("Refresh", "fa-fw fas fa-sync-alt", (Class<? extends WebPage>) getPageClass(), getPageParameters()));
         addNavigationBar(parameters, html, id, navs, false, false, false);
+    }
+
+    protected void demos(List<NavBarLink> navs) {
+        NavBarLink demos = new NavBarLink("Demo", "fa-fw fas fa-home", DefaultWebPage.class, null);
+        demos.getChildLinks().add(new NavBarLink("settings", "", org.tools.hqlbuilder.webservice.wicket.settings.SettingsPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("overview", "", org.tools.hqlbuilder.webservice.demo.TestPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("vue", "", org.tools.hqlbuilder.webservice.demo.VueTestPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("pagination", "", org.tools.hqlbuilder.webservice.demo.PaginationTestPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("messages", "", org.tools.hqlbuilder.webservice.demo.TestMessagesPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("upload", "", org.tools.hqlbuilder.webservice.demo.UploadTestPage.class, null));
+        //
+        demos.getChildLinks().add(new NavBarLink("registration", "", org.tools.hqlbuilder.webservice.demo.RegistrationPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("login", "", org.tools.hqlbuilder.webservice.wicket.pages.LogInPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("logout", "", org.tools.hqlbuilder.webservice.wicket.pages.LogOutPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("public", "", org.tools.hqlbuilder.webservice.wicket.pages.PublicPage.class, null));
+        demos.getChildLinks().add(new NavBarLink("register", "", org.tools.hqlbuilder.webservice.wicket.pages.RegisterPage.class, null));
+        navs.add(demos);
     }
 
     protected Component addNavigationBar(PageParameters parameters, MarkupContainer html, String id, List<NavBarLink> navs, boolean userButton,
