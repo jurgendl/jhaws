@@ -72,6 +72,7 @@ import org.tools.hqlbuilder.webservice.wicket.tables.common.Side;
 /**
  * @see https://www.packtpub.com/article/apache-wicket-displaying-data-using-datatable
  * @see http://wicketinaction.com/2008/10/building-a-listeditor-form-component/
+ * @see https://javabeat.net/displaying-data-using-datatable-in-apache-wicket/
  */
 @SuppressWarnings("serial")
 public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<T, String> {
@@ -467,6 +468,8 @@ public class Table<T extends Serializable> extends AjaxFallbackDefaultDataTable<
                     return loopItem;
                 }
             };
+            // ajaxPagingNavigation.setDefaultModel(Model.of(5));// iterations
+            // ajaxPagingNavigation.getIterations();
             return ajaxPagingNavigation;
         }
 
