@@ -1,0 +1,24 @@
+<wicket:panel>
+	<wicket:fragment wicket:id="popover-x-trigger-fragment">
+		<a data-target="#popover-x-panel" wicket:id="popover-x-trigger" class="btn btn-sm btn-secondary" href="#" data-toggle="popover-x" data-placement="bottom bottom-left">
+			<i class="fas fa-caret-down" style="cursor: pointer"></i>
+		</a>
+	</wicket:fragment>
+	<span wicket:id="popover-x-trigger"></span>
+	<span style="display:none">
+		<div wicket:id="popover-x-panel" style="min-width: 150px" class="popover popover-x popover-default">
+			<div class="arrow"></div>
+			<h3 wicket:id="popover-x-header" class="popover-header popover-title">
+				<span wicket:id="popover-x-header-text">{title}</span>
+				<span wicket:id="popover-x-header-close" class="close pull-right" data-dismiss="popover-x">
+					<span aria-hidden="true">&times;</span>
+				</span>
+			</h3>
+			<span wicket:id="popover-x-close" class="close" data-dismiss="popover-x">
+				<span aria-hidden="true">&times;</span>
+			</span>
+			<div wicket:id="popover-x-content" class="popover-body popover-content"><span wicket:id="content">{content}</span></div>
+			<div wicket:id="popover-x-footer" class="popover-footer"><span wicket:id="footer">{footer}</span></div>
+		</div>
+	</span>
+</wicket:panel>

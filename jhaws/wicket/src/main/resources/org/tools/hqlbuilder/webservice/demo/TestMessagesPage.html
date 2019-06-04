@@ -1,0 +1,51 @@
+<wicket:extend>
+	<br>
+	<div class="container">
+		<h4>form</h4>
+	</div>
+	<form wicket:id="formsubmit">
+		<div class="container">
+			<input class="form-control" type="text" readonly wicket:id="counter">
+		</div>
+		<br>
+		<div class="container">
+			<a wicket:id="submit1" class="btn btn-light">link submit</a>
+			<input type="submit" wicket:id="submit2" class="btn btn-light" value="input submit">
+			<button wicket:id="submit3" class="btn btn-light">submit button</button>
+			<a wicket:id="submit4" class="btn btn-light">ajax link submit</a>
+			<button wicket:id="submit5" class="btn btn-light">ajax submit button</button>
+			<input type="submit" wicket:id="submit6" class="btn btn-light" value="ajax input submit">
+		</div>
+		<br>
+		<div class="container">
+			<h4>inner form</h4>
+		</div>
+		<form wicket:id="innerformsubmit">
+			<div class="container">
+				<input class="form-control" type="text" readonly wicket:id="innercounter">
+			</div>
+			<br>
+			<div class="container">
+				<a wicket:id="innersubmit1" class="btn btn-light">link submit</a>
+				<input type="submit" wicket:id="innersubmit2" class="btn btn-light" value="input submit">
+				<button wicket:id="innersubmit3" class="btn btn-light">submit button</button>
+				<a wicket:id="innersubmit4" class="btn btn-light">ajax link submit</a>
+				<button wicket:id="innersubmit5" class="btn btn-light">ajax submit button</button>
+				<input type="submit" wicket:id="innersubmit6" class="btn btn-light" value="ajax input submit">
+			</div>
+		</form>
+	</form>
+	<br>
+	<div class="container">
+		<h4>extern</h4>
+		<a wicket:id="link1" class="btn btn-light">ajax link</a>
+		<button wicket:id="link2" class="btn btn-light">ajax button</button>
+	</div>
+	<br><br><br><br>
+	<div wicket:id="feedback1">
+	</div>
+	<br><br>
+	<div wicket:id="feedback2">
+	</div>
+	<br><br><br><br>
+</wicket:extend>

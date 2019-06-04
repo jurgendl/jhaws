@@ -445,4 +445,8 @@ public class WicketApplication extends WebApplication implements InitializingBea
             }
         }
     }
+
+    public static String getRestPath() {
+        return WicketApplication.getApplicationName() + "/rest";
+    }
 }

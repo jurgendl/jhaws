@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<body>
+	<wicket:extend>
+
+	<div class="container">
+		<div style="display:none" id="appVueTest">
+			<span v-for="(element, index) in elements">
+				<transition appear name="fade">
+					<div v-show="element.show" class="card border-dark bg-light m-2 p-0" :id="element.id" :key="element.id">
+						<div class="card-body p-2">
+							<h5 class="card-title text-muted">{{ element.id }}</h5>
+							<h6 class="card-subtitle mb-2 text-muted">{{ element.order }}</h6>
+							<p class="card-text"><small class="text-muted">{{ index }}</small></p>
+						</div>
+						<button onclick="testVueApplication.remove(this)" style="position:absolute;top:0.25rem;right:0.25rem;" class="btn btn-sm btn-danger"><i class="fa-fw fas fa-stop-circle"></i></button>
+					</div>
+				</transition>
+			</span>
+		</div>
+	</div>
+
+	</wicket:extend>
+</body>
+</html>

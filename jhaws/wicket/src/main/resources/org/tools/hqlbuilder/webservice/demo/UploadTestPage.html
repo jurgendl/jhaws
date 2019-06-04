@@ -1,0 +1,71 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+
+<body>
+    <wicket:extend>
+        <wicket:child>
+<style>
+/* standaar tekst, html tag moet lang=nl hebben, vervangen door vast folder icon */
+/*.custom-file-input:lang(nl) ~ .custom-file-label::after {
+  content: "Selecteer";
+}*/
+
+/* vast folder icon vervangt taal afhankelijke tekst */
+.custom-file-input ~ .custom-file-label::after {
+  content: "\f07c" !important; /* folder icon */
+  font-family: 'Font Awesome 5 Free';
+}
+
+/* checkbox by toggle botton -> custom class "check-to-remove" */
+.check-to-remove:active, .check-to-remove.active {
+    color: #fff;
+    background-color: #bd2130;
+}
+.check-to-remove {
+    box-shadow: none !important; /* nooit box shadow, lelijk */
+}
+.check-to-remove:active .fa-fw:before, .check-to-remove.active .fa-fw:before
+, .check-to-remove:hover .fa-fw:before, .check-to-remove.hover .fa-fw:before { /* icon kleur wanneer hover of active */
+    color: #fff;
+}
+.check-to-remove:active .fa-fw:before, .check-to-remove.active .fa-fw:before { /* wanneer geselecteerd */
+    content: "\f05e" !important; /* verbodsteken overschrijft vuilbak */
+    font-weight: 900 !important; /* =fas, overschrijft far (500) */
+}
+</style>
+            <form wicket:id="hoofdform">
+                <br><br><br>
+                <div class="container">
+                    <form wicket:id="uploadform">
+                        <!-- upload form component -->
+                        <div class="custom-file mb-4">
+                            <input wicket:id="fileupload" type="file" multiple="multiple" class="custom-file-input">
+                            <label wicket:id="fileuploadLabel" class="custom-file-label" for="{fileupload.id}">Kies bestand(en)</label>
+                        </div>
+                        <div class="mb-4">
+                            <!-- list van bestaande files -->
+                            <div class="mb-2" wicket:id="existing">
+                                <!-- 1 bestaan file item -->
+                                <div class="input-group">
+                                    <!-- naam van file -->
+                                    <span class="form-control" wicket:id="itemlabel"></span>
+                                    <!-- checkbox=toggle-button om te verwijderen -->
+                                    <div class="input-group-append">
+                                        <div style="display: inline;" class="btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-outline-danger check-to-remove">
+                                                <input wicket:id="itemdelete" type="checkbox" autocomplete="off"><i class="text-danger fa-fw far fa-trash-alt"></i> Verwijder
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <a wicket:id="submit" class="btn btn-sm btn-primary"><i class="fas fa-save"></i> Bewaren</a>
+                </div>
+            </form>
+        </wicket:child>
+    </wicket:extend>
+</body>
+
+</html>
