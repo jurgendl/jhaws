@@ -77,6 +77,7 @@ public class SettingsPage extends DefaultWebPage {
         form.addTextField(p.getGoogleSigninClientId(), new TextFieldSettings());
         form.addToggle(p.getJavascriptAtBottom(), new CheckBoxSettings());
         form.addTextField(p.getShortcutIcon(), new TextFieldSettings());
+        form.addToggle(p.getDemo(), new CheckBoxSettings());
         this.add(form);
     }
 }

@@ -4,11 +4,247 @@
 <body>
 	<wicket:extend>
 
-<br/>
 
-<div class="container">
+		<br />
+		<br />
 
-<form class="needs-validation" novalidate>
+		<div class="container">
+			<form class="form-horizontal" role="form" method="POST" action="/login">
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-6">
+						<h2>Login</h2>
+						<hr>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3 field-label-responsive">
+						<label for="username">Username</label>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fa-fw fas fa-user"></span>
+									</span>
+								</div>
+								<input type="text" name="username1" class="form-control border-left-0" id="username1" placeholder="username" required>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="row">
+				<div class="col-md-3 field-label-responsive">
+					<label for="email">E-Mail Address</label>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group">
+						<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+							<div class="input-group-prepend">
+								<span class="input-group-text">
+									<span class="fa envelope-user"></span>
+								</span>
+							</div>
+							<input type="text" name="email" class="form-control border-left-0" id="email" placeholder="you@example.com" required>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="form-control-feedback">
+						<span class="text-danger align-middle"> Put e-mail validation error messages here
+						</span>
+					</div>
+				</div>
+			</div> -->
+				<div class="row">
+					<div class="col-md-3 field-label-responsive">
+						<label for="password">Password</label>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fa-fw fas fa-key"></span>
+									</span>
+								</div>
+								<input type="password" name="password2" class="form-control border-left-0" id="password2" placeholder="Password" required>
+							</div>
+							<a href="">Forgot password</a>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-control-feedback">
+							<span class="text-danger align-middle"> <i class="fa-fw fas fa-exclamation-circle"></i> Example Error Message
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label class="custom-control custom-checkbox">
+								<input type="checkbox" checked="true" class="custom-control-input" id="inlineCheckbox4a">
+								<label class="custom-control-label" for="customCheck1">Keep me signed in</label>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<button style="width: 100%" type="submit" class="btn btn-primary">
+								<i class="fa-fw fas fa-sign-in-alt"></i> Login
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<button style="width: 100%" type="submit" class="btn btn-success">
+								<i class="fa-fw fas fa-user-plus"></i> Register
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<br />
+		<br />
+
+		<div class="container">
+			<form class="form-horizontal" role="form" method="POST" action="/register">
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-6">
+						<h2>Register</h2>
+						<hr>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3 field-label-responsive">
+						<label for="username">Username</label>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fa-fw fas fa-user"></span>
+									</span>
+								</div>
+								<input type="text" name="username2" class="form-control border-left-0" id="username2" placeholder="username" required>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-control-feedback">
+							<span class="text-danger align-middle"> <i class="fa-fw fas fa-exclamation-circle"></i> Username not available
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3 field-label-responsive">
+						<label for="email">E-Mail Address</label>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fa-fw fas fa-envelope"></span>
+									</span>
+								</div>
+								<input type="text" name="email" class="form-control border-left-0" id="email" placeholder="you@example.com" required>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-control-feedback">
+							<span class="text-danger align-middle"> <i class="fa-fw fas fa-exclamation-circle"></i> Input is not an email
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3 field-label-responsive">
+						<label for="password">Password</label>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group has-danger">
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fa-fw fas fa-key"></span>
+									</span>
+								</div>
+								<input type="password" name="password1" class="form-control border-left-0" id="password1" placeholder="Password" required>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-control-feedback">
+							<span class="text-danger align-middle">
+								<i class="fa-fw fas fa-exclamation-circle"></i> Password does not match rules: 8 to 24 characters, contains a symbol, number, lowercase and upercase character.
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3 field-label-responsive">
+						<label for="password">Confirm Password</label>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+								<div class="input-group-prepend">
+									<span class="input-group-text">
+										<span class="fa-fw fas fa-key"></span>
+									</span>
+								</div>
+								<input type="password" name="password-confirmation" class="form-control border-left-0" id="password-confirm" placeholder="Password" required>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="form-control-feedback">
+							<span class="text-danger align-middle"> <i class="fa-fw fas fa-exclamation-circle"></i> Passwords do not match
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3"></div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<button style="width: 100%" type="submit" class="btn btn-success">
+								<i class="fa-fw fas fa-user-plus"></i> Register
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<br />
+		<br />
+
+		<div class="container">
+			<button class="btn btn-danger">
+				<i class="fa-fw fas fa-sign-out-alt"></i> Log out
+			</button>
+		</div>
+
+
+
+<!-- <form class="needs-validation" novalidate> -->
   <!-- <div class="form-row">
     <div class="col-md-4 mb-3">
       <label for="validationCustom01">First name</label>
@@ -108,7 +344,7 @@
 
 <br/><br/> -->
 
-<div class="form-group"><!--  is-valid -->
+<!-- <div class="form-group">
 <input type="email" pattern="/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/" class="form-control" id="email1" placeholder="test@gmail.com">
 <div class="invalid-feedback">Email error</div>
 <div class="valid-feedback">Email correct</div>
@@ -116,7 +352,7 @@
 
 <br>
 
-<div class="form-group"><!--  is-invalid -->
+<div class="form-group">
 <input type="email" pattern="/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/" class="form-control" id="email2" placeholder="test@gmail.com">
 <div class="invalid-feedback">Email error</div>
 <div class="valid-feedback">Email correct</div>
@@ -124,7 +360,7 @@
 
 <br>
 
-<div class="form-group"><!--  is-invalid -->
+<div class="form-group">
 <input type="text" pattern="[0-9]*" title="All numbers" class="form-control" id="pattern" placeholder="09...">
 <div class="invalid-feedback">pattern error</div>
 <div class="valid-feedback">pattern correct</div>
@@ -132,54 +368,17 @@
 
 <br>
 
-<div class="form-group"><!--  is-invalid -->
+<div class="form-group">
 <input type="url" pattern="https?://.+" title="All numbers" class="form-control" id="website" placeholder="http://...">
 <div class="invalid-feedback">url error</div>
 <div class="valid-feedback">url correct</div>
 </div>
 
-<!-- email pattern: [a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$ -->
+ email pattern: [a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$ 
   <button class="btn btn-primary" type="submit">Submit form</button>
 </form>
+ -->
 
-<script>
-// Example starter JavaScript for disabling form submissions if there are invalid fields
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
-    // Loop over them and prevent submission
-    var validation = Array.prototype.filter.call(forms, function(form) {
-      form.addEventListener('submit', function(event) {
-          /*console.log('start');
-          $(form).find('input').each(function(index){
-          	switch(this.type){
-          		case 'email': {
-          			var value = this.value;
-          			if(value) {
-	          			var regex = '/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/';
-	          			if(!regex.test(value)) {
-	          				console.log('err');
-	          			}
-          			}
-          			break;
-          		}
-          	}
-          });
-          console.log('end');*/
-      if (form.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-})();
-</script>
-
-</div>
 
 	</wicket:extend>
 </body>

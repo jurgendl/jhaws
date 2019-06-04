@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ConverterLocator;
 import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.IConverterLocator;
+import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.bean.validation.BeanValidationConfiguration;
 import org.apache.wicket.bean.validation.IPropertyResolver;
@@ -458,5 +459,11 @@ public class WicketApplication extends WebApplication implements InitializingBea
 
     public void setRestRelativePath(String restRelativePath) {
         this.restRelativePath = restRelativePath;
+    }
+
+    @Override
+    public <T extends Page> void mountPage(String path, Class<T> pageClass) {
+        super.mountPage(path, pageClass);
+        logger.info("mounting {} on {}", pageClass.getName(), path);
     }
 }

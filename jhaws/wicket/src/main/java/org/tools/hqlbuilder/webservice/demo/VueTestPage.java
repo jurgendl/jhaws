@@ -1,14 +1,10 @@
 package org.tools.hqlbuilder.webservice.demo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.vue.Vue;
@@ -27,15 +23,6 @@ public class VueTestPage extends DefaultWebPage {
         Component breadcrumb = super.addBreadcrumb(parameters, html, id);
         breadcrumb.setVisible(false);
         return breadcrumb;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void addNavigationBar(PageParameters parameters, MarkupContainer html, String id) {
-        List<NavBarLink> navs = new ArrayList<>();
-        navs.add(new NavBarLink("Home", "fa-fw fas fa-home", VueTestPage.class, null));
-        navs.add(new NavBarLink("Refresh", "fa-fw fas fa-sync-alt", (Class<? extends WebPage>) getPageClass(), getPageParameters()));
-        addNavigationBar(parameters, html, id, navs, false, false, false);
     }
 
     @Override

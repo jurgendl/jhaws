@@ -317,8 +317,12 @@ public abstract class DefaultWebPage extends WebPage {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void addNavigationBar(PageParameters parameters, MarkupContainer html, String id) {
-        addNavigationBar(parameters, html, id, new ArrayList<>(), false, false, false);
+        List<NavBarLink> navs = new ArrayList<>();
+        navs.add(new NavBarLink("Home", "fa-fw fas fa-home", DefaultWebPage.class, null));
+        navs.add(new NavBarLink("Refresh", "fa-fw fas fa-sync-alt", (Class<? extends WebPage>) getPageClass(), getPageParameters()));
+        addNavigationBar(parameters, html, id, navs, false, false, false);
     }
 
     protected Component addNavigationBar(PageParameters parameters, MarkupContainer html, String id, List<NavBarLink> navs, boolean userButton,
@@ -644,6 +648,9 @@ public abstract class DefaultWebPage extends WebPage {
 
         response.render(CssHeaderItem.forReference(Magnify.CSS));
         response.render(JavaScriptHeaderItem.forReference(Magnify.JS));
+
+        // response.render(CssHeaderItem.forReference(Pace.CSS));
+        // response.render(JavaScriptHeaderItem.forReference(Pace.JS));
 
         response.render(CssHeaderItem.forReference(QTip.CSS));
         response.render(JavaScriptHeaderItem.forReference(QTip.JS));
