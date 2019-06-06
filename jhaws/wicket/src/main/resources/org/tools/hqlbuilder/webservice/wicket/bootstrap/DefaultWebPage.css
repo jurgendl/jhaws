@@ -35,10 +35,13 @@
 /* https://css-tricks.com/custom-scrollbars-in-webkit/ */
 /* https://css-tricks.com/almanac/properties/s/scrollbar/ */
 ::-webkit-scrollbar {
-	width: 10px;
+	width: 12px !important;
+}
+::-webkit-scrollbar-thumb {
+	width: 12px !important;
 }
 ::-webkit-scrollbar-button {
-	width: 10px;
+	width: 12px;
 	height: 1px;
 }
 ::-webkit-scrollbar-track {
@@ -60,8 +63,15 @@
 ::-webkit-scrollbar-thumb:hover {
 	background: rgb(210, 210, 210);
 }
-::-webkit-scrollbar-thumb:window-inactive {
-	
+/*::-webkit-scrollbar-thumb:window-inactive {
+}*/
+/* body scollbar always */
+html {
+	overflow: -moz-scrollbars-vertical; 
+	overflow-y: scroll;
+}
+body.modal-open {
+	padding-right: 0px !important;
 }
 
 /* ======================== rotated ======================== */
