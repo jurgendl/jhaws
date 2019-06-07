@@ -320,14 +320,14 @@ public abstract class DefaultWebPage extends WebPage {
     @SuppressWarnings("unchecked")
     protected void addNavigationBar(PageParameters parameters, MarkupContainer html, String id) {
         List<NavBarLink> navs = new ArrayList<>();
-        navs.add(new NavBarLink("Home", "fa-fw fas fa-home", DefaultWebPage.class, null));
+        navs.add(new NavBarLink("Home", "fa-fw fas fa-home", WicketApplication.get().getHomePage(), null));
         demos(navs);
         navs.add(new NavBarLink("Refresh", "fa-fw fas fa-sync-alt", (Class<? extends WebPage>) getPageClass(), getPageParameters()));
         addNavigationBar(parameters, html, id, navs, false, false, false);
     }
 
     protected void demos(List<NavBarLink> navs) {
-        NavBarLink demos = new NavBarLink("Demo", "fa-fw fas fa-home", DefaultWebPage.class, null);
+        NavBarLink demos = new NavBarLink("Demo", "fa-fw fas fa-home", null, null);
         demos.getChildLinks().add(new NavBarLink("settings", "", org.tools.hqlbuilder.webservice.wicket.settings.SettingsPage.class, null));
         demos.getChildLinks().add(new NavBarLink("overview", "", org.tools.hqlbuilder.webservice.demo.TestPage.class, null));
         demos.getChildLinks().add(new NavBarLink("vue", "", org.tools.hqlbuilder.webservice.demo.VueTestPage.class, null));
