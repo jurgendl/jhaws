@@ -327,7 +327,7 @@ public abstract class DefaultWebPage extends WebPage {
     }
 
     protected void demos(List<NavBarLink> navs) {
-        NavBarLink demos = new NavBarLink("Demo", "fa-fw fas fa-home", null, null);
+        NavBarLink demos = new NavBarLink("Demo", null, null, null);
         demos.getChildLinks().add(new NavBarLink("settings", "", org.tools.hqlbuilder.webservice.wicket.settings.SettingsPage.class, null));
         demos.getChildLinks().add(new NavBarLink("overview", "", org.tools.hqlbuilder.webservice.demo.TestPage.class, null));
         demos.getChildLinks().add(new NavBarLink("vue", "", org.tools.hqlbuilder.webservice.demo.VueTestPage.class, null));
