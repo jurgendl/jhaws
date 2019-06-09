@@ -324,7 +324,7 @@ public class HTTPClient implements Closeable {
 
 	protected URI toFullUri(AbstractGetRequest<? extends AbstractGetRequest<?>> get) {
 		URIBuilder uriBuilder = new URIBuilder(get.getUri());
-		stream(get.getFormValues().entrySet().spliterator(), false)
+		stream(get.getFormValues().entrySet().spliterator(), false).filter(e -> StringUtils.isNotBlank(e.getKey()))
 				.forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
 		try {
 			return uriBuilder.build();

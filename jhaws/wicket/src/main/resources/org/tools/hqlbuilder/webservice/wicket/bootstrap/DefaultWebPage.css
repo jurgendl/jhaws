@@ -493,10 +493,12 @@ img.niceimage {
 	position: sticky;
 	top: 3.55rem;
 	z-index: 900; /* should be less than 1000 of navbar menu */
+	background-color: inherit;
+}
+.bottomshadow {
 	-webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
 	box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
-	background-color: inherit;
 }
 .navbar .dropdown-menu.show {
 	margin-top: .5em !important;
