@@ -447,6 +447,10 @@ img.niceimage {
 .typeahead {
 	z-index: 1051;
 }
+.typeahead.dropdown-menu {
+	max-height: 250px;
+	overflow-y: auto;
+}
 
 /* */
 .col-form-label {
