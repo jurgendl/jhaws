@@ -1,4 +1,4 @@
-/* ============= DefaultWebPage.js ============= */
+/* ============= base.js =============>>> */
 
 /*
 	<div id="id1" class="collapsed" onclick="toggle_visibility('id1','id2')">toggle visibility</div>
@@ -373,4 +373,4 @@ function syntaxHighlight(json) {
     });
 }
 
-/* ======================================================= */
+/* <<<============= base.js ============= */

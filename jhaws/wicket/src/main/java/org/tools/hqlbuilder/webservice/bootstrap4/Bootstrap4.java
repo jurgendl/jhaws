@@ -1,6 +1,5 @@
 package org.tools.hqlbuilder.webservice.bootstrap4;
 
-import org.jhaws.common.io.FilePath;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
@@ -50,8 +49,6 @@ public class Bootstrap4 {
 	// public static final CssResourceReference CSS_REBOOT = new
 	// CssResourceReference(Bootstrap4.class,
 	// "css/bootstrap-reboot.css");
-
-	public static String FACTORY = new FilePath(Bootstrap4.class, "js/bootstrap.factory.js").readAll();
 
 	static {
 		JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
