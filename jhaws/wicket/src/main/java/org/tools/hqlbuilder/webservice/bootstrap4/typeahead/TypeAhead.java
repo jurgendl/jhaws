@@ -11,7 +11,7 @@ public class TypeAhead {
     public static JavaScriptResourceReference JS = new JavaScriptResourceReference(TypeAhead.class, "bootstrap3-typeahead.js");
 
     static {
-        JS.addJavaScriptResourceReferenceDependency(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS);
+        // JS.addJavaScriptResourceReferenceDependency(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS);
         JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
     }
 }

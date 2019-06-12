@@ -638,10 +638,9 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(BootstrapSlider.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));
 
-        response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
+        // response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
         response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
         response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
-
         response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
         response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
 

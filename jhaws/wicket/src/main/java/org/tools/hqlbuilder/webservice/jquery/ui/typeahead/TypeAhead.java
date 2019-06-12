@@ -11,6 +11,6 @@ public class TypeAhead {
 
     static {
         JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-        JS_BLOODHOUND.addJavaScriptResourceReferenceDependency(JS);
+        JS_BLOODHOUND.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
     }
 }
