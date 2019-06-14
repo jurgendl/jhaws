@@ -544,6 +544,9 @@ img.niceimage {
 		margin-top: 0px !important;
 	}
 }
+.fixed-top , .fixed-bottom {
+	z-index: 2030 !important; /* was 1030 */
+}
 
 /** rating by stars */
 div.rating-input a.rating-clear {
