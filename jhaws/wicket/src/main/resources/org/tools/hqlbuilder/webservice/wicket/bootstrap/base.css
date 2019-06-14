@@ -442,7 +442,15 @@ img.niceimage {
 	background-color: rgba(0, 0, 0, 0);
 	font-size: 11px;
 }
-
+.bootstrap-tagsinput input {
+	width: 100%;
+}
+.bootstrap-tagsinput {
+	overflow-x: hidden;
+}
+.bootstrap-tagsinput .badge {
+	margin: .1em 0;
+}
 /* typeahead */
 .typeahead {
 	z-index: 1051;
