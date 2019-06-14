@@ -1,5 +1,10 @@
 /* ============= base.css =============>>> */
 
+:root {
+	--nav-height: 3.55rem;
+	--border-radius: 2px;
+}
+
 /* ======================== fonts ======================== */
 /* https://www.google.com/fonts */
 /* http://fontfabric.com/idealist-sans/ */
@@ -492,10 +497,10 @@ img.niceimage {
 	font-size: 0.75rem !important;
 }
 .navbar {
-	height: 3.55rem;
+	height: var(--nav-height);
 }
 .navbarwhitebehind {
-	padding-top: 3.55rem;
+	padding-top: var(--nav-height);
 }
 .sticky {
 	position: -webkit-sticky;
@@ -503,7 +508,7 @@ img.niceimage {
 	position: -o-sticky;
 	position: -ms-sticky;
 	position: sticky;
-	top: 3.55rem;
+	top: var(--nav-height);
 	z-index: 900; /* should be less than 1000 of navbar menu */
 	background-color: inherit;
 }
@@ -516,7 +521,7 @@ img.niceimage {
 	margin-top: .5em !important;
 	padding: 0.25rem;
 	height:auto;
-	max-height:calc( 100vh - 3.55rem - 1rem );
+	max-height:calc( 100vh - var(--nav-height) - 1rem );
 	overflow:auto; 
 }
 .navbar .dropdown-item {
@@ -671,7 +676,7 @@ div.rating-input {
 	z-index: 9998 !important;
 }
 
-/* no rounded corners */
+/* corners */
 .btn
 , .dropdown-menu
 , .form-control
@@ -682,7 +687,7 @@ div.rating-input {
 , .bootstrap-tagsinput
 , .card
 , .custom-file-label {
-	/*border-radius: 4px !important;*/
+	border-radius: var(--border-radius) !important;
 }
 .custom-checkbox .custom-control-label::before {
 	border-radius: 0px !important;
@@ -760,6 +765,5 @@ a.link-unstyled
 	position: relative;
 	z-index: 200;
 }
-
 
 /* <<<============= base.css ============= */
