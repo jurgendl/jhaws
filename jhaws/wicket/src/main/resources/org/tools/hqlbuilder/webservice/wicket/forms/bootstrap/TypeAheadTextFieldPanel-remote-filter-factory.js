@@ -1,5 +1,6 @@
 console.log(REST + '$URL$');
 $('#$ID$').typeahead({
+	autoSelect: false,
 	highlight: true,
 	hint: true,
 	items: $MAX$,
@@ -14,7 +15,10 @@ $('#$ID$').typeahead({
 		return tmp;
 	},
 	matcher: function (item) { return true; },
-	templates : {
-		empty : ['<div class="empty-message">','no results','</div>' ].join('\n')
-	}
+	// default template
+	menu: '<ul class="typeahead dropdown-menu" role="listbox"></ul>',
+	item: '<li><a class="dropdown-item" href="#" role="option"></a></li>',
+	headerHtml: '<li class="dropdown-header"></li>',
+	headerDivider: '<li class="divider" role="separator"></li>',
+	itemContentSelector:'a'
 });
