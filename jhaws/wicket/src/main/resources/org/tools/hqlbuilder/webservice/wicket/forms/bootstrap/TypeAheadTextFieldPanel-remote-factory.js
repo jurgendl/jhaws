@@ -11,6 +11,7 @@ var source_$ID$ = new Bloodhound({
 console.log(REST + '$URL$' + '%QUERY');
 source_$ID$.initialize();
 $('#$ID$').typeahead({
+	selectOnBlur: false,
 	autoSelect: false,
 	highlight: true,
 	hint: true,

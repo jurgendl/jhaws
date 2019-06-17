@@ -7,6 +7,7 @@ var source_$ID$ = new Bloodhound({
 });
 source_$ID$.initialize();
 $('#$ID$').typeahead({
+	selectOnBlur: false,
 	autoSelect: false,
 	highlight: true,
 	hint: true,

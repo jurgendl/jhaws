@@ -1,5 +1,6 @@
 console.log(REST + '$URL$');
 $('#$ID$').typeahead({
+	selectOnBlur: false,
 	autoSelect: false,
 	highlight: true,
 	hint: true,
