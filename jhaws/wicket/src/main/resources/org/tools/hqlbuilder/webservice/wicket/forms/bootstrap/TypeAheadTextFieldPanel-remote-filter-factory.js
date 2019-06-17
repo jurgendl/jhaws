@@ -9,6 +9,7 @@ $('#$ID$').typeahead({
 	minLength: $MIN$,
 	source : function(query, process) {
 		var tmp = $.get(REST + '$URL$', {query : query}, function(data) {
+			console.log(REST + '$URL$' + "&query=" + query);
 			console.log(data);
 			return process(data);
 		});
