@@ -16,6 +16,7 @@ import org.tools.hqlbuilder.webservice.libraries.videojs.VideoJs7;
 // https://codepen.io/dotdreaming/pen/CnLeD
 // https://codepen.io/rayrc/post/responsive-html5-video-using-video-js
 // http://bgbaden-frauen.ac.at/~infwurst/Hagmann/videojs/VideoJS%20setup%20guide%20to%20scale%20for%20responsive%20design%20on%20all%20browsers%20&%20mobile.html
+// https://blog.videojs.com/
 @SuppressWarnings("serial")
 public class VideoJs7Panel extends Panel {
 	@SuppressWarnings("unused")
@@ -67,6 +68,11 @@ public class VideoJs7Panel extends Panel {
 		}
 		video.add(new AttributeModifier("fluid", "true"));
 		video.add(new AttributeModifier("muted", "true"));
+
+//		video.add(new AttributeModifier("fill", "true"));
+//		video.add(new AttributeModifier("responsive", "true"));
+		// video.add(new AttributeModifier("data-setup",
+		// "{fluid:true,fill:true,responsive:true}"));
 
 		// video.add(new AttributeModifier("style", "width:100% !important;
 		// padding-bottom:"
