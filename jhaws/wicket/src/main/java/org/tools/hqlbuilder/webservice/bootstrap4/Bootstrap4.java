@@ -36,7 +36,7 @@ public class Bootstrap4 {
     public static final JavaScriptResourceReference JS_IE10FIX = new JavaScriptResourceReference(Bootstrap4.class,
             "js/ie10-viewport-bug-workaround.js");
 
-    public static CssResourceReference CSS = new CssResourceReference(Bootstrap4.class, "css/bootstrap.css");
+    public static final CssResourceReference CSS = new CssResourceReference(Bootstrap4.class, "css/bootstrap.css");
 
     static {
         JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
