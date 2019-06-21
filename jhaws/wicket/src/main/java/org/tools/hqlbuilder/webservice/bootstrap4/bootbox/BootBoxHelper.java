@@ -43,12 +43,14 @@ public class BootBoxHelper implements Serializable {
 		// size // sm lg [xl bootstrap 4]
 		options.put("size", "sm");
 
+		options.put("centerVertical", "true");
+
 		// boolean swapButtonOrder (false)
 
 		// boolean scrollable (false) [bootstrap 4]
 
-		options.put("locale", "nl"); // FIXME luister naar session (maakt het
-										// eigenlijk uit?)
+		options.put("locale", "nl");
+		// FIXME luister naar session (maakt het eigenlijk uit?)
 
 		options.put("onEscape", "true");
 
