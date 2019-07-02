@@ -5,6 +5,7 @@ import static org.tools.hqlbuilder.webservice.wicket.WebHelper.tag;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.IModel;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
@@ -64,5 +65,7 @@ public class RatingFieldPanel2 extends DefaultFormRowPanel<Integer, NumberTextFi
 		response.render(JavaScriptHeaderItem
 				.forReference(new JavaScriptResourceReference(getClass(), "bootstrap-rating-input.js")
 						.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference())));
+		response.render(
+				OnDomReadyHeaderItem.forScript(";$('input.rating[type=number]').each(function(){$(this).rating();});"));
 	}
 }

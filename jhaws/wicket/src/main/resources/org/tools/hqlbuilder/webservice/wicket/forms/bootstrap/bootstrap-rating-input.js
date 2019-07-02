@@ -146,10 +146,10 @@
 
   Plugin.Constructor = Rating;
 
-  $(function() {
+  /*$(function() {
     $('input.rating[type=number]').each(function() {
       $(this).rating();
     });
-  });
+  });*/
 
 }(jQuery));
