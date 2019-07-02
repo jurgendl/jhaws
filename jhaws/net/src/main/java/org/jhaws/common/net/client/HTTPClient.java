@@ -43,7 +43,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -197,22 +196,26 @@ public class HTTPClient implements Closeable {
 
 	public RequestConfig getRequestConfig() {
 		if (requestConfig == null) {
-			Builder requestConfigBuilder = RequestConfig.custom()//
-					.setMaxRedirects(5)//
-					.setCircularRedirectsAllowed(true)//
-					.setConnectionRequestTimeout(60000)//
-					.setConnectTimeout(60000)//
-					.setSocketTimeout(60000)//
-					.setExpectContinueEnabled(true)//
-					.setRedirectsEnabled(true)//
-					// https://stackoverflow.com/questions/36473478/fixing-httpclient-warning-invalid-expires-attribute-using-fluent-api/40697322
-					.setCookieSpec(CookieSpecs.STANDARD)//
-			// .setCookieSpec(org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY)//
-			;
-			requestConfigBuilder = requestConfigBuilder.setContentCompressionEnabled(compressed);
-			requestConfig = requestConfigBuilder.build();
+			requestConfig = getRequestConfigBuilder().build();
 		}
 		return requestConfig;
+	}
+
+	protected org.apache.http.client.config.RequestConfig.Builder getRequestConfigBuilder() {
+		org.apache.http.client.config.RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()//
+				.setMaxRedirects(5)//
+				.setCircularRedirectsAllowed(true)//
+				.setConnectionRequestTimeout(60000)//
+				.setConnectTimeout(60000)//
+				.setSocketTimeout(60000)//
+				.setExpectContinueEnabled(true)//
+				.setRedirectsEnabled(true)//
+				// https://stackoverflow.com/questions/36473478/fixing-httpclient-warning-invalid-expires-attribute-using-fluent-api/40697322
+				.setCookieSpec(CookieSpecs.STANDARD)//
+		// .setCookieSpec(org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY)//
+		;
+		requestConfigBuilder = requestConfigBuilder.setContentCompressionEnabled(compressed);
+		return requestConfigBuilder;
 	}
 
 	protected final ThreadLocal<List<URI>> chain = new ThreadLocal<List<URI>>() {
@@ -268,33 +271,37 @@ public class HTTPClient implements Closeable {
 
 	public CloseableHttpClient getHttpClient() {
 		if (httpClient == null) {
-			HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()//
-					.setDefaultCookieStore(getCookieStore()) //
-					.setUserAgent(getUserAgent())//
-					.setRedirectStrategy(getRedirectStrategy())//
-					.setDefaultRequestConfig(getRequestConfig())//
-					.setConnectionManager(getConnectionManager())//
-					.setDefaultCredentialsProvider(getDefaultCredentialsProvider());
-			if (!compressed) {
-				httpClientBuilder.disableContentCompression();
-			}
-			if (ssl) {
-				// Trust own CA and all self-signed certs
-				SSLContext sslcontext;
-				try {
-					sslcontext = SSLContext.getDefault();
-				} catch (NoSuchAlgorithmException ex) {
-					throw new RuntimeException(ex);
-				}
-				// Allow TLSv1 protocol only
-				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext,
-						new String[] { "TLSv1", "TLSv1.1", "TLSv1.2" }, null,
-						SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-				httpClientBuilder.setSSLSocketFactory(sslsf);
-			}
-			httpClient = httpClientBuilder.build();//
+			httpClient = getHttpClientBuilder().build();//
 		}
 		return httpClient;
+	}
+
+	protected HttpClientBuilder getHttpClientBuilder() {
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()//
+				.setDefaultCookieStore(getCookieStore()) //
+				.setUserAgent(getUserAgent())//
+				.setRedirectStrategy(getRedirectStrategy())//
+				.setDefaultRequestConfig(getRequestConfig())//
+				.setConnectionManager(getConnectionManager())//
+				.setDefaultCredentialsProvider(getDefaultCredentialsProvider());
+		if (!compressed) {
+			httpClientBuilder.disableContentCompression();
+		}
+		if (ssl) {
+			// Trust own CA and all self-signed certs
+			SSLContext sslcontext;
+			try {
+				sslcontext = SSLContext.getDefault();
+			} catch (NoSuchAlgorithmException ex) {
+				throw new RuntimeException(ex);
+			}
+			// Allow TLSv1 protocol only
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext,
+					new String[] { "TLSv1", "TLSv1.1", "TLSv1.2" }, null,
+					SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+			httpClientBuilder.setSSLSocketFactory(sslsf);
+		}
+		return httpClientBuilder;
 	}
 
 	protected HttpClientConnectionManager getConnectionManager() {
@@ -324,7 +331,8 @@ public class HTTPClient implements Closeable {
 
 	protected URI toFullUri(AbstractGetRequest<? extends AbstractGetRequest<?>> get) {
 		URIBuilder uriBuilder = new URIBuilder(get.getUri());
-		stream(get.getFormValues().entrySet().spliterator(), false).filter(e -> StringUtils.isNotBlank(e.getKey()))
+		stream(get.getFormValues().entrySet().spliterator(), false)//
+				.filter(e -> StringUtils.isNotBlank(e.getKey()))//
 				.forEach(e -> e.getValue().forEach(i -> uriBuilder.addParameter(e.getKey(), i)));
 		try {
 			return uriBuilder.build();
@@ -666,7 +674,11 @@ public class HTTPClient implements Closeable {
 	protected void prepareRequest_additionalHeaders(AbstractRequest<? extends AbstractRequest<?>> params,
 			HttpUriRequest req) {
 		if (params != null) {
-			params.getHeaders().entrySet().stream().filter(h -> h.getValue() != null)
+			params//
+					.getHeaders()//
+					.entrySet()//
+					.stream()//
+					.filter(h -> h.getValue() != null)//
 					.forEach(h -> req.setHeader(h.getKey(), String.valueOf(h.getValue())));
 		}
 	}
@@ -716,11 +728,11 @@ public class HTTPClient implements Closeable {
 	}
 
 	public void addAuthentication(HTTPClientAuth httpClientAuth) {
-		authentication.add(httpClientAuth);
+		this.authentication.add(httpClientAuth);
 	}
 
 	public HTTPClient resetAuthentication() {
-		authentication.clear();
+		this.authentication.clear();
 		return this;
 	}
 
@@ -806,5 +818,4 @@ public class HTTPClient implements Closeable {
 		this.throwException = throwException;
 		return this;
 	}
-
 }
