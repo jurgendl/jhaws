@@ -28,9 +28,8 @@ import org.htmlcleaner.XmlSerializer;
 import org.jhaws.common.lang.IntegerValue;
 import org.jhaws.common.lang.StringUtils;
 
+@SuppressWarnings("serial")
 public class Response extends InputStream implements Serializable {
-	private static final long serialVersionUID = 1806430557697629499L;
-
 	public static Response deserialize(InputStream in) throws IOException {
 		try (ObjectInputStream encoder = new ObjectInputStream(in)) {
 			Object object;
@@ -52,35 +51,35 @@ public class Response extends InputStream implements Serializable {
 		}
 	}
 
-	private int statusCode;
+	protected int statusCode;
 
-	private String statusText;
+	protected String statusText;
 
-	private byte[] content;
+	protected byte[] content;
 
-	private URI uri;
+	protected URI uri;
 
-	private List<URI> chain;
+	protected List<URI> chain;
 
-	private Map<String, List<Object>> headers = new HashMap<>();
+	protected Map<String, List<Object>> headers = new HashMap<>();
 
-	private Locale locale;
+	protected Locale locale;
 
-	private long contentLength;
+	protected long contentLength;
 
-	private String contentEncoding;
+	protected String contentEncoding;
 
-	private String contentType;
+	protected String contentType;
 
-	private transient TagNode node = null;
+	protected transient TagNode node = null;
 
-	private transient HtmlCleaner cleaner = new HtmlCleaner();
+	protected transient HtmlCleaner cleaner = new HtmlCleaner();
 
-	private Date date;
+	protected Date date;
 
-	private String filename;
+	protected String filename;
 
-	private String charset;
+	protected String charset;
 
 	public Response() {
 		super();
@@ -97,6 +96,10 @@ public class Response extends InputStream implements Serializable {
 
 	public Map<String, List<Object>> getHeaders() {
 		return Collections.unmodifiableMap(headers);
+	}
+
+	public boolean isOk() {
+		return 200 <= getStatusCode() && getStatusCode() <= 299;
 	}
 
 	public int getStatusCode() {
@@ -376,5 +379,4 @@ public class Response extends InputStream implements Serializable {
 		pos += k;
 		return k;
 	}
-
 }
