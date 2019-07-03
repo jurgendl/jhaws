@@ -66,6 +66,7 @@ import org.jhaws.common.lang.functions.EConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//https://wiki.apache.org/lucene-java/ImproveIndexingSpeed
 /**
  * @see http://stackoverflow.com/questions/8878448/lucene-good-practice-and-thread-safety
  * @see http://blog.swwomm.com/2013/07/tuning-lucene-to-get-most-relevant.html
@@ -151,7 +152,8 @@ public class LuceneIndex implements Closeable {
 		new FilePath(dir, WRITE_LOCK).delete();
 		MMapDirectory mMapDirectory;
 		try {
-			mMapDirectory = new MMapDirectory(dir.getPath() /* ,new SimpleFSLockFactory() */);
+			mMapDirectory = new MMapDirectory(
+					dir.getPath() /* ,new SimpleFSLockFactory() */);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -448,7 +450,7 @@ public class LuceneIndex implements Closeable {
 	}
 
 	protected <L> L log(String prefix, L l) {
-		logger.debug("{}: {}", prefix, l);
+		logger.info("{}: {}", prefix, l);
 		return l;
 	}
 
