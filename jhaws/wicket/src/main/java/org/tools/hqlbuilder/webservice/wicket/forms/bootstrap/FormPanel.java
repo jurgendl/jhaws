@@ -1,15 +1,22 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.head.CssHeaderItem;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
+import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
+import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 import org.tools.hqlbuilder.webservice.wicket.converter.Converter;
@@ -29,6 +36,7 @@ import org.tools.hqlbuilder.webservice.wicket.forms.common.TagItTextFieldSetting
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TextAreaSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TextFieldSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TriStateCheckBoxSettings;
+import org.tools.hqlbuilder.webservice.wicket.forms.common.TypeAheadTextFieldAltSettings;
 import org.tools.hqlbuilder.webservice.wicket.forms.common.TypeAheadTextFieldSettings;
 
 @SuppressWarnings("serial")
@@ -208,6 +216,34 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 			TypeAheadTextFieldSettings componentSettings, IModel<? extends List<String>> choices) {
 		return this.addDefaultRow(new TypeAheadTextFieldPanel(this.getFormModel(), propertyPath, this.getFormSettings(),
 				componentSettings, choices));
+	}
+
+	public TypeAheadTextFieldAltPanel addTypeAheadTextFieldAlt(String propertyPath,
+			TypeAheadTextFieldAltSettings componentSettings, IModel<? extends List<Map<String, String>>> choices) {
+		return this.addDefaultRow(new TypeAheadTextFieldAltPanel(this.getFormModel(), propertyPath,
+				this.getFormSettings(), componentSettings, choices));
+	}
+
+	public static final CssResourceReference FLAGS_CSS = new CssResourceReference(FormPanel.class,
+			"country/flags/css/flag-icon.css");
+	public static final JavaScriptResourceReference COUNTRY_JS = new JavaScriptResourceReference(FormPanel.class,
+			"country/countries.js");
+
+	public TypeAheadTextFieldAltPanel addCountryTypeAhead(String propertyPath,
+			TypeAheadTextFieldAltSettings componentSettings) {
+		componentSettings.setProperties(Arrays.asList("name"));
+		componentSettings.setTemplate(
+				"/* + \"<a target='_blank' title='Wikipedia' href='https://en.wikipedia.org/wiki/ISO_3166-2:\" + item.iso + \"'>\"*/+ \"<span class='flag-icon flag-icon-\"+ item.iso.toLowerCase()+ \" flag-icon'></span>\"/*+ \"</a>\"*/+ \"&nbsp;&nbsp;{{name}} - {{capital}} - {{iso}} +{{phone}}\"");
+		componentSettings.setLocal("countrydata");
+		return this.addDefaultRow(new TypeAheadTextFieldAltPanel(this.getFormModel(), propertyPath,
+				this.getFormSettings(), componentSettings, null) {
+			@Override
+			public void renderHead(IHeaderResponse response) {
+				super.renderHead(response);
+				response.render(CssHeaderItem.forReference(FLAGS_CSS));
+				response.render(JavaScriptHeaderItem.forReference(COUNTRY_JS));
+			}
+		});
 	}
 
 	public void feedbackError(Serializable message) {

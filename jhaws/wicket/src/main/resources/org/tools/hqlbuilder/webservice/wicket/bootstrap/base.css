@@ -769,4 +769,15 @@ a.link-unstyled
 	z-index: 200;
 }
 
+
+/* jquery type-ahead */
+.typeahead__list {
+	max-height: 300px;
+	overflow-y: auto;
+}
+.flag-icon {
+	border: 1px solid #343a40;
+	background-color: #343a40;
+}
+
 /* <<<============= base.css ============= */
