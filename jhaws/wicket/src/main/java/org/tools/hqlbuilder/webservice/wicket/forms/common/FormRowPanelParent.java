@@ -82,11 +82,12 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
     public FormRowPanelParent<P, T, C, ElementSettings> addComponents(ElementSettings settings) {
         add(getLabel(settings));
-        add(getComponentContainer(settings));
+        WebMarkupContainer _componentContainer = getComponentContainer(settings);
+		add(_componentContainer);
         C _component = getComponent();
-        getComponentContainer(settings).add(_component);
-        getComponentContainer(settings).add(getRequiredMarker());
-        getComponentContainer(settings).add(getFeedback());
+        _componentContainer.add(_component);
+        _componentContainer.add(getRequiredMarker());
+        _componentContainer.add(getFeedback());
         return this;
     }
 

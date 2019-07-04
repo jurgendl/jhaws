@@ -14,7 +14,7 @@ $.typeahead({
 	display : [$PROPERTIES$],
 	emptyTemplate : "no result for {{query}}",
 	template : function(query, item) {
-		return "$TEMPLATE$";
+		return $TEMPLATE$;
 	},
 	callback : {
 		onInit : function(node) {
@@ -24,7 +24,7 @@ $.typeahead({
 				if(node._data) {
 					var val = node[0].value;
 					for (var i = 0; i < node._data.length; i++) {
-						if(node._data[i].name == val) {
+						if(node._data[i].$PROPERTY$ == val) {
 							return;
 						}
 					}

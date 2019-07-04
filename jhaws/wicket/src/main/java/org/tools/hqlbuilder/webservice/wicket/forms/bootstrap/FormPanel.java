@@ -233,7 +233,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 			TypeAheadTextFieldAltSettings componentSettings) {
 		componentSettings.setProperties(Arrays.asList("name"));
 		componentSettings.setTemplate(
-				"/* + \"<a target='_blank' title='Wikipedia' href='https://en.wikipedia.org/wiki/ISO_3166-2:\" + item.iso + \"'>\"*/+ \"<span class='flag-icon flag-icon-\"+ item.iso.toLowerCase()+ \" flag-icon'></span>\"/*+ \"</a>\"*/+ \"&nbsp;&nbsp;{{name}} - {{capital}} - {{iso}} +{{phone}}\"");
+				"\"<span class='flag-icon flag-icon-\"+ item.iso.toLowerCase()+ \" flag-icon'></span>&nbsp;{{name}}:&nbsp;{{capital}}&nbsp;[{{iso}}]&nbsp;(+{{phone}})\"");
 		componentSettings.setLocal("countrydata");
 		return this.addDefaultRow(new TypeAheadTextFieldAltPanel(this.getFormModel(), propertyPath,
 				this.getFormSettings(), componentSettings, null) {

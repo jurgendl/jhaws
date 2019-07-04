@@ -1,5 +1,6 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.jquery_typeahead;
 
+import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
 import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
 import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
@@ -16,4 +17,12 @@ public class JqueryTypeAhead {
 			"jquery.typeahead.js");
 	public static final CssResourceReference CSS = new CssResourceReference(JqueryTypeAhead.class,
 			"jquery.typeahead.css");
+
+	static {
+		try {
+			JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+		} catch (Exception e) {
+			//
+		}
+	}
 }

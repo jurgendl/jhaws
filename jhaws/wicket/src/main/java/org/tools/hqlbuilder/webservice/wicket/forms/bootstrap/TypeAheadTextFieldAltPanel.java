@@ -44,10 +44,10 @@ public class TypeAheadTextFieldAltPanel
 	@Override
 	public FormRowPanelParent<String, String, TextField<String>, TypeAheadTextFieldAltSettings> addComponents(
 			TypeAheadTextFieldAltSettings settings) {
-		FormRowPanelParent<String, String, TextField<String>, TypeAheadTextFieldAltSettings> tmp = super.addComponents(
-				settings);
-		add(results = new WebMarkupContainer("result-container").setOutputMarkupId(true));
-		return tmp;
+		super.addComponents(settings);
+		getComponentContainer(settings)
+				.add(results = new WebMarkupContainer("result-container").setOutputMarkupId(true));
+		return this;
 	}
 
 	@Override
@@ -75,23 +75,23 @@ public class TypeAheadTextFieldAltPanel
 		if (StringUtils.isNotBlank(getComponentSettings().getRemote())) {
 			if (getComponentSettings().isRemoteFilters()) {
 				String script = new FilePath(TypeAheadTextFieldAltPanel.class,
-						getClass().getSimpleName() + "-remote-filter-factory.js").readAll();
+						TypeAheadTextFieldAltPanel.class.getSimpleName() + "-remote-filter-factory.js").readAll();
 				response.render(OnDomReadyHeaderItem.forScript(
 						replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
 			} else {
 				String script = new FilePath(TypeAheadTextFieldAltPanel.class,
-						getClass().getSimpleName() + "-remote-factory.js").readAll();
+						TypeAheadTextFieldAltPanel.class.getSimpleName() + "-remote-factory.js").readAll();
 				response.render(OnDomReadyHeaderItem.forScript(
 						replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
 			}
 		} else if (StringUtils.isNotBlank(getComponentSettings().getLocal())) {
 			String script = new FilePath(TypeAheadTextFieldAltPanel.class,
-					getClass().getSimpleName() + "-local-factory.js").readAll();
+					TypeAheadTextFieldAltPanel.class.getSimpleName() + "-local-factory.js").readAll();
 			response.render(OnDomReadyHeaderItem.forScript(
 					replace(script, getComponentSettings()).replace("$OPTIONS$", getComponentSettings().getLocal())));
 		} else if (choices != null && choices.getObject() != null && !choices.getObject().isEmpty()) {
 			String script = new FilePath(TypeAheadTextFieldAltPanel.class,
-					getClass().getSimpleName() + "-local-factory.js").readAll();
+					TypeAheadTextFieldAltPanel.class.getSimpleName() + "-local-factory.js").readAll();
 			response.render(OnDomReadyHeaderItem.forScript(
 					replace(script, getComponentSettings()).replace("$OPTIONS$", typeAheadChoices(choices))));
 		} else {
@@ -107,6 +107,7 @@ public class TypeAheadTextFieldAltPanel
 				.replace("$PROPERTIES$",
 						getComponentSettings().getProperties().stream().map(p -> "'" + p + "'")
 								.collect(Collectors.joining(",")))//
+				.replace("$PROPERTY$", getComponentSettings().getProperties().get(0))//
 				.replace("$DELAY$", String.valueOf(getComponentSettings().getDelay()))//
 				.replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
 				.replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
