@@ -10,7 +10,6 @@ $.typeahead({
 	source : {
 		data : $OPTIONS$
 	},
-	/*dynamic : true,*/
 	display : [$PROPERTIES$],
 	emptyTemplate : "no result for {{query}}",
 	template : function(query, item) {
@@ -21,7 +20,7 @@ $.typeahead({
 			console.log('Typeahead Initiated on ' + node.selector);
 			node.blur(function() {
 				$('#$RESULTS_ID$').html(''); /* hide results info */
-				if(node._data) {
+				if(node._data && !$FREE$) {
 					var val = node[0].value;
 					for (var i = 0; i < node._data.length; i++) {
 						if(node._data[i].$PROPERTY$ == val) {
