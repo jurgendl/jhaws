@@ -35,7 +35,7 @@ $.typeahead({
 			console.log(objCount)
 			var text = "";
 			if (query !== "" && query.length>=2) {
-				text = '<span class="badge badge-pill badge-light">' + objCount + '</span> elements matching "' + query + '"';
+				text = '<span class="badge badge-pill badge-light">' + objCount + '</span>';
 			}
 			$('#$RESULTS_ID$').html(text);
 		},

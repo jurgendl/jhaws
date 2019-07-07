@@ -3,8 +3,8 @@ $.typeahead({
 	delay : $DELAY$,
 	minLength : $MIN$,
 	maxItem: $MAX$,
-	accent : true,
-	hint : true,
+	accent : false,
+	hint : false,
 	order : null, // 'asc', 'desc'
 	dynamic : true,
 	filter: false,
@@ -58,7 +58,7 @@ $.typeahead({
 			console.log(objCount)
 			var text = "";
 			if (query !== "" && query.length>=2) {
-				text = '<span class="badge badge-pill badge-light">' + objCount + '</span> elements matching "' + query + '"';
+				text = '<span class="badge badge-pill badge-light">' + objCount + '</span>';
 			}
 			$('#$RESULTS_ID$').html(text);
 		},
