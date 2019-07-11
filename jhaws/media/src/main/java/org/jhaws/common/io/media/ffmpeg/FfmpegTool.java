@@ -1466,6 +1466,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("192k");
 		command.add("-f");
 		command.add("mp3");
+		command.add("-codec:a");
+		command.add("libmp3lame");
+		command.add("-qscale:a");
+		command.add("0");
 		command.add(command(out));
 		call(null, lines, getFfmpeg().getParentPath(), command);
 	}

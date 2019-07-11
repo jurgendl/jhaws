@@ -99,7 +99,7 @@ public class YTDL extends Tool {
 		return lines.lines().get(0);
 	}
 
-	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder) {
+	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
 		if (tmpFolder == null)
@@ -109,10 +109,46 @@ public class YTDL extends Tool {
 		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
 		List<String> command = new ArrayList<>();
 		command.add(FfmpegTool.command(executable));
+		command.add("-f");
+		command.add("bestaudio[ext=m4a]");
+		command.add("--embed-thumbnail");
+		command.add("--add-metadata");
+		command.add(url);
+		List<String> dl = new ArrayList<>();
+		try {
+			dl(tmpFolder, command, dl);
+		} catch (ExitValueException ex) {
+			//
+		}
+		if (dl.isEmpty()) {
+			throw new NullPointerException();
+		}
+		if (dl.size() == 1) {
+			FilePath from = tmpFolder.child(dl.get(0));
+			FilePath to = targetFolder.child(dl.get(0)).newFileIndex();
+			from.renameTo(to);
+			return to;
+		} else {
+			throw new UnsupportedOperationException();
+		}
+	}
+
+	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder) {
+		if (executable == null || executable.notExists())
+			throw new NullPointerException();
+		if (tmpFolder == null)
+			tmpFolder = FilePath.getTempDirectory();
+		if (targetFolder == null)
+			targetFolder = FilePath.getTempDirectory();
+		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
+		List<String> command = new ArrayList<>();
+		command.add(command(executable));
 		command.add("--verbose");
 		command.add("-f");
 		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 		command.add("bestvideo,bestaudio");
+		command.add("--embed-thumbnail");
+		command.add("--add-metadata");
 		command.add("-o");
 		command.add("%(title)s.f%(format_id)s.%(ext)s");
 		command.add(url);
@@ -121,7 +157,7 @@ public class YTDL extends Tool {
 			dl(tmpFolder, command, dl);
 		} catch (ExitValueException ex) {
 			command = new ArrayList<>();
-			command.add(FfmpegTool.command(executable));
+			command.add(command(executable));
 			command.add("--verbose");
 			command.add(url);
 			dl(tmpFolder, command, dl);
