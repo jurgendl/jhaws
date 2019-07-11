@@ -147,8 +147,8 @@ public class YTDL extends Tool {
 		command.add("-f");
 		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 		command.add("bestvideo,bestaudio");
-		command.add("--embed-thumbnail");
-		command.add("--add-metadata");
+		// command.add("--embed-thumbnail");
+		// command.add("--add-metadata");
 		command.add("-o");
 		command.add("%(title)s.f%(format_id)s.%(ext)s");
 		command.add(url);

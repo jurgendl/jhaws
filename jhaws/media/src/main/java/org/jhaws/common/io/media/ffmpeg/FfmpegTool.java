@@ -1259,7 +1259,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return this.actions;
 	}
 
-	public void dash(String manifest, FilePath out, Lines lines) {
+	public FilePath dash(String manifest, FilePath out, Lines lines) {
 		List<String> command = new ArrayList<>();
 		command.add(command(getFfmpeg()));
 		command.add("-hide_banner");
@@ -1274,9 +1274,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add(command(out));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
 		call(null, lines, out.getParentPath(), command);
+		return out;
 	}
 
-	public void hls(String hls, FilePath out, Lines lines) {
+	public FilePath hls(String hls, FilePath out, Lines lines) {
 		List<String> command = new ArrayList<>();
 		command.add(command(getFfmpeg()));
 		command.add("-hide_banner");
@@ -1289,6 +1290,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add(command(out));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
 		call(null, lines, out.getParentPath(), command);
+		return out;
 	}
 
 	// public List<String> listDevices() {
@@ -1301,7 +1303,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	// return null; // TODO
 	// }
 
-	public void encodeForYT(FilePath in, FilePath out, Lines lines) {
+	public FilePath encodeForYT(FilePath in, FilePath out, Lines lines) {
 		// https://gist.github.com/mikoim/27e4e0dc64e384adbcb91ff10a2d3678
 		//
 		// -movflags faststart moov atom at the front of the file (Fast Start)
@@ -1348,6 +1350,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add(command(out));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
 		call(null, lines, out.getParentPath(), command);
+		return out;
 	}
 
 	public FilePath mergeUnknowns(FilePath f1, FilePath f2, FilePath output, Lines lines) {
@@ -1447,7 +1450,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		ImageTools.write(tile, outDir.child("tile").createDirectory().child("tile.png"));
 	}
 
-	public void mp3(FilePath in, FilePath out, Lines lines) {
+	public FilePath mp3(FilePath in, FilePath out, Lines lines) {
 		if (out == null)
 			out = in.appendExtension("mp3");
 		if (out.isDirectory())
@@ -1472,5 +1475,27 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("0");
 		command.add(command(out));
 		call(null, lines, getFfmpeg().getParentPath(), command);
+		return out;
+	}
+
+	public FilePath animatedGif(FilePath in, FilePath out, Lines lines) {
+		if (out == null)
+			out = in.appendExtension("gif");
+		if (out.isDirectory())
+			out = out.child(in.getFileNameString()).appendExtension("mp3");
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-i");
+		command.add(command(in));
+		command.add("-vf");
+		command.add("scale=500:-1");
+		command.add("-t");
+		command.add("10");
+		command.add("-r");
+		command.add("10");
+		command.add(command(out));
+		call(null, lines, getFfmpeg().getParentPath(), command);
+		return out;
 	}
 }
