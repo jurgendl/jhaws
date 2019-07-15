@@ -20,6 +20,7 @@ import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
 
 // https://github.com/ytdl-org/youtube-dl
 // https://ytdl-org.github.io/youtube-dl/supportedsites.html
+// --write-info-json
 public class YTDL extends Tool {
 	public static final String EXE = "youtube-dl";
 
@@ -144,6 +145,8 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		command.add("--verbose");
+		command.add("--encoding");
+		command.add("utf-8");
 		command.add("-f");
 		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 		command.add("bestvideo,bestaudio");
@@ -159,6 +162,8 @@ public class YTDL extends Tool {
 			command = new ArrayList<>();
 			command.add(command(executable));
 			command.add("--verbose");
+			command.add("--encoding");
+			command.add("utf-8");
 			command.add(url);
 			dl(tmpFolder, command, dl);
 		}
