@@ -110,6 +110,19 @@ public interface StringUtils {
 		return sb.toString();
 	}
 
+	public static String abcSpace(String string) {
+		if (org.apache.commons.lang3.StringUtils.isBlank(string)) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (char c : Normalizer.normalize(string, Normalizer.Form.NFKD).toCharArray()) {
+			if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || c == ' ') {
+				sb.append(c);
+			}
+		}
+		return sb.toString();
+	}
+
 	public static String splitCamelCase(String s) {
 		return s == null ? null
 				: s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
