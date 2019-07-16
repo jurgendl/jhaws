@@ -226,22 +226,32 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 
 	public static final CssResourceReference FLAGS_CSS = new CssResourceReference(FormPanel.class,
 			"country/flags/css/flag-icon.css");
-	public static final JavaScriptResourceReference COUNTRY_JS = new JavaScriptResourceReference(FormPanel.class,
-			"country/countries.js");
+//	public static final JavaScriptResourceReference COUNTRY_JS = new JavaScriptResourceReference(FormPanel.class,
+//			"country/countries.js");
+	// org.jhaws.wicket.test.CountryExtra
+	public static final JavaScriptResourceReference COUNTRY_EXTRA_JS = new JavaScriptResourceReference(FormPanel.class,
+			"country/countries-extra.js");
 
 	public TypeAheadTextFieldAltPanel addCountryTypeAhead(String propertyPath,
 			TypeAheadTextFieldAltSettings componentSettings) {
-		componentSettings.setProperties(Arrays.asList("name"));
-		componentSettings.setTemplate(
-				"\"<span class='flag-icon flag-icon-\"+ item.iso.toLowerCase()+ \" flag-icon'></span>&nbsp;{{name}}:&nbsp;{{capital}}&nbsp;[{{iso}}]&nbsp;(+{{phone}})\"");
-		componentSettings.setLocal("countrydata");
+		if (componentSettings.getProperties() == null || (componentSettings.getProperties().size() == 1
+				&& "value".equals(componentSettings.getProperties().get(0)))) {
+			componentSettings.setProperties(Arrays.asList("name", "adjectivals"));
+		}
+		if ("value".equals(componentSettings.getTemplate())) {
+			componentSettings.setTemplate(
+					"\"<span class='flag-icon flag-icon-\"+ item.iso.toLowerCase()+ \" flag-icon'></span>&nbsp;{{name}}:&nbsp;{{capital}}&nbsp;{{adjectivals}}&nbsp;[{{iso}}]&nbsp;(+{{phone}})\"");
+		}
+		if (componentSettings.getLocal() == null) {
+			componentSettings.setLocal("countrydata");
+		}
 		return this.addDefaultRow(new TypeAheadTextFieldAltPanel(this.getFormModel(), propertyPath,
 				this.getFormSettings(), componentSettings, null) {
 			@Override
 			public void renderHead(IHeaderResponse response) {
 				super.renderHead(response);
 				response.render(CssHeaderItem.forReference(FLAGS_CSS));
-				response.render(JavaScriptHeaderItem.forReference(COUNTRY_JS));
+				response.render(JavaScriptHeaderItem.forReference(COUNTRY_EXTRA_JS));
 			}
 		});
 	}

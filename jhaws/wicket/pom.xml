@@ -55,6 +55,11 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.12.1</version>
+		</dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>

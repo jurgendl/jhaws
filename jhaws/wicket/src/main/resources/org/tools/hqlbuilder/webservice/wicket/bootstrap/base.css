@@ -775,6 +775,14 @@ a.link-unstyled
 	max-height: 300px;
 	overflow-y: auto;
 }
+.typeahead__container .typeahead__field input,
+.typeahead__container .typeahead__field textarea,
+.typeahead__container .typeahead__field [contenteditable],
+.typeahead__container .typeahead__field .typeahead__hint,
+.typeahead__container .typeahead__field .typeahead__label-container {
+   padding-right: 8px !important;
+}
+
 .flag-icon {
 	border: 1px solid #343a40;
 	background-color: #343a40;
