@@ -67,7 +67,9 @@ public class VideoJs7Panel extends Panel {
 			video.add(new AttributeModifier("height", _config.getH()));
 		}
 		video.add(new AttributeModifier("fluid", "true"));
-		video.add(new AttributeModifier("muted", "true"));
+		if (Boolean.TRUE.equals(_config.getMute())) {
+			video.add(new AttributeModifier("muted", "true"));
+		}
 
 //		video.add(new AttributeModifier("fill", "true"));
 //		video.add(new AttributeModifier("responsive", "true"));
