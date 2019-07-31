@@ -604,8 +604,9 @@ public class UIUtils {
      */
     public static boolean registerLocaleChangeListener(final Component component) {
         component.setLocale(SystemSettings.getCurrentLocale());
-        SystemSettings.getSingleton().addPropertyChangeListener(SystemSettings.LOCALE,
-                WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
+        SystemSettings.getSingleton()
+                .addPropertyChangeListener(SystemSettings.LOCALE,
+                        WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
         return true;
     }
 
@@ -634,8 +635,9 @@ public class UIUtils {
         }
 
         component.setLocale(SystemSettings.getCurrentLocale());
-        SystemSettings.getSingleton().addPropertyChangeListener(SystemSettings.LOCALE,
-                WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
+        SystemSettings.getSingleton()
+                .addPropertyChangeListener(SystemSettings.LOCALE,
+                        WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
         return true;
     }
 
@@ -879,17 +881,13 @@ public class UIUtils {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static boolean translucent(Window w, Float f) {
         try {
-            if (AWTUtilitiesWrapper.isTranslucencySupported(
-                    Enum.valueOf((Class<? extends Enum>) Class.forName("com.sun.awt.AWTUtilities$Translucency"), "TRANSLUCENT"))) {
-                try {
-                    AWTUtilitiesWrapper.setWindowOpacity(w, f);
-                    return true;
-                } catch (Exception ex) {
-                    UIUtils.log(ex);
-                }
+            Class<?> awtT = Class.forName("com.sun.awt.AWTUtilities$Translucency"); // classnotfoundexception
+            if (AWTUtilitiesWrapper.isTranslucencySupported(Enum.valueOf((Class<? extends Enum>) awtT, "TRANSLUCENT"))) {
+                AWTUtilitiesWrapper.setWindowOpacity(w, f);
+                return true;
             }
         } catch (Exception ex) {
-            UIUtils.log(ex);
+            //
         }
         return false;
     }
