@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.commons.lang3>3.8.1</version.commons.lang3>
-        <version.commons.io>2.5</version.commons.io>
+        <version.commons.io>2.6</version.commons.io>
     </properties>
     <dependencyManagement>
         <dependencies>
