@@ -32,7 +32,7 @@
         <version.glazedlists>1.9.1</version.glazedlists>
         <version.commons.lang3>3.8.1</version.commons.lang3>
         <version.miglayout>4.2</version.miglayout>
-        <version.javassist>3.23.1-GA</version.javassist>
+        <version.javassist>3.25.0-GA</version.javassist><!-- Java 1.9 ready -->
         <version.commons.beanutils>1.9.3</version.commons.beanutils>
         <version.xhtmlrenderer>9.1.16</version.xhtmlrenderer>
         <version.commons.codec>1.11</version.commons.codec>

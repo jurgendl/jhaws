@@ -27,9 +27,10 @@
         <!-- versions -->
         <version.junit>4.12</version.junit>
         <version.commons.lang3>3.8.1</version.commons.lang3>
-        <version.javassist>3.23.1-GA</version.javassist>
+        <version.javassist>3.25.0-GA</version.javassist><!-- Java 1.9 ready -->
         <version.lambdaj>2.4</version.lambdaj><!-- 2.3.3 -->
-        <version.cglib>3.2.8</version.cglib>
+        <version.cglib>3.2.12</version.cglib><!-- jdk 9 ready -->
+        <version.jaxb>2.3.1</version.jaxb>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -43,6 +44,21 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+		<dependency>
+		  <groupId>javax.xml.bind</groupId>
+		  <artifactId>jaxb-api</artifactId>
+		  <version>${version.jaxb}</version>
+		</dependency>
+		<!-- <dependency>
+		  <groupId>com.sun.xml.bind</groupId>
+		  <artifactId>jaxb-core</artifactId>
+		  <version>${version.jaxb}</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.sun.xml.bind</groupId>
+		  <artifactId>jaxb-impl</artifactId>
+		  <version>${version.jaxb}</version>
+		</dependency> -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -41,7 +41,8 @@ public class NSHandler extends HashMap<String, String> implements NamespaceConte
 
     /** Dummy implemenation - not used! */
     @Override
-    public Iterator<?> getPrefixes(String val) {
+    public Iterator<String> getPrefixes(String namespaceURI) {
+
         return null;
     }
 

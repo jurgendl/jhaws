@@ -36,7 +36,7 @@
         <version.commons-collections>3.2.2</version.commons-collections><!-- stale -->
         <version.commons-collections4>4.2</version.commons-collections4>
         <version.commons-lang>2.6</version.commons-lang><!-- stale -->
-        <version.cglib>3.2.8</version.cglib><!-- dead project, Spring includes fork -->
+        <version.cglib>3.2.12</version.cglib><!-- jdk 9 ready -->
         <version.guava>18.0</version.guava>
         <version.wro4j>1.8.0</version.wro4j>
         <version.yui>2.4.7</version.yui>
