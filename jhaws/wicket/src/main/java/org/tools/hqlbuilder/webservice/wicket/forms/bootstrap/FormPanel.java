@@ -236,7 +236,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 			TypeAheadTextFieldAltSettings componentSettings) {
 		if (componentSettings.getProperties() == null || (componentSettings.getProperties().size() == 1
 				&& "value".equals(componentSettings.getProperties().get(0)))) {
-			componentSettings.setProperties(Arrays.asList("name", "adjectivals"));
+			componentSettings.setProperties(Arrays.asList("name", "adjectivals", "iso"));
 		}
 		if ("value".equals(componentSettings.getTemplate())) {
 			componentSettings.setTemplate(
