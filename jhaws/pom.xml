@@ -29,15 +29,18 @@
 	((commit/commit/push))
 	-->
 	<properties>
-        <targetJdk>1.8</targetJdk>
+        <targetJdk.short>8</targetJdk.short>
+        <targetJdk>1.${targetJdk.short}</targetJdk>
+        <maven.compiler.source>1.${targetJdk.short}</maven.compiler.source>
+        <maven.compiler.target>1.${targetJdk.short}</maven.compiler.target>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <forceRecheck>false</forceRecheck>
+        <scope.activation>provided</scope.activation>
         <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.site.skip>false</maven.site.skip>
         <maven.compiler.optimize>true</maven.compiler.optimize>
         <maven.compiler.fork>true</maven.compiler.fork>
-        <maven.compiler.source>${targetJdk}</maven.compiler.source>
-        <maven.compiler.target>${targetJdk}</maven.compiler.target>
         <maven.compiler.verbose>true</maven.compiler.verbose>
         <maven.compiler.debug>true</maven.compiler.debug>
         <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
@@ -77,21 +80,23 @@
 			<build>
 				<finalName>${artifactId}-nodebuginfo-${version}</finalName>
 				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>3.5.1</version>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
                         <configuration>
-                            <fork>true</fork>
+        					<!--<release>${targetJdk.short}</release>-->
+                            <fork>false</fork>
                             <source>${targetJdk}</source>
                             <target>${targetJdk}</target>
                             <optimize>true</optimize>
                             <verbose>false</verbose>
                             <encoding>${project.build.sourceEncoding}</encoding>
-                            <debug>false</debug>
-                            <debuglevel>none</debuglevel>
+                            <debug>true</debug>
+                            <debuglevel>lines,vars,source</debuglevel>
+                            <compilerArgument>-parameters</compilerArgument>
                         </configuration>
-					</plugin>
+                    </plugin>
 				</plugins>
 			</build>
 		</profile>
@@ -207,12 +212,13 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
-                    <fork>true</fork>
+					<!--<release>${targetJdk.short}</release>-->
+                    <fork>false</fork>
                     <source>${targetJdk}</source>
                     <target>${targetJdk}</target>
                     <optimize>true</optimize>
@@ -222,14 +228,18 @@
                     <debuglevel>lines,vars,source</debuglevel>
                     <compilerArgument>-parameters</compilerArgument>
                 </configuration>
-			</plugin>
+            </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.17</version>
-				<configuration>
-					<testFailureIgnore>true</testFailureIgnore>
-					<argLine>-Xms128m -Xmx128m</argLine>
+                <version>3.0.0-M3</version><!--$NO-MVN-MAN-VER$ -->
+                <configuration>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <forkMode>pertest</forkMode>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <argLine>--illegal-access=permit</argLine>
+					<forkCount>1</forkCount>
+					<reuseForks>true</reuseForks>
 				</configuration>
 			</plugin>
 			<plugin>
