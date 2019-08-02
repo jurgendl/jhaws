@@ -39,7 +39,7 @@
         <version.poi>3.17</version.poi>
         <version.junit>4.12</version.junit>
         <version.ostermiller>1.07.00</version.ostermiller>
-		<version.commons-collections4>4.2</version.commons-collections4>
+		<version.commons-collections4>4.4</version.commons-collections4>
     </properties>
     <dependencyManagement>
         <dependencies>
