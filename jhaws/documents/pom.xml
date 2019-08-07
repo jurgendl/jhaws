@@ -32,7 +32,7 @@
         <version.httpcomponents.nio>4.4.10</version.httpcomponents.nio>
         <version.httpcomponents.cache>4.1.4</version.httpcomponents.cache>
 		<version.commons-collections4>4.4</version.commons-collections4>
-        <version.tika>1.21</version.tika>
+        <version.tika>1.22</version.tika>
     </properties>
     <dependencyManagement>
         <dependencies>
