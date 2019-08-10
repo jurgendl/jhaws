@@ -19,6 +19,8 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
 
 	protected transient OutputStream out;
 
+	protected transient RequestListener requestListener;
+
 	protected String referer;
 
 	public AbstractRequest() {
@@ -109,6 +111,15 @@ public abstract class AbstractRequest<T extends AbstractRequest<? super T>> impl
 
 	public T setReferer(String referer) {
 		this.referer = referer;
+		return cast();
+	}
+
+	public RequestListener getRequestListener() {
+		return this.requestListener;
+	}
+
+	public T setRequestListener(RequestListener requestListener) {
+		this.requestListener = requestListener;
 		return cast();
 	}
 }
