@@ -61,7 +61,7 @@
 		<module>lucene</module><!--aka 4-->
 		<module>lucene5</module>
 		<module>lucene6</module>
-		<!--<module>lucene7</module>-->
+		<module>lucene7</module>
 		<module>svn</module>
 		<module>swing</module>
 		<module>media</module>
