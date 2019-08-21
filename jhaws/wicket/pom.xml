@@ -40,6 +40,7 @@
         <version.guava>18.0</version.guava>
         <version.wro4j>1.8.0</version.wro4j>
         <version.yui>2.4.7</version.yui>
+        <version.joda>2.10.3</version.joda>
         <version.commons-beanutils>1.9.3</version.commons-beanutils><!-- recent version, keep up to date -->
         <version.commons-codec>1.12</version.commons-codec><!-- recent version, keep up to date -->
     </properties>
@@ -78,7 +79,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.10.3</version>
+            <version>${version.joda}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
@@ -93,10 +94,6 @@
                 <exclusion>
                     <groupId>commons-logging</groupId>
                     <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-collections</artifactId>
-                    <groupId>commons-collections</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
