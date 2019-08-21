@@ -11,13 +11,9 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import org.htmlcleaner.CleanerProperties;
@@ -25,6 +21,10 @@ import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.PrettyXmlSerializer;
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XmlSerializer;
+import org.jhaws.common.lang.EnhancedArrayList;
+import org.jhaws.common.lang.EnhancedHashMap;
+import org.jhaws.common.lang.EnhancedList;
+import org.jhaws.common.lang.EnhancedMap;
 import org.jhaws.common.lang.IntegerValue;
 import org.jhaws.common.lang.StringUtils;
 
@@ -59,9 +59,9 @@ public class Response extends InputStream implements Serializable {
 
 	protected URI uri;
 
-	protected List<URI> chain;
+	protected EnhancedList<URI> chain;
 
-	protected Map<String, List<Object>> headers = new HashMap<>();
+	protected EnhancedMap<String, EnhancedList<Object>> headers = new EnhancedHashMap<>();
 
 	protected Locale locale;
 
@@ -86,16 +86,16 @@ public class Response extends InputStream implements Serializable {
 	}
 
 	public void addHeader(String key, Object value) {
-		List<Object> list = headers.get(key);
+		EnhancedList<Object> list = headers.get(key);
 		if (list == null) {
-			list = new ArrayList<>();
+			list = new EnhancedArrayList<>();
 			headers.put(key, list);
 		}
 		list.add(value);
 	}
 
-	public Map<String, List<Object>> getHeaders() {
-		return Collections.unmodifiableMap(headers);
+	public EnhancedMap<String, EnhancedList<Object>> getHeaders() {
+		return headers;
 	}
 
 	public boolean isOk() {
@@ -128,7 +128,7 @@ public class Response extends InputStream implements Serializable {
 		this.count = content.length;
 	}
 
-	public List<Form> getForms() {
+	public EnhancedList<Form> getForms() {
 		TagNode n;
 		try {
 			n = cleaner.clean(new ByteArrayInputStream(getContent()));
@@ -136,7 +136,7 @@ public class Response extends InputStream implements Serializable {
 			throw new UncheckedIOException(ex);
 		}
 		List<? extends TagNode> formlist = n.getElementListByName("form", true);
-		List<Form> forms = new ArrayList<>();
+		EnhancedList<Form> forms = new EnhancedArrayList<>();
 		for (TagNode formnode : formlist) {
 			forms.add(new Form(getLastUri(), formnode));
 		}
@@ -232,11 +232,11 @@ public class Response extends InputStream implements Serializable {
 		this.contentType = contentType;
 	}
 
-	public List<URI> getChain() {
+	public EnhancedList<URI> getChain() {
 		return this.chain;
 	}
 
-	public void setChain(List<URI> chain) {
+	public void setChain(EnhancedList<URI> chain) {
 		this.chain = chain;
 	}
 
@@ -306,7 +306,7 @@ public class Response extends InputStream implements Serializable {
 		this.filename = filename;
 	}
 
-	public void setHeaders(Map<String, List<Object>> headers) {
+	public void setHeaders(EnhancedMap<String, EnhancedList<Object>> headers) {
 		this.headers = headers;
 	}
 

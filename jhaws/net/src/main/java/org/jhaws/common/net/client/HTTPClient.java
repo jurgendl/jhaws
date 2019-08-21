@@ -21,9 +21,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import javax.annotation.PreDestroy;
@@ -81,6 +79,8 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.lang.EnhancedArrayList;
+import org.jhaws.common.lang.EnhancedList;
 import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.net.NetHelper;
 import org.slf4j.Logger;
@@ -153,7 +153,7 @@ public class HTTPClient implements Closeable {
 
 	protected transient RedirectStrategy redirectStrategy;
 
-	protected transient List<HTTPClientAuth> authentication = new ArrayList<>();
+	protected transient EnhancedList<HTTPClientAuth> authentication = new EnhancedArrayList<>();
 
 	protected String userAgent = CHROME;
 
@@ -253,10 +253,10 @@ public class HTTPClient implements Closeable {
 		return requestConfigBuilder;
 	}
 
-	protected final ThreadLocal<List<URI>> chain = new ThreadLocal<List<URI>>() {
+	protected final ThreadLocal<EnhancedList<URI>> chain = new ThreadLocal<EnhancedList<URI>>() {
 		@Override
-		protected java.util.List<URI> initialValue() {
-			return new ArrayList<>();
+		protected EnhancedList<URI> initialValue() {
+			return new EnhancedArrayList<>();
 		};
 	};
 
@@ -464,7 +464,7 @@ public class HTTPClient implements Closeable {
 	protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse, OutputStream out,
 			RequestListener requestListener) throws IOException {
 		Response response = new Response();
-		List<URI> uris = chain.get();
+		EnhancedList<URI> uris = chain.get();
 		URI _uri_ = req.getURI();
 		uris.add(0, _uri_);
 		response.setChain(uris);
@@ -511,7 +511,7 @@ public class HTTPClient implements Closeable {
 		return response;
 	}
 
-	public ThreadLocal<List<URI>> getChain() {
+	public ThreadLocal<EnhancedList<URI>> getChain() {
 		return this.chain;
 	}
 
@@ -578,7 +578,7 @@ public class HTTPClient implements Closeable {
 			HttpPost.class.cast(req).setEntity(body);
 		} else if (post.isUrlEncodedFormEntity()) {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<NameValuePair>();
 			post.getFormValues().entrySet()
 					.forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
 			try {

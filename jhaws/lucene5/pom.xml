@@ -170,7 +170,7 @@
             <plugin>
                 <!-- mvn package -->
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.6</version>
+				<version>2.6</version><!--$NO-MVN-MAN-VER$-->
 				<configuration>
 					<descriptors>
 						<descriptor>src/assemblies/bin-with-dependencies.xml</descriptor>
