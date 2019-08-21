@@ -29,7 +29,7 @@
         <version.commons.lang3>3.8.1</version.commons.lang3>
         <version.javassist>3.25.0-GA</version.javassist><!-- Java 1.9 ready -->
         <version.lambdaj>2.4</version.lambdaj><!-- 2.3.3 -->
-        <version.cglib>3.2.12</version.cglib><!-- jdk 9 ready -->
+        <version.cglib>3.3.0</version.cglib><!-- jdk 10 ready -->
     </properties>
     <dependencyManagement>
         <dependencies>
