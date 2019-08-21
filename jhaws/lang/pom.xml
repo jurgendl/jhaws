@@ -30,7 +30,6 @@
         <version.javassist>3.25.0-GA</version.javassist><!-- Java 1.9 ready -->
         <version.lambdaj>2.4</version.lambdaj><!-- 2.3.3 -->
         <version.cglib>3.2.12</version.cglib><!-- jdk 9 ready -->
-        <version.jaxb>2.3.1</version.jaxb>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -45,20 +44,25 @@
     </dependencyManagement>
     <dependencies>
 		<dependency>
-		  <groupId>javax.xml.bind</groupId>
-		  <artifactId>jaxb-api</artifactId>
-		  <version>${version.jaxb}</version>
-		</dependency>
-		<!-- <dependency>
-		  <groupId>com.sun.xml.bind</groupId>
-		  <artifactId>jaxb-core</artifactId>
-		  <version>${version.jaxb}</version>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.4.0-b180830.0359</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
-		  <groupId>com.sun.xml.bind</groupId>
-		  <artifactId>jaxb-impl</artifactId>
-		  <version>${version.jaxb}</version>
-		</dependency> -->
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>2.3.0.1</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.4.0-b180830.0438</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.4.0-b180830.0438</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
