@@ -11,7 +11,6 @@ import org.jhaws.common.io.FilePath;
 import org.junit.Assert;
 import org.junit.Test;
 
-// FIXME
 public class MultiTreadedTest {
     @Test
     public void test() {

@@ -66,11 +66,6 @@
             <version>2.6</version>
         </dependency>
         <dependency>
-            <groupId>com.github.zengde</groupId>
-            <artifactId>lire</artifactId>
-            <version>1.0b4</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-documents</artifactId>
             <version>${project.version}</version>
