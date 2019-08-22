@@ -42,7 +42,7 @@
         <version.yui>2.4.7</version.yui>
         <version.joda>2.10.3</version.joda>
         <version.commons-beanutils>1.9.3</version.commons-beanutils><!-- recent version, keep up to date -->
-        <version.commons-codec>1.12</version.commons-codec><!-- recent version, keep up to date -->
+        <version.commons.codec>1.13</version.commons.codec><!-- recent version, keep up to date -->
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>${version.commons-codec}</version>
+            <version>${version.commons.codec}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
