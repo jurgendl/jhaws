@@ -29,6 +29,7 @@
         <!-- <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs> --><!-- version 3.0.17.Final does not exists // 3.1.4.Final -->
         <version.jackson>2.10.0.pr1</version.jackson>
         <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problems -->
+		<version.inject>1</version.inject>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -42,11 +43,22 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+   		<dependency>
+   			<groupId>javax.servlet</groupId>
+   			<artifactId>servlet-api</artifactId>
+   			<version>2.5</version>
+   			<scope>provided</scope>
+   		</dependency>
         <!-- <dependency>
           <groupId>org.jboss.spec.javax.ws.rs</groupId>
           <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
           <version>1.0.2.Final</version>
         </dependency> -->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>${version.inject}</version>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>
@@ -106,17 +118,6 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-xc</artifactId>
             <version>${version.jackson.codehaus}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version><!--$NO-MVN-MAN-VER$ -->
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
