@@ -45,7 +45,6 @@ import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -423,7 +422,7 @@ public class UIUtils {
         focusLog.setLevel(Level.ALL);
 
         // Create a new handler
-        ConsoleHandler handler = new ConsoleHandler();
+        java.util.logging.ConsoleHandler handler = new java.util.logging.ConsoleHandler();
 
         // The handler must handle all messages
         handler.setLevel(Level.ALL);

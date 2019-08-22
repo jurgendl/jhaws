@@ -6,9 +6,9 @@
         <version>5.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>jhaws-lucene7</artifactId>
-    <name>lucene7</name>
-    <description>lucene7</description>
+    <artifactId>jhaws-lucene8</artifactId>
+    <name>lucene8</name>
+    <description>lucene8</description>
     <properties>
         <targetJdk>1.8</targetJdk>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
@@ -26,7 +26,7 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.junit>4.12</version.junit>
-        <version.lucene>7.7.2</version.lucene>
+        <version.lucene>8.2.0</version.lucene>
     </properties>
     <dependencyManagement>
         <dependencies>
