@@ -5,6 +5,7 @@ import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.StringField;
 import org.jhaws.common.io.FilePath;
 
+// FIXME
 public class EmptyLuceneIndex {
     public static void main(String[] args) {
         FilePath lp = FilePath.getTempDirectory().child("luceneempty8_" + System.currentTimeMillis());

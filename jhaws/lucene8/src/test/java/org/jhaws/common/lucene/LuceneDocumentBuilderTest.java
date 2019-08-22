@@ -6,6 +6,7 @@ import org.apache.lucene.document.Document;
 import org.junit.Assert;
 import org.junit.Test;
 
+// FIXME in all version
 public class LuceneDocumentBuilderTest {
     public static class It extends BuildableIndexable<It> {
         @IndexField

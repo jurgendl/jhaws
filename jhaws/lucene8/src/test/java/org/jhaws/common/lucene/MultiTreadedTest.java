@@ -11,6 +11,7 @@ import org.jhaws.common.io.FilePath;
 import org.junit.Assert;
 import org.junit.Test;
 
+// FIXME
 public class MultiTreadedTest {
     @Test
     public void test() {
@@ -19,6 +20,11 @@ public class MultiTreadedTest {
         System.out.println(fp);
         @SuppressWarnings("resource")
         LuceneIndex li = new LuceneIndex(fp);
+        {
+            Document doc = new Document();
+            doc.add(new StringField("idx", "", org.apache.lucene.document.Field.Store.YES));
+            li.addDocs(doc);
+        }
         Random r = new Random();
         for (int i = 0; i < 10; i++) {
             Thread t = new Thread(() -> {
