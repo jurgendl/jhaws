@@ -253,9 +253,9 @@ public class Collections8Test {
     @Test
     public void testProjectionIterator() {
         Assert.assertEquals(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
-                CollectionUtils8.stream(new ProjectionIterator<Integer>(0, true, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
+                CollectionUtils8.stream(new ProjectionIterator<>(0, true, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
         Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9), CollectionUtils8
-                .stream(new ProjectionIterator<Integer>(0, false, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
+                .stream(new ProjectionIterator<>(0, false, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
     }
 
     @Test

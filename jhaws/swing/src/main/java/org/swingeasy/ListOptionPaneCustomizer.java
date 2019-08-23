@@ -20,7 +20,7 @@ public class ListOptionPaneCustomizer<T> implements OptionPaneCustomizer {
 	}
 
 	/**
-	 * 
+	 *
 	 * @see org.swingeasy.OptionPaneCustomizer#customize(java.awt.Component, org.swingeasy.MessageType, org.swingeasy.OptionType, javax.swing.JOptionPane, javax.swing.JDialog)
 	 */
 	@Override

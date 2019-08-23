@@ -23,7 +23,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     protected ButtonModel previousSelection = null;
 
     /**
-     * 
+     *
      * @see javax.swing.ButtonGroup#add(javax.swing.AbstractButton)
      */
     @Override
@@ -36,7 +36,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
      */
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -44,7 +44,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
      */
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
@@ -52,7 +52,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see java.beans.PropertyChangeSupport#getPropertyChangeListeners()
      */
     public PropertyChangeListener[] getPropertyChangeListeners() {
@@ -60,7 +60,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see java.beans.PropertyChangeSupport#getPropertyChangeListeners(java.lang.String)
      */
     public PropertyChangeListener[] getPropertyChangeListeners(String propertyName) {
@@ -78,7 +78,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
      */
     @Override
@@ -92,7 +92,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.ButtonGroup#remove(javax.swing.AbstractButton)
      */
     @Override
@@ -102,7 +102,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
      */
     public void removePropertyChangeListener(PropertyChangeListener listener) {
@@ -110,7 +110,7 @@ public class EButtonGroup extends ButtonGroup implements ItemListener {
     }
 
     /**
-     * 
+     *
      * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
      */
     public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

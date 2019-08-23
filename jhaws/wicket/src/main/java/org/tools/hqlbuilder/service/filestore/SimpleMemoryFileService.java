@@ -16,7 +16,7 @@ public class SimpleMemoryFileService implements FileService {
     private Map<FileMeta, byte[]> files = new HashMap<>();
 
     /**
-     * 
+     *
      * @see org.tools.hqlbuilder.service.filestore.FileService#add(org.tools.hqlbuilder.model.filestore.FileMeta, java.io.InputStream)
      */
     @Override
@@ -28,7 +28,7 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * 
+     *
      * @see org.tools.hqlbuilder.service.filestore.FileService#deleteFiles(java.lang.String)
      */
     @Override
@@ -39,7 +39,7 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * 
+     *
      * @see org.tools.hqlbuilder.service.filestore.FileService#getFile(java.lang.String)
      */
     @Override
@@ -52,7 +52,7 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * 
+     *
      * @see org.tools.hqlbuilder.service.filestore.FileService#getFiles()
      */
     @Override
@@ -61,7 +61,7 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * 
+     *
      * @see org.tools.hqlbuilder.service.filestore.FileService#getFiles(java.lang.String)
      */
     @Override
@@ -70,7 +70,7 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * 
+     *
      * @see org.tools.hqlbuilder.service.filestore.FileService#readFile(org.tools.hqlbuilder.model.filestore.FileMeta, java.io.OutputStream)
      */
     @Override
@@ -80,7 +80,7 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     * 
+     *
      * @see org.tools.hqlbuilder.service.filestore.FileService#remove(org.tools.hqlbuilder.model.filestore.FileMeta)
      */
     @Override

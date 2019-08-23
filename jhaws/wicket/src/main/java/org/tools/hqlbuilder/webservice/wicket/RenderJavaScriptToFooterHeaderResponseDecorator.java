@@ -21,9 +21,10 @@ public class RenderJavaScriptToFooterHeaderResponseDecorator implements IHeaderR
     public RenderJavaScriptToFooterHeaderResponseDecorator(final String filterName) {
         Args.notEmpty(filterName, "filterName");
 
-        filters = new ArrayList<FilteringHeaderResponse.IHeaderResponseFilter>();
+        filters = new ArrayList<>();
 
         final AbstractHeaderResponseFilter jsAcceptingFilter = new AbstractHeaderResponseFilter(filterName) {
+            @Override
             public boolean accepts(HeaderItem item) {
                 return item instanceof JavaScriptHeaderItem || item instanceof OnDomReadyHeaderItem || item instanceof OnLoadHeaderItem;
             }
@@ -33,6 +34,7 @@ public class RenderJavaScriptToFooterHeaderResponseDecorator implements IHeaderR
         filters.add(new OppositeHeaderResponseFilter("headBucket", jsAcceptingFilter));
     }
 
+    @Override
     public IHeaderResponse decorate(final IHeaderResponse response) {
         return new FilteringHeaderResponse(response, "headBucket", filters);
     }

@@ -12,6 +12,7 @@ import java.util.Properties;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -23,7 +24,7 @@ public class TreeTableDemo {
             UIUtils.systemLookAndFeel();
 
             JFrame f = new JFrame();
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             String[] h = { "key", "value" };
 

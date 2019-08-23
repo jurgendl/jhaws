@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class SortedList<E> extends AbstractList<E> {
-    private ArrayList<E> internalList = new ArrayList<E>();
+    private ArrayList<E> internalList = new ArrayList<>();
 
     private Comparator<? super E> comparator;
 

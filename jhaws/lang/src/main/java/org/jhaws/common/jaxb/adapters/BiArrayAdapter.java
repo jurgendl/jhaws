@@ -18,8 +18,8 @@ public abstract class BiArrayAdapter<N extends Number> extends XmlAdapter<String
     @Override
     public N[][] unmarshal(String v) {
         if (v == null) return null;
-        return (N[][]) Arrays.stream(v.replace("\n", "").replace("[[", "").replace("]]", "").split("\\],\\["))
-                .map(s -> (N[]) Arrays.stream(s.split(SEP)).map(this::parse).toArray(this::single))
+        return Arrays.stream(v.replace("\n", "").replace("[[", "").replace("]]", "").split("\\],\\["))
+                .map(s -> Arrays.stream(s.split(SEP)).map(this::parse).toArray(this::single))
                 .toArray(this::bi);
     }
 

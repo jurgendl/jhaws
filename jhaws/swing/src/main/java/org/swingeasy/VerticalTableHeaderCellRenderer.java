@@ -40,7 +40,7 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
 
         /**
          * Returns the height of the rotated icon.
-         * 
+         *
          * @return the <B>width</B> of the contained icon
          */
         @Override
@@ -50,7 +50,7 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
 
         /**
          * Returns the width of the rotated icon.
-         * 
+         *
          * @return the <B>height</B> of the contained icon
          */
         @Override
@@ -63,7 +63,7 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
          * rotation already applied to the passed in Graphics reference by the VerticalLabelUI.
          * <P>
          * The icon is retrieved from the UIManager to obtain an icon appropriate to the L&F.
-         * 
+         *
          * @param c the component to which the icon is to be rendered
          * @param g the graphics context
          * @param x the X coordinate of the icon's top-left corner
@@ -97,7 +97,7 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
 
     /**
      * Overridden to return a rotated version of the sort icon.
-     * 
+     *
      * @param table the <code>JTable</code>.
      * @param column the colummn index.
      * @return the sort icon, or null if the column is unsorted.

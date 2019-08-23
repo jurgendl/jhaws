@@ -387,7 +387,7 @@ public class WinRegistry {
 
 			String result = sw.toString();
 			StringTokenizer st = new StringTokenizer(result, "\r\n");
-			List<String> results = new ArrayList<String>();
+			List<String> results = new ArrayList<>();
 			while (st.hasMoreTokens()) {
 				String token = st.nextToken().trim();
 				if (key == null) {

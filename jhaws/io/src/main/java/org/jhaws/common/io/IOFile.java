@@ -949,6 +949,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
      *
      * @return : ImageIcon
      */
+    @Override
     public Icon getLargeIcon() {
         return (IOFile.grabber == null) ? null : IOFile.grabber.getLargeIcon(new FilePath(this));
     }
@@ -993,6 +994,7 @@ public class IOFile extends IOGeneralFile<IOFile> {
      *
      * @return : ImageIcon
      */
+    @Override
     public Icon getSmallIcon() {
         return (IOFile.grabber == null) ? null : IOFile.grabber.getSmallIcon(new FilePath(this));
     }

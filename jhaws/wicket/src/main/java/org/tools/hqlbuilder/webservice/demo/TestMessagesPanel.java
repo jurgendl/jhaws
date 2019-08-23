@@ -11,7 +11,7 @@ import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
 public class TestMessagesPanel extends Panel {
 	public TestMessagesPanel(String id) {
 		super(id);
-		Form<Object> form = new Form<Object>("form");
+		Form<Object> form = new Form<>("form");
 		add(form);
 		form.add(new BootstrapFencedFeedbackPanel("feedback", this));
 		form.add(new AjaxSubmitLink("submit") {

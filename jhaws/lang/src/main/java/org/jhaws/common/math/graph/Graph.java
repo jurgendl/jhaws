@@ -35,8 +35,8 @@ public class Graph<T, N extends Number> implements Serializable {
     }
 
     public int addNodes(Node<T>[] newNodes) {
-        for (int i = 0; i < newNodes.length; i++) {
-            nodes.add(newNodes[i]);
+        for (Node<T> newNode : newNodes) {
+            nodes.add(newNode);
         }
         return nodes.size() - 1;
     }
@@ -59,8 +59,8 @@ public class Graph<T, N extends Number> implements Serializable {
     }
 
     public int addEdges(Edge<T, N>[] newEdges) {
-        for (int i = 0; i < newEdges.length; i++) {
-            edges.add(newEdges[i]);
+        for (Edge<T, N> newEdge : newEdges) {
+            edges.add(newEdge);
         }
         return edges.size() - 1;
     }
@@ -114,7 +114,7 @@ public class Graph<T, N extends Number> implements Serializable {
     public List<Node<T>> depthFirst(Node<T> root) {
         HashSet<Node<T>> visited = new HashSet<>();
         List<Node<T>> result = new ArrayList<>();
-        Stack<Node<T>> stack = new Stack<Node<T>>();
+        Stack<Node<T>> stack = new Stack<>();
         stack.add(root);
         visited.add(root);
         while (!stack.isEmpty()) {

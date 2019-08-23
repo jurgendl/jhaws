@@ -2,7 +2,7 @@ package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import java.util.Locale;
 
-import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -90,7 +90,7 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox
             label.setEscapeModelStrings(false);
             String labelClass = getLabelClass(settings);
             if (labelClass != null) {
-                label.add(AttributeAppender.append("class", labelClass));
+                label.add(AttributeModifier.append("class", labelClass));
             }
         }
         return label;

@@ -2,6 +2,7 @@ package org.swingeasy.task;
 
 import javax.swing.JFrame;
 import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -38,7 +39,7 @@ public class EDTTaskDemo {
 
     protected static void test1() throws Exception {
         JFrame f = new JFrame("close to exit");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setVisible(true);
 
         SwingWorker<String, Void> dw = new SwingWorker<String, Void>() {
@@ -67,7 +68,7 @@ public class EDTTaskDemo {
 
     protected static void test2() throws Exception {
         JFrame f = new JFrame("close to exit");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setVisible(true);
 
         EventThreadTask<String> outer_task = new EventThreadTask<String>() {

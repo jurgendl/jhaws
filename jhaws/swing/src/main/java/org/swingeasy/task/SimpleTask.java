@@ -5,7 +5,7 @@ package org.swingeasy.task;
  */
 public abstract class SimpleTask extends Task<Void> {
     /**
-     * 
+     *
      * @see be.ugent.oasis.swing.ui.gen2.Task#doInBackground()
      */
     @Override
@@ -19,7 +19,7 @@ public abstract class SimpleTask extends Task<Void> {
     abstract protected void done(Throwable cause);
 
     /**
-     * 
+     *
      * @see be.ugent.oasis.swing.ui.gen2.Task#done(java.lang.Object, java.lang.Throwable)
      */
     @Override

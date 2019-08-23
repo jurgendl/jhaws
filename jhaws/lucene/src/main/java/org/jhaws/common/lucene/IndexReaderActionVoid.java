@@ -6,6 +6,7 @@ import org.apache.lucene.index.IndexReader;
 public interface IndexReaderActionVoid extends IndexReaderAction<Void> {
     void actionVoid(IndexReader reader) throws Exception;
 
+    @Override
     default Void action(IndexReader reader) throws Exception {
         actionVoid(reader);
         return null;

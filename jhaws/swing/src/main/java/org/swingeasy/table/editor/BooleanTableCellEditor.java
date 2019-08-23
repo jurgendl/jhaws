@@ -22,7 +22,7 @@ public class BooleanTableCellEditor extends DefaultCellEditor implements ECompon
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.EComponentI#setEnabled(boolean)
      */
     @Override
@@ -31,7 +31,7 @@ public class BooleanTableCellEditor extends DefaultCellEditor implements ECompon
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
      */
     @Override

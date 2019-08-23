@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -19,7 +20,7 @@ public class ComboBoxDemo {
         {
             JFrame f = new JFrame();
             f.getContentPane().add(cc, BorderLayout.CENTER);
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             f.setVisible(true);
             cc = cc.stsi();
             final EComboBox<String> ccc = cc;

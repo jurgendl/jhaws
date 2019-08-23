@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import org.jhaws.common.pool.RunnableThread;
 
@@ -18,7 +19,7 @@ public class ThreadTest2 {
         rt.start();
         JFrame f = new JFrame();
         f.setSize(200, 200);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JButton b = new JButton("x");
         b.addActionListener(ev -> {
             rt.stop();

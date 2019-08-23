@@ -1,7 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -64,7 +63,7 @@ public class TogglePanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckBox
             label.setEscapeModelStrings(false);
             String labelClass = getLabelClass(settings);
             if (labelClass != null) {
-                label.add(AttributeAppender.append("class", labelClass));
+                label.add(AttributeModifier.append("class", labelClass));
             }
         }
         return label;

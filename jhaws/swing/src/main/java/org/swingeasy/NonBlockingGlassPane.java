@@ -45,7 +45,7 @@ public class NonBlockingGlassPane extends JPanel implements AWTEventListener {
     }
 
     /**
-     * 
+     *
      * @see java.awt.event.AWTEventListener#eventDispatched(java.awt.AWTEvent)
      */
     @Override

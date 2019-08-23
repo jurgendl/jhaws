@@ -27,7 +27,7 @@ public interface StringUtils {
 	 * (since java 1.7) or set Pattern.UNICODE_CHARACTER_CLASS to true when
 	 * creating Pattern <br>
 	 * (since java 1.7) or use (?U)...\s instead
-	 * 
+	 *
 	 * @see http://stackoverflow.com/questions/4731055/whitespace-matching-regex-java
 	 */
 	public static final char[] whitespace_chars = ( //
@@ -225,7 +225,7 @@ public interface StringUtils {
 
 	/**
 	 * remove leading and trailing spaces and replace multiple spaces by 1 space
-	 * 
+	 *
 	 * @see http://stackoverflow.com/questions/2932392/java-how-to-replace-2-or-more-spaces-with-single-space-in-string-and-delete-lead
 	 */
 	public static String cleanSpaces(String s) {

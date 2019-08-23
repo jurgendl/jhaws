@@ -24,7 +24,7 @@ public class Equal implements Filter {
 
     /**
      * Creates a new Equal object.
-     * 
+     *
      * @param key key
      * @param value value
      */
@@ -36,7 +36,7 @@ public class Equal implements Filter {
 
     /**
      * gets key
-     * 
+     *
      * @return Returns the key.
      */
     public String getKey() {
@@ -45,7 +45,7 @@ public class Equal implements Filter {
 
     /**
      * gets value
-     * 
+     *
      * @return Returns the value.
      */
     public String getValue() {
@@ -54,7 +54,7 @@ public class Equal implements Filter {
 
     /**
      * gets negate
-     * 
+     *
      * @return Returns the negate.
      */
     public boolean isNegate() {
@@ -63,7 +63,7 @@ public class Equal implements Filter {
 
     /**
      * sets key
-     * 
+     *
      * @param key The key to set.
      */
     public void setKey(String key) {
@@ -72,7 +72,7 @@ public class Equal implements Filter {
 
     /**
      * sets negate
-     * 
+     *
      * @param negate The negate to set.
      */
     public void setNegate(boolean negate) {
@@ -81,7 +81,7 @@ public class Equal implements Filter {
 
     /**
      * sets value
-     * 
+     *
      * @param value The value to set.
      */
     public void setValue(String value) {
@@ -90,7 +90,7 @@ public class Equal implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

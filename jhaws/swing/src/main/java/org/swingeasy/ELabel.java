@@ -29,7 +29,7 @@ public class ELabel extends JLabel implements EComponentI, ReadableComponent {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
      */
     @Override
@@ -38,7 +38,7 @@ public class ELabel extends JLabel implements EComponentI, ReadableComponent {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.HasParentComponent#getParentComponent()
      */
     @Override
@@ -47,7 +47,7 @@ public class ELabel extends JLabel implements EComponentI, ReadableComponent {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JComponent#getToolTipText()
      */
     @Override

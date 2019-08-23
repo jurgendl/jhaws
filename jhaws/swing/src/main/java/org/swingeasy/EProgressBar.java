@@ -51,7 +51,7 @@ public class EProgressBar extends JProgressBar {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JComponent#getToolTipText()
      */
     @Override

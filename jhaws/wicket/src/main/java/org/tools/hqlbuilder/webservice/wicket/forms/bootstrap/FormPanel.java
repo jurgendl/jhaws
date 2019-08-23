@@ -45,7 +45,8 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 		super(id, formActions, formSettings);
 	}
 
-	protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {
+	@Override
+    protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {
 		BootstrapFencedFeedbackPanel feedbackPanel = new BootstrapFencedFeedbackPanel(id, this);
 		return feedbackPanel;
 	}
@@ -55,7 +56,8 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 		return this.addRow(rowpanel);
 	}
 
-	protected MarkupContainer newEmptyPanel() {
+	@Override
+    protected MarkupContainer newEmptyPanel() {
 		return new EmptyFormPanel();
 	}
 
@@ -66,7 +68,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	public PasswordFieldPanel<String> addPasswordField(String propertyPath, TextFieldSettings componentSettings) {
-		return this.addDefaultRow(new PasswordFieldPanel<String>(this.getFormModel(), propertyPath,
+		return this.addDefaultRow(new PasswordFieldPanel<>(this.getFormModel(), propertyPath,
 				this.getFormSettings(), componentSettings));
 	}
 
@@ -110,7 +112,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	public <F extends Serializable> RadioButtonsAltPanel<F> addRadioButtonsAlt(F propertyPath,
 			FormElementSettings componentSettings, IModel<? extends List<? extends F>> choices,
 			IChoiceRenderer<F> renderer) {
-		return this.addDefaultRow(new RadioButtonsAltPanel<F>(this.getFormModel(), propertyPath, this.getFormSettings(),
+		return this.addDefaultRow(new RadioButtonsAltPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(),
 				componentSettings, choices, renderer));
 	}
 
@@ -144,7 +146,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 			IOptionRenderer<I> renderer, //
 			IModel<? extends List<? extends I>> choices//
 	) {
-		return this.addDefaultRow(new MultiSelectPanel<I>(this.getFormModel(), propertyPath, this.getFormSettings(),
+		return this.addDefaultRow(new MultiSelectPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(),
 				componentSettings, renderer, choices));
 	}
 
@@ -155,7 +157,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 			IModel<? extends List<? extends I>>[] choices, //
 			IModel<String>[] groupLabels//
 	) {
-		return this.addDefaultRow(new MultiSelectPanel<I>(this.getFormModel(), propertyPath, this.getFormSettings(),
+		return this.addDefaultRow(new MultiSelectPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(),
 				componentSettings, renderer, choices, groupLabels));
 	}
 
@@ -193,7 +195,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	public <F extends Serializable> HiddenFieldPanel<F> addHidden(F propertyPath) {
-		return this.addDefaultRow(new HiddenFieldPanel<F>(this.getFormModel(), propertyPath));
+		return this.addDefaultRow(new HiddenFieldPanel<>(this.getFormModel(), propertyPath));
 	}
 
 	public TagItTextFieldPanel addTagItField(String propertyPath, TagItTextFieldSettings componentSettings,

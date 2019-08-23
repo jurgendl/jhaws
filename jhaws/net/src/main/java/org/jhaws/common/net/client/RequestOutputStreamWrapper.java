@@ -10,7 +10,8 @@ public class RequestOutputStreamWrapper extends org.apache.commons.compress.util
 		this.requestListener = requestListener;
 	}
 
-	protected void count(final long written) {
+	@Override
+    protected void count(final long written) {
 		super.count(written);
 		if (written != -1) {
 			requestListener.bytesWritten(written, getBytesWritten());

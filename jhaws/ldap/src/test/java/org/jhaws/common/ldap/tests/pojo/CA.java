@@ -43,7 +43,7 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -53,9 +53,9 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * na
-     * 
+     *
      * @return
-     * 
+     *
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
@@ -64,7 +64,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Getter voor certificateRevocationList
-     * 
+     *
      * @return Returns the certificateRevocationList.
      */
     public byte[] getCertificateRevocationList() {
@@ -73,9 +73,9 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * na
-     * 
+     *
      * @return
-     * 
+     *
      * @throws CertificateException na
      * @throws CRLException na
      * @throws IOException na
@@ -86,9 +86,9 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * na
-     * 
+     *
      * @return
-     * 
+     *
      * @throws CertificateException na
      * @throws CRLException na
      * @throws IOException na
@@ -99,7 +99,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Getter voor deltaRevocationList
-     * 
+     *
      * @return Returns the deltaRevocationList.
      */
     public byte[] getDeltaRevocationList() {
@@ -108,7 +108,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Getter voor objectClass
-     * 
+     *
      * @return Returns the objectClass.
      */
     public String[] getObjectClass() {
@@ -117,7 +117,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Getter voor ou
-     * 
+     *
      * @return Returns the ou.
      */
     public String getOu() {
@@ -126,7 +126,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Getter voor userCertificate
-     * 
+     *
      * @return Returns the userCertificate.
      */
     public byte[] getUserCertificate() {
@@ -168,7 +168,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Setter voor certificateRevocationList
-     * 
+     *
      * @param certificateRevocationList The certificateRevocationList to set.
      */
     public void setCertificateRevocationList(byte[] certificateRevocationList) {
@@ -177,7 +177,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Setter voor deltaRevocationList
-     * 
+     *
      * @param deltaRevocationList The deltaRevocationList to set.
      */
     public void setDeltaRevocationList(byte[] deltaRevocationList) {
@@ -186,7 +186,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Setter voor objectClass
-     * 
+     *
      * @param objectClass The objectClass to set.
      */
     public void setObjectClass(String[] objectClass) {
@@ -195,7 +195,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Setter voor ou
-     * 
+     *
      * @param ou The ou to set.
      */
     public void setOu(String ou) {
@@ -204,7 +204,7 @@ public class CA implements Serializable, Comparable<CA> {
 
     /**
      * Setter voor userCertificate
-     * 
+     *
      * @param userCertificate The userCertificate to set.
      */
     public void setUserCertificate(byte[] userCertificate) {
@@ -212,7 +212,7 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

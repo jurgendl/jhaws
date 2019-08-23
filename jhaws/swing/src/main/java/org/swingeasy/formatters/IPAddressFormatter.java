@@ -28,7 +28,7 @@ public class IPAddressFormatter extends DefaultFormatter {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.text.DefaultFormatter#stringToValue(java.lang.String)
      */
     @Override
@@ -57,7 +57,7 @@ public class IPAddressFormatter extends DefaultFormatter {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.text.DefaultFormatter#valueToString(java.lang.Object)
      */
     @Override

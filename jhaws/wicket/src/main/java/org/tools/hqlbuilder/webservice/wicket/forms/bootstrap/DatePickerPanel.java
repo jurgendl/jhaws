@@ -7,7 +7,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
@@ -84,11 +83,11 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
             switch (DatePickerSettings.class.cast(getComponentSettings()).getType()) {
                 case datetime:
                     tempusdominuspicker.add(AttributeRemover.remove("class", "tempusdominusdate")); // remove default
-                    tempusdominuspicker.add(AttributeAppender.append("class", "tempusdominusdatetime")); // add correct one
+                    tempusdominuspicker.add(AttributeModifier.append("class", "tempusdominusdatetime")); // add correct one
                     break;
                 case time:
                     tempusdominuspicker.add(AttributeRemover.remove("class", "tempusdominusdate")); // remove default
-                    tempusdominuspicker.add(AttributeAppender.append("class", "tempusdominustime")); // add correct one
+                    tempusdominuspicker.add(AttributeModifier.append("class", "tempusdominustime")); // add correct one
                     break;
                 default:
                 case date:

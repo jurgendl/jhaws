@@ -16,7 +16,7 @@ public class KeyValue {
 
     /**
      * Creates a new KeyValue object.
-     * 
+     *
      * @param key
      * @param value
      */
@@ -27,7 +27,7 @@ public class KeyValue {
 
     /**
      * gets key
-     * 
+     *
      * @return Returns the key.
      */
     public String getKey() {
@@ -36,7 +36,7 @@ public class KeyValue {
 
     /**
      * gets value
-     * 
+     *
      * @return Returns the value.
      */
     public String getValue() {
@@ -44,7 +44,7 @@ public class KeyValue {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

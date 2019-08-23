@@ -73,11 +73,11 @@ public class MomentJs {
     /**
      * <pre>
      * Map<String, String> formats = MomentJs.dateFormats(getLocale());
-     * 
+     *
      * DateFormat dateFormat = new SimpleDateFormat(formats.get("L"));
-     * 
+     *
      * DateFormat timeFormat = new SimpleDateFormat(formats.get("LT"));
-     * 
+     *
      * DateFormat dateTimeFormat = new SimpleDateFormat(formats.get("L") + " " + formats.get("LT"));
      * </pre>
      */

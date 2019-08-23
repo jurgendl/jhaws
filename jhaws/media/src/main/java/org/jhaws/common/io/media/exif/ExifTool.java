@@ -37,7 +37,6 @@ import org.jhaws.common.io.Utils.OSGroup;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
-import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
 import org.jhaws.common.lang.CollectionUtils8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,7 +202,7 @@ public class ExifTool extends Tool implements MediaCte {
 
 		private Double wh = 0.0;
 
-		private Map<String, String> all = new HashMap<String, String>();
+		private Map<String, String> all = new HashMap<>();
 
 		private String orientation;
 
@@ -582,7 +581,7 @@ public class ExifTool extends Tool implements MediaCte {
 	protected String getVersionImpl() {
 		List<String> command = Arrays.asList(command(executable), "-ver");
 		Lines lines = new Lines();
-		FfmpegTool.call(null, lines, executable.getParentPath(), command);
+		Tool.call(null, lines, executable.getParentPath(), command);
 		return lines.lines().get(0);
 	}
 

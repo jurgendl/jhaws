@@ -58,7 +58,7 @@ public class RowNumberTable extends JTable implements ChangeListener, PropertyCh
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JTable#addNotify()
      */
     @Override
@@ -84,7 +84,7 @@ public class RowNumberTable extends JTable implements ChangeListener, PropertyCh
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JTable#getRowHeight(int)
      */
     @Override

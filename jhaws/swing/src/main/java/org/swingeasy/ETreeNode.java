@@ -44,7 +44,7 @@ public class ETreeNode<T> extends DefaultMutableTreeNode {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.tree.DefaultMutableTreeNode#getChildAt(int)
      */
     @Override
@@ -53,7 +53,7 @@ public class ETreeNode<T> extends DefaultMutableTreeNode {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.tree.DefaultMutableTreeNode#getChildCount()
      */
     @Override
@@ -81,7 +81,7 @@ public class ETreeNode<T> extends DefaultMutableTreeNode {
 
     /**
      * called when children is not initialized an {@link #getAllowsChildren()} is true (default)
-     * 
+     *
      * @param list
      */
     protected void initChildren(List<ETreeNode<T>> list) {
@@ -93,7 +93,7 @@ public class ETreeNode<T> extends DefaultMutableTreeNode {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.tree.DefaultMutableTreeNode#isLeaf()
      */
     @Override
@@ -102,7 +102,7 @@ public class ETreeNode<T> extends DefaultMutableTreeNode {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.tree.DefaultMutableTreeNode#removeAllChildren()
      */
     @Override
@@ -112,7 +112,7 @@ public class ETreeNode<T> extends DefaultMutableTreeNode {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.tree.DefaultMutableTreeNode#toString()
      */
     @Override

@@ -3,6 +3,7 @@ package org.swingeasy;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -13,7 +14,7 @@ public class TableDemoPlain {
             ETableConfig configuration = new ETableConfig(true);
             final ETable<Object[]> table = new ETable<>(configuration, null);
             final JFrame frame = new JFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setSize(400, 400);
             frame.getContentPane().add(new JScrollPane(table));
             SwingUtilities.invokeLater(() -> frame.setVisible(true));

@@ -1,5 +1,6 @@
 package org.jhaws.common.jaxb.adapters;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
@@ -8,7 +9,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 public class SqlDateAdapter extends XmlAdapter<XMLGregorianCalendar, java.sql.Date> {
     /**
-     * 
+     *
      * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
      */
     @Override
@@ -16,13 +17,13 @@ public class SqlDateAdapter extends XmlAdapter<XMLGregorianCalendar, java.sql.Da
         if (v == null) {
             return null;
         }
-        GregorianCalendar gregorianCalendar = GregorianCalendar.class.cast(GregorianCalendar.getInstance());
+        GregorianCalendar gregorianCalendar = GregorianCalendar.class.cast(Calendar.getInstance());
         gregorianCalendar.setTime(v);
         return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
     }
 
     /**
-     * 
+     *
      * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
      */
     @Override

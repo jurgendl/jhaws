@@ -19,7 +19,7 @@ public class NumberFormatBuilder implements EFormatBuilder {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.formatters.EFormatBuilder#build(java.util.Locale)
      */
     @Override

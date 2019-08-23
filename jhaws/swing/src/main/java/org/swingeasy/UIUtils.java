@@ -60,6 +60,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileSystemView;
 
 import org.swingeasy.system.SystemSettings;
@@ -947,7 +948,7 @@ public class UIUtils {
     }
 
     public static <F extends JFrame> F setup(F f) {
-        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         return f;
     }
 

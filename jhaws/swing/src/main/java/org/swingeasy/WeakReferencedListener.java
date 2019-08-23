@@ -57,7 +57,7 @@ public final class WeakReferencedListener<T> implements java.lang.reflect.Invoca
     }
 
     /**
-     * 
+     *
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
      */
     @Override

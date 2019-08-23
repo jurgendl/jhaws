@@ -20,7 +20,7 @@ public class ETextComponentBorderHighlightPainter extends ETextComponentAbstract
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ETextComponentHighlightPainter#getColor()
      */
     @Override
@@ -37,7 +37,7 @@ public class ETextComponentBorderHighlightPainter extends ETextComponentAbstract
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ETextComponentAbstractHighlightPainter#paintHighlight(java.awt.Graphics2D, java.awt.Rectangle)
      */
     @Override
@@ -55,7 +55,7 @@ public class ETextComponentBorderHighlightPainter extends ETextComponentAbstract
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ETextComponentHighlightPainter#setColor(java.awt.Color)
      */
     @Override

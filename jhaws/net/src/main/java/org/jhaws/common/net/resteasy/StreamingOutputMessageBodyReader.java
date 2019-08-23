@@ -2,7 +2,6 @@ package org.jhaws.common.net.resteasy;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -24,11 +23,6 @@ public class StreamingOutputMessageBodyReader implements MessageBodyReader<Strea
     @Override
     public StreamingOutput readFrom(Class<StreamingOutput> type, Type genericType, Annotation[] annotations, MediaType mediaType,
             MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
-        return new StreamingOutput() {
-            @Override
-            public void write(OutputStream output) throws IOException, WebApplicationException {
-                IOUtils.copy(entityStream, output);
-            }
-        };
+        return output -> IOUtils.copy(entityStream, output);
     }
 }

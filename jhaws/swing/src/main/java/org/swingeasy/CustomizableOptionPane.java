@@ -176,7 +176,7 @@ public class CustomizableOptionPane {
 
     /**
      * show customizable (by {@link OptionPaneCustomizer}) dialog with {@link JComponent} as content, uses enums as parameters and return value
-     * 
+     *
      * @param parentComponent
      * @param component
      * @param title
@@ -184,9 +184,9 @@ public class CustomizableOptionPane {
      * @param optionType
      * @param icon
      * @param customizer
-     * 
+     *
      * @return
-     * 
+     *
      * @throws HeadlessException
      */
     public static ResultType showCustomDialog(Component parentComponent, JComponent component, String title, MessageType messageType,

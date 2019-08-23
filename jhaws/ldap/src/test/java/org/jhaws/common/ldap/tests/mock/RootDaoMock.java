@@ -11,7 +11,7 @@ public class RootDaoMock extends RootDao {
 
     /**
      * Creates a new RootDaoMock object.
-     * 
+     *
      * @param b na
      */
     public RootDaoMock() {

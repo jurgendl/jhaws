@@ -29,6 +29,7 @@ public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSett
         return "col-2";
     }
 
+    @Override
     public String getComponentClass(ElementSettings settings) {
         if (formSettings.getColumns() == null) {
             return settings.getComponentClass();

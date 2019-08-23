@@ -5,16 +5,17 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
 /**
  * <p>
  * Java class for pixelFormatType complex type.
- * 
+ *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="pixelFormatType">
  *   &lt;complexContent>
@@ -32,8 +33,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "pixelFormatType", propOrder = { "flags", "components" })
@@ -60,9 +61,9 @@ public class PixelFormatType {
 
     /**
      * Gets the value of the flags property.
-     * 
+     *
      * @return possible object is {@link PixelFormatFlagsType }
-     * 
+     *
      */
     public PixelFormatFlagsType getFlags() {
         return flags;
@@ -70,9 +71,9 @@ public class PixelFormatType {
 
     /**
      * Sets the value of the flags property.
-     * 
+     *
      * @param value allowed object is {@link PixelFormatFlagsType }
-     * 
+     *
      */
     public void setFlags(PixelFormatFlagsType value) {
         this.flags = value;
@@ -80,9 +81,9 @@ public class PixelFormatType {
 
     /**
      * Gets the value of the components property.
-     * 
+     *
      * @return possible object is {@link PixelFormatComponentsType }
-     * 
+     *
      */
     public PixelFormatComponentsType getComponents() {
         return components;
@@ -90,9 +91,9 @@ public class PixelFormatType {
 
     /**
      * Sets the value of the components property.
-     * 
+     *
      * @param value allowed object is {@link PixelFormatComponentsType }
-     * 
+     *
      */
     public void setComponents(PixelFormatComponentsType value) {
         this.components = value;
@@ -100,9 +101,9 @@ public class PixelFormatType {
 
     /**
      * Gets the value of the name property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getName() {
         return name;
@@ -110,9 +111,9 @@ public class PixelFormatType {
 
     /**
      * Sets the value of the name property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setName(String value) {
         this.name = value;
@@ -120,7 +121,7 @@ public class PixelFormatType {
 
     /**
      * Gets the value of the nbComponents property.
-     * 
+     *
      */
     public int getNbComponents() {
         return nbComponents;
@@ -128,7 +129,7 @@ public class PixelFormatType {
 
     /**
      * Sets the value of the nbComponents property.
-     * 
+     *
      */
     public void setNbComponents(int value) {
         this.nbComponents = value;
@@ -136,9 +137,9 @@ public class PixelFormatType {
 
     /**
      * Gets the value of the log2ChromaW property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getLog2ChromaW() {
         return log2ChromaW;
@@ -146,9 +147,9 @@ public class PixelFormatType {
 
     /**
      * Sets the value of the log2ChromaW property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setLog2ChromaW(Integer value) {
         this.log2ChromaW = value;
@@ -156,9 +157,9 @@ public class PixelFormatType {
 
     /**
      * Gets the value of the log2ChromaH property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getLog2ChromaH() {
         return log2ChromaH;
@@ -166,9 +167,9 @@ public class PixelFormatType {
 
     /**
      * Sets the value of the log2ChromaH property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setLog2ChromaH(Integer value) {
         this.log2ChromaH = value;
@@ -176,9 +177,9 @@ public class PixelFormatType {
 
     /**
      * Gets the value of the bitsPerPixel property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getBitsPerPixel() {
         return bitsPerPixel;
@@ -186,9 +187,9 @@ public class PixelFormatType {
 
     /**
      * Sets the value of the bitsPerPixel property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setBitsPerPixel(Integer value) {
         this.bitsPerPixel = value;
@@ -196,7 +197,7 @@ public class PixelFormatType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     * 
+     *
      */
     @Override
     public String toString() {

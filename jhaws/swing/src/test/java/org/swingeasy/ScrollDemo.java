@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -47,7 +48,7 @@ public class ScrollDemo {
 
         EComponentHelper.bindVerticalScrolling(jsp, jsp2);
 
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setSize(600, 400);
         f.setVisible(true);
 

@@ -23,7 +23,7 @@ public class ECheckBoxTreeNodeRenderer implements TreeCellRenderer {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int,
      *      boolean)
      */

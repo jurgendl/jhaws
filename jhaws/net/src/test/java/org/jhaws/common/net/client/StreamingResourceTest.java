@@ -114,7 +114,7 @@ public class StreamingResourceTest {
         try {
             MultipartFormDataOutput mdo = new MultipartFormDataOutput();
             mdo.addFormData("attachment", file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM_TYPE, file.getFileNameString());
-            response = target().path(StreamingResource.UPLOAD_FORM).request().post(MultipartFormDataOutputEntity.entity(mdo));
+            response = target().path(StreamingResourceI.UPLOAD_FORM).request().post(MultipartFormDataOutputEntity.entity(mdo));
             Assert.assertEquals(200, response.getStatus());
             System.out.println(response.readEntity(String.class));
         } catch (Exception ex) {
@@ -151,7 +151,7 @@ public class StreamingResourceTest {
     public void test_List() {
         if (!runDirect) return;
         try {
-            String response = target().path(StreamingResource.LIST).request().get(String.class);
+            String response = target().path(StreamingResourceI.LIST).request().get(String.class);
             System.out.println(response);
             JsonArray a = Json.createReader(new InputStreamReader(new ByteArrayInputStream(response.getBytes()))).read().asJsonArray();
             Assert.assertEquals(1, a.size());
@@ -167,7 +167,7 @@ public class StreamingResourceTest {
         if (!runDirect) return;
         Response response = null;
         try {
-            response = target().path(StreamingResource.DOWNLOAD_GET).queryParam("file", file.getFileNameString()).request().buildGet().invoke();
+            response = target().path(StreamingResourceI.DOWNLOAD_GET).queryParam("file", file.getFileNameString()).request().buildGet().invoke();
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
@@ -220,7 +220,7 @@ public class StreamingResourceTest {
         try {
             MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
             formData.add("file", file.getFileNameString());
-            response = target().path(StreamingResource.DOWNLOAD_FORM).request().buildPost(Entity.form(formData)).invoke();
+            response = target().path(StreamingResourceI.DOWNLOAD_FORM).request().buildPost(Entity.form(formData)).invoke();
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
@@ -271,7 +271,7 @@ public class StreamingResourceTest {
         if (!runDirect) return;
         Response response = null;
         try {
-            response = target().path(StreamingResource.DOWNLOAD_STREAM)
+            response = target().path(StreamingResourceI.DOWNLOAD_STREAM)
                     .queryParam("file", file.getFileName().toString())
                     .request()
                     .buildGet()
@@ -316,7 +316,7 @@ public class StreamingResourceTest {
         if (!runDirect) return;
         Response response = null;
         try {
-            response = target().path(StreamingResource.DOWNLOAD_STREAM_IN_RESPONSE)
+            response = target().path(StreamingResourceI.DOWNLOAD_STREAM_IN_RESPONSE)
                     .queryParam("file", file.getFileNameString())
                     .request()
                     .buildGet()
@@ -371,7 +371,7 @@ public class StreamingResourceTest {
         if (!runDirect) return;
         Response response = null;
         try {
-            response = target().path(StreamingResource.UPLOAD_STREAM)
+            response = target().path(StreamingResourceI.UPLOAD_STREAM)
                     .request()
                     .header("file", file.getFileNameString())
                     .buildPost(Entity.entity(file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM))

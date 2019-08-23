@@ -101,7 +101,7 @@ public class SecureMe implements Security {
         /*
          * Create some temporary byte arrays for use in encryption, make them a reasonable size so that we don't spend forever reading small chunks
          * from a file.
-         * 
+         *
          * There is no particular reason for using getBlockSize() to determine the size of the input chunk. It just was a convenient number for the
          * example.
          */

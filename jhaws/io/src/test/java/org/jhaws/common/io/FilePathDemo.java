@@ -4,13 +4,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import org.jhaws.common.io.FilePath.FilePathWatcher;
 
 public class FilePathDemo {
     public static void main(String[] args) {
         JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         JButton b = new JButton("stop");
         f.getContentPane().add(b, BorderLayout.CENTER);
         FilePathWatcher watch = new FilePath().watch(System.out::println);

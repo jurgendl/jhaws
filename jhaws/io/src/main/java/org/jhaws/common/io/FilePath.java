@@ -69,7 +69,6 @@ import java.text.NumberFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -176,7 +175,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public static FileTime convert(LocalDateTime dateTime) {
-		return FileTime.from(dateTime.toInstant(ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
+		return FileTime.from(dateTime.toInstant(ZoneId.systemDefault().getRules().getOffset(Instant.now())));
 	}
 
 	public static String getCurrentUser() {
@@ -267,7 +266,7 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * path (then class or classloader is required) or url or uri required
-	 * 
+	 *
 	 * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
 	 */
 	public static Path path(String _path, URL _url, URI _uri, Class<?> _root, ClassLoader _classLoader) {
@@ -2924,7 +2923,7 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath write(Stream<String> lines, Charset charset, OpenOption... options) {
 		Iterable<String> tmp = () -> lines.iterator();
-		return write((Iterable<? extends CharSequence>) tmp, options);
+		return write(tmp, options);
 	}
 
 	public FilePath write(Stream<String> lines, OpenOption... options) {
@@ -3311,7 +3310,7 @@ public class FilePath implements Path, Externalizable {
 
 	/**
 	 * windows only
-	 * 
+	 *
 	 * @see http://stackoverflow.com/questions/1646425/cmd-command-to-delete-files-and-put-them-into-recycle-bin
 	 * @see https://github.com/npocmaka/batch.scripts/blob/master/hybrids/jscript/deleteJS.bat
 	 * @see http://stackoverflow.com/questions/615948/how-do-i-run-a-batch-file-from-my-java-application

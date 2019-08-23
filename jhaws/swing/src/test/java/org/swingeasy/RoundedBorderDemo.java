@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.WindowConstants;
 
 import org.swingeasy.system.SystemSettings;
 
@@ -73,7 +74,7 @@ public class RoundedBorderDemo {
         UIUtils.systemLookAndFeel();
         RoundedBorderDemo.frame = new JFrame("forced exit");
         RoundedBorderDemo.frame.setSize(300, 20);
-        RoundedBorderDemo.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        RoundedBorderDemo.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         RoundedBorderDemo.frame.setVisible(true);
         final Window w = new Window(RoundedBorderDemo.frame);
         w.setLayout(new BorderLayout());

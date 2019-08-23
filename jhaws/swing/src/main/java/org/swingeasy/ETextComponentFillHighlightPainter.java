@@ -21,7 +21,7 @@ public class ETextComponentFillHighlightPainter extends ETextComponentAbstractHi
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ETextComponentHighlightPainter#getColor()
      */
     @Override
@@ -38,7 +38,7 @@ public class ETextComponentFillHighlightPainter extends ETextComponentAbstractHi
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ETextComponentAbstractHighlightPainter#paintHighlight(java.awt.Graphics2D, java.awt.Rectangle)
      */
     @Override
@@ -69,7 +69,7 @@ public class ETextComponentFillHighlightPainter extends ETextComponentAbstractHi
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ETextComponentHighlightPainter#setColor(java.awt.Color)
      */
     @Override

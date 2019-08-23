@@ -2,7 +2,6 @@ package org.tools.hqlbuilder.webservice.wicket;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -41,7 +40,7 @@ public class FlowPlayer7Panel extends Panel {
         // flowplayer.add(AttributeAppender.append("class","fp-mute"));
         // flowplayer.add(AttributeAppender.append("class","is-closeable"));
         if (size) {
-            flowplayer.add(new AttributeModifier("data-ratio", (float) (int) _config.getH() / _config.getW()));
+            flowplayer.add(new AttributeModifier("data-ratio", (float) _config.getH() / _config.getW()));
         }
         // fixed controls
         // flowplayer.add(AttributeAppender.append("class","no-toggle"));
@@ -58,7 +57,7 @@ public class FlowPlayer7Panel extends Panel {
         // }
 
         if (_config.isSplash()) {
-            flowplayer.add(AttributeAppender.append("class", "is-splash"));
+            flowplayer.add(AttributeModifier.append("class", "is-splash"));
             if (_config.getSplashFile().exists()) {
                 if (size) {
                     flowplayer.add(new AttributeModifier("style",

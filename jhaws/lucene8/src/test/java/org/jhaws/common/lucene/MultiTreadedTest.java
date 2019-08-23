@@ -31,7 +31,7 @@ public class MultiTreadedTest {
                     List<Document> docs = new ArrayList<>();
                     for (int k = 0; k < 10000; k++) {
                         Document doc = new Document();
-                        doc.add(new StringField("idx", "" + ((char) ((int) 'a' + r.nextInt(26))) + ((char) ((int) 'a' + r.nextInt(26))),
+                        doc.add(new StringField("idx", "" + ((char) ('a' + r.nextInt(26))) + ((char) ('a' + r.nextInt(26))),
                                 org.apache.lucene.document.Field.Store.YES));
                         docs.add(doc);
                     }
@@ -52,7 +52,7 @@ public class MultiTreadedTest {
             Thread t = new Thread(() -> {
                 while (true) {
                     try {
-                        li.search(li.keyValueQuery("idx", "" + ((char) ((int) 'a' + r.nextInt(26))) + ((char) ((int) 'a' + r.nextInt(26)))).build(),
+                        li.search(li.keyValueQuery("idx", "" + ((char) ('a' + r.nextInt(26))) + ((char) ('a' + r.nextInt(26)))).build(),
                                 10000);
                     } catch (Exception ex) {
                         ex.printStackTrace(System.out);

@@ -87,7 +87,7 @@ public abstract class Task<T> {
 
     /**
      * override deze methode om in aparte thread op achtergrond uit te voeren
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -105,7 +105,7 @@ public abstract class Task<T> {
 
     /**
      * override deze methode om te reageren op het aflopen van een taak, normaal en door exception
-     * 
+     *
      * @param returnValue
      * @param cause
      */

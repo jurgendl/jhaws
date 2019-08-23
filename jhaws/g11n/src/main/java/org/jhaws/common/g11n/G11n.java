@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.Date;
@@ -152,7 +151,7 @@ public class G11n {
 
     public static DateFormat getShortDateFormat() {
         if (G11n.shortDateFormat == null) {
-            G11n.shortDateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, getCurrentLocale());
+            G11n.shortDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, getCurrentLocale());
         }
         return shortDateFormat;
     }
@@ -163,7 +162,7 @@ public class G11n {
 
     public static DateFormat getMediumDateFormat() {
         if (G11n.mediumDateFormat == null) {
-            G11n.mediumDateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM, getCurrentLocale());
+            G11n.mediumDateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, getCurrentLocale());
         }
         return mediumDateFormat;
     }
@@ -174,7 +173,7 @@ public class G11n {
 
     public static DateFormat getLongDateFormat() {
         if (G11n.longDateFormat == null) {
-            G11n.longDateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, getCurrentLocale());
+            G11n.longDateFormat = DateFormat.getDateInstance(DateFormat.LONG, getCurrentLocale());
         }
         return longDateFormat;
     }
@@ -185,7 +184,7 @@ public class G11n {
 
     public static DateFormat getShortTimeFormat() {
         if (G11n.shortTimeFormat == null) {
-            G11n.shortTimeFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, getCurrentLocale());
+            G11n.shortTimeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, getCurrentLocale());
         }
         return shortTimeFormat;
     }
@@ -196,7 +195,7 @@ public class G11n {
 
     public static DateFormat getMediumTimeFormat() {
         if (G11n.mediumTimeFormat == null) {
-            G11n.mediumTimeFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM, getCurrentLocale());
+            G11n.mediumTimeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM, getCurrentLocale());
         }
         return mediumTimeFormat;
     }
@@ -207,7 +206,7 @@ public class G11n {
 
     public static DateFormat getLongTimeFormat() {
         if (G11n.longTimeFormat == null) {
-            G11n.longTimeFormat = SimpleDateFormat.getTimeInstance(SimpleDateFormat.LONG, getCurrentLocale());
+            G11n.longTimeFormat = DateFormat.getTimeInstance(DateFormat.LONG, getCurrentLocale());
         }
         return longTimeFormat;
     }
@@ -218,7 +217,7 @@ public class G11n {
 
     public static DateFormat getShortDateTimeFormat() {
         if (G11n.shortDateTimeFormat == null) {
-            G11n.shortDateTimeFormat = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT, getCurrentLocale());
+            G11n.shortDateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, getCurrentLocale());
         }
         return shortDateTimeFormat;
     }
@@ -229,7 +228,7 @@ public class G11n {
 
     public static DateFormat getMediumDateTimeFormat() {
         if (G11n.mediumDateTimeFormat == null) {
-            G11n.mediumDateTimeFormat = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM, getCurrentLocale());
+            G11n.mediumDateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM, getCurrentLocale());
         }
         return mediumDateTimeFormat;
     }
@@ -240,7 +239,7 @@ public class G11n {
 
     public static DateFormat getLongDateTimeFormat() {
         if (G11n.longDateTimeFormat == null) {
-            G11n.longDateTimeFormat = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG, getCurrentLocale());
+            G11n.longDateTimeFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, getCurrentLocale());
         }
         return longDateTimeFormat;
     }

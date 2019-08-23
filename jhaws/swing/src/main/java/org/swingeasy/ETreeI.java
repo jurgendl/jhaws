@@ -16,7 +16,7 @@ public interface ETreeI<T> extends EComponentI {
 
     /**
      * JDOC
-     * 
+     *
      * @param current
      * @param matcher
      * @return

@@ -17,7 +17,6 @@ import org.jhaws.common.io.Utils;
 import org.jhaws.common.io.Utils.OSGroup;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.Tool;
-import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
 
 // http://www.sentex.net/~mwandel/jhead/
 public class JHeadTool extends Tool {
@@ -47,7 +46,7 @@ public class JHeadTool extends Tool {
 	protected String getVersionImpl() {
 		List<String> command = Arrays.asList(command(executable), "-V");
 		Lines lines = new Lines();
-		FfmpegTool.call(null, lines, executable.getParentPath(), command);
+		Tool.call(null, lines, executable.getParentPath(), command);
 		return lines.lines().get(0);
 	}
 

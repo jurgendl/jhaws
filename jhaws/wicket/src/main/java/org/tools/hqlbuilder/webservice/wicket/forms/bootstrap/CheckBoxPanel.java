@@ -1,6 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket.forms.bootstrap;
 
-import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -61,7 +61,7 @@ public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckB
             };
             String labelClass = getLabelClass(settings);
             if (labelClass != null) {
-                label.add(AttributeAppender.append("class", labelClass));
+                label.add(AttributeModifier.append("class", labelClass));
             }
             label.setEscapeModelStrings(false);
         }

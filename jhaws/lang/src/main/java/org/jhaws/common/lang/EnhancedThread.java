@@ -7,25 +7,22 @@ import org.jhaws.common.lang.functions.ESupplier;
 
 public class EnhancedThread extends Thread {
     public static Runnable convert(ESupplier<Long> runnable, Consumer<Exception> exceptionHandler) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    long delay;
-                    do {
-                        delay = runnable.get();
-                        if (delay > 0) {
-                            try {
-                                Thread.sleep(delay);
-                            } catch (InterruptedException ex) {
-                                //
-                            }
+        return () -> {
+            try {
+                long delay;
+                do {
+                    delay = runnable.get();
+                    if (delay > 0) {
+                        try {
+                            Thread.sleep(delay);
+                        } catch (InterruptedException ex1) {
+                            //
                         }
-                    } while (delay >= 0);
-                } catch (Exception ex) {
-                    if (exceptionHandler != null) {
-                        exceptionHandler.accept(ex);
                     }
+                } while (delay >= 0);
+            } catch (Exception ex2) {
+                if (exceptionHandler != null) {
+                    exceptionHandler.accept(ex2);
                 }
             }
         };

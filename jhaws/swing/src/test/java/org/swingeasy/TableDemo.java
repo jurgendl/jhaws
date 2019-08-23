@@ -20,6 +20,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 import org.swingeasy.system.SystemSettings;
 import org.swingeasy.table.editor.EnumTableCellEditor;
@@ -85,7 +86,7 @@ public class TableDemo {
                 table.repaint();
             });
             cp.add(localepanel, BorderLayout.NORTH);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setSize(800, 400);
             final Random r = new Random(256955466579946l);
             headers.add("Integer", Integer.class, true); //$NON-NLS-1$

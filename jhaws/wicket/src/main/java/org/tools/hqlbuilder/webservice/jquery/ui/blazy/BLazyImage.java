@@ -3,7 +3,7 @@ package org.tools.hqlbuilder.webservice.jquery.ui.blazy;
 import java.net.URI;
 import java.net.URL;
 
-import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -64,7 +64,7 @@ public class BLazyImage extends Image {
     }
 
     public static Image adjustImage(Image image) {
-        image.add(AttributeAppender.append("class", BLazy.BLAZY_CLASS));
+        image.add(AttributeModifier.append("class", BLazy.BLAZY_CLASS));
         return image;
     }
 

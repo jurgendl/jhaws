@@ -22,7 +22,7 @@ public class ESpinner<T> extends JSpinner {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JComponent#getToolTipText()
      */
     @Override
@@ -67,7 +67,7 @@ public class ESpinner<T> extends JSpinner {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JComponent#setToolTipText(java.lang.String)
      */
     @Override

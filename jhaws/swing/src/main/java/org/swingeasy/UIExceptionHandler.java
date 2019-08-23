@@ -28,7 +28,7 @@ public class UIExceptionHandler {
     public static interface Out {
         /**
          * public void println(String line)
-         * 
+         *
          * @param line
          * @param outType
          */
@@ -45,7 +45,7 @@ public class UIExceptionHandler {
     public static class PrintWriterOutWrapper extends PrintWriter implements Out {
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param file
          * @throws FileNotFoundException
          */
@@ -55,7 +55,7 @@ public class UIExceptionHandler {
 
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param file
          * @param csn
          * @throws FileNotFoundException
@@ -67,7 +67,7 @@ public class UIExceptionHandler {
 
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param out
          */
         public PrintWriterOutWrapper(OutputStream out) {
@@ -76,7 +76,7 @@ public class UIExceptionHandler {
 
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param out
          * @param autoFlush
          */
@@ -86,7 +86,7 @@ public class UIExceptionHandler {
 
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param fileName
          * @throws FileNotFoundException
          */
@@ -96,7 +96,7 @@ public class UIExceptionHandler {
 
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param fileName
          * @param csn
          * @throws FileNotFoundException
@@ -108,7 +108,7 @@ public class UIExceptionHandler {
 
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param out
          */
         public PrintWriterOutWrapper(Writer out) {
@@ -117,7 +117,7 @@ public class UIExceptionHandler {
 
         /**
          * Instantieer een nieuwe PrintWriterOut
-         * 
+         *
          * @param out
          * @param autoFlush
          */
@@ -126,7 +126,7 @@ public class UIExceptionHandler {
         }
 
         /**
-         * 
+         *
          * @see be.ugent.komodo.exceptions.ExceptionHandlerUtils.Out#println(java.lang.String,
          *      be.ugent.komodo.exceptions.ExceptionHandlerUtils.OutType)
          */
@@ -145,9 +145,9 @@ public class UIExceptionHandler {
     /**
      * There is an easy an elegant way to convert or store an exception stack trace to a string variable. The following method takes an exception
      * object as a parameter and returns the string representation of the stack trace.
-     * 
+     *
      * @param ex
-     * 
+     *
      * @return
      */
     public static String getStackTrace(Throwable ex) {
@@ -159,7 +159,7 @@ public class UIExceptionHandler {
 
     /**
      * internal use
-     * 
+     *
      * @param t internal use
      * @param out internal use
      * @param supert super throwable
@@ -183,7 +183,7 @@ public class UIExceptionHandler {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Throwable#printStackTrace(java.io.PrintStream)
      */
     public static synchronized void printStackTrace(final Throwable top, final Out out) {

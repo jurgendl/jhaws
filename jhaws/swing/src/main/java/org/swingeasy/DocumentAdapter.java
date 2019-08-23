@@ -8,7 +8,7 @@ import javax.swing.event.DocumentListener;
  */
 public class DocumentAdapter implements DocumentListener {
     /**
-     * 
+     *
      * @see javax.swing.event.DocumentListener#changedUpdate(javax.swing.event.DocumentEvent)
      */
     @Override
@@ -17,7 +17,7 @@ public class DocumentAdapter implements DocumentListener {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.event.DocumentListener#insertUpdate(javax.swing.event.DocumentEvent)
      */
     @Override
@@ -26,7 +26,7 @@ public class DocumentAdapter implements DocumentListener {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.event.DocumentListener#removeUpdate(javax.swing.event.DocumentEvent)
      */
     @Override

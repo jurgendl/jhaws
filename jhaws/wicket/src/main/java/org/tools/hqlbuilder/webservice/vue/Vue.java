@@ -18,7 +18,7 @@ public class Vue {
      * "','appVueTest');", "vuetest_rest_init"));<br>
      * <br>
      * RestEasy:<br>
-     * 
+     *
      * <pre>
      * &#64;Path(VueTestRest.PATH)
      * &#64;Pretty
@@ -56,10 +56,10 @@ public class Vue {
      *     }
      * }
      * </pre>
-     * 
+     *
      * <br>
      * Html:<br>
-     * 
+     *
      * <pre>
         &lt;div style="display:none" id="appVueTest"&gt;
             &lt;span v-for="(element, index) in elements"&gt;

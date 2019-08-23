@@ -11,9 +11,9 @@ public enum Search {
     SINGLE_LEVEL, DEEP;
     /**
      * na
-     * 
+     *
      * @return
-     * 
+     *
      * @throws IllegalArgumentException na
      */
     public int value() {

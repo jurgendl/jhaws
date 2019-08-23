@@ -12,7 +12,7 @@ public abstract class ELabeledTextFieldButtonComponent extends AbstractELabeledT
     private static final long serialVersionUID = 3476659373915137098L;
 
     /**
-     * 
+     *
      * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
      */
     @Override
@@ -21,7 +21,7 @@ public abstract class ELabeledTextFieldButtonComponent extends AbstractELabeledT
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getButton()
      */
     @Override
@@ -36,7 +36,7 @@ public abstract class ELabeledTextFieldButtonComponent extends AbstractELabeledT
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getInput()
      */
     @Override
@@ -58,7 +58,7 @@ public abstract class ELabeledTextFieldButtonComponent extends AbstractELabeledT
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getLabel()
      */
     @Override

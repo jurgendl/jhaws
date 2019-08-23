@@ -41,7 +41,7 @@ public class TestMessagesPage extends DefaultWebPage {
 				counter.setObject(String.valueOf(Integer.parseInt(counter.getObject()) + 1));
 			}
 		};
-		form.add(new TextField<String>("counter", counter));
+		form.add(new TextField<>("counter", counter));
 		add(form);
 		form.add(new ConfirmationSubmitLink("submit1").setMessage(Model.of("confirm")));
 		form.add(new ConfirmationSubmitLink("submit2").setMessage(Model.of("confirm")));
@@ -57,7 +57,7 @@ public class TestMessagesPage extends DefaultWebPage {
 				innercounter.setObject(String.valueOf(Integer.parseInt(innercounter.getObject()) + 1));
 			}
 		};
-		innerform.add(new TextField<String>("innercounter", innercounter));
+		innerform.add(new TextField<>("innercounter", innercounter));
 		form.add(innerform);
 		innerform.add(new ConfirmationSubmitLink("innersubmit1").setMessage(Model.of("confirm")));
 		innerform.add(new ConfirmationSubmitLink("innersubmit2").setMessage(Model.of("confirm")));

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -28,7 +29,7 @@ public class ListDnDDemo {
         }
         jsp.setDividerLocation(200);
         f.setSize(400, 400);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setVisible(true);
     }
 }

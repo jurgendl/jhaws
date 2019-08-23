@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 import org.swingeasy.ECheckBoxList.ECheckBoxListRecord;
 
@@ -19,7 +20,7 @@ public class ListDemo3 {
 
     protected static void newFrame() {
         JFrame f = new JFrame("new");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         final ECheckBoxList cbl = new ECheckBoxList(new EListConfig().setSortable(false));
         final EList<Boolean> stsi = cbl.stsi();
         for (int i = 0; i < 10; i++) {
@@ -47,7 +48,7 @@ public class ListDemo3 {
 
     protected static void newFrameOld() {
         JFrame f = new JFrame("old");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         final EList<String> cbl = new EList<>(new EListConfig().setSortable(false));
         final EList<String> stsi = cbl.stsi();
         for (int i = 0; i < 10; i++) {

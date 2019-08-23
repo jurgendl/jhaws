@@ -81,7 +81,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Create a line number component for a text component. This minimum display width will be based on 3 digits.
-     * 
+     *
      * @param component the related text component
      */
     public TextLineNumber(JTextComponent component) {
@@ -90,7 +90,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Create a line number component for a text component.
-     * 
+     *
      * @param component the related text component
      * @param minimumDisplayDigits the number of digits used to calculate the minimum width of the component
      */
@@ -160,7 +160,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Gets the border gap
-     * 
+     *
      * @return the border gap in pixels
      */
     public int getBorderGap() {
@@ -169,7 +169,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Gets the current line rendering Color
-     * 
+     *
      * @return the Color used to render the current line number
      */
     public Color getCurrentLineForeground() {
@@ -178,7 +178,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Gets the digit alignment
-     * 
+     *
      * @return the alignment of the painted digits
      */
     public float getDigitAlignment() {
@@ -187,7 +187,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Gets the minimum display digits
-     * 
+     *
      * @return the minimum display digits
      */
     public int getMinimumDisplayDigits() {
@@ -266,7 +266,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Gets the update font property
-     * 
+     *
      * @return the update font property
      */
     public boolean getUpdateFont() {
@@ -364,7 +364,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * The border gap is used in calculating the left and right insets of the border. Default value is 5.
-     * 
+     *
      * @param borderGap the gap in pixels
      */
     public void setBorderGap(int borderGap) {
@@ -377,7 +377,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * The Color used to render the current line digits. Default is Coolor.RED.
-     * 
+     *
      * @param currentLineForeground the Color used to render the current line
      */
     public void setCurrentLineForeground(Color currentLineForeground) {
@@ -391,7 +391,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
      * <li>TextLineNumber.CENTER
      * <li>TextLineNumber.RIGHT (default)
      * </ul>
-     * 
+     *
      * @param currentLineForeground the Color used to render the current line
      */
     public void setDigitAlignment(float digitAlignment) {
@@ -400,7 +400,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
 
     /**
      * Specify the mimimum number of digits used to calculate the preferred width of the component. Default is 3.
-     * 
+     *
      * @param minimumDisplayDigits the number digits used in the preferred width calculation
      */
     public void setMinimumDisplayDigits(int minimumDisplayDigits) {
@@ -435,7 +435,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
     /**
      * Set the update font property. Indicates whether this Font should be updated automatically when the Font of the related text component is
      * changed.
-     * 
+     *
      * @param updateFont when true update the Font and repaint the line numbers, otherwise just repaint the line numbers.
      */
     public void setUpdateFont(boolean updateFont) {

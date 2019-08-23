@@ -16,7 +16,6 @@ import org.jhaws.common.io.Utils.OSGroup;
 import org.jhaws.common.io.console.Processes.ExitValueException;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.Tool;
-import org.jhaws.common.io.media.ffmpeg.FfmpegTool;
 
 // https://github.com/ytdl-org/youtube-dl
 // https://ytdl-org.github.io/youtube-dl/supportedsites.html
@@ -72,9 +71,9 @@ public class YTDL extends Tool {
 
 		if (executable.exists()) {
 			List<String> command = new ArrayList<>();
-			command.add(FfmpegTool.command(executable));
+			command.add(Tool.command(executable));
 			command.add("-U");
-			FfmpegTool.call(null, new Lines(), executable.getParentPath(), command);
+			Tool.call(null, new Lines(), executable.getParentPath(), command);
 		} else {
 			String tmp = EXE;
 			if (Utils.osgroup == OSGroup.Windows) {
@@ -93,10 +92,10 @@ public class YTDL extends Tool {
 	@Override
 	protected String getVersionImpl() {
 		List<String> command = new ArrayList<>();
-		command.add(FfmpegTool.command(executable));
+		command.add(Tool.command(executable));
 		command.add("--version");
 		Lines lines = new Lines();
-		FfmpegTool.call(null, lines, executable.getParentPath(), command);
+		Tool.call(null, lines, executable.getParentPath(), command);
 		return lines.lines().get(0);
 	}
 
@@ -109,7 +108,7 @@ public class YTDL extends Tool {
 			targetFolder = FilePath.getTempDirectory();
 		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
 		List<String> command = new ArrayList<>();
-		command.add(FfmpegTool.command(executable));
+		command.add(Tool.command(executable));
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
 		command.add("--embed-thumbnail");

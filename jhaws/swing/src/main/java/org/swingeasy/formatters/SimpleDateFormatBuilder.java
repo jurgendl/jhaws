@@ -15,7 +15,7 @@ public class SimpleDateFormatBuilder implements EFormatBuilder {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.formatters.EFormatBuilder#build(java.util.Locale)
      */
     @Override

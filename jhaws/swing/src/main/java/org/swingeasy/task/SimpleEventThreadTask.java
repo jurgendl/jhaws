@@ -5,7 +5,7 @@ package org.swingeasy.task;
  */
 public abstract class SimpleEventThreadTask extends EventThreadTask<Void> {
     /**
-     * 
+     *
      * @see be.ugent.oasis.swing.ui.gen2.Task#doInBackground()
      */
     @Override
@@ -19,7 +19,7 @@ public abstract class SimpleEventThreadTask extends EventThreadTask<Void> {
     abstract protected void doOnEventThread() throws Exception;
 
     /**
-     * 
+     *
      * @see be.ugent.oasis.swing.ui.gen2.EventThreadTask#doOnEventThread(java.lang.Object)
      */
     @Override
@@ -28,7 +28,7 @@ public abstract class SimpleEventThreadTask extends EventThreadTask<Void> {
     }
 
     /**
-     * 
+     *
      * @see be.ugent.oasis.swing.ui.gen2.EventThreadTask#handleException(java.lang.Throwable)
      */
     @Override

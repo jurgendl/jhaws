@@ -20,7 +20,7 @@ public class EListPdfExporter<T> extends EListExporterImpl<T> {
     };
 
     /**
-     * 
+     *
      * @see org.swingeasy.EListExporterImpl#exportStream(org.swingeasy.EList, java.io.OutputStream)
      */
     @Override
@@ -29,7 +29,7 @@ public class EListPdfExporter<T> extends EListExporterImpl<T> {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.EListExporter#getAction()
      */
     @Override
@@ -38,7 +38,7 @@ public class EListPdfExporter<T> extends EListExporterImpl<T> {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.EListExporter#getFileExtension()
      */
     @Override

@@ -31,7 +31,7 @@ public class BooleanValue extends Value<Boolean> implements BooleanSupplier {
 
     /**
      * does not return true when equals to null !!!!!!!!!!!!!!!!!!!!!
-     * 
+     *
      * @see #isNull()
      * @see #isNotTrue()
      */

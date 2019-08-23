@@ -175,7 +175,7 @@ public class Processes {
 	}
 
 	public static List<String> split(String command) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(command);
 		while (m.find())
 			list.add(m.group(1).replace("\"", ""));

@@ -4,20 +4,22 @@ package org.jhaws.common.io.media.ffmpeg.xml;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
 /**
  * <p>
  * Java class for formatType complex type.
- * 
+ *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="formatType">
  *   &lt;complexContent>
@@ -39,8 +41,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "formatType", propOrder = { "tag" })
@@ -80,36 +82,36 @@ public class FormatType {
 
     /**
      * Gets the value of the tag property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
      * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tag property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getTag().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link TagType }
-     * 
-     * 
+     *
+     *
      */
     public List<TagType> getTag() {
         if (tag == null) {
-            tag = new ArrayList<TagType>();
+            tag = new ArrayList<>();
         }
         return this.tag;
     }
 
     /**
      * Gets the value of the filename property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getFilename() {
         return filename;
@@ -117,9 +119,9 @@ public class FormatType {
 
     /**
      * Sets the value of the filename property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setFilename(String value) {
         this.filename = value;
@@ -127,7 +129,7 @@ public class FormatType {
 
     /**
      * Gets the value of the nbStreams property.
-     * 
+     *
      */
     public int getNbStreams() {
         return nbStreams;
@@ -135,7 +137,7 @@ public class FormatType {
 
     /**
      * Sets the value of the nbStreams property.
-     * 
+     *
      */
     public void setNbStreams(int value) {
         this.nbStreams = value;
@@ -143,7 +145,7 @@ public class FormatType {
 
     /**
      * Gets the value of the nbPrograms property.
-     * 
+     *
      */
     public int getNbPrograms() {
         return nbPrograms;
@@ -151,7 +153,7 @@ public class FormatType {
 
     /**
      * Sets the value of the nbPrograms property.
-     * 
+     *
      */
     public void setNbPrograms(int value) {
         this.nbPrograms = value;
@@ -159,9 +161,9 @@ public class FormatType {
 
     /**
      * Gets the value of the formatName property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getFormatName() {
         return formatName;
@@ -169,9 +171,9 @@ public class FormatType {
 
     /**
      * Sets the value of the formatName property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setFormatName(String value) {
         this.formatName = value;
@@ -179,9 +181,9 @@ public class FormatType {
 
     /**
      * Gets the value of the formatLongName property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getFormatLongName() {
         return formatLongName;
@@ -189,9 +191,9 @@ public class FormatType {
 
     /**
      * Sets the value of the formatLongName property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setFormatLongName(String value) {
         this.formatLongName = value;
@@ -199,9 +201,9 @@ public class FormatType {
 
     /**
      * Gets the value of the startTime property.
-     * 
+     *
      * @return possible object is {@link Float }
-     * 
+     *
      */
     public Float getStartTime() {
         return startTime;
@@ -209,9 +211,9 @@ public class FormatType {
 
     /**
      * Sets the value of the startTime property.
-     * 
+     *
      * @param value allowed object is {@link Float }
-     * 
+     *
      */
     public void setStartTime(Float value) {
         this.startTime = value;
@@ -219,9 +221,9 @@ public class FormatType {
 
     /**
      * Gets the value of the duration property.
-     * 
+     *
      * @return possible object is {@link Float }
-     * 
+     *
      */
     public Float getDuration() {
         return duration;
@@ -229,9 +231,9 @@ public class FormatType {
 
     /**
      * Sets the value of the duration property.
-     * 
+     *
      * @param value allowed object is {@link Float }
-     * 
+     *
      */
     public void setDuration(Float value) {
         this.duration = value;
@@ -239,9 +241,9 @@ public class FormatType {
 
     /**
      * Gets the value of the size property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getSize() {
         return size;
@@ -249,9 +251,9 @@ public class FormatType {
 
     /**
      * Sets the value of the size property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setSize(Long value) {
         this.size = value;
@@ -259,9 +261,9 @@ public class FormatType {
 
     /**
      * Gets the value of the bitRate property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getBitRate() {
         return bitRate;
@@ -269,9 +271,9 @@ public class FormatType {
 
     /**
      * Sets the value of the bitRate property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setBitRate(Long value) {
         this.bitRate = value;
@@ -279,9 +281,9 @@ public class FormatType {
 
     /**
      * Gets the value of the probeScore property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getProbeScore() {
         return probeScore;
@@ -289,9 +291,9 @@ public class FormatType {
 
     /**
      * Sets the value of the probeScore property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setProbeScore(Integer value) {
         this.probeScore = value;
@@ -299,7 +301,7 @@ public class FormatType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     * 
+     *
      */
     @Override
     public String toString() {

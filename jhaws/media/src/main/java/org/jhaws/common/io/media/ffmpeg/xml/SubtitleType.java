@@ -5,16 +5,17 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
 /**
  * <p>
  * Java class for subtitleType complex type.
- * 
+ *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="subtitleType">
  *   &lt;complexContent>
@@ -30,8 +31,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "subtitleType")
@@ -60,9 +61,9 @@ public class SubtitleType {
 
     /**
      * Gets the value of the mediaType property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getMediaType() {
         if (mediaType == null) {
@@ -74,9 +75,9 @@ public class SubtitleType {
 
     /**
      * Sets the value of the mediaType property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setMediaType(String value) {
         this.mediaType = value;
@@ -84,9 +85,9 @@ public class SubtitleType {
 
     /**
      * Gets the value of the pts property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getPts() {
         return pts;
@@ -94,9 +95,9 @@ public class SubtitleType {
 
     /**
      * Sets the value of the pts property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setPts(Long value) {
         this.pts = value;
@@ -104,9 +105,9 @@ public class SubtitleType {
 
     /**
      * Gets the value of the ptsTime property.
-     * 
+     *
      * @return possible object is {@link Float }
-     * 
+     *
      */
     public Float getPtsTime() {
         return ptsTime;
@@ -114,9 +115,9 @@ public class SubtitleType {
 
     /**
      * Sets the value of the ptsTime property.
-     * 
+     *
      * @param value allowed object is {@link Float }
-     * 
+     *
      */
     public void setPtsTime(Float value) {
         this.ptsTime = value;
@@ -124,9 +125,9 @@ public class SubtitleType {
 
     /**
      * Gets the value of the format property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getFormat() {
         return format;
@@ -134,9 +135,9 @@ public class SubtitleType {
 
     /**
      * Sets the value of the format property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setFormat(Integer value) {
         this.format = value;
@@ -144,9 +145,9 @@ public class SubtitleType {
 
     /**
      * Gets the value of the startDisplayTime property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getStartDisplayTime() {
         return startDisplayTime;
@@ -154,9 +155,9 @@ public class SubtitleType {
 
     /**
      * Sets the value of the startDisplayTime property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setStartDisplayTime(Integer value) {
         this.startDisplayTime = value;
@@ -164,9 +165,9 @@ public class SubtitleType {
 
     /**
      * Gets the value of the endDisplayTime property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getEndDisplayTime() {
         return endDisplayTime;
@@ -174,9 +175,9 @@ public class SubtitleType {
 
     /**
      * Sets the value of the endDisplayTime property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setEndDisplayTime(Integer value) {
         this.endDisplayTime = value;
@@ -184,9 +185,9 @@ public class SubtitleType {
 
     /**
      * Gets the value of the numRects property.
-     * 
+     *
      * @return possible object is {@link Integer }
-     * 
+     *
      */
     public Integer getNumRects() {
         return numRects;
@@ -194,9 +195,9 @@ public class SubtitleType {
 
     /**
      * Sets the value of the numRects property.
-     * 
+     *
      * @param value allowed object is {@link Integer }
-     * 
+     *
      */
     public void setNumRects(Integer value) {
         this.numRects = value;
@@ -204,7 +205,7 @@ public class SubtitleType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     * 
+     *
      */
     @Override
     public String toString() {

@@ -125,6 +125,7 @@ public class RegexIterator implements EnhancedIterator<Match>, Match {
         return stream().collect(Collectors.toList()).parallelStream();
     }
 
+    @Override
     public Stream<Match> stream() {
         return CollectionUtils8.stream(this);
     }

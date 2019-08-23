@@ -90,7 +90,7 @@ public class Pool<M> {
 				whenQueued(job1);
 				@SuppressWarnings("unchecked")
 				Job<U> job2 = Job.class.cast(callable);
-				return new Task<U>(job2);
+				return new Task<>(job2);
 			}
 
 			@Override

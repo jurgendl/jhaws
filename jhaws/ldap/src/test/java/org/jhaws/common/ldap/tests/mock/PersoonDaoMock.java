@@ -11,7 +11,7 @@ public class PersoonDaoMock extends PersoonDao {
 
     /**
      * Instantieer een nieuwe PersoonDaoMock
-     * 
+     *
      * @param b
      */
     public PersoonDaoMock() {

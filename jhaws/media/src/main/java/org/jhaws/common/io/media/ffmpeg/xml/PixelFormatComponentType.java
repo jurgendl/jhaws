@@ -5,16 +5,17 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
 /**
  * <p>
  * Java class for pixelFormatComponentType complex type.
- * 
+ *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="pixelFormatComponentType">
  *   &lt;complexContent>
@@ -25,8 +26,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "pixelFormatComponentType")
@@ -40,7 +41,7 @@ public class PixelFormatComponentType {
 
     /**
      * Gets the value of the index property.
-     * 
+     *
      */
     public int getIndex() {
         return index;
@@ -48,7 +49,7 @@ public class PixelFormatComponentType {
 
     /**
      * Sets the value of the index property.
-     * 
+     *
      */
     public void setIndex(int value) {
         this.index = value;
@@ -56,7 +57,7 @@ public class PixelFormatComponentType {
 
     /**
      * Gets the value of the bitDepth property.
-     * 
+     *
      */
     public int getBitDepth() {
         return bitDepth;
@@ -64,7 +65,7 @@ public class PixelFormatComponentType {
 
     /**
      * Sets the value of the bitDepth property.
-     * 
+     *
      */
     public void setBitDepth(int value) {
         this.bitDepth = value;
@@ -72,7 +73,7 @@ public class PixelFormatComponentType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     * 
+     *
      */
     @Override
     public String toString() {

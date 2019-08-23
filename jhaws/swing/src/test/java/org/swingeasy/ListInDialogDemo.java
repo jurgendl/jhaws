@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
@@ -37,7 +38,7 @@ public class ListInDialogDemo {
             UIUtils.systemLookAndFeel();
 
             JFrame parent = new JFrame();
-            parent.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            parent.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             parent.setVisible(true);
 
             final EList<DemoValue> list = new EList<>(new EListConfig());

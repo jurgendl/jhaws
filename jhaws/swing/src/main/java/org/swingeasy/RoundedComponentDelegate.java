@@ -49,7 +49,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Get the value of arcs
-	 * 
+	 *
 	 * @return the value of arcs
 	 */
 	public Dimension getArcs() {
@@ -58,7 +58,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Get the value of shadowAlpha
-	 * 
+	 *
 	 * @return the value of shadowAlpha
 	 */
 	public int getShadowAlpha() {
@@ -67,7 +67,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Returns the Color of shadow.
-	 * 
+	 *
 	 * @return a Color object.
 	 */
 	public Color getShadowColor() {
@@ -76,7 +76,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Get the value of shadowGap
-	 * 
+	 *
 	 * @return the value of shadowGap
 	 */
 	public int getShadowGap() {
@@ -85,7 +85,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Get the value of shadowOffset
-	 * 
+	 *
 	 * @return the value of shadowOffset
 	 */
 	public int getShadowOffset() {
@@ -94,7 +94,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Returns the size of strokes.
-	 * 
+	 *
 	 * @return the value of size.
 	 */
 	public float getStrokeSize() {
@@ -103,7 +103,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Check if component has High Quality enabled.
-	 * 
+	 *
 	 * @return <b>TRUE</b> if it is HQ ; <b>FALSE</b> Otherwise
 	 */
 	public boolean isHighQuality() {
@@ -112,7 +112,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Check if component drops shadow.
-	 * 
+	 *
 	 * @return <b>TRUE</b> if it drops shadow ; <b>FALSE</b> Otherwise
 	 */
 	public boolean isShady() {
@@ -156,7 +156,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Set the value of arcs
-	 * 
+	 *
 	 * @param arcs
 	 *            new value of arcs
 	 */
@@ -166,7 +166,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Sets whether this component has High Quality or not
-	 * 
+	 *
 	 * @param highQuality
 	 *            if <b>TRUE</b>, set this component to HQ
 	 */
@@ -176,7 +176,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Set the value of shadowAlpha
-	 * 
+	 *
 	 * @param shadowAlpha
 	 *            new value of shadowAlpha
 	 */
@@ -190,7 +190,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Sets the Color of shadow
-	 * 
+	 *
 	 * @param shadowColor
 	 *            Color of shadow
 	 */
@@ -200,7 +200,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Set the value of shadowGap
-	 * 
+	 *
 	 * @param shadowGap
 	 *            new value of shadowGap
 	 */
@@ -214,7 +214,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Set the value of shadowOffset
-	 * 
+	 *
 	 * @param shadowOffset
 	 *            new value of shadowOffset
 	 */
@@ -228,7 +228,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Sets whether this component drops shadow
-	 * 
+	 *
 	 * @param shady
 	 *            if <b>TRUE</b>, it draws shadow
 	 */
@@ -238,7 +238,7 @@ public class RoundedComponentDelegate {
 
 	/**
 	 * Sets the stroke size value.
-	 * 
+	 *
 	 * @param strokeSize
 	 *            stroke size value
 	 */

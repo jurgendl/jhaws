@@ -55,7 +55,7 @@ public class UndoRedoManager {
 
     /**
      * Creates a new UndoRedoManager object.
-     * 
+     *
      * @param textcomp JTextComponent
      */
     public UndoRedoManager(final JTextComponent textcomp) {
@@ -95,7 +95,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#addEdit(javax.swing.undo.UndoableEdit)
      */
     public void addEdit(UndoableEdit event) {
@@ -103,7 +103,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#canRedo()
      */
     public boolean canRedo() {
@@ -111,7 +111,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#canUndo()
      */
     public boolean canUndo() {
@@ -119,7 +119,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#clearEdits()
      */
     public void clearEdits() {
@@ -128,7 +128,7 @@ public class UndoRedoManager {
 
     /**
      * gets redoAction
-     * 
+     *
      * @return Returns the redoAction.
      */
     protected AbstractAction getRedoAction() {
@@ -136,7 +136,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#getRedoString()
      */
     public String getRedoString() {
@@ -145,7 +145,7 @@ public class UndoRedoManager {
 
     /**
      * gets undoAction
-     * 
+     *
      * @return Returns the undoAction.
      */
     protected AbstractAction getUndoAction() {
@@ -153,7 +153,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#getUndoString()
      */
     public String getUndoString() {
@@ -161,7 +161,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#isPaused()
      */
     public boolean isPaused() {
@@ -169,7 +169,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#redoEdit()
      */
     public boolean redoEdit() throws CannotRedoException {
@@ -183,7 +183,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#undoEdit()
      */
     public boolean undoEdit() throws CannotUndoException {
@@ -197,7 +197,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#undoRedoPause()
      */
     public void undoRedoPause() {
@@ -208,7 +208,7 @@ public class UndoRedoManager {
     }
 
     /**
-     * 
+     *
      * @see util.swing.UndoRedoAble#undoRedoResume()
      */
     public void undoRedoResume() {

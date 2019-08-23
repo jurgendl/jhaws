@@ -15,15 +15,15 @@ import java.lang.annotation.Target;
 public @interface LdapKeyValue {
     /**
      * key
-     * 
+     *
      * @return key
      */
     String key();
 
     /**
-     * 
+     *
      * value
-     * 
+     *
      * @return value
      */
     String value();

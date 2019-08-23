@@ -44,7 +44,7 @@ public class RotatedLabel extends JPanel implements Icon {
 
     /**
      * Implementation of Icon interface (especially useful with side tabs on a JTabbedPane)
-     * 
+     *
      * @return
      */
     @Override
@@ -53,7 +53,7 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.Icon#getIconWidth()
      */
     @Override
@@ -62,7 +62,7 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JComponent#getPreferredSize()
      */
     @Override
@@ -81,7 +81,7 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
     @Override
@@ -92,7 +92,7 @@ public class RotatedLabel extends JPanel implements Icon {
 
     /**
      * doet effectieve rendering (painting)
-     * 
+     *
      * @param c
      * @param g
      * @param x
@@ -122,7 +122,7 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     * 
+     *
      * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
      */
     @Override

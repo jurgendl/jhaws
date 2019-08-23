@@ -11,8 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
 
 import org.jhaws.common.io.media.images.HexString;
@@ -118,95 +116,92 @@ public class ForegroundBackgroundGen {
 
 		panel.add(new ELabel("Background Value"));
 		this.slider = new JSlider(0, 100, 0);
-		slider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				FBGReport report = new FBGReport();
-				{
-					int brightness = slider.getValue();
-					int color = Color.HSBtoRGB(0f, 0f, (float) brightness / 100.0f);
-					Color c = new Color(color);
-					String hex = String.format("%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
-					fg.setText(hex);
-				}
-				{
-					String rgbhexbg = bg.getText();
-					String rgbhexfg = fg.getText();
+		slider.addChangeListener(e -> {
+        	FBGReport report = new FBGReport();
+        	{
+        		int brightness = slider.getValue();
+        		int color = Color.HSBtoRGB(0f, 0f, brightness / 100.0f);
+        		Color c = new Color(color);
+        		String hex = String.format("%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
+        		fg.setText(hex);
+        	}
+        	{
+        		String rgbhexbg = bg.getText();
+        		String rgbhexfg = fg.getText();
 
-					int br = HexString.hexToByte(rgbhexbg.substring(0, 2));
-					@SuppressWarnings("hiding")
-					int bg = HexString.hexToByte(rgbhexbg.substring(2, 4));
-					int bb = HexString.hexToByte(rgbhexbg.substring(4, 6));
-					if (br < 0)
-						br += 256;
-					if (bg < 0)
-						bg += 256;
-					if (bb < 0)
-						bb += 256;
+        		int br = HexString.hexToByte(rgbhexbg.substring(0, 2));
+        		@SuppressWarnings("hiding")
+        		int bg = HexString.hexToByte(rgbhexbg.substring(2, 4));
+        		int bb = HexString.hexToByte(rgbhexbg.substring(4, 6));
+        		if (br < 0)
+        			br += 256;
+        		if (bg < 0)
+        			bg += 256;
+        		if (bb < 0)
+        			bb += 256;
 
-					int fr = HexString.hexToByte(rgbhexfg.substring(0, 2));
-					@SuppressWarnings("hiding")
-					int fg = HexString.hexToByte(rgbhexfg.substring(2, 4));
-					int fb = HexString.hexToByte(rgbhexfg.substring(4, 6));
-					if (fr < 0)
-						fr += 256;
-					if (fg < 0)
-						fg += 256;
-					if (fb < 0)
-						fb += 256;
+        		int fr = HexString.hexToByte(rgbhexfg.substring(0, 2));
+        		@SuppressWarnings("hiding")
+        		int fg = HexString.hexToByte(rgbhexfg.substring(2, 4));
+        		int fb = HexString.hexToByte(rgbhexfg.substring(4, 6));
+        		if (fr < 0)
+        			fr += 256;
+        		if (fg < 0)
+        			fg += 256;
+        		if (fb < 0)
+        			fb += 256;
 
-					paint.setForeground(new Color(fr, fg, fb));
-					paint.setBackground(new Color(br, bg, bb));
+        		paint.setForeground(new Color(fr, fg, fb));
+        		paint.setBackground(new Color(br, bg, bb));
 
-					double brightnessThreshold = 125.0;
-					double colorThreshold = 500.0;
+        		double brightnessThreshold = 125.0;
+        		double colorThreshold = 500.0;
 
-					double bY = ((br * 299.0) + (bg * 587.0) + (bb * 114.0)) / 1000.0;
-					double fY = ((fr * 299.0) + (fg * 587.0) + (fb * 114.0)) / 1000.0;
+        		double bY = ((br * 299.0) + (bg * 587.0) + (bb * 114.0)) / 1000.0;
+        		double fY = ((fr * 299.0) + (fg * 587.0) + (fb * 114.0)) / 1000.0;
 
-					double brightnessDifference = Math.abs(bY - fY);
-					double colorDifference = (Math.max(fr, br) - Math.min(fr, br)) + (Math.max(fg, bg) - Math.min(fg, bg)) + (Math.max(fb, bb) - Math.min(fb, bb));
+        		double brightnessDifference = Math.abs(bY - fY);
+        		double colorDifference = (Math.max(fr, br) - Math.min(fr, br)) + (Math.max(fg, bg) - Math.min(fg, bg)) + (Math.max(fb, bb) - Math.min(fb, bb));
 
-					report.brightnessDifference = brightnessDifference;
-					bdiff.setText("" + brightnessDifference);
-					report.colorDifference = colorDifference;
-					cdiff.setText("" + colorDifference);
+        		report.brightnessDifference = brightnessDifference;
+        		bdiff.setText("" + brightnessDifference);
+        		report.colorDifference = colorDifference;
+        		cdiff.setText("" + colorDifference);
 
-					if ((brightnessDifference >= brightnessThreshold) && (colorDifference >= colorThreshold)) {
-						compl.setText("compliant");
-						report.compliancy = true;
-					} else if ((brightnessDifference >= brightnessThreshold) || (colorDifference >= colorThreshold)) {
-						compl.setText("sort of compliant");
-						report.compliancy = true;
-					} else {
-						compl.setText("NOT compliant"); // not compliant "Poor visibility between text and background colors."
-						report.compliancy = false;
-					}
+        		if ((brightnessDifference >= brightnessThreshold) && (colorDifference >= colorThreshold)) {
+        			compl.setText("compliant");
+        			report.compliancy = true;
+        		} else if ((brightnessDifference >= brightnessThreshold) || (colorDifference >= colorThreshold)) {
+        			compl.setText("sort of compliant");
+        			report.compliancy = true;
+        		} else {
+        			compl.setText("NOT compliant"); // not compliant "Poor visibility between text and background colors."
+        			report.compliancy = false;
+        		}
 
-					// perform math for WCAG2
-					double ratio = 1;
-					double l1 = getLuminance(new double[] { fr / 255.0, fg / 255.0, fb / 255.0 });
-					double l2 = getLuminance(new double[] { br / 255.0, bg / 255.0, bb / 255.0 });
-					if (l1 >= l2) {
-						ratio = (l1 + .05) / (l2 + .05);
-					} else {
-						ratio = (l2 + .05) / (l1 + .05);
-					}
-					ratio = Math.floor(ratio * 1000.0) / 1000.0; // round to 3 decimal places
+        		// perform math for WCAG2
+        		double ratio = 1;
+        		double l1 = getLuminance(new double[] { fr / 255.0, fg / 255.0, fb / 255.0 });
+        		double l2 = getLuminance(new double[] { br / 255.0, bg / 255.0, bb / 255.0 });
+        		if (l1 >= l2) {
+        			ratio = (l1 + .05) / (l2 + .05);
+        		} else {
+        			ratio = (l2 + .05) / (l1 + .05);
+        		}
+        		ratio = Math.floor(ratio * 1000.0) / 1000.0; // round to 3 decimal places
 
-					cr.setText("" + ratio);
-					report.ratio = ratio;
-					aa.setText((ratio >= 4.5 ? "YES" : "NO"));
-					report.aa = (ratio >= 4.5 ? true : false);
-					aa18.setText((ratio >= 3 ? "YES" : "NO"));
-					report.aa18 = (ratio >= 3 ? true : false);
-					aaa.setText((ratio >= 7 ? "YES" : "NO"));
-					report.aaa = (ratio >= 7 ? true : false);
-					aaa18.setText((ratio >= 4.5 ? "YES" : "NO"));
-					report.aaa18 = (ratio >= 4.5 ? true : false);
-				}
-			}
-		});
+        		cr.setText("" + ratio);
+        		report.ratio = ratio;
+        		aa.setText((ratio >= 4.5 ? "YES" : "NO"));
+        		report.aa = (ratio >= 4.5 ? true : false);
+        		aa18.setText((ratio >= 3 ? "YES" : "NO"));
+        		report.aa18 = (ratio >= 3 ? true : false);
+        		aaa.setText((ratio >= 7 ? "YES" : "NO"));
+        		report.aaa = (ratio >= 7 ? true : false);
+        		aaa18.setText((ratio >= 4.5 ? "YES" : "NO"));
+        		report.aaa18 = (ratio >= 4.5 ? true : false);
+        	}
+        });
 		panel.add(slider, "growx, growy, wrap");
 
 		panel.add(new ELabel("Brightness Difference: (>= 125):"));

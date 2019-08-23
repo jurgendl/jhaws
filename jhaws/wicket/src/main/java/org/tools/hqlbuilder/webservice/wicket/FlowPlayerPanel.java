@@ -1,7 +1,6 @@
 package org.tools.hqlbuilder.webservice.wicket;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -32,7 +31,7 @@ public class FlowPlayerPanel extends Panel {
         WebMarkupContainer flowplayer = new WebMarkupContainer("flowplayer");
 
         if (_config.isSplash()) {
-            flowplayer.add(AttributeAppender.append("class", "is-splash"));
+            flowplayer.add(AttributeModifier.append("class", "is-splash"));
             if (_config.getSplashFile().exists()) {
                 if (_config.getW() != 0 && _config.getH() != 0) {
                     flowplayer.add(new AttributeModifier("style",

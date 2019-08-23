@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -137,8 +136,7 @@ public class ImageIndexer {
             iw.commit();
             int x = 0;
             long start0 = System.currentTimeMillis();
-            for (Iterator<String> it = images.iterator(); it.hasNext();) {
-                String imageFilePath = it.next();
+            for (String imageFilePath : images) {
                 System.out.println("Indexing " + imageFilePath);
                 long start = System.currentTimeMillis();
                 BufferedImage img = null;

@@ -274,7 +274,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	protected KeyValue<ProcessInfo, Process> act(Object context, FilePath input, String action) {
-		KeyValue<ProcessInfo, Process> act = new KeyValue<ProcessInfo, Process>(new ProcessInfo(context, action, input),
+		KeyValue<ProcessInfo, Process> act = new KeyValue<>(new ProcessInfo(context, action, input),
 				null);
 		actions.add(act);
 		return act;
@@ -1412,7 +1412,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	protected String getVersionImpl() {
 		List<String> command = Arrays.asList(command(getFfmpeg()), "-version");
 		Lines lines = new Lines();
-		FfmpegTool.call(null, lines, getFfmpeg().getParentPath(), command);
+		Tool.call(null, lines, getFfmpeg().getParentPath(), command);
 		return lines.lines().get(0);
 	}
 

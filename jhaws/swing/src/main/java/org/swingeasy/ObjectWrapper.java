@@ -31,7 +31,7 @@ public final class ObjectWrapper {
 
         /**
          * Creates a new ClassCache object.
-         * 
+         *
          * @param type
          */
         private ClassCache(Class type) {
@@ -52,7 +52,7 @@ public final class ObjectWrapper {
 
         /**
          * Creates a new FieldNotFoundException object.
-         * 
+         *
          * @param message
          */
         public FieldNotFoundException(String message) {
@@ -61,7 +61,7 @@ public final class ObjectWrapper {
 
         /**
          * Creates a new FieldNotFoundException object.
-         * 
+         *
          * @param message
          * @param cause
          */
@@ -71,7 +71,7 @@ public final class ObjectWrapper {
 
         /**
          * Creates a new FieldNotFoundException object.
-         * 
+         *
          * @param cause
          */
         public FieldNotFoundException(Throwable cause) {
@@ -87,12 +87,12 @@ public final class ObjectWrapper {
 
     /**
      * get {@link Field} for name
-     * 
+     *
      * @param cc
      * @param fieldName
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final Field cc_getField(ClassCache cc, String fieldName) throws FieldNotFoundException {
@@ -113,9 +113,9 @@ public final class ObjectWrapper {
 
     /**
      * initAllFields
-     * 
+     *
      * @param cc
-     * 
+     *
      * @return
      */
     private static final Set<String> cc_getFieldNames(ClassCache cc) {
@@ -124,9 +124,9 @@ public final class ObjectWrapper {
 
     /**
      * getFields
-     * 
+     *
      * @param cc
-     * 
+     *
      * @return the fields
      */
     private static final Map<String, Field> cc_getFields(ClassCache cc) {
@@ -143,13 +143,13 @@ public final class ObjectWrapper {
 
     /**
      * get value
-     * 
+     *
      * @param cc
      * @param fieldName
      * @param wrapper
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final Object cc_getValue(ClassCache cc, String fieldName, ObjectWrapper wrapper) throws FieldNotFoundException {
@@ -177,12 +177,12 @@ public final class ObjectWrapper {
 
     /**
      * set value
-     * 
+     *
      * @param cc
      * @param fieldName
      * @param wrapper
      * @param value
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final void cc_setValue(ClassCache cc, String fieldName, ObjectWrapper wrapper, Object value) throws FieldNotFoundException {
@@ -208,9 +208,9 @@ public final class ObjectWrapper {
 
     /**
      * buildPath
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final String[] ow_buildPath(String... path) {
@@ -233,9 +233,9 @@ public final class ObjectWrapper {
 
     /**
      * fromCache
-     * 
+     *
      * @param type
-     * 
+     *
      * @return
      */
     private static final ClassCache ow_fromCache(Class type) {
@@ -251,12 +251,12 @@ public final class ObjectWrapper {
 
     /**
      * get value
-     * 
+     *
      * @param ow
      * @param field
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final Object ow_get(ObjectWrapper ow, String field) throws FieldNotFoundException {
@@ -273,12 +273,12 @@ public final class ObjectWrapper {
 
     /**
      * get value
-     * 
+     *
      * @param ow
      * @param path
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final Object ow_get(ObjectWrapper ow, String[] path) throws FieldNotFoundException {
@@ -301,12 +301,12 @@ public final class ObjectWrapper {
 
     /**
      * get value
-     * 
+     *
      * @param ow
      * @param field
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final Field ow_getField(ObjectWrapper ow, String field) throws FieldNotFoundException {
@@ -323,11 +323,11 @@ public final class ObjectWrapper {
 
     /**
      * set value
-     * 
+     *
      * @param ow
      * @param field
      * @param value
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final void ow_set(ObjectWrapper ow, String field, Object value) throws FieldNotFoundException {
@@ -346,11 +346,11 @@ public final class ObjectWrapper {
 
     /**
      * set value
-     * 
+     *
      * @param ow
      * @param path
      * @param value
-     * 
+     *
      * @throws FieldNotFoundException
      */
     private static final void ow_set(ObjectWrapper ow, String[] path, Object value) throws FieldNotFoundException {
@@ -385,7 +385,7 @@ public final class ObjectWrapper {
 
     /**
      * Creates a new ObjectWrapper object.
-     * 
+     *
      * @param bean
      */
     public ObjectWrapper(Class<?> bean) {
@@ -403,7 +403,7 @@ public final class ObjectWrapper {
 
     /**
      * Creates a new ObjectWrapper object.
-     * 
+     *
      * @param bean
      */
     public ObjectWrapper(Object bean) {
@@ -421,12 +421,12 @@ public final class ObjectWrapper {
 
     /**
      * get value
-     * 
+     *
      * @param <T>
      * @param type
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final <T> T get(Class<T> type, String... path) throws FieldNotFoundException {
@@ -440,9 +440,9 @@ public final class ObjectWrapper {
 
     /**
      * get value
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final Object get(String... path) throws FieldNotFoundException {
@@ -451,13 +451,13 @@ public final class ObjectWrapper {
 
     /**
      * get value
-     * 
+     *
      * @param <T>
      * @param path
      * @param type
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final <T> T get(String path, Class<T> type) throws FieldNotFoundException {
@@ -466,7 +466,7 @@ public final class ObjectWrapper {
 
     /**
      * getBean
-     * 
+     *
      * @return the bean
      */
     public final Object getBean() {
@@ -475,7 +475,7 @@ public final class ObjectWrapper {
 
     /**
      * getBeanclass
-     * 
+     *
      * @return the beanclass
      */
     public final Class getBeanclass() {
@@ -484,7 +484,7 @@ public final class ObjectWrapper {
 
     /**
      * getBeanclassname
-     * 
+     *
      * @return the beanclassname
      */
     public final String getBeanclassname() {
@@ -493,11 +493,11 @@ public final class ObjectWrapper {
 
     /**
      * get field
-     * 
+     *
      * @param field
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final Field getField(String field) throws FieldNotFoundException {
@@ -514,7 +514,7 @@ public final class ObjectWrapper {
 
     /**
      * getFieldNames
-     * 
+     *
      * @return
      */
     public final Set<String> getFieldNames() {
@@ -529,7 +529,7 @@ public final class ObjectWrapper {
 
     /**
      * get all fields
-     * 
+     *
      * @return
      */
     public final Map<String, Field> getFields() {
@@ -545,7 +545,7 @@ public final class ObjectWrapper {
     /**
      * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan
      * {@link #getFields()}
-     * 
+     *
      * @return
      */
     public final Map<String, Field> getFields(boolean removeStatic, boolean removeFinal, Class<?> exclusiveClass) {
@@ -581,11 +581,11 @@ public final class ObjectWrapper {
 
     /**
      * get type for field
-     * 
+     *
      * @param field
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final Class<?> getType(String field) throws FieldNotFoundException {
@@ -595,7 +595,7 @@ public final class ObjectWrapper {
     /**
      * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan
      * {@link #getFields()}
-     * 
+     *
      * @return
      */
     public final Map<String, Class<?>> getTypes(boolean removeStatic, boolean removeFinal, Class<?> exclusiveClass) {
@@ -610,11 +610,11 @@ public final class ObjectWrapper {
 
     /**
      * set value
-     * 
+     *
      * @param value
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final ObjectWrapper set(Object value, String... path) throws FieldNotFoundException {
@@ -625,12 +625,12 @@ public final class ObjectWrapper {
 
     /**
      * set value
-     * 
+     *
      * @param path
      * @param value
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final ObjectWrapper set(String path, Object value) throws FieldNotFoundException {
@@ -639,11 +639,11 @@ public final class ObjectWrapper {
 
     /**
      * set each value on deep path
-     * 
+     *
      * @param path
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      * @throws IllegalArgumentException
      */
@@ -666,7 +666,7 @@ public final class ObjectWrapper {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -686,11 +686,11 @@ public final class ObjectWrapper {
 
     /**
      * set value null
-     * 
+     *
      * @param path
-     * 
+     *
      * @return
-     * 
+     *
      * @throws FieldNotFoundException
      */
     public final ObjectWrapper unset(String path) throws FieldNotFoundException {

@@ -34,7 +34,7 @@ public class EListFilterComponent<T> extends ELabeledTextFieldButtonComponent im
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#doAction()
      */
     @Override
@@ -43,7 +43,7 @@ public class EListFilterComponent<T> extends ELabeledTextFieldButtonComponent im
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#getAction()
      */
     @Override
@@ -52,7 +52,7 @@ public class EListFilterComponent<T> extends ELabeledTextFieldButtonComponent im
     }
 
     /**
-     * 
+     *
      * @see ca.odell.glazedlists.TextFilterator#getFilterStrings(java.util.List, java.lang.Object)
      */
     @Override
@@ -63,7 +63,7 @@ public class EListFilterComponent<T> extends ELabeledTextFieldButtonComponent im
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#getIcon()
      */
     @Override
@@ -72,7 +72,7 @@ public class EListFilterComponent<T> extends ELabeledTextFieldButtonComponent im
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.HasParentComponent#getParentComponent()
      */
     @Override
@@ -106,7 +106,7 @@ public class EListFilterComponent<T> extends ELabeledTextFieldButtonComponent im
     }
 
     /**
-     * 
+     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

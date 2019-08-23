@@ -20,7 +20,7 @@ public class JodaLocalTimeAdapter extends XmlAdapter<XMLGregorianCalendar, Local
     }
 
     /**
-     * 
+     *
      * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
      */
     @Override
@@ -34,7 +34,7 @@ public class JodaLocalTimeAdapter extends XmlAdapter<XMLGregorianCalendar, Local
     }
 
     /**
-     * 
+     *
      * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
      */
     @Override

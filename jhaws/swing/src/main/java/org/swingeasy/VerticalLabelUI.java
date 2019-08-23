@@ -64,7 +64,7 @@ public class VerticalLabelUI extends BasicLabelUI {
     /**
      * Constructs a <code>VerticalLabelUI</code> with the desired rotation.
      * <P>
-     * 
+     *
      * @param clockwise true to rotate clockwise, false for anticlockwise
      */
     public VerticalLabelUI(boolean clockwise) {
@@ -84,7 +84,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
     /**
      * Overridden to always return -1, since a vertical label does not have a meaningful baseline.
-     * 
+     *
      * @see ComponentUI#getBaseline(JComponent, int, int)
      */
     @Override
@@ -95,7 +95,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
     /**
      * Overridden to always return Component.BaselineResizeBehavior.OTHER, since a vertical label does not have a meaningful baseline
-     * 
+     *
      * @see ComponentUI#getBaselineResizeBehavior(javax.swing.JComponent)
      */
     @Override
@@ -106,7 +106,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
     /**
      * Returns a Dimension appropriate for vertical rendering
-     * 
+     *
      * @see ComponentUI#getMaximumSize(javax.swing.JComponent)
      */
     @Override
@@ -116,7 +116,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
     /**
      * Returns a Dimension appropriate for vertical rendering
-     * 
+     *
      * @see ComponentUI#getMinimumSize(javax.swing.JComponent)
      */
     @Override
@@ -126,7 +126,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
     /**
      * Returns a Dimension appropriate for vertical rendering
-     * 
+     *
      * @see ComponentUI#getPreferredSize(javax.swing.JComponent)
      */
     @Override

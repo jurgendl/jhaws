@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,13 +87,10 @@ public class StreamingResource implements StreamingResourceI {
 
     private StreamingOutput stream(String file) {
         InputStream in = new BufferedInputStream(new ByteArrayInputStream(data.get(file)));
-        StreamingOutput entity = new StreamingOutput() {
-            @Override
-            public void write(OutputStream out) throws IOException, WebApplicationException {
-                org.apache.commons.io.IOUtils.copy(in, out);
-                out.flush();
-                out.close();
-            }
+        StreamingOutput entity = out -> {
+            org.apache.commons.io.IOUtils.copy(in, out);
+            out.flush();
+            out.close();
         };
         return entity;
     }

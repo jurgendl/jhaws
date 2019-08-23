@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 public @interface LdapField {
     /**
      * fieldname or same as class property when not set
-     * 
+     *
      * @return fieldname
      */
     String value() default "";

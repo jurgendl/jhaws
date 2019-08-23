@@ -22,7 +22,7 @@ public abstract class ETextComponentAbstractHighlightPainter extends LayeredHigh
     }
 
     /**
-     * 
+     *
      * @see javax.swing.text.Highlighter.HighlightPainter#paint(java.awt.Graphics, int, int, java.awt.Shape, javax.swing.text.JTextComponent)
      */
     @Override
@@ -64,7 +64,7 @@ public abstract class ETextComponentAbstractHighlightPainter extends LayeredHigh
     protected abstract void paintHighlight(Graphics2D g2d, Rectangle alloc);
 
     /**
-     * 
+     *
      * @see javax.swing.text.LayeredHighlighter.LayerPainter#paintLayer(java.awt.Graphics, int, int, java.awt.Shape, javax.swing.text.JTextComponent,
      *      javax.swing.text.View)
      */

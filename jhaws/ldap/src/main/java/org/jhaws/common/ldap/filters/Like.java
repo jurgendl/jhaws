@@ -30,7 +30,7 @@ public class Like implements Filter {
 
     /**
      * gets key
-     * 
+     *
      * @return Returns the key.
      */
     public String getKey() {
@@ -39,7 +39,7 @@ public class Like implements Filter {
 
     /**
      * gets value
-     * 
+     *
      * @return Returns the value.
      */
     public String getValue() {
@@ -48,7 +48,7 @@ public class Like implements Filter {
 
     /**
      * sets key
-     * 
+     *
      * @param key The key to set.
      */
     public void setKey(String key) {
@@ -57,7 +57,7 @@ public class Like implements Filter {
 
     /**
      * sets value
-     * 
+     *
      * @param value The value to set.
      */
     public void setValue(String value) {
@@ -66,7 +66,7 @@ public class Like implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

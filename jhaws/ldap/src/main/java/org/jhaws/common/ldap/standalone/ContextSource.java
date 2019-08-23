@@ -36,7 +36,7 @@ public class ContextSource {
 
     /**
      * gets context
-     * 
+     *
      * @return Returns the context.
      */
     public final InitialDirContext getContext() {
@@ -45,7 +45,7 @@ public class ContextSource {
 
     /**
      * maakt context aan
-     * 
+     *
      * @return InitialDirContext
      */
     public final InitialDirContext init() {
@@ -85,7 +85,7 @@ public class ContextSource {
 
     /**
      * sets base
-     * 
+     *
      * @param base The base to set.
      */
     public final void setBase(String base) {
@@ -94,7 +94,7 @@ public class ContextSource {
 
     /**
      * sets baseEnvironmentProperties
-     * 
+     *
      * @param baseEnvironmentProperties The baseEnvironmentProperties to set.
      */
     public final void setBaseEnvironmentProperties(Properties baseEnvironmentProperties) {
@@ -103,7 +103,7 @@ public class ContextSource {
 
     /**
      * sets password
-     * 
+     *
      * @param password The password to set.
      */
     public final void setPassword(String password) {
@@ -112,7 +112,7 @@ public class ContextSource {
 
     /**
      * sets url
-     * 
+     *
      * @param url The url to set.
      */
     public final void setUrl(String url) {
@@ -121,7 +121,7 @@ public class ContextSource {
 
     /**
      * sets userName
-     * 
+     *
      * @param name The userName to set.
      */
     public final void setUserName(String name) {

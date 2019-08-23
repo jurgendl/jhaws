@@ -103,7 +103,7 @@ public class EValidationMessage extends EButton implements EValidationMessageI {
 
     /**
      * JDOC
-     * 
+     *
      * @return
      */
     public EValidationMessage getSimpleThreadSafeInterface() {
@@ -142,7 +142,7 @@ public class EValidationMessage extends EButton implements EValidationMessageI {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.validation.EValidationMessageI#setIsInvalid(java.lang.String)
      */
     @Override
@@ -153,7 +153,7 @@ public class EValidationMessage extends EButton implements EValidationMessageI {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.validation.EValidationMessageI#setIsValid()
      */
     @Override
@@ -187,7 +187,7 @@ public class EValidationMessage extends EButton implements EValidationMessageI {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.validation.EValidationMessageI#setShowWhenValid(boolean)
      */
     @Override

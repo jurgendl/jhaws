@@ -10,11 +10,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class And<T> implements Predicate<List<T>> {
     static public <T> And<T> and(@SuppressWarnings("unchecked") T... options) {
-        return new And<T>(options);
+        return new And<>(options);
     }
 
     static public <T> And<T> and(List<T> options) {
-        return new And<T>(options);
+        return new And<>(options);
     }
 
     @SuppressWarnings("unchecked")
@@ -29,7 +29,7 @@ public class And<T> implements Predicate<List<T>> {
     }
 
     public And(@SuppressWarnings("unchecked") T... and) {
-        this.and = new ArrayList<T>(Arrays.asList(and));
+        this.and = new ArrayList<>(Arrays.asList(and));
     }
 
     public And(List<T> and) {
@@ -50,7 +50,7 @@ public class And<T> implements Predicate<List<T>> {
 
     public And<T> and(T t) {
         if (and == null)
-            and = new ArrayList<T>(Arrays.asList(t));
+            and = new ArrayList<>(Arrays.asList(t));
         else
             and.add(t);
         return this;

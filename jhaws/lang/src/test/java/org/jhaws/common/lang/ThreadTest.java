@@ -6,8 +6,8 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
-import org.jhaws.common.lang.CollectionUtils8;
 import org.jhaws.common.pool.Job;
 import org.jhaws.common.pool.Pool;
 import org.jhaws.common.pool.Task;
@@ -38,14 +38,14 @@ public class ThreadTest {
 					System.out.println("done " + this);
 				}
 			};
-			Job<Object> job = new Job<Object>(r, null);
+			Job<Object> job = new Job<>(r, null);
 			Task<Object> task = wdljobs.addJob(job);
 			map.put(job, task);
 		}
 
 		JFrame f = new JFrame();
 		f.setSize(200, 200);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JButton b = new JButton("x");
 		b.addActionListener(ev -> {
 			System.out.println("A" + wdljobs.getAll().size() + "/D" + wdljobs.getCompleted().size() + "/C" + wdljobs.getCurrent().size() + "/Q" + wdljobs.getQueued().size() + "/F" + wdljobs.getFailed().size() + "/X" + wdljobs.getCancelled().size());

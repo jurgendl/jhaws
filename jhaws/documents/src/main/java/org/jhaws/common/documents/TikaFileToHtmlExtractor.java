@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
@@ -24,7 +25,7 @@ public class TikaFileToHtmlExtractor {
         byte[] bytes = Files.toByteArray(f);
         AutoDetectParser tikaParser = new AutoDetectParser();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        SAXTransformerFactory factory = (SAXTransformerFactory) SAXTransformerFactory.newInstance();
+        SAXTransformerFactory factory = (SAXTransformerFactory) TransformerFactory.newInstance();
         TransformerHandler handler;
         try {
             handler = factory.newTransformerHandler();

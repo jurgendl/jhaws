@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 import org.swingeasy.system.SystemSettings;
 
@@ -37,7 +38,7 @@ public class ListDemo2 {
                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             cc.addRowHeader(scroller);
             f.getContentPane().add(scroller, BorderLayout.CENTER);
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             cc = cc.stsi();
             f.setSize(400, 400);
             {

@@ -20,7 +20,7 @@ public class EComponentExporterFileChooserCustomizer<T extends JComponent & ECom
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.FileChooserCustomizer#customize(java.awt.Component, javax.swing.JDialog)
      */
     @Override
@@ -29,7 +29,7 @@ public class EComponentExporterFileChooserCustomizer<T extends JComponent & ECom
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.FileChooserCustomizer#customize(javax.swing.JFileChooser)
      */
     @Override

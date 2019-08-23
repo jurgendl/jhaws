@@ -3,13 +3,13 @@ package org.tools.hqlbuilder.webservice.wicket.forms.common;
 import java.util.MissingResourceException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.bean.validation.PropertyValidator;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -105,7 +105,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         if (componentContainer == null) {
             componentContainer = new WebMarkupContainer("componentContainer");
             String componentClass = getComponentClass(settings);
-            if (componentClass != null) componentContainer.add(AttributeAppender.append("class", componentClass));
+            if (componentClass != null) componentContainer.add(AttributeModifier.append("class", componentClass));
         }
         return componentContainer;
     }
@@ -164,7 +164,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
             };
             label.setEscapeModelStrings(false);
             String labelClass = getLabelClass(settings);
-            if (labelClass != null) label.add(AttributeAppender.append("class", labelClass));
+            if (labelClass != null) label.add(AttributeModifier.append("class", labelClass));
         }
         return this.label;
     }
@@ -272,7 +272,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
             protected void onError(AjaxRequestTarget ajaxRequestTarget, RuntimeException e) {
                 C c = FormRowPanelParent.this.getComponent();
                 c.add(AttributeRemover.remove("class", FormRowPanelParent.this.formSettings.getValidClass()));
-                c.add(AttributeAppender.append("class", FormRowPanelParent.this.formSettings.getInvalidClass()));
+                c.add(AttributeModifier.append("class", FormRowPanelParent.this.formSettings.getInvalidClass()));
                 ajaxRequestTarget.add(c, FormRowPanelParent.this.getFeedback());
             }
 
@@ -280,7 +280,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 C c = FormRowPanelParent.this.getComponent();
                 c.add(AttributeRemover.remove("class", FormRowPanelParent.this.formSettings.getInvalidClass()));
-                c.add(AttributeAppender.append("class", FormRowPanelParent.this.formSettings.getValidClass()));
+                c.add(AttributeModifier.append("class", FormRowPanelParent.this.formSettings.getValidClass()));
                 ajaxRequestTarget.add(c, FormRowPanelParent.this.getFeedback());
             }
         };
@@ -317,7 +317,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
             component.setRequired(this.componentSettings.isRequired());
             if (StringUtils.isNotBlank(this.formSettings.getRequiredClass())) {
                 if (this.componentSettings.isRequired()) {
-                    component.add(AttributeAppender.append("class", this.formSettings.getRequiredClass()));
+                    component.add(AttributeModifier.append("class", this.formSettings.getRequiredClass()));
                 } else {
                     component.add(AttributeRemover.remove("class", this.formSettings.getRequiredClass()));
                 }

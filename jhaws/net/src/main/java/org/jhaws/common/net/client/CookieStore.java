@@ -169,7 +169,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.apache.http.cookie.SetCookie#setComment(java.lang.String)
 		 */
 		@Override
@@ -178,7 +178,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.apache.http.cookie.SetCookie#setDomain(java.lang.String)
 		 */
 		@Override
@@ -187,7 +187,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.apache.http.cookie.SetCookie#setExpiryDate(java.util.Date)
 		 */
 		@Override
@@ -196,7 +196,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @param name
 		 */
 		public void setName(String name) {
@@ -204,7 +204,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.apache.http.cookie.SetCookie#setPath(java.lang.String)
 		 */
 		@Override
@@ -213,7 +213,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.apache.http.cookie.SetCookie#setSecure(boolean)
 		 */
 		@Override
@@ -222,7 +222,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.apache.http.cookie.SetCookie#setValue(java.lang.String)
 		 */
 		@Override
@@ -231,7 +231,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 
 		/**
-		 * 
+		 *
 		 * @see org.apache.http.cookie.SetCookie#setVersion(int)
 		 */
 		@Override

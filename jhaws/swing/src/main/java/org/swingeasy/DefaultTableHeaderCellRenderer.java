@@ -41,7 +41,7 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
 
     /**
      * Overloaded to return an icon suitable to the primary sorted column, or null if the column is not the primary sort key.
-     * 
+     *
      * @param table the <code>JTable</code>.
      * @param column the column index.
      * @return the sort icon, or null if the column is unsorted.
@@ -62,7 +62,7 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
 
     /**
      * Returns the current sort key, or null if the column is unsorted.
-     * 
+     *
      * @param table the table
      * @param column the column index
      * @return the SortKey, or null if the column is unsorted
@@ -88,7 +88,7 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
      * applied.
      * <P>
      * Subclasses may overide this method to provide custom content or formatting.
-     * 
+     *
      * @param table the <code>JTable</code>.
      * @param value the value to assign to the header cell
      * @param isSelected This parameter is ignored.

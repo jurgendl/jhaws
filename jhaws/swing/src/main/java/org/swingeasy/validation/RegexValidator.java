@@ -17,7 +17,7 @@ public class RegexValidator implements Validator<String> {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.validation.Validator#getArguments(java.lang.Object)
      */
     @Override

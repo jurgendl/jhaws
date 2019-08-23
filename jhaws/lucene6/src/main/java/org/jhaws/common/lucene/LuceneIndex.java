@@ -747,7 +747,7 @@ public class LuceneIndex implements Closeable {
     // }
 
     protected List<String> tokenizePhrase(String phrase) throws IOException {
-        List<String> tokens = new ArrayList<String>();
+        List<String> tokens = new ArrayList<>();
         TokenStream stream = getSearchAnalyzer().tokenStream("someField", new StringReader(phrase));
         stream.reset();
         while (stream.incrementToken())
@@ -764,7 +764,7 @@ public class LuceneIndex implements Closeable {
             // of each result, concatenated with ellipses
             String[] highlights = highlighter.highlight(field, query, topDocs, 3);
             int length = topDocs.scoreDocs.length;
-            List<HighlightResult> results = new ArrayList<HighlightResult>(length);
+            List<HighlightResult> results = new ArrayList<>(length);
             for (int i = 0; i < length; i++) {
                 int docId = topDocs.scoreDocs[i].doc;
                 results.add(new HighlightResult(s.doc(docId), highlights[i]));

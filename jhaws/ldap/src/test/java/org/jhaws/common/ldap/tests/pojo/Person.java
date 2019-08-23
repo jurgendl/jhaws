@@ -49,7 +49,7 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -59,7 +59,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor c
-     * 
+     *
      * @return Returns the c.
      */
     public String getC() {
@@ -68,9 +68,9 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * na
-     * 
+     *
      * @return
-     * 
+     *
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
@@ -79,7 +79,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor cn
-     * 
+     *
      * @return Returns the cn.
      */
     public String getCn() {
@@ -88,7 +88,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor givenName
-     * 
+     *
      * @return Returns the givenName.
      */
     public String getGivenName() {
@@ -97,7 +97,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor objectClass
-     * 
+     *
      * @return Returns the objectClass.
      */
     public String[] getObjectClass() {
@@ -106,7 +106,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor serialNumber
-     * 
+     *
      * @return Returns the serialNumber.
      */
     public String getSerialNumber() {
@@ -115,7 +115,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor sn
-     * 
+     *
      * @return Returns the sn.
      */
     public String getSn() {
@@ -124,7 +124,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor uid
-     * 
+     *
      * @return Returns the uid.
      */
     public String getUid() {
@@ -133,7 +133,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Getter voor userCertificate
-     * 
+     *
      * @return Returns the userCertificate.
      */
     public byte[] getUserCertificate() {
@@ -155,7 +155,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor c
-     * 
+     *
      * @param c The c to set.
      */
     public void setC(String c) {
@@ -164,7 +164,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor cn
-     * 
+     *
      * @param cn The cn to set.
      */
     public void setCn(String cn) {
@@ -173,7 +173,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor givenName
-     * 
+     *
      * @param givenName The givenName to set.
      */
     public void setGivenName(String givenName) {
@@ -182,7 +182,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor objectClass
-     * 
+     *
      * @param objectClass The objectClass to set.
      */
     public void setObjectClass(String[] objectClass) {
@@ -191,7 +191,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor serialNumber
-     * 
+     *
      * @param serialNumber The serialNumber to set.
      */
     public void setSerialNumber(String serialNumber) {
@@ -200,7 +200,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor sn
-     * 
+     *
      * @param sn The sn to set.
      */
     public void setSn(String sn) {
@@ -209,7 +209,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor uid
-     * 
+     *
      * @param uid The uid to set.
      */
     public void setUid(String uid) {
@@ -218,7 +218,7 @@ public class Person implements Serializable, Comparable<Person> {
 
     /**
      * Setter voor userCertificate
-     * 
+     *
      * @param userCertificate The userCertificate to set.
      */
     public void setUserCertificate(byte[] userCertificate) {
@@ -226,7 +226,7 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

@@ -217,7 +217,7 @@ public class XmlWrapper<T> implements Serializable {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

@@ -8,7 +8,7 @@ public class XmlWrapperAdapter extends XmlAdapter<Object, XmlWrapper<Object>> {
 
     @Override
     public XmlWrapper<Object> unmarshal(Object v) throws Exception {
-        return new XmlWrapper<Object>(v);
+        return new XmlWrapper<>(v);
     }
 
     @Override

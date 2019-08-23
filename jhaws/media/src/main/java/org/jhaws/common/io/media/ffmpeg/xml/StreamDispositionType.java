@@ -5,16 +5,17 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
 /**
  * <p>
  * Java class for streamDispositionType complex type.
- * 
+ *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="streamDispositionType">
  *   &lt;complexContent>
@@ -35,8 +36,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "streamDispositionType")
@@ -80,7 +81,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the default property.
-     * 
+     *
      */
     public int getDefault() {
         return _default;
@@ -88,7 +89,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the default property.
-     * 
+     *
      */
     public void setDefault(int value) {
         this._default = value;
@@ -96,7 +97,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the dub property.
-     * 
+     *
      */
     public int getDub() {
         return dub;
@@ -104,7 +105,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the dub property.
-     * 
+     *
      */
     public void setDub(int value) {
         this.dub = value;
@@ -112,7 +113,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the original property.
-     * 
+     *
      */
     public int getOriginal() {
         return original;
@@ -120,7 +121,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the original property.
-     * 
+     *
      */
     public void setOriginal(int value) {
         this.original = value;
@@ -128,7 +129,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the comment property.
-     * 
+     *
      */
     public int getComment() {
         return comment;
@@ -136,7 +137,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the comment property.
-     * 
+     *
      */
     public void setComment(int value) {
         this.comment = value;
@@ -144,7 +145,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the lyrics property.
-     * 
+     *
      */
     public int getLyrics() {
         return lyrics;
@@ -152,7 +153,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the lyrics property.
-     * 
+     *
      */
     public void setLyrics(int value) {
         this.lyrics = value;
@@ -160,7 +161,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the karaoke property.
-     * 
+     *
      */
     public int getKaraoke() {
         return karaoke;
@@ -168,7 +169,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the karaoke property.
-     * 
+     *
      */
     public void setKaraoke(int value) {
         this.karaoke = value;
@@ -176,7 +177,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the forced property.
-     * 
+     *
      */
     public int getForced() {
         return forced;
@@ -184,7 +185,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the forced property.
-     * 
+     *
      */
     public void setForced(int value) {
         this.forced = value;
@@ -192,7 +193,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the hearingImpaired property.
-     * 
+     *
      */
     public int getHearingImpaired() {
         return hearingImpaired;
@@ -200,7 +201,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the hearingImpaired property.
-     * 
+     *
      */
     public void setHearingImpaired(int value) {
         this.hearingImpaired = value;
@@ -208,7 +209,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the visualImpaired property.
-     * 
+     *
      */
     public int getVisualImpaired() {
         return visualImpaired;
@@ -216,7 +217,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the visualImpaired property.
-     * 
+     *
      */
     public void setVisualImpaired(int value) {
         this.visualImpaired = value;
@@ -224,7 +225,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the cleanEffects property.
-     * 
+     *
      */
     public int getCleanEffects() {
         return cleanEffects;
@@ -232,7 +233,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the cleanEffects property.
-     * 
+     *
      */
     public void setCleanEffects(int value) {
         this.cleanEffects = value;
@@ -240,7 +241,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the attachedPic property.
-     * 
+     *
      */
     public int getAttachedPic() {
         return attachedPic;
@@ -248,7 +249,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the attachedPic property.
-     * 
+     *
      */
     public void setAttachedPic(int value) {
         this.attachedPic = value;
@@ -256,7 +257,7 @@ public class StreamDispositionType {
 
     /**
      * Gets the value of the timedThumbnails property.
-     * 
+     *
      */
     public int getTimedThumbnails() {
         return timedThumbnails;
@@ -264,7 +265,7 @@ public class StreamDispositionType {
 
     /**
      * Sets the value of the timedThumbnails property.
-     * 
+     *
      */
     public void setTimedThumbnails(int value) {
         this.timedThumbnails = value;
@@ -272,7 +273,7 @@ public class StreamDispositionType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     * 
+     *
      */
     @Override
     public String toString() {

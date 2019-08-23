@@ -27,7 +27,7 @@ public abstract class EventThreadTask<T> extends Task<T> {
     }
 
     /**
-     * 
+     *
      * @see be.ugent.oasis.swing.ui.gen2.Task#done(java.lang.Object, java.lang.Throwable)
      */
     @Override

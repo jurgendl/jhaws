@@ -4,21 +4,23 @@ package org.jhaws.common.io.media.ffmpeg.xml;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 
 /**
  * <p>
  * Java class for packetType complex type.
- * 
+ *
  * <p>
  * The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="packetType">
  *   &lt;complexContent>
@@ -46,8 +48,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "packetType", propOrder = { "tag", "sideDataList" })
@@ -105,36 +107,36 @@ public class PacketType {
 
     /**
      * Gets the value of the tag property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
      * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tag property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getTag().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link TagType }
-     * 
-     * 
+     *
+     *
      */
     public List<TagType> getTag() {
         if (tag == null) {
-            tag = new ArrayList<TagType>();
+            tag = new ArrayList<>();
         }
         return this.tag;
     }
 
     /**
      * Gets the value of the sideDataList property.
-     * 
+     *
      * @return possible object is {@link PacketSideDataListType }
-     * 
+     *
      */
     public PacketSideDataListType getSideDataList() {
         return sideDataList;
@@ -142,9 +144,9 @@ public class PacketType {
 
     /**
      * Sets the value of the sideDataList property.
-     * 
+     *
      * @param value allowed object is {@link PacketSideDataListType }
-     * 
+     *
      */
     public void setSideDataList(PacketSideDataListType value) {
         this.sideDataList = value;
@@ -152,9 +154,9 @@ public class PacketType {
 
     /**
      * Gets the value of the codecType property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getCodecType() {
         return codecType;
@@ -162,9 +164,9 @@ public class PacketType {
 
     /**
      * Sets the value of the codecType property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setCodecType(String value) {
         this.codecType = value;
@@ -172,7 +174,7 @@ public class PacketType {
 
     /**
      * Gets the value of the streamIndex property.
-     * 
+     *
      */
     public int getStreamIndex() {
         return streamIndex;
@@ -180,7 +182,7 @@ public class PacketType {
 
     /**
      * Sets the value of the streamIndex property.
-     * 
+     *
      */
     public void setStreamIndex(int value) {
         this.streamIndex = value;
@@ -188,9 +190,9 @@ public class PacketType {
 
     /**
      * Gets the value of the pts property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getPts() {
         return pts;
@@ -198,9 +200,9 @@ public class PacketType {
 
     /**
      * Sets the value of the pts property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setPts(Long value) {
         this.pts = value;
@@ -208,9 +210,9 @@ public class PacketType {
 
     /**
      * Gets the value of the ptsTime property.
-     * 
+     *
      * @return possible object is {@link Float }
-     * 
+     *
      */
     public Float getPtsTime() {
         return ptsTime;
@@ -218,9 +220,9 @@ public class PacketType {
 
     /**
      * Sets the value of the ptsTime property.
-     * 
+     *
      * @param value allowed object is {@link Float }
-     * 
+     *
      */
     public void setPtsTime(Float value) {
         this.ptsTime = value;
@@ -228,9 +230,9 @@ public class PacketType {
 
     /**
      * Gets the value of the dts property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getDts() {
         return dts;
@@ -238,9 +240,9 @@ public class PacketType {
 
     /**
      * Sets the value of the dts property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setDts(Long value) {
         this.dts = value;
@@ -248,9 +250,9 @@ public class PacketType {
 
     /**
      * Gets the value of the dtsTime property.
-     * 
+     *
      * @return possible object is {@link Float }
-     * 
+     *
      */
     public Float getDtsTime() {
         return dtsTime;
@@ -258,9 +260,9 @@ public class PacketType {
 
     /**
      * Sets the value of the dtsTime property.
-     * 
+     *
      * @param value allowed object is {@link Float }
-     * 
+     *
      */
     public void setDtsTime(Float value) {
         this.dtsTime = value;
@@ -268,9 +270,9 @@ public class PacketType {
 
     /**
      * Gets the value of the duration property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getDuration() {
         return duration;
@@ -278,9 +280,9 @@ public class PacketType {
 
     /**
      * Sets the value of the duration property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setDuration(Long value) {
         this.duration = value;
@@ -288,9 +290,9 @@ public class PacketType {
 
     /**
      * Gets the value of the durationTime property.
-     * 
+     *
      * @return possible object is {@link Float }
-     * 
+     *
      */
     public Float getDurationTime() {
         return durationTime;
@@ -298,9 +300,9 @@ public class PacketType {
 
     /**
      * Sets the value of the durationTime property.
-     * 
+     *
      * @param value allowed object is {@link Float }
-     * 
+     *
      */
     public void setDurationTime(Float value) {
         this.durationTime = value;
@@ -308,9 +310,9 @@ public class PacketType {
 
     /**
      * Gets the value of the convergenceDuration property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getConvergenceDuration() {
         return convergenceDuration;
@@ -318,9 +320,9 @@ public class PacketType {
 
     /**
      * Sets the value of the convergenceDuration property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setConvergenceDuration(Long value) {
         this.convergenceDuration = value;
@@ -328,9 +330,9 @@ public class PacketType {
 
     /**
      * Gets the value of the convergenceDurationTime property.
-     * 
+     *
      * @return possible object is {@link Float }
-     * 
+     *
      */
     public Float getConvergenceDurationTime() {
         return convergenceDurationTime;
@@ -338,9 +340,9 @@ public class PacketType {
 
     /**
      * Sets the value of the convergenceDurationTime property.
-     * 
+     *
      * @param value allowed object is {@link Float }
-     * 
+     *
      */
     public void setConvergenceDurationTime(Float value) {
         this.convergenceDurationTime = value;
@@ -348,7 +350,7 @@ public class PacketType {
 
     /**
      * Gets the value of the size property.
-     * 
+     *
      */
     public long getSize() {
         return size;
@@ -356,7 +358,7 @@ public class PacketType {
 
     /**
      * Sets the value of the size property.
-     * 
+     *
      */
     public void setSize(long value) {
         this.size = value;
@@ -364,9 +366,9 @@ public class PacketType {
 
     /**
      * Gets the value of the pos property.
-     * 
+     *
      * @return possible object is {@link Long }
-     * 
+     *
      */
     public Long getPos() {
         return pos;
@@ -374,9 +376,9 @@ public class PacketType {
 
     /**
      * Sets the value of the pos property.
-     * 
+     *
      * @param value allowed object is {@link Long }
-     * 
+     *
      */
     public void setPos(Long value) {
         this.pos = value;
@@ -384,9 +386,9 @@ public class PacketType {
 
     /**
      * Gets the value of the flags property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getFlags() {
         return flags;
@@ -394,9 +396,9 @@ public class PacketType {
 
     /**
      * Sets the value of the flags property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setFlags(String value) {
         this.flags = value;
@@ -404,9 +406,9 @@ public class PacketType {
 
     /**
      * Gets the value of the data property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getData() {
         return data;
@@ -414,9 +416,9 @@ public class PacketType {
 
     /**
      * Sets the value of the data property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setData(String value) {
         this.data = value;
@@ -424,9 +426,9 @@ public class PacketType {
 
     /**
      * Gets the value of the dataHash property.
-     * 
+     *
      * @return possible object is {@link String }
-     * 
+     *
      */
     public String getDataHash() {
         return dataHash;
@@ -434,9 +436,9 @@ public class PacketType {
 
     /**
      * Sets the value of the dataHash property.
-     * 
+     *
      * @param value allowed object is {@link String }
-     * 
+     *
      */
     public void setDataHash(String value) {
         this.dataHash = value;
@@ -444,7 +446,7 @@ public class PacketType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     * 
+     *
      */
     @Override
     public String toString() {

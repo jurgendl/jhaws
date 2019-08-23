@@ -88,7 +88,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * http test server: http://httpbin.org/
- * 
+ *
  * @see http://httpbin.org/
  * @see http://www.baeldung.com/httpclient-4-basic-authentication
  * @see https://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org/-apache/http/examples/client/
@@ -578,7 +578,7 @@ public class HTTPClient implements Closeable {
 			HttpPost.class.cast(req).setEntity(body);
 		} else if (post.isUrlEncodedFormEntity()) {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<NameValuePair>();
+			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
 			post.getFormValues().entrySet()
 					.forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
 			try {

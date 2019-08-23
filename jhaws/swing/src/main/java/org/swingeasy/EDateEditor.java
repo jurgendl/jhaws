@@ -45,7 +45,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
      */
     @Override
@@ -58,7 +58,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#doAction()
      */
     @Override
@@ -75,7 +75,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#getAction()
      */
     @Override
@@ -84,7 +84,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getButton()
      */
     @Override
@@ -147,7 +147,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#getIcon()
      */
     @Override
@@ -156,7 +156,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getInput()
      */
     @Override
@@ -172,7 +172,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getLabel()
      */
     @Override
@@ -185,7 +185,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.HasParentComponent#getParentComponent()
      */
     @Override
@@ -249,7 +249,7 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     * 
+     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

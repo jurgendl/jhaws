@@ -11,7 +11,7 @@ import org.joda.time.LocalDateTime;
 
 /**
  * JAXB-adapter om LocalDate om te zetten in XMLGregorianCalendar.
- * 
+ *
  * @author bnootaer
  */
 public class JodaLocalDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, LocalDateTime> {
@@ -27,7 +27,7 @@ public class JodaLocalDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, L
 
     /**
      * Converteert een datum naar een XmlGregorianCalendar
-     * 
+     *
      * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
      */
     @Override
@@ -43,7 +43,7 @@ public class JodaLocalDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, L
 
     /**
      * Converteert Xml gregorian calendar.
-     * 
+     *
      * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
      */
     @Override

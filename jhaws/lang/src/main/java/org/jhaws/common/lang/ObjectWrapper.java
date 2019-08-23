@@ -64,7 +64,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get {@link Field} for name
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Field cc_getField(ClassCache cc, String fieldName) throws FieldNotFoundException {
@@ -107,7 +107,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Object cc_getValue(ClassCache cc, String fieldName, ObjectWrapper wrapper)
@@ -147,7 +147,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * set value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final void cc_setValue(ClassCache cc, String fieldName, ObjectWrapper wrapper, Object value)
@@ -200,7 +200,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * buildPath
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final String[] ow_buildPath(String... path) {
@@ -237,7 +237,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Object ow_get(ObjectWrapper ow, String field) throws FieldNotFoundException {
@@ -258,7 +258,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Object ow_get(ObjectWrapper ow, String[] path) throws FieldNotFoundException {
@@ -281,7 +281,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final Field ow_getField(ObjectWrapper ow, String field) throws FieldNotFoundException {
@@ -302,7 +302,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * set value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final void ow_set(ObjectWrapper ow, String field, Object value) throws FieldNotFoundException {
@@ -325,7 +325,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * set value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	private static final void ow_set(ObjectWrapper ow, String[] path, Object value) throws FieldNotFoundException {
@@ -392,7 +392,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	public final <T> T get(Class<T> type, String... path) throws FieldNotFoundException {
@@ -406,7 +406,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	public final Object get(String... path) throws FieldNotFoundException {
@@ -415,7 +415,7 @@ public final class ObjectWrapper {
 
 	/**
 	 * get value
-	 * 
+	 *
 	 * @throws FieldNotFoundException
 	 */
 	public final <T> T get(String path, Class<T> type) throws FieldNotFoundException {

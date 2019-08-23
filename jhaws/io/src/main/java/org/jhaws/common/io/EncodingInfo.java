@@ -33,9 +33,9 @@ public class EncodingInfo {
 
     /**
      * gets encoding info on first bytes read from a file
-     * 
+     *
      * @param bomBuffer : byte[] : first bytes read from file
-     * 
+     *
      * @return : EncodingInfo : appropriate encoding info
      */
     public static EncodingInfo getEncodingInfo(final byte[] bomBuffer) {
@@ -44,9 +44,9 @@ public class EncodingInfo {
 
     /**
      * gets encoding info on first bytes read from a file
-     * 
+     *
      * @param bomBuffer : char[] : first bytes read from file as a char array
-     * 
+     *
      * @return : EncodingInfo : appropriate encoding info
      */
     public static EncodingInfo getEncodingInfo(final char[] bomBuffer) {
@@ -55,9 +55,9 @@ public class EncodingInfo {
 
     /**
      * gets encoding info on first bytes read from a file
-     * 
+     *
      * @param bom : String : first bytes read from file as a string
-     * 
+     *
      * @return : EncodingInfo : appropriate encoding info
      */
     public static EncodingInfo getEncodingInfo(final String bom) {
@@ -74,7 +74,7 @@ public class EncodingInfo {
 
     /**
      * returns a list (array) of all EncodingInfo objects
-     * 
+     *
      * @return : EncodingInfo[] : complete list
      */
     public static EncodingInfo[] getEncodingInfos() {
@@ -106,7 +106,7 @@ public class EncodingInfo {
 
     /**
      * Creates a new EncodingInfo object.; internal use
-     * 
+     *
      * @param encoding : String : encoding name
      * @param name : String : name
      * @param BOM : String : <i>BOM</i> string
@@ -119,7 +119,7 @@ public class EncodingInfo {
 
     /**
      * gets <i>BOM</i> string
-     * 
+     *
      * @return : String : <i>BOM</i> string
      */
     public String getBOM() {
@@ -128,7 +128,7 @@ public class EncodingInfo {
 
     /**
      * gets encoding name
-     * 
+     *
      * @return : String : encoding name
      */
     public String getEncoding() {
@@ -137,7 +137,7 @@ public class EncodingInfo {
 
     /**
      * gets name
-     * 
+     *
      * @return : String : name
      */
     public String getName() {
@@ -145,7 +145,7 @@ public class EncodingInfo {
     }
 
     /**
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

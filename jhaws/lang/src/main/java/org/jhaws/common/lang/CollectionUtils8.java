@@ -613,7 +613,7 @@ public interface CollectionUtils8 {
 
 	/**
 	 * rejects !different! keys for the same value
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 */
 	public static <V> BinaryOperator<V> rejectDuplicateKeys() throws IllegalArgumentException {
@@ -1370,7 +1370,7 @@ public interface CollectionUtils8 {
 	/**
 	 * !!!!!!!!!!! terminates source stream !!!!!!!!!!! <br>
 	 * !!!!!!!!!!! cannot be used on endless streams !!!!!!!!!!!
-	 * 
+	 *
 	 * stackoverflow.com/questions/24010109/java-8-stream-reverse-order
 	 */
 	@SuppressWarnings("unchecked")
@@ -1402,7 +1402,7 @@ public interface CollectionUtils8 {
 
 	/**
 	 * workaround om null values in key toe te laten
-	 * 
+	 *
 	 * @see https://stackoverflow.com/questions/22625065/collectors-groupingby-doesnt-accept-null-keys
 	 */
 	public static <V, K> Map<K, List<V>> groupByAcceptsNull(Stream<V> stream, Function<V, K> groupBy) {
@@ -2050,7 +2050,7 @@ public interface CollectionUtils8 {
 
 	public static <T> Stream<KeyValue<Integer, T>> index(Stream<T> stream) {
 		IntegerValue index = new IntegerValue(-1);
-		return stream.map(t -> new KeyValue<Integer, T>(index.add().get(), t));
+		return stream.map(t -> new KeyValue<>(index.add().get(), t));
 	}
 
 	public static <T> Map<T, Long> countBy(Stream<T> stream) {
@@ -2070,7 +2070,7 @@ public interface CollectionUtils8 {
 		if (first > 0) {
 			s = s.skip(first);
 		}
-		ArrayDeque<T> pending = new ArrayDeque<T>(last + 1);
+		ArrayDeque<T> pending = new ArrayDeque<>(last + 1);
 		Spliterator<T> src = s.spliterator();
 		return StreamSupport.stream(new Spliterator<T>() {
 			@Override

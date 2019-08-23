@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -12,7 +13,7 @@ public class FileSelectionDemo {
     public static void main(String[] args) {
         UIUtils.systemLookAndFeel();
         JFrame f = new JFrame();
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setSize(300, 250);
         f.setLocationRelativeTo(null);
         f.getContentPane().setLayout(new GridLayout(-1, 1));

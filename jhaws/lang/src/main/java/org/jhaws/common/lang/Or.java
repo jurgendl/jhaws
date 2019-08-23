@@ -11,15 +11,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Or<T> implements Predicate<T> {
     static public <T> Or<T> or(@SuppressWarnings("unchecked") T... options) {
-        return new Or<T>(options);
+        return new Or<>(options);
     }
 
     static public Or<Integer> range(int from, int endInclusive) {
-        return new Or<Integer>(IntStream.range(from, endInclusive + 1).boxed().toArray(i -> new Integer[endInclusive - from + 1]));
+        return new Or<>(IntStream.range(from, endInclusive + 1).boxed().toArray(i -> new Integer[endInclusive - from + 1]));
     }
 
     static public <T> Or<T> or(List<T> options) {
-        return new Or<T>(options);
+        return new Or<>(options);
     }
 
     @SuppressWarnings("unchecked")
@@ -34,7 +34,7 @@ public class Or<T> implements Predicate<T> {
     }
 
     public Or(@SuppressWarnings("unchecked") T... or) {
-        this.or = new ArrayList<T>(Arrays.asList(or));
+        this.or = new ArrayList<>(Arrays.asList(or));
     }
 
     public Or(List<T> or) {
@@ -55,7 +55,7 @@ public class Or<T> implements Predicate<T> {
 
     public Or<T> or(T t) {
         if (or == null)
-            or = new ArrayList<T>(Arrays.asList(t));
+            or = new ArrayList<>(Arrays.asList(t));
         else
             or.add(t);
         return this;

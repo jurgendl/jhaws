@@ -42,21 +42,18 @@ public class HttpClientTestSimple {
             HttpClientContext[] context = new HttpClientContext[threads.length];
             for (int i = 0; i < threads.length; i++) {
                 final int j = i;
-                threads[i] = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        System.out.println(h.get("http://www.google.com").getContentString());
-                        context[j] = h.getContext(null);
-                    }
+                threads[i] = new Thread(() -> {
+                    System.out.println(h.get("http://www.google.com").getContentString());
+                    context[j] = h.getContext(null);
                 });
             }
-            for (int i = 0; i < threads.length; i++) {
-                threads[i].start();
+            for (Thread thread : threads) {
+                thread.start();
             }
 
-            for (int i = 0; i < threads.length; i++) {
+            for (Thread thread : threads) {
                 try {
-                    threads[i].join();
+                    thread.join();
                 } catch (InterruptedException ex) {
                     //
                 }

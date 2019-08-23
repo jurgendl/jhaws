@@ -764,7 +764,7 @@ public class EList<T> extends JList<EListRecord<T>> implements EListI<T>, Iterab
     }
 
     /**
-     * 
+     *
      * @see java.awt.Component#addMouseListener(java.awt.event.MouseListener)
      */
     @Override

@@ -10,6 +10,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.WindowConstants;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
@@ -48,7 +49,7 @@ public class ListDemo1 {
                     BorderLayout.CENTER);
             f.getContentPane().add(cc.getFiltercomponent(), BorderLayout.NORTH);
             f.getContentPane().add(cc.getSearchComponent(), BorderLayout.SOUTH);
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             final EList<ListDemo1Value> ccc = cc;
             f.addWindowListener(new WindowAdapter() {
                 @Override

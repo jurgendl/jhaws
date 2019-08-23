@@ -20,7 +20,7 @@ public class NSHandler extends HashMap<String, String> implements NamespaceConte
     }
 
     /**
-     * 
+     *
      * @see javax.xml.namespace.NamespaceContext#getNamespaceURI(java.lang.String)
      */
     @Override

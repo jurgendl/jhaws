@@ -334,19 +334,23 @@ public class Response extends InputStream implements Serializable {
 		//
 	}
 
-	public synchronized int available() {
+	@Override
+    public synchronized int available() {
 		return count - pos;
 	}
 
-	public void mark(int readAheadLimit) {
+	@Override
+    public void mark(int readAheadLimit) {
 		mark = pos;
 	}
 
-	public boolean markSupported() {
+	@Override
+    public boolean markSupported() {
 		return true;
 	}
 
-	public synchronized int read(byte b[], int off, int len) {
+	@Override
+    public synchronized int read(byte b[], int off, int len) {
 		if (b == null) {
 			throw new NullPointerException();
 		} else if (off < 0 || len < 0 || len > b.length - off) {
@@ -367,11 +371,13 @@ public class Response extends InputStream implements Serializable {
 		return len;
 	}
 
-	public synchronized void reset() {
+	@Override
+    public synchronized void reset() {
 		pos = mark;
 	}
 
-	public synchronized long skip(long n) {
+	@Override
+    public synchronized long skip(long n) {
 		long k = count - pos;
 		if (n < k) {
 			k = n < 0 ? 0 : n;

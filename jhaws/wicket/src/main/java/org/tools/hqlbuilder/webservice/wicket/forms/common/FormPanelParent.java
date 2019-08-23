@@ -8,7 +8,6 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -156,7 +155,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			WebMarkupContainer rowContainer = new WebMarkupContainer(getRowRepeater().newChildId());
 			String cssClass = getComponentRepeaterCssClass();
 			if (StringUtils.isNotBlank(cssClass))
-				rowContainer.add(AttributeAppender.append("class", cssClass));
+				rowContainer.add(AttributeModifier.append("class", cssClass));
 			getRowRepeater().add(rowContainer);
 
 			RepeatingView repeater = new RepeatingView(FormConstants.FORM_ELEMENT_REPEATER);
@@ -371,11 +370,11 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			submit.setVisible(this.formSettings.isShowSubmit());
 			submit.add(createSubmitLabel(SUBMIT_LABEL));
 			if (getButtonCssClass() != null)
-				submit.add(AttributeAppender.append("class", getButtonCssClass()));
+				submit.add(AttributeModifier.append("class", getButtonCssClass()));
 
 			Button reset = new Button(FormConstants.FORM_RESET/* , resetModel */);
 			if (getButtonCssClass() != null)
-				reset.add(AttributeAppender.append("class", getButtonCssClass()));
+				reset.add(AttributeModifier.append("class", getButtonCssClass()));
 			reset.add(createResetLabel(RESET_LABEL));
 			reset.setVisible(this.formSettings.isShowReset());
 
@@ -401,7 +400,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 				((Button) cancel).setDefaultFormProcessing(false);
 			}
 			if (getButtonCssClass() != null)
-				cancel.add(AttributeAppender.append("class", getButtonCssClass()));
+				cancel.add(AttributeModifier.append("class", getButtonCssClass()));
 			cancel.setVisible(this.getFormSettings().isCancelable());
 			cancel.add(createCancelLabel(RESET_LABEL));
 

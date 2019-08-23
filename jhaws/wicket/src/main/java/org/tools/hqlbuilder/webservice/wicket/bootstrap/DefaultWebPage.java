@@ -396,7 +396,7 @@ public abstract class DefaultWebPage extends WebPage {
 
 				WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbaritemicon");
 				if (StringUtils.isNotBlank(main.getIcon())) {
-					navbaritemicon.add(AttributeAppender.replace("class", main.getIcon()));
+					navbaritemicon.add(AttributeModifier.replace("class", main.getIcon()));
 				}
 				if (StringUtils.isNotBlank(main.getStyle())) {
 					navbaritemicon.add(new AttributeModifier("style", main.getStyle()));
@@ -415,8 +415,8 @@ public abstract class DefaultWebPage extends WebPage {
 				if (main.getChildLinks().isEmpty()) {
 					navbardropdown.setVisible(false);
 				} else {
-					item.add(AttributeAppender.append("class", "dropdown"));
-					link.add(AttributeAppender.append("class", "dropdown-toggle"));
+					item.add(AttributeModifier.append("class", "dropdown"));
+					link.add(AttributeModifier.append("class", "dropdown-toggle"));
 					link.add(new AttributeModifier("data-toggle", "dropdown"));
 					link.add(new AttributeModifier("aria-haspopup", "true"));
 					link.add(new AttributeModifier("aria-expanded", "false"));
@@ -431,7 +431,7 @@ public abstract class DefaultWebPage extends WebPage {
 								sub.getInternalPage(), sub.getInternalPageParameters());
 						WebMarkupContainer navbaritemicon = new WebMarkupContainer("navbardropdownitemicon");
 						if (StringUtils.isNotBlank(sub.getIcon())) {
-							navbaritemicon.add(AttributeAppender.replace("class", sub.getIcon()));
+							navbaritemicon.add(AttributeModifier.replace("class", sub.getIcon()));
 						}
 						if (StringUtils.isNotBlank(sub.getCssClass())) {
 							navbaritemicon.add(new AttributeAppender("class", sub.getCssClass(), " "));

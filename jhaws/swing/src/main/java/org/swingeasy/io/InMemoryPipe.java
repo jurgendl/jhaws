@@ -44,7 +44,7 @@ public class InMemoryPipe implements Pipe {
     };
 
     /**
-     * 
+     *
      * @see org.swingeasy.io.Pipe#getInputStream()
      */
     @Override
@@ -56,7 +56,7 @@ public class InMemoryPipe implements Pipe {
     }
 
     /**
-     * 
+     *
      * @see org.swingeasy.io.Pipe#getOutputStream()
      */
     @Override

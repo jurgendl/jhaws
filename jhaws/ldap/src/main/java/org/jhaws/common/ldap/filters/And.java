@@ -21,7 +21,7 @@ public class And implements Filter {
 
     /**
      * Creates a new And object.
-     * 
+     *
      * @param filters lijst van Filter (1 of meer)
      */
     public And(Filter... filters) {
@@ -43,7 +43,7 @@ public class And implements Filter {
 
     /**
      * gets filters
-     * 
+     *
      * @return Returns the filters.
      */
     public List<Filter> getFilters() {
@@ -52,7 +52,7 @@ public class And implements Filter {
 
     /**
      * verwijderd een filter uit de lijst
-     * 
+     *
      * @param filter Filter
      */
     public void removeFilter(Filter filter) {
@@ -61,7 +61,7 @@ public class And implements Filter {
 
     /**
      * sets filters
-     * 
+     *
      * @param filters The filters to set.
      */
     public void setFilters(List<Filter> filters) {
@@ -70,7 +70,7 @@ public class And implements Filter {
 
     /**
      * wordt gebruikt om filter op te bouwen
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

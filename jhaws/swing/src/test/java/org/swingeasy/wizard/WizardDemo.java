@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 /**
  * @author Jurgen
@@ -64,7 +65,7 @@ public class WizardDemo {
         f.setSize(800, 600);
         f.setResizable(false);
         f.setLocationRelativeTo(null);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.setVisible(true);
     }
 }

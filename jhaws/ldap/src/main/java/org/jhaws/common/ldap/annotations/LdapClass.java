@@ -16,31 +16,31 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface LdapClass {
     /**
-     * 
+     *
      * find properties via class properties instead of via LdapField annotation (default false)
-     * 
+     *
      * @return boolean
      */
     boolean autoFields() default false;
 
     /**
      * ordered key array
-     * 
+     *
      * @return LdapKeyValue[]
      */
     LdapKeyValue[] dn() default @LdapKeyValue(key = "", value = "");
 
     /**
      * processes superclass if it's a @LdapClass itself and merges info
-     * 
+     *
      * @return boolean
      */
     boolean inherited() default false;
 
     /**
-     * 
+     *
      * wordt gebruikt bij findAll, update en create
-     * 
+     *
      * @return String[]
      */
     String[] objectClass() default "";

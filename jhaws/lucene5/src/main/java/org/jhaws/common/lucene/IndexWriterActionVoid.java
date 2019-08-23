@@ -6,6 +6,7 @@ import org.apache.lucene.index.IndexWriter;
 public interface IndexWriterActionVoid extends IndexWriterAction<Void> {
     void actionVoid(IndexWriter writer) throws Exception;
 
+    @Override
     default Void action(IndexWriter writer) throws Exception {
         actionVoid(writer);
         return null;
