@@ -36,7 +36,6 @@
         <version.commons-collections>3.2.2</version.commons-collections><!-- stale -->
         <version.commons-collections4>4.4</version.commons-collections4>
         <version.commons-lang>2.6</version.commons-lang><!-- stale -->
-        <version.cglib>3.3.0</version.cglib><!-- jdk 10 ready -->
         <version.guava>18.0</version.guava>
         <version.wro4j>1.8.0</version.wro4j>
         <version.yui>2.4.7</version.yui>
@@ -154,7 +153,7 @@
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
-            <version>${version.cglib}</version>
+            <version>3.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
