@@ -2,6 +2,7 @@ package org.jhaws.common.net.resteasy.client;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
@@ -82,10 +83,18 @@ public class RestEasyClient<R> {
         Class<?> clazz = factory.createClass();
         Object instance;
         try {
-            instance = clazz.newInstance();
+            instance = clazz.getDeclaredConstructor().newInstance();
         } catch (InstantiationException ex) {
             throw new RuntimeException(ex);
         } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        } catch (NoSuchMethodException ex) {
+            throw new RuntimeException(ex);
+        } catch (SecurityException ex) {
             throw new RuntimeException(ex);
         }
         ProxyObject.class.cast(instance).setHandler(new MethodHandler() {
