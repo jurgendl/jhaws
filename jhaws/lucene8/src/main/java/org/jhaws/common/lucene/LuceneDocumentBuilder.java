@@ -1,5 +1,6 @@
 package org.jhaws.common.lucene;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
@@ -153,8 +154,9 @@ public abstract class LuceneDocumentBuilder<T> {
     public T retrieveFromDocument(Document d) {
         T o;
         try {
-            o = getType().newInstance();
-        } catch (InstantiationException | IllegalAccessException ex) {
+            o = getType().getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+                | SecurityException ex) {
             throw new RuntimeException(ex);
         }
         return retrieveFromDocument(d, o);
