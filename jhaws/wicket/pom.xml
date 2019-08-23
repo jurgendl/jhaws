@@ -105,11 +105,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>${version.cglib}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
             <version>${version.commons-lang}</version>
@@ -154,6 +149,12 @@
                     <artifactId>validation-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <!-- FIXME cglib 3.3.3 can not be used, 2.x used in wicket-spring, not ready for JDK 11 -->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>${version.cglib}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
