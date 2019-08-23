@@ -4,6 +4,38 @@
 	--nav-height: 3.55rem;
 	--border-radius: 2px;
 }
+/*
+.form-control:focus, .custom-control-input:focus {
+	box-shadow: 0 0 0 0.1rem var(--primary) !important;
+}
+.btn.focus, .btn:focus {
+	box-shadow: 0 0 0 0.1rem var(--light) !important;
+}
+.btn.btn-primary.focus, .btn.btn-primary:focus {
+	box-shadow: 0 0 0 0.1rem var(--primary) !important;
+}
+.btn.btn.btn-secondary.focus, .btn.btn.btn-secondary:focus {
+	box-shadow: 0 0 0 0.1rem var(--secondary) !important;
+}
+.btn.btn-success.focus, .btn.btn-success:focus {
+	box-shadow: 0 0 0 0.1rem var(--success) !important;
+}
+.btn.btn-info.focus, .btn.btn-info:focus {
+	box-shadow: 0 0 0 0.1rem var(--info) !important;
+}
+.btn.btn-warning.focus, .btn.btn-warning:focus {
+	box-shadow: 0 0 0 0.1rem var(--warning) !important;
+}
+.btn.btn-danger.focus, .btn.btn-danger:focus {
+	box-shadow: 0 0 0 0.1rem var(--danger) !important;
+}
+.btn.btn-light.focus, .btn.btn-light:focus {
+	box-shadow: 0 0 0 0.1rem var(--light) !important;
+}
+.btn.btn-dark.focus, .btn.btn-dark:focus {
+	box-shadow: 0 0 0 0.1rem var(--dark) !important;
+}
+*/
 
 /* ======================== fonts ======================== */
 /* https://www.google.com/fonts */
