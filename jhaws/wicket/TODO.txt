@@ -1,1 +1,17 @@
 https://sweetalert2.github.io/
+
+Animate.css - https://daneden.github.io/animate.css/
+ChartJS - http://www.chartjs.org/
+CKEditor - ckeditor.com
+Custom Scrollbar - http://manos.malihu.gr/jquery-custom-content-scroller/
+Datatables - https://datatables.net/
+Easy Pie Chart - https://github.com/rendro/easy-pie-chart
+Full Calendar - https://fullcalendar.io/
+Jquery Visible - https://github.com/customd/jquery-visible/
+Jquery Mask - https://igorescobar.github.io/jQuery-Mask-Plugin/
+JQVMaps - https://jqvmap.com/
+Prettify - https://github.com/google/code-prettify
+TagsInput - https://github.com/xoxco/jQuery-Tags-Input
+Timelify - https://github.com/Liinkiing/jquery-timelify
+Toastr - https://github.com/CodeSeven/toastr&lt;
+Typeahead - https://twitter.github.io/typeahead.js/
