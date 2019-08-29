@@ -331,9 +331,9 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			}
 
 			if (Boolean.FALSE.equals(this.formSettings.getAutocomplete())) {
-				this.form.add(new AttributeModifier("autocomplete", "off"));
+				this.form.add(AttributeModifier.replace("autocomplete", "off"));
 			} else if (Boolean.TRUE.equals(this.formSettings.getAutocomplete())) {
-				this.form.add(new AttributeModifier("autocomplete", "on"));
+				this.form.add(AttributeModifier.replace("autocomplete", "on"));
 			}
 
 			if (this.getFormSettings().isInheritId()) {
@@ -342,7 +342,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
 			WebHelper.show(this.form);
 			WebMarkupContainer formContainer = new WebMarkupContainer(FormConstants.FORM_CONTAINER);
-			formContainer.add(new AttributeModifier("class", getFormContainerCssClass()));
+			formContainer.add(AttributeModifier.replace("class", getFormContainerCssClass()));
 			formContainer.add(form);
 			this.add(formContainer);
 
@@ -466,10 +466,12 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			switch (getFormSettings().getShowMessages()) {
 			case bottom:
 				formHeader.add(new WebMarkupContainer("allMessagesTop").setVisible(false));
-				formFooter.add(newFeedbackPanel("allMessagesBottom"));
+				formFooter.add(newFeedbackPanel("allMessagesBottom")
+						.add(AttributeModifier.replace("class", getFeedbackCssClass())));
 				break;
 			case top:
-				formHeader.add(newFeedbackPanel("allMessagesTop"));
+				formHeader.add(newFeedbackPanel("allMessagesTop")
+						.add(AttributeModifier.replace("class", getFeedbackCssClass())));
 				formFooter.add(new WebMarkupContainer("allMessagesBottom").setVisible(false));
 				break;
 			default:
@@ -523,7 +525,6 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
 	protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {
 		org.apache.wicket.markup.html.panel.FeedbackPanel feedbackPanel = new BootstrapFencedFeedbackPanel(id, this);
-		feedbackPanel.add(AttributeModifier.replace("class", getFeedbackCssClass()));
 		return feedbackPanel;
 	}
 
