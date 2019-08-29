@@ -46,7 +46,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	@Override
-    protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {
+	protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {
 		BootstrapFencedFeedbackPanel feedbackPanel = new BootstrapFencedFeedbackPanel(id, this);
 		return feedbackPanel;
 	}
@@ -57,7 +57,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	@Override
-    protected MarkupContainer newEmptyPanel() {
+	protected MarkupContainer newEmptyPanel() {
 		return new EmptyFormPanel();
 	}
 
@@ -68,8 +68,8 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	public PasswordFieldPanel<String> addPasswordField(String propertyPath, TextFieldSettings componentSettings) {
-		return this.addDefaultRow(new PasswordFieldPanel<>(this.getFormModel(), propertyPath,
-				this.getFormSettings(), componentSettings));
+		return this.addDefaultRow(
+				new PasswordFieldPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public TextFieldPanel<String> addEmailField(String propertyPath, TextFieldSettings componentSettings) {
@@ -256,25 +256,5 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 				response.render(JavaScriptHeaderItem.forReference(COUNTRY_EXTRA_JS));
 			}
 		});
-	}
-
-	public void feedbackError(Serializable message) {
-		getForm().error(message);
-	}
-
-	public void feedbackInfo(Serializable message) {
-		getForm().info(message);
-	}
-
-	public void feedbackFatal(Serializable message) {
-		getForm().fatal(message);
-	}
-
-	public void feedbackWarn(Serializable message) {
-		getForm().warn(message);
-	}
-
-	public void feedbackSuccess(Serializable message) {
-		getForm().success(message);
 	}
 }

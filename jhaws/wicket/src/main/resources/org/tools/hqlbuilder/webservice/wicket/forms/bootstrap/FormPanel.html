@@ -4,36 +4,32 @@
 
 	<div wicket:id="form.container" class="container-fluid">
 		<form class="needs-validation" novalidate="true" wicket:id="form">
-			<fieldset wicket:id="form.header">
+			<span wicket:id="form.header">
 				<div class="form-group form-row mb-1 mt-1" wicket:id="allMessagesTop"></div>
-			</fieldset>
+			</span>
 			<span wicket:id="form.body">
-				<fieldset wicket:id="form.fieldset">
+				<span wicket:id="form.fieldset">
 					<legend wicket:id="form.fieldset.legend">[Legend]</legend>
 					<div class="form-group form-row mb-1" wicket:id="form.row.repeater">
 						<span wicket:id="form.element.repeater">
 							<span wicket:id="form.element"></span>
 						</span>
 					</div>
-				</fieldset>
+				</span>
 			</span>
-			<fieldset wicket:id="form.footer">
+			<span wicket:id="form.footer">
 				<div class="form-group form-row mb-1 mt-1" wicket:id="allMessagesBottom"></div>
-			</fieldset>
-			<span wicket:id="form.actions">
-				<fieldset>
-					<div class="form-group form-row mb-1 mt-1">
-						<div class="col-12" style="text-align:center">
-							<div class="form-actions">
-								<button class="btn btn-primary btn-sm mr-1" wicket:id="form.submit" type="submit" value="[Submit]"><span class="fa-fw fas fa-check"></span><span class="ml-1" wicket:id="submit.label">[Submit]</span></button>
-								<button class="btn btn-secondary btn-sm mr-1" wicket:id="form.reset" type="reset" value="[Reset]"><span class="fa-fw fas fa-undo"></span><span class="ml-1" wicket:id="reset.label">[Reset]</span></button>
-								<button class="btn btn-secondary btn-sm mr-1" wicket:id="form.cancel" type="button" value="[Cancel]"><span class="fa-fw fas fa-times"></span><span class="ml-1" wicket:id="cancel.label">[Cancel]</span></button>
-								<span wicket:id="form.actions.additional"></span>
-							</div>
-						</div>
-					</div>
-				</fieldset>
 			</span>
+			<div wicket:id="form.actions" class="form-group form-row mb-1 mt-1">
+				<div class="col-12" style="text-align:center">
+					<div class="form-actions">
+						<button data-toggle="tooltip" data-trigger="hover" title="Submit" class="btn btn-primary btn-sm mr-1" wicket:id="form.submit" type="submit" value="[Submit]"><span class="fa-fw fas fa-check"></span><span class="ml-1" wicket:id="submit.label">[Submit]</span></button>
+						<button data-toggle="tooltip" data-trigger="hover" title="Reset" class="btn btn-secondary btn-sm mr-1" wicket:id="form.reset" type="reset" value="[Reset]"><span class="fa-fw fas fa-undo"></span><span class="ml-1" wicket:id="reset.label">[Reset]</span></button>
+						<button data-toggle="tooltip" data-trigger="hover" title="Cancel" class="btn btn-secondary btn-sm mr-1" wicket:id="form.cancel" type="button" value="[Cancel]"><span class="fa-fw fas fa-times"></span><span class="ml-1" wicket:id="cancel.label">[Cancel]</span></button>
+						<span wicket:id="form.actions.additional"></span>
+					</div>
+				</div>
+			</div>
 			<span wicket:id="form.additional"></span>
 		</form>
 	</div>

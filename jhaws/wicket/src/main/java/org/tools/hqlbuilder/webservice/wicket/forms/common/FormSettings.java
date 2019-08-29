@@ -59,8 +59,6 @@ public class FormSettings implements Serializable {
 
 	protected boolean disableOnClick = true;
 
-	protected String formContainerClass;
-
 	protected boolean spinner;
 
 	public FormSettings() {
@@ -315,15 +313,6 @@ public class FormSettings implements Serializable {
 
 	public FormSettings setDisableOnClick(boolean disableOnClick) {
 		this.disableOnClick = disableOnClick;
-		return this;
-	}
-
-	public String getFormContainerClass() {
-		return this.formContainerClass;
-	}
-
-	public FormSettings setFormContainerClass(String formContainerClass) {
-		this.formContainerClass = formContainerClass;
 		return this;
 	}
 

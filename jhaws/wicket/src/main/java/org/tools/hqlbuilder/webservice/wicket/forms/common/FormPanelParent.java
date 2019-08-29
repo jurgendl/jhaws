@@ -2,7 +2,6 @@ package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -31,7 +30,6 @@ import org.tools.hqlbuilder.webservice.wicket.WebHelper;
 import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 
 /**
- * @see http://jqueryui.com/button/
  * @see http://wicket.apache.org/guide/guide/forms2.html#forms2_1
  */
 @SuppressWarnings("serial")
@@ -145,17 +143,46 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 		return this.rowRepeater;
 	}
 
+	/** defaults: form-group form-row mb-1 */
 	protected String getComponentRepeaterCssClass() {
-		return null;
+		return "form-group form-row mb-1 mt-1";
+	}
+
+	/** defaults: "container-fluid" */
+	protected String getFormContainerCssClass() {
+		return "container-fluid";
+	}
+
+	/** defaults: "form-group form-row mb-1 mt-1" */
+	protected String getActionsCssClass() {
+		return "form-group form-row mb-1 mt-1";
+	}
+
+	/** defaults: "form-group form-row mb-1 mt-1" */
+	protected String getFeedbackCssClass() {
+		return "form-group form-row mb-1 mt-1";
+	}
+
+	/** defaults: "btn btn-primary btn-sm mr-1" */
+	protected String getSubmitButtonCssClass() {
+		return "btn btn-primary btn-sm mr-1";
+	}
+
+	/** defaults: "btn btn-secondary btn-sm mr-1" */
+	protected String getResetButtonCssClass() {
+		return "btn btn-secondary btn-sm mr-1";
+	}
+
+	/** defaults: "btn btn-secondary btn-sm mr-1 " */
+	protected String getCancelButtonCssClass() {
+		return "btn btn-secondary btn-sm mr-1";
 	}
 
 	protected RepeatingView getComponentRepeater() {
 		// only create a new row when needed
 		if (this.componentRepeater == null) {
 			WebMarkupContainer rowContainer = new WebMarkupContainer(getRowRepeater().newChildId());
-			String cssClass = getComponentRepeaterCssClass();
-			if (StringUtils.isNotBlank(cssClass))
-				rowContainer.add(AttributeModifier.append("class", cssClass));
+			rowContainer.add(AttributeModifier.replace("class", getComponentRepeaterCssClass()));
 			getRowRepeater().add(rowContainer);
 
 			RepeatingView repeater = new RepeatingView(FormConstants.FORM_ELEMENT_REPEATER);
@@ -315,9 +342,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
 			WebHelper.show(this.form);
 			WebMarkupContainer formContainer = new WebMarkupContainer(FormConstants.FORM_CONTAINER);
-			if (org.jhaws.common.lang.StringUtils.isNotBlank(formSettings.getFormContainerClass())) {
-				formContainer.add(new AttributeModifier("class", formSettings.getFormContainerClass()));
-			}
+			formContainer.add(new AttributeModifier("class", getFormContainerCssClass()));
 			formContainer.add(form);
 			this.add(formContainer);
 
@@ -369,12 +394,10 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			}
 			submit.setVisible(this.formSettings.isShowSubmit());
 			submit.add(createSubmitLabel(SUBMIT_LABEL));
-			if (getButtonCssClass() != null)
-				submit.add(AttributeModifier.append("class", getButtonCssClass()));
+			submit.add(AttributeModifier.replace("class", getSubmitButtonCssClass()));
 
 			Button reset = new Button(FormConstants.FORM_RESET/* , resetModel */);
-			if (getButtonCssClass() != null)
-				reset.add(AttributeModifier.append("class", getButtonCssClass()));
+			reset.add(AttributeModifier.replace("class", getResetButtonCssClass()));
 			reset.add(createResetLabel(RESET_LABEL));
 			reset.setVisible(this.formSettings.isShowReset());
 
@@ -399,8 +422,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 				cancel = new Button(FormConstants.FORM_CANCEL/* , cancelModel */);
 				((Button) cancel).setDefaultFormProcessing(false);
 			}
-			if (getButtonCssClass() != null)
-				cancel.add(AttributeModifier.append("class", getButtonCssClass()));
+			cancel.add(AttributeModifier.replace("class", getCancelButtonCssClass()));
 			cancel.setVisible(this.getFormSettings().isCancelable());
 			cancel.add(createCancelLabel(RESET_LABEL));
 
@@ -411,6 +433,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			}
 
 			WebMarkupContainer formActionsContainer = new WebMarkupContainer(FormConstants.FORM_ACTIONS);
+			formActionsContainer.add(AttributeModifier.replace("class", getActionsCssClass()));
 			this.form.add(formActionsContainer);
 			formActionsContainer.add(submit);
 			formActionsContainer.add(reset);
@@ -500,14 +523,15 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
 	protected org.apache.wicket.markup.html.panel.FeedbackPanel newFeedbackPanel(String id) {
 		org.apache.wicket.markup.html.panel.FeedbackPanel feedbackPanel = new BootstrapFencedFeedbackPanel(id, this);
+		feedbackPanel.add(AttributeModifier.replace("class", getFeedbackCssClass()));
 		return feedbackPanel;
 	}
 
-	protected String getButtonCssClass() {
-		return null;
-	}
-
-	protected <PropertyType, ModelType, ComponentType extends FormComponent<ModelType>, ElementSettings extends AbstractFormElementSettings<ElementSettings>, RowPanel extends FormRowPanelParent<PropertyType, ModelType, ComponentType, ElementSettings>> //
+	protected <PropertyType//
+			, ModelType//
+			, ComponentType extends FormComponent<ModelType>//
+			, ElementSettings extends AbstractFormElementSettings<ElementSettings>//
+			, RowPanel extends FormRowPanelParent<PropertyType, ModelType, ComponentType, ElementSettings>> //
 	RowPanel addRow(RowPanel rowpanel) {
 		getForm();
 
@@ -538,5 +562,25 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 		this.count = 0; // reset count
 		// so that a new one is created when needed
 		this.componentRepeater = null;
+	}
+
+	public void feedbackError(Serializable message) {
+		getForm().error(message);
+	}
+
+	public void feedbackInfo(Serializable message) {
+		getForm().info(message);
+	}
+
+	public void feedbackFatal(Serializable message) {
+		getForm().fatal(message);
+	}
+
+	public void feedbackWarn(Serializable message) {
+		getForm().warn(message);
+	}
+
+	public void feedbackSuccess(Serializable message) {
+		getForm().success(message);
 	}
 }
