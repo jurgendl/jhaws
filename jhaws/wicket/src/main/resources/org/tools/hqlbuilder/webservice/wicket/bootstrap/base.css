@@ -731,7 +731,7 @@ div.rating-input {
 	border-radius: var(--border-radius) !important;
 }
 .custom-checkbox .custom-control-label::before {
-	border-radius: 0px !important;
+	border-radius: var(--border-radius) !important;
 }
 
 /* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */
@@ -798,7 +798,7 @@ a.link-unstyled
 	padding: 0.25em 1em;
 }
 
-/* */
+/* toggle password eye */
 .field-icon.toggle-password {
 	float: right;
 	margin-left: -25px;
@@ -806,7 +806,6 @@ a.link-unstyled
 	position: relative;
 	z-index: 200;
 }
-
 
 /* jquery type-ahead */
 .typeahead__list {
@@ -820,7 +819,21 @@ a.link-unstyled
 .typeahead__container .typeahead__field .typeahead__label-container {
    padding-right: 8px !important;
 }
+.typeahead__container .form-control:valid
+, .typeahead__container .form-control.is-valid
+, .typeahead__container .form-control:invalid
+, .typeahead__container .form-control.is-invalid {
+	background-image: none !important;
+}/*
+.typeahead__container .form-control:valid ~ .typeahead__cancel-button
+, .typeahead__container .form-control.is-valid ~ .typeahead__cancel-button
+, .typeahead__container .form-control:invalid ~ .typeahead__cancel-button
+, .typeahead__container .form-control.is-invalid ~ .typeahead__cancel-button {
+	visibility: hidden !important;
+}*/
 
+
+/* flags */
 .flag-icon {
 	border: 1px solid #343a40;
 	background-color: #343a40;

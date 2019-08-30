@@ -1,10 +1,10 @@
 /* ============= base-factory.js =============>>> */
 
 /* Bootstrap popover */
-$('[data-toggle="popover"]')
-.popover({ html: true, delay: { "show": 50, "hide": 50 } });
-$('.popover-dismiss')
-.popover({ html: true, trigger: 'focus', delay: { "show": 50, "hide": 500 } });
+console.log("base-factory.js ...");
+
+$('[data-toggle="popover"]').popover({ html: true, delay: { "show": 50, "hide": 50 } });
+$('.popover-dismiss').popover({ html: true, trigger: 'focus', delay: { "show": 50, "hide": 500 } });
 
 /* Bootstrap tooltip */
 /* https://stackoverflow.com/questions/35079509/bootstrap-button-tooltip-hide-on-click */
@@ -66,14 +66,28 @@ if ( customInputs.length > 0 ) {
 */
 
 /* Bootstrap form validation */
-(function() {
-  'use strict';
-  window.addEventListener('load', function() {
+
+//(function() {
+//  'use strict';
+  window.addEventListener("load", function() {
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.getElementsByClassName('needs-validation');
+    var forms = document.getElementsByClassName("needs-validation");
+    console.log(forms);
+    $("form.needs-validation").each(function(index) {
+    	var formNeedsValidation = $(this);
+    	console.log("formNeedsValidation="+formNeedsValidation)
+    	var bootstrapValidator = formNeedsValidation.data("bootstrapValidator");
+        formNeedsValidation.find(".disable-validation:not([name=''])").each(function(index) {
+        	var fieldNeedsNoValidation = $(this);
+        	console.log("fieldNeedsNoValidation="+fieldNeedsNoValidation)
+            bootstrapValidator.enableFieldValidators(fieldNeedsNoValidation.attr('name'), false);
+        });
+    });
+
     // Loop over them and prevent submission
     var validation = Array.prototype.filter.call(forms, function(form) {
       form.addEventListener('submit', function(event) {
+        console.log(event);
         if (form.checkValidity() === false) {
           event.preventDefault();
           event.stopPropagation();
@@ -82,7 +96,9 @@ if ( customInputs.length > 0 ) {
       }, false);
     });
   }, false);
-})();
+//})();
+
+
 // activate with $('form').preventDoubleSubmission();
 //jQuery plugin to prevent double submission of forms
 jQuery.fn.preventDoubleSubmission = function() {
@@ -116,4 +132,5 @@ jQuery.fn.preventDoubleSubmission = function() {
 
 // ;$('.disabled').click(function(e){ e.preventDefault(); });
 
+console.log("... base-factory.js");
 /* <<<============= base-factory.js ============= */

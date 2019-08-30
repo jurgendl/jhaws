@@ -701,9 +701,21 @@ public abstract class DefaultWebPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(PopoverX.JS));
 		response.render(CssHeaderItem.forReference(PopoverX.CSS));
 
-		response.render(CssHeaderItem.forReference(CSS));
-		response.render(JavaScriptHeaderItem.forReference(JS));
+		renderBaseCss(response);
+		renderBaseJs(response);
+		renderBaseJsFactory(response);
+	}
+
+	protected void renderBaseJsFactory(IHeaderResponse response) {
 		response.render(OnDomReadyHeaderItem.forScript(FACTORY));
+	}
+
+	protected void renderBaseJs(IHeaderResponse response) {
+		response.render(JavaScriptHeaderItem.forReference(JS));
+	}
+
+	protected void renderBaseCss(IHeaderResponse response) {
+		response.render(CssHeaderItem.forReference(CSS));
 	}
 
 	/** optional, call in renderhead */
