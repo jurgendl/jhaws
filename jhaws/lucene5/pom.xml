@@ -85,6 +85,16 @@
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-expressions</artifactId>
             <version>${version.lucene}</version>
+            <exclusions>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.ow2.asm</groupId>
+					<artifactId>asm-commons</artifactId>
+				</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
