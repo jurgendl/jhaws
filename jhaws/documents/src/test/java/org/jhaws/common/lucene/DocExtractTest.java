@@ -5,7 +5,7 @@ import org.jhaws.common.io.FilePath;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class LuceneDocExtractTest {
+public class DocExtractTest {
     @Test
     public void testXml() {
         try {

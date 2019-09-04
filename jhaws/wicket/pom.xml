@@ -238,11 +238,11 @@
             <artifactId>wicketstuff-logback</artifactId>
             <version>${version.wicket.stuff}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-tinymce</artifactId>
             <version>${version.wicket.stuff}</version>
-        </dependency>
+        </dependency> -->
         <!-- <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-googlecharts</artifactId>
