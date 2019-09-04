@@ -30,7 +30,6 @@
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
         <version.glazedlists>1.9.1</version.glazedlists>
-        <version.commons.lang3>3.8.1</version.commons.lang3>
         <version.miglayout>4.2</version.miglayout>
         <version.javassist>3.25.0-GA</version.javassist><!-- Java 1.9 ready -->
         <version.commons.beanutils>1.9.3</version.commons.beanutils>
@@ -71,6 +70,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jhaws.common</groupId>
+            <artifactId>jhaws-documents</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${version.commons-collections4}</version>
@@ -90,11 +94,6 @@
             <groupId>net.java.dev.glazedlists</groupId>
             <artifactId>glazedlists_java15</artifactId>
             <version>${version.glazedlists}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${version.commons.lang3}</version>
         </dependency>
         <dependency>
             <groupId>com.miglayout</groupId>
@@ -130,21 +129,6 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${version.commons.codec}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${version.poi}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>stax-api</artifactId>
-                    <groupId>stax</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>xml-apis</artifactId>
-                    <groupId>xml-apis</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.ostermiller</groupId>

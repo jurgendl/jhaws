@@ -30,6 +30,8 @@
         <version.jackson>2.10.0.pr1</version.jackson>
         <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problems -->
 		<version.inject>1</version.inject>
+		<version.javax.json>1.1.4</version.javax.json>
+		<version.jsoup>1.12.1</version.jsoup>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -49,6 +51,21 @@
    			<version>2.5</version>
    			<scope>provided</scope>
    		</dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${version.jsoup}</version>
+        </dependency>
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+			<version>${version.javax.json}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.json</artifactId>
+			<version>${version.javax.json}</version>
+		</dependency>
         <!-- <dependency>
           <groupId>org.jboss.spec.javax.ws.rs</groupId>
           <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
@@ -99,6 +116,11 @@
             <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>${version.jackson}</version>
         </dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>${version.jackson}</version>
+		</dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
