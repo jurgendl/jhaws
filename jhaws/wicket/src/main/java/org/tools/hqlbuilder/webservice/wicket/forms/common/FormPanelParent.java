@@ -424,7 +424,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			}
 			cancel.add(AttributeModifier.replace("class", getCancelButtonCssClass()));
 			cancel.setVisible(this.getFormSettings().isCancelable());
-			cancel.add(createCancelLabel(RESET_LABEL));
+			cancel.add(createCancelLabel(CANCEL_LABEL));
 
 			if (this.getFormSettings().isInheritId()) {
 				submit.setMarkupId(this.getId() + "." + FormConstants.FORM_SUBMIT);
