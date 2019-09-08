@@ -274,8 +274,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	protected KeyValue<ProcessInfo, Process> act(Object context, FilePath input, String action) {
-		KeyValue<ProcessInfo, Process> act = new KeyValue<>(new ProcessInfo(context, action, input),
-				null);
+		KeyValue<ProcessInfo, Process> act = new KeyValue<>(new ProcessInfo(context, action, input), null);
 		actions.add(act);
 		return act;
 	}
@@ -1494,6 +1493,43 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("10");
 		command.add("-r");
 		command.add("10");
+		command.add(command(out));
+		call(null, lines, getFfmpeg().getParentPath(), command);
+		return out;
+	}
+
+	public FilePath rotate(FilePath in, FilePath out, Lines lines, int degrees) {
+		if (out == null)
+			out = in.appendExtension("mp4");
+		if (out.isDirectory())
+			out = out.child(in.getFileNameString()).appendExtension("mp4");
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-i");
+		command.add(command(in));
+		command.add("-v");
+		command.add("0");
+
+		command.add("-vf");
+		// https://stackoverflow.com/questions/3937387/rotating-videos-with-ffmpeg
+		// https://github.com/laurentperrinet/photoscripts/blob/master/rotate_video.py
+//		0 = 90 CounterCLockwise and Vertical Flip (default)
+//		1 = 90 Clockwise
+//		2 = 90 CounterClockwise
+//		3 = 90 Clockwise and Vertical Flip
+		if (degrees == -90 || degrees == 270) {
+			command.add("\"transpose=1\"");
+		} else if (degrees == 90 || degrees == -270) {
+			command.add("\"transpose=2\"");
+		} else if (degrees == -180 || degrees == 180) {
+			command.add("\"transpose=2,transpose=2\"");
+		} else {
+			throw new UnsupportedOperationException();
+		}
+
+		command.add("-qscale");
+		command.add("0");
 		command.add(command(out));
 		call(null, lines, getFfmpeg().getParentPath(), command);
 		return out;
