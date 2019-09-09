@@ -117,6 +117,11 @@ jQuery.fn.preventDoubleSubmission = function() {
 };
 
 
+$('[data-toggle=confirmation]').confirmation({
+    rootSelector: '[data-toggle=confirmation]',
+    container: 'body'
+});
+
 //https://www.codeply.com/go/SkIJQ5LqKp/custom-file-input
 /*;$('.custom-file-input').on('change', function() {
 	let fileName = $(this).val();
