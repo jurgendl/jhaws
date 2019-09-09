@@ -648,6 +648,14 @@ public class HTTPClient implements Closeable {
 		return get(URI.create(url));
 	}
 
+	public String getContentString(String url) {
+		return get(url).getContentString();
+	}
+
+	public String getContentString(URI url) {
+		return get(url).getContentString();
+	}
+
 	public Response get(URI url) {
 		return get(new GetRequest(url));
 	}
