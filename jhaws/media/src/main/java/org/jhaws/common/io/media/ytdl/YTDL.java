@@ -141,24 +141,27 @@ public class YTDL extends Tool {
 		if (targetFolder == null)
 			targetFolder = FilePath.getTempDirectory();
 		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
-		List<String> command = new ArrayList<>();
-		command.add(command(executable));
-		command.add("--verbose");
-		command.add("--encoding");
-		command.add("utf-8");
-		command.add("-f");
-		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
-		command.add("bestvideo,bestaudio");
-		// command.add("--embed-thumbnail");
-		// command.add("--add-metadata");
-		command.add("-o");
-		command.add("%(title)s.f%(format_id)s.%(ext)s");
-		command.add(url);
 		List<String> dl = new ArrayList<>();
 		try {
+			if (!(url.contains("youtube") || url.contains("youtu.be"))) {
+				throw new IllegalArgumentException("simple");
+			}
+			List<String> command = new ArrayList<>();
+			command.add(command(executable));
+			command.add("--verbose");
+			command.add("--encoding");
+			command.add("utf-8");
+			command.add("-f");
+			// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
+			command.add("bestvideo,bestaudio");
+			// command.add("--embed-thumbnail");
+			// command.add("--add-metadata");
+			command.add("-o");
+			command.add("%(title)s.f%(format_id)s.%(ext)s");
+			command.add(url);
 			dl(tmpFolder, command, dl);
 		} catch (ExitValueException ex) {
-			command = new ArrayList<>();
+			List<String> command = new ArrayList<>();
 			command.add(command(executable));
 			command.add("--verbose");
 			command.add("--encoding");
