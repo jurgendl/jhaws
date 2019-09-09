@@ -144,7 +144,7 @@ public class YTDL extends Tool {
 		List<String> dl = new ArrayList<>();
 		try {
 			if (!(url.contains("youtube") || url.contains("youtu.be"))) {
-				throw new IllegalArgumentException("simple");
+				throw new ExitValueException(0);
 			}
 			List<String> command = new ArrayList<>();
 			command.add(command(executable));
