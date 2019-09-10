@@ -27,7 +27,7 @@
         <!-- versions -->
         <version.junit>4.12</version.junit>
         <version.ldapbp>1.0</version.ldapbp>
-        <version.commons.lang3>3.8.1</version.commons.lang3>
+        <version.commons.lang3>3.9</version.commons.lang3>
     </properties>
     <repositories>
         <repository>
