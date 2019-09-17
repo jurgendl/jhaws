@@ -182,7 +182,7 @@
             <artifactId>wicket-devutils</artifactId>
             <version>${version.wicket.core}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-datetime</artifactId>
             <version>${version.wicket.core}</version>
@@ -192,7 +192,7 @@
                     <groupId>joda-time</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency> -->
         <!-- <dependency>
             <groupId>com.googlecode.wicket-jquery-ui</groupId>
             <artifactId>wicket-jquery-ui</artifactId>
