@@ -25,7 +25,6 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.junit>4.12</version.junit>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -39,12 +38,6 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-logging</artifactId>

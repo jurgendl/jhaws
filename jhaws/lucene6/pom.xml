@@ -25,7 +25,6 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.junit>4.12</version.junit>
         <version.lucene>6.6.6</version.lucene>
     </properties>
     <dependencyManagement>
@@ -192,12 +191,6 @@
                     <groupId>commons-codec</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

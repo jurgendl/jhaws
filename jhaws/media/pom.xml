@@ -25,7 +25,6 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.commons-lang>2.6</version.commons-lang><!-- stale -->
 		<version.javax.json>1.1.4</version.javax.json>
     </properties>
     <dependencyManagement>
@@ -58,18 +57,11 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>${version.commons-lang}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf.xjc-utils</groupId>
             <artifactId>cxf-xjc-runtime</artifactId>
             <version>3.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

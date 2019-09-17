@@ -25,20 +25,11 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.junit>4.12</version.junit>
-        <version.commons.lang3>3.9</version.commons.lang3>
-        <version.bouncycastle>1.62</version.bouncycastle>
-        <version.httpcomponents>4.5.6</version.httpcomponents>
-        <version.httpcomponents.nio>4.4.10</version.httpcomponents.nio>
-        <version.httpcomponents.cache>4.1.4</version.httpcomponents.cache>
         <version.resteasy>3.8.1.Final</version.resteasy>
         <!-- <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs> -->
         <version.xhtmlrenderer>9.1.16</version.xhtmlrenderer>
-		<version.commons.compress>1.18</version.commons.compress>
-		<version.commons.codec>1.13</version.commons.codec>
 		<version.jcifs>1.3.17</version.jcifs>
 		<version.ostermiller>1.07.00</version.ostermiller>
-		<version.activation>1.1.1</version.activation>
 		<version.htmlcleaner>2.8</version.htmlcleaner>
 		<version.jtidy>r938</version.jtidy>
     </properties>
@@ -92,15 +83,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>${version.commons.compress}</version>
         </dependency>
         <dependency>
             <groupId>jcifs</groupId>
@@ -122,7 +106,6 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>${version.commons.codec}</version>
 		</dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
@@ -142,59 +125,30 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${version.commons.lang3}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>${version.httpcomponents}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>${version.httpcomponents}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-codec</artifactId>
-                    <groupId>commons-codec</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-win</artifactId>
-            <version>${version.httpcomponents}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore-nio</artifactId>
-            <version>${version.httpcomponents.nio}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient-cache</artifactId>
-            <version>${version.httpcomponents}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpasyncclient</artifactId>
-            <version>${version.httpcomponents.cache}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.ostermiller</groupId>
@@ -204,12 +158,10 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>${version.bouncycastle}</version>
         </dependency>
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-            <version>${version.activation}</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.htmlcleaner</groupId>

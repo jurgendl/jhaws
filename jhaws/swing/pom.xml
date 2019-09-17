@@ -31,14 +31,9 @@
         <!-- versions -->
         <version.glazedlists>1.9.1</version.glazedlists>
         <version.miglayout>4.2</version.miglayout>
-        <version.javassist>3.25.0-GA</version.javassist><!-- Java 1.9 ready -->
-        <version.commons.beanutils>1.9.3</version.commons.beanutils>
         <version.xhtmlrenderer>9.1.16</version.xhtmlrenderer>
-        <version.commons.codec>1.13</version.commons.codec>
         <version.poi>3.17</version.poi>
-        <version.junit>4.12</version.junit>
         <version.ostermiller>1.07.00</version.ostermiller>
-		<version.commons-collections4>4.4</version.commons-collections4>
 		<version.pdfbox>2.0.16</version.pdfbox>
     </properties>
     <dependencyManagement>
@@ -53,6 +48,10 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <dependency><!-- must be place before poi -->
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
             <artifactId>jhaws-logging</artifactId>
@@ -77,7 +76,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>${version.commons-collections4}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -103,44 +101,20 @@
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>${version.javassist}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>${version.commons.beanutils}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>commons-logging</artifactId>
-                    <groupId>commons-logging</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-collections</artifactId>
-                    <groupId>commons-collections</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf-itext5</artifactId>
             <version>${version.xhtmlrenderer}</version>
         </dependency>
-        <dependency><!-- must be place before poi -->
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${version.commons.codec}</version>
-        </dependency>
         <dependency>
             <groupId>org.ostermiller</groupId>
             <artifactId>utils</artifactId>
             <version>${version.ostermiller}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${version.junit}</version>
-            <scope>test</scope>
-            <optional>true</optional>
         </dependency>
     </dependencies>
     <repositories>

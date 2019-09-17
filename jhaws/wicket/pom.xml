@@ -33,15 +33,9 @@
         <version.wicket.stuff>6.30.0</version.wicket.stuff><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
         <version.wicket.jquery.ui>6.30.0</version.wicket.jquery.ui><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
         <!-- <version.wicket.bootstrap>0.9.21</version.wicket.bootstrap> --><!-- https://github.com/l0rdn1kk0n/wicket-bootstrap -->
-        <version.commons-collections>3.2.2</version.commons-collections><!-- stale -->
-        <version.commons-collections4>4.4</version.commons-collections4>
-        <version.commons-lang>2.6</version.commons-lang><!-- stale -->
         <version.guava>18.0</version.guava>
         <version.wro4j>1.8.0</version.wro4j>
         <version.yui>2.4.7</version.yui>
-        <version.joda>2.10.3</version.joda>
-        <version.commons-beanutils>1.9.3</version.commons-beanutils><!-- recent version, keep up to date -->
-        <version.commons.codec>1.13</version.commons.codec><!-- recent version, keep up to date -->
 		<version.jsoup>1.12.1</version.jsoup>
     </properties>
     <dependencyManagement>
@@ -101,38 +95,26 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>${version.joda}</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>${version.commons.codec}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>${version.commons-beanutils}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>${version.commons-lang}</version>
         </dependency>
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>${version.commons-collections}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
-            <version>${version.commons-collections4}</version>
         </dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
@@ -168,7 +150,6 @@
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
-            <version>3.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>
