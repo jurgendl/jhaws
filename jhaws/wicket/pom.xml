@@ -175,50 +175,11 @@
             <artifactId>wicket-guice</artifactId>
             <version>${version.wicket.core}</version>
         </dependency>
-        <!-- <dependency> <groupId>org.apache.wicket</groupId> <artifactId>wicket-velocity</artifactId> <version>${version.wicket.core}</version> </dependency> -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-devutils</artifactId>
             <version>${version.wicket.core}</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-datetime</artifactId>
-            <version>${version.wicket.core}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>joda-time</artifactId>
-                    <groupId>joda-time</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>com.googlecode.wicket-jquery-ui</groupId>
-            <artifactId>wicket-jquery-ui</artifactId>
-            <version>${version.wicket.jquery.ui}</version>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>com.googlecode.wicket-jquery-ui</groupId>
-            <artifactId>wicket-jquery-ui-core</artifactId>
-            <version>${version.wicket.jquery.ui}</version>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>com.googlecode.wicket-jquery-ui</groupId>
-            <artifactId>wicket-jquery-ui-calendar</artifactId>
-            <version>${version.wicket.jquery.ui}</version>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>com.googlecode.wicket-jquery-ui</groupId>
-            <artifactId>wicket-jquery-ui-plugins</artifactId>
-            <version>${version.wicket.jquery.ui}</version>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>com.googlecode.wicket-jquery-ui</groupId>
-            <artifactId>wicket-kendo-ui</artifactId>
-            <version>${version.wicket.jquery.ui}</version>
-        </dependency> -->
-        <!-- <dependency> <groupId>org.wicketstuff</groupId> <artifactId>wicketstuff-serializer-kryo2</artifactId> <version>${version.wicket.core}</version> 
-            </dependency> -->
         <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-htmlcompressor</artifactId>
@@ -239,180 +200,11 @@
             <artifactId>guava</artifactId>
             <version>28.1-jre</version>
         </dependency>
-        <!-- <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-tinymce</artifactId>
-            <version>${version.wicket.stuff}</version>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-googlecharts</artifactId>
-            <version>${version.wicket.stuff}</version>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>org.wicketstuff</groupId>
-            <artifactId>wicketstuff-inmethod-grid</artifactId>
-            <version>${version.wicket.stuff}</version>
-        </dependency> -->
-        <!-- wicket-bootstrap-extensions -->
-        <!-- <dependency>
-          <groupId>com.google.protobuf</groupId>
-          <artifactId>protobuf-java</artifactId>
-          <version>3.9.1</version>
-        </dependency> -->
-        <!-- <dependency>
-          <groupId>com.google.javascript</groupId>
-          <artifactId>closure-compiler</artifactId>
-          <version>v20190909</version>
-        </dependency> -->
-        <!-- <dependency>
-            <groupId>de.agilecoders.wicket</groupId>
-            <artifactId>wicket-bootstrap-extensions</artifactId>
-            <version>${version.wicket.bootstrap}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javassist</groupId>
-                    <artifactId>javassist</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency> -->
-        <!-- ======================== WRO4J - Sass - scss ======================== -->
-        <!-- Tomcat issue 8.0.xx? test 9.1.8.0, was 9.0.5.0 -->
-        <!-- <dependency>
-          <groupId>org.jruby</groupId>
-          <artifactId>jruby-core</artifactId>
-          <version>9.2.0.0</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jruby</groupId>
-          <artifactId>jruby-stdlib</artifactId>
-          <version>9.2.0.0</version>
-        </dependency> -->
-        <!-- https://wro4j.readthedocs.io/en/stable/AvailableProcessors/ -->
-        <!-- <dependency>
-            <groupId>ro.isdc.wro4j</groupId>
-            <artifactId>wro4j-extensions</artifactId>
-            <version>${version.wro4j}</version>
-            <exclusions>
-                <exclusion>
-                  <groupId>org.jruby</groupId>
-                  <artifactId>jruby-core</artifactId>
-                </exclusion>
-                <exclusion>
-                  <groupId>org.jruby</groupId>
-                  <artifactId>jruby-stdlib</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>junit</groupId>
-                    <artifactId>junit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.commons</groupId>
-                    <artifactId>commons-lang3</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-io</groupId>
-                    <artifactId>commons-io</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-web</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>joda-time</groupId>
-                    <artifactId>joda-time</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>nz.co.edmi</groupId>
-                    <artifactId>bourbon-gem-jar</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.sommeri</groupId>
-                    <artifactId>less4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>emberjs</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>jslint</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>coffee-script</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>handlebars</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>envjs</artifactId>
-                </exclusion>- 
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>less</artifactId>
-                </exclusion> -
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>jshint</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.lltyk</groupId>
-                    <artifactId>dojo-shrinksafe</artifactId>
-                </exclusion>- 
-                <exclusion>
-                    <groupId>org.mozilla</groupId>
-                    <artifactId>rhino</artifactId>
-                </exclusion> -
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>json2</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars</groupId>
-                    <artifactId>webjars-locator</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.codehaus.gmaven.runtime</groupId>
-                    <artifactId>gmaven-runtime-1.7</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.javascript</groupId>
-                    <artifactId>closure-compiler</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
-        <!-- ======================== WRO4J - Sass - scss ======================== -->
-		<!-- <dependency>
-		  <groupId>org.mozilla</groupId>
-		  <artifactId>rhino</artifactId>
-		  <version>1.7.10</version>
-		</dependency> -->
-		<!-- <dependency>
-		    <groupId>com.yahoo.platform.yui</groupId>
-		    <artifactId>yuicompressor</artifactId>
-		    <version>2.4.8</version> -->
-		    <!-- <exclusions>
-		    	<exclusion>
-		    		<groupId>rhino</groupId>
-		    		<artifactId>js</artifactId>
-		    	</exclusion>
-		    </exclusions> -->
-		<!-- </dependency> -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.5</version>
+		</dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
