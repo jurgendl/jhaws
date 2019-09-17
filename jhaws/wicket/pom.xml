@@ -34,7 +34,7 @@
         <version.wicket.jquery.ui>6.30.0</version.wicket.jquery.ui><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
         <!-- <version.wicket.bootstrap>0.9.21</version.wicket.bootstrap> --><!-- https://github.com/l0rdn1kk0n/wicket-bootstrap -->
         <version.guava>18.0</version.guava>
-        <version.wro4j>1.8.0</version.wro4j>
+        <!-- <version.wro4j>1.8.0</version.wro4j> -->
         <version.yui>2.4.7</version.yui>
 		<version.jsoup>1.12.1</version.jsoup>
     </properties>
@@ -279,21 +279,23 @@
             <version>${version.guava}</version>
         </dependency>
         <!-- ======================== WRO4J - Sass - scss ======================== -->
-        <dependency>
+        <!-- Tomcat issue 8.0.xx? test 9.1.8.0, was 9.0.5.0 -->
+        <!-- <dependency>
           <groupId>org.jruby</groupId>
           <artifactId>jruby-core</artifactId>
-          <version>9.2.0.0</version><!-- Tomcat issue 8.0.xx? test 9.1.8.0, was 9.0.5.0 -->
+          <version>9.2.0.0</version>
         </dependency>
         <dependency>
           <groupId>org.jruby</groupId>
           <artifactId>jruby-stdlib</artifactId>
-          <version>9.2.0.0</version><!-- Tomcat issue 8.0.xx? test 9.1.8.0, was 9.0.5.0 -->
-        </dependency>
-        <dependency>
+          <version>9.2.0.0</version>
+        </dependency> -->
+        <!-- https://wro4j.readthedocs.io/en/stable/AvailableProcessors/ -->
+        <!-- <dependency>
             <groupId>ro.isdc.wro4j</groupId>
             <artifactId>wro4j-extensions</artifactId>
             <version>${version.wro4j}</version>
-            <exclusions><!-- https://wro4j.readthedocs.io/en/stable/AvailableProcessors/ -->
+            <exclusions>
                 <exclusion>
                   <groupId>org.jruby</groupId>
                   <artifactId>jruby-core</artifactId>
@@ -357,11 +359,11 @@
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>envjs</artifactId>
-                </exclusion><!-- 
+                </exclusion>- 
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>less</artifactId>
-                </exclusion> -->
+                </exclusion> -
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>jshint</artifactId>
@@ -369,11 +371,11 @@
                 <exclusion>
                     <groupId>com.github.lltyk</groupId>
                     <artifactId>dojo-shrinksafe</artifactId>
-                </exclusion><!-- 
+                </exclusion>- 
                 <exclusion>
                     <groupId>org.mozilla</groupId>
                     <artifactId>rhino</artifactId>
-                </exclusion> -->
+                </exclusion> -
                 <exclusion>
                     <groupId>org.webjars</groupId>
                     <artifactId>json2</artifactId>
@@ -395,7 +397,7 @@
                     <artifactId>closure-compiler</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <!-- ======================== WRO4J - Sass - scss ======================== -->
 		<!-- <dependency>
 		  <groupId>org.mozilla</groupId>
