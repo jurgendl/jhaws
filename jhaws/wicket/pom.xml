@@ -33,7 +33,6 @@
         <version.wicket.stuff>6.30.0</version.wicket.stuff><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
         <version.wicket.jquery.ui>6.30.0</version.wicket.jquery.ui><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
         <!-- <version.wicket.bootstrap>0.9.21</version.wicket.bootstrap> --><!-- https://github.com/l0rdn1kk0n/wicket-bootstrap -->
-        <version.guava>18.0</version.guava>
         <!-- <version.wro4j>1.8.0</version.wro4j> -->
         <version.yui>2.4.7</version.yui>
 		<version.jsoup>1.12.1</version.jsoup>
@@ -235,6 +234,11 @@
             <artifactId>wicketstuff-logback</artifactId>
             <version>${version.wicket.stuff}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.1-jre</version>
+        </dependency>
         <!-- <dependency>
             <groupId>org.wicketstuff</groupId>
             <artifactId>wicketstuff-tinymce</artifactId>
@@ -251,17 +255,16 @@
             <version>${version.wicket.stuff}</version>
         </dependency> -->
         <!-- wicket-bootstrap-extensions -->
-        <dependency>
+        <!-- <dependency>
           <groupId>com.google.protobuf</groupId>
           <artifactId>protobuf-java</artifactId>
-          <version>3.6.1</version>
-          <!-- <type>bundle</type> -->
-        </dependency>
-        <dependency>
+          <version>3.9.1</version>
+        </dependency> -->
+        <!-- <dependency>
           <groupId>com.google.javascript</groupId>
           <artifactId>closure-compiler</artifactId>
-          <version>v20181008</version>
-        </dependency>
+          <version>v20190909</version>
+        </dependency> -->
         <!-- <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>wicket-bootstrap-extensions</artifactId>
@@ -273,11 +276,6 @@
                 </exclusion>
             </exclusions>
         </dependency> -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${version.guava}</version>
-        </dependency>
         <!-- ======================== WRO4J - Sass - scss ======================== -->
         <!-- Tomcat issue 8.0.xx? test 9.1.8.0, was 9.0.5.0 -->
         <!-- <dependency>
