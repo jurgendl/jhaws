@@ -49,7 +49,7 @@
         <!-- DEPENDENCIES -->
         <version.bouncycastle>1.62</version.bouncycastle>
         <version.commons.codec>1.13</version.commons.codec>
-        <version.commons.beanutils>1.9.3</version.commons.beanutils>
+        <version.commons.beanutils>1.9.4</version.commons.beanutils>
         <version.commons.io>2.6</version.commons.io>
         <version.commons.compress>1.18</version.commons.compress>
         <version.commons.collections>3.2.2</version.commons.collections>
