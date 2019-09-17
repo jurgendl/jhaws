@@ -171,7 +171,6 @@
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf-itext5</artifactId>
-            <version>${version.xhtmlrenderer}</version>
         </dependency>
         <dependency>
             <groupId>net.sf.jtidy</groupId>

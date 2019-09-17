@@ -31,7 +31,6 @@
         <!-- versions -->
         <version.glazedlists>1.9.1</version.glazedlists>
         <version.miglayout>4.2</version.miglayout>
-        <version.xhtmlrenderer>9.1.16</version.xhtmlrenderer>
         <version.poi>3.17</version.poi>
         <version.ostermiller>1.07.00</version.ostermiller>
 		<version.pdfbox>2.0.16</version.pdfbox>
@@ -109,7 +108,6 @@
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf-itext5</artifactId>
-            <version>${version.xhtmlrenderer}</version>
         </dependency>
         <dependency>
             <groupId>org.ostermiller</groupId>
