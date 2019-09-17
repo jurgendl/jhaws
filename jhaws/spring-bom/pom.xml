@@ -872,7 +872,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
+    <!--<dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webflux</artifactId>
@@ -1177,5 +1177,5 @@
             <groupId>org.springframework.ws</groupId>
             <artifactId>spring-xml</artifactId>
         </dependency>
-    </dependencies>
+    </dependencies>-->
 </project>
