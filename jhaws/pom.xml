@@ -58,9 +58,9 @@
         <version.commons.lang>2.6</version.commons.lang>
         <version.commons.math>2.2</version.commons.math>
         <version.commons.math3>3.6.1</version.commons.math3>
-        <version.httpcomponents>4.5.6</version.httpcomponents>
-        <version.httpcomponents.nio>4.4.10</version.httpcomponents.nio>
-        <version.httpcomponents.cache>4.1.4</version.httpcomponents.cache>
+        <version.httpcomponents>4.5.10</version.httpcomponents>
+        <version.httpcomponents.nio>4.4.12</version.httpcomponents.nio>
+        <version.httpcomponents.async>4.1.4</version.httpcomponents.async>
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -204,7 +204,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpasyncclient</artifactId>
-                <version>${version.httpcomponents.cache}</version>
+                <version>${version.httpcomponents.async}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>commons-logging</artifactId>
