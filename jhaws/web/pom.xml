@@ -87,6 +87,12 @@
             <artifactId>jhaws-io</artifactId>
             <version>${project.version}</version>
         </dependency>
+		<dependency>
+			<groupId>org.codehaus.woodstox</groupId>
+			<artifactId>stax2-api</artifactId>
+			<version>4.2</version>
+			<type>bundle</type>
+		</dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
