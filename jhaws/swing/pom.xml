@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jhaws.common</groupId>
         <artifactId>jhaws-modules</artifactId>
-        <version>5.0.0</version>
+        <version>5.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jhaws-swing</artifactId>
@@ -195,7 +195,7 @@
         <connection>scm:git:git@github.com:jurgendl/swing-easy.git</connection>
         <url>scm:git:git@github.com:jurgendl/swing-easy.git</url>
         <developerConnection>scm:git:git@github.com:jurgendl/swing-easy.git</developerConnection>
-        <tag>jhaws-modules-5.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <build>
         <extensions>
