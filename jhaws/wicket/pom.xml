@@ -31,10 +31,6 @@
         <version.validation.api>1.1.0.Final</version.validation.api><!-- for wicket validation, see version used in Hibernate -->
         <version.wicket.core>6.30.0</version.wicket.core><!-- keep up to date 6.x.x -->
         <version.wicket.stuff>6.30.0</version.wicket.stuff><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
-        <version.wicket.jquery.ui>6.30.0</version.wicket.jquery.ui><!-- keep up to date 6.x.x, somewhat behind Wicket core version, kendo is not compatible with version 6.16.0 -->
-        <!-- <version.wicket.bootstrap>0.9.21</version.wicket.bootstrap> --><!-- https://github.com/l0rdn1kk0n/wicket-bootstrap -->
-        <!-- <version.wro4j>1.8.0</version.wro4j> -->
-        <version.yui>2.4.7</version.yui>
 		<version.jsoup>1.12.1</version.jsoup>
     </properties>
     <dependencyManagement>
@@ -198,7 +194,6 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>28.1-jre</version>
         </dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
