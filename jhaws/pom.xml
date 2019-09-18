@@ -237,6 +237,11 @@
                 <artifactId>bcpkix-jdk15on</artifactId>
                 <version>${version.bouncycastle}</version>
             </dependency>
+       		<dependency>
+    			<groupId>com.google.guava</groupId>
+    			<artifactId>guava</artifactId>
+    			<version>28.1-jre</version>
+       		</dependency>
 	        <dependency>
 	            <groupId>org.xhtmlrenderer</groupId>
 	            <artifactId>flying-saucer-pdf-itext5</artifactId>
