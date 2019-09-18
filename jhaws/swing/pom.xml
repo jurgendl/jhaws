@@ -6,8 +6,7 @@
         <version>5.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>org.swingeasy</groupId>
-    <artifactId>swing-easy</artifactId>
+    <artifactId>jhaws-swing</artifactId>
     <name>swing</name>
     <description>Java Swing components</description>
     <properties>
@@ -150,8 +149,8 @@
             </build>
         </profile>
         <profile>
-            <!-- "mvn clean package -P nodebuginfo" wil create an optimized (without debugging info) jar: swing-easy-nodebug-{version}.jar "mvn clean package" 
-                wil create a jar without debugging info: swing-easy-{version}.jar -->
+            <!-- "mvn clean package -P nodebuginfo" wil create an optimized (without debugging info) jar: jhaws-swing-nodebug-{version}.jar "mvn clean package" 
+                wil create a jar without debugging info: jhaws-swing-{version}.jar -->
             <id>nodebuginfo</id>
             <build>
                 <finalName>${project.artifactId}-nodebuginfo-${project.version}</finalName>
