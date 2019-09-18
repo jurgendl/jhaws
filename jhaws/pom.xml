@@ -46,6 +46,8 @@
         <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
+        <deploy.skip.demo>true</deploy.skip.demo>
+        <deploy.skip.web>true</deploy.skip.web>
         <!-- DEPENDENCIES -->
         <version.bouncycastle>1.62</version.bouncycastle>
         <version.commons.codec>1.13</version.commons.codec>

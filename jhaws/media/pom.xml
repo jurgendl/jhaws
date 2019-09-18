@@ -10,21 +10,6 @@
     <name>media</name>
     <description>media</description>
     <properties>
-        <targetJdk>1.8</targetJdk>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <maven.site.skip>false</maven.site.skip>
-        <maven.compiler.optimize>true</maven.compiler.optimize>
-        <maven.compiler.fork>true</maven.compiler.fork>
-        <maven.compiler.source>${targetJdk}</maven.compiler.source>
-        <maven.compiler.target>${targetJdk}</maven.compiler.target>
-        <maven.compiler.verbose>true</maven.compiler.verbose>
-        <maven.compiler.debug>true</maven.compiler.debug>
-        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <maven.test.failure.ignore>true</maven.test.failure.ignore>
-        <!-- versions -->
 		<version.javax.json>1.1.4</version.javax.json>
     </properties>
     <dependencyManagement>

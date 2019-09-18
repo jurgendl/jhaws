@@ -10,21 +10,6 @@
     <name>net</name>
     <description>http(s) protocol made simple, build around Apache httpcomponents</description>
     <properties>
-        <targetJdk>1.8</targetJdk>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <maven.site.skip>false</maven.site.skip>
-        <maven.compiler.optimize>true</maven.compiler.optimize>
-        <maven.compiler.fork>true</maven.compiler.fork>
-        <maven.compiler.source>${targetJdk}</maven.compiler.source>
-        <maven.compiler.target>${targetJdk}</maven.compiler.target>
-        <maven.compiler.verbose>true</maven.compiler.verbose>
-        <maven.compiler.debug>true</maven.compiler.debug>
-        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <maven.test.failure.ignore>true</maven.test.failure.ignore>
-        <!-- versions -->
         <version.resteasy>3.8.1.Final</version.resteasy>
         <!-- <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs> -->
         <version.xhtmlrenderer>9.1.16</version.xhtmlrenderer>

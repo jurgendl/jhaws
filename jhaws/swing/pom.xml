@@ -10,24 +10,6 @@
     <name>swing</name>
     <description>Java Swing components</description>
     <properties>
-        <targetJdk.short>8</targetJdk.short>
-        <targetJdk>1.${targetJdk.short}</targetJdk>
-        <maven.compiler.source>1.${targetJdk.short}</maven.compiler.source>
-        <maven.compiler.target>1.${targetJdk.short}</maven.compiler.target>
-        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <forceRecheck>false</forceRecheck>
-        <scope.activation>provided</scope.activation>
-        <project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <maven.site.skip>false</maven.site.skip>
-        <maven.compiler.optimize>true</maven.compiler.optimize>
-        <maven.compiler.fork>true</maven.compiler.fork>
-        <maven.compiler.verbose>true</maven.compiler.verbose>
-        <maven.compiler.debug>true</maven.compiler.debug>
-        <maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-        <maven.javadoc.skip>true</maven.javadoc.skip>
-        <maven.test.failure.ignore>true</maven.test.failure.ignore>
-        <!-- versions -->
         <version.glazedlists>1.9.1</version.glazedlists>
         <version.miglayout>4.2</version.miglayout>
         <version.poi>3.17</version.poi>
