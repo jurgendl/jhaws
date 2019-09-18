@@ -63,6 +63,7 @@
         <version.httpcomponents>4.5.10</version.httpcomponents>
         <version.httpcomponents.nio>4.4.12</version.httpcomponents.nio>
         <version.httpcomponents.async>4.1.4</version.httpcomponents.async>
+        <version.groovy>2.5.8</version.groovy>
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -279,15 +280,115 @@
                 <artifactId>cglib</artifactId>
                 <version>3.3.0</version>
             </dependency>
-    		<dependency>
-    			<groupId>org.codehaus.groovy</groupId>
-    			<artifactId>groovy-all</artifactId>
-    			<version>2.5.8</version>
-    		</dependency>
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy</artifactId>
-                <version>2.5.8</version>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-ant</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-cli-commons</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-cli-picocli</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-console</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-datetime</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-docgenerator</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-groovydoc</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-groovysh</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-jmx</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-json</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-jsr223</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-macro</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-nio</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-servlet</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-sql</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-swing</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-templates</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-test</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-test-junit5</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-testng</artifactId>
+                <version>${version.groovy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-xml</artifactId>
+                <version>${version.groovy}</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
