@@ -78,13 +78,14 @@ public class BootBoxAjaxCallListener extends AjaxCallListener {
 		// btn-sm"}},"callback":"||FUNC||"}
 		//
 		jsonResp = jsonResp.replace(BootBoxHelper.QFUNC, ""//
-				+ "function(result){"// --> D result kan confirmed zijn of niet
-				+ "if(result){"// --> C als confirmed
-				+ "attrs.event.originalEvent.target.dataset.doContinueConfirm='true';"// *B*
-																						// 2de
-																						// maal
-				+ "attrs.event.target.dispatchEvent(attrs.event.originalEvent);"// heroproepen
-																				// event
+				// --> D result kan confirmed zijn of niet
+				+ "function(result){"//
+				// --> C als confirmed
+				+ "if(result){"//
+				// *B* 2de maal
+				+ "attrs.event.originalEvent.target.dataset.doContinueConfirm='true';"//
+				// heroproepen event
+				+ "attrs.event.target.dispatchEvent(attrs.event.originalEvent);"//
 				+ "}"// <-- C
 				+ "}"// <-- D
 		);
@@ -95,21 +96,21 @@ public class BootBoxAjaxCallListener extends AjaxCallListener {
 		// btn-sm"}},"callback":function(result){if(result){attrs.event.originalEvent.target.dataset.doContinueConfirm='true';attrs.event.target.dispatchEvent(attrs.event.originalEvent);}}}
 		//
 		jsonResp = "" //
-				+ "if(attrs.event.originalEvent.target.dataset.doContinueConfirm==='true'){" // -->
-																								// E
-				+ "attrs.event.originalEvent.target.dataset.doContinueConfirm='false';"// *B*
-																						// reset
-																						// 2de
-																						// maal
-				+ "return(true);"// <-- *B* 2de maal is al geconfimed, return
-									// true voor normale afhandeling
+				// --> E
+				+ "if(attrs.event.originalEvent.target.dataset.doContinueConfirm==='true'){" //
+				// *B* reset 2de maal
+				+ "attrs.event.originalEvent.target.dataset.doContinueConfirm='false';"//
+				// <-- *B* 2de maal is al geconfimed, return true voor normale
+				// afhandeling
+				+ "return(true);"//
 				+ "}"// <-- E
 				+ "attrs.event.preventDefault();"//
 				+ "bootbox.confirm("//
 				+ jsonResp//
 				+ ");"// <-- A
-				+ "return(false);"// de eerste maal stopt normale afhandeling en
-									// wordt een confirm gevraagd
+				// de eerste maal stopt normale afhandeling en wordt een confirm
+				// gevraagd
+				+ "return(false);"//
 		;
 		// if(attrs.event.originalEvent.target.dataset.doContinueConfirm==='true'){attrs.event.originalEvent.target.dataset.doContinueConfirm='false';return(true);}attrs.event.preventDefault();bootbox.confirm({"className":"bootboxmodalclass","size":"sm","centerVertical":"true","locale":"en","onEscape":"true","animate":"false","message":"Are
 		// you
