@@ -71,11 +71,7 @@ public class BootBoxAjaxCallListener extends AjaxCallListener {
 	public CharSequence getPrecondition(Component component) {
 		//
 		String jsonResp = model.getScript();
-		// {"className":"bootboxmodalclass","size":"sm","centerVertical":"true","locale":"en","onEscape":"true","animate":"false","message":"Are
-		// you
-		// sure?","buttons":{"confirm":{"label":"Ok","className":"btn-primary
-		// btn-sm"},"cancel":{"label":"Cancel","className":"btn-secondary
-		// btn-sm"}},"callback":"||FUNC||"}
+		// {..OPTIONS..,"callback":"||FUNC||"}
 		//
 		jsonResp = jsonResp.replace(BootBoxHelper.QFUNC, ""//
 				// --> D result kan confirmed zijn of niet
@@ -89,11 +85,7 @@ public class BootBoxAjaxCallListener extends AjaxCallListener {
 				+ "}"// <-- C
 				+ "}"// <-- D
 		);
-		// {"className":"bootboxmodalclass","size":"sm","centerVertical":"true","locale":"en","onEscape":"true","animate":"false","message":"Are
-		// you
-		// sure?","buttons":{"confirm":{"label":"Ok","className":"btn-primary
-		// btn-sm"},"cancel":{"label":"Cancel","className":"btn-secondary
-		// btn-sm"}},"callback":function(result){if(result){attrs.event.originalEvent.target.dataset.doContinueConfirm='true';attrs.event.target.dispatchEvent(attrs.event.originalEvent);}}}
+		// {..OPTIONS..,"callback":function(result){if(result){attrs.event.originalEvent.target.dataset.doContinueConfirm='true';attrs.event.target.dispatchEvent(attrs.event.originalEvent);}}}
 		//
 		jsonResp = "" //
 				// --> E
@@ -112,11 +104,7 @@ public class BootBoxAjaxCallListener extends AjaxCallListener {
 				// gevraagd
 				+ "return(false);"//
 		;
-		// if(attrs.event.originalEvent.target.dataset.doContinueConfirm==='true'){attrs.event.originalEvent.target.dataset.doContinueConfirm='false';return(true);}attrs.event.preventDefault();bootbox.confirm({"className":"bootboxmodalclass","size":"sm","centerVertical":"true","locale":"en","onEscape":"true","animate":"false","message":"Are
-		// you
-		// sure?","buttons":{"confirm":{"label":"Ok","className":"btn-primary
-		// btn-sm"},"cancel":{"label":"Cancel","className":"btn-secondary
-		// btn-sm"}},"callback":function(result){if(result){attrs.event.originalEvent.target.dataset.doContinueConfirm='true';attrs.event.target.dispatchEvent(attrs.event.originalEvent);}}});return(false);
+		// if(attrs.event.originalEvent.target.dataset.doContinueConfirm==='true'){attrs.event.originalEvent.target.dataset.doContinueConfirm='false';return(true);}attrs.event.preventDefault();bootbox.confirm({..FUNCTIONS..,"callback":function(result){if(result){attrs.event.originalEvent.target.dataset.doContinueConfirm='true';attrs.event.target.dispatchEvent(attrs.event.originalEvent);}}});return(false);
 		//
 		return jsonResp;
 	}

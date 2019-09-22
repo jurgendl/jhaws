@@ -8,6 +8,13 @@ import java.util.Map;
 
 import org.apache.wicket.model.IModel;
 
+//bootbox.confirm({
+//    opt1:opt1,
+//    opt2:opt2,
+//    callback: function (result) {
+//        do stuff on confirmation
+//    }
+//});
 @SuppressWarnings("serial")
 public class BootBoxHelper implements Serializable {
 	public static final String FUNC = "||FUNC||";
