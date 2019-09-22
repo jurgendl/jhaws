@@ -49,7 +49,7 @@ public class BootBoxHelper implements Serializable {
 
 		// boolean scrollable (false) [bootstrap 4]
 
-		options.put("locale", "nl");
+		options.put("locale", "en");
 		// FIXME luister naar session (maakt het eigenlijk uit?)
 
 		options.put("onEscape", "true");
