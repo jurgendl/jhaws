@@ -450,7 +450,7 @@ public class LuceneIndex implements Closeable {
 	}
 
 	protected <L> L log(String prefix, L l) {
-		logger.info("{}: {}", prefix, l);
+		logger.trace("{}: {}", prefix, l);
 		return l;
 	}
 
