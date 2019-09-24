@@ -62,7 +62,7 @@ $.typeahead({
 			}
 			$('#$RESULTS_ID$').html(text);
 		},
-		onPopulateSource: function (node, data, group, path) {
+		onPopulateSource : function (node, data, group, path) {
 			node._data = data;
 			return data;
 		}

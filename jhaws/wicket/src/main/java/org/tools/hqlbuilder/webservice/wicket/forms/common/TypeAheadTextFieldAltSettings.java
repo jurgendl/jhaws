@@ -4,134 +4,145 @@ import java.util.Arrays;
 import java.util.List;
 
 public class TypeAheadTextFieldAltSettings extends AbstractFormElementSettings<TypeAheadTextFieldAltSettings> {
-    private static final long serialVersionUID = 1098120531336315493L;
+	private static final long serialVersionUID = 1098120531336315493L;
 
-    protected boolean caseSensitive = false;
+	protected boolean caseSensitive = false;
 
-    protected int max = 10;
+	protected int max = 10;
 
-    protected int minLength = 2;
+	protected int minLength = 2;
 
-    protected long delay = 200;
+	protected long delay = 200;
 
-    protected String remote;
+	protected String remote;
 
-    protected String queryParam;
+	protected String queryParam;
 
-    protected boolean remoteFilters = false;
+	protected boolean remoteFilters = false;
 
-    protected String local;
+	protected String local;
 
-    protected boolean free = true;
+	protected boolean free = true;
 
-    protected List<String> properties = Arrays.asList("value");
+	protected List<String> properties = Arrays.asList("value");
 
-    protected String template = "value";
+	protected String template = "value";
 
-    public TypeAheadTextFieldAltSettings() {
-        super();
-    }
+	protected Boolean custom;
 
-    public TypeAheadTextFieldAltSettings(boolean required) {
-        super(required);
-    }
+	public TypeAheadTextFieldAltSettings() {
+		super();
+	}
 
-    public long getDelay() {
-        return this.delay;
-    }
+	public TypeAheadTextFieldAltSettings(boolean required) {
+		super(required);
+	}
 
-    public int getMinLength() {
-        return this.minLength;
-    }
+	public long getDelay() {
+		return this.delay;
+	}
 
-    public boolean isCaseSensitive() {
-        return this.caseSensitive;
-    }
+	public int getMinLength() {
+		return this.minLength;
+	}
 
-    public TypeAheadTextFieldAltSettings setCaseSensitive(boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
-        return this;
-    }
+	public boolean isCaseSensitive() {
+		return this.caseSensitive;
+	}
 
-    public TypeAheadTextFieldAltSettings setDelay(long delay) {
-        this.delay = delay;
-        return this;
-    }
+	public TypeAheadTextFieldAltSettings setCaseSensitive(boolean caseSensitive) {
+		this.caseSensitive = caseSensitive;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setMinLength(int minLength) {
-        this.minLength = minLength;
-        return this;
-    }
+	public TypeAheadTextFieldAltSettings setDelay(long delay) {
+		this.delay = delay;
+		return this;
+	}
 
-    public String getRemote() {
-        return this.remote;
-    }
+	public TypeAheadTextFieldAltSettings setMinLength(int minLength) {
+		this.minLength = minLength;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setRemote(String remote) {
-        this.remote = remote;
-        return this;
-    }
+	public String getRemote() {
+		return this.remote;
+	}
 
-    public boolean isFree() {
-        return this.free;
-    }
+	public TypeAheadTextFieldAltSettings setRemote(String remote) {
+		this.remote = remote;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setFree(boolean free) {
-        this.free = free;
-        return this;
-    }
+	public boolean isFree() {
+		return this.free;
+	}
 
-    public String getLocal() {
-        return this.local;
-    }
+	public TypeAheadTextFieldAltSettings setFree(boolean free) {
+		this.free = free;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setLocal(String local) {
-        this.local = local;
-        return this;
-    }
+	public String getLocal() {
+		return this.local;
+	}
 
-    public int getMax() {
-        return this.max;
-    }
+	public TypeAheadTextFieldAltSettings setLocal(String local) {
+		this.local = local;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setMax(int max) {
-        this.max = max;
-        return this;
-    }
+	public int getMax() {
+		return this.max;
+	}
 
-    public boolean isRemoteFilters() {
-        return this.remoteFilters;
-    }
+	public TypeAheadTextFieldAltSettings setMax(int max) {
+		this.max = max;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setRemoteFilters(boolean remoteFilters) {
-        this.remoteFilters = remoteFilters;
-        return this;
-    }
+	public boolean isRemoteFilters() {
+		return this.remoteFilters;
+	}
 
-    public List<String> getProperties() {
-        return this.properties;
-    }
+	public TypeAheadTextFieldAltSettings setRemoteFilters(boolean remoteFilters) {
+		this.remoteFilters = remoteFilters;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setProperties(List<String> properties) {
-        this.properties = properties;
-        return this;
-    }
+	public List<String> getProperties() {
+		return this.properties;
+	}
 
-    public String getTemplate() {
-        return this.template;
-    }
+	public TypeAheadTextFieldAltSettings setProperties(List<String> properties) {
+		this.properties = properties;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setTemplate(String template) {
-        this.template = template;
-        return this;
-    }
+	public String getTemplate() {
+		return this.template;
+	}
 
-    public String getQueryParam() {
-        return this.queryParam;
-    }
+	public TypeAheadTextFieldAltSettings setTemplate(String template) {
+		this.template = template;
+		return this;
+	}
 
-    public TypeAheadTextFieldAltSettings setQueryParam(String queryParam) {
-        this.queryParam = queryParam;
-        return this;
-    }
+	public String getQueryParam() {
+		return this.queryParam;
+	}
+
+	public TypeAheadTextFieldAltSettings setQueryParam(String queryParam) {
+		this.queryParam = queryParam;
+		return this;
+	}
+
+	public Boolean getCustom() {
+		return this.custom;
+	}
+
+	public TypeAheadTextFieldAltSettings setCustom(Boolean custom) {
+		this.custom = custom;
+		return this;
+	}
 }
