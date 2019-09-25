@@ -1069,7 +1069,11 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public static String getExtension(Path path) {
-		String fileName = path.getFileName().toString();
+		Path fileName0 = path.getFileName();
+		if (fileName0 == null) {
+			return null;
+		}
+		String fileName = fileName0.toString();
 		int p = fileName.lastIndexOf(getFileExtensionSeperator());
 		if (p == -1) {
 			return null;
