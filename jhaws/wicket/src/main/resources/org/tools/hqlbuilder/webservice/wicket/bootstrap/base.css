@@ -842,4 +842,28 @@ a.link-unstyled
 	background-color: #343a40;
 }
 
+/* https://stackoverflow.com/questions/16600479/how-do-you-override-moz-user-select-none-on-a-child-element */
+/* img draggable="false" */
+/* oncontextmenu="window.alert('All Rights Reserved &copy;');return false; */
+.no-select {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+/* document.addEventListener('dragover', event => event.preventDefault());
+document.addEventListener('drop', event => event.preventDefault()); */
+.no-drag {
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	-moz-user-drag: none;
+	-ms-user-drag: none;
+	user-drag: none;
+	-webkit-touch-callout: none;
+	-webkit-app-region: no-drag;
+}
+
+
 /* <<<============= base.css ============= */
