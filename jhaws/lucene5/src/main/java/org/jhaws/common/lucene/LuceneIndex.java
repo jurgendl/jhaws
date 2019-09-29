@@ -54,6 +54,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.TotalHitCountCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.postingshighlight.PostingsHighlighter;
 import org.apache.lucene.store.Directory;
@@ -523,7 +524,7 @@ public class LuceneIndex implements Closeable {
 		return (F) indexable.get().retrieve(doc);
 	}
 
-	protected Document getDoc(ScoreDoc hit) {
+	public Document getDoc(ScoreDoc hit) {
 		return stransactionReturn(s -> s.doc(hit.doc));
 	}
 
@@ -826,5 +827,11 @@ public class LuceneIndex implements Closeable {
 	@Override
 	public void close() {
 		shutDown();
+	}
+
+	public int count(Query query) {
+		TotalHitCountCollector collector = new TotalHitCountCollector();
+		stransaction(s -> s.search(query, collector));
+		return collector.getTotalHits();
 	}
 }
