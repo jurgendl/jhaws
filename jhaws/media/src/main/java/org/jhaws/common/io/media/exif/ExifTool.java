@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.Utils;
 import org.jhaws.common.io.Utils.OSGroup;
+import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
@@ -461,13 +462,25 @@ public class ExifTool extends Tool implements MediaCte {
 		try {
 			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path)
 					|| qtFilter.accept(path)) {
-				List<String> command = Arrays.asList(command(executable), "-charset", "utf8", "-q", "-json",
-						path.getAbsolutePath());
+				List<String> command = Arrays.asList(//
+						command(executable) //
+						// , "-charset" //
+						// , "FileName=" +
+						// System.getProperty("sun.jnu.encoding")//
+						// , "FileName=utf-8"//
+						, "-q"//
+						, "-json"//
+						, "\"" + path.getFileNameString() + "\""//
+				);
 				String jc = join(command);
-				logger.trace("{}", jc);
+				System.out.println(jc);
 
-				List<String> lines = callProcess(null, false, command, path.getParentPath(), new Lines()).lines()
-						.stream().collect(collectList());
+				List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command,
+						path.getParentPath(), null, null, new Lines()).lines().stream().collect(collectList());
+				// List<String> lines = callProcess(null, false, command,
+				// path.getParentPath(), new Lines()).lines()
+				// .stream().collect(collectList());
+
 				// lines.forEach(System.out::println);
 
 				JsonStructure jso = Json

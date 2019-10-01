@@ -107,7 +107,7 @@ public class LuceneIndex implements Closeable {
 
 	protected Thread startupThread;
 
-	protected int maxBatchSize = 1000;
+	protected int maxBatchSize = 100;
 
 	// protected long writeLockTimeout = 10000l;
 
