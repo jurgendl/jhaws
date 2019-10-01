@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -477,11 +478,41 @@ public class ExifTool extends Tool implements MediaCte {
 
 				List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command,
 						path.getParentPath(), null, null, new Lines()).lines().stream().collect(collectList());
-				// List<String> lines = callProcess(null, false, command,
-				// path.getParentPath(), new Lines()).lines()
-				// .stream().collect(collectList());
-
 				// lines.forEach(System.out::println);
+
+				if (lines.stream().anyMatch(x -> x.startsWith("No file specified") || x.startsWith("No matching files")
+						|| x.startsWith("Error: File not found"))) {
+					FilePath tmp = path.getParentPath().child("" + System.currentTimeMillis());
+					try {
+						Files.createLink(tmp.toPath(), path.toPath());
+						command = Arrays.asList(//
+								command(executable) //
+								// , "-charset" //
+								// , "FileName=" +
+								// System.getProperty("sun.jnu.encoding")//
+								// , "FileName=utf-8"//
+								, "-q"//
+								, "-json"//
+								, "\"" + tmp.getFileNameString() + "\""//
+						);
+						lines = Processes.callProcess(null, false, null, System.getenv(), command, path.getParentPath(),
+								null, null, new Lines()).lines().stream().collect(collectList());
+						// lines.forEach(System.out::println);
+					} catch (Exception x) {
+						System.out.println(
+								"could not create " + tmp.getAbsolutePath() + " from " + path.getAbsolutePath());
+						x.printStackTrace(System.out);
+					} finally {
+						if (tmp.exists()) {
+							try {
+								tmp.delete();
+							} catch (Exception x) {
+								System.out.println("could not delete " + tmp.getAbsolutePath());
+								x.printStackTrace(System.out);
+							}
+						}
+					}
+				}
 
 				JsonStructure jso = Json
 						.createReader(new InputStreamReader(
