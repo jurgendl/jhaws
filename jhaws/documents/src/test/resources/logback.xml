@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="true" scan="true">
-	<property name="pattern" value="\\(%file:%line\\) %message%n"/>
+	<property name="pattern" value="%highlight(%level) \\(%file:%line\\) %boldMagenta([%logger]) %boldBlue([%thread]) %message %n" />
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset>UTF-8</charset>
@@ -8,5 +8,7 @@
 			<outputPatternAsHeader>false</outputPatternAsHeader>
 		</encoder>
 	</appender>
-	<root level="info"><appender-ref ref="CONSOLE" /></root>
+	<logger name="org.apache.pdfbox" level="info" />
+	<logger name="org.apache.fontbox" level="info" />
+	<root level="debug"><appender-ref ref="CONSOLE" /></root>
 </configuration>
