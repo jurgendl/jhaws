@@ -1,8 +1,12 @@
 package org.jhaws.common.lucene;
 
-import java.io.InputStream;
+import java.io.IOException;
+import java.util.List;
 
-import org.apache.tika.Tika;
+import org.jhaws.common.documents.FileTextExtracter;
+import org.jhaws.common.documents.FileTextExtracterService;
+import org.jhaws.common.documents.TikaHelper;
+import org.jhaws.common.io.FilePath;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,12 +79,34 @@ public class DocExtractTest {
     private void test(String docName) {
         try {
             System.out.println(docName);
-            InputStream doc = getClass().getClassLoader().getResourceAsStream("docs/" + docName);
-            Tika tika = new Tika();
-            System.out.println(tika.parseToString(doc).length());
+            System.out.println(TikaHelper.parse(getClass().getClassLoader().getResourceAsStream("docs/" + docName)).length());
+            System.out.println(TikaHelper.parseToString(getClass().getClassLoader().getResourceAsStream("docs/" + docName)).length());
+            // System.out.println("---------------------------------------------");
+            // System.out.println(TikaHelper.parse(getClass().getClassLoader().getResourceAsStream("docs/" + docName)));
+            // System.out.println("---------------------------------------------");
+            // System.out.println(TikaHelper.parseToString(getClass().getClassLoader().getResourceAsStream("docs/" + docName)));
+            System.out.println("============================================");
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
             Assert.fail("" + ex);
         }
+    }
+
+    @Test
+    public void testPdfOptions() {
+        FileTextExtracterService s = new FileTextExtracterService();
+        FilePath tmp = FilePath.getTempDirectory().child(String.valueOf(System.currentTimeMillis())).appendExtension("pdf");
+        tmp.write(getClass().getClassLoader().getResourceAsStream("docs/" + "file-example_PDF_1MB.pdf"));
+        FilePath target = new FilePath(tmp).appendExtension("txt");
+        List<FileTextExtracter> fileTextExtracters = s.getFileTextExtracters(tmp);
+        fileTextExtracters.forEach(i -> {
+            System.out.println(i);
+            try {
+                i.extract(tmp.newBufferedInputStream(), target);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            System.out.println(target.getFileSize());
+        });
     }
 }
