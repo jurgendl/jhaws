@@ -101,12 +101,14 @@ public class DocExtractTest {
         List<FileTextExtracter> fileTextExtracters = s.getFileTextExtracters(tmp);
         fileTextExtracters.forEach(i -> {
             System.out.println(i);
+            long start = System.currentTimeMillis();
             try {
                 i.extract(tmp.newBufferedInputStream(), target);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
             System.out.println(target.getFileSize());
+            System.out.println((System.currentTimeMillis() - start) + "ms");
         });
     }
 }

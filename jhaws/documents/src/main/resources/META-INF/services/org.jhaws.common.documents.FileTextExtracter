@@ -1,9 +1,9 @@
+org.jhaws.common.documents.PdfFileTextExtracter
 org.jhaws.common.documents.TikaTextExtractor
 org.jhaws.common.documents.OfficeFileTextExtracter
 org.jhaws.common.documents.OfficeDocxFileTextExtracter
 org.jhaws.common.documents.OfficePpsxFileTextExtracter
 org.jhaws.common.documents.OfficeXlsxFileTextExtracter
-org.jhaws.common.documents.PdfFileTextExtracter
 org.jhaws.common.documents.RtfFileTextExtracter
 org.jhaws.common.documents.TxtFileTextExtracter
 org.jhaws.common.documents.OdfFileTextExtracter
