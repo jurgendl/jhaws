@@ -10,19 +10,20 @@ import org.jhaws.common.io.FilePath;
 import org.xml.sax.SAXException;
 
 public class TikaTextExtractor implements FileTextExtracter {
-    @Override
-    public List<String> accepts() {
-        return Arrays.asList("rtf", "xml", "txt", "pdf", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp", "ods", "odt");
-    }
+	@Override
+	public List<String> accepts() {
+		return Arrays.asList("rtf", "xml", "txt", "pdf", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp", "ods",
+				"odt", "epub");
+	}
 
-    @Override
-    public void extract(InputStream stream, FilePath target) throws IOException {
-        try {
-            TikaHelper.parse(stream, target.newBufferedOutputStream());
-        } catch (SAXException ex) {
-            throw new IOException(ex);
-        } catch (TikaException ex) {
-            throw new IOException(ex);
-        }
-    }
+	@Override
+	public void extract(InputStream stream, FilePath target) throws IOException {
+		try {
+			TikaHelper.parse(stream, target.newBufferedOutputStream());
+		} catch (SAXException ex) {
+			throw new IOException(ex);
+		} catch (TikaException ex) {
+			throw new IOException(ex);
+		}
+	}
 }
