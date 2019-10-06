@@ -12,8 +12,8 @@ import org.xml.sax.SAXException;
 public class TikaTextExtractor implements FileTextExtracter {
 	@Override
 	public List<String> accepts() {
-		return Arrays.asList("rtf", "xml", "txt", "pdf", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp", "ods",
-				"odt", "epub", "csv");
+		return Arrays.asList("txt", "rtf", "xml", "txt", "pdf", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp",
+				"ods", "odt", "epub", "csv");
 	}
 
 	@Override
