@@ -67,6 +67,11 @@ public class DocExtractTest {
 		test("don-quijoti-epub3.epub");
 	}
 
+	@Test
+	public void testCsv() {
+		test("file_example_ODS_5000.csv");
+	}
+
 	// FIXME no implementation
 	@Test
 	public void testMobi() {

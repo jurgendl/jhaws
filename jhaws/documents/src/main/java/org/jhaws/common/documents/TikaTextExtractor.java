@@ -13,7 +13,7 @@ public class TikaTextExtractor implements FileTextExtracter {
 	@Override
 	public List<String> accepts() {
 		return Arrays.asList("rtf", "xml", "txt", "pdf", "xls", "xlsx", "ppt", "pptx", "doc", "docx", "odp", "ods",
-				"odt", "epub");
+				"odt", "epub", "csv");
 	}
 
 	@Override
