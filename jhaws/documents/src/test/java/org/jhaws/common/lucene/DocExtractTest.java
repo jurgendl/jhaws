@@ -97,12 +97,14 @@ public class DocExtractTest {
 		try {
 			FileTextExtracterService s = new FileTextExtracterService();
 			s.extract(in, out);
+			System.out.println(in);
 			System.out.println(in.getHumanReadableFileSize());
 			System.out.println(out.getHumanReadableFileSize());
 		} catch (IOException ex) {
 			ex.printStackTrace();
 			Assert.fail();
 		}
+		System.out.println("============================================");
 	}
 
 	@Test
@@ -135,11 +137,11 @@ public class DocExtractTest {
 			// System.out.println("---------------------------------------------");
 			// System.out.println(TikaHelper.parseToString(getClass().getClassLoader().getResourceAsStream("docs/"
 			// + docName)));
-			System.out.println("============================================");
 		} catch (Exception ex) {
 			ex.printStackTrace(System.out);
 			Assert.fail("" + ex);
 		}
+		System.out.println("============================================");
 	}
 
 	@Test
@@ -165,5 +167,6 @@ public class DocExtractTest {
 			System.out.println(i.getClass() + " // " + target.getFileSize() + " // "
 					+ (System.currentTimeMillis() - start) + "ms");
 		});
+		System.out.println("============================================");
 	}
 }
