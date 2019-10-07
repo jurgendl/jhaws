@@ -8,7 +8,6 @@ import org.jhaws.common.documents.FileTextExtracter;
 import org.jhaws.common.documents.FileTextExtracterService;
 import org.jhaws.common.documents.TikaHelper;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.win.WinRegistryAlt;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,10 +74,28 @@ public class DocExtractTest {
 
 	@Test
 	public void testMobi() {
-		FileTextExtracterService s = new FileTextExtracterService();
+		FilePath in = new FilePath(getClass(), "docs/" + "don-quijoti.mobi");
+		FilePath out = FilePath.getTempDirectory().child("don-quijoti.mobi.txt");
+		ebook(in, out);
+	}
+
+	@Test
+	public void testAzw3() {
+		FilePath in = new FilePath(getClass(), "docs/" + "don-quijoti.azw3");
+		FilePath out = FilePath.getTempDirectory().child("don-quijoti.azw3.txt");
+		ebook(in, out);
+	}
+
+	@Test
+	public void testFb2() {
+		FilePath in = new FilePath(getClass(), "docs/" + "don-quijoti.fb2");
+		FilePath out = FilePath.getTempDirectory().child("don-quijoti.fb2.txt");
+		ebook(in, out);
+	}
+
+	private void ebook(FilePath in, FilePath out) {
 		try {
-			FilePath in = new FilePath(getClass(), "docs/" + "don-quijoti-epub3.mobi");
-			FilePath out = FilePath.getTempDirectory().child("don-quijoti-epub3.mobi.txt");
+			FileTextExtracterService s = new FileTextExtracterService();
 			s.extract(in, out);
 			System.out.println(in.getHumanReadableFileSize());
 			System.out.println(out.getHumanReadableFileSize());
@@ -148,15 +165,5 @@ public class DocExtractTest {
 			System.out.println(i.getClass() + " // " + target.getFileSize() + " // "
 					+ (System.currentTimeMillis() - start) + "ms");
 		});
-	}
-
-	public static void main(String[] args) {
-		try {
-			String loc = WinRegistryAlt.readString(WinRegistryAlt.HKEY_LOCAL_MACHINE,
-					"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\calibre.exe", "Path");
-			System.out.println(loc);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 	}
 }

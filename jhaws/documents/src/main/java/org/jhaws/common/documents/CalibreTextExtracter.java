@@ -30,7 +30,7 @@ public class CalibreTextExtracter implements FileTextExtracter {
 
 	@Override
 	public List<String> accepts() {
-		return Arrays.asList("mobi");
+		return Arrays.asList("mobi", "azw", "azw3", "cbc", "cbr", "cbz", "epub", "fb2");
 	}
 
 	@Override
