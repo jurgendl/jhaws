@@ -8,6 +8,7 @@ import org.jhaws.common.documents.FileTextExtracter;
 import org.jhaws.common.documents.FileTextExtracterService;
 import org.jhaws.common.documents.TikaHelper;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.io.win.WinRegistryAlt;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -72,10 +73,19 @@ public class DocExtractTest {
 		test("file_example_ODS_5000.csv");
 	}
 
-	// FIXME no implementation
 	@Test
 	public void testMobi() {
-		test("don-quijoti-epub3.mobi");
+		FileTextExtracterService s = new FileTextExtracterService();
+		try {
+			FilePath in = new FilePath(getClass(), "docs/" + "don-quijoti-epub3.mobi");
+			FilePath out = FilePath.getTempDirectory().child("don-quijoti-epub3.mobi.txt");
+			s.extract(in, out);
+			System.out.println(in.getHumanReadableFileSize());
+			System.out.println(out.getHumanReadableFileSize());
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			Assert.fail();
+		}
 	}
 
 	@Test
@@ -138,5 +148,15 @@ public class DocExtractTest {
 			System.out.println(i.getClass() + " // " + target.getFileSize() + " // "
 					+ (System.currentTimeMillis() - start) + "ms");
 		});
+	}
+
+	public static void main(String[] args) {
+		try {
+			String loc = WinRegistryAlt.readString(WinRegistryAlt.HKEY_LOCAL_MACHINE,
+					"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\calibre.exe", "Path");
+			System.out.println(loc);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

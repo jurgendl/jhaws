@@ -1,7 +1,7 @@
 package org.jhaws.common.io.sevenzip;
 
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.win.WinRegistry;
+import org.jhaws.common.io.win.WinRegistryAlt;
 
 public class WinSevenZip extends SevenZip {
     public static FilePath getWinExecutable(boolean compatibility) {
@@ -33,10 +33,10 @@ public class WinSevenZip extends SevenZip {
 
     public static String getWin32SevenZipPath() {
         try {
-            return WinRegistry.readString(WinRegistry.HKEY_CURRENT_USER, "Software\\7-Zip", "Path").toString();
+            return WinRegistryAlt.readString(WinRegistryAlt.HKEY_CURRENT_USER, "Software\\7-Zip", "Path").toString();
         } catch (Exception ex1) {
             try {
-                return WinRegistry.readString(WinRegistry.HKEY_LOCAL_MACHINE, "Software\\7-Zip", "Path").toString();
+                return WinRegistryAlt.readString(WinRegistryAlt.HKEY_LOCAL_MACHINE, "Software\\7-Zip", "Path").toString();
             } catch (Exception ex2) {
                 return null;
             }
@@ -45,10 +45,10 @@ public class WinSevenZip extends SevenZip {
 
     public static String getWin64SevenZipPath() {
         try {
-            return WinRegistry.readString(WinRegistry.HKEY_CURRENT_USER, "Software\\7-Zip", "Path64").toString();
+            return WinRegistryAlt.readString(WinRegistryAlt.HKEY_CURRENT_USER, "Software\\7-Zip", "Path64").toString();
         } catch (Exception ex1) {
             try {
-                return WinRegistry.readString(WinRegistry.HKEY_LOCAL_MACHINE, "Software\\7-Zip", "Path64").toString();
+                return WinRegistryAlt.readString(WinRegistryAlt.HKEY_LOCAL_MACHINE, "Software\\7-Zip", "Path64").toString();
             } catch (Exception ex2) {
                 return null;
             }

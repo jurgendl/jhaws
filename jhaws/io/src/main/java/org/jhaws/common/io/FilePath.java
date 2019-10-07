@@ -114,7 +114,7 @@ import org.jhaws.common.io.FilePath.Filters.DirectoryFilter;
 import org.jhaws.common.io.FilePath.Visitors.CopyAllFilesVisitor;
 import org.jhaws.common.io.FilePath.Visitors.MoveAllFilesVisitor;
 import org.jhaws.common.io.Utils.OSGroup;
-import org.jhaws.common.io.win.WinRegistry;
+import org.jhaws.common.io.win.WinRegistryAlt;
 import org.jhaws.common.lang.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -3253,7 +3253,7 @@ public class FilePath implements Path, Externalizable {
 		if (FILE_TYPES.containsKey(ext))
 			return FILE_TYPES.get(ext);
 		try {
-			String value = WinRegistry
+			String value = WinRegistryAlt
 					.getRegValue("HKEY_CLASSES_ROOT\\" + Utils.WIN_FILE_EXTS.get(ext), null, "REG_SZ", false).get(0);
 			if (value.startsWith("[") && value.endsWith("]")) {
 				value = value.substring(1, value.length() - 1);

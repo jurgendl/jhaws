@@ -1,4 +1,4 @@
-org.jhaws.common.documents.PdfFileTextExtracter
+org.jhaws.common.documents.XPdfFileTextExtracter
 org.jhaws.common.documents.TikaTextExtractor
 org.jhaws.common.documents.OfficeFileTextExtracter
 org.jhaws.common.documents.OfficeDocxFileTextExtracter
@@ -12,3 +12,4 @@ org.jhaws.common.documents.OfficeDocFileTextExtracter
 org.jhaws.common.documents.OfficePpsFileTextExtracter
 org.jhaws.common.documents.OfficeXlsFileTextExtracter
 org.jhaws.common.documents.XmlTextExtracter
+org.jhaws.common.documents.CalibreTextExtracter
