@@ -70,6 +70,7 @@ import org.slf4j.LoggerFactory;
  * @see http://blog.swwomm.com/2013/07/tuning-lucene-to-get-most-relevant.html
  */
 // SmartLifecycle, InitializingBean
+//https://github.com/DmitryKey/luke
 @SuppressWarnings("deprecation")
 public class LuceneIndex implements Closeable {
 	protected final Lock lock = new ReentrantLock();
