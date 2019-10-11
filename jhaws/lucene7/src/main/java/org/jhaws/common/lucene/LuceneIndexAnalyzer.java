@@ -11,7 +11,6 @@ import org.apache.lucene.analysis.en.EnglishPossessiveFilter;
 import org.apache.lucene.analysis.en.KStemFilter;
 import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.standard.ClassicFilter;
-import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 
 public class LuceneIndexAnalyzer extends Analyzer {
@@ -32,7 +31,6 @@ public class LuceneIndexAnalyzer extends Analyzer {
     }
 
     protected TokenStream addFilters(TokenStream tf) {
-        tf = new StandardFilter(tf);
         tf = new LowerCaseFilter(tf);
         tf = new EnglishPossessiveFilter(tf);
         tf = new ClassicFilter(tf);

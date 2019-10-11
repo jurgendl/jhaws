@@ -80,7 +80,6 @@
 		<module>web</module>
 		<module>wicket</module>
 		<module>documents</module>
-		<module>lucene</module><!--aka 4-->
 		<module>lucene5</module>
 		<module>lucene6</module>
 		<module>lucene7</module>

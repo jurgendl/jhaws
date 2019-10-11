@@ -42,7 +42,6 @@ public class LuceneSearchAnalyzer extends Analyzer {
     }
 
     protected TokenStream addFilters(TokenStream tf) {
-        // tf = new StandardFilter(tf);
         tf = new LowerCaseFilter(tf);
         tf = new EnglishPossessiveFilter(tf);
         tf = new ClassicFilter(tf);

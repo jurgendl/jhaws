@@ -17,7 +17,6 @@ import org.apache.lucene.analysis.miscellaneous.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.miscellaneous.HyphenatedWordsFilter;
 import org.apache.lucene.analysis.miscellaneous.LengthFilter;
 import org.apache.lucene.analysis.standard.ClassicFilter;
-import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
@@ -43,7 +42,6 @@ public class LuceneSearchAnalyzer extends Analyzer {
     }
 
     protected TokenStream addFilters(TokenStream tf) {
-        tf = new StandardFilter(tf);
         tf = new LowerCaseFilter(tf);
         tf = new EnglishPossessiveFilter(tf);
         tf = new ClassicFilter(tf);
