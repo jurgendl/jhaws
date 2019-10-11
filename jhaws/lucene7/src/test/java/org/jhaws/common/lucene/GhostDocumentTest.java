@@ -93,8 +93,6 @@ public class GhostDocumentTest {
             writer.addDocument(doc);
             // writer.updateDocument(new Term("ID", id3), doc);
         }
-        // writer.flush();
-        // writer.commit();
         writer.close();
     }
 
@@ -104,8 +102,6 @@ public class GhostDocumentTest {
         iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
         IndexWriter writer = new IndexWriter(dir, iwc);
         writer.deleteDocuments(new Term("ID", id));
-        // writer.flush();
-        // writer.commit();
         writer.close();
     }
 
