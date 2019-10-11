@@ -474,7 +474,7 @@ public class ExifTool extends Tool implements MediaCte {
 						, "\"" + path.getFileNameString() + "\""//
 				);
 				String jc = join(command);
-				System.out.println(jc);
+				logger.trace(jc);
 
 				List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command,
 						path.getParentPath(), null, null, new Lines()).lines().stream().collect(collectList());
