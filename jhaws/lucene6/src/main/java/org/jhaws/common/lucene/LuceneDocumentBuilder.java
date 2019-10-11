@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.document.BinaryDocValuesField;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Store;
@@ -16,8 +17,10 @@ import org.apache.lucene.document.LegacyDoubleField;
 import org.apache.lucene.document.LegacyFloatField;
 import org.apache.lucene.document.LegacyIntField;
 import org.apache.lucene.document.LegacyLongField;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.util.BytesRef;
 import org.jhaws.common.lang.ClassUtils;
 import org.jhaws.common.lang.DateTime8;
 
@@ -87,6 +90,21 @@ public abstract class LuceneDocumentBuilder<T> {
                         }
                     }
                     d.add(new Field(name, s, indexFieldType));
+                } else if (byte[].class.isAssignableFrom(fieldType)) {
+                    d.add(new BinaryDocValuesField(name, new BytesRef((byte[]) v)));
+                    if (store == Store.YES) {
+                        d.add(new StoredField(name, new BytesRef((byte[]) v)));
+                    }
+                } else if (Byte[].class.isAssignableFrom(fieldType)) {
+                    Byte[] a = (Byte[]) v;
+                    byte[] b = new byte[a.length];
+                    for (int i = 0; i < a.length; i++) {
+                        b[i] = a[i];
+                    }
+                    d.add(new BinaryDocValuesField(name, new BytesRef(b)));
+                    if (store == Store.YES) {
+                        d.add(new StoredField(name, new BytesRef(b)));
+                    }
                 } else if (Boolean.class.isAssignableFrom(fieldType)) {
                     d.add(new LegacyIntField(name, Boolean.TRUE.equals(v) ? 1 : 0, store));
                 } else if (Number.class.isAssignableFrom(fieldType)) {

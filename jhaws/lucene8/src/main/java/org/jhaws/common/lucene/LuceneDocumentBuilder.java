@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.document.BinaryDocValuesField;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DoublePoint;
 import org.apache.lucene.document.Field;
@@ -19,6 +20,7 @@ import org.apache.lucene.document.LongPoint;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.util.BytesRef;
 import org.jhaws.common.lang.ClassUtils;
 import org.jhaws.common.lang.DateTime8;
 
@@ -87,6 +89,21 @@ public abstract class LuceneDocumentBuilder<T> {
                         }
                     }
                     d.add(new Field(name, s, indexFieldType));
+                } else if (byte[].class.isAssignableFrom(fieldType)) {
+                    d.add(new BinaryDocValuesField(name, new BytesRef((byte[]) v)));
+                    if (store == Store.YES) {
+                        d.add(new StoredField(name, new BytesRef((byte[]) v)));
+                    }
+                } else if (Byte[].class.isAssignableFrom(fieldType)) {
+                    Byte[] a = (Byte[]) v;
+                    byte[] b = new byte[a.length];
+                    for (int i = 0; i < a.length; i++) {
+                        b[i] = a[i];
+                    }
+                    d.add(new BinaryDocValuesField(name, new BytesRef(b)));
+                    if (store == Store.YES) {
+                        d.add(new StoredField(name, new BytesRef(b)));
+                    }
                 } else if (Boolean.class.isAssignableFrom(fieldType)) {
                     d.add(new IntPoint(name, Boolean.TRUE.equals(v) ? 1 : 0));
                     if (store == Store.YES) {
@@ -231,33 +248,33 @@ public abstract class LuceneDocumentBuilder<T> {
         TEXT_TYPE_NOT_STORED.setOmitNorms(false);
         TEXT_TYPE_NOT_STORED.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS);// DOCS_AND_FREQS_AND_POSITIONS
         TEXT_TYPE_NOT_STORED.setTokenized(true);
-        TEXT_TYPE_NOT_STORED.setStored(false);
+        TEXT_TYPE_NOT_STORED.setStored(false);// !!
         TEXT_TYPE_NOT_STORED.freeze();
 
         // TEXT_TYPE_STORED.setIndexed(true);
         TEXT_TYPE_STORED.setOmitNorms(false);
         TEXT_TYPE_STORED.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);// DOCS_AND_FREQS_AND_POSITIONS
         TEXT_TYPE_STORED.setTokenized(true);
-        TEXT_TYPE_STORED.setStored(true);
-        TEXT_TYPE_STORED.setStoreTermVectorOffsets(true);
-        TEXT_TYPE_STORED.setStoreTermVectorPayloads(true);
-        TEXT_TYPE_STORED.setStoreTermVectorPositions(true);
-        TEXT_TYPE_STORED.setStoreTermVectorPositions(true);
-        TEXT_TYPE_STORED.setStoreTermVectors(true);
+        TEXT_TYPE_STORED.setStored(true);// !!
+        TEXT_TYPE_STORED.setStoreTermVectorOffsets(true);// !!
+        TEXT_TYPE_STORED.setStoreTermVectorPayloads(true);// !!
+        TEXT_TYPE_STORED.setStoreTermVectorPositions(true);// !!
+        TEXT_TYPE_STORED.setStoreTermVectorPositions(true);// !!
+        TEXT_TYPE_STORED.setStoreTermVectors(true);// !!
         TEXT_TYPE_STORED.freeze();
 
         // STRING_TYPE_NOT_STORED.setIndexed(true);
         STRING_TYPE_NOT_STORED.setOmitNorms(true);
         STRING_TYPE_NOT_STORED.setIndexOptions(IndexOptions.DOCS);
         STRING_TYPE_NOT_STORED.setTokenized(false);
-        STRING_TYPE_NOT_STORED.setStored(false);
+        STRING_TYPE_NOT_STORED.setStored(false);// !!
         STRING_TYPE_NOT_STORED.freeze();
 
         // STRING_TYPE_STORED.setIndexed(true);
         STRING_TYPE_STORED.setOmitNorms(true);
         STRING_TYPE_STORED.setIndexOptions(IndexOptions.DOCS);
         STRING_TYPE_STORED.setTokenized(false);
-        STRING_TYPE_STORED.setStored(true);
+        STRING_TYPE_STORED.setStored(true);// !!
         STRING_TYPE_STORED.freeze();
     }
 }

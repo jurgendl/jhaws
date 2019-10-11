@@ -309,23 +309,32 @@ public class LuceneIndex implements Closeable {
             if (index == null) return;
             index = null;
             logger.info("shutdown index@{}", dir);
-            if (indexWriter != null) try {
-                indexWriter.commit();
-                indexWriter.forceMergeDeletes();
-            } catch (Exception ex) {
-                //
-            }
-            if (indexReader != null) try {
+            try {
                 indexReader.close();
             } catch (Exception ex) {
                 //
             }
-            if (indexWriter != null) try {
+            try {
+                indexWriter.commit();
+            } catch (Exception ex) {
+                //
+            }
+            try {
+                indexWriter.forceMergeDeletes();
+            } catch (Exception ex) {
+                //
+            }
+            try {
+                indexWriter.deleteUnusedFiles();
+            } catch (Exception ex) {
+                //
+            }
+            try {
                 indexWriter.close();
             } catch (Exception ex) {
                 //
             }
-            if (indexAnalyzer != null) try {
+            try {
                 indexAnalyzer.close();
             } catch (Exception ex) {
                 //
