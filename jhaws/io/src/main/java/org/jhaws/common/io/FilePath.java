@@ -1209,7 +1209,7 @@ public class FilePath implements Path, Externalizable {
 				indStringSB.append("0");
 			}
 			indStringSB.append(String.valueOf(ind));
-			if (extension.equals("")) {
+			if (extension == null || extension.equals("")) {
 				file = new FilePath(parent, outFileName.substring(0, outFileName.length() - FORMAT.length()) + SEPARATOR
 						+ indStringSB.toString());
 			} else {
