@@ -297,12 +297,14 @@ public class LuceneIndex implements Closeable {
 	public void shutDown() {
 		lock.lock();
 		try {
-			if (index == null)
-				return;
-			index = null;
 			logger.info("shutdown index@{}", dir);
 			try {
 				indexReader.close();
+			} catch (Exception ex) {
+				//
+			}
+			try {
+				getIndexWriter();
 			} catch (Exception ex) {
 				//
 			}
@@ -331,6 +333,7 @@ public class LuceneIndex implements Closeable {
 			} catch (Exception ex) {
 				//
 			}
+			index = null;
 			indexReader = null;
 			indexWriter = null;
 			indexWriterConfig = null;
