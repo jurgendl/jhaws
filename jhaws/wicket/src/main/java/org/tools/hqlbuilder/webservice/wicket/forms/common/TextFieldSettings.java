@@ -2,66 +2,77 @@ package org.tools.hqlbuilder.webservice.wicket.forms.common;
 
 @SuppressWarnings("serial")
 public class TextFieldSettings extends AbstractFormElementSettings<TextFieldSettings> {
-    protected Boolean selectAllOnFocus;
+	protected Boolean selectAllOnFocus;
 
-    protected Boolean replaceAllOnDrop;
+	protected Boolean replaceAllOnDrop;
 
-    protected Boolean autocomplete = false;
+	protected Boolean autocomplete = false;
 
-    protected String pattern;
+	protected String pattern;
 
-    protected Integer minlength;
+	protected Integer minlength;
 
-    protected Integer maxlength;
+	protected Integer maxlength;
 
-    public Boolean getSelectAllOnFocus() {
-        return this.selectAllOnFocus;
-    }
+	protected String placeholder;
 
-    public TextFieldSettings setSelectAllOnFocus(Boolean selectAllOnFocus) {
-        this.selectAllOnFocus = selectAllOnFocus;
-        return this;
-    }
+	public String getPlaceholder() {
+		return this.placeholder;
+	}
 
-    public Boolean getReplaceAllOnDrop() {
-        return this.replaceAllOnDrop;
-    }
+	public TextFieldSettings setPlaceholder(String placeholder) {
+		this.placeholder = placeholder;
+		return this;
+	}
 
-    public TextFieldSettings setReplaceAllOnDrop(Boolean replaceAllOnDrop) {
-        this.replaceAllOnDrop = replaceAllOnDrop;
-        return this;
-    }
+	public Boolean getSelectAllOnFocus() {
+		return this.selectAllOnFocus;
+	}
 
-    public Boolean getAutocomplete() {
-        return this.autocomplete;
-    }
+	public TextFieldSettings setSelectAllOnFocus(Boolean selectAllOnFocus) {
+		this.selectAllOnFocus = selectAllOnFocus;
+		return this;
+	}
 
-    public TextFieldSettings setAutocomplete(Boolean autocomplete) {
-        this.autocomplete = autocomplete;
-        return this;
-    }
+	public Boolean getReplaceAllOnDrop() {
+		return this.replaceAllOnDrop;
+	}
 
-    public String getPattern() {
-        return this.pattern;
-    }
+	public TextFieldSettings setReplaceAllOnDrop(Boolean replaceAllOnDrop) {
+		this.replaceAllOnDrop = replaceAllOnDrop;
+		return this;
+	}
 
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
+	public Boolean getAutocomplete() {
+		return this.autocomplete;
+	}
 
-    public Integer getMinlength() {
-        return this.minlength;
-    }
+	public TextFieldSettings setAutocomplete(Boolean autocomplete) {
+		this.autocomplete = autocomplete;
+		return this;
+	}
 
-    public void setMinlength(Integer minlength) {
-        this.minlength = minlength;
-    }
+	public String getPattern() {
+		return this.pattern;
+	}
 
-    public Integer getMaxlength() {
-        return this.maxlength;
-    }
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
 
-    public void setMaxlength(Integer maxlength) {
-        this.maxlength = maxlength;
-    }
+	public Integer getMinlength() {
+		return this.minlength;
+	}
+
+	public void setMinlength(Integer minlength) {
+		this.minlength = minlength;
+	}
+
+	public Integer getMaxlength() {
+		return this.maxlength;
+	}
+
+	public void setMaxlength(Integer maxlength) {
+		this.maxlength = maxlength;
+	}
 }

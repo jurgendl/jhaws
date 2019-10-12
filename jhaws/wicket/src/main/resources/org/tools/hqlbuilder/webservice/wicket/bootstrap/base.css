@@ -865,5 +865,17 @@ document.addEventListener('drop', event => event.preventDefault()); */
 	-webkit-app-region: no-drag;
 }
 
+.form-control::placeholder,
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ccc !important;
+  opacity: 1; /* Firefox */
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: #ccc !important;
+}
+.form-control::-ms-input-placeholder,
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: #ccc !important;
+}
 
 /* <<<============= base.css ============= */
