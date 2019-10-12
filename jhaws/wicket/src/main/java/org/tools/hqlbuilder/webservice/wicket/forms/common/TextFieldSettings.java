@@ -14,17 +14,6 @@ public class TextFieldSettings extends AbstractFormElementSettings<TextFieldSett
 
 	protected Integer maxlength;
 
-	protected String placeholder;
-
-	public String getPlaceholder() {
-		return this.placeholder;
-	}
-
-	public TextFieldSettings setPlaceholder(String placeholder) {
-		this.placeholder = placeholder;
-		return this;
-	}
-
 	public Boolean getSelectAllOnFocus() {
 		return this.selectAllOnFocus;
 	}

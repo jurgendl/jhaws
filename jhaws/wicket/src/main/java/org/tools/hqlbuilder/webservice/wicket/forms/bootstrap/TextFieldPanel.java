@@ -39,9 +39,6 @@ public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<
 		if (Boolean.TRUE.equals(getComponentSettings().getSelectAllOnFocus())) {
 			WebHelper.tag(tag, "onClick", ";this.setSelectionRange(0,this.value.length);");
 		}
-		if (StringUtils.isNotBlank(getComponentSettings().getPlaceholder())) {
-			WebHelper.tag(tag, "placeholder", getComponentSettings().getPlaceholder());
-		}
 	}
 
 	@Override
