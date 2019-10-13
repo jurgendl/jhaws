@@ -64,8 +64,8 @@
         <version.httpcomponents.nio>4.4.12</version.httpcomponents.nio>
         <version.httpcomponents.async>4.1.4</version.httpcomponents.async>
         <version.groovy>2.5.8</version.groovy>
-        <version.jackson>2.9.10</version.jackson>
-        <version.jackson.codehaus>1.9.12</version.jackson.codehaus><!-- 1.9.13 gives problems -->
+        <version.jackson>2.10.0</version.jackson>
+        <version.jackson.codehaus>1.9.13</version.jackson.codehaus><!-- 1.9.13 gives problems -->
         <version.resteasy>3.8.1.Final</version.resteasy>
         <!-- <version.resteasy.jaxrs>3.0.12.Final</version.resteasy.jaxrs> --><!-- version 3.0.17.Final does not exists // 3.1.4.Final -->
 	</properties>
@@ -485,6 +485,46 @@
                 <artifactId>jackson-xc</artifactId>
                 <version>${version.jackson.codehaus}</version>
             </dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-jsr353</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-jsr310</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-json-org</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-joda</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-jdk8</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-guava</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-hibernate5</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.datatype</groupId>
+				<artifactId>jackson-datatype-pcollections</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>jaxrs-api</artifactId>
