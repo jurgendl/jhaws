@@ -7,12 +7,12 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.joda.time.LocalDateTime;
+import org.joda.time.DateTime;
 
-public class JodaLocalDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, LocalDateTime> {
+public class JodaDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, DateTime> {
     private DatatypeFactory datatypeFactory;
 
-    public JodaLocalDateTimeAdapter() {
+    public JodaDateTimeAdapter() {
         try {
             datatypeFactory = DatatypeFactory.newInstance();
         } catch (DatatypeConfigurationException e) {
@@ -21,7 +21,7 @@ public class JodaLocalDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, L
     }
 
     @Override
-    public XMLGregorianCalendar marshal(LocalDateTime v) throws Exception {
+    public XMLGregorianCalendar marshal(DateTime v) throws Exception {
         if (v == null) {
             return null;
         }
@@ -32,7 +32,7 @@ public class JodaLocalDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, L
     }
 
     @Override
-    public LocalDateTime unmarshal(XMLGregorianCalendar v) throws Exception {
+    public DateTime unmarshal(XMLGregorianCalendar v) throws Exception {
         if (v == null) {
             return null;
         }
@@ -42,6 +42,6 @@ public class JodaLocalDateTimeAdapter extends XmlAdapter<XMLGregorianCalendar, L
             millisecond = 0;
         }
 
-        return new LocalDateTime(v.getYear(), v.getMonth(), v.getDay(), v.getHour(), v.getMinute(), v.getSecond(), millisecond);
+        return new DateTime(v.getYear(), v.getMonth(), v.getDay(), v.getHour(), v.getMinute(), v.getSecond(), millisecond);
     }
 }

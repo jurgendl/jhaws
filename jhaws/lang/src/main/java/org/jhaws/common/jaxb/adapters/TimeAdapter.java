@@ -9,10 +9,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 public class TimeAdapter extends XmlAdapter<XMLGregorianCalendar, Time> {
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
-     */
     @Override
     public XMLGregorianCalendar marshal(Time v) throws Exception {
         if (v == null) {
@@ -23,10 +19,6 @@ public class TimeAdapter extends XmlAdapter<XMLGregorianCalendar, Time> {
         return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
     }
 
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
-     */
     @Override
     public Time unmarshal(XMLGregorianCalendar v) throws Exception {
         if (v == null) {

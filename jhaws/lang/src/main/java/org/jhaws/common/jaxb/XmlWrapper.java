@@ -22,6 +22,7 @@ import org.jhaws.common.jaxb.adapters.CollectionAdapter;
 import org.jhaws.common.jaxb.adapters.DateAdapter;
 import org.jhaws.common.jaxb.adapters.DateFormatAdapter;
 import org.jhaws.common.jaxb.adapters.EnumAdapter;
+import org.jhaws.common.jaxb.adapters.JodaDateTimeAdapter;
 import org.jhaws.common.jaxb.adapters.JodaLocalDateAdapter;
 import org.jhaws.common.jaxb.adapters.JodaLocalDateTimeAdapter;
 import org.jhaws.common.jaxb.adapters.JodaLocalTimeAdapter;
@@ -31,6 +32,7 @@ import org.jhaws.common.jaxb.adapters.NumberFormatAdapter;
 import org.jhaws.common.jaxb.adapters.SqlDateAdapter;
 import org.jhaws.common.jaxb.adapters.TimeAdapter;
 import org.jhaws.common.jaxb.adapters.TimestampAdapter;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
@@ -103,6 +105,10 @@ public class XmlWrapper<T> implements Serializable {
     @XmlJavaTypeAdapter(JodaLocalDateTimeAdapter.class)
     private LocalDateTime localDateTime;
 
+    @XmlElement(name = "jdatetime", required = false)
+    @XmlJavaTypeAdapter(JodaDateTimeAdapter.class)
+    private DateTime dateTime;
+
     @SuppressWarnings("rawtypes")
     @XmlElement(name = "enum", required = false)
     @XmlJavaTypeAdapter(EnumAdapter.class)
@@ -153,6 +159,8 @@ public class XmlWrapper<T> implements Serializable {
                 transientValue = locale;
             } else if (localDateTime != null) {
                 transientValue = localDateTime;
+            } else if (dateTime != null) {
+                transientValue = dateTime;
             } else if (localDate != null) {
                 transientValue = localDate;
             } else if (localTime != null) {
@@ -199,6 +207,8 @@ public class XmlWrapper<T> implements Serializable {
             localTime = (LocalTime) value;
         } else if (value instanceof LocalDateTime) {
             localDateTime = (LocalDateTime) value;
+        } else if (value instanceof DateTime) {
+            dateTime = (DateTime) value;
         } else if (value instanceof Collection) {
             valueType = "Collection";
             collection = new ArrayList<>((Collection<Object>) value);

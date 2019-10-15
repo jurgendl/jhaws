@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.lang.ObjectWrapper;
 
 public class NumberFormatAdapter extends XmlAdapter<String, NumberFormat> {
-
     @Override
     public NumberFormat unmarshal(String v) throws Exception {
         if (StringUtils.isBlank(v)) {

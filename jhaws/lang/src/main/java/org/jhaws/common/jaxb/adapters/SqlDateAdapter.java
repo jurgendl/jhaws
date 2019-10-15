@@ -8,10 +8,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 public class SqlDateAdapter extends XmlAdapter<XMLGregorianCalendar, java.sql.Date> {
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
-     */
     @Override
     public XMLGregorianCalendar marshal(java.sql.Date v) throws Exception {
         if (v == null) {
@@ -22,10 +18,6 @@ public class SqlDateAdapter extends XmlAdapter<XMLGregorianCalendar, java.sql.Da
         return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
     }
 
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
-     */
     @Override
     public java.sql.Date unmarshal(XMLGregorianCalendar v) throws Exception {
         if (v == null) {

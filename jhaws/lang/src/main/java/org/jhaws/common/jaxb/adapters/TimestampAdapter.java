@@ -9,10 +9,6 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 public class TimestampAdapter extends XmlAdapter<XMLGregorianCalendar, Timestamp> {
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
-     */
     @Override
     public XMLGregorianCalendar marshal(Timestamp v) throws Exception {
         if (v == null) {
@@ -23,10 +19,6 @@ public class TimestampAdapter extends XmlAdapter<XMLGregorianCalendar, Timestamp
         return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
     }
 
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
-     */
     @Override
     public Timestamp unmarshal(XMLGregorianCalendar v) throws Exception {
         if (v == null) {

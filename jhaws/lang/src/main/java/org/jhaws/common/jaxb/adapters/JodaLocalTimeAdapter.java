@@ -19,10 +19,6 @@ public class JodaLocalTimeAdapter extends XmlAdapter<XMLGregorianCalendar, Local
         }
     }
 
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
-     */
     @Override
     public XMLGregorianCalendar marshal(LocalTime v) throws Exception {
         if (v == null) {
@@ -33,10 +29,6 @@ public class JodaLocalTimeAdapter extends XmlAdapter<XMLGregorianCalendar, Local
                 DatatypeConstants.FIELD_UNDEFINED);
     }
 
-    /**
-     *
-     * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
-     */
     @Override
     public LocalTime unmarshal(XMLGregorianCalendar v) throws Exception {
         if (v == null) {

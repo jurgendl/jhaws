@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.jhaws.common.lang.ObjectWrapper;
 
 public class DateFormatAdapter extends XmlAdapter<String[], DateFormat> {
-
     @Override
     public DateFormat unmarshal(String[] v) throws Exception {
         if (v == null || v.length == 0) {
