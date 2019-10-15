@@ -13,7 +13,7 @@ import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class ImageXmlAdapter extends XmlAdapter<String, Image> {
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "serial" })
 	private ImageObserver imageObserver = new Component() {
 		//
 	};
