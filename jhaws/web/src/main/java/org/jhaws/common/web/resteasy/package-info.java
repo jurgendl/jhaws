@@ -69,5 +69,9 @@
 				type = java.time.ZonedDateTime.class, //
 				value = org.jhaws.common.jaxb.adapters.JavaZonedDateTimeAdapter.class), //
 		//
+		@javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(//
+				type = java.awt.Image.class, //
+				value = org.jhaws.common.jaxb.adapters.ImageXmlAdapter.class), //
+		//
 })
 package org.jhaws.common.web.resteasy;
