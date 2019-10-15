@@ -87,8 +87,6 @@ public class LuceneIndex implements Closeable {
 
 	protected static final String LUCENE_METADATA = "LUCENE_METADATA";
 
-	public static final String DOC_VERSION = "DOC_VERSION";
-
 	public static final String DOC_UUID = "DOC_UUID";
 
 	public static final String DOC_LASTMOD = "lastmod";
@@ -108,8 +106,6 @@ public class LuceneIndex implements Closeable {
 	protected IndexWriterConfig indexWriterConfig;
 
 	protected final FilePath dir;
-
-	protected Integer docVersion;
 
 	protected Long activity;
 
@@ -169,50 +165,7 @@ public class LuceneIndex implements Closeable {
 		return index = mMapDirectory;
 	}
 
-	public int getVersion() {
-		return docVersion;
-	}
-
-	protected void fixDocVersion() {
-		if (docVersion != null) {
-			return;
-		}
-		docVersion = 0;
-		ScoreDoc metaDataScoreDocs = search1(keyValueQuery(LUCENE_METADATA, LUCENE_METADATA).build());
-		Document metaDataDoc = new Document();
-		if (metaDataScoreDocs != null) {
-			metaDataDoc = getDoc(metaDataScoreDocs);
-			docVersion = metaDataDoc.getField(DOC_VERSION).numericValue().intValue();
-		}
-		if (docVersion < 1) {
-			docVersion++;
-			List<Document> docs = searchAllDocs();
-			deleteAll();
-			List<Document> batch = new ArrayList<>();
-			for (Document doc : docs) {
-				batch.add(doc);
-			}
-			addDocs(batch);
-			metaDataDoc = new Document();
-			metaDataDoc.add(new StringField(LUCENE_METADATA, LUCENE_METADATA, YES));
-			uuid(metaDataDoc);
-			version(metaDataDoc, docVersion);
-			addDocs(metaDataDoc);
-			shutDown();
-		}
-		// if (currentDocVersion < 2) {
-		// docVersion++;
-		// metaDataDoc.removeField(DOC_VERSION);
-		// metaDataDoc.add(new IntField(DOC_VERSION, 1, YES));
-		// replaceDoc(metaDataDoc);
-		// }
-	}
-
-	protected Document version(Document doc, int version) {
-		return replaceValue(doc, DOC_VERSION, version, true);
-	}
-
-	protected Document uuid(Document doc) {
+	public Document uuid(Document doc) {
 		return replaceValue(doc, DOC_UUID, newUuid(), true);
 	}
 
@@ -220,23 +173,15 @@ public class LuceneIndex implements Closeable {
 		return java.util.UUID.randomUUID().toString();
 	}
 
-	protected Document version(Document doc) {
-		if (docVersion != null)
-			return replaceValue(doc, DOC_VERSION, docVersion, true);
-		return doc;
-	}
-
 	public <F extends Indexable<? super F>> void replace(F indexable) {
 		replaceDoc(indexable.indexable());
 	}
 
-	protected void replaceDoc(Document doc) {
+	public void replaceDoc(Document doc) {
 		if (isBlank(doc.get(DOC_UUID))) {
 			throw new IllegalArgumentException("doc does not contain " + DOC_UUID);
 		}
-		wtransaction(w -> {
-			w.updateDocument(new Term(DOC_UUID, doc.get(DOC_UUID)), doc);
-		});
+		wtransaction(w -> w.updateDocument(new Term(DOC_UUID, doc.get(DOC_UUID)), doc));
 		// wtransaction(w -> {
 		// w.deleteDocuments(uuidQuery(doc.get(DOC_UUID)));
 		// w.addDocument(doc);
@@ -269,7 +214,6 @@ public class LuceneIndex implements Closeable {
 
 	protected synchronized IndexWriter getIndexWriter() {
 		activity = System.currentTimeMillis();
-		fixDocVersion();
 		return optional(indexWriter, this::createIndexWriter);
 	}
 
@@ -294,7 +238,6 @@ public class LuceneIndex implements Closeable {
 
 	protected DirectoryReader getIndexReader() {
 		activity = System.currentTimeMillis();
-		fixDocVersion();
 		return optional(indexReader, this::createIndexReader);
 	}
 
@@ -406,15 +349,14 @@ public class LuceneIndex implements Closeable {
 		return dir;
 	}
 
-	public <F extends Indexable<? super F>> List<F> sync(List<F> indexed, List<F> fetched, Consumer<F> onDeleteOptional,
-			Consumer<F> onCreateOptional, BiConsumer<F, F> onRematchOptional, ForceRedo<F> forceRedoOptional) {
-		fetched.forEach(f -> {
-			if (f.getUuid() == null)
-				f.setUuid(newUuid());
-			if (f.getVersion() == null)
-				f.setVersion(docVersion);
-		});
-
+	public <F extends Indexable<? super F>> List<F> sync(//
+			List<F> indexed//
+			, List<F> fetched//
+			, Consumer<F> onDeleteOptional//
+			, Consumer<F> onCreateOptional//
+			, BiConsumer<F, F> onRematchOptional//
+			, ForceRedo<F> forceRedoOptional//
+	) {
 		Consumer<F> onDelete = optional(onDeleteOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
 		Consumer<F> onCreate = optional(onCreateOptional, (Supplier<Consumer<F>>) CollectionUtils8::consume);
 		BiConsumer<F, F> onRematch2 = optional(onRematchOptional,
@@ -436,23 +378,24 @@ public class LuceneIndex implements Closeable {
 		}
 		match.removeAll(redo);
 
-		redo.stream().parallel() //
-				.forEach(onRematch.andThen(p -> log("sync:index:redo", p)));
-
 		if (redo.size() > 0)
 			logger.info("*{}", redo.size());
-		redo.stream().map(Map.Entry::getKey).forEach(delete::add);
-		redo.stream().map(Map.Entry::getValue).forEach(create::add);
-
 		if (delete.size() - redo.size() > 0)
 			logger.info("-{}", delete.size() - redo.size());
 		if (create.size() - redo.size() > 0)
 			logger.info("+{}", create.size() - redo.size());
+
+		redo.forEach(e -> e.getValue().setUuid(e.getKey().getUuid()));
+		onCreate = onCreate.andThen(f -> f.setUuid(newUuid()));
+
+		redo.stream().parallel() //
+				.forEach(onRematch.andThen(p -> log("sync:index:redo", p)));
 		delete.stream().parallel() //
 				.forEach(onDelete.andThen(e -> log("sync:index:delete", e)));
 		create.stream().parallel() //
 				.forEach(onCreate.andThen(f -> log("sync:index:create", f)));
 
+		wtransaction(w -> redo.stream().map(Map.Entry::getValue).forEach(EConsumer.enhance(this::replace)));
 		wtransaction(w -> delete.stream().map(Indexable::term).forEach(EConsumer.enhance(w::deleteDocuments)));
 		wtransaction(w -> create.stream().map(Indexable::indexable).forEach(EConsumer.enhance(this::addDocs)));
 
@@ -495,11 +438,11 @@ public class LuceneIndex implements Closeable {
 				.map(Indexable::indexable).collect(collectList()));
 	}
 
-	protected void deleteDocs(Document... docs) {
+	public void deleteDocs(Document... docs) {
 		deleteDocs(toList(docs));
 	}
 
-	protected void deleteDocs(Collection<Document> docs) {
+	public void deleteDocs(Collection<Document> docs) {
 		split(docs, maxBatchSize).stream()
 				.forEach(batch -> wtransaction(w -> batch.stream().forEach(EConsumer.enhance(doc -> {
 					w.deleteDocuments(uuidQuery(doc.get(DOC_UUID).toString()));
@@ -535,7 +478,7 @@ public class LuceneIndex implements Closeable {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <F extends Indexable<? super F>> F get(Document doc, Supplier<F> indexable) {
+	public <F extends Indexable<? super F>> F get(Document doc, Supplier<F> indexable) {
 		return (F) indexable.get().retrieve(doc);
 	}
 
@@ -558,9 +501,9 @@ public class LuceneIndex implements Closeable {
 
 	public <T> void deleteDuplicates(Query query, int max, Function<Document, T> groupBy,
 			Comparator<Document> comparator, Consumer<Document> after) {
-		Consumer<Document> deleter = doc -> deleteDocs(doc);
+		Consumer<Document> deleter = this::deleteDocs;
 		Consumer<Document> action = after == null ? deleter : deleter.andThen(after);
-		streamDeepValues(groupBy(stream(search(query, max)).map(hit -> getDoc(hit)), groupBy))
+		streamDeepValues(groupBy(stream(search(query, max)).map(this::getDoc), groupBy))
 				.forEach(stream -> stream.sorted(comparator).skip(1).forEach(action));
 	}
 
@@ -574,16 +517,13 @@ public class LuceneIndex implements Closeable {
 	}
 
 	public void addDocs(Document... docs) {
-		List<Document> list = toList(docs);
-		addDocs(list);
+		addDocs(toList(docs));
 	}
 
 	public void addDocs(Collection<Document> docs) {
 		// System.out.println("+" + docs.size());
 		docs.stream().parallel() //
 				.filter(d -> isBlank(d.get(DOC_UUID))).forEach(this::uuid);
-		docs.stream().parallel() //
-				.filter(d -> d.getField(DOC_VERSION) == null).forEach(this::version);
 		split(docs, maxBatchSize).stream().forEach(batch -> wtransaction(w -> w.addDocuments(batch)));
 	}
 
@@ -771,7 +711,7 @@ public class LuceneIndex implements Closeable {
 		return q;
 	}
 
-	protected List<String> tokenizePhrase(String phrase) throws IOException {
+	public List<String> tokenizePhrase(String phrase) throws IOException {
 		List<String> tokens = new ArrayList<>();
 		TokenStream stream = getSearchAnalyzer().tokenStream("someField", new StringReader(phrase));
 		stream.reset();
