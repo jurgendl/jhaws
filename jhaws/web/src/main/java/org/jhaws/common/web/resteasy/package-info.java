@@ -65,5 +65,21 @@
                 type = org.joda.time.YearMonth.class, //
                 value = org.jhaws.common.jaxb.adapters.JodaYearMonthAdapter.class), //
         //
+        @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(//
+                type = java.time.LocalDate.class, //
+                value = org.jhaws.common.jaxb.adapters.JavaLocalDateAdapter.class), //
+        //
+        @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(//
+                type = java.time.LocalTime.class, //
+                value = org.jhaws.common.jaxb.adapters.JavaLocalTimeAdapter.class), //
+        //
+        @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(//
+                type = java.time.LocalDateTime.class, //
+                value = org.jhaws.common.jaxb.adapters.JavaLocalDateTimeAdapter.class), //
+        //
+        @javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter(//
+                type = java.time.ZonedDateTime.class, //
+                value = org.jhaws.common.jaxb.adapters.JavaZonedDateTimeAdapter.class), //
+        //
 })
 package org.jhaws.common.web.resteasy;
