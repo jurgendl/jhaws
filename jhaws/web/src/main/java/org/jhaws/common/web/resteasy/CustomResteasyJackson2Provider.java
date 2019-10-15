@@ -72,6 +72,8 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
 			registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
 			registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
 			registerModule(new com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module());
+			registerModule(new com.fasterxml.jackson.datatype.guava.GuavaModule());
+			registerModule(new com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule());
 
 			// https://stackoverflow.com/questions/7105745/how-to-specify-jackson-to-only-use-fields-preferably-globally
 			setVisibility(getSerializationConfig().getDefaultVisibilityChecker()//
