@@ -72,9 +72,6 @@ public abstract class LuceneDocumentBuilder<T> {
                 Class<?> fieldType = entry.getType();
                 if (String.class.equals(fieldType)) {
                     String s = String.class.cast(v);
-                    if (s.length() >= 32766 && !anno.big()) {
-                        throw new IllegalArgumentException("big should be set on " + entry.getDeclaringClass().getName() + "#" + entry.getName());
-                    }
                     FieldType indexFieldType;
                     if (anno.big()) {
                         if (anno.store()) {
