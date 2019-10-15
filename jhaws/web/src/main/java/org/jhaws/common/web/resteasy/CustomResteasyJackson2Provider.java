@@ -47,7 +47,9 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
 	@SuppressWarnings("serial")
 	public static class CustomObjectMapper extends ObjectMapper {
 		public CustomObjectMapper() {
-			registerModule(new CustomModule());
+			findAndRegisterModules();
+
+			// registerModule(new CustomModule());
 
 			// https://stackoverflow.com/questions/33820327/excluding-null-fields-in-pojo-response
 			setSerializationInclusion(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL);
@@ -55,6 +57,7 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
 
 			// https://developer.jboss.org/thread/215591
 			configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+			// TODO set date format? read config prop jdoc
 
 			configure(com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT, false);
 
@@ -68,12 +71,13 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
 			// mapper.configure(JsonGenerator.Feature.QUOTE_FIELD_NAMES, false);
 
 			// https://github.com/FasterXML/jackson-modules-java8
-			registerModule(new com.fasterxml.jackson.datatype.joda.JodaModule());
-			registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-			registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
-			registerModule(new com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module());
-			registerModule(new com.fasterxml.jackson.datatype.guava.GuavaModule());
-			registerModule(new com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule());
+//			registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+//			registerModule(new com.fasterxml.jackson.module.paramnames.ParameterNamesModule());
+//			registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
+//			registerModule(new com.fasterxml.jackson.datatype.joda.JodaModule());
+//			registerModule(new com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module());
+//			registerModule(new com.fasterxml.jackson.datatype.guava.GuavaModule());
+//			registerModule(new com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule());
 
 			// https://stackoverflow.com/questions/7105745/how-to-specify-jackson-to-only-use-fields-preferably-globally
 			setVisibility(getSerializationConfig().getDefaultVisibilityChecker()//
