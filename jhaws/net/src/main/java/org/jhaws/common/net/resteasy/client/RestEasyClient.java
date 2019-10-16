@@ -40,6 +40,7 @@ import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.BasicHttpContext;
 import org.jboss.resteasy.client.core.BaseClientResponse;
+import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.jboss.resteasy.util.HttpResponseCodes;
 import org.slf4j.Logger;
@@ -362,7 +363,9 @@ public class RestEasyClient<R> {
 
     public ResteasyProviderFactory getResteasyProvider() {
         if (resteasyProvider == null) {
-            resteasyProvider = ResteasyProviderFactory.getInstance();
+            resteasyProvider = new ResteasyProviderFactory();
+            resteasyProvider.registerProviderInstance(new JsonProvider());
+            RegisterBuiltin.register(resteasyProvider);
         }
         return this.resteasyProvider;
     }
