@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
@@ -49,10 +50,19 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
         public CustomObjectMapper() {
             CustomModule module = new CustomModule();
             registerModule(module);
-            System.out.println(module);
+            // System.out.println(module);
 
-            findAndRegisterModules();
-            findModules().forEach(System.out::println);
+            // findAndRegisterModules();
+            // findModules().forEach(System.out::println);
+            // https://github.com/FasterXML/jackson-modules-java8
+            // registerModule(new com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule());
+            registerModule(new com.fasterxml.jackson.datatype.jsr353.JSR353Module());
+            registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            registerModule(new com.fasterxml.jackson.datatype.joda.JodaModule());
+            registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
+            // registerModule(new com.fasterxml.jackson.module.paramnames.ParameterNamesModule());
+            // registerModule(new com.fasterxml.jackson.datatype.guava.GuavaModule());
+            // registerModule(new com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module());
 
             // https://stackoverflow.com/questions/33820327/excluding-null-fields-in-pojo-response
             setSerializationInclusion(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL);
@@ -72,15 +82,6 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
             // true);
 
             // mapper.configure(JsonGenerator.Feature.QUOTE_FIELD_NAMES, false);
-
-            // https://github.com/FasterXML/jackson-modules-java8
-            // registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-            // registerModule(new com.fasterxml.jackson.module.paramnames.ParameterNamesModule());
-            // registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
-            // registerModule(new com.fasterxml.jackson.datatype.joda.JodaModule());
-            // registerModule(new com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module());
-            // registerModule(new com.fasterxml.jackson.datatype.guava.GuavaModule());
-            // registerModule(new com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule());
 
             // https://stackoverflow.com/questions/7105745/how-to-specify-jackson-to-only-use-fields-preferably-globally
             setVisibility(getSerializationConfig().getDefaultVisibilityChecker()//
@@ -123,6 +124,7 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
         public JsonSerializer<?> findReferenceSerializer(SerializationConfig config, ReferenceType refType, BeanDescription beanDesc,
                 TypeSerializer contentTypeSerializer, JsonSerializer<Object> contentValueSerializer) {
             final Class<?> raw = refType.getRawClass();
+            System.out.println("? " + raw);
             if (Image.class.isAssignableFrom(raw)) {
                 return new ImageSerializer();
             }
@@ -132,6 +134,7 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
         @Override
         public JsonSerializer<?> findSerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc) {
             final Class<?> raw = type.getRawClass();
+            System.out.println("? " + raw);
             if (Image.class.isAssignableFrom(raw)) {
                 return new ImageSerializer();
             }
@@ -145,6 +148,7 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
         public JsonDeserializer<?> findReferenceDeserializer(ReferenceType refType, DeserializationConfig config, BeanDescription beanDesc,
                 TypeDeserializer contentTypeDeserializer, JsonDeserializer<?> contentDeserializer) throws JsonMappingException {
             final Class<?> raw = refType.getRawClass();
+            System.out.println("? " + raw);
             if (Image.class.isAssignableFrom(raw)) {
                 return new ImageDeserializer();
             }
@@ -155,6 +159,7 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
         public JsonDeserializer<?> findBeanDeserializer(JavaType type, DeserializationConfig config, BeanDescription beanDesc)
                 throws JsonMappingException {
             final Class<?> raw = type.getRawClass();
+            System.out.println("? " + raw);
             if (Image.class.isAssignableFrom(raw)) {
                 return new ImageDeserializer();
             }
@@ -170,12 +175,13 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
 
         @Override
         public void serialize(Image v, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            if (v == null) return;
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             @SuppressWarnings("unused")
             boolean ok = ImageIO.write(toBufferedImage(v), "png", output);
             output.close();
             String string = "data:image/png;base64," + DatatypeConverter.printBase64Binary(output.toByteArray());
-            System.out.println("serialize to " + string);
+            System.out.println("serialize " + string.length());
             gen.writeString(string);
         }
 
@@ -194,8 +200,17 @@ public class CustomResteasyJackson2Provider extends ResteasyJackson2Provider {
     public static class ImageDeserializer extends JsonDeserializer<Image> {
         @Override
         public Image deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-            String str = p.nextTextValue();
-            System.out.println("deserialize from " + str);
+            JsonToken t = p.getCurrentToken();
+            String str = null;
+            if (t == JsonToken.VALUE_STRING) {
+                str = p.getText().trim();
+            } else {
+                throw new IllegalArgumentException();
+            }
+            System.out.println("deserialize " + (str == null ? null : str.length()));
+            if (str == null) {
+                return null;
+            }
             byte[] imagedata = DatatypeConverter.parseBase64Binary(str.substring(str.indexOf(",") + 1));
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imagedata));
             return bufferedImage;
