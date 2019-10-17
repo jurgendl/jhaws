@@ -579,7 +579,7 @@ public class HTTPClient implements Closeable {
 		} else if (post.isUrlEncodedFormEntity()) {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
 			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
-			post.getFormValues().entrySet()
+			post.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null)
 					.forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
 			try {
 				builder.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
@@ -589,7 +589,7 @@ public class HTTPClient implements Closeable {
 			req = builder.build();
 		} else {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-			post.getFormValues().entrySet()
+			post.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null)
 					.forEach(kv -> kv.getValue().forEach(v -> builder.addParameter(kv.getKey(), v)));
 			req = builder.build();
 		}
