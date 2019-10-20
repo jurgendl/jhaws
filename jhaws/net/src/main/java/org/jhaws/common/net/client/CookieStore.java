@@ -299,6 +299,10 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		super();
 	}
 
+	public CookieStore(org.apache.http.client.CookieStore source) {
+		source.getCookies().forEach(this::addCookie);
+	}
+
 	/**
 	 *
 	 * @see org.apache.http.client.CookieStore#addCookie(org.apache.http.cookie.Cookie)
@@ -308,7 +312,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeAddCookie(this);
 		}
-
 		this.cookieStore.addCookie(cookie);
 	}
 
