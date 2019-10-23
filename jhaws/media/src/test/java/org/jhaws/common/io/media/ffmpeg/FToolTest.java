@@ -16,7 +16,7 @@ public class FToolTest {
 	}
 
 	@Test
-	public void test1a() {
+	public void testH265ToH264() {
 		try {
 			System.out.println(t.getHwAccel());
 			FilePath input = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".Tears_400_x265.mp4");
@@ -34,9 +34,8 @@ public class FToolTest {
 	}
 
 	@Test
-	public void test1b() {
+	public void testSmallFileToHq() {
 		try {
-			System.out.println(t.getHwAccel());
 			FilePath input = FilePath.getTempDirectory()
 					.child(System.currentTimeMillis() + ".file_example_MP4_480_1_5MG.mp4");
 			input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("file_example_MP4_480_1_5MG.mp4"));
@@ -52,6 +51,7 @@ public class FToolTest {
 			throw ex;
 		}
 	}
+
 //	@Test
 //	public void test2() {
 //		try {
@@ -187,7 +187,7 @@ public class FToolTest {
 //	}
 
 	@Test
-	public void test5() {
+	public void testHwAccel() {
 		try {
 			System.out.println(t.getHwAccel());
 		} catch (RuntimeException ex) {
@@ -197,7 +197,7 @@ public class FToolTest {
 	}
 
 	@Test
-	public void test6() {
+	public void testToH264Hi10p() {
 		FilePath target = FilePath.getTempDirectory().child("file_example_MP4_480_1_5MG.mp4");
 		if (target.notExists()) {
 			FilePath source = new FilePath(getClass(), "file_example_MP4_480_1_5MG.mp4");
@@ -213,7 +213,7 @@ public class FToolTest {
 	}
 
 	@Test
-	public void test7() {
+	public void testTwoPass() {
 		try {
 			System.out.println(t.getHwAccel());
 			FilePath input = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".Tears_400_x265.mp4");
@@ -233,7 +233,7 @@ public class FToolTest {
 	}
 
 	@Test
-	public void test8() {
+	public void testLargeFileToHq() {
 		FilePath target = FilePath.getTempDirectory().child("file_example_MP4_1920_18MG.mp4");
 		if (target.notExists()) {
 			GetRequest get = new GetRequest(
@@ -245,31 +245,107 @@ public class FToolTest {
 				ex.printStackTrace(System.out);
 			}
 		}
+		all(target);
+	}
+
+	@Test
+	public void testHevc10ToAll() {
+		FilePath target = FilePath.getTempDirectory().child("jellyfish-3-mbps-hd-hevc-10bit.mkv");
+		if (target.notExists()) {
+			GetRequest get = new GetRequest("http://jell.yfish.us/media/jellyfish-3-mbps-hd-hevc-10bit.mkv");
+			get.setOut(target.newOutputStream());
+			try (org.jhaws.common.net.client.HTTPClient hc = new org.jhaws.common.net.client.HTTPClient()) {
+				hc.get(get);
+			} catch (Exception ex) {
+				ex.printStackTrace(System.out);
+			}
+		}
+		all(target);
+	}
+
+	@Test
+	public void testHevcToAll() {
+		FilePath target = FilePath.getTempDirectory().child("jellyfish-3-mbps-hd-hevc.mkv");
+		if (target.notExists()) {
+			GetRequest get = new GetRequest("http://jell.yfish.us/media/jellyfish-3-mbps-hd-hevc.mkv");
+			get.setOut(target.newOutputStream());
+			try (org.jhaws.common.net.client.HTTPClient hc = new org.jhaws.common.net.client.HTTPClient()) {
+				hc.get(get);
+			} catch (Exception ex) {
+				ex.printStackTrace(System.out);
+			}
+		}
+		all(target);
+	}
+
+	@Test
+	public void testH264ToAll() {
+		FilePath target = FilePath.getTempDirectory().child("jellyfish-3-mbps-hd-h264.mkv");
+		if (target.notExists()) {
+			GetRequest get = new GetRequest("http://jell.yfish.us/media/jellyfish-3-mbps-hd-h264.mkv");
+			get.setOut(target.newOutputStream());
+			try (org.jhaws.common.net.client.HTTPClient hc = new org.jhaws.common.net.client.HTTPClient()) {
+				hc.get(get);
+			} catch (Exception ex) {
+				ex.printStackTrace(System.out);
+			}
+		}
+		all(target);
+	}
+
+	@Test
+	public void testSmallFileToAll() {
+		try {
+			FilePath target = FilePath.getTempDirectory().child("file_example_MP4_480_1_5MG.mp4");
+			if (target.notExists())
+				target.write(FfmpegTool.class.getClassLoader().getResourceAsStream("file_example_MP4_480_1_5MG.mp4"));
+			all(target);
+		} catch (RuntimeException ex) {
+			ex.printStackTrace(System.out);
+			throw ex;
+		}
+	}
+
+	private void all(FilePath target) {
 		{
 			FilePath test = target.appendExtension("mp4");
-			test.delete();
-			t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
-				cfg.vcopy = false;
-				cfg.hq = true;
-			});
+			// test.delete();
+			if (test.notExists())
+				t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
+					cfg.vcopy = false;
+					cfg.hq = true;
+				});
 		}
 		{
 			FilePath test = target.appendExtension("hi10p.mp4");
-			test.delete();
-			t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
-				cfg.vcopy = false;
-				cfg.hi10p = true;
-				cfg.hq = true;
-			});
+			// test.delete();
+			if (test.notExists())
+				t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
+					cfg.vcopy = false;
+					cfg.hi10p = true;
+					cfg.hq = true;
+				});
 		}
 		{
 			FilePath test = target.appendExtension("hevc.mp4");
-			test.delete();
-			t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
-				cfg.vcopy = false;
-				cfg.hevc = true;
-				cfg.hq = true;
-			});
+			// test.delete();
+			if (test.notExists())
+				t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
+					cfg.vcopy = false;
+					cfg.hevc = true;
+					cfg.hq = true;
+				});
+		}
+		{
+			FilePath test = target.appendExtension("hevc.hi10p.mp4");
+			// test.delete();
+			if (test.notExists())
+				t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
+					cfg.vcopy = false;
+					cfg.hevc = true;
+					cfg.hi10p = true;
+					cfg.hq = true;
+				});
 		}
 	}
 }

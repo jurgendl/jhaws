@@ -927,30 +927,6 @@ public class FfmpegTool extends Tool implements MediaCte {
 			// command.add("error"); //
 			// quiet,panic,fatal,error,warning,info,verbose,debug,trace
 		}
-		// if (!cfg.vcopy) {
-		// // if (accel.contains("nvdec")) {
-		// // // "CUDA Video Decoding API" or "CUVID."
-		// // command.add("-hwaccel");
-		// // // command.add("cuvid");
-		// // command.add("nvdec");
-		// // // command.add("-threads");
-		// // // command.add("1");
-		// // } else
-		// if (accel.contains("qsv")) {
-		// // qsv (intel onboard vid HW accel)
-		// command.add("-hwaccel");
-		// command.add("qsv");
-		// // command.add("-threads");
-		// // command.add("1");
-		// } else if (accel.contains("dxva2")) {
-		// // Direct-X Video Acceleration API, developed by Microsoft
-		// // (supports Windows and XBox360)
-		// command.add("-hwaccel");
-		// command.add("dxva2");
-		// // command.add("-threads");
-		// // command.add("1");
-		// }
-		// }
 		if (cfg.slideshowCfg != null) {
 			command.add("-framerate");
 			if (cfg.slideshowCfg.secondsPerFrame != null) {
@@ -981,15 +957,19 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-vcodec");
 			command.add("copy");
 		} else {
-			if (Boolean.TRUE.equals(cfg.hi10p)) {
-				// https://trac.ffmpeg.org/ticket/6774
+			// https://trac.ffmpeg.org/ticket/6774
+			if (Boolean.TRUE.equals(cfg.hevc)) {
+				if (Boolean.TRUE.equals(cfg.hi10p)) {
+					command.add("-pix_fmt");
+					command.add("yuv420p10le");
+				}
+				command.add("-c:v");
+				command.add("libx265");
+			} else if (Boolean.TRUE.equals(cfg.hi10p)) {
 				command.add("-pix_fmt");
 				command.add("yuv420p10le");
 				command.add("-c:v");
 				command.add("libx264");
-			} else if (Boolean.TRUE.equals(cfg.hevc)) {
-				command.add("-c:v");
-				command.add("libx265");
 			} else {
 				command.add("-c:v");
 				// ...HWAccelIntro...
@@ -1013,6 +993,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 				} else {
 					command.add("libx264");
 				}
+				if ("hevc".equals(cfg.input.vt) && !cfg.fixes.fixDiv2) {
+					command.add("-vf");
+					command.add(FORMAT_YUV420P);
+				}
 			}
 		}
 		{
@@ -1025,20 +1009,30 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 4)));
 		}
 		if (!cfg.vcopy) {
-			if (Boolean.TRUE.equals(cfg.hi10p)) {
-				command.add("-profile:v");
-				command.add("high10");
-				command.add("-level");
-				command.add("4.2");
-			} else if (Boolean.TRUE.equals(cfg.hevc)) {
+			if (Boolean.TRUE.equals(cfg.hevc)) {
 				// main main10 mainstillpicture msp main-intra main10-intra
 				// main444-8 main444-intra main444-stillpicture main422-10
 				// main422-10-intra main444-10 main444-10-intra main12
 				// main12-intra
 				// main422-12 main422-12-intra main444-12 main444-12-intra
 				// main444-16-intra main444-16-stillpicture
+				if (Boolean.TRUE.equals(cfg.hi10p)) {
+					command.add("-profile:v");
+					command.add("main10");
+					command.add("-level");
+					command.add("4.2");
+				} else {
+					command.add("-profile:v");
+					command.add("main");
+					command.add("-level");
+					command.add("4.2");
+				}
+			} else if (Boolean.TRUE.equals(cfg.hi10p)) {
+				command.add("-profile:v");
+				command.add("high10");
+				command.add("-level");
+				command.add("4.2");
 			} else if (cfg.fixes.fixNotHighProfile) {
-				logger.warn("fix: not High Profile 4.2 not possible unless remuxing video");
 				command.add("-profile:v");
 				command.add("high");
 				command.add("-level");
