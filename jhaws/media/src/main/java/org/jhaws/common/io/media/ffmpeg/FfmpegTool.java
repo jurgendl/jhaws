@@ -189,6 +189,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 					// hwAccel.remove("nvdec");
 					// }
 				}
+				input.delete();
+				output.delete();
 			}
 			if (hwAccel.contains("cuvid")) {
 				// ffmpeg -i input -c:v h264_nvenc -profile high444p
@@ -222,6 +224,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 				} catch (Exception ex) {
 					hwAccel.remove("cuvid");
 				}
+				input.delete();
+				output.delete();
 			}
 		}
 		return Collections.unmodifiableList(hwAccel);
@@ -490,6 +494,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 			output = null;
 		}
 		return output;
+	}
+
+	@Pooled
+	public RemuxCfg remux(FilePath input, FilePath output) {
+		return remux(null, null, cfg -> System.out::println, input, output, null);
 	}
 
 	@Pooled
@@ -862,6 +871,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		// force if no changes at all (vcopy=true && acopy=true)
 		public boolean forceRemux = false;
 
+		public Boolean hi10p;
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -871,6 +882,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			builder.append(", vidrate=").append(this.vidrate);
 			builder.append(", repeat=").append(this.repeat);
 			builder.append(", hq=").append(this.hq);
+			builder.append(", hi10p=").append(this.hi10p);
 			if (slideshowCfg != null)
 				builder.append(", slideshowCfg=").append(this.slideshowCfg);
 			if (input != null)
@@ -966,27 +978,35 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-vcodec");
 			command.add("copy");
 		} else {
-			command.add("-c:v");
-			// ...HWAccelIntro...
-			if (accel.contains("nvenc")) {
-				logger.debug("choosing HW accell h264_nvenc: " + accel);
-				// h264_nvenc (nvidia HW accel)
-				command.add("h264_nvenc");
-				// No NVENC capable devices found
-				// -profile high444p -pixel_format yuv444p
-				// -pix_fmt nv12
-			} else if (accel.contains("cuvid")) {
-				logger.debug("choosing HW accell h264_cuvid: " + accel);
-				command.add("h264_cuvid");
-			} else if (accel.contains("qsv")) {
-				// h264_qsv (intel onboard vid HW accel)
-				logger.debug("choosing HW accell h264_qsv: " + accel);
-				command.add("h264_qsv");
-			} else if (accel.contains("dxva2")) {
-				logger.debug("choosing HW accell h264_dxva2: " + accel);
-				command.add("h264_dxva2");
-			} else {
+			if (Boolean.TRUE.equals(cfg.hi10p)) {
+				// https://trac.ffmpeg.org/ticket/6774
+				command.add("-pix_fmt");
+				command.add("yuv420p10le");
+				command.add("-c:v");
 				command.add("libx264");
+			} else {
+				command.add("-c:v");
+				// ...HWAccelIntro...
+				if (accel.contains("nvenc")) {
+					logger.debug("choosing HW accell h264_nvenc: " + accel);
+					// h264_nvenc (nvidia HW accel)
+					command.add("h264_nvenc");
+					// No NVENC capable devices found
+					// -profile high444p -pixel_format yuv444p
+					// -pix_fmt nv12
+				} else if (accel.contains("cuvid")) {
+					logger.debug("choosing HW accell h264_cuvid: " + accel);
+					command.add("h264_cuvid");
+				} else if (accel.contains("qsv")) {
+					// h264_qsv (intel onboard vid HW accel)
+					logger.debug("choosing HW accell h264_qsv: " + accel);
+					command.add("h264_qsv");
+				} else if (accel.contains("dxva2")) {
+					logger.debug("choosing HW accell h264_dxva2: " + accel);
+					command.add("h264_dxva2");
+				} else {
+					command.add("libx264");
+				}
 			}
 		}
 		{
@@ -998,12 +1018,20 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-threads");
 			command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 4)));
 		}
-		if (!cfg.vcopy && cfg.fixes.fixNotHighProfile) {
-			logger.warn("fix: not High Profile 4.2 not possible unless remuxing video");
-			command.add("-profile:v");
-			command.add("high");
-			command.add("-level");
-			command.add("4.2");
+		if (!cfg.vcopy) {
+			if (cfg.fixes.fixNotHighProfile) {
+				logger.warn("fix: not High Profile 4.2 not possible unless remuxing video");
+				command.add("-profile:v");
+				command.add("high");
+				command.add("-level");
+				command.add("4.2");
+			}
+			if (Boolean.TRUE.equals(cfg.hi10p)) {
+				command.add("-profile:v");
+				command.add("high10");
+				command.add("-level");
+				command.add("4.2");
+			}
 		}
 		if (!cfg.vcopy) {
 			command.add("-preset");

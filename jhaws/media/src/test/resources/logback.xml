@@ -8,5 +8,5 @@
 			<outputPatternAsHeader>false</outputPatternAsHeader>
 		</encoder>
 	</appender>
-	<root level="warn"><appender-ref ref="CONSOLE" /></root>
+	<root level="debug"><appender-ref ref="CONSOLE" /></root>
 </configuration>
