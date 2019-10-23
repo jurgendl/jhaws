@@ -3,6 +3,7 @@ package org.jhaws.common.io.media.ffmpeg;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxCfg;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxDefaultsCfg;
+import org.jhaws.common.net.client.GetRequest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,15 +16,16 @@ public class FToolTest {
 	}
 
 	@Test
-	public void test1() {
+	public void test1a() {
 		try {
 			System.out.println(t.getHwAccel());
 			FilePath input = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".Tears_400_x265.mp4");
 			input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("Tears_400_x265.mp4"));
 			FilePath output = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".Tears_400_x264.mp4");
-			RemuxDefaultsCfg def = new RemuxDefaultsCfg();
-			def.twopass = true;
-			RemuxCfg cfg = t.remux(null, def, x -> System.out::println, input, output, null);
+			RemuxCfg cfg = t.remux(null, null, x -> System.out::println, input, output, c -> {
+				c.vcopy = false;
+				c.hq = true;
+			});
 			cfg.commands.forEach(System.out::println);
 		} catch (RuntimeException ex) {
 			ex.printStackTrace(System.out);
@@ -31,6 +33,25 @@ public class FToolTest {
 		}
 	}
 
+	@Test
+	public void test1b() {
+		try {
+			System.out.println(t.getHwAccel());
+			FilePath input = FilePath.getTempDirectory()
+					.child(System.currentTimeMillis() + ".file_example_MP4_480_1_5MG.mp4");
+			input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("file_example_MP4_480_1_5MG.mp4"));
+			FilePath output = FilePath.getTempDirectory()
+					.child(System.currentTimeMillis() + ".file_example_MP4_480_1_5MG.mp4.mp4");
+			RemuxCfg cfg = t.remux(null, null, x -> System.out::println, input, output, c -> {
+				c.vcopy = false;
+				c.hq = true;
+			});
+			cfg.commands.forEach(System.out::println);
+		} catch (RuntimeException ex) {
+			ex.printStackTrace(System.out);
+			throw ex;
+		}
+	}
 //	@Test
 //	public void test2() {
 //		try {
@@ -177,16 +198,8 @@ public class FToolTest {
 
 	@Test
 	public void test6() {
-		FilePath target = FilePath.getTempDirectory().child("file_example_MP4_1920_18MG.mp4");
+		FilePath target = FilePath.getTempDirectory().child("file_example_MP4_480_1_5MG.mp4");
 		if (target.notExists()) {
-//			GetRequest get = new GetRequest(
-//					"https://file-examples.com/wp-content/uploads/2017/04/file_example_MP4_1920_18MG.mp4");
-//			get.setOut(target.newOutputStream());
-//			try (org.jhaws.common.net.client.HTTPClient hc = new org.jhaws.common.net.client.HTTPClient()) {
-//				hc.get(get);
-//			} catch (Exception ex) {
-//				ex.printStackTrace(System.out);
-//			}
 			FilePath source = new FilePath(getClass(), "file_example_MP4_480_1_5MG.mp4");
 			source.copyTo(target);
 		}
@@ -195,6 +208,68 @@ public class FToolTest {
 		t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
 			cfg.vcopy = false;
 			cfg.hi10p = true;
+			cfg.hq = true;
 		});
+	}
+
+	@Test
+	public void test7() {
+		try {
+			System.out.println(t.getHwAccel());
+			FilePath input = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".Tears_400_x265.mp4");
+			input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("Tears_400_x265.mp4"));
+			FilePath output = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".Tears_400_x264.mp4");
+			RemuxDefaultsCfg def = new RemuxDefaultsCfg();
+			def.twopass = true;
+			RemuxCfg cfg = t.remux(null, def, x -> System.out::println, input, output, c -> {
+				c.vcopy = false;
+				c.hq = true;
+			});
+			cfg.commands.forEach(System.out::println);
+		} catch (RuntimeException ex) {
+			ex.printStackTrace(System.out);
+			throw ex;
+		}
+	}
+
+	@Test
+	public void test8() {
+		FilePath target = FilePath.getTempDirectory().child("file_example_MP4_1920_18MG.mp4");
+		if (target.notExists()) {
+			GetRequest get = new GetRequest(
+					"https://file-examples.com/wp-content/uploads/2017/04/file_example_MP4_1920_18MG.mp4");
+			get.setOut(target.newOutputStream());
+			try (org.jhaws.common.net.client.HTTPClient hc = new org.jhaws.common.net.client.HTTPClient()) {
+				hc.get(get);
+			} catch (Exception ex) {
+				ex.printStackTrace(System.out);
+			}
+		}
+		{
+			FilePath test = target.appendExtension("mp4");
+			test.delete();
+			t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
+				cfg.vcopy = false;
+				cfg.hq = true;
+			});
+		}
+		{
+			FilePath test = target.appendExtension("hi10p.mp4");
+			test.delete();
+			t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
+				cfg.vcopy = false;
+				cfg.hi10p = true;
+				cfg.hq = true;
+			});
+		}
+		{
+			FilePath test = target.appendExtension("hevc.mp4");
+			test.delete();
+			t.remux(null, null, cfg -> System.out::println, target, test, cfg -> {
+				cfg.vcopy = false;
+				cfg.hevc = true;
+				cfg.hq = true;
+			});
+		}
 	}
 }

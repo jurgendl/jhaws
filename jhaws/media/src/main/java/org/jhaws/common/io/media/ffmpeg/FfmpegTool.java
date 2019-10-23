@@ -873,6 +873,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 		public Boolean hi10p;
 
+		public Boolean hevc;
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -883,6 +885,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			builder.append(", repeat=").append(this.repeat);
 			builder.append(", hq=").append(this.hq);
 			builder.append(", hi10p=").append(this.hi10p);
+			builder.append(", hevc=").append(this.hevc);
 			if (slideshowCfg != null)
 				builder.append(", slideshowCfg=").append(this.slideshowCfg);
 			if (input != null)
@@ -984,6 +987,9 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add("yuv420p10le");
 				command.add("-c:v");
 				command.add("libx264");
+			} else if (Boolean.TRUE.equals(cfg.hevc)) {
+				command.add("-c:v");
+				command.add("libx265");
 			} else {
 				command.add("-c:v");
 				// ...HWAccelIntro...
@@ -1019,16 +1025,22 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 4)));
 		}
 		if (!cfg.vcopy) {
-			if (cfg.fixes.fixNotHighProfile) {
-				logger.warn("fix: not High Profile 4.2 not possible unless remuxing video");
-				command.add("-profile:v");
-				command.add("high");
-				command.add("-level");
-				command.add("4.2");
-			}
 			if (Boolean.TRUE.equals(cfg.hi10p)) {
 				command.add("-profile:v");
 				command.add("high10");
+				command.add("-level");
+				command.add("4.2");
+			} else if (Boolean.TRUE.equals(cfg.hevc)) {
+				// main main10 mainstillpicture msp main-intra main10-intra
+				// main444-8 main444-intra main444-stillpicture main422-10
+				// main422-10-intra main444-10 main444-10-intra main12
+				// main12-intra
+				// main422-12 main422-12-intra main444-12 main444-12-intra
+				// main444-16-intra main444-16-stillpicture
+			} else if (cfg.fixes.fixNotHighProfile) {
+				logger.warn("fix: not High Profile 4.2 not possible unless remuxing video");
+				command.add("-profile:v");
+				command.add("high");
 				command.add("-level");
 				command.add("4.2");
 			}
@@ -1133,7 +1145,12 @@ public class FfmpegTool extends Tool implements MediaCte {
 					+ cfg.input.wh[1] * (cfg.input.fps == null ? 24 : cfg.input.fps) * cfg.defaults.vidRateQ / 1000);
 			if (cfg.input.vr != -1) {
 				if (cfg.vidrate > cfg.input.vr) {
-					cfg.vidrate = cfg.input.vr;
+					if (cfg.hq && cfg.input.vr < 2500 && !Boolean.TRUE.equals(cfg.hi10p)
+							&& !Boolean.TRUE.equals(cfg.hevc)) {
+						cfg.vidrate = (int) (cfg.input.vr * 1.25);
+					} else {
+						cfg.vidrate = cfg.input.vr;
+					}
 				} else {
 					if (3000 < cfg.input.vr && cfg.vidrate < 2500) {
 						cfg.vidrate *= 1.25;
@@ -1145,7 +1162,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 			}
 		} else {
 			if (cfg.input.vr != -1) {
-				cfg.vidrate = cfg.input.vr;
+				if (cfg.hq && !Boolean.TRUE.equals(cfg.hi10p) && !Boolean.TRUE.equals(cfg.hevc)) {
+					cfg.vidrate = (int) (cfg.input.vr * 1.25);
+				} else {
+					cfg.vidrate = cfg.input.vr;
+				}
 			} else {
 				if (cfg.hq) {
 					cfg.vidrate = cfg.defaults.vidRateHQ;
