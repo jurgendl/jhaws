@@ -576,6 +576,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		}
 		{
 			cfg.fixes.fixNotHighProfile = true;
+			cfg.fixes.fixTooManyPackets = false;
 			cfg.fixes.fixAudioRate = false;
 			cfg.fixes.fixAudioStrict = false;
 			cfg.fixes.fixDiv2 = false;
@@ -608,15 +609,23 @@ public class FfmpegTool extends Tool implements MediaCte {
 			needsFixing.set(true);
 			cfg.fixes.fixDiv2 = true;
 		}
+		//
+		if (lines.lines().stream().anyMatch(s -> s.contains("Too many packets buffered for output stream"))) {
+			needsFixing.set(true);
+			cfg.fixes.fixTooManyPackets = true;
+		}
+		//
 		if (lines.lines().stream()
 				.anyMatch(s -> s.contains("No device available for encoder (device type qsv for codec h264_qsv)"))) {
 			hwAccel.remove("qsv");
 			needsFixing.set(true);
 		}
+		//
 		if (lines.lines().stream().anyMatch(s -> s.contains("InitializeEncoder failed: invalid param (8)"))) {
 			needsFixing.set(true);
 			cfg.fixes.fixNotHighProfile = false;
 		}
+		//
 		// Cannot load nvcuda.dll
 		// if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load
 		// nvcuda.dll"))) {
@@ -635,6 +644,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 		public boolean fixDiv2;
 
+		public boolean fixTooManyPackets;
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -646,6 +657,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			builder.append(this.fixAudioStrict);
 			builder.append(", fixDiv2=");
 			builder.append(this.fixDiv2);
+			builder.append(", fixTooManyPackets=");
+			builder.append(this.fixTooManyPackets);
 			builder.append("]");
 			return builder.toString();
 		}
@@ -936,6 +949,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-i");
 			command.add(command(cfg.input.input));
 		}
+		if (!cfg.vcopy && cfg.fixes.fixTooManyPackets) {
+			logger.warn("fix: Too many packets buffered for output stream");
+			// command.add("-max_muxing_queue_size");
+			// command.add("9999");
+		}
 		if (cfg.repeat != null) {
 			command.add("-filter_complex");
 			command.add("loop=" + (cfg.repeat - 1) + ":" + cfg.input.fps + ":0");
@@ -981,7 +999,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add(String.valueOf(Math.max(1, Runtime.getRuntime().availableProcessors() / 4)));
 		}
 		if (!cfg.vcopy && cfg.fixes.fixNotHighProfile) {
-			logger.warn("fix not High Profile 4.2 not possible unless remuxing video");
+			logger.warn("fix: not High Profile 4.2 not possible unless remuxing video");
 			command.add("-profile:v");
 			command.add("high");
 			command.add("-level");
@@ -1031,11 +1049,12 @@ public class FfmpegTool extends Tool implements MediaCte {
 						command.add(MP3C);
 						if (cfg.fixes.fixAudioRate) {
 							// muxing mp3 at 11025hz is not supported
-							logger.warn("fix for 'muxing mp3 at ?hz is not supported'");
+							logger.warn("fix: muxing ... at ...hz is not supported");
 							command.add("-ar");
 							command.add("44100");
 						}
 						if (cfg.fixes.fixAudioStrict) {
+							logger.warn("fix: muxing ... at ...hz is not standard, to mux anyway set strict to -1'");
 							command.add("-strict");
 							command.add("-1");
 						}
@@ -1053,11 +1072,13 @@ public class FfmpegTool extends Tool implements MediaCte {
 			}
 			command.add("-vf");
 			if (cfg.fixes.fixDiv2) {
+				logger.warn("fix: not divisible by 2");
 				command.add(escape(and("fps=" + cfg.slideshowCfg.framesPerSecondOut, FORMAT_YUV420P)));
 			} else {
 				command.add(escape(and("fps=" + cfg.slideshowCfg.framesPerSecondOut, FORMAT_YUV420P, FIX_DIV2)));
 			}
 		} else if (cfg.fixes.fixDiv2) {
+			logger.warn("fix: not divisible by 2");
 			command.add("-vf");
 			command.add(escape(and(FORMAT_YUV420P, FIX_DIV2)));
 		}
