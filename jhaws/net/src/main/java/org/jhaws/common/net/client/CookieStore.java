@@ -300,6 +300,10 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 	}
 
 	public CookieStore(org.apache.http.client.CookieStore source) {
+		setParentCookieStore(source);
+	}
+
+	public void setParentCookieStore(org.apache.http.client.CookieStore source) {
 		source.getCookies().forEach(this::addCookie);
 	}
 
