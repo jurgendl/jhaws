@@ -239,7 +239,7 @@ public abstract class StreamingServlet extends HttpServlet {
 		}
 
 		// url decodede filename (can contain '/')
-		String relativeFileName = StreamingServlet.decode(requestedFile);
+		String relativeFileName = decode(requestedFile);
 		if (relativeFileName.startsWith("/")) {
 			relativeFileName = relativeFileName.substring(1);
 		}

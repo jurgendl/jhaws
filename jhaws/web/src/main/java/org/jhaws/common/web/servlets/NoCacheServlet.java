@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -20,6 +22,22 @@ import org.apache.commons.io.IOUtils;
 @SuppressWarnings("serial")
 public abstract class NoCacheServlet extends HttpServlet {
 	protected static final int DEFAULT_BUFFER_SIZE = 2 << 12; // ..bytes = 8KB.
+
+	public static String decode(String name) {
+		try {
+			return URLDecoder.decode(name, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+			throw new IllegalArgumentException(ex);
+		}
+	}
+
+	public static String encode(String name) {
+		try {
+			return URLEncoder.encode(name, "UTF-8");
+		} catch (UnsupportedEncodingException ex) {
+			throw new IllegalArgumentException(ex);
+		}
+	}
 
 	/**
 	 * Process HEAD request. This returns the same headers as GET request, but
@@ -57,20 +75,50 @@ public abstract class NoCacheServlet extends HttpServlet {
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content)
 			throws ServletException, IOException {
+		// Get requested file by path info.
 		String requestedFile = request.getPathInfo();
 		requestedFile = request.getRequestURI().replaceFirst(request.getContextPath(), "").replaceFirst("/nocache", "");
-		String relativeFileName = StreamingServlet.decode(requestedFile);
+
+		// Check if file is actually supplied to the request URL.
+		if (requestedFile == null) {
+			// Do your thing if the file is not supplied to the request URL.
+			// Throw an exception, or send 404, or show default/warning page, or
+			// just ignore it.
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, requestedFile);
+			return;
+		}
+
+		// url decodede filename (can contain '/')
+		String relativeFileName = decode(requestedFile);
 		if (relativeFileName.startsWith("/")) {
 			relativeFileName = relativeFileName.substring(1);
 		}
+		// filename without relative path
 		String shortFileName = relativeFileName.contains("/")
 				? relativeFileName.substring(relativeFileName.lastIndexOf('/') + 1)
 				: relativeFileName;
-		Path file = getStream(relativeFileName);
-		if (!Files.exists(file)) {
+
+		Path file;
+		try {
+			file = getStream(relativeFileName);
+		} catch (IOException ex) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND, relativeFileName);
 			return;
 		}
+
+		// Check if file actually exists in filesystem.
+		if (!Files.exists(file)) {
+			// Do your thing if the file appears to be non-existing.
+			// Throw an exception, or send 404, or show default/warning page, or
+			// just ignore it.
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, relativeFileName);
+			return;
+		}
+
+		// Prepare some variables.
+		long length = Files.size(file);
+		long lastModified = Files.getLastModifiedTime(file).toMillis();
+		long expires = 0;
 
 		// Prepare and initialize response
 		// --------------------------------------------------------
@@ -108,8 +156,6 @@ public abstract class NoCacheServlet extends HttpServlet {
 			disposition = accept != null && accepts(accept, contentType) ? "inline" : "attachment";
 		}
 
-		long lastModified = Files.getLastModifiedTime(file).toMillis();
-
 		// Initialize response.
 		response.reset();
 		response.setBufferSize(getBufferSize());
@@ -117,14 +163,21 @@ public abstract class NoCacheServlet extends HttpServlet {
 		response.setDateHeader("Last-Modified", lastModified);
 		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Pragma", "no-cache");
-		response.setDateHeader("Expires", 0);
+		response.setDateHeader("Expires", expires);
+
+		// Send requested file to client
+		// ------------------------------------------------
 
 		// Prepare streams.
-		OutputStream output = null;
 		InputStream input = null;
+		OutputStream output = null;
+
 		try {
-			output = response.getOutputStream();
+			// Open streams.
 			input = Files.newInputStream(file);
+			output = response.getOutputStream();
+
+			// Return full file.
 			response.setContentType(contentType);
 			if (content) {
 				if (acceptsGzip) {
@@ -136,7 +189,7 @@ public abstract class NoCacheServlet extends HttpServlet {
 					// GZIP.
 					// So only add it if there is no means of GZIP, else
 					// browser will hang.
-					response.setHeader("Content-Length", String.valueOf(Files.size(file)));
+					response.setHeader("Content-Length", String.valueOf(length));
 				}
 
 				// Copy full range
