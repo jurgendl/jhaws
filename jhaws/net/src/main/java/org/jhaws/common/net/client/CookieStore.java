@@ -25,10 +25,9 @@ import org.jhaws.common.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("serial")
 public class CookieStore implements org.apache.http.client.CookieStore, Externalizable {
 	public static class SerializableCookie implements SetCookie, Serializable {
-		private static final long serialVersionUID = -2874315698582406980L;
-
 		private Date expiryDate;
 
 		private String comment;
@@ -195,10 +194,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 			this.expiryDate = expiryDate;
 		}
 
-		/**
-		 *
-		 * @param name
-		 */
 		public void setName(String name) {
 			this.name = name;
 		}
@@ -239,10 +234,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 			this.version = version;
 		}
 
-		/**
-		 *
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).appendSuper(super.toString())
@@ -284,8 +275,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 			return store;
 		}
 	}
-
-	protected static final long serialVersionUID = -3469573532019535065L;
 
 	protected static final Logger logger = LoggerFactory.getLogger(CookieStore.class);
 
@@ -362,7 +351,6 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeGetCookies(this);
 		}
-
 		return this.cookieStore.getCookies();
 	}
 
@@ -453,15 +441,5 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 			}
 			return this;
 		}
-	}
-
-	transient HTTPClient client;
-
-	public HTTPClient getClient() {
-		return this.client;
-	}
-
-	public void setClient(HTTPClient client) {
-		this.client = client;
 	}
 }
