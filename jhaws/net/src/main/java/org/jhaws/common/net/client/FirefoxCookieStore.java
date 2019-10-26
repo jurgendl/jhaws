@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.http.cookie.Cookie;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.net.client.CookieStore.SerializableCookie;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.sqlite.SQLiteDataSource;
@@ -61,8 +62,9 @@ public class FirefoxCookieStore implements org.apache.http.client.CookieStore {
 					byte[] decrypted_value = rs.getBytes(i++);
 					Date expires = new Date(1000l * rs.getInt(i++));
 					boolean secure = rs.getBoolean(i++);
-					org.apache.http.impl.cookie.BasicClientCookie cookie = new org.apache.http.impl.cookie.BasicClientCookie(
-							name, new String(decrypted_value));
+					SerializableCookie cookie = new SerializableCookie();
+					cookie.setName(name);
+					cookie.setValue(new String(decrypted_value));
 					cookie.setDomain(host_key);
 					cookie.setPath(path);
 					cookie.setExpiryDate(expires);
