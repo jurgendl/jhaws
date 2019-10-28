@@ -29,65 +29,15 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-			<scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <optional>true</optional>
-		</dependency>
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.28.0</version>
-            <optional>true</optional>
-        </dependency>
-		<dependency>
-			<groupId>net.java.dev.jna</groupId>
-			<artifactId>jna-platform</artifactId>
-			<version>4.1.0</version>
-			<optional>true</optional>
-		</dependency>
-        <dependency>
-            <groupId>net.sourceforge.nekohtml</groupId>
-            <artifactId>nekohtml</artifactId>
-            <version>1.9.22</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.ccil.cowan.tagsoup</groupId>
-            <artifactId>tagsoup</artifactId>
-            <version>1.2.1</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>net.htmlparser.jericho</groupId>
-            <artifactId>jericho-html</artifactId>
-            <version>3.3</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-compress</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jcifs</groupId>
-            <artifactId>jcifs</artifactId>
-            <version>${version.jcifs}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+			<scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.logging</groupId>
@@ -100,10 +50,6 @@
             <artifactId>tjws</artifactId>
             <scope>test</scope>
         </dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
         <dependency>
             <groupId>org.jhaws.common</groupId>
             <artifactId>jhaws-io</artifactId>
@@ -120,8 +66,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -147,6 +93,70 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpasyncclient</artifactId>
         </dependency>
+        <dependency><!-- reading cookies from chrome/firefox -->
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <optional>true</optional>
+		</dependency>
+        <dependency><!-- reading cookies from chrome/firefox -->
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.28.0</version>
+            <optional>true</optional>
+        </dependency>
+		<dependency><!-- reading cookies from chrome/firefox -->
+			<groupId>net.java.dev.jna</groupId>
+			<artifactId>jna-platform</artifactId>
+			<version>4.1.0</version>
+			<optional>true</optional>
+		</dependency>
+		<!-- <dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.12.0</version>
+            <optional>true</optional>
+		</dependency>
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+            <version>1.9.22</version>
+            <optional>true</optional>
+        </dependency> -->
+        <!-- <dependency>
+            <groupId>org.ccil.cowan.tagsoup</groupId>
+            <artifactId>tagsoup</artifactId>
+            <version>1.2.1</version>
+            <optional>true</optional>
+        </dependency> -->
+        <!-- <dependency>
+            <groupId>net.htmlparser.jericho</groupId>
+            <artifactId>jericho-html</artifactId>
+            <version>3.3</version>
+            <optional>true</optional>
+        </dependency> -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+        </dependency>
+        <dependency><!-- ntlm -->
+            <groupId>jcifs</groupId>
+            <artifactId>jcifs</artifactId>
+            <version>${version.jcifs}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.ostermiller</groupId>
             <artifactId>utils</artifactId>
@@ -160,21 +170,26 @@
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>net.sourceforge.htmlcleaner</groupId>
             <artifactId>htmlcleaner</artifactId>
             <version>${version.htmlcleaner}</version>
-        </dependency>
+        </dependency> -->
         <dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.12.1</version>
+        </dependency>
+        <!-- <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf-itext5</artifactId>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>net.sf.jtidy</groupId>
             <artifactId>jtidy</artifactId>
             <version>${version.jtidy}</version>
             <optional>true</optional>
-        </dependency>
+        </dependency><!-- only for org.jhaws.common.net.client.HtmlCleanup -->
         <dependency>
             <groupId>javax.json</groupId>
             <artifactId>javax.json-api</artifactId>

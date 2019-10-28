@@ -5,83 +5,81 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.htmlcleaner.TagNode;
-
 public class Selection implements InputElement {
-    private static final long serialVersionUID = -434561563846856302L;
+	private static final long serialVersionUID = -434561563846856302L;
 
-    private final String id;
+	private final String id;
 
-    private final String name;
+	private final String name;
 
-    private String value;
+	private String value;
 
-    private Map<String, String> options = new LinkedHashMap<>();
+	private Map<String, String> options = new LinkedHashMap<>();
 
-    private final boolean multiple;
+	private final boolean multiple;
 
-    public Selection(TagNode selectnode) {
-        List<? extends TagNode> optionlist = selectnode.getElementListByName("option", true);
-        String selected = null;
+	public Selection(org.jsoup.nodes.Element selectnode) {
+		List<? extends org.jsoup.nodes.Element> optionlist = selectnode.select("option");
+		String selected = null;
 
-        for (TagNode optionnode : optionlist) {
-            String v = optionnode.getAttributeByName("value");
-            String t = optionnode.getText().toString().trim();
+		for (org.jsoup.nodes.Element optionnode : optionlist) {
+			String v = optionnode.attr("value");
+			String t = optionnode.html().toString().trim();
 
-            if (v == null) {
-                v = optionnode.getText().toString().trim();
-            }
+			if (v == null) {
+				v = optionnode.html().toString().trim();
+			}
 
-            this.options.put(v, t);
+			this.options.put(v, t);
 
-            if ("selected".equals(optionnode.getAttributeByName("selected"))) {
-                selected = v;
-            }
-        }
+			if ("selected".equals(optionnode.attr("selected"))) {
+				selected = v;
+			}
+		}
 
-        this.value = selected;
+		this.value = selected;
 
-        this.name = selectnode.getAttributeByName("name");
-        this.id = selectnode.getAttributeByName("id");
-        this.multiple = "multiple".equals(selectnode.getAttributeByName("multiple"));
-    }
+		this.name = selectnode.attr("name");
+		this.id = selectnode.attr("id");
+		this.multiple = "multiple".equals(selectnode.attr("multiple"));
+	}
 
-    @Override
-    public String getId() {
-        return this.id;
-    }
+	@Override
+	public String getId() {
+		return this.id;
+	}
 
-    @Override
-    public String getName() {
-        return this.name;
-    }
+	@Override
+	public String getName() {
+		return this.name;
+	}
 
-    public Map<String, String> getOptions() {
-        return Collections.unmodifiableMap(this.options);
-    }
+	public Map<String, String> getOptions() {
+		return Collections.unmodifiableMap(this.options);
+	}
 
-    @Override
-    public InputType getType() {
-        return InputType.select;
-    }
+	@Override
+	public InputType getType() {
+		return InputType.select;
+	}
 
-    @Override
-    public String getValue() {
-        return this.value;
-    }
+	@Override
+	public String getValue() {
+		return this.value;
+	}
 
-    public boolean isMultiple() {
-        return this.multiple;
-    }
+	public boolean isMultiple() {
+		return this.multiple;
+	}
 
-    @Override
-    public void setValue(String value) {
-        this.value = value;
-    }
+	@Override
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    @Override
-    public String toString() {
-        return "input[type=select,name=" + this.name + ",id=" + this.id + ",multiple=" + this.multiple + ",options=" + this.options + ",value="
-                + this.value + "]";
-    }
+	@Override
+	public String toString() {
+		return "input[type=select,name=" + this.name + ",id=" + this.id + ",multiple=" + this.multiple + ",options="
+				+ this.options + ",value=" + this.value + "]";
+	}
 }

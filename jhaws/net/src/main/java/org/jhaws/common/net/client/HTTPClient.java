@@ -496,9 +496,18 @@ public class HTTPClient implements Closeable {
 			response.setContentLength(entity.getContentLength());
 			response.setContentEncoding(
 					entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
-			response.setContentType(entity.getContentType() == null ? null : entity.getContentType().getValue());
+			Header contentTypeHeader = entity.getContentType();
+			if (contentTypeHeader != null) {
+				String contentType = contentTypeHeader.getValue();
+				response.setContentType(contentType);
+				if (StringUtils.isNotBlank(contentType)) {
+					int charsetIndex = contentType.indexOf("charset=");
+					if (charsetIndex != -1) {
+						response.setCharset(contentType.substring("charset=".length() + charsetIndex));
+					}
+				}
+			}
 			response.setFilename(NetHelper.getName(uris.get(uris.size() - 1)));
-			response.setCharset(ContentType.getOrDefault(entity).getMimeType());
 		}
 		try {
 			Header dateHeader = httpResponse.getFirstHeader("Date");

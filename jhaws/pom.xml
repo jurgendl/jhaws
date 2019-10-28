@@ -60,7 +60,11 @@
         <version.commons.lang>2.6</version.commons.lang>
         <version.commons.math>2.2</version.commons.math>
         <version.commons.math3>3.6.1</version.commons.math3>
-        <version.httpcomponents>4.5.10</version.httpcomponents>
+        <version.httpcomponents.cache>4.5.10</version.httpcomponents.cache>
+        <version.httpcomponents.win>4.5.10</version.httpcomponents.win>
+        <version.httpcomponents.mime>4.5.10</version.httpcomponents.mime>
+        <version.httpcomponents.core>4.4.12</version.httpcomponents.core>
+        <version.httpcomponents.client>4.5.10</version.httpcomponents.client>
         <version.httpcomponents.nio>4.4.12</version.httpcomponents.nio>
         <version.httpcomponents.async>4.1.4</version.httpcomponents.async>
         <version.groovy>2.5.8</version.groovy>
@@ -165,15 +169,20 @@
             	<artifactId>jaxb-runtime</artifactId>
             	<version>2.4.0-b180830.0438</version><!--$NO-MVN-MAN-VER$-->
             </dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpcore</artifactId>
+                <version>${version.httpcomponents.core}</version>
+			</dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpmime</artifactId>
-                <version>${version.httpcomponents}</version>
+                <version>${version.httpcomponents.mime}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
-                <version>${version.httpcomponents}</version>
+                <version>${version.httpcomponents.client}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>commons-logging</artifactId>
@@ -188,7 +197,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient-win</artifactId>
-                <version>${version.httpcomponents}</version>
+                <version>${version.httpcomponents.win}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -198,7 +207,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient-cache</artifactId>
-                <version>${version.httpcomponents}</version>
+                <version>${version.httpcomponents.cache}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>commons-logging</artifactId>

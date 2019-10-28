@@ -12,10 +12,7 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-
-import org.htmlcleaner.TagNode;
 
 public class Form implements Serializable, Iterable<InputElement> {
 	public static Form deserialize(InputStream in) throws IOException, ClassNotFoundException {
@@ -46,23 +43,20 @@ public class Form implements Serializable, Iterable<InputElement> {
 		this.id = id;
 	}
 
-	public Form(URI url, TagNode formnode) {
+	public Form(URI url, org.jsoup.nodes.FormElement formnode) {
 		this.url = url;
-		this.id = formnode.getAttributeByName("id");
-		this.method = formnode.getAttributeByName("method");
-		this.action = formnode.getAttributeByName("action");
-
-		List<? extends TagNode> inputlist = formnode.getElementListByName("input", true);
-
-		for (TagNode inputnode : inputlist) {
-			String type = inputnode.getAttributeByName("type");
+		this.id = formnode.attr("id");
+		this.method = formnode.attr("method");
+		this.action = formnode.attr("action");
+		formnode.select("input").forEach((org.jsoup.nodes.Element inputnode) -> {
+			String type = inputnode.attr("type");
 			if ("checkbox".equals(type) || "radio".equals(type)) {
 				InputSelection newe = new InputSelection(inputnode);
 				InputSelection e = (InputSelection) this.inputElements.get(newe.getNameOrId());
 				if (e == null) {
 					this.inputElements.put(newe.getNameOrId(), newe);
 				} else {
-					e.addOption(inputnode.getAttributeByName("value"));
+					e.addOption(inputnode.attr("value"));
 				}
 			} else if ("password".equals(type)) {
 				Password e = new Password(inputnode);
@@ -74,19 +68,15 @@ public class Form implements Serializable, Iterable<InputElement> {
 				Input e = new Input(inputnode);
 				this.inputElements.put(e.getNameOrId(), e);
 			}
-		}
-
-		List<? extends TagNode> selectlist = formnode.getElementListByName("select", true);
-		for (TagNode selectnode : selectlist) {
+		});
+		formnode.select("select").forEach((org.jsoup.nodes.Element selectnode) -> {
 			Selection e = new Selection(selectnode);
 			this.inputElements.put(e.getNameOrId(), e);
-		}
-
-		List<? extends TagNode> textarealist = formnode.getElementListByName("textarea", true);
-		for (TagNode textareanode : textarealist) {
+		});
+		formnode.select("textarea").forEach((org.jsoup.nodes.Element textareanode) -> {
 			TextArea e = new TextArea(textareanode);
 			this.inputElements.put(e.getNameOrId(), e);
-		}
+		});
 	}
 
 	public boolean contains(String string) {

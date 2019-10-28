@@ -1,7 +1,6 @@
 package org.jhaws.common.net.client;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -16,17 +15,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import org.htmlcleaner.CleanerProperties;
-import org.htmlcleaner.HtmlCleaner;
-import org.htmlcleaner.PrettyXmlSerializer;
-import org.htmlcleaner.TagNode;
-import org.htmlcleaner.XmlSerializer;
+import org.jhaws.common.lang.CollectionUtils8;
 import org.jhaws.common.lang.EnhancedArrayList;
 import org.jhaws.common.lang.EnhancedHashMap;
 import org.jhaws.common.lang.EnhancedList;
 import org.jhaws.common.lang.EnhancedMap;
 import org.jhaws.common.lang.IntegerValue;
 import org.jhaws.common.lang.StringUtils;
+import org.jsoup.Jsoup;
 
 @SuppressWarnings("serial")
 public class Response extends InputStream implements Serializable {
@@ -70,10 +66,6 @@ public class Response extends InputStream implements Serializable {
 	protected String contentEncoding;
 
 	protected String contentType;
-
-	protected transient TagNode node = null;
-
-	protected transient HtmlCleaner cleaner = new HtmlCleaner();
 
 	protected Date date;
 
@@ -126,21 +118,6 @@ public class Response extends InputStream implements Serializable {
 		this.content = content;
 		this.pos = 0;
 		this.count = content.length;
-	}
-
-	public EnhancedList<Form> getForms() {
-		TagNode n;
-		try {
-			n = cleaner.clean(new ByteArrayInputStream(getContent()));
-		} catch (IOException ex) {
-			throw new UncheckedIOException(ex);
-		}
-		List<? extends TagNode> formlist = n.getElementListByName("form", true);
-		EnhancedList<Form> forms = new EnhancedArrayList<>();
-		for (TagNode formnode : formlist) {
-			forms.add(new Form(getLastUri(), formnode));
-		}
-		return forms;
 	}
 
 	public URI getLastUri() {
@@ -240,48 +217,6 @@ public class Response extends InputStream implements Serializable {
 		this.chain = chain;
 	}
 
-	public String getTitle() throws IOException {
-		List<? extends TagNode> res = getNode().getElementListByName("title", false);
-		return res.isEmpty() ? null : res.get(0).getText().toString();
-	}
-
-	public TagNode getNode() throws IOException {
-		if (this.node == null) {
-			this.node = this.cleaner.clean(new ByteArrayInputStream(this.getContent()));
-		}
-		return this.node;
-	}
-
-	public String getMetaRedirect() throws IOException {
-		List<? extends TagNode> metas = getNode().getElementListByName("meta", true);
-		for (TagNode meta : metas) {
-			if ("refresh".equals(meta.getAttributeByName("http-equiv"))) {
-				String url = meta.getAttributeByName("content").split("url=")[1];
-				return url;
-			}
-		}
-		return null;
-	}
-
-	public Response cleanup() throws IOException {
-		TagNode rootnode = getNode();
-		CleanerProperties properties = this.cleaner.getProperties();
-		XmlSerializer xmlSerializer = new PrettyXmlSerializer(properties);
-		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-			xmlSerializer.writeToStream(rootnode, out);
-			out.close();
-			Response r;
-			try (ByteArrayOutputStream o = new ByteArrayOutputStream()) {
-				serialize(o);
-				try (ByteArrayInputStream i = new ByteArrayInputStream(o.toByteArray())) {
-					r = deserialize(i);
-				}
-			}
-			r.setContent(out.toByteArray());
-			return r;
-		}
-	}
-
 	public String getFilename() {
 		return filename;
 	}
@@ -335,22 +270,22 @@ public class Response extends InputStream implements Serializable {
 	}
 
 	@Override
-    public synchronized int available() {
+	public synchronized int available() {
 		return count - pos;
 	}
 
 	@Override
-    public void mark(int readAheadLimit) {
+	public void mark(int readAheadLimit) {
 		mark = pos;
 	}
 
 	@Override
-    public boolean markSupported() {
+	public boolean markSupported() {
 		return true;
 	}
 
 	@Override
-    public synchronized int read(byte b[], int off, int len) {
+	public synchronized int read(byte b[], int off, int len) {
 		if (b == null) {
 			throw new NullPointerException();
 		} else if (off < 0 || len < 0 || len > b.length - off) {
@@ -372,17 +307,50 @@ public class Response extends InputStream implements Serializable {
 	}
 
 	@Override
-    public synchronized void reset() {
+	public synchronized void reset() {
 		pos = mark;
 	}
 
 	@Override
-    public synchronized long skip(long n) {
+	public synchronized long skip(long n) {
 		long k = count - pos;
 		if (n < k) {
 			k = n < 0 ? 0 : n;
 		}
 		pos += k;
 		return k;
+	}
+
+	protected transient org.jsoup.nodes.Document parsed;
+
+	protected org.jsoup.nodes.Document parse() {
+		if (parsed == null) {
+			try {
+				parsed = Jsoup.parse(new ByteArrayInputStream(this.getContent()), charset, uri.toASCIIString());
+			} catch (IOException ex) {
+				throw new UncheckedIOException(ex);
+			}
+		}
+		return parsed;
+	}
+
+	public String getTitle() {
+		return parse().select("title").html();
+	}
+
+	public String getMetaRedirect() {
+		return parse().select("meta[refresh=http-equiv]").attr("content").split("url=")[1];
+	}
+
+	public EnhancedList<org.jhaws.common.net.client.Form> getForms() {
+		List<org.jhaws.common.net.client.Form> collect = //
+				parse()//
+						.select("form")//
+						.stream()//
+						.map(org.jsoup.nodes.FormElement.class::cast)//
+						.map((org.jsoup.nodes.FormElement node) -> {
+							return new org.jhaws.common.net.client.Form(getLastUri(), node);
+						}).collect(CollectionUtils8.collectList());
+		return (EnhancedList<Form>) collect;
 	}
 }

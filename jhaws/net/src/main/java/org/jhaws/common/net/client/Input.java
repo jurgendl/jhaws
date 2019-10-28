@@ -1,7 +1,5 @@
 package org.jhaws.common.net.client;
 
-import org.htmlcleaner.TagNode;
-
 public class Input implements InputElement {
 	private static final long serialVersionUID = 8640479033953741491L;
 
@@ -19,11 +17,11 @@ public class Input implements InputElement {
 		this.type = type;
 	}
 
-	public Input(TagNode inputnode) {
-		this.type = InputType.valueOf(inputnode.getAttributeByName("type").toLowerCase());
-		this.name = inputnode.getAttributeByName("name");
-		this.value = inputnode.getAttributeByName("value");
-		this.id = inputnode.getAttributeByName("id");
+	public Input(org.jsoup.nodes.Element inputnode) {
+		this.type = InputType.valueOf(inputnode.attr("type").toLowerCase());
+		this.name = inputnode.attr("name");
+		this.value = inputnode.attr("value");
+		this.id = inputnode.attr("id");
 	}
 
 	@Override
