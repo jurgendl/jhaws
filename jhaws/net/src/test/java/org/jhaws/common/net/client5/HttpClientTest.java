@@ -84,6 +84,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_get() {
+		if (true)
+			throw new UnsupportedOperationException("FIXME");
 		try {
 			URI uri = getBase().path(TestResourceI.GET).build();
 			String rec = server.resteasyClient.target(uri).request().get(String.class);
@@ -111,6 +113,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_getWithParams() {
+		if (true)
+			throw new UnsupportedOperationException("FIXME");
 		try {
 			URI uri = getBase().path(TestResourceI.GET_WITH_PARAMS).build("pathValue");
 			String rec = server.resteasyClient.target(uri).request().get(String.class);
@@ -124,6 +128,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_getWithQuery() {
+		if (true)
+			throw new UnsupportedOperationException("FIXME");
 		try {
 			URI uri = getBase().path(TestResourceI.GET_WITH_QUERY).queryParam(TestResourceI.QUERY_PARAM, "queryValue")
 					.build();
@@ -138,6 +144,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_delete() {
+		if (true)
+			throw new UnsupportedOperationException("FIXME");
 		URI uri = getBase().path(TestResourceI.DELETE).build("deleteId");
 		server.resteasyClient.target(uri).request().delete();
 		String rec = String.class.cast(testResource.delete);
@@ -149,6 +157,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_put() {
+		if (true)
+			throw new UnsupportedOperationException("FIXME");
 		URI uri = getBase().path(TestResourceI.PUT).build("putId");
 		TestBody entity = new TestBody("putBody");
 		Entity<TestBody> xmle = Entity.xml(entity);
@@ -205,6 +215,8 @@ public class HttpClientTest {
 
 	@Test
 	public void test_post() {
+		if (true)
+			throw new UnsupportedOperationException("FIXME");
 		URI uri = getBase().path(TestResourceI.POST).build();
 		Form form = new Form("formid");
 		form.setMethod("POST");
