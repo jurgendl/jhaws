@@ -388,7 +388,7 @@ public class HTTPClient implements Closeable {
 						.build();
 			}
 			// FIXME httpClientBuilder.setSSLSocketFactory(sslsf);
-			throw new UnsupportedOperationException();
+			// throw new UnsupportedOperationException();
 		}
 		return httpClientBuilder;
 	}
