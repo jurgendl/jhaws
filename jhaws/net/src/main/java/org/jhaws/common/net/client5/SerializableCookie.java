@@ -178,13 +178,33 @@ public class SerializableCookie implements SetCookie, Serializable {
 
 	@Override
 	public String getAttribute(String name) {
-		// TODO Auto-generated method stub
+		// if("CreationDate".equals(name))return getCreationDate();
+		if ("domain".equals(name))
+			return getDomain();
+		// if("ExpiryDate".equals(name))return getExpiryDate();
+		if ("name".equals(name))
+			return getName();
+		if ("path".equals(name))
+			return getPath();
+		if ("value".equals(name))
+			return getValue();
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean containsAttribute(String name) {
-		// TODO Auto-generated method stub
+		if ("CreationDate".equals(name))
+			return getCreationDate() != null;
+		if ("domain".equals(name))
+			return getDomain() != null;
+		if ("ExpiryDate".equals(name))
+			return getExpiryDate() != null;
+		if ("name".equals(name))
+			return getName() != null;
+		if ("path".equals(name))
+			return getPath() != null;
+		if ("value".equals(name))
+			return getValue() != null;
 		throw new UnsupportedOperationException();
 	}
 }
