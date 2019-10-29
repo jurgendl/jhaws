@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client;
+package org.jhaws.common.net.client5;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.cookie.Cookie;
+import org.apache.hc.client5.http.cookie.Cookie;
 import org.jhaws.common.io.FilePath;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,7 +15,7 @@ import org.sqlite.SQLiteDataSource;
 
 //https://stackoverflow.com/questions/33629474/reading-and-inserting-chrome-cookies-java
 //https://github.com/benjholla/CookieMonster
-public class FirefoxCookieStore implements org.apache.http.client.CookieStore {
+public class FirefoxCookieStore implements org.apache.hc.client5.http.cookie.CookieStore {
 	protected NamedParameterJdbcTemplate jdbc;
 
 	public FirefoxCookieStore(FilePath cookieStore) {

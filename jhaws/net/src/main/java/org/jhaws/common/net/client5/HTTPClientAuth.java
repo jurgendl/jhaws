@@ -1,6 +1,5 @@
-package org.jhaws.common.net.client;
+package org.jhaws.common.net.client5;
 
-import org.apache.http.auth.AuthScope;
 import org.jhaws.common.io.security.SecureMe;
 import org.jhaws.common.io.security.Security;
 
@@ -11,15 +10,15 @@ public class HTTPClientAuth {
 
 	private final transient Security security;
 
-	private transient String realm = AuthScope.ANY_REALM;
+	private transient String realm = null;
 
-	private transient String host = AuthScope.ANY_HOST;
+	private transient String host = null;
 
-	private transient int port = AuthScope.ANY_PORT;
+	private transient Integer port = null;
 
 	private transient boolean preemptive = false;
 
-	private transient String scheme = AuthScope.ANY_SCHEME;
+	private transient String scheme = null;
 
 	public HTTPClientAuth() {
 		Security s;

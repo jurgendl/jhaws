@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client;
+package org.jhaws.common.net.client5;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.http.cookie.Cookie;
+import org.apache.hc.client5.http.cookie.Cookie;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.Utils;
 import org.jhaws.common.io.Utils.OSGroup;
@@ -29,7 +29,7 @@ import com.sun.jna.platform.win32.Crypt32Util;
 
 // https://stackoverflow.com/questions/33629474/reading-and-inserting-chrome-cookies-java
 // https://github.com/benjholla/CookieMonster
-public class ChromeCookieStore implements org.apache.http.client.CookieStore {
+public class ChromeCookieStore implements org.apache.hc.client5.http.cookie.CookieStore {
 	protected NamedParameterJdbcTemplate jdbc;
 
 	public ChromeCookieStore(FilePath cookieStore) {

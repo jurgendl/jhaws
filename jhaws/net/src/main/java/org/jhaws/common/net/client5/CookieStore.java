@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client;
+package org.jhaws.common.net.client5;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -15,13 +15,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.BasicCookieStore;
+import org.apache.hc.client5.http.cookie.Cookie;
 import org.jhaws.common.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CookieStore implements org.apache.http.client.CookieStore, Externalizable {
+@SuppressWarnings("serial")
+public class CookieStore implements org.apache.hc.client5.http.cookie.CookieStore, Externalizable {
 	/**
 	 * deserialize
 	 */
@@ -58,7 +59,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 	protected static final Logger logger = LoggerFactory.getLogger(CookieStore.class);
 
 	/** backing store */
-	protected transient org.apache.http.client.CookieStore cookieStore = new BasicCookieStore();
+	protected transient org.apache.hc.client5.http.cookie.CookieStore cookieStore = new BasicCookieStore();
 
 	/** interceptors */
 	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<>();
@@ -67,17 +68,17 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		super();
 	}
 
-	public CookieStore(org.apache.http.client.CookieStore source) {
+	public CookieStore(org.apache.hc.client5.http.cookie.CookieStore source) {
 		setParentCookieStore(source);
 	}
 
-	public void setParentCookieStore(org.apache.http.client.CookieStore source) {
+	public void setParentCookieStore(org.apache.hc.client5.http.cookie.CookieStore source) {
 		source.getCookies().forEach(this::addCookie);
 	}
 
 	/**
 	 *
-	 * @see org.apache.http.client.CookieStore#addCookie(org.apache.http.cookie.Cookie)
+	 * @see org.apache.hc.client5.http.cookie.CookieStore#addCookie(org.apache.http.cookie.Cookie)
 	 */
 	@Override
 	public synchronized void addCookie(Cookie cookie) {
@@ -93,7 +94,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
 	/**
 	 *
-	 * @see org.apache.http.client.CookieStore#clear()
+	 * @see org.apache.hc.client5.http.cookie.CookieStore#clear()
 	 */
 	@Override
 	public synchronized void clear() {
@@ -110,7 +111,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
 	/**
 	 *
-	 * @see org.apache.http.client.CookieStore#clearExpired(java.util.Date)
+	 * @see org.apache.hc.client5.http.cookie.CookieStore#clearExpired(java.util.Date)
 	 */
 	@Override
 	public synchronized boolean clearExpired(Date date) {
@@ -123,7 +124,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 
 	/**
 	 *
-	 * @see org.apache.http.client.CookieStore#getCookies()
+	 * @see org.apache.hc.client5.http.cookie.CookieStore#getCookies()
 	 */
 	@Override
 	public synchronized List<Cookie> getCookies() {
@@ -133,7 +134,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		return this.cookieStore.getCookies();
 	}
 
-	public org.apache.http.client.CookieStore getCookieStore() {
+	public org.apache.hc.client5.http.cookie.CookieStore getCookieStore() {
 		return this.cookieStore;
 	}
 
@@ -184,7 +185,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 	}
 
-	public void setCookieStore(org.apache.http.client.CookieStore cookieStore) {
+	public void setCookieStore(org.apache.hc.client5.http.cookie.CookieStore cookieStore) {
 		this.cookieStore = cookieStore;
 	}
 

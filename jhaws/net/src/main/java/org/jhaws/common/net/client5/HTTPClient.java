@@ -1,17 +1,16 @@
-package org.jhaws.common.net.client;
+package org.jhaws.common.net.client5;
 
 import static java.util.stream.StreamSupport.stream;
 import static org.apache.commons.io.IOUtils.copyLarge;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.time.DateUtils.parseDate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -20,69 +19,88 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Objects;
 
 import javax.annotation.PreDestroy;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.ProtocolException;
-import org.apache.http.auth.AuthSchemeProvider;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.AuthCache;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.RedirectStrategy;
-import org.apache.http.client.config.AuthSchemes;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpOptions;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpTrace;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.auth.AuthCache;
+import org.apache.hc.client5.http.auth.AuthSchemeProvider;
+import org.apache.hc.client5.http.auth.AuthSchemes;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.auth.CredentialsProvider;
+import org.apache.hc.client5.http.auth.NTCredentials;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpHead;
+import org.apache.hc.client5.http.classic.methods.HttpOptions;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpPut;
+import org.apache.hc.client5.http.classic.methods.HttpTrace;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.cookie.CookieSpecs;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.impl.DefaultRedirectStrategy;
+import org.apache.hc.client5.http.impl.auth.BasicAuthCache;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.auth.BasicScheme;
+import org.apache.hc.client5.http.impl.auth.SystemDefaultCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.client5.http.protocol.RedirectStrategy;
+import org.apache.hc.client5.http.ssl.HttpsSupport;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.client5.http.utils.URIUtils;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.ProtocolException;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.io.entity.InputStreamEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.util.Timeout;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.EnhancedArrayList;
 import org.jhaws.common.lang.EnhancedList;
 import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.net.NetHelper;
+import org.jhaws.common.net.client.AbstractGetRequest;
+import org.jhaws.common.net.client.AbstractRequest;
+import org.jhaws.common.net.client.DeleteRequest;
+import org.jhaws.common.net.client.FileInput;
+import org.jhaws.common.net.client.Form;
+import org.jhaws.common.net.client.GetRequest;
+import org.jhaws.common.net.client.HeadRequest;
+import org.jhaws.common.net.client.HttpException;
+import org.jhaws.common.net.client.NoOpX509TrustManager;
+import org.jhaws.common.net.client.OptionsRequest;
+import org.jhaws.common.net.client.PostRequest;
+import org.jhaws.common.net.client.PutRequest;
+import org.jhaws.common.net.client.RequestListener;
+import org.jhaws.common.net.client.RequestListenerAdapter;
+import org.jhaws.common.net.client.RequestOutputStreamWrapper;
+import org.jhaws.common.net.client.Response;
+import org.jhaws.common.net.client.TraceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,7 +175,7 @@ public class HTTPClient implements Closeable {
 
 	protected String userAgent = CHROME;
 
-	protected org.apache.http.client.CookieStore cookieStore;
+	protected org.jhaws.common.net.client5.CookieStore cookieStore;
 
 	protected final ThreadLocal<URI> preemptiveCPBaseUrl = new ThreadLocal<>();
 
@@ -169,7 +187,7 @@ public class HTTPClient implements Closeable {
 
 	protected boolean disableSSLCheck = false;
 
-	protected String cookieSpec = CookieSpecs.STANDARD;
+	protected String cookieSpec = CookieSpecs.STANDARD.ident;
 
 	protected final ThreadLocal<HttpClientContext> context = new ThreadLocal<HttpClientContext>() {
 		@Override
@@ -181,8 +199,8 @@ public class HTTPClient implements Closeable {
 				AuthCache authCache = new BasicAuthCache();
 				BasicScheme basicAuth = new BasicScheme();
 				URI _preemptiveCPBaseUrl = preemptiveCPBaseUrl.get();
-				HttpHost targetHost = new HttpHost(_preemptiveCPBaseUrl.getHost(), _preemptiveCPBaseUrl.getPort(),
-						_preemptiveCPBaseUrl.getScheme());
+				HttpHost targetHost = new HttpHost(_preemptiveCPBaseUrl.getScheme(), _preemptiveCPBaseUrl.getHost(),
+						_preemptiveCPBaseUrl.getPort());
 				authCache.put(targetHost, basicAuth);
 				_context.setAuthCache(authCache);
 			}
@@ -229,14 +247,14 @@ public class HTTPClient implements Closeable {
 		return requestConfig;
 	}
 
-	protected org.apache.http.client.config.RequestConfig.Builder getRequestConfigBuilder() {
-		org.apache.http.client.config.RequestConfig.Builder requestConfigBuilder = RequestConfig//
+	protected RequestConfig.Builder getRequestConfigBuilder() {
+		RequestConfig.Builder requestConfigBuilder = RequestConfig//
 				.custom()//
 				.setMaxRedirects(5)//
 				.setCircularRedirectsAllowed(true)//
-				.setConnectionRequestTimeout(timeout)//
-				.setConnectTimeout(timeout)//
-				.setSocketTimeout(timeout)//
+				.setConnectionRequestTimeout(Timeout.ofMilliseconds(timeout))//
+				.setConnectTimeout(Timeout.ofMilliseconds(timeout))//
+				// .setSocketTimeout(Timeout.ofMilliseconds(timeout))//
 				.setExpectContinueEnabled(true)//
 				.setRedirectsEnabled(true)//
 				// https://stackoverflow.com/questions/36473478/fixing-httpclient-warning-invalid-expires-attribute-using-fluent-api/40697322
@@ -245,7 +263,7 @@ public class HTTPClient implements Closeable {
 		;
 		if (sharepoint) {
 			requestConfigBuilder//
-					.setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM))//
+					.setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM.ident))//
 					.setCookieSpec(cookieSpec)//
 			;
 		}
@@ -262,13 +280,13 @@ public class HTTPClient implements Closeable {
 
 	public RedirectStrategy getRedirectStrategy() {
 		if (redirectStrategy == null) {
-			redirectStrategy = new LaxRedirectStrategy() {
+			redirectStrategy = new DefaultRedirectStrategy() {
 				@Override
-				public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context)
-						throws ProtocolException {
-					HttpUriRequest redirect = super.getRedirect(request, response, context);
+				public URI getLocationURI(HttpRequest request, HttpResponse response, HttpContext context)
+						throws org.apache.hc.core5.http.HttpException {
+					URI redirect = super.getLocationURI(request, response, context);
 					if (chain != null)
-						chain.get().add(redirect.getURI());
+						chain.get().add(redirect);
 					return redirect;
 				}
 
@@ -279,8 +297,8 @@ public class HTTPClient implements Closeable {
 						throw new IllegalArgumentException("HTTP response may not be null");
 					}
 
-					int statusCode = response.getStatusLine().getStatusCode();
-					String method = request.getRequestLine().getMethod();
+					int statusCode = response.getCode();
+					String method = request.getMethod();
 					Header locationHeader = response.getFirstHeader("location");
 
 					switch (statusCode) {
@@ -324,7 +342,7 @@ public class HTTPClient implements Closeable {
 		if (sharepoint) {
 			httpClientBuilder.setDefaultAuthSchemeRegistry(//
 					RegistryBuilder.<AuthSchemeProvider>create()//
-							.register(AuthSchemes.NTLM, new JCIFSNTLMSchemeFactory())//
+							.register(AuthSchemes.NTLM.ident, new JCIFSNTLMSchemeFactory())//
 							.build()//
 			);
 		}
@@ -361,15 +379,16 @@ public class HTTPClient implements Closeable {
 				);
 			} else {
 				// Allow TLSv1 protocol only
-				sslsf = new SSLConnectionSocketFactory(//
-						sslcontext, //
-						new String[] { "TLSv1", "TLSv1.1", "TLSv1.2" }, // supportedProtocols
-						null, // supportedCipherSuites
-						SSLConnectionSocketFactory.getDefaultHostnameVerifier()// (default)
-																				// hostnameVerifier
-				);
+				// FIXME
+				// new String[] { "TLSv1", "TLSv1.1", "TLSv1.2" }, //
+				// supportedProtocols
+				sslsf = SSLConnectionSocketFactoryBuilder.create()//
+						.setSslContext(sslcontext)//
+						.setHostnameVerifier(HttpsSupport.getDefaultHostnameVerifier())//
+						.build();
 			}
-			httpClientBuilder.setSSLSocketFactory(sslsf);
+			// FIXME httpClientBuilder.setSSLSocketFactory(sslsf);
+			throw new UnsupportedOperationException();
 		}
 		return httpClientBuilder;
 	}
@@ -425,7 +444,12 @@ public class HTTPClient implements Closeable {
 
 		chain.get().clear();
 
-		URI uri = req.getURI();
+		URI uri;
+		try {
+			uri = req.getUri();
+		} catch (URISyntaxException ex) {
+			throw new RuntimeException(ex);
+		}
 		logger.trace("{}", uri);
 
 		if (StringUtils.isNotBlank(params.getReferer())) {
@@ -434,7 +458,7 @@ public class HTTPClient implements Closeable {
 			req.addHeader("Referer", uri.toASCIIString());
 		}
 
-		HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+		HttpHost targetHost = new HttpHost(uri.getScheme(), uri.getHost(), uri.getPort());
 		Response response = null;
 		if (requestListener == null)
 			requestListener = new RequestListenerAdapter();
@@ -465,15 +489,19 @@ public class HTTPClient implements Closeable {
 			RequestListener requestListener) throws IOException {
 		Response response = new Response();
 		EnhancedList<URI> uris = chain.get();
-		URI _uri_ = req.getURI();
+		URI _uri_;
+		try {
+			_uri_ = req.getUri();
+		} catch (URISyntaxException ex1) {
+			throw new RuntimeException(ex1);
+		}
 		uris.add(0, _uri_);
 		response.setChain(uris);
 		response.setUri(_uri_);
-		for (Header header : httpResponse.getAllHeaders()) {
-			response.addHeader(header.getName(), header.getValue());
-		}
-		response.setStatusCode(httpResponse.getStatusLine().getStatusCode());
-		response.setStatusText(httpResponse.getStatusLine().getReasonPhrase());
+		Arrays.stream(httpResponse.getHeaders())
+				.forEach(header -> response.addHeader(header.getName(), header.getValue()));
+		response.setStatusCode(httpResponse.getCode());
+		response.setStatusText(httpResponse.getReasonPhrase());
 		response.setLocale(httpResponse.getLocale());
 		HttpEntity entity = httpResponse.getEntity();
 		if (entity != null) {
@@ -494,11 +522,9 @@ public class HTTPClient implements Closeable {
 				}
 			}
 			response.setContentLength(entity.getContentLength());
-			response.setContentEncoding(
-					entity.getContentEncoding() == null ? null : entity.getContentEncoding().getValue());
-			Header contentTypeHeader = entity.getContentType();
-			if (contentTypeHeader != null) {
-				String contentType = contentTypeHeader.getValue();
+			response.setContentEncoding(entity.getContentEncoding());
+			String contentType = entity.getContentType();
+			if (contentType != null) {
 				response.setContentType(contentType);
 				if (StringUtils.isNotBlank(contentType)) {
 					int charsetIndex = contentType.indexOf("charset=");
@@ -545,19 +571,18 @@ public class HTTPClient implements Closeable {
 	}
 
 	public HttpUriRequest createPut(PutRequest put) {
-		RequestBuilder builder = RequestBuilder.put().setUri(put.getUri());
+		HttpPut httpPut = new HttpPut(put.getUri());
 		if (put.getBody() != null) {
-			builder.setEntity(new StringEntity(put.getBody(), ContentType.create(put.getMime(), charSet)));
+			httpPut.setEntity(new StringEntity(put.getBody(), ContentType.create(put.getMime(), charSet)));
 		}
+		// FIXME
 		if (!put.getFormValues().isEmpty()) {
-			put.getFormValues().entrySet().stream().forEach(entry -> {
-				entry.getValue().stream().filter(Objects::nonNull).forEach(value -> {
-					builder.addParameter(entry.getKey(), value);
-				});
-			});
+			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
+			put.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null)
+					.forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
+			httpPut.setEntity(new UrlEncodedFormEntity(nvps));
 		}
-		HttpUriRequest req = builder.build();
-		return req;
+		return httpPut;
 	}
 
 	public Response post(PostRequest post) {
@@ -567,9 +592,8 @@ public class HTTPClient implements Closeable {
 	public HttpUriRequest createPost(PostRequest post) {
 		HttpUriRequest req;
 		if (post.getBody() != null) {
-			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
-			builder.setEntity(new StringEntity(post.getBody(), ContentType.create(post.getMime(), charSet)));
-			req = builder.build();
+			req = new HttpPost(post.getUri());
+			req.setEntity(new StringEntity(post.getBody(), ContentType.create(post.getMime(), charSet)));
 		} else if (post.getAttachments().size() > 0) {
 			MultipartEntityBuilder mb = MultipartEntityBuilder.create();
 			// STRICT, BROWSER_COMPATIBLE, RFC6532
@@ -583,24 +607,24 @@ public class HTTPClient implements Closeable {
 			HttpPost.class.cast(req).setEntity(body);
 		} else if (post.getStream() != null) {
 			req = new HttpPost(post.getUri());
-			HttpEntity body = new InputStreamEntity(post.getStream().get());
+			InputStream inputStream = post.getStream().get();
+			HttpEntity body = new InputStreamEntity(inputStream, ContentType.APPLICATION_OCTET_STREAM); // FIXME
 			HttpPost.class.cast(req).setEntity(body);
 		} else if (post.isUrlEncodedFormEntity()) {
-			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
+			HttpPost httpPost = new HttpPost(post.getUri());
 			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
 			post.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null)
 					.forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
-			try {
-				builder.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
-			} catch (UnsupportedEncodingException ex) {
-				throw new RuntimeException(ex);
-			}
-			req = builder.build();
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+			req = httpPost;
 		} else {
-			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
+			// FIXME
+			HttpPost httpPost = new HttpPost(post.getUri());
+			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
 			post.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null)
-					.forEach(kv -> kv.getValue().forEach(v -> builder.addParameter(kv.getKey(), v)));
-			req = builder.build();
+					.forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
+			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+			req = httpPost;
 		}
 		return req;
 	}
@@ -646,8 +670,9 @@ public class HTTPClient implements Closeable {
 		PostRequest post = new PostRequest(uri);
 		form.getInputElements().stream().filter(e -> !(e instanceof FileInput))
 				.forEach(e -> post.addFormValue(e.getName(), e.getValue()));
-		form.getInputElements().stream().filter(e -> isNotBlank(e.getName())).filter(e -> isNotBlank(e.getValue()))
-				.filter(e -> e instanceof FileInput).map(e -> FileInput.class.cast(e))
+		form.getInputElements().stream().filter(e -> StringUtils.isNotBlank(e.getName()))
+				.filter(e -> StringUtils.isNotBlank(e.getValue())).filter(e -> e instanceof FileInput)
+				.map(e -> FileInput.class.cast(e))
 				.forEach(e -> post.addAttachment(e.getName(), new FilePath(e.getFile())));
 		post.setName(form.getId());
 		return post;
@@ -777,18 +802,18 @@ public class HTTPClient implements Closeable {
 		}
 	}
 
-	public org.apache.http.client.CookieStore getCookieStore() {
+	public org.jhaws.common.net.client5.CookieStore getCookieStore() {
 		if (cookieStore == null) {
-			cookieStore = new org.jhaws.common.net.client.CookieStore();
+			cookieStore = new org.jhaws.common.net.client5.CookieStore();
 		}
 		return this.cookieStore;
 	}
 
-	public org.jhaws.common.net.client.CookieStore getCustomCookieStore() {
-		return org.jhaws.common.net.client.CookieStore.class.cast(getCookieStore());
+	public org.jhaws.common.net.client5.CookieStore getCustomCookieStore() {
+		return org.jhaws.common.net.client5.CookieStore.class.cast(getCookieStore());
 	}
 
-	public HTTPClient setCookieStore(org.apache.http.client.CookieStore cookieStore) {
+	public HTTPClient setCookieStore(org.jhaws.common.net.client5.CookieStore cookieStore) {
 		this.cookieStore = cookieStore;
 		return this;
 	}
@@ -841,13 +866,18 @@ public class HTTPClient implements Closeable {
 				init = true;
 				AuthScope authscope;
 				if (StringUtils.isNotBlank(auth.getRealm()) && StringUtils.isNotBlank(auth.getScheme())) {
-					authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm(), auth.getScheme());
+					authscope = new AuthScope(new HttpHost(auth.getHost(), auth.getPort()), auth.getRealm(),
+							auth.getScheme());
 				} else if (StringUtils.isNotBlank(auth.getRealm())) {
-					authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm());
+					// FIXME
+					// authscope = new AuthScope(new HttpHost(auth.getHost(),
+					// auth.getPort()), auth.getRealm());
+					throw new UnsupportedOperationException();
 				} else {
 					authscope = new AuthScope(auth.getHost(), auth.getPort());
 				}
-				defaultCredentialsProvider.setCredentials(authscope, createCredentials(auth));
+				BasicCredentialsProvider.class.cast(defaultCredentialsProvider).setCredentials(authscope,
+						createCredentials(auth));
 			}
 			if (!init) {
 				defaultCredentialsProvider = new SystemDefaultCredentialsProvider();
@@ -872,13 +902,18 @@ public class HTTPClient implements Closeable {
 				init = true;
 				AuthScope authscope;
 				if (StringUtils.isNotBlank(auth.getRealm()) && StringUtils.isNotBlank(auth.getScheme())) {
-					authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm(), auth.getScheme());
+					authscope = new AuthScope(new HttpHost(auth.getHost(), auth.getPort()), auth.getRealm(),
+							auth.getScheme());
 				} else if (StringUtils.isNotBlank(auth.getRealm())) {
-					authscope = new AuthScope(auth.getHost(), auth.getPort(), auth.getRealm());
+					// FIXME
+					// authscope = new AuthScope(new HttpHost(auth.getHost(),
+					// auth.getPort()), auth.getRealm());
+					throw new UnsupportedOperationException();
 				} else {
 					authscope = new AuthScope(auth.getHost(), auth.getPort());
 				}
-				preemptiveCredentialsProvider.setCredentials(authscope, createCredentials(auth));
+				BasicCredentialsProvider.class.cast(preemptiveCredentialsProvider).setCredentials(authscope,
+						createCredentials(auth));
 			}
 			if (!init) {
 				preemptiveCredentialsProvider = null;
@@ -889,9 +924,9 @@ public class HTTPClient implements Closeable {
 
 	protected Credentials createCredentials(HTTPClientAuth auth) {
 		if (sharepoint) {
-			return new NTCredentials(auth.getUser(), auth.getPass(), null, null);
+			return new NTCredentials(auth.getUser(), auth.getPass().toCharArray(), null, null);
 		}
-		return new UsernamePasswordCredentials(auth.getUser(), auth.getPass());
+		return new UsernamePasswordCredentials(auth.getUser(), auth.getPass().toCharArray());
 	}
 
 	public HTTPClient setPreemptiveCredentialsProvider(CredentialsProvider credentialsProvider) {
