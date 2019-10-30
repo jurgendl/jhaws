@@ -18,6 +18,7 @@ import org.apache.hc.core5.http.Message;
 import org.apache.hc.core5.http.Methods;
 import org.apache.hc.core5.http.impl.bootstrap.HttpAsyncRequester;
 import org.apache.hc.core5.http.nio.AsyncClientEndpoint;
+import org.apache.hc.core5.http.nio.entity.BasicAsyncEntityConsumer;
 import org.apache.hc.core5.http.nio.entity.StringAsyncEntityConsumer;
 import org.apache.hc.core5.http.nio.support.BasicRequestProducer;
 import org.apache.hc.core5.http.nio.support.BasicResponseConsumer;
@@ -165,16 +166,16 @@ public class Http2Test {
 			Future<AsyncClientEndpoint> future = requester.connect(target, Timeout.ofSeconds(5));
 			AsyncClientEndpoint clientEndpoint = future.get();
 			clientEndpoint.execute(new BasicRequestProducer(Methods.GET, target, requestUri),
-					new BasicResponseConsumer<>(new StringAsyncEntityConsumer()),
-					new FutureCallback<Message<HttpResponse, String>>() {
+					new BasicResponseConsumer<>(new BasicAsyncEntityConsumer()),
+					new FutureCallback<Message<HttpResponse, byte[]>>() {
 
 						@Override
-						public void completed(Message<HttpResponse, String> message) {
+						public void completed(Message<HttpResponse, byte[]> message) {
 							clientEndpoint.releaseAndReuse();
 							HttpResponse response = message.getHead();
-							String body = message.getBody();
+							byte[] body = message.getBody();
 							System.out.println(requestUri + "->" + response.getCode() + " " + response.getVersion());
-							System.out.println(body);
+							// System.out.println(body);
 							latch.countDown();
 						}
 
