@@ -10,11 +10,12 @@ public class HttpClientOtherTest {
     @Test
     public void test() {
         try (HTTPClient hc = new HTTPClient()) {
-            Response response = hc.get("http://www.google.com");
+            Response response = hc.get("https://www.google.be");
             System.out.println(response);
             System.out.println(response.getContentString().length());
             System.out.println(hc.getDownloaded());
         } catch (Exception e) {
+            e.printStackTrace(System.out);
             Assert.fail(String.valueOf(e));
         }
     }

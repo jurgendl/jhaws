@@ -21,16 +21,16 @@ import org.jhaws.common.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CookieStore implements org.apache.http.client.CookieStore, Externalizable {
+public class DefaultCookieStore implements org.apache.http.client.CookieStore, Externalizable {
 	/**
 	 * deserialize
 	 */
-	public static CookieStore deserialize(InputStream in) {
+	public static DefaultCookieStore deserialize(InputStream in) {
 		try {
 			try (ObjectInputStream encoder = new ObjectInputStream(in)) {
 				Object object = encoder.readObject();
 				encoder.close();
-				return (CookieStore) object;
+				return (DefaultCookieStore) object;
 			} catch (ClassNotFoundException ex) {
 				throw new IOException(ex);
 			}
@@ -42,10 +42,10 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 	/**
 	 * xml deserialize
 	 */
-	public static CookieStore xmldeserialize(InputStream in) {
+	public static DefaultCookieStore xmldeserialize(InputStream in) {
 		try (XMLDecoder decoder = new XMLDecoder(in)) {
 			Integer count = (Integer) decoder.readObject();
-			CookieStore store = new CookieStore();
+			DefaultCookieStore store = new DefaultCookieStore();
 			for (int i = 0; i < count; i++) {
 				Cookie readObject = (Cookie) decoder.readObject();
 				store.addCookie(readObject);
@@ -55,7 +55,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 	}
 
-	protected static final Logger logger = LoggerFactory.getLogger(CookieStore.class);
+	protected static final Logger logger = LoggerFactory.getLogger(DefaultCookieStore.class);
 
 	/** backing store */
 	protected transient org.apache.http.client.CookieStore cookieStore = new BasicCookieStore();
@@ -63,11 +63,11 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 	/** interceptors */
 	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<>();
 
-	public CookieStore() {
+	public DefaultCookieStore() {
 		super();
 	}
 
-	public CookieStore(org.apache.http.client.CookieStore source) {
+	public DefaultCookieStore(org.apache.http.client.CookieStore source) {
 		setParentCookieStore(source);
 	}
 
@@ -177,7 +177,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		this.cookieStoreInterceptors.remove(interceptor);
 	}
 
-	public CookieStore serialize(OutputStream out) throws IOException {
+	public DefaultCookieStore serialize(OutputStream out) throws IOException {
 		try (ObjectOutputStream encoder = new ObjectOutputStream(out)) {
 			encoder.writeObject(this);
 			return this;
@@ -211,7 +211,7 @@ public class CookieStore implements org.apache.http.client.CookieStore, External
 		}
 	}
 
-	public CookieStore xmlserialize(OutputStream out) {
+	public DefaultCookieStore xmlserialize(OutputStream out) {
 		try (XMLEncoder encoder = new XMLEncoder(out)) {
 			Cookie[] cookies = this.getCookies().toArray(new Cookie[0]);
 			encoder.writeObject(cookies.length);
