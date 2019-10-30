@@ -1,7 +1,8 @@
 package org.jhaws.common.net.client5;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
@@ -131,10 +132,22 @@ public class Http2Test {
 		}
 		latch1.await();
 
-		List<String> requestUris = new ArrayList<>();
+		Set<String> requestUris = new HashSet<>();
 
 		Jsoup.parse(body.get()).select("link").forEach(el -> {
 			String href = el.attr("href");
+			if (href != null && !href.startsWith("//")
+					&& (href.startsWith("/") || href.startsWith("https://www.youtube.com"))) {
+				if (href.startsWith("https://www.youtube.com")) {
+					href = href.substring("https://www.youtube.com".length());
+				}
+				if (!href.equals("/"))
+					requestUris.add(href);
+			}
+		});
+
+		Jsoup.parse(body.get()).select("img").forEach(el -> {
+			String href = el.attr("src");
 			if (href != null && !href.startsWith("//")
 					&& (href.startsWith("/") || href.startsWith("https://www.youtube.com"))) {
 				if (href.startsWith("https://www.youtube.com")) {
