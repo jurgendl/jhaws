@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
@@ -15,7 +16,6 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.Message;
 import org.apache.hc.core5.http.Methods;
-import org.apache.hc.core5.http.ProtocolException;
 import org.apache.hc.core5.http.impl.bootstrap.HttpAsyncRequester;
 import org.apache.hc.core5.http.nio.AsyncClientEndpoint;
 import org.apache.hc.core5.http.nio.entity.BasicAsyncEntityConsumer;
@@ -28,14 +28,18 @@ import org.apache.hc.core5.http2.impl.nio.bootstrap.H2RequesterBootstrap;
 import org.apache.hc.core5.http2.ssl.H2ClientTlsStrategy;
 import org.apache.hc.core5.io.CloseMode;
 import org.apache.hc.core5.net.NamedEndpoint;
+import org.apache.hc.core5.reactor.IOReactorConfig;
 import org.apache.hc.core5.reactor.ssl.SSLSessionVerifier;
 import org.apache.hc.core5.reactor.ssl.TlsDetails;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.util.Timeout;
+import org.jhaws.common.io.FilePath;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class Http2Test {
+	static long total;
+
 	private static class H2Callback<T> implements FutureCallback<Message<HttpResponse, T>> {
 		public H2Callback(CountDownLatch latch, AsyncClientEndpoint clientEndpoint, String requestUri) {
 			this.requestUri = requestUri;
@@ -53,12 +57,15 @@ public class Http2Test {
 			clientEndpoint.releaseAndReuse();
 			HttpResponse response = message.getHead();
 			body = message.getBody();
+			int len = 0;
 			try {
-				System.out.println(requestUri + " -> " + response.getCode() + " :: " + response.getVersion() + " :: "
-						+ response.getHeader("content-length"));
-			} catch (ProtocolException ex) {
-				ex.printStackTrace();
+				len = Integer.parseInt(response.getHeader("content-length").getValue());
+			} catch (Exception ex) {
+				//
 			}
+			total += len;
+			System.out.println(Thread.currentThread().getName() + " :: " + requestUri + " -> " + response.getCode()
+					+ " :: " + response.getVersion() + " :: " + len);
 			latch.countDown();
 		}
 
@@ -76,12 +83,16 @@ public class Http2Test {
 	}
 
 	public static void main(String[] args) throws Exception {
+		IOReactorConfig ioReactorConfig = IOReactorConfig.custom().setSoTimeout(5, TimeUnit.SECONDS).build();
+
 		H2Config h2Config = H2Config.custom()//
 				.setPushEnabled(false)//
+				.setMaxConcurrentStreams(100)//
 				.build();
 
 		HttpAsyncRequester requester = H2RequesterBootstrap//
 				.bootstrap()//
+				.setIOReactorConfig(ioReactorConfig)//
 				.setVersionPolicy(HttpVersionPolicy.FORCE_HTTP_2)//
 				.setH2Config(h2Config)//
 				.setTlsStrategy(new H2ClientTlsStrategy(SSLContexts.createSystemDefault(), new SSLSessionVerifier() {
@@ -190,5 +201,6 @@ public class Http2Test {
 		}
 		System.out.println("Shutting down I/O reactor");
 		requester.initiateShutdown();
+		System.out.println(FilePath.getHumanReadableFileSize(total));
 	}
 }
