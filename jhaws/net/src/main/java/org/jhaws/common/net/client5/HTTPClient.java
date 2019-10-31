@@ -159,12 +159,10 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
                 .setCircularRedirectsAllowed(true)//
                 .setConnectionRequestTimeout(Timeout.ofMilliseconds(timeout))//
                 .setConnectTimeout(Timeout.ofMilliseconds(timeout))//
-                // .setSocketTimeout(Timeout.ofMilliseconds(timeout))//
                 .setExpectContinueEnabled(true)//
                 .setRedirectsEnabled(true)//
                 // https://stackoverflow.com/questions/36473478/fixing-httpclient-warning-invalid-expires-attribute-using-fluent-api/40697322
                 .setCookieSpec(cookieSpec)//
-        // .setCookieSpec(org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY)//
         ;
         if (sharepoint) {
             requestConfigBuilder//
