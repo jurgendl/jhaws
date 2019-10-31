@@ -31,11 +31,41 @@ import org.apache.hc.core5.reactor.ssl.SSLSessionVerifier;
 import org.apache.hc.core5.reactor.ssl.TlsDetails;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.util.Timeout;
-import org.jhaws.common.lang.StringValue;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class Http2Test {
+	private static class H2Callback<T> implements FutureCallback<Message<HttpResponse, T>> {
+		public H2Callback(CountDownLatch latch, AsyncClientEndpoint clientEndpoint) {
+			super();
+			this.latch = latch;
+			this.clientEndpoint = clientEndpoint;
+		}
+
+		T body;
+		final CountDownLatch latch;
+		final AsyncClientEndpoint clientEndpoint;
+
+		@Override
+		public void completed(Message<HttpResponse, T> message) {
+			clientEndpoint.releaseAndReuse();
+			body = message.getBody();
+			latch.countDown();
+		}
+
+		@Override
+		public void failed(Exception ex) {
+			clientEndpoint.releaseAndReuse();
+			latch.countDown();
+		}
+
+		@Override
+		public void cancelled() {
+			clientEndpoint.releaseAndReuse();
+			latch.countDown();
+		}
+	}
+
 	public static void main(String[] args) throws Exception {
 		H2Config h2Config = H2Config.custom()//
 				.setPushEnabled(false)//
@@ -107,34 +137,17 @@ public class Http2Test {
 
 		HttpHost target = new HttpHost("https", "www.youtube.com", 443);
 
-		StringValue body = new StringValue();
-		CountDownLatch latch1 = new CountDownLatch(1);
+		String body;
 		{
+			CountDownLatch latch = new CountDownLatch(1);
 			Future<AsyncClientEndpoint> future = requester.connect(target, Timeout.ofSeconds(5));
 			AsyncClientEndpoint clientEndpoint = future.get();
+			H2Callback<String> callback = new H2Callback<>(latch, clientEndpoint);
 			clientEndpoint.execute(new BasicRequestProducer(Methods.GET, target, "/"),
-					new BasicResponseConsumer<>(new StringAsyncEntityConsumer()),
-					new FutureCallback<Message<HttpResponse, String>>() {
-
-						@Override
-						public void completed(Message<HttpResponse, String> message) {
-							clientEndpoint.releaseAndReuse();
-							body.set(message.getBody());
-							latch1.countDown();
-						}
-
-						@Override
-						public void failed(Exception ex) {
-							latch1.countDown();
-						}
-
-						@Override
-						public void cancelled() {
-							latch1.countDown();
-						}
-					});
+					new BasicResponseConsumer<>(new StringAsyncEntityConsumer()), callback);
+			latch.await();
+			body = callback.body;
 		}
-		latch1.await();
 
 		Set<String> requestUris = new HashSet<>();
 
@@ -143,7 +156,7 @@ public class Http2Test {
 						&& (href.startsWith("/") || href.startsWith("https://www.youtube.com")))
 				.map(href -> href.replaceFirst("https://www.youtube.com", "")).filter(href -> !href.equals("/"))
 				.forEach(href -> requestUris.add(href));
-		Document parsed = Jsoup.parse(body.get());
+		Document parsed = Jsoup.parse(body);
 		ssv.accept(parsed.select("link").stream().map(el -> el.attr("href")));
 		ssv.accept(parsed.select("img").stream().map(el -> el.attr("src")));
 		requestUris.forEach(System.out::println);
