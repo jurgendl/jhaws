@@ -85,7 +85,10 @@ public class Http2Test {
 	}
 
 	public static void main(String[] args) throws Exception {
-		IOReactorConfig ioReactorConfig = IOReactorConfig.custom().setSoTimeout(5, TimeUnit.SECONDS).build();
+		IOReactorConfig ioReactorConfig = IOReactorConfig.custom()//
+				.setSoTimeout(5, TimeUnit.SECONDS)//
+				// .setTcpNoDelay(true)//
+				.build();
 
 		H2Config h2Config = H2Config.custom()//
 				.setPushEnabled(false)//
