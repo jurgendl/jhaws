@@ -15,6 +15,7 @@ import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.Message;
 import org.apache.hc.core5.http.Methods;
+import org.apache.hc.core5.http.ProtocolException;
 import org.apache.hc.core5.http.impl.bootstrap.HttpAsyncRequester;
 import org.apache.hc.core5.http.nio.AsyncClientEndpoint;
 import org.apache.hc.core5.http.nio.entity.BasicAsyncEntityConsumer;
@@ -36,8 +37,8 @@ import org.jsoup.nodes.Document;
 
 public class Http2Test {
 	private static class H2Callback<T> implements FutureCallback<Message<HttpResponse, T>> {
-		public H2Callback(CountDownLatch latch, AsyncClientEndpoint clientEndpoint) {
-			super();
+		public H2Callback(CountDownLatch latch, AsyncClientEndpoint clientEndpoint, String requestUri) {
+			this.requestUri = requestUri;
 			this.latch = latch;
 			this.clientEndpoint = clientEndpoint;
 		}
@@ -45,11 +46,19 @@ public class Http2Test {
 		T body;
 		final CountDownLatch latch;
 		final AsyncClientEndpoint clientEndpoint;
+		final String requestUri;
 
 		@Override
 		public void completed(Message<HttpResponse, T> message) {
 			clientEndpoint.releaseAndReuse();
+			HttpResponse response = message.getHead();
 			body = message.getBody();
+			try {
+				System.out.println(requestUri + " -> " + response.getCode() + " :: " + response.getVersion() + " :: "
+						+ response.getHeader("content-length"));
+			} catch (ProtocolException ex) {
+				ex.printStackTrace();
+			}
 			latch.countDown();
 		}
 
@@ -140,11 +149,15 @@ public class Http2Test {
 		String body;
 		{
 			CountDownLatch latch = new CountDownLatch(1);
-			Future<AsyncClientEndpoint> future = requester.connect(target, Timeout.ofSeconds(5));
+			Future<AsyncClientEndpoint> future = requester.connect(target, Timeout.ofSeconds(10));
 			AsyncClientEndpoint clientEndpoint = future.get();
-			H2Callback<String> callback = new H2Callback<>(latch, clientEndpoint);
-			clientEndpoint.execute(new BasicRequestProducer(Methods.GET, target, "/"),
-					new BasicResponseConsumer<>(new StringAsyncEntityConsumer()), callback);
+			String requestUri = "/";
+			H2Callback<String> callback = new H2Callback<>(latch, clientEndpoint, requestUri);
+			clientEndpoint.execute(//
+					new BasicRequestProducer(Methods.GET, target, requestUri)//
+					, new BasicResponseConsumer<>(new StringAsyncEntityConsumer())//
+					, callback//
+			);
 			latch.await();
 			body = callback.body;
 		}
@@ -161,42 +174,20 @@ public class Http2Test {
 		ssv.accept(parsed.select("img").stream().map(el -> el.attr("src")));
 		requestUris.forEach(System.out::println);
 
-		CountDownLatch latch = new CountDownLatch(requestUris.size());
-		for (String requestUri : requestUris) {
-			Future<AsyncClientEndpoint> future = requester.connect(target, Timeout.ofSeconds(5));
-			AsyncClientEndpoint clientEndpoint = future.get();
-			clientEndpoint.execute(new BasicRequestProducer(Methods.GET, target, requestUri),
-					new BasicResponseConsumer<>(new BasicAsyncEntityConsumer()),
-					new FutureCallback<Message<HttpResponse, byte[]>>() {
-
-						@Override
-						public void completed(Message<HttpResponse, byte[]> message) {
-							clientEndpoint.releaseAndReuse();
-							HttpResponse response = message.getHead();
-							byte[] body = message.getBody();
-							System.out.println(requestUri + "->" + response.getCode() + " " + response.getVersion());
-							// System.out.println(body);
-							latch.countDown();
-						}
-
-						@Override
-						public void failed(Exception ex) {
-							clientEndpoint.releaseAndDiscard();
-							System.out.println(requestUri + "->" + ex);
-							latch.countDown();
-						}
-
-						@Override
-						public void cancelled() {
-							clientEndpoint.releaseAndDiscard();
-							System.out.println(requestUri + " cancelled");
-							latch.countDown();
-						}
-
-					});
+		{
+			CountDownLatch latch = new CountDownLatch(requestUris.size());
+			for (String requestUri : requestUris) {
+				Future<AsyncClientEndpoint> future = requester.connect(target, Timeout.ofSeconds(10));
+				AsyncClientEndpoint clientEndpoint = future.get();
+				H2Callback<byte[]> callback = new H2Callback<>(latch, clientEndpoint, requestUri);
+				clientEndpoint.execute(//
+						new BasicRequestProducer(Methods.GET, target, requestUri)//
+						, new BasicResponseConsumer<>(new BasicAsyncEntityConsumer())//
+						, callback//
+				);
+			}
+			latch.await();
 		}
-
-		latch.await();
 		System.out.println("Shutting down I/O reactor");
 		requester.initiateShutdown();
 	}
