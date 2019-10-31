@@ -73,12 +73,14 @@ public class Http2Test {
 		public void failed(Exception ex) {
 			clientEndpoint.releaseAndReuse();
 			latch.countDown();
+			System.out.println(requestUri + "->" + ex);
 		}
 
 		@Override
 		public void cancelled() {
 			clientEndpoint.releaseAndReuse();
 			latch.countDown();
+			System.out.println(requestUri + " cancelled");
 		}
 	}
 
