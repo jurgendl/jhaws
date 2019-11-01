@@ -62,7 +62,7 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 	protected transient CookieStore cookieStore = new BasicCookieStore();
 
 	/** interceptors */
-	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<>();
+	protected transient List<CookieStoreInterceptor<DefaultCookieStore>> cookieStoreInterceptors = new ArrayList<>();
 
 	public DefaultCookieStore() {
 		super();
@@ -82,13 +82,13 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 	 */
 	@Override
 	public synchronized void addCookie(Cookie cookie) {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeAddCookie(this);
 		}
 		this.cookieStore.addCookie(cookie);
 	}
 
-	public void addCookieStoreInterceptor(CookieStoreInterceptor interceptor) {
+	public void addCookieStoreInterceptor(CookieStoreInterceptor<DefaultCookieStore> interceptor) {
 		this.cookieStoreInterceptors.add(interceptor);
 	}
 
@@ -98,7 +98,7 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 	 */
 	@Override
 	public synchronized void clear() {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeClear(this);
 		}
 
@@ -115,7 +115,7 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 	 */
 	@Override
 	public synchronized boolean clearExpired(Date date) {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeClearExpired(this, date);
 		}
 
@@ -128,7 +128,7 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 	 */
 	@Override
 	public synchronized List<Cookie> getCookies() {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeGetCookies(this);
 		}
 		return this.cookieStore.getCookies();
@@ -174,7 +174,7 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 		}
 	}
 
-	public void removeCookieStoreInterceptor(CookieStoreInterceptor interceptor) {
+	public void removeCookieStoreInterceptor(CookieStoreInterceptor<DefaultCookieStore> interceptor) {
 		this.cookieStoreInterceptors.remove(interceptor);
 	}
 

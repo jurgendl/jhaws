@@ -19,6 +19,7 @@ import org.apache.hc.client5.http.cookie.BasicCookieStore;
 import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.cookie.CookieStore;
 import org.jhaws.common.lang.StringUtils;
+import org.jhaws.common.net.client.CookieStoreInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,7 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 	protected transient CookieStore cookieStore = new BasicCookieStore();
 
 	/** interceptors */
-	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<>();
+	protected transient List<CookieStoreInterceptor<DefaultCookieStore>> cookieStoreInterceptors = new ArrayList<>();
 
 	public DefaultCookieStore() {
 		super();
@@ -82,13 +83,13 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 	 */
 	@Override
 	public synchronized void addCookie(Cookie cookie) {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeAddCookie(this);
 		}
 		this.cookieStore.addCookie(cookie);
 	}
 
-	public void addCookieStoreInterceptor(CookieStoreInterceptor interceptor) {
+	public void addCookieStoreInterceptor(CookieStoreInterceptor<DefaultCookieStore> interceptor) {
 		this.cookieStoreInterceptors.add(interceptor);
 	}
 
@@ -98,7 +99,7 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 	 */
 	@Override
 	public synchronized void clear() {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeClear(this);
 		}
 
@@ -115,7 +116,7 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 	 */
 	@Override
 	public synchronized boolean clearExpired(Date date) {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeClearExpired(this, date);
 		}
 
@@ -128,7 +129,7 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 	 */
 	@Override
 	public synchronized List<Cookie> getCookies() {
-		for (CookieStoreInterceptor interceptor : this.cookieStoreInterceptors) {
+		for (CookieStoreInterceptor<DefaultCookieStore> interceptor : this.cookieStoreInterceptors) {
 			interceptor.beforeGetCookies(this);
 		}
 		return this.cookieStore.getCookies();
@@ -174,7 +175,7 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 		}
 	}
 
-	public void removeCookieStoreInterceptor(CookieStoreInterceptor interceptor) {
+	public void removeCookieStoreInterceptor(CookieStoreInterceptor<DefaultCookieStore> interceptor) {
 		this.cookieStoreInterceptors.remove(interceptor);
 	}
 

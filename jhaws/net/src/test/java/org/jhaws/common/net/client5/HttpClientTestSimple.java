@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.jhaws.common.net.client.HTTPClientAuth;
 import org.jhaws.common.net.client.Response;
 import org.junit.Assert;
 import org.junit.Test;
