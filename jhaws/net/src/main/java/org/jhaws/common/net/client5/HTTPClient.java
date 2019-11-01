@@ -88,6 +88,7 @@ import org.jhaws.common.net.client.DeleteRequest;
 import org.jhaws.common.net.client.FileInput;
 import org.jhaws.common.net.client.Form;
 import org.jhaws.common.net.client.GetRequest;
+import org.jhaws.common.net.client.HTTPClientAuth;
 import org.jhaws.common.net.client.HTTPClientBase;
 import org.jhaws.common.net.client.HeadRequest;
 import org.jhaws.common.net.client.HttpException;

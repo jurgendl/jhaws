@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.jhaws.common.lang.StringUtils;
@@ -58,7 +59,7 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 	protected static final Logger logger = LoggerFactory.getLogger(DefaultCookieStore.class);
 
 	/** backing store */
-	protected transient org.apache.http.client.CookieStore cookieStore = new BasicCookieStore();
+	protected transient CookieStore cookieStore = new BasicCookieStore();
 
 	/** interceptors */
 	protected transient List<CookieStoreInterceptor> cookieStoreInterceptors = new ArrayList<>();
@@ -133,7 +134,7 @@ public class DefaultCookieStore implements org.apache.http.client.CookieStore, E
 		return this.cookieStore.getCookies();
 	}
 
-	public org.apache.http.client.CookieStore getCookieStore() {
+	public CookieStore getCookieStore() {
 		return this.cookieStore;
 	}
 
