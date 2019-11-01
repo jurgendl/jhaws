@@ -1,29 +1,11 @@
 package org.jhaws.common.net.client5;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.cookie.SetCookie;
+import org.jhaws.common.net.client.CookieBase;
 
 @SuppressWarnings("serial")
-public class SerializableCookie implements SetCookie, Serializable {
-	private Date expiryDate;
-
-	private Date creationDate;
-
-	private String domain;
-
-	private String name;
-
-	private String path;
-
-	private String value;
-
-	private boolean isSecure;
-
+public class SerializableCookie extends CookieBase implements SetCookie {
 	public SerializableCookie() {
 		super();
 	}
@@ -38,173 +20,47 @@ public class SerializableCookie implements SetCookie, Serializable {
 		this.setCreationDate(cookie.getCreationDate());
 	}
 
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#getDomain()
-	 */
-	@Override
-	public String getDomain() {
-		return this.domain;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#getExpiryDate()
-	 */
-	@Override
-	public Date getExpiryDate() {
-		return this.expiryDate;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#getName()
-	 */
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#getPath()
-	 */
-	@Override
-	public String getPath() {
-		return this.path;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#getValue()
-	 */
-	@Override
-	public String getValue() {
-		return this.value;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#isExpired(java.util.Date)
-	 */
-	@Override
-	public boolean isExpired(Date date) {
-		return false;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#isPersistent()
-	 */
-	@Override
-	public boolean isPersistent() {
-		return (null != this.expiryDate);
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.Cookie#isSecure()
-	 */
-	@Override
-	public boolean isSecure() {
-		return this.isSecure;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.SetCookie#setDomain(java.lang.String)
-	 */
-	@Override
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.SetCookie#setExpiryDate(java.util.Date)
-	 */
-	@Override
-	public void setExpiryDate(Date expiryDate) {
-		this.expiryDate = expiryDate;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.SetCookie#setPath(java.lang.String)
-	 */
-	@Override
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.SetCookie#setSecure(boolean)
-	 */
-	@Override
-	public void setSecure(boolean isSecure) {
-		this.isSecure = isSecure;
-	}
-
-	/**
-	 *
-	 * @see org.apache.http.cookie.SetCookie#setValue(java.lang.String)
-	 */
-	@Override
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE).appendSuper(super.toString())
-				.append("expiryDate", this.expiryDate).append("domain", this.domain).append("name", this.name)
-				.append("path", this.path).append("creationDate", this.creationDate).append("value", this.value)
-				.append("isSecure", this.isSecure).toString();
-	}
-
-	@Override
-	public Date getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public SerializableCookie(CookieBase cookie) {
+		this.setDomain(cookie.getDomain());
+		this.setExpiryDate(cookie.getExpiryDate());
+		this.setName(cookie.getName());
+		this.setPath(cookie.getPath());
+		this.setSecure(cookie.isSecure());
+		this.setValue(cookie.getValue());
+		this.setCreationDate(cookie.getCreationDate());
 	}
 
 	@Override
 	public String getAttribute(String name) {
-		// if("CreationDate".equals(name))return getCreationDate();
-		if ("domain".equals(name))
+		if (DOMAIN_ATTR.equals(name))
 			return getDomain();
-		// if("ExpiryDate".equals(name))return getExpiryDate();
+		if (EXPIRES_ATTR.equals(name))
+			return null;
 		if ("name".equals(name))
 			return getName();
-		if ("path".equals(name))
+		if (PATH_ATTR.equals(name))
 			return getPath();
 		if ("value".equals(name))
 			return getValue();
+		if (SECURE_ATTR.equals(name))
+			return "" + isSecure();
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean containsAttribute(String name) {
-		if ("CreationDate".equals(name))
-			return getCreationDate() != null;
-		if ("domain".equals(name))
+		if (DOMAIN_ATTR.equals(name))
 			return getDomain() != null;
-		if ("ExpiryDate".equals(name))
+		if (EXPIRES_ATTR.equals(name))
 			return getExpiryDate() != null;
 		if ("name".equals(name))
 			return getName() != null;
-		if ("path".equals(name))
+		if (PATH_ATTR.equals(name))
 			return getPath() != null;
 		if ("value".equals(name))
 			return getValue() != null;
+		if (SECURE_ATTR.equals(name))
+			return isSecure();
 		throw new UnsupportedOperationException();
 	}
 }

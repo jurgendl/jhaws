@@ -43,6 +43,7 @@ public class Http2Test {
 	protected static void siteDownload(String site, HttpVersionPolicy httpVersionPolicy)
 			throws InterruptedException, ExecutionException {
 		IOReactorConfig ioReactorConfig = IOReactorConfig.custom()//
+				.setIoThreadCount(5)//
 				.setSoTimeout(5, TimeUnit.SECONDS)//
 				// .setTcpNoDelay(true)//
 				.build();

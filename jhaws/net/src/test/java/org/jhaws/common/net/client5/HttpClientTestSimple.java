@@ -23,7 +23,7 @@ public class HttpClientTestSimple {
 		String user = "user";
 		String passwd = "passwd";
 		try (HTTPClient h = new HTTPClient()) {
-			h.addAuthentication(new HTTPClientAuth(user, passwd, "httpbin.org").setPreemptive(true));
+			h.addAuthentication(new HTTPClientAuth(user, passwd, "httpbin.org").setPort(80).setPreemptive(true));
 			// h.addAuthentication(new HTTPClientAuth("u1", "p1",
 			// "www.google.co.uk"));
 			{

@@ -14,7 +14,7 @@ public class HTTPClientAuth {
 
 	private transient String host = null;
 
-	private transient Integer port = null;
+	private transient Integer port = 443;
 
 	private transient boolean preemptive = false;
 

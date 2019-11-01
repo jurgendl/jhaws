@@ -9,5 +9,5 @@
 		</encoder>
 	</appender>
 	<logger name="org.apache.http.wire" level="warn" />
-	<root level="warn"><appender-ref ref="CONSOLE" /></root>
+	<root level="trace"><appender-ref ref="CONSOLE" /></root>
 </configuration>

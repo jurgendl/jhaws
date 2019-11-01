@@ -3,7 +3,7 @@ package org.jhaws.common.net.client;
 import java.io.OutputStream;
 
 public class RequestOutputStreamWrapper extends org.apache.commons.compress.utils.CountingOutputStream {
-	RequestListener requestListener;
+	protected RequestListener requestListener;
 
 	public RequestOutputStreamWrapper(OutputStream out, RequestListener requestListener) {
 		super(out);
@@ -11,7 +11,7 @@ public class RequestOutputStreamWrapper extends org.apache.commons.compress.util
 	}
 
 	@Override
-    protected void count(final long written) {
+	protected void count(final long written) {
 		super.count(written);
 		if (written != -1) {
 			requestListener.bytesWritten(written, getBytesWritten());
