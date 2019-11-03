@@ -203,7 +203,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable 
 		return redirectStrategy;
 	}
 
-	public CloseableHttpClient getHttpClient() {
+	public synchronized CloseableHttpClient getHttpClient() {
 		if (httpClient == null) {
 			httpClient = getHttpClientBuilder().build();//
 		}
@@ -241,9 +241,9 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable 
 							.register("https", getSSLConnectionSocketFactory())//
 							.build()//
 			);
-			connectionManager = poolingConnectionManager;
 			poolingConnectionManager.setMaxTotal(20);
 			poolingConnectionManager.setDefaultMaxPerRoute(2);
+			connectionManager = poolingConnectionManager;
 		}
 		return connectionManager;
 	}

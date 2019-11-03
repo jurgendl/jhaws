@@ -219,7 +219,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 		return redirectStrategy;
 	}
 
-	public CloseableHttpClient getHttpClient() {
+	public synchronized CloseableHttpClient getHttpClient() {
 		if (httpClient == null) {
 			httpClient = getHttpClientBuilder().build();//
 		}

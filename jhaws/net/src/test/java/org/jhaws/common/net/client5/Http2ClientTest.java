@@ -24,7 +24,9 @@ public class Http2ClientTest {
 //				.setMaxConcurrentStreams(50)//
 //				.build();
 
-		CloseableHttpAsyncClient client = HttpAsyncClients.createHttp2System();
+		CloseableHttpAsyncClient client = HttpAsyncClients.createHttp2Default();
+		// CloseableHttpAsyncClient client =
+		// HttpAsyncClients.createHttp2System();
 //		HttpAsyncClients.customHttp2()
 //				.setTlsStrategy(ClientTlsStrategyBuilder.create().setSslContext(SSLContexts.createSystemDefault())
 //						.setTlsVersions(TLS.V_1_3, TLS.V_1_2).build())
