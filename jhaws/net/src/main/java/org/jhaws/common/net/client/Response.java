@@ -186,7 +186,11 @@ public class Response extends InputStream implements Serializable {
 	}
 
 	public long getHeaderContentLength() {
-		return Long.parseLong(getHeaders().get("Content-Length").get(0).toString());
+		try {
+			return Long.parseLong(getHeaders().get("Content-Length").get(0).toString());
+		} catch (java.lang.NullPointerException ex) {
+			return -1l;
+		}
 	}
 
 	public void setContentLength(long contentLength) {
