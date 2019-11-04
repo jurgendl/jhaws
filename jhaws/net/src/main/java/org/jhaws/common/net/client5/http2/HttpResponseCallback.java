@@ -1,4 +1,4 @@
-package org.jhaws.common.net.client5;
+package org.jhaws.common.net.client5.http2;
 
 import java.util.concurrent.CountDownLatch;
 
