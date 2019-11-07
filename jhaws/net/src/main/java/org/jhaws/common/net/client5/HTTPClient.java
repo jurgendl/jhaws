@@ -1,6 +1,5 @@
 package org.jhaws.common.net.client5;
 
-import static org.apache.commons.io.IOUtils.copyLarge;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.time.DateUtils.parseDate;
 
@@ -19,6 +18,7 @@ import javax.annotation.PreDestroy;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.auth.AuthCache;
 import org.apache.hc.client5.http.auth.AuthSchemeProvider;
 import org.apache.hc.client5.http.auth.AuthSchemes;
@@ -153,15 +153,20 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 		return requestConfig;
 	}
 
+	protected int maxRedirects = 5;
+	protected boolean redirectsEnabled = true;
+	protected boolean expectContinueEnabled = true;
+	protected boolean circularRedirectsEnabled = true;
+
 	protected RequestConfig.Builder getRequestConfigBuilder() {
 		RequestConfig.Builder requestConfigBuilder = RequestConfig//
 				.custom()//
-				.setMaxRedirects(5)//
-				.setCircularRedirectsAllowed(true)//
+				.setMaxRedirects(maxRedirects)//
+				.setCircularRedirectsAllowed(circularRedirectsEnabled)//
 				.setConnectionRequestTimeout(Timeout.ofMilliseconds(timeout))//
 				.setConnectTimeout(Timeout.ofMilliseconds(timeout))//
-				.setExpectContinueEnabled(true)//
-				.setRedirectsEnabled(true)//
+				.setExpectContinueEnabled(expectContinueEnabled)//
+				.setRedirectsEnabled(redirectsEnabled)//
 				// https://stackoverflow.com/questions/36473478/fixing-httpclient-warning-invalid-expires-attribute-using-fluent-api/40697322
 				.setCookieSpec(cookieSpec)//
 		;
@@ -264,10 +269,12 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 		return connectionManager;
 	}
 
+	protected String[] tlsVersions = { "TLSv1.3", "TLSv1.2" };
+
 	protected SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
 		return SSLConnectionSocketFactoryBuilder.create()//
 				.setSslContext(getSSLContext())//
-				.setTlsVersions(TLS.V_1_3, TLS.V_1_2)//
+				.setTlsVersions(Arrays.stream(tlsVersions).map(TLS::valueOf).toArray(length -> new TLS[length]))//
 				.setHostnameVerifier(getHostnameVerifier())//
 				.setCiphers(HttpsSupport.getSystemCipherSuits())//
 				.build();
@@ -358,7 +365,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 				}
 				requestListener.start(_uri_, entity.getContentLength());
 				try (RequestOutputStreamWrapper cout = new RequestOutputStreamWrapper(out, requestListener)) {
-					copyLarge(entity.getContent(), cout);
+					IOUtils.copyLarge(entity.getContent(), cout);
 					downloaded += cout.getBytesWritten();
 				}
 				requestListener.end();

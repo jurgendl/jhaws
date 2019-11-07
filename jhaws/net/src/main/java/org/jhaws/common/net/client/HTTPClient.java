@@ -1,6 +1,5 @@
 package org.jhaws.common.net.client;
 
-import static org.apache.commons.io.IOUtils.copyLarge;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.time.DateUtils.parseDate;
@@ -14,6 +13,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -22,7 +23,9 @@ import javax.annotation.PreDestroy;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.ssl.HttpsSupport;
+import org.apache.hc.core5.util.TextUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -135,16 +138,21 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable 
 		return requestConfig;
 	}
 
+	protected int maxRedirects = 5;
+	protected boolean redirectsEnabled = true;
+	protected boolean expectContinueEnabled = true;
+	protected boolean circularRedirectsEnabled = true;
+
 	protected RequestConfig.Builder getRequestConfigBuilder() {
 		RequestConfig.Builder requestConfigBuilder = RequestConfig//
 				.custom()//
-				.setMaxRedirects(5)//
-				.setCircularRedirectsAllowed(true)//
+				.setMaxRedirects(maxRedirects)//
+				.setCircularRedirectsAllowed(circularRedirectsEnabled)//
 				.setConnectionRequestTimeout(timeout)//
 				.setConnectTimeout(timeout)//
 				.setSocketTimeout(timeout)//
-				.setExpectContinueEnabled(true)//
-				.setRedirectsEnabled(true)//
+				.setExpectContinueEnabled(expectContinueEnabled)//
+				.setRedirectsEnabled(redirectsEnabled)//
 				// https://stackoverflow.com/questions/36473478/fixing-httpclient-warning-invalid-expires-attribute-using-fluent-api/40697322
 				.setCookieSpec(cookieSpec)//
 		// .setCookieSpec(org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY)//
@@ -248,11 +256,33 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable 
 		return connectionManager;
 	}
 
+	protected String[] tlsVersions = { "TLSv1.3", "TLSv1.2" };
+
+	private static String getProperty(final String key) {
+		return AccessController.doPrivileged(new PrivilegedAction<String>() {
+			@Override
+			public String run() {
+				return System.getProperty(key);
+			}
+		});
+	}
+
+	public static String[] getSystemCipherSuits() {
+		return split(getProperty("https.cipherSuites"));
+	}
+
+	private static String[] split(final String s) {
+		if (TextUtils.isBlank(s)) {
+			return null;
+		}
+		return s.split(" *, *");
+	}
+
 	protected SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
 		return new SSLConnectionSocketFactory(//
 				getSSLContext()//
-				, new String[] { "TLSv1.3", "TLSv1.2" }//
-				, null//
+				, tlsVersions//
+				, getSystemCipherSuits()//
 				, getHostnameVerifier()//
 		);
 	}
@@ -333,7 +363,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable 
 				}
 				requestListener.start(_uri_, entity.getContentLength());
 				try (RequestOutputStreamWrapper cout = new RequestOutputStreamWrapper(out, requestListener)) {
-					copyLarge(entity.getContent(), cout);
+					IOUtils.copyLarge(entity.getContent(), cout);
 					downloaded += cout.getBytesWritten();
 				}
 				requestListener.end();
