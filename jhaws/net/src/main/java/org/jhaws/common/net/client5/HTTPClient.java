@@ -274,7 +274,13 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 	protected SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
 		return SSLConnectionSocketFactoryBuilder.create()//
 				.setSslContext(getSSLContext())//
-				.setTlsVersions(Arrays.stream(tlsVersions).map(TLS::valueOf).toArray(length -> new TLS[length]))//
+				.setTlsVersions(Arrays.stream(tlsVersions).map(t -> {
+					try {
+						return TLS.parse(t);
+					} catch (org.apache.hc.core5.http.ParseException ex) {
+						throw new IllegalArgumentException(ex);
+					}
+				}).toArray(length -> new TLS[length]))//
 				.setHostnameVerifier(getHostnameVerifier())//
 				.setCiphers(HttpsSupport.getSystemCipherSuits())//
 				.build();
