@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.time.DateUtils.parseDate;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
@@ -89,7 +88,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @SuppressWarnings("serial")
-public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable {
+public class HTTPClient extends HTTPClientBase<HTTPClient> {
 	protected static Logger logger = LoggerFactory.getLogger(HTTPClient.class);
 
 	protected transient CloseableHttpClient httpClient;
@@ -137,11 +136,6 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable 
 		}
 		return requestConfig;
 	}
-
-	protected int maxRedirects = 5;
-	protected boolean redirectsEnabled = true;
-	protected boolean expectContinueEnabled = true;
-	protected boolean circularRedirectsEnabled = true;
 
 	protected RequestConfig.Builder getRequestConfigBuilder() {
 		RequestConfig.Builder requestConfigBuilder = RequestConfig//
@@ -255,8 +249,6 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> implements Closeable 
 		}
 		return connectionManager;
 	}
-
-	protected String[] tlsVersions = { "TLSv1.3", "TLSv1.2" };
 
 	private static String getProperty(final String key) {
 		return AccessController.doPrivileged(new PrivilegedAction<String>() {

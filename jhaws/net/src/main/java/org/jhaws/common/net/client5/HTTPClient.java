@@ -153,11 +153,6 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 		return requestConfig;
 	}
 
-	protected int maxRedirects = 5;
-	protected boolean redirectsEnabled = true;
-	protected boolean expectContinueEnabled = true;
-	protected boolean circularRedirectsEnabled = true;
-
 	protected RequestConfig.Builder getRequestConfigBuilder() {
 		RequestConfig.Builder requestConfigBuilder = RequestConfig//
 				.custom()//
@@ -268,8 +263,6 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 		}
 		return connectionManager;
 	}
-
-	protected String[] tlsVersions = { "TLSv1.3", "TLSv1.2" };
 
 	protected SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
 		return SSLConnectionSocketFactoryBuilder.create()//

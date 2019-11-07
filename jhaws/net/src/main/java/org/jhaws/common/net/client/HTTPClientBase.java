@@ -124,6 +124,16 @@ public abstract class HTTPClientBase<X extends HTTPClientBase<? super X>> implem
 
 	protected String cookieSpec = "standard";
 
+	protected int maxRedirects = 5;
+
+	protected boolean redirectsEnabled = true;
+
+	protected boolean expectContinueEnabled = true;
+
+	protected boolean circularRedirectsEnabled = true;
+
+	protected String[] tlsVersions = { "TLSv1.3", "TLSv1.2" };
+
 	protected final ThreadLocal<EnhancedList<URI>> chain = new ThreadLocal<EnhancedList<URI>>() {
 		@Override
 		protected EnhancedList<URI> initialValue() {
@@ -266,5 +276,50 @@ public abstract class HTTPClientBase<X extends HTTPClientBase<? super X>> implem
 		} else {
 			req.removeHeaders(HttpHeaders.ACCEPT_LANGUAGE);
 		}
+	}
+
+	public int getMaxRedirects() {
+		return this.maxRedirects;
+	}
+
+	public X setMaxRedirects(int maxRedirects) {
+		this.maxRedirects = maxRedirects;
+		return castThis();
+	}
+
+	public boolean isRedirectsEnabled() {
+		return this.redirectsEnabled;
+	}
+
+	public X setRedirectsEnabled(boolean redirectsEnabled) {
+		this.redirectsEnabled = redirectsEnabled;
+		return castThis();
+	}
+
+	public boolean isExpectContinueEnabled() {
+		return this.expectContinueEnabled;
+	}
+
+	public X setExpectContinueEnabled(boolean expectContinueEnabled) {
+		this.expectContinueEnabled = expectContinueEnabled;
+		return castThis();
+	}
+
+	public boolean isCircularRedirectsEnabled() {
+		return this.circularRedirectsEnabled;
+	}
+
+	public X setCircularRedirectsEnabled(boolean circularRedirectsEnabled) {
+		this.circularRedirectsEnabled = circularRedirectsEnabled;
+		return castThis();
+	}
+
+	public String[] getTlsVersions() {
+		return this.tlsVersions;
+	}
+
+	public X setTlsVersions(String[] tlsVersions) {
+		this.tlsVersions = tlsVersions;
+		return castThis();
 	}
 }
