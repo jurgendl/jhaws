@@ -3,10 +3,14 @@ package org.jhaws.common.lang;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 // [^abc], which is anything but abc,
 // or negative lookahead: a(?!b), which is a not followed by b
@@ -305,5 +309,19 @@ public interface StringUtils {
 	public static String replaceLast(String text, String regex, String replacement) {
 		// https://stackoverflow.com/questions/2282728/java-replacelast
 		return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
+	}
+
+	public static final Pattern HTML_CODE = Pattern.compile("\\&#(\\d++);");
+
+	public static String unescapeHtml(String markup) {
+		StringValue html = new StringValue(markup);
+		html.operate(StringEscapeUtils::unescapeHtml4);
+		Matcher m = HTML_CODE.matcher(markup);
+		Map<String, String> map = new LinkedHashMap<>();
+		while (m.find()) {
+			map.put(m.group(), String.valueOf((char) Integer.parseInt(m.group(1))));
+		}
+		map.entrySet().forEach(e -> html.operate(t -> t.replace(e.getKey(), e.getValue())));
+		return html.get();
 	}
 }
