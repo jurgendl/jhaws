@@ -678,6 +678,9 @@ public abstract class DefaultWebPage extends WebPage {
         response.render(CssHeaderItem.forReference(PopoverX.CSS));
 
         response.render(JavaScriptHeaderItem.forReference(Waypoints.JS));
+        response.render(JavaScriptHeaderItem.forReference(Waypoints.JS_INFINITE));
+        response.render(JavaScriptHeaderItem.forReference(Waypoints.JS_INVIEW));
+        response.render(JavaScriptHeaderItem.forReference(Waypoints.JS_STICKY));
 
         renderBaseCss(response);
         renderBaseJs(response);

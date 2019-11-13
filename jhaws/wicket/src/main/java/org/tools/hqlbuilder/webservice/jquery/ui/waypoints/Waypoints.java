@@ -15,11 +15,20 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 public class Waypoints {
     public static JavaScriptResourceReference JS = new JavaScriptResourceReference(Waypoints.class, "jquery.waypoints.js");
 
+    public static JavaScriptResourceReference JS_STICKY = new JavaScriptResourceReference(Waypoints.class, "shortcuts/sticky.js");
+
+    public static JavaScriptResourceReference JS_INVIEW = new JavaScriptResourceReference(Waypoints.class, "shortcuts/inview.js");
+
+    public static JavaScriptResourceReference JS_INFINITE = new JavaScriptResourceReference(Waypoints.class, "shortcuts/infinite.js");
+
     static {
         try {
             JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
         } catch (Exception ex) {
             //
         }
+        JS_STICKY.addJavaScriptResourceReferenceDependency(JS);
+        JS_INVIEW.addJavaScriptResourceReferenceDependency(JS);
+        JS_INFINITE.addJavaScriptResourceReferenceDependency(JS);
     }
 }
