@@ -480,8 +480,11 @@ public class ExifTool extends Tool implements MediaCte {
 						path.getParentPath(), null, null, new Lines()).lines().stream().collect(collectList());
 				// lines.forEach(System.out::println);
 
-				if (lines.stream().anyMatch(x -> x.startsWith("No file specified") || x.startsWith("No matching files")
-						|| x.startsWith("Error: File not found"))) {
+				if (lines.stream().anyMatch(x -> //
+				x.startsWith("No file specified")//
+						|| x.startsWith("No matching files")//
+						|| x.startsWith("Error: File not found")//
+				)) {
 					FilePath tmp = path.getParentPath().child("" + System.currentTimeMillis());
 					try {
 						Files.createLink(tmp.toPath(), path.toPath());
