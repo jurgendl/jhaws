@@ -9,6 +9,9 @@ import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 // notify('Basic waypoint triggered')
 // }
 // })
+//
+// http://imakewebthings.com/waypoints/guides/getting-started/
+// v4.0.1
 public class Waypoints {
     public static JavaScriptResourceReference JS = new JavaScriptResourceReference(Waypoints.class, "jquery.waypoints.js");
 
