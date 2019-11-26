@@ -26,7 +26,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.spring>5.1.9.RELEASE</version.spring>
+        <version.spring>5.2.1.RELEASE</version.spring>
         <version.spring-ws>3.0.7.RELEASE</version.spring-ws>
         <version.spring-integration>5.1.7.RELEASE</version.spring-integration>
         <version.spring-security>5.1.6.RELEASE</version.spring-security>
