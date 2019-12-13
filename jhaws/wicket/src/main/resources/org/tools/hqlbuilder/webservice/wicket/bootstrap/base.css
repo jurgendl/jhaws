@@ -549,10 +549,10 @@ img.niceimage {
 	background-color: inherit;
 }
 .bottomshadow {
-	-webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
-	-moz-box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
-	box-shadow: 0 0 0.2rem 0.2rem rgba(0, 0, 0, 0.25);
-	background-color: white;
+	-webkit-box-shadow: 0 0 0.2rem 0.2rem rgba(var(--dark), 0.5);
+	-moz-box-shadow: 0 0 0.2rem 0.2rem rgba(var(--dark), 0.5);
+	box-shadow: 0 0 0.2rem 0.2rem rgba(var(--dark), 0.5);
+	background-color: var(--light);
 }
 .navbar .dropdown-menu.show {
 	margin-top: .5em !important;
@@ -603,10 +603,10 @@ div.rating-input {
 /* add FontAwesome icon for input (optional) */
 .custom-file-control::before {
 	font-family: 'FontAwesome';
-	content: "\f03e"!important;
-	height: 2.3rem!important;
-	padding: .4rem 1rem!important;
-	border-radius: 0!important;
+	content: "\f03e" !important;
+	height: 2.3rem !important;
+	padding: .4rem 1rem !important;
+	border-radius: 0 !important;
 }
 .custom-file-name:after {
 	content: attr(data-content) !important;
