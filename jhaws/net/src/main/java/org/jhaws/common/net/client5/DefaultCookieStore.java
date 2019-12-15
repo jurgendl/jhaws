@@ -23,6 +23,12 @@ import org.jhaws.common.net.client.CookieStoreInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.CookieStore, Externalizable {
 	/**
 	 * deserialize
@@ -54,6 +60,23 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 			}
 			decoder.close();
 			return store;
+		}
+	}
+
+	public static DefaultCookieStore jsondeserialize(InputStream in) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			List<SerializableCookie> cc = objectMapper.readValue(in, new TypeReference<List<SerializableCookie>>() {
+				/**/});
+			DefaultCookieStore store = new DefaultCookieStore();
+			cc.forEach(store::addCookie);
+			return store;
+		} catch (JsonParseException ex) {
+			throw new RuntimeException(ex);
+		} catch (JsonMappingException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
 		}
 	}
 
@@ -221,6 +244,20 @@ public class DefaultCookieStore implements org.apache.hc.client5.http.cookie.Coo
 				encoder.writeObject(new SerializableCookie(c));
 			}
 			return this;
+		}
+	}
+
+	public DefaultCookieStore jsonserialize(OutputStream out) {
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.writeValue(out, getCookies());
+			return this;
+		} catch (JsonGenerationException ex) {
+			throw new RuntimeException(ex);
+		} catch (JsonMappingException ex) {
+			throw new RuntimeException(ex);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
 		}
 	}
 }

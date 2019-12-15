@@ -40,4 +40,8 @@ public class SerializableCookie extends CookieBase implements SetCookie {
 	public String getCommentURL() {
 		return null;
 	}
+
+	public void setPersistent(Boolean b) {
+		//
+	}
 }

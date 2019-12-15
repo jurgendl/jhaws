@@ -63,4 +63,8 @@ public class SerializableCookie extends CookieBase implements SetCookie {
 			return isSecure();
 		throw new UnsupportedOperationException();
 	}
+
+	public void setPersistent(Boolean b) {
+		//
+	}
 }
