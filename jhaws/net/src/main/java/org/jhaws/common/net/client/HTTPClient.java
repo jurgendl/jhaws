@@ -377,8 +377,30 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 					}
 				}
 			}
-			response.setFilename(getName(uris.get(uris.size() - 1)));
+		} else {
+			try {
+				Header h = httpResponse.getFirstHeader("Content-Type");
+				if (h != null && StringUtils.isNotBlank(h.getValue())) {
+					String contentType = h.getValue();
+					response.setContentType(contentType);
+					int charsetIndex = contentType.indexOf("charset=");
+					if (charsetIndex != -1) {
+						response.setCharset(contentType.substring("charset=".length() + charsetIndex));
+					}
+				}
+			} catch (RuntimeException ex) {
+				//
+			}
+			try {
+				Header h = httpResponse.getFirstHeader("Content-Length");
+				if (h != null && StringUtils.isNotBlank(h.getValue())) {
+					response.setContentLength(Long.parseLong(h.getValue()));
+				}
+			} catch (RuntimeException ex) {
+				//
+			}
 		}
+		response.setFilename(getName(uris.get(uris.size() - 1)));
 		try {
 			Header dateHeader = httpResponse.getFirstHeader("Date");
 			if (dateHeader != null && StringUtils.isNotBlank(String.valueOf(dateHeader))) {
