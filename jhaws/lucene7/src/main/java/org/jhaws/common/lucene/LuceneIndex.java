@@ -396,6 +396,7 @@ public class LuceneIndex implements Closeable {
 		List<F> result = new ArrayList<>(create);
 		// do not change to parallelStream or it will add null values
 		match.stream().map(Map.Entry::getKey).forEach(result::add);
+		redo.stream().map(Map.Entry::getKey).forEach(result::add);
 		return result;
 	}
 
