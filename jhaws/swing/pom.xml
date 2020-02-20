@@ -14,7 +14,7 @@
         <version.miglayout>4.2</version.miglayout>
         <version.poi>3.17</version.poi>
         <version.ostermiller>1.07.00</version.ostermiller>
-		<version.pdfbox>2.0.16</version.pdfbox>
+		<version.pdfbox>2.0.18</version.pdfbox>
     </properties>
     <dependencyManagement>
         <dependencies>
