@@ -2391,4 +2391,12 @@ public interface CollectionUtils8 {
 	public static <T> T[] prepend(T[] a, @SuppressWarnings("unchecked") T... b) {
 		return merge(b, a);
 	}
+
+    public static <T> UnaryOperator<T> unaryOperator(Consumer<T> consumer) {
+        UnaryOperator<T> a = b -> {
+            consumer.accept(b);
+            return b;
+        };
+        return a;
+    }
 }
