@@ -20,8 +20,7 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.auth.AuthCache;
-import org.apache.hc.client5.http.auth.AuthSchemeProvider;
-import org.apache.hc.client5.http.auth.AuthSchemes;
+import org.apache.hc.client5.http.auth.AuthSchemeFactory;
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
 import org.apache.hc.client5.http.auth.CredentialsProvider;
@@ -79,6 +78,7 @@ import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.http.ssl.TLS;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.util.Timeout;
+import org.apache.http.client.config.AuthSchemes;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.EnhancedArrayList;
 import org.jhaws.common.lang.EnhancedList;
@@ -166,7 +166,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         ;
         if (ntlm) {
             requestConfigBuilder//
-                    .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM.ident))//
+                    .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM))//
                     .setCookieSpec(cookieSpec)//
             ;
         }
@@ -232,8 +232,8 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         ;
         if (ntlm) {
             httpClientBuilder.setDefaultAuthSchemeRegistry(//
-                    RegistryBuilder.<AuthSchemeProvider> create()//
-                            .register(AuthSchemes.NTLM.ident, new JCIFSNTLMSchemeFactory())//
+                    RegistryBuilder.<AuthSchemeFactory> create()//
+                            .register(AuthSchemes.NTLM, new JCIFSNTLMSchemeFactory())//
                             .build()//
             );
         }
@@ -261,7 +261,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 
     protected SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
         TLS[] tlsva = Arrays.stream(tlsVersions)
-                .map(t -> Arrays.stream(TLS.values()).filter(tls -> tls.ident.equals(t)).findAny().get())
+                .map(t -> Arrays.stream(TLS.values()).filter(tls -> tls.id.equals(t)).findAny().get())
                 .toArray(length -> new TLS[length]);
         return SSLConnectionSocketFactoryBuilder.create()//
                 .setSslContext(getSSLContext())//
@@ -393,10 +393,12 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
     }
 
     protected void responseContentType(Response response, String contentType) {
-        response.setContentType(contentType);
-        int charsetIndex = contentType.indexOf("charset=");
-        if (charsetIndex != -1) {
-            response.setCharset(contentType.substring("charset=".length() + charsetIndex));
+        if (contentType != null) {
+            response.setContentType(contentType);
+            int charsetIndex = contentType.indexOf("charset=");
+            if (charsetIndex != -1) {
+                response.setCharset(contentType.substring("charset=".length() + charsetIndex));
+            }
         }
     }
 
@@ -475,7 +477,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         } else if (post.getAttachments().size() > 0) {
             MultipartEntityBuilder mb = MultipartEntityBuilder.create();
             // STRICT, BROWSER_COMPATIBLE, RFC6532
-            mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            mb.setMode(HttpMultipartMode.EXTENDED);
             post.getAttachments().entrySet().forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
             post.getFormValues().entrySet().forEach(entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
             req = new HttpPost(post.getUri());

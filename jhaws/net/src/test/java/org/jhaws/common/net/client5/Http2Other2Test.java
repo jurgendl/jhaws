@@ -20,47 +20,46 @@ import org.apache.hc.core5.pool.PoolReusePolicy;
 import org.apache.hc.core5.util.TimeValue;
 
 public class Http2Other2Test {
-	public static void main(String[] args) {
-		try {
-			AsyncClientConnectionManager connManager = new PoolingAsyncClientConnectionManager(
-					RegistryBuilder.<TlsStrategy>create()//
-							.register("https", DefaultClientTlsStrategy.getDefault())//
-							.build()//
-					, PoolConcurrencyPolicy.STRICT//
-					, PoolReusePolicy.LIFO//
-					, TimeValue.NEG_ONE_MILLISECONDS//
-					, null//
-					, null//
-			);
-			CloseableHttpAsyncClient client = HttpAsyncClients.custom().setConnectionManager(connManager).build();
-			client.start();
-			FutureCallback<SimpleHttpResponse> callback = new FutureCallback<SimpleHttpResponse>() {
-				@Override
-				public void failed(Exception ex) {
-					ex.printStackTrace(System.out);
-				}
+    public static void main(String[] args) {
+        try {
+            AsyncClientConnectionManager connManager = new PoolingAsyncClientConnectionManager(RegistryBuilder.<TlsStrategy> create()//
+                    .register("https", DefaultClientTlsStrategy.getDefault())//
+                    .build()//
+                    , PoolConcurrencyPolicy.STRICT//
+                    , PoolReusePolicy.LIFO//
+                    , TimeValue.NEG_ONE_MILLISECOND//
+                    , null//
+                    , null//
+            );
+            CloseableHttpAsyncClient client = HttpAsyncClients.custom().setConnectionManager(connManager).build();
+            client.start();
+            FutureCallback<SimpleHttpResponse> callback = new FutureCallback<SimpleHttpResponse>() {
+                @Override
+                public void failed(Exception ex) {
+                    ex.printStackTrace(System.out);
+                }
 
-				@Override
-				public void completed(SimpleHttpResponse result) {
-					System.out.println(result);
-					System.out.println(result.getBodyText());
-				}
+                @Override
+                public void completed(SimpleHttpResponse result) {
+                    System.out.println(result);
+                    System.out.println(result.getBodyText());
+                }
 
-				@Override
-				public void cancelled() {
-					System.out.println("cancelled");
-				}
-			};
-			SimpleHttpRequest request = SimpleHttpRequest.copy(new HttpGet("http://www.google.com"));
-			Future<SimpleHttpResponse> future = client.execute(request, callback);
-			HttpResponse response = future.get();
-			client.close();
-			System.out.println(response.getCode());
-			System.out.println(response.getReasonPhrase());
-			System.out.println(response.getVersion());
-			System.out.println(Arrays.asList(response.getHeaders()));
-		} catch (Exception ex) {
-			ex.printStackTrace(System.out);
-		}
-	}
+                @Override
+                public void cancelled() {
+                    System.out.println("cancelled");
+                }
+            };
+            SimpleHttpRequest request = SimpleHttpRequest.copy(new HttpGet("http://www.google.com"));
+            Future<SimpleHttpResponse> future = client.execute(request, callback);
+            HttpResponse response = future.get();
+            client.close();
+            System.out.println(response.getCode());
+            System.out.println(response.getReasonPhrase());
+            System.out.println(response.getVersion());
+            System.out.println(Arrays.asList(response.getHeaders()));
+        } catch (Exception ex) {
+            ex.printStackTrace(System.out);
+        }
+    }
 }

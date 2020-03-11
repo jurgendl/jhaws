@@ -13,7 +13,6 @@ import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLException;
 
 import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.http.Methods;
 import org.apache.hc.core5.http.impl.bootstrap.HttpAsyncRequester;
 import org.apache.hc.core5.http.nio.AsyncClientEndpoint;
 import org.apache.hc.core5.http.nio.entity.BasicAsyncEntityConsumer;
@@ -136,7 +135,7 @@ public class Http2Test {
             String requestUri = "/";
             HttpResponseCallback<String> callback = new HttpResponseCallback<>(latch, clientEndpoint, requestUri);
             clientEndpoint.execute(//
-                    new BasicRequestProducer(Methods.GET, target, requestUri)//
+                    new BasicRequestProducer("GET", target, requestUri)//
                     , new BasicResponseConsumer<>(new StringAsyncEntityConsumer())//
                     , callback//
             );
@@ -165,7 +164,7 @@ public class Http2Test {
                 AsyncClientEndpoint clientEndpoint = future.get();
                 HttpResponseCallback<byte[]> callback = new HttpResponseCallback<>(latch, clientEndpoint, requestUri);
                 clientEndpoint.execute(//
-                        new BasicRequestProducer(Methods.GET, target, requestUri)//
+                        new BasicRequestProducer("GET", target, requestUri)//
                         , new BasicResponseConsumer<>(new BasicAsyncEntityConsumer())//
                         , callback//
                 );

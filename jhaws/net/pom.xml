@@ -37,50 +37,42 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5</artifactId>
-			<version>5.0-beta6</version>
-			<optional>true</optional>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5-cache</artifactId>
-			<version>5.0-beta6</version>
-			<optional>true</optional>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5-fluent</artifactId>
-			<version>5.0-beta6</version>
-			<optional>true</optional>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents.client5</groupId>
 			<artifactId>httpclient5-win</artifactId>
-			<version>5.0-beta6</version>
-			<optional>true</optional>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents.core5</groupId>
 			<artifactId>httpcore5</artifactId>
-			<version>5.0-beta10</version>
-			<optional>true</optional>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents.core5</groupId>
 			<artifactId>httpcore5-h2</artifactId>
-			<version>5.0-beta10</version>
-			<optional>true</optional>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents.core5</groupId>
 			<artifactId>httpcore5-reactive</artifactId>
-			<version>5.0-beta10</version>
-			<optional>true</optional>
+			<version>5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents.core5</groupId>
 			<artifactId>httpcore5-ab</artifactId>
 			<version>5.0-alpha3</version>
-			<optional>true</optional>
 		</dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
