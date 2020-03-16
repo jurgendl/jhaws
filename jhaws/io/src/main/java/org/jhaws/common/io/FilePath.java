@@ -171,11 +171,12 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public static LocalDateTime convert(FileTime fileTime) {
-		return LocalDateTime.ofInstant(fileTime.toInstant(), ZoneId.systemDefault());
+		return fileTime == null ? null : LocalDateTime.ofInstant(fileTime.toInstant(), ZoneId.systemDefault());
 	}
 
 	public static FileTime convert(LocalDateTime dateTime) {
-		return FileTime.from(dateTime.toInstant(ZoneId.systemDefault().getRules().getOffset(Instant.now())));
+		return dateTime == null ? null
+				: FileTime.from(dateTime.toInstant(ZoneId.systemDefault().getRules().getOffset(Instant.now())));
 	}
 
 	public static String getCurrentUser() {
@@ -1875,11 +1876,21 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FileTime getLastAccessTime() {
-		return getAttributes().lastAccessTime();
+		try {
+			return getAttributes().lastAccessTime();
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
 	public FileTime getCreationTime() {
-		return getAttributes().creationTime();
+		try {
+			return getAttributes().creationTime();
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+			return null;
+		}
 	}
 
 	public FileTime getLastModifiedTime(LinkOption... options) {
