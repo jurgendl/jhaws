@@ -463,18 +463,7 @@ public class ExifTool extends Tool implements MediaCte {
 		try {
 			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path)
 					|| qtFilter.accept(path)) {
-				List<String> command = Arrays.asList(//
-						command(executable) //
-						// , "-charset" //
-						// , "FileName=" +
-						// System.getProperty("sun.jnu.encoding")//
-						// , "FileName=utf-8"//
-						, "-q"//
-						, "-json"//
-						, "\"" + path.getFileNameString() + "\""//
-				);
-				String jc = join(command);
-				logger.trace(jc);
+				List<String> command = exifCommand(path);
 
 				List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command,
 						path.getParentPath(), null, null, new Lines()).lines().stream().collect(collectList());
@@ -571,6 +560,22 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 
 		return exifinfo;
+	}
+
+	public List<String> exifCommand(FilePath path) {
+		List<String> command = Arrays.asList(//
+				command(executable) //
+				// , "-charset" //
+				// , "FileName=" +
+				// System.getProperty("sun.jnu.encoding")//
+				// , "FileName=utf-8"//
+				, "-q"//
+				, "-json"//
+				, "\"" + path.getFileNameString() + "\""//
+		);
+		String jc = join(command);
+		logger.trace(jc);
+		return command;
 	}
 
 	@SuppressWarnings("incomplete-switch")
