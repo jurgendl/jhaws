@@ -10,7 +10,7 @@
     <name>lucene8</name>
     <description>lucene8</description>
     <properties>
-        <version.lucene>8.2.0</version.lucene>
+        <version.lucene>8.5.0</version.lucene><!-- see lucene-spatial -->
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -44,11 +44,13 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-        <!-- <dependency>
-            <groupId>net.semanticmetadata</groupId>
-            <artifactId>lire</artifactId>
-            <version>1.0b4+lucene8</version>
-        </dependency> -->
+    	<!-- https://github.com/dermotte/lire -->
+        <dependency>
+			<groupId>com.github.zengde</groupId>
+			<artifactId>lire</artifactId>
+            <version>1.0b5</version>
+            <optional>true</optional>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jhaws-documents</artifactId>
@@ -163,7 +165,7 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-spatial</artifactId>
-            <version>${version.lucene}</version>
+            <version>8.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
