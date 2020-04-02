@@ -2,7 +2,7 @@
 
 :root {
 	--nav-height: 3.55rem;
-	--border-radius: 2px;
+	--border-radius: 0px;
 }
 
 /* https://stackoverflow.com/questions/2392366/print-background-colours-in-chrome */
