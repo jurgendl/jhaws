@@ -9,7 +9,7 @@ public class HttpException extends UncheckedIOException {
 	private final int statusCode;
 
 	public HttpException(Response response, int statusCode, String statusText) {
-		super(new IOException(statusText));
+		super(new IOException(statusCode + ": " + statusText));
 		this.response = response;
 		this.statusCode = statusCode;
 	}
