@@ -1,5 +1,6 @@
 package org.jhaws.common.net.client;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +30,8 @@ public class ChromeCookieStore extends ChromeCookieStoreBase implements CookieSt
 
 	@Override
 	public void addCookie(Cookie cookie) {
+		if (cookies == null)
+			cookies = new ArrayList<>();
 		cookies.add(cookie);
 	}
 
