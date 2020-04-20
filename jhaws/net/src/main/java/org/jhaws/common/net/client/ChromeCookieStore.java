@@ -24,16 +24,20 @@ public class ChromeCookieStore extends ChromeCookieStoreBase implements CookieSt
 
 	@Override
 	public void clear() {
-		//
+		cookies = null;
 	}
 
 	@Override
 	public void addCookie(Cookie cookie) {
-		//
+		cookies.add(cookie);
 	}
+
+	protected List<Cookie> cookies;
 
 	@Override
 	public List<Cookie> getCookies() {
-		return getSerializableCookies().stream().map(SerializableCookie::new).collect(Collectors.toList());
+		if (cookies == null)
+			cookies = getSerializableCookies().stream().map(SerializableCookie::new).collect(Collectors.toList());
+		return cookies;
 	}
 }

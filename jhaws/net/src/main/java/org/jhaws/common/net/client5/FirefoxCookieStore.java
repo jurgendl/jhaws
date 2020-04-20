@@ -20,7 +20,7 @@ public class FirefoxCookieStore extends FirefoxCookieStoreBase implements Cookie
 
 	@Override
 	public void addCookie(Cookie cookie) {
-		//
+		cookies.add(cookie);
 	}
 
 	@Override
@@ -30,11 +30,15 @@ public class FirefoxCookieStore extends FirefoxCookieStoreBase implements Cookie
 
 	@Override
 	public void clear() {
-		//
+		cookies = null;
 	}
+
+	protected List<Cookie> cookies;
 
 	@Override
 	public List<Cookie> getCookies() {
-		return getSerializableCookies().stream().map(SerializableCookie::new).collect(Collectors.toList());
+		if (cookies == null)
+			cookies = getSerializableCookies().stream().map(SerializableCookie::new).collect(Collectors.toList());
+		return cookies;
 	}
 }
