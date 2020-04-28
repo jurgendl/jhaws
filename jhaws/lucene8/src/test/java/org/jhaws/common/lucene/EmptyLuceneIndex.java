@@ -7,7 +7,7 @@ import org.jhaws.common.io.FilePath;
 
 public class EmptyLuceneIndex {
     public static void main(String[] args) {
-        FilePath lp = FilePath.getTempDirectory().child("luceneempty8_" + System.currentTimeMillis());
+        FilePath lp = FilePath.getTempDirectory().child("luceneempty8");
         lp.delete();
         System.out.println(lp);
         Document doc = new Document();
