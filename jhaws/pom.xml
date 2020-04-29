@@ -813,7 +813,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-	        <dependency>
+	        <dependency><!-- uses unit 4.12 -->
 	            <groupId>org.jboss.resteasy</groupId>
 	            <artifactId>tjws</artifactId>
 	            <version>${version.resteasy}</version>
