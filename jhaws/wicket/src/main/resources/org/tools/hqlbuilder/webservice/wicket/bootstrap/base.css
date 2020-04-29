@@ -734,6 +734,7 @@ div.rating-input {
 , .input-group-text
 , .pagination
 , .page-link
+, .img-thumbnail
 {
 	border-radius: var(--border-radius) !important;
 }
