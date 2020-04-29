@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.apache.wicket.model.IModel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 //bootbox.confirm({
 //    opt1:opt1,
 //    opt2:opt2,
@@ -21,7 +23,7 @@ public class BootBoxHelper implements Serializable {
 
 	public static final String QFUNC = '"' + FUNC + '"';
 
-	private static final org.codehaus.jackson.map.ObjectMapper jsonMapperObj = new org.codehaus.jackson.map.ObjectMapper();
+	private static final ObjectMapper jsonMapperObj = new ObjectMapper();
 
 	private IModel<String> okButton;
 
