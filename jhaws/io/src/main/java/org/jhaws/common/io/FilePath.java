@@ -103,7 +103,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 
@@ -1982,20 +1981,20 @@ public class FilePath implements Path, Externalizable {
 		return getShortFileName(this);
 	}
 
-	@SuppressWarnings("restriction")
-	public Icon getSmallIcon() {
-		try {
-			sun.awt.shell.ShellFolder sf;
-			try {
-				sf = sun.awt.shell.ShellFolder.getShellFolder(toFile());
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
-			return new ImageIcon(sf.getIcon(true));
-		} catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
-	}
+//	@SuppressWarnings("restriction")
+//	public Icon getSmallIcon() {
+//		try {
+//			sun.awt.shell.ShellFolder sf;
+//			try {
+//				sf = sun.awt.shell.ShellFolder.getShellFolder(toFile());
+//			} catch (IOException ex) {
+//				throw new RuntimeException(ex);
+//			}
+//			return new ImageIcon(sf.getIcon(true));
+//		} catch (Exception ex) {
+//			throw new RuntimeException(ex);
+//		}
+//	}
 
 	/**
 	 *

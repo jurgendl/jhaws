@@ -29,7 +29,7 @@
 	((commit/commit/push))
 	-->
 	<properties>
-        <targetJdk.short>8</targetJdk.short>
+        <targetJdk.short>11</targetJdk.short>
         <targetJdk>1.${targetJdk.short}</targetJdk>
         <maven.compiler.source>1.${targetJdk.short}</maven.compiler.source>
         <maven.compiler.target>1.${targetJdk.short}</maven.compiler.target>

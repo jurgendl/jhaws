@@ -11,7 +11,7 @@
     <description>web</description>
     <properties>
 		<version.inject>1</version.inject>
-		<version.jsoup>1.12.1</version.jsoup>
+		<version.jsoup>1.13.1</version.jsoup>
     </properties>
     <dependencyManagement>
         <dependencies>
