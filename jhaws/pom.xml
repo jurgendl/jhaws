@@ -72,6 +72,7 @@
         <version.jackson>2.10.3</version.jackson>
         <!-- <version.jackson.codehaus>1.9.13</version.jackson.codehaus> -->
         <version.resteasy>3.9.0.Final</version.resteasy>
+        <version.junit.jupiter>5.6.1</version.junit.jupiter>
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -387,7 +388,7 @@
                 <artifactId>groovy-templates</artifactId>
                 <version>${version.groovy}</version>
             </dependency>
-            <dependency>
+            <!-- <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-test</artifactId>
                 <version>${version.groovy}</version>
@@ -401,7 +402,7 @@
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-testng</artifactId>
                 <version>${version.groovy}</version>
-            </dependency>
+            </dependency> -->
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-xml</artifactId>
@@ -841,11 +842,18 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-        </dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${version.junit.jupiter}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<version>${version.junit.jupiter}</version>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 	<!-- http://maven.apache.org/guides/introduction/introduction-to-profiles.html -->
 	<profiles>

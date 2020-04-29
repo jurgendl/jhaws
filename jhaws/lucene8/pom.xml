@@ -101,12 +101,12 @@
             <artifactId>lucene-backward-codecs</artifactId>
             <version>${version.lucene}</version>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-test-framework</artifactId>
             <version>${version.lucene}</version>
             <scope>test</scope>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
