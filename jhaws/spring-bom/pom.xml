@@ -26,12 +26,12 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.test.failure.ignore>true</maven.test.failure.ignore>
         <!-- versions -->
-        <version.spring>5.2.3.RELEASE</version.spring>
+        <version.spring>5.2.6.RELEASE</version.spring>
         <version.spring-ws>3.0.8.RELEASE</version.spring-ws>
-        <version.spring-integration>5.2.3.RELEASE</version.spring-integration>
-        <version.spring-security>5.2.2.RELEASE</version.spring-security>
+        <version.spring-integration>5.2.5.RELEASE</version.spring-integration>
+        <version.spring-security>5.3.1.RELEASE</version.spring-security>
         <version.spring-ldap>2.3.2.RELEASE</version.spring-ldap>
-        <version.spring-session>2.2.1.RELEASE</version.spring-session>
+        <version.spring-session>2.2.2.RELEASE</version.spring-session>
     </properties>
     <dependencyManagement>
         <dependencies>
