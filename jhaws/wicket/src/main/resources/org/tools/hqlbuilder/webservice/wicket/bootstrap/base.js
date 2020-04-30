@@ -373,4 +373,20 @@ function syntaxHighlight(json) {
     });
 }
 
+/* https://codepen.io/lukezak/pen/rVZMgv */
+/*$(".action-card-fullscreen").click(function(e) {
+	e.preventDefault();
+	var $this = $(this);
+	if ($this.children('i').hasClass('fas fa-compress')) {
+		$this.children('i').removeClass('fas fa-compress');
+		$this.children('i').addClass('fas fa-compress-arrows-alt');
+	} else if ($this.children('i').hasClass('fas fa-compress-arrows-alt')) {
+		$this.children('i').removeClass('fas fa-compress-arrows-alt');
+		$this.children('i').addClass('fas fa-compress');
+	}
+	var closestCard = $(this).closest('.card');
+	console.log(closestCard);
+	closestCard.toggleClass('card-fullscreen');
+});*/
+
 /* <<<============= base.js ============= */
