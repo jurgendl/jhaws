@@ -7,9 +7,11 @@ import org.jhaws.common.io.FilePath;
 
 @SuppressWarnings("serial")
 public class PathImageDataProvider implements ImageDataProvider {
+	private FilePath root;
 	private FilePath path;
 
-	public PathImageDataProvider(Path path) {
+	public PathImageDataProvider(Path root, Path path) {
+		this.root = new FilePath(root);
 		this.path = new FilePath(path);
 	}
 
@@ -20,7 +22,7 @@ public class PathImageDataProvider implements ImageDataProvider {
 
 	@Override
 	public String getName() {
-		return path.getName();
+		return root.relativize(path).toString().replace('/', '_').replace('\\', '_');
 	}
 
 	@Override

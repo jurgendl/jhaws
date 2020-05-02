@@ -81,7 +81,7 @@ public class BLazyImage extends Image {
 		this(id, Model.of(path));
 	}
 
-	public static Image adjustImage(Image image) {
+	public static <T extends Image> T adjustImage(T image) {
 		image.add(AttributeModifier.append("class", BLazy.BLAZY_CLASS));
 		return image;
 	}
