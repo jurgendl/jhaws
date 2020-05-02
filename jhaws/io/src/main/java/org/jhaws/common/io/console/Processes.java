@@ -39,7 +39,7 @@ public class Processes {
 
 		@Override
 		public String toString() {
-			return this.lines.toString();
+			return this.lines.stream().collect(Collectors.joining("\n"));
 		}
 	}
 

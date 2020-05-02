@@ -7,6 +7,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -73,7 +80,30 @@ public class YTDL extends Tool {
 			List<String> command = new ArrayList<>();
 			command.add(Tool.command(executable));
 			command.add("-U");
-			Tool.call(null, new Lines(), executable.getParentPath(), command);
+
+			// ---------------->
+			// https://stackoverflow.com/questions/2275443/how-to-timeout-a-thread
+			ExecutorService executor = Executors.newSingleThreadExecutor();
+			Future<Lines> future = executor.submit(new Callable<Lines>() {
+				@Override
+				public Lines call() throws Exception {
+					return Tool.call(null, new Lines(), executable.getParentPath(), command);
+				}
+			});
+			try {
+				logger.info("Started..");
+				logger.info("{}", future.get(60, TimeUnit.SECONDS));
+				logger.info("Finished!");
+			} catch (TimeoutException ex) {
+				future.cancel(true);
+				logger.error("{}", ex);
+			} catch (InterruptedException ex) {
+				logger.error("{}", ex);
+			} catch (ExecutionException ex) {
+				logger.error("{}", ex);
+			}
+			executor.shutdownNow();
+			// <----------------
 		} else {
 			String tmp = EXE;
 			if (Utils.osgroup == OSGroup.Windows) {
@@ -83,7 +113,7 @@ public class YTDL extends Tool {
 					OutputStream out = executable.newBufferedOutputStream()) {
 				IOUtils.copy(in, out);
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				logger.error("{}", ex);
 				return;
 			}
 		}
@@ -195,7 +225,7 @@ public class YTDL extends Tool {
 					dl.add(t.substring(prefix.length()));
 				}
 				super.accept(t);
-				System.out.println("> " + t);
+				logger.info("> " + t);
 			}
 		}, tmpFolder, command);
 	}
