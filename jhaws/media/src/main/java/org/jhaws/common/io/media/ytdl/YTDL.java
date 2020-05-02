@@ -83,7 +83,11 @@ public class YTDL extends Tool {
 
 			// ---------------->
 			// https://stackoverflow.com/questions/2275443/how-to-timeout-a-thread
-			ExecutorService executor = Executors.newSingleThreadExecutor();
+			ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+				Thread t = new Thread(r);
+				t.setDaemon(true);
+				return t;
+			});
 			Future<Lines> future = executor.submit(new Callable<Lines>() {
 				@Override
 				public Lines call() throws Exception {
