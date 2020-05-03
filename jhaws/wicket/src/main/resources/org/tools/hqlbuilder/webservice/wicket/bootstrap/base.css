@@ -2,7 +2,7 @@
 
 :root {
 	--nav-height: 3.55rem;
-	--border-radius: 0px;
+	--border-radius: 1px;
 }
 
 /* https://stackoverflow.com/questions/2392366/print-background-colours-in-chrome */
@@ -743,6 +743,17 @@ div.rating-input {
 }
 .collapse-inner {
 	border-radius: var(--border-radius) !important;
+}
+.badge {
+	border-radius: calc(2*var(--border-radius)) !important;
+}
+.list-group-horizontal .list-group-item:first-child {
+	border-top-left-radius: var(--border-radius) !important;
+	border-bottom-left-radius: var(--border-radius) !important;
+}
+.list-group-horizontal .list-group-item:last-child {
+	border-top-right-radius: var(--border-radius) !important;
+	border-bottom-right-radius: var(--border-radius) !important;
 }
 
 /* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */
