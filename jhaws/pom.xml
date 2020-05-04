@@ -30,9 +30,9 @@
 	-->
 	<properties>
         <targetJdk.short>11</targetJdk.short>
-        <targetJdk>1.${targetJdk.short}</targetJdk>
-        <maven.compiler.source>1.${targetJdk.short}</maven.compiler.source>
-        <maven.compiler.target>1.${targetJdk.short}</maven.compiler.target>
+        <targetJdk>${targetJdk.short}</targetJdk>
+        <maven.compiler.source>${targetJdk.short}</maven.compiler.source>
+        <maven.compiler.target>${targetJdk.short}</maven.compiler.target>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <forceRecheck>false</forceRecheck>
         <scope.activation>provided</scope.activation>
