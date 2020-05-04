@@ -10,7 +10,7 @@
     <name>lucene8</name>
     <description>lucene8</description>
     <properties>
-        <version.lucene>8.5.0</version.lucene><!-- see lucene-spatial -->
+        <version.lucene>8.5.1</version.lucene><!-- see lucene-spatial -->
     </properties>
     <dependencyManagement>
         <dependencies>

@@ -10,7 +10,7 @@
     <name>lucene7</name>
     <description>lucene7</description>
     <properties>
-        <version.lucene>7.7.2</version.lucene>
+        <version.lucene>7.7.3</version.lucene>
     </properties>
     <dependencyManagement>
         <dependencies>
