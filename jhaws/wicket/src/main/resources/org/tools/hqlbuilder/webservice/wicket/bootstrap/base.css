@@ -755,6 +755,14 @@ div.rating-input {
 	border-top-right-radius: var(--border-radius) !important;
 	border-bottom-right-radius: var(--border-radius) !important;
 }
+.list-group-item:first-child {
+	border-top-left-radius: var(--border-radius) !important;
+	border-top-right-radius: var(--border-radius) !important;
+}
+.list-group-item:last-child {
+	border-bottom-right-radius: var(--border-radius) !important;
+	border-bottom-left-radius: var(--border-radius) !important;
+}
 
 /* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */
 pre {
