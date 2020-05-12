@@ -373,6 +373,9 @@ function syntaxHighlight(json) {
     });
 }
 
+/* blazy => bLazy.revalidate() */
+var bLazy = new Blazy();
+
 /* https://codepen.io/lukezak/pen/rVZMgv */
 /*$(".action-card-fullscreen").click(function(e) {
 	e.preventDefault();
