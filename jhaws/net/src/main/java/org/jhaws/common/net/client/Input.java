@@ -1,5 +1,7 @@
 package org.jhaws.common.net.client;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Input implements InputElement {
 	private static final long serialVersionUID = 8640479033953741491L;
 
@@ -18,7 +20,13 @@ public class Input implements InputElement {
 	}
 
 	public Input(org.jsoup.nodes.Element inputnode) {
-		this.type = InputType.valueOf(inputnode.attr("type").toLowerCase());
+		String t = inputnode.attr("type");
+		if (StringUtils.isNotBlank(t)) {
+			this.type = InputType.valueOf(t.toLowerCase());
+		} else {
+			System.out.println("NO TYPE " + inputnode);
+			this.type = null;
+		}
 		this.name = inputnode.attr("name");
 		this.value = inputnode.attr("value");
 		this.id = inputnode.attr("id");
