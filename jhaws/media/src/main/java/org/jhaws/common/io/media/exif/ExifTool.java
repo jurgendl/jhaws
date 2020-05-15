@@ -519,8 +519,9 @@ public class ExifTool extends Tool implements MediaCte {
 				exifinfo.setH(Integer.parseInt(exifinfo.values("0", IH, H)));
 				exifinfo.setOrientation(exifinfo.value("Orientation"));
 
+				exifinfo.setMimetype(exifinfo.value(MIME1));
+
 				if (videoFilter.accept(path) || html5Videofilter.accept(path) || qtFilter.accept(path)) {
-					exifinfo.setMimetype(exifinfo.value(MIME1));
 					if (isBlank(exifinfo.getMimetype())) {
 						exifinfo.setMimetype("video/" + path.getExtension().toLowerCase()//
 								.replace(FLV, "flash")//
