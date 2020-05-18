@@ -95,7 +95,7 @@ public class YTDL extends Tool {
 				}
 			});
 			try {
-				logger.info("Started..");
+				logger.info("Started ...");
 				logger.info("{}", future.get(60, TimeUnit.SECONDS));
 				logger.info("Finished!");
 			} catch (TimeoutException ex) {
