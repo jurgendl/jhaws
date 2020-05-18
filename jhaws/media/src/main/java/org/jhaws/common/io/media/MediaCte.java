@@ -3,12 +3,15 @@ package org.jhaws.common.io.media;
 import org.jhaws.common.io.FilePath.Filters;
 import org.jhaws.common.io.FilePath.Filters.FlashVideoFilter;
 import org.jhaws.common.io.FilePath.Filters.Html5VideoFilter;
+import org.jhaws.common.io.FilePath.Filters.ImageFilter;
 import org.jhaws.common.io.FilePath.Filters.QuickTimeVideoFilter;
 import org.jhaws.common.io.FilePath.Filters.VideoFilter;
 import org.jhaws.common.io.FilePath.Filters.WebImageFilter;
 
 public interface MediaCte {
 	public static final Filters.ExtensionFilter webImageFilter = new WebImageFilter();
+
+	public static final Filters.ExtensionFilter imageFilter = new ImageFilter();
 
 	public static final Filters.ExtensionFilter videoFilter = new VideoFilter();
 
