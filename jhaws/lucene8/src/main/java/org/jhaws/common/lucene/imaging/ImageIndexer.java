@@ -3,12 +3,16 @@ package org.jhaws.common.lucene.imaging;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -64,7 +68,7 @@ public class ImageIndexer {
 			System.out.println(f);
 			new ImageIndexer().findDuplicatesExt(//
 					"null".equals(args[0]) ? null : new FilePath(args[0]), //
-					new FilePath(args[1]), //
+					Arrays.stream(args[1].split("|")).map(FilePath::new).collect(Collectors.toList()), //
 					"null".equals(args[2]) ? null : new FilePath(args[2]), //
 					"null".equals(args[3]) ? 5.0 : Double.parseDouble(args[3]), //
 					f.isEmpty() ? null : f//
@@ -76,12 +80,12 @@ public class ImageIndexer {
 		}
 	}
 
-	public ImageSimilarities findDuplicates(FilePath index, FilePath root, FilePath report, Double max,
+	public ImageSimilarities findDuplicates(FilePath index, List<FilePath> roots, FilePath report, Double max,
 			Class<? extends GlobalFeature> feature) {
-		return findDuplicatesExt(index, root, report, max, feature == null ? null : Arrays.asList(feature));
+		return findDuplicatesExt(index, roots, report, max, feature == null ? null : Arrays.asList(feature));
 	}
 
-	public ImageSimilarities findDuplicatesExt(FilePath index, FilePath root, FilePath report, Double max,
+	public ImageSimilarities findDuplicatesExt(FilePath index, List<FilePath> roots, FilePath report, Double max,
 			List<Class<? extends GlobalFeature>> features) {
 		ImageSimilarities sim = new ImageSimilarities();
 		if (features == null) {
@@ -102,7 +106,13 @@ public class ImageIndexer {
 			}
 		});
 		try {
-			List<String> images = FileUtils.getAllImages(root.toFile(), false);
+			List<String> images = roots.stream().map(root -> {
+				try {
+					return FileUtils.getAllImages(root.toFile(), false).stream();
+				} catch (IOException ex) {
+					throw new UncheckedIOException(ex);
+				}
+			}).flatMap(Function.identity()).collect(Collectors.toList());
 			if (images == null)
 				images = Collections.<String>emptyList();
 			if (index != null)

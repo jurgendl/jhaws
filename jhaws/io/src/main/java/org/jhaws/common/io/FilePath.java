@@ -3492,4 +3492,19 @@ public class FilePath implements Path, Externalizable {
 			throw new UncheckedIOException(ex);
 		}
 	}
+
+	// https://stackoverflow.com/questions/28698125/java-check-if-path-is-parent-of-a-file
+	public static boolean isChildPath(Path parent, Path child) {
+		Path pn = parent.normalize();
+		Path cn = child.normalize();
+		return cn.getNameCount() > pn.getNameCount() && cn.startsWith(pn);
+	}
+
+	public boolean isParentOf(FilePath child) {
+		return isChildPath(toPath(), child.toPath());
+	}
+
+	public boolean isChildOf(FilePath parent) {
+		return parent.isParentOf(this);
+	}
 }

@@ -27,8 +27,9 @@ public class ImageIndexerTest {
 		new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_4.jpg").writeTo(tmp.child("lucene_4.jpg"));
 		new FilePath(ImageIndexerTest.class.getClassLoader(), "lucene_5.gif").writeTo(tmp.child("lucene_5.gif"));
 		ImageSimilarities results;
-		results = new ImageIndexer().findDuplicatesExt(tmp.child("dubsindex"), tmp, xml, 5.0, Arrays.asList(CEDD.class,
-				FCTH.class, EdgeHistogram.class, ColorLayout.class, ScalableColor.class, Tamura.class, Gabor.class));
+		results = new ImageIndexer().findDuplicatesExt(tmp.child("dubsindex"), Arrays.asList(tmp), xml, 5.0,
+				Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class, ColorLayout.class, ScalableColor.class,
+						Tamura.class, Gabor.class));
 		System.out.println("=========================");
 		results.forEach(System.out::print);
 		System.out.println("=========================");
@@ -37,8 +38,8 @@ public class ImageIndexerTest {
 	public static void main(String[] args) {
 		FilePath p = new FilePath(args.length == 0 ? "src/test/resources/" : args[0]);
 		FilePath xml = p.child("dubsreport.xml");
-		ImageSimilarities results = new ImageIndexer().findDuplicatesExt(p.child("dubsindex"), p, xml, 5.0,
-				Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class, ColorLayout.class, ScalableColor.class,
+		ImageSimilarities results = new ImageIndexer().findDuplicatesExt(p.child("dubsindex"), Arrays.asList(p), xml,
+				5.0, Arrays.asList(CEDD.class, FCTH.class, EdgeHistogram.class, ColorLayout.class, ScalableColor.class,
 						Tamura.class, Gabor.class));
 		System.out.println("=========================");
 		results.forEach(System.out::print);
