@@ -66,7 +66,10 @@ public class WicketAppSettings implements Serializable {
 		spacelab(null), //
 		superhero(null), //
 		united(null), //
-		yeti(null)//
+		yeti(null), //
+		resume(null), //
+		grayscale(null), //
+		clean_blog("clean-blog"), //
 		;
 
 		private final String id;
