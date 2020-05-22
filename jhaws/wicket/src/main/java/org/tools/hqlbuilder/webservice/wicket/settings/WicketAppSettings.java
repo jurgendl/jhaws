@@ -69,7 +69,6 @@ public class WicketAppSettings implements Serializable {
 		yeti(null), //
 		resume(null), //
 		grayscale(null), //
-		clean_blog("clean-blog"), //
 		;
 
 		private final String id;
