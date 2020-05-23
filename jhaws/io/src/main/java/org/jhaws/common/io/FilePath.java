@@ -1707,12 +1707,16 @@ public class FilePath implements Path, Externalizable {
 		return Files.exists(this.getPath(), options);
 	}
 
+	public FilePath flatten() {
+		return flatten(new ArrayList<>());
+	}
+
 	/**
 	 * flattens this directory, copies all files in all subdirectories to this
 	 * directory, deletes doubles, rename if file already exists and isn't the
 	 * same, delete all subdirectories afterwards
 	 */
-	public FilePath flatten() {
+	public FilePath flatten(Collection<FilePath> changed) {
 		final FilePath root = this;
 		this.walkFileTree(new SimpleFileVisitor<Path>() {
 			@Override
@@ -1738,7 +1742,9 @@ public class FilePath implements Path, Externalizable {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				if (!root.equals(file.getParent())) {
-					new FilePath(file).moveTo(new FilePath(root, file.getFileName().toString()).newFileIndex());
+					FilePath target = new FilePath(root, file.getFileName().toString()).newFileIndex();
+					changed.add(target);
+					new FilePath(file).moveTo(target);
 				}
 				return FileVisitResult.CONTINUE;
 			}
