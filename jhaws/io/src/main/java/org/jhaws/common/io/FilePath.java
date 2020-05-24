@@ -1503,7 +1503,8 @@ public class FilePath implements Path, Externalizable {
 
 	public Path createSymbolicLinkTo(Path target, FileAttribute<?>... attrs) {
 		try {
-			return new FilePath(Files.createSymbolicLink(this.getPath(), target, attrs));
+			return new FilePath(Files.createSymbolicLink(this.getPath(),
+					target instanceof FilePath ? FilePath.class.cast(target).toPath() : path, attrs));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

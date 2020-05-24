@@ -354,8 +354,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
 			} else {
-				BufferedImage bio = ImageTools.tile(seperates.stream().map(ImageTools::read)
-						.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()), wh);
+				BufferedImage bio = ImageTools.tile(
+						seperates.stream().filter(FilePath::exists).map(ImageTools::read)
+								.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()),
+						wh);
 				ImageTools.write(bio, splashFile);
 			}
 			seperates.stream().forEach(FilePath::delete);
