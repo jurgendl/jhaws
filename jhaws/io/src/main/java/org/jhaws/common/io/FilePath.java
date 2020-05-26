@@ -63,6 +63,8 @@ import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.UserPrincipal;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.text.NumberFormat;
@@ -72,6 +74,7 @@ import java.time.ZoneId;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -3513,5 +3516,33 @@ public class FilePath implements Path, Externalizable {
 
 	public boolean isChildOf(FilePath parent) {
 		return parent.isParentOf(this);
+	}
+
+	public byte[] digest(String type) {
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance(type);
+		} catch (NoSuchAlgorithmException ex) {
+			throw new RuntimeException(ex);
+		}
+		md.update(readAllBytes());
+		byte[] digest = md.digest();
+		return digest;
+	}
+
+	public byte[] md5() {
+		return digest("MD5");
+	}
+
+	public byte[] sha256() {
+		return digest("SHA-256");
+	}
+
+	public String base64() {
+		return Base64.getEncoder().encodeToString(readAllBytes());
+	}
+
+	public String inlineHtml() {
+		return "data:" + getMimeType() + ";base64," + base64();
 	}
 }
