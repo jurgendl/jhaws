@@ -63,8 +63,7 @@ import org.jhaws.common.web.wicket.waypoints.Waypoints;
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
-	protected static final String FACTORY = new FilePath(WicketRoot.class, "wicket/bootstrap/base-factory.js")
-			.readAll();
+	protected static final String FACTORY = new FilePath(WicketRoot.class, "bootstrap/base-factory.js").readAll();
 
 	protected static final JavaScriptResourceReference JS = new JavaScriptResourceReference(WicketRoot.class,
 			"wicket/bootstrap/base.js");
@@ -347,17 +346,16 @@ public abstract class DefaultWebPage extends WebPage {
 				.add(new NavBarLink("settings", "", org.jhaws.common.web.wicket.settings.SettingsPage.class, null));
 		demos.getChildLinks()
 				.add(new NavBarLink("overview", "", org.jhaws.common.web.wicket.demo.TestPage.class, null));
+		demos.getChildLinks().add(new NavBarLink("vue", "", org.jhaws.common.web.wicket.demo.VueTestPage.class, null));
 		demos.getChildLinks()
-				.add(new NavBarLink("vue", "", org.jhaws.common.web.wicket.demo.VueTestPage.class, null));
-		demos.getChildLinks().add(
-				new NavBarLink("pagination", "", org.jhaws.common.web.wicket.demo.PaginationTestPage.class, null));
+				.add(new NavBarLink("pagination", "", org.jhaws.common.web.wicket.demo.PaginationTestPage.class, null));
 		demos.getChildLinks()
 				.add(new NavBarLink("messages", "", org.jhaws.common.web.wicket.demo.TestMessagesPage.class, null));
 		demos.getChildLinks()
 				.add(new NavBarLink("upload", "", org.jhaws.common.web.wicket.demo.UploadTestPage.class, null));
 		//
-		demos.getChildLinks().add(
-				new NavBarLink("registration", "", org.jhaws.common.web.wicket.demo.RegistrationPage.class, null));
+		demos.getChildLinks()
+				.add(new NavBarLink("registration", "", org.jhaws.common.web.wicket.demo.RegistrationPage.class, null));
 		demos.getChildLinks().add(new NavBarLink("login", "", org.jhaws.common.web.wicket.pages.LogInPage.class, null));
 		demos.getChildLinks()
 				.add(new NavBarLink("logout", "", org.jhaws.common.web.wicket.pages.LogOutPage.class, null));
@@ -668,10 +666,9 @@ public abstract class DefaultWebPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(BootstrapSlider.JS));
 
 		// response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
-		response.render(JavaScriptHeaderItem
-				.forReference(org.jhaws.common.web.wicket.typeahead_old.TypeAhead.JS_BLOODHOUND));
 		response.render(
-				JavaScriptHeaderItem.forReference(org.jhaws.common.web.wicket.typeahead.TypeAhead.JS));
+				JavaScriptHeaderItem.forReference(org.jhaws.common.web.wicket.typeahead_old.TypeAhead.JS_BLOODHOUND));
+		response.render(JavaScriptHeaderItem.forReference(org.jhaws.common.web.wicket.typeahead.TypeAhead.JS));
 		response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
 		response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
 
