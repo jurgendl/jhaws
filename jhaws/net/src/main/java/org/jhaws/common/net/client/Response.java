@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import org.jhaws.common.lang.CollectionUtils8;
 import org.jhaws.common.lang.EnhancedArrayList;
-import org.jhaws.common.lang.EnhancedHashMap;
+import org.jhaws.common.lang.EnhancedLinkedHashMap;
 import org.jhaws.common.lang.EnhancedList;
 import org.jhaws.common.lang.EnhancedMap;
 import org.jhaws.common.lang.IntegerValue;
@@ -57,7 +57,7 @@ public class Response extends InputStream implements Serializable {
 
 	protected EnhancedList<URI> chain;
 
-	protected EnhancedMap<String, EnhancedList<Object>> headers = new EnhancedHashMap<>();
+	protected EnhancedMap<String, EnhancedList<Object>> headers = new EnhancedLinkedHashMap<>();
 
 	protected Locale locale;
 
