@@ -6,7 +6,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
-import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
+import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
 
 @SuppressWarnings("serial")
 public class TinyMCEPanel extends DefaultFormRowPanel<String, TextArea<String>, TinyMCESettings> {

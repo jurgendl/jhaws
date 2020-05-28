@@ -32,34 +32,34 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.web.wicket.Bootstrap4;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.jhaws.common.web.wicket.WicketApplication;
 import org.jhaws.common.web.wicket.WicketRoot;
 import org.jhaws.common.web.wicket.blazy.BLazy;
+import org.jhaws.common.web.wicket.bootbox.BootBox;
+import org.jhaws.common.web.wicket.clipboardjs.ClipboardJs;
+import org.jhaws.common.web.wicket.colorpicker.BootstrapColorPicker;
 import org.jhaws.common.web.wicket.components.ExternalLink;
+import org.jhaws.common.web.wicket.confirmation.Bootstrap4Confirmation;
+import org.jhaws.common.web.wicket.customfileinput.CustomFileInput;
+import org.jhaws.common.web.wicket.datetimepicker.tempusdominus.BootstrapTempusDominusDateTimePicker;
 import org.jhaws.common.web.wicket.fontawesome.FontAwesome;
 import org.jhaws.common.web.wicket.jquery.JQuery;
 import org.jhaws.common.web.wicket.magnify.Magnify;
 import org.jhaws.common.web.wicket.materialdesign.Materialdesign;
 import org.jhaws.common.web.wicket.moment.MomentJs;
+import org.jhaws.common.web.wicket.multiselect.MultiSelect;
 import org.jhaws.common.web.wicket.picturefill.PictureFill;
+import org.jhaws.common.web.wicket.popoverx.PopoverX;
 import org.jhaws.common.web.wicket.prismjs.PrismJs;
 import org.jhaws.common.web.wicket.qtip.QTip;
+import org.jhaws.common.web.wicket.slider.BootstrapSlider;
 import org.jhaws.common.web.wicket.spin.Spin;
+import org.jhaws.common.web.wicket.tags.BootstrapTags;
+import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
+import org.jhaws.common.web.wicket.toast.BootstrapToasts;
 import org.jhaws.common.web.wicket.waypoints.Waypoints;
-import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.bootstrap4.bootbox.BootBox;
-import org.tools.hqlbuilder.webservice.bootstrap4.clipboardjs.ClipboardJs;
-import org.tools.hqlbuilder.webservice.bootstrap4.colorpicker.BootstrapColorPicker;
-import org.tools.hqlbuilder.webservice.bootstrap4.confirmation.Bootstrap4Confirmation;
-import org.tools.hqlbuilder.webservice.bootstrap4.customfileinput.CustomFileInput;
-import org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus.BootstrapTempusDominusDateTimePicker;
-import org.tools.hqlbuilder.webservice.bootstrap4.multiselect.MultiSelect;
-import org.tools.hqlbuilder.webservice.bootstrap4.popoverx.PopoverX;
-import org.tools.hqlbuilder.webservice.bootstrap4.slider.BootstrapSlider;
-import org.tools.hqlbuilder.webservice.bootstrap4.tags.BootstrapTags;
-import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
-import org.tools.hqlbuilder.webservice.bootstrap4.toast.BootstrapToasts;
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
@@ -669,9 +669,9 @@ public abstract class DefaultWebPage extends WebPage {
 
 		// response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
 		response.render(JavaScriptHeaderItem
-				.forReference(org.jhaws.common.web.wicket.typeahead.TypeAhead.JS_BLOODHOUND));
+				.forReference(org.jhaws.common.web.wicket.typeahead_old.TypeAhead.JS_BLOODHOUND));
 		response.render(
-				JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
+				JavaScriptHeaderItem.forReference(org.jhaws.common.web.wicket.typeahead.TypeAhead.JS));
 		response.render(CssHeaderItem.forReference(BootstrapTags.CSS));
 		response.render(JavaScriptHeaderItem.forReference(BootstrapTags.JS));
 

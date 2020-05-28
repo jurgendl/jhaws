@@ -16,11 +16,11 @@ import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
+import org.jhaws.common.web.wicket.popoverx.PopoverXPanel;
 import org.jhaws.common.web.wicket.tables.bootstrap.EnhancedTable;
 import org.jhaws.common.web.wicket.tables.bootstrap.TableColumn;
 import org.jhaws.common.web.wicket.tables.common.DefaultDataProvider;
 import org.jhaws.common.web.wicket.tables.common.Side;
-import org.tools.hqlbuilder.webservice.bootstrap4.popoverx.PopoverXPanel;
 
 import ch.lambdaj.Lambda;
 
