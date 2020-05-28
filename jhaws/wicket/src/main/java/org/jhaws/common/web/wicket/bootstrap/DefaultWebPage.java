@@ -66,10 +66,9 @@ public abstract class DefaultWebPage extends WebPage {
 	protected static final String FACTORY = new FilePath(WicketRoot.class, "bootstrap/base-factory.js").readAll();
 
 	protected static final JavaScriptResourceReference JS = new JavaScriptResourceReference(WicketRoot.class,
-			"wicket/bootstrap/base.js");
+			"bootstrap/base.js");
 
-	protected static final CssResourceReference CSS = new CssResourceReference(WicketRoot.class,
-			"wicket/bootstrap/base.css");
+	protected static final CssResourceReference CSS = new CssResourceReference(WicketRoot.class, "bootstrap/base.css");
 
 	public DefaultWebPage() {
 		this(new PageParameters());
