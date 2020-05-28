@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.sass;
+package org.jhaws.common.web.wicket.sass;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,7 +27,7 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tools.hqlbuilder.webservice.wicket.StreamResourceReference;
+import org.jhaws.common.web.wicket.StreamResourceReference;
 
 import ro.isdc.wro.extensions.processor.css.RubySassCssProcessor;
 import ro.isdc.wro.model.resource.processor.ResourcePreProcessor;

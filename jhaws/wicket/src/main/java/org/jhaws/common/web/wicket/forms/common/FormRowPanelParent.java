@@ -19,8 +19,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.jhaws.common.web.wicket.AttributeRemover;
-import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.HtmlEvent.HtmlFormEvent;
+import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -247,8 +247,8 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
 	/**
 	 * call this in overridden method:<br>
-	 * org.tools.hqlbuilder.webservice.wicket.forms.[Component]Panel.
-	 * createComponent().new [Component]() {...}.onComponentTag(ComponentTag)
+	 * forms.[Component]Panel. createComponent().new [Component]()
+	 * {...}.onComponentTag(ComponentTag)
 	 */
 	protected void onFormComponentTag(ComponentTag tag) {
 		this.setupPlaceholder(tag);

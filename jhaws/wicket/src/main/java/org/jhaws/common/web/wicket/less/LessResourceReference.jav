@@ -1,4 +1,4 @@
-package org.tools.hqlbuilder.webservice.wicket.less;
+package org.jhaws.common.web.wicket.less;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,8 +20,8 @@ import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
 import org.apache.wicket.util.time.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tools.hqlbuilder.webservice.wicket.StreamResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.sass.SassResourceReference;
+import org.jhaws.common.web.wicket.StreamResourceReference;
+import org.jhaws.common.web.wicket.sass.SassResourceReference;
 
 import ro.isdc.wro.extensions.processor.css.NodeLessCssProcessor;
 import ro.isdc.wro.extensions.processor.css.RhinoLessCssProcessor;
