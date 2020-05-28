@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.tablesorter;
 
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * @see http://mottie.github.io/tablesorter/docs/index.html

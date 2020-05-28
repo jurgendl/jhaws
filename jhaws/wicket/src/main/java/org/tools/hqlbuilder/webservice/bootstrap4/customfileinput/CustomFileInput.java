@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.customfileinput;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // https://github.com/Johann-S/bs-custom-file-input
 // v1.3.1

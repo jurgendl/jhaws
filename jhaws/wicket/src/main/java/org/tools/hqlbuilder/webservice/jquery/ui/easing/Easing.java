@@ -1,9 +1,9 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.easing;
 
 import org.apache.wicket.request.Url;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.UrlResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.UrlResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * @see http://gsgd.co.uk/sandbox/jquery/easing/

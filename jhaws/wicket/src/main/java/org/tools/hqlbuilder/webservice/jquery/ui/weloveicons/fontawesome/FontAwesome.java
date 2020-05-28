@@ -1,6 +1,6 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
 
 // https://fontawesome.com/get-started
 // https://fontawesome.com/v4.7.0/

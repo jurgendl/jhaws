@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.typeahead;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // http://twitter.github.io/typeahead.js/examples/
 public class TypeAhead {

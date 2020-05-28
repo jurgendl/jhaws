@@ -1,9 +1,9 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.pro_bars;
 
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery_appear.JqueryAppear;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
 
 /**
  * @see https://github.com/joemottershaw/pro-bars

@@ -5,7 +5,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
 
 @SuppressWarnings("serial")
 public class RegistrationPage extends DefaultWebPage {

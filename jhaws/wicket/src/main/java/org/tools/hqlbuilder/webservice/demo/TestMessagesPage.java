@@ -6,10 +6,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
 import org.tools.hqlbuilder.webservice.bootstrap4.bootbox.ConfirmationAjaxLink;
 import org.tools.hqlbuilder.webservice.bootstrap4.bootbox.ConfirmationAjaxSubmitLink;
 import org.tools.hqlbuilder.webservice.bootstrap4.bootbox.ConfirmationSubmitLink;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
 
 @SuppressWarnings("serial")
 public class TestMessagesPage extends DefaultWebPage {

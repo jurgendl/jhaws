@@ -1,8 +1,8 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.offcanvaspush;
 
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 /**
  * @see https://github.com/marc-andrew/off-canvas-infinity-push/releases

@@ -8,7 +8,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.jhaws.common.io.FilePath;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
 
 @SuppressWarnings("serial")
 public class TestPage extends DefaultWebPage {

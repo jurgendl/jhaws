@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.clipboardjs;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // <div class="input-group mb-3">
 // <input id="clipboardtarget" type="text" class="form-control">

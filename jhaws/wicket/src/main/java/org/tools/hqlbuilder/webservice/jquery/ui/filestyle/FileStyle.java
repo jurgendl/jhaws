@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.filestyle;
 
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * version 1.1.0<br>

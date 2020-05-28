@@ -1,6 +1,6 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.jquery;
 
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * version 1.12.4

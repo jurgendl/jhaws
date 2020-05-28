@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.typeahead;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // https://github.com/bassjobsen/Bootstrap-3-Typeahead
 // !!!!!!!!!!! IMPORTANT FIX !!!!!!!!!!!

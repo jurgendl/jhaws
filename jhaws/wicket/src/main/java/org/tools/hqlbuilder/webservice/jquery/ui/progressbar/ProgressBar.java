@@ -1,6 +1,6 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.progressbar;
 
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 /**
  * @see https://github.com/kimmobrunfeldt/progressbar.js

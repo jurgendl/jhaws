@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.notify;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // call:
 // $.notify({message:'Done'},{delay:0,type:'info',animate: { enter: 'animated fadeInRight', exit: 'animated fadeOutRight' } } );

@@ -4,7 +4,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 /**
  * @see https://developers.google.com/identity/sign-in/web/reference

@@ -7,10 +7,10 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
 import org.tools.hqlbuilder.webservice.vue.Vue;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
 
 @SuppressWarnings("serial")
 public class VueTestPage extends DefaultWebPage {

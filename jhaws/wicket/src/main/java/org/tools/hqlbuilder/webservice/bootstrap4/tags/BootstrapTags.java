@@ -1,8 +1,8 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.tags;
 
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 /**
  * bootstrap v3

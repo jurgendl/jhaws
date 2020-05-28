@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.jquery_file_upload_alt;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 /**
  * @see https://github.com/elw00d/jQuery-File-Upload-Spring/blob/master/src/main/java/su/elwood/UploadController.java

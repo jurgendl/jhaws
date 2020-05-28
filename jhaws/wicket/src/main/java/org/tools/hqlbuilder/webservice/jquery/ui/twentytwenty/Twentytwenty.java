@@ -1,8 +1,8 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.twentytwenty;
 
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // $(".twentytwenty").twentytwenty({
 // default_offset_pct: 0.7, // How much of the before image is visible when the page loads

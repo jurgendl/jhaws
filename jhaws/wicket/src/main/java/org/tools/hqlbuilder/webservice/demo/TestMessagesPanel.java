@@ -4,8 +4,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.BootstrapFencedFeedbackPanel;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
+import org.jhaws.common.web.wicket.bootstrap.BootstrapFencedFeedbackPanel;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
 
 @SuppressWarnings("serial")
 public class TestMessagesPanel extends Panel {

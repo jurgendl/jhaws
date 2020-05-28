@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.store;
 
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * @see https://github.com/marcuswestin/store.js

@@ -1,9 +1,9 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.form;
 
 import org.apache.wicket.request.Url;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.UrlResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.UrlResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * used version 3.51.0-2014.06.20

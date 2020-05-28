@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.js;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 public class WicketJSRoot {
 // WRO4J

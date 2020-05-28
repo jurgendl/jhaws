@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.jhaws.common.io.FilePath;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 // http://momentjs.com/
 // https://github.com/moment/moment/tree/master

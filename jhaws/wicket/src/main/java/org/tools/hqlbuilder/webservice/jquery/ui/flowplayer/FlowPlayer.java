@@ -6,11 +6,11 @@ import java.io.InputStream;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.StreamResourceReference;
+import org.jhaws.common.web.wicket.WicketUtils;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.StreamResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketUtils;
 
 /**
  * <div wicket:id="flowplayer" class="customflowplayer is-splash grayscale-gradient"><br>

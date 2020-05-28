@@ -6,10 +6,10 @@ import java.io.InputStream;
 import org.apache.wicket.util.resource.AbstractResourceStream;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.ResourceStreamNotFoundException;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.StreamResourceReference;
+import org.jhaws.common.web.wicket.WicketUtils;
 import org.tools.hqlbuilder.webservice.jquery.ui.flowplayer.FlowPlayer;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.StreamResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketUtils;
 
 /**
  * @see http://www.easy-bits.com/products/http-streaming-for-flash/flowplayer

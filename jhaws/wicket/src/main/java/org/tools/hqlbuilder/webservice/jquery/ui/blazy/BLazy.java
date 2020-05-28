@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.blazy;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 // @see http://dinbror.dk/blog/blazy/
 // 1.3.1

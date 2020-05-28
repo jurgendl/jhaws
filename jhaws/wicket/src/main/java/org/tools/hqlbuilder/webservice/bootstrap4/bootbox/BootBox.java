@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.bootbox;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // http://bootboxjs.com/examples.html
 public class BootBox {

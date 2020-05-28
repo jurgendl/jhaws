@@ -1,6 +1,6 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.materialdesign;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
 
 // http://materialdesignicons.com/cdn/5.1.45/
 public class Materialdesign {

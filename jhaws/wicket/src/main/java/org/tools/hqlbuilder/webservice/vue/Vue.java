@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.vue;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 // https://vuejs.org/v2/guide/syntax.html
 // https://jsfiddle.net/fxszLc2j/6/

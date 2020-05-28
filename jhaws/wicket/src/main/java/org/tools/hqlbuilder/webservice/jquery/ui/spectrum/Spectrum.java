@@ -1,8 +1,8 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.spectrum;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * @see http://bgrins.github.io/spectrum/#why

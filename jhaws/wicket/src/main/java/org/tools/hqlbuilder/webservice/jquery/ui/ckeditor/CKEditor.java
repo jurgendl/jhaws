@@ -3,8 +3,8 @@ package org.tools.hqlbuilder.webservice.jquery.ui.ckeditor;
 import java.util.Locale;
 
 import org.apache.wicket.request.Url;
-import org.tools.hqlbuilder.webservice.wicket.UrlResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.WicketApplication;
+import org.jhaws.common.web.wicket.UrlResourceReference;
+import org.jhaws.common.web.wicket.WicketApplication;
 
 /**
  * <code>$( '#ckeditor' ).ckeditor();</code>

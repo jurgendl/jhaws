@@ -1,6 +1,6 @@
 package org.tools.hqlbuilder.webservice.riot;
 
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 // todo.tag:
 //

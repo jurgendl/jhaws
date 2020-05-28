@@ -16,8 +16,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.DynamicImageResource;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.components.ExternalImage;
-import org.tools.hqlbuilder.webservice.wicket.components.ImageDataProvider;
+import org.jhaws.common.web.wicket.components.ExternalImage;
+import org.jhaws.common.web.wicket.components.ImageDataProvider;
 
 @SuppressWarnings("serial")
 public class BLazyImage extends Image {

@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.prismjs;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 // v1.16.0
 // <pre><code class="language-xxx">...</code></pre>

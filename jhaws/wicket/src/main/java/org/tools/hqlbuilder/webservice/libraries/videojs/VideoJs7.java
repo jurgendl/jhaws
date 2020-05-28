@@ -1,8 +1,8 @@
 package org.tools.hqlbuilder.webservice.libraries.videojs;
 
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // http://videojs.com/getting-started/
 // http://videojs.com/plugins/

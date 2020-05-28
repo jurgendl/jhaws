@@ -1,6 +1,6 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.pocketgrid;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
 
 /**
  * @seee http://arnaudleray.github.io/pocketgrid/

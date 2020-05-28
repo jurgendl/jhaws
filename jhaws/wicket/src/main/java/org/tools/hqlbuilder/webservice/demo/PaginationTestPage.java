@@ -15,12 +15,12 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.panel.Fragment;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
+import org.jhaws.common.web.wicket.tables.bootstrap.EnhancedTable;
+import org.jhaws.common.web.wicket.tables.bootstrap.TableColumn;
+import org.jhaws.common.web.wicket.tables.common.DefaultDataProvider;
+import org.jhaws.common.web.wicket.tables.common.Side;
 import org.tools.hqlbuilder.webservice.bootstrap4.popoverx.PopoverXPanel;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
-import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.EnhancedTable;
-import org.tools.hqlbuilder.webservice.wicket.tables.bootstrap.TableColumn;
-import org.tools.hqlbuilder.webservice.wicket.tables.common.DefaultDataProvider;
-import org.tools.hqlbuilder.webservice.wicket.tables.common.Side;
 
 import ch.lambdaj.Lambda;
 

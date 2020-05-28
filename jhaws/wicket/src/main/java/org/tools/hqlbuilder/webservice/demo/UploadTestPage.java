@@ -25,7 +25,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.lang.Bytes;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.lang.CollectionUtils8;
-import org.tools.hqlbuilder.webservice.wicket.bootstrap.DefaultWebPage;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
 
 @SuppressWarnings("serial")
 public class UploadTestPage extends DefaultWebPage {

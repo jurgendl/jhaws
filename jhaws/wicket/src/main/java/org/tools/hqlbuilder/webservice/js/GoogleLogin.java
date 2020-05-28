@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
 
-import org.tools.hqlbuilder.webservice.wicket.CachingUrlResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.settings.WicketAppSettings;
+import org.jhaws.common.web.wicket.CachingUrlResourceReference;
+import org.jhaws.common.web.wicket.settings.WicketAppSettings;
 
 // https://console.developers.google.com/project/
 // https://developers.google.com/identity/sign-in/web/sign-in

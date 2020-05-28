@@ -1,9 +1,9 @@
 package org.tools.hqlbuilder.webservice.bootstrap4.multiselect;
 
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 // http://davidstutz.github.io/bootstrap-multiselect/
 // https://github.com/davidstutz/bootstrap-multiselect

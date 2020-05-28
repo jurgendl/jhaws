@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.jquery.ui.velocity;
 
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
 
 /**
  * Velocity animation framework version 0.11.9

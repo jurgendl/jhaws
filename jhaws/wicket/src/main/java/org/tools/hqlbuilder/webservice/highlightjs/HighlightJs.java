@@ -1,7 +1,7 @@
 package org.tools.hqlbuilder.webservice.highlightjs;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
-import org.tools.hqlbuilder.webservice.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 // https://highlightjs.org/download/
 // https://highlightjs.readthedocs.io/en/latest/css-classes-reference.html

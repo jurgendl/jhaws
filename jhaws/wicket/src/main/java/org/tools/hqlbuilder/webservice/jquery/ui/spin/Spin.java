@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import org.tools.hqlbuilder.webservice.wicket.CssResourceReference;
+import org.jhaws.common.web.wicket.CssResourceReference;
 
 // http://www.raphaelfabeni.com.br/css-loader/
 // https://github.com/raphaelfabeni/css-loader
