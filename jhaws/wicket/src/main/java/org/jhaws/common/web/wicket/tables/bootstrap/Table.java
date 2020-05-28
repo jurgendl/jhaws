@@ -67,7 +67,7 @@ import org.jhaws.common.web.wicket.components.LinkPanel;
 import org.jhaws.common.web.wicket.components.LinkPanel.LinkType;
 import org.jhaws.common.web.wicket.tables.common.DataProvider;
 import org.jhaws.common.web.wicket.tables.common.Side;
-import org.tools.hqlbuilder.webservice.jquery.ui.tablesorter.TableSorter;
+import org.jhaws.common.web.wicket.tablesorter.TableSorter;
 
 /**
  * @see https://www.packtpub.com/article/apache-wicket-displaying-data-using-datatable

@@ -19,7 +19,7 @@ import org.jhaws.common.web.wicket.forms.common.AbstractFormElementSettings;
 import org.jhaws.common.web.wicket.forms.common.DatePickerSettings;
 import org.jhaws.common.web.wicket.forms.common.FormRowPanelParent;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
-import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
+import org.jhaws.common.web.wicket.moment.MomentJs;
 
 @SuppressWarnings({ "unchecked", "rawtypes", "serial" })
 public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel {

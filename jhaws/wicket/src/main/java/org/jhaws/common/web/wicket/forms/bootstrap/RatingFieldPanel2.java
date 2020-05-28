@@ -11,7 +11,7 @@ import org.apache.wicket.model.IModel;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.RatingFieldSettings;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
+import org.jhaws.common.web.wicket.jquery.JQuery;
 
 /**
  * https://github.com/javiertoledo/bootstrap-rating-input v0.4

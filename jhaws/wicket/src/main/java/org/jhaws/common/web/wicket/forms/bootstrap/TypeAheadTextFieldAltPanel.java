@@ -19,7 +19,7 @@ import org.jhaws.common.web.wicket.forms.common.FormConstants;
 import org.jhaws.common.web.wicket.forms.common.FormRowPanelParent;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.TypeAheadTextFieldAltSettings;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery_typeahead.JqueryTypeAhead;
+import org.jhaws.common.web.wicket.jquery_typeahead.JqueryTypeAhead;
 
 // //https://github.com/lipis/flag-icon-css
 @SuppressWarnings("serial")

@@ -18,7 +18,7 @@ import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.TextFieldSettings;
 import org.jhaws.common.web.wicket.renderer.StringOptionRenderer;
 import org.jhaws.common.web.wicket.settings.WicketAppSettings.Theme;
-import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin;
+import org.jhaws.common.web.wicket.spin.Spin;
 
 @SuppressWarnings("serial")
 public class SettingsPage extends DefaultWebPage {

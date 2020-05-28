@@ -7,7 +7,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.tools.hqlbuilder.webservice.jquery.ui.flowplayer.FlowPlayer;
+import org.jhaws.common.web.wicket.flowplayer.FlowPlayer;
 
 @SuppressWarnings("serial")
 public class FlowPlayerPanel extends Panel {

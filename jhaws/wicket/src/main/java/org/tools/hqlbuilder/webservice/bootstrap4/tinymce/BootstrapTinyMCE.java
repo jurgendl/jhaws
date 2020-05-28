@@ -2,7 +2,7 @@ package org.tools.hqlbuilder.webservice.bootstrap4.tinymce;
 
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
+import org.jhaws.common.web.wicket.jquery.JQuery;
 
 // TODO https://www.tiny.cloud/docs/demo/local-upload/
 // https://www.tinymce.com/

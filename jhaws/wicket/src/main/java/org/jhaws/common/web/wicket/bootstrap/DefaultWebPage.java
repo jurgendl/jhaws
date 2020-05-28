@@ -35,8 +35,18 @@ import org.jhaws.common.io.FilePath;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.jhaws.common.web.wicket.WicketApplication;
 import org.jhaws.common.web.wicket.WicketRoot;
+import org.jhaws.common.web.wicket.blazy.BLazy;
 import org.jhaws.common.web.wicket.components.ExternalLink;
+import org.jhaws.common.web.wicket.fontawesome.FontAwesome;
+import org.jhaws.common.web.wicket.jquery.JQuery;
+import org.jhaws.common.web.wicket.magnify.Magnify;
+import org.jhaws.common.web.wicket.materialdesign.Materialdesign;
+import org.jhaws.common.web.wicket.moment.MomentJs;
+import org.jhaws.common.web.wicket.picturefill.PictureFill;
 import org.jhaws.common.web.wicket.prismjs.PrismJs;
+import org.jhaws.common.web.wicket.qtip.QTip;
+import org.jhaws.common.web.wicket.spin.Spin;
+import org.jhaws.common.web.wicket.waypoints.Waypoints;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.bootstrap4.bootbox.BootBox;
 import org.tools.hqlbuilder.webservice.bootstrap4.clipboardjs.ClipboardJs;
@@ -50,16 +60,6 @@ import org.tools.hqlbuilder.webservice.bootstrap4.slider.BootstrapSlider;
 import org.tools.hqlbuilder.webservice.bootstrap4.tags.BootstrapTags;
 import org.tools.hqlbuilder.webservice.bootstrap4.tinymce.BootstrapTinyMCE;
 import org.tools.hqlbuilder.webservice.bootstrap4.toast.BootstrapToasts;
-import org.tools.hqlbuilder.webservice.jquery.ui.blazy.BLazy;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
-import org.tools.hqlbuilder.webservice.jquery.ui.magnify.Magnify;
-import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
-import org.tools.hqlbuilder.webservice.jquery.ui.picturefill.PictureFill;
-import org.tools.hqlbuilder.webservice.jquery.ui.qtip.QTip;
-import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin;
-import org.tools.hqlbuilder.webservice.jquery.ui.waypoints.Waypoints;
-import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
-import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.materialdesign.Materialdesign;
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
@@ -669,7 +669,7 @@ public abstract class DefaultWebPage extends WebPage {
 
 		// response.render(JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS));
 		response.render(JavaScriptHeaderItem
-				.forReference(org.tools.hqlbuilder.webservice.jquery.ui.typeahead.TypeAhead.JS_BLOODHOUND));
+				.forReference(org.jhaws.common.web.wicket.typeahead.TypeAhead.JS_BLOODHOUND));
 		response.render(
 				JavaScriptHeaderItem.forReference(org.tools.hqlbuilder.webservice.bootstrap4.typeahead.TypeAhead.JS));
 		response.render(CssHeaderItem.forReference(BootstrapTags.CSS));

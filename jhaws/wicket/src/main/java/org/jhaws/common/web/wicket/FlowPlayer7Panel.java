@@ -9,7 +9,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.tools.hqlbuilder.webservice.jquery.ui.flowplayer.FlowPlayer7;
+import org.jhaws.common.web.wicket.flowplayer.FlowPlayer7;
 
 @SuppressWarnings("serial")
 public class FlowPlayer7Panel extends Panel {

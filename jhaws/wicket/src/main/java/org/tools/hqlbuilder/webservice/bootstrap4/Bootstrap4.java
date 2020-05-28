@@ -2,7 +2,7 @@ package org.tools.hqlbuilder.webservice.bootstrap4;
 
 import org.jhaws.common.web.wicket.CssResourceReference;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
+import org.jhaws.common.web.wicket.jquery.JQuery;
 
 // v4.3.1 (previous: v4.2.1-v4.1.3)
 // https://blog.getbootstrap.com/2018/12/21/bootstrap-4-2-1/

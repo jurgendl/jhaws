@@ -3,8 +3,8 @@ package org.tools.hqlbuilder.webservice.bootstrap4.datetimepicker.tempusdominus;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.web.wicket.CssResourceReference;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.moment.MomentJs;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
-import org.tools.hqlbuilder.webservice.jquery.ui.moment.MomentJs;
 
 // https://github.com/tempusdominus/bootstrap-4
 // https://tempusdominus.github.io/bootstrap-4/

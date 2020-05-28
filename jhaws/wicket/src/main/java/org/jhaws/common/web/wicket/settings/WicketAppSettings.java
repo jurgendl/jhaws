@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
-import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin.SpinType;
+import org.jhaws.common.web.wicket.spin.Spin.SpinType;
 
 @SuppressWarnings("serial")
 @XmlRootElement(name = "web-app-settings")

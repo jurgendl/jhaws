@@ -2,7 +2,7 @@ package org.jhaws.common.web.wicket.videojs;
 
 import org.jhaws.common.web.wicket.CssResourceReference;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
-import org.tools.hqlbuilder.webservice.jquery.ui.jquery.JQuery;
+import org.jhaws.common.web.wicket.jquery.JQuery;
 
 // http://videojs.com/getting-started/
 // http://videojs.com/plugins/

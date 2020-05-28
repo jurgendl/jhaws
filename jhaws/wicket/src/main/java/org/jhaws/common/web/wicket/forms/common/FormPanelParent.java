@@ -25,9 +25,9 @@ import org.apache.wicket.util.visit.IVisit;
 import org.apache.wicket.util.visit.IVisitor;
 import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.bootstrap.BootstrapFencedFeedbackPanel;
+import org.jhaws.common.web.wicket.spin.Spin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin;
 
 /**
  * @see http://wicket.apache.org/guide/guide/forms2.html#forms2_1
