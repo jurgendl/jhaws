@@ -69,5 +69,5 @@ import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 public class BootstrapNotify {
     public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapNotify.class, "bootstrap-notify.js")
             .addJavaScriptResourceReferenceDependency(Bootstrap4.JS)
-            .addCssResourceReferenceDependency(org.tools.hqlbuilder.webservice.css.WicketCSSRoot.ANIMATE);
+            .addCssResourceReferenceDependency(org.jhaws.common.web.wicket.css.WicketCSSRoot.ANIMATE);
 }

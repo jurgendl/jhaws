@@ -36,6 +36,7 @@ import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.jhaws.common.web.wicket.WicketApplication;
 import org.jhaws.common.web.wicket.WicketRoot;
 import org.jhaws.common.web.wicket.components.ExternalLink;
+import org.jhaws.common.web.wicket.prismjs.PrismJs;
 import org.tools.hqlbuilder.webservice.bootstrap4.Bootstrap4;
 import org.tools.hqlbuilder.webservice.bootstrap4.bootbox.BootBox;
 import org.tools.hqlbuilder.webservice.bootstrap4.clipboardjs.ClipboardJs;
@@ -59,7 +60,6 @@ import org.tools.hqlbuilder.webservice.jquery.ui.spin.Spin;
 import org.tools.hqlbuilder.webservice.jquery.ui.waypoints.Waypoints;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.fontawesome.FontAwesome;
 import org.tools.hqlbuilder.webservice.jquery.ui.weloveicons.materialdesign.Materialdesign;
-import org.tools.hqlbuilder.webservice.prismjs.PrismJs;
 
 @SuppressWarnings("serial")
 public abstract class DefaultWebPage extends WebPage {
@@ -346,18 +346,18 @@ public abstract class DefaultWebPage extends WebPage {
 		demos.getChildLinks()
 				.add(new NavBarLink("settings", "", org.jhaws.common.web.wicket.settings.SettingsPage.class, null));
 		demos.getChildLinks()
-				.add(new NavBarLink("overview", "", org.tools.hqlbuilder.webservice.demo.TestPage.class, null));
+				.add(new NavBarLink("overview", "", org.jhaws.common.web.wicket.demo.TestPage.class, null));
 		demos.getChildLinks()
-				.add(new NavBarLink("vue", "", org.tools.hqlbuilder.webservice.demo.VueTestPage.class, null));
+				.add(new NavBarLink("vue", "", org.jhaws.common.web.wicket.demo.VueTestPage.class, null));
 		demos.getChildLinks().add(
-				new NavBarLink("pagination", "", org.tools.hqlbuilder.webservice.demo.PaginationTestPage.class, null));
+				new NavBarLink("pagination", "", org.jhaws.common.web.wicket.demo.PaginationTestPage.class, null));
 		demos.getChildLinks()
-				.add(new NavBarLink("messages", "", org.tools.hqlbuilder.webservice.demo.TestMessagesPage.class, null));
+				.add(new NavBarLink("messages", "", org.jhaws.common.web.wicket.demo.TestMessagesPage.class, null));
 		demos.getChildLinks()
-				.add(new NavBarLink("upload", "", org.tools.hqlbuilder.webservice.demo.UploadTestPage.class, null));
+				.add(new NavBarLink("upload", "", org.jhaws.common.web.wicket.demo.UploadTestPage.class, null));
 		//
 		demos.getChildLinks().add(
-				new NavBarLink("registration", "", org.tools.hqlbuilder.webservice.demo.RegistrationPage.class, null));
+				new NavBarLink("registration", "", org.jhaws.common.web.wicket.demo.RegistrationPage.class, null));
 		demos.getChildLinks().add(new NavBarLink("login", "", org.jhaws.common.web.wicket.pages.LogInPage.class, null));
 		demos.getChildLinks()
 				.add(new NavBarLink("logout", "", org.jhaws.common.web.wicket.pages.LogOutPage.class, null));
@@ -690,7 +690,7 @@ public abstract class DefaultWebPage extends WebPage {
 		// response.render(JavaScriptHeaderItem.forReference(BootstrapConfirmation.JS));
 		// response.render(OnLoadHeaderItem.forScript(";$('[data-toggle=confirmation]').confirmation({rootSelector:'[data-toggle=confirmation]'});"));
 
-		response.render(CssHeaderItem.forReference(org.tools.hqlbuilder.webservice.css.WicketCSSRoot.ANIMATE));
+		response.render(CssHeaderItem.forReference(org.jhaws.common.web.wicket.css.WicketCSSRoot.ANIMATE));
 
 		response.render(CssHeaderItem.forReference(Spin.css(WicketApplication.get().getSettings().getSpinner())));
 

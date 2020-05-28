@@ -8,7 +8,7 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
-import org.tools.hqlbuilder.webservice.libraries.videojs.VideoJs7;
+import org.jhaws.common.web.wicket.videojs.VideoJs7;
 
 // https://github.com/videojs/video.js/issues/3773
 // http://jsbin.com/faxayot/edit?html,output

@@ -2,7 +2,7 @@ package org.tools.hqlbuilder.webservice.jquery.ui.stickynavbar;
 
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.jhaws.common.web.wicket.WicketApplication;
-import org.tools.hqlbuilder.webservice.css.WicketCSSRoot;
+import org.jhaws.common.web.wicket.css.WicketCSSRoot;
 import org.tools.hqlbuilder.webservice.jquery.ui.easing.Easing;
 
 /**
