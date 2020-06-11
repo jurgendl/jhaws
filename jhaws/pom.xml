@@ -71,7 +71,7 @@
         <version.groovy>2.5.8</version.groovy>
         <version.jackson>2.10.3</version.jackson>
         <!-- <version.jackson.codehaus>1.9.13</version.jackson.codehaus> -->
-        <version.resteasy>3.11.2.Final</version.resteasy>
+        <version.resteasy>3.12.1.Final</version.resteasy>
         <version.junit.jupiter>5.6.1</version.junit.jupiter>
 	</properties>
 	<modules>
