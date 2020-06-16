@@ -1,4 +1,4 @@
-var source_$ID$ = new Bloodhound({
+/*var source_$ID$ = new Bloodhound({
 	datumTokenizer : function(datum) {
 		return Bloodhound.tokenizers.whitespace(datum.value);
 	},
@@ -8,13 +8,13 @@ var source_$ID$ = new Bloodhound({
 		url : REST + '$URL$' + '%QUERY'
 	}
 });
-source_$ID$.initialize();
+source_$ID$.initialize();*/
 $('#$ID$').tagsinput({
 	trimValue : true,
 	allowDuplicates: false,
 	freeInput: $FREE$,
 	delimiter: '$DELIMITER$',
-	typeaheadjs : {
+	typeahead : {
 		highlight: true,
 		hint: true,
 		items : $MAX$,
@@ -22,7 +22,8 @@ $('#$ID$').tagsinput({
 		minLength : $MIN$,
 		fitToElement : false,
 		/*source : source_$ID$.ttAdapter()*/
-		source : source_$ID$,
+		/*source : source_$ID$,*/
+		source: function(query) { console.log(REST+'$URL$'+query); return $.get(REST+'$URL$'+query); },
 		templates : {
 			empty : ['<div class="empty-message">','no results','</div>' ].join('\n')
 		}
