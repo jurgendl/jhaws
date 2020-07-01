@@ -4,13 +4,13 @@ import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxCfg;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxDefaultsCfg;
 import org.jhaws.common.net.client.GetRequest;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class FToolTest {
 	static FfmpegTool t;
 
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() throws Exception {
 		t = new FfmpegTool();
 	}
