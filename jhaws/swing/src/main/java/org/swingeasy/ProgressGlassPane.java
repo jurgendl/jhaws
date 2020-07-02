@@ -120,6 +120,8 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
     // return startalpha;
     // }
 
+    private int messageOffset = 75;
+
     /**
      *
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
@@ -151,9 +153,9 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a));
             g2d.setFont(font);
             int mw = g2d.getFontMetrics(font).stringWidth(message);
-            g2d.translate(-mw / 2, 75);
+            g2d.translate(-mw / 2, messageOffset);
             g2d.drawString(message, 0, 0);
-            g2d.translate(+mw / 2, -75);
+            g2d.translate(+mw / 2, -messageOffset);
         }
 
         g2d.setColor(diskColor);
@@ -167,7 +169,14 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
             g2d.fillPolygon(getShape());
             g2d.rotate(rad);
         }
+
+        paintExtra(g2d);
+
         g2d.dispose();
+    }
+
+    protected void paintExtra(Graphics2D g2d) {
+        //
     }
 
     public void setBlockingColor(Color blockingColor) {
@@ -216,6 +225,10 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
         toggle(visible);
     }
 
+    protected void progress() {
+        progress++;
+    }
+
     protected void toggle(boolean enabled) {
         if (isVisible() != enabled) {
             return;
@@ -233,7 +246,7 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
                         }
                         SwingUtilities.invokeLater(() -> {
                             if (ProgressGlassPane.this.isVisible()) {
-                                progress++;
+                                progress();
                                 ProgressGlassPane.this.repaint();
                             }
                         });
@@ -255,5 +268,21 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
             }
         }
         // }
+    }
+
+    public int getProgress() {
+        return this.progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
+    public int getMessageOffset() {
+        return this.messageOffset;
+    }
+
+    public void setMessageOffset(int messageOffset) {
+        this.messageOffset = messageOffset;
     }
 }

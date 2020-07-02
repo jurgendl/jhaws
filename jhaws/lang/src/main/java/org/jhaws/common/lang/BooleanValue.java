@@ -91,4 +91,9 @@ public class BooleanValue extends Value<Boolean> implements BooleanSupplier {
         set(getAsBoolean() || b);
         return this;
     }
+
+    public boolean toggle() {
+        set(!is());
+        return is();
+    }
 }
