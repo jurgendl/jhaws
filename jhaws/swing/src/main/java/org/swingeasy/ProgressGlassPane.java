@@ -31,18 +31,21 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
 
     protected int count = 8;
 
+    // clockwise
     protected int direction = 1;
 
     protected int scale = 95;
 
     protected int old_scale = 0;
 
+    // lower = faster
     protected int speed = 70;
 
-    protected int startalpha = 0;
+    // protected int startalpha = 0;
 
     protected Color diskColor = Color.gray;
 
+    // glass transparent color
     protected Color blockingColor = Color.BLUE;
 
     protected Font font;
@@ -57,6 +60,12 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
         super(parent);
         this.parent = parent;
         font = getFont().deriveFont(22f).deriveFont(Font.BOLD);
+    }
+
+    public ProgressGlassPane(Window parent, Font font) {
+        super(parent);
+        this.parent = parent;
+        this.font = font;
     }
 
     public Color getBlockingColor() {
@@ -107,9 +116,9 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
         return speed;
     }
 
-    public int getStartalpha() {
-        return startalpha;
-    }
+    // public int getStartalpha() {
+    // return startalpha;
+    // }
 
     /**
      *
@@ -117,6 +126,9 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
      */
     @Override
     protected void paintComponent(Graphics g) {
+        if (!isVisible()) {
+            return;
+        }
         Graphics2D g2d = Graphics2D.class.cast(g);
         g2d.setColor(blockingColor);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .2f));
@@ -190,9 +202,9 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
         this.speed = speed;
     }
 
-    public void setStartalpha(int startalpha) {
-        this.startalpha = startalpha;
-    }
+    // public void setStartalpha(int startalpha) {
+    // this.startalpha = startalpha;
+    // }
 
     /**
      *
