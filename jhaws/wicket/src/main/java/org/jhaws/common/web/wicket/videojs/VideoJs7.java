@@ -8,10 +8,10 @@ import org.jhaws.common.web.wicket.jquery.JQuery;
 // http://videojs.com/plugins/
 // http://docs.videojs.com/tutorial-options.html#loop
 // https://videojs.com/plugins/
-// 7.5.5
+// 7.9.1
 public class VideoJs7 {
 	public static JavaScriptResourceReference JS = new JavaScriptResourceReference(VideoJs7.class,
-			"video-js-7.5.5/video.js");
+			"video-js-7.9.1/video.js");
 
 	static {
 		JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
@@ -24,5 +24,5 @@ public class VideoJs7 {
 		JS_PREVENT_MULTIPLE.addJavaScriptResourceReferenceDependency(JS);
 	}
 
-	public static CssResourceReference CSS = new CssResourceReference(VideoJs7.class, "video-js-7.5.5/video-js.css");
+	public static CssResourceReference CSS = new CssResourceReference(VideoJs7.class, "video-js-7.9.1/video-js.css");
 }
