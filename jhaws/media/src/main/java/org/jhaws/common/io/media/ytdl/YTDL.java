@@ -27,6 +27,8 @@ import org.jhaws.common.io.media.Tool;
 // https://github.com/ytdl-org/youtube-dl
 // https://ytdl-org.github.io/youtube-dl/supportedsites.html
 // --write-info-json
+//
+//https://askubuntu.com/questions/673442/downloading-youtube-playlist-with-youtube-dl-skipping-existing-files
 public class YTDL extends Tool {
 	public static final String EXE = "youtube-dl";
 
