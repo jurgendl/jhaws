@@ -23,12 +23,22 @@ import org.jhaws.common.io.Utils.OSGroup;
 import org.jhaws.common.io.console.Processes.ExitValueException;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.Tool;
+import org.jhaws.common.lang.StringValue;
 
 // https://github.com/ytdl-org/youtube-dl
 // https://ytdl-org.github.io/youtube-dl/supportedsites.html
 // --write-info-json
 //
 //https://askubuntu.com/questions/673442/downloading-youtube-playlist-with-youtube-dl-skipping-existing-files
+//
+//--restrict-filenames             Restrict filenames to only ASCII
+//characters, and avoid "&" and spaces in
+//filenames
+//-w, --no-overwrites              Do not overwrite files
+//-c, --continue                   Force resume of partially downloaded files.
+//By default, youtube-dl will resume
+//downloads if possible.
+//--write-info-json                Write video metadata to a .info.json file
 public class YTDL extends Tool {
 	public static final String EXE = "youtube-dl";
 
@@ -133,6 +143,23 @@ public class YTDL extends Tool {
 		Lines lines = new Lines();
 		Tool.call(null, lines, executable.getParentPath(), command);
 		return lines.lines().get(0);
+	}
+
+	public String fileName(String url) {
+		if (executable == null || executable.notExists())
+			throw new NullPointerException();
+		List<String> command = new ArrayList<>();
+		command.add(Tool.command(executable));
+		command.add("--get-filename");
+		command.add(url);
+		StringValue fn = new StringValue();
+		call(null, new Lines() {
+			@Override
+			public void accept(String t) {
+				fn.set(t);
+			}
+		}, null, command);
+		return fn.get();
 	}
 
 	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder) {
