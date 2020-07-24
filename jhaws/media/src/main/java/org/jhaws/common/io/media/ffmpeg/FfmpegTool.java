@@ -1729,9 +1729,4 @@ public class FfmpegTool extends Tool implements MediaCte {
 			silentcall(null, new Lines(), input.getParentPath(), command);
 		}
 	}
-
-	public static void main(String[] args) {
-		new FfmpegTool("F:/tools/youtube-dl").previews(new FilePath("F:/tools/youtube-dl/video.mp4"), null, null, null,
-				null);
-	}
 }
