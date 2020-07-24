@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -14,9 +15,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileExistsException;
@@ -32,6 +36,7 @@ import org.jhaws.common.io.media.images.ImageTools;
 import org.jhaws.common.lang.BooleanValue;
 import org.jhaws.common.lang.DateTime8;
 import org.jhaws.common.lang.KeyValue;
+import org.jhaws.common.lang.Value;
 import org.jhaws.common.pool.Pooled;
 
 /**
@@ -142,6 +147,41 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 	public FfmpegTool(boolean disableAuto) {
 		super(disableAuto);
+	}
+
+	public List<Properties> info(FilePath input) {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfprobe()));
+
+		// https://superuser.com/questions/326629/how-can-i-make-ffmpeg-be-quieter-less-verbose
+		command.add("-hide_banner");
+		command.add("-loglevel");
+		command.add("warning");
+
+		command.add("-show_streams");
+		command.add(command(input));
+
+		List<Properties> propslist = new ArrayList<>();
+		Value<Properties> props = new Value<>();
+		silentcall(null, new Lines() {
+			@Override
+			public void accept(String t) {
+				if (t.contains("[STREAM]")) {
+					Properties tmp = new Properties();
+					propslist.add(tmp);
+					props.set(tmp);
+				}
+				if (t.contains("[/STREAM]")) {
+					props.setNull();
+				}
+				if (t.contains("=")) {
+					String p = t.substring(0, t.indexOf("="));
+					String v = t.substring(t.indexOf("=") + 1);
+					props.get().put(p, v);
+				}
+			}
+		}, input.getParentPath(), command);
+		return propslist;
 	}
 
 	/** dxva2, qsv, nvenc */
@@ -1311,6 +1351,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	public void loop(FilePath input, int times, FilePath output, Consumer<String> listener) {
+		if (input == null || input.notExists())
+			throw new IllegalArgumentException();
 		// https://video.stackexchange.com/questions/12905/repeat-loop-input-video-with-ffmpeg
 		RemuxDefaultsCfg defaults = new RemuxDefaultsCfg();
 		defaults.cfrHQ = 15;
@@ -1324,14 +1366,16 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return this.actions;
 	}
 
-	public FilePath dash(String manifest, FilePath out, Lines lines) {
+	public FilePath dash(URL manifest, FilePath out, Lines lines) {
+		if (manifest == null)
+			throw new IllegalArgumentException();
 		List<String> command = new ArrayList<>();
 		command.add(command(getFfmpeg()));
 		command.add("-hide_banner");
 		// command.add("-v");
 		// command.add("40");
 		command.add("-i");
-		command.add(manifest);
+		command.add(manifest.toExternalForm());
 		command.add("-c:a");
 		command.add("copy");
 		command.add("-c:v");
@@ -1342,12 +1386,14 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return out;
 	}
 
-	public FilePath hls(String hls, FilePath out, Lines lines) {
+	public FilePath hls(URL hls, FilePath out, Lines lines) {
+		if (hls == null)
+			throw new IllegalArgumentException();
 		List<String> command = new ArrayList<>();
 		command.add(command(getFfmpeg()));
 		command.add("-hide_banner");
 		command.add("-i");
-		command.add(hls);
+		command.add(hls.toExternalForm());
 		command.add("-c:a");
 		command.add("copy");
 		command.add("-c:v");
@@ -1369,6 +1415,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	// }
 
 	public FilePath encodeForYT(FilePath in, FilePath out, Lines lines) {
+		if (in == null || in.notExists())
+			throw new IllegalArgumentException();
 		// https://gist.github.com/mikoim/27e4e0dc64e384adbcb91ff10a2d3678
 		//
 		// -movflags faststart moov atom at the front of the file (Fast Start)
@@ -1484,6 +1532,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	// https://www.webtvsolutions.com/support.php?s=ws_webtv_docs&d=clips_video_thumbnails&lang=en
 	// https://stackoverflow.com/questions/20022006/generate-all-the-files-vtt-sprite-for-the-tooltip-thumbnails-options-of-jwp
 	public void thumbs(FilePath input, FilePath outDir, Integer maxw, Integer perSeconds, Lines lines) {
+		if (input == null || input.notExists())
+			throw new IllegalArgumentException();
 		if (maxw == null)
 			maxw = 200;
 		if (perSeconds != null)
@@ -1516,6 +1566,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	public FilePath mp3(FilePath in, FilePath out, Lines lines) {
+		if (in == null || in.notExists())
+			throw new IllegalArgumentException();
 		if (out == null)
 			out = in.appendExtension("mp3");
 		if (out.isDirectory())
@@ -1544,6 +1596,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	public FilePath animatedGif(FilePath in, FilePath out, Lines lines) {
+		if (in == null || in.notExists())
+			throw new IllegalArgumentException();
 		if (out == null)
 			out = in.appendExtension("gif");
 		if (out.isDirectory())
@@ -1565,6 +1619,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	public FilePath rotate(FilePath in, FilePath out, Lines lines, int degrees) {
+		if (in == null || in.notExists())
+			throw new IllegalArgumentException();
 		if (out == null)
 			out = in.appendExtension("mp4");
 		if (out.isDirectory())
@@ -1599,5 +1655,83 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add(command(out));
 		call(null, lines, getFfmpeg().getParentPath(), command);
 		return out;
+	}
+
+	// https://www.binpress.com/generate-video-previews-ffmpeg/
+	public void previews(FilePath input, FilePath output, Integer $HEIGHT, Integer $ROWS, Integer $COLS) {
+		if (input == null || input.notExists())
+			throw new IllegalArgumentException();
+		if (output == null)
+			output = input.getParentPath().child(input.getShortFileName() + "_preview.jpg");
+
+		// ./ffprobe -show_streams "video.mp4" 2> /dev/null | grep nb_frames |
+		// head -n1 | sed 's/.*=//'
+
+		// ./ffmpeg -nostats -i "video.mp4" -vcodec copy -f rawvideo -y
+		// /dev/null 2>&1 | grep frame | awk '{split($0,a,"fps")}END{print
+		// a[1]}' | sed 's/.*= *//'
+
+		// :100
+
+		// ./ffmpeg -loglevel panic -y -i "video.mp4" -frames 1 -q:v 1 -vf
+		// "select=not(mod(n\,90)),scale=-1:120,tile=100x1" video_preview.jpg
+
+		int frames;
+		{
+			List<String> command = new ArrayList<>();
+			command.add(command(getFfmpeg()));
+			command.add("-hide_banner");
+			command.add("-i");
+			command.add(command(input));
+			command.add("-vcodec");
+			command.add("copy");
+			command.add("-f");
+			command.add("rawvideo");
+			command.add("-y");
+			command.add("NUL");
+			System.out.println(command.stream().collect(Collectors.joining(" ")));
+			Pattern P = Pattern.compile("frame= (\\d++)");
+			Lines lines = new Lines() {
+				@Override
+				public void accept(String t) {
+					Matcher M = P.matcher(t);
+					if (M.find()) {
+						super.accept(M.group(1));
+					}
+				}
+			};
+			silentcall(null, lines, input.getParentPath(), command);
+			frames = Integer.parseInt(lines.lines().get(0));
+		}
+		if ($HEIGHT == null)
+			$HEIGHT = 120;
+		if ($ROWS == null)
+			$ROWS = 1;
+		if ($COLS == null)
+			$COLS = 50;
+		Integer $NTH_FRAME = frames / $COLS;
+		{
+			List<String> command = new ArrayList<>();
+			command.add(command(getFfmpeg()));
+			command.add("-hide_banner");
+			command.add("-y");
+			command.add("-i");
+			command.add(command(input));
+			command.add("-frames");
+			command.add("1");
+			command.add("-q:v");
+			command.add("1");
+			command.add("-vf");
+			command.add("\"select=not(mod(n\\," + $NTH_FRAME + ")),scale=-1:" + $HEIGHT + ",tile=" + $COLS + "x" + $ROWS
+					+ "\"");
+			command.add(command(output));
+			System.out.println(command.stream().collect(Collectors.joining(" ")));
+			silentcall(null, new Lines(), input.getParentPath(), command);
+		}
+	}
+
+	public static void main(String[] args) {
+		new FfmpegTool("F:/tools/youtube-dl").previews(new FilePath("F:/tools/youtube-dl/video.mp4"), null, null, null,
+				null);
 	}
 }

@@ -171,15 +171,16 @@ public class YTDL extends Tool {
 			targetFolder = FilePath.getTempDirectory();
 		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
 		List<String> command = new ArrayList<>();
-		command.add(Tool.command(executable));
+		command.add(command(executable));
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
 		command.add("--embed-thumbnail");
 		command.add("--add-metadata");
+		command.add("--no-check-certificate");
 		command.add(url);
 		List<String> dl = new ArrayList<>();
 		try {
-			dl(tmpFolder, command, dl);
+			dl(executable.getParentPath(), command, dl);
 		} catch (ExitValueException ex) {
 			//
 		}
@@ -212,25 +213,41 @@ public class YTDL extends Tool {
 			List<String> command = new ArrayList<>();
 			command.add(command(executable));
 			command.add("--verbose");
+			command.add("--embed-thumbnail");
+			command.add("--add-metadata");
+			command.add("--no-check-certificate");
 			command.add("--encoding");
 			command.add("utf-8");
 			command.add("-f");
 			// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 			command.add("bestvideo,bestaudio");
-			// command.add("--embed-thumbnail");
-			// command.add("--add-metadata");
 			command.add("-o");
 			command.add("%(title)s.f%(format_id)s.%(ext)s");
 			command.add(url);
-			dl(tmpFolder, command, dl);
+			dl(executable.getParentPath(), command, dl);
 		} catch (ExitValueException ex) {
-			List<String> command = new ArrayList<>();
-			command.add(command(executable));
-			command.add("--verbose");
-			command.add("--encoding");
-			command.add("utf-8");
-			command.add(url);
-			dl(tmpFolder, command, dl);
+			try {
+				List<String> command = new ArrayList<>();
+				command.add(command(executable));
+				command.add("--verbose");
+				command.add("--no-check-certificate");
+				command.add("--encoding");
+				command.add("utf-8");
+				command.add("-f");
+				command.add("bestvideo,bestaudio");
+				command.add("-o");
+				command.add("%(title)s.f%(format_id)s.%(ext)s");
+				command.add(url);
+				dl(executable.getParentPath(), command, dl);
+			} catch (ExitValueException ex2) {
+				List<String> command = new ArrayList<>();
+				command.add(command(executable));
+				command.add("--no-check-certificate");
+				command.add("--encoding");
+				command.add("utf-8");
+				command.add(url);
+				dl(executable.getParentPath(), command, dl);
+			}
 		}
 		if (dl.isEmpty()) {
 			throw new NullPointerException();
