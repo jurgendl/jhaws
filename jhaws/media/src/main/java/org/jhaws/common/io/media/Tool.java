@@ -3,6 +3,7 @@ package org.jhaws.common.io.media;
 import static org.jhaws.common.lang.CollectionUtils8.join;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -90,11 +91,11 @@ public abstract class Tool {
 
 	public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log,
 			Consumer<String> listener) {
-		return call(processHolder, lines, dir, command, log, listener, true);
+		return call(processHolder, lines, dir, command, log, listener, true, null);
 	}
 
 	public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log,
-			Consumer<String> listener, boolean exit) {
+			Consumer<String> listener, boolean throwExitValue, List<FilePath> paths) {
 		if (lines == null)
 			lines = new Lines();
 		Consumer<String> consumers = log ? lines.andThen(new Lines()) : lines;
@@ -105,9 +106,11 @@ public abstract class Tool {
 			logger.info("start - {}", join(command));
 		}
 		long start = System.currentTimeMillis();
-		Processes.callProcess(processHolder, exit, command, dir, consumers);
+		HashMap<String, String> env = new HashMap<>();
+		if (paths != null)
+			env.put("Path", paths.stream().map(FilePath::getAbsolutePath).collect(Collectors.joining(";")));
+		Processes.callProcess(processHolder, throwExitValue, null, env, command, dir, null, null, consumers, consumers);
 		if (log) {
-
 			logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
 		}
 		return lines;

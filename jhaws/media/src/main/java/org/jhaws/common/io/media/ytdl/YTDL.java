@@ -224,29 +224,27 @@ public class YTDL extends Tool {
 			command.add("-o");
 			command.add("%(title)s.f%(format_id)s.%(ext)s");
 			command.add(url);
-			dl(executable.getParentPath(), command, dl);
+			dl(tmpFolder, command, dl);
 		} catch (ExitValueException ex) {
 			try {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
 				command.add("--verbose");
+				command.add("--embed-thumbnail");
+				command.add("--add-metadata");
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add("utf-8");
-				command.add("-f");
-				command.add("bestvideo,bestaudio");
-				command.add("-o");
-				command.add("%(title)s.f%(format_id)s.%(ext)s");
 				command.add(url);
-				dl(executable.getParentPath(), command, dl);
-			} catch (ExitValueException ex2) {
+				dl(tmpFolder, command, dl);
+			} catch (Exception ex2) {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add("utf-8");
 				command.add(url);
-				dl(executable.getParentPath(), command, dl);
+				dl(tmpFolder, command, dl);
 			}
 		}
 		if (dl.isEmpty()) {
@@ -277,6 +275,6 @@ public class YTDL extends Tool {
 				super.accept(t);
 				logger.info("> " + t);
 			}
-		}, tmpFolder, command);
+		}, tmpFolder, command, true, null, true, Arrays.asList(executable.getParentPath()));
 	}
 }
