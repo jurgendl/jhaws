@@ -62,7 +62,7 @@ public class JpegTran extends Tool {
 	protected String getVersionImpl() {
 		List<String> command = Arrays.asList(command(executable), "-verbose");
 		Lines lines = new Lines();
-		call(null, lines, executable.getParentPath(), command, true, null, false);
+		call(null, lines, executable.getParentPath(), command, true, null, false, null);
 		return lines.lines().stream().filter(l -> l.contains("version")).map(l -> l.substring(l.indexOf("version")))
 				.findAny().get();
 	}
