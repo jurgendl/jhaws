@@ -38,6 +38,7 @@ import org.jhaws.common.web.wicket.WicketApplication;
 import org.jhaws.common.web.wicket.WicketRoot;
 import org.jhaws.common.web.wicket.blazy.BLazy;
 import org.jhaws.common.web.wicket.bootbox.BootBox;
+import org.jhaws.common.web.wicket.bootstrapselect.BootstrapSelect;
 import org.jhaws.common.web.wicket.clipboardjs.ClipboardJs;
 import org.jhaws.common.web.wicket.colorpicker.BootstrapColorPicker;
 import org.jhaws.common.web.wicket.components.ExternalLink;
@@ -156,7 +157,7 @@ public abstract class DefaultWebPage extends WebPage {
 		addCheckCookies(html);
 
 		// check if ads are not blocked
-		addCkechAddBlock(html);
+		addCheckAddBlock(html);
 
 		// add header response (javascript) down below on page
 		addJavasScriptOnBottom(html);
@@ -205,7 +206,7 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 	}
 
-	protected void addCkechAddBlock(MarkupContainer html) {
+	protected void addCheckAddBlock(MarkupContainer html) {
 		try {
 			html.add(new CheckAdsEnabled());
 		} catch (Exception ex) {
@@ -706,6 +707,9 @@ public abstract class DefaultWebPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(Waypoints.JS_INFINITE));
 		response.render(JavaScriptHeaderItem.forReference(Waypoints.JS_INVIEW));
 		response.render(JavaScriptHeaderItem.forReference(Waypoints.JS_STICKY));
+
+		response.render(CssHeaderItem.forReference(BootstrapSelect.CSS));
+		response.render(JavaScriptHeaderItem.forReference(BootstrapSelect.JS));
 
 		renderBaseCss(response);
 		renderBaseJs(response);
