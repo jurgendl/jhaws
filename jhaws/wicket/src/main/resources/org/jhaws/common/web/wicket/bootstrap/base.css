@@ -1080,5 +1080,20 @@ document.addEventListener('drop', event => event.preventDefault()); */
 .trans99{opacity:0.99;filter:alpha(opacity=99);}
 .trans100{opacity:1.0;filter:alpha(opacity=100);}
 
+/* -------------- */
+
+.bootstrap-select.form-control .dropdown-toggle {
+	background: transparent;
+	color: #6e707e;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #d1d3e2;
+	border-radius: var(--border-radius);
+	-webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+	transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+}
+
 /* <<<============= base.css ============= */
 
