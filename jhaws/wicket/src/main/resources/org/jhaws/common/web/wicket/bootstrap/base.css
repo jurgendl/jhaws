@@ -322,13 +322,40 @@ body.modal-open {
 
 /* http://css-tricks.com/centering-css-complete-guide */
 /* inline, inline-block, inline-table, inline-flex in block-level parent element */
-.center-children-hor {
+.center-children-horizontally {
 	text-align: center;
 }
+.center-children-vertically-flex {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+}
 /* block-level element */
-.center-me-hor {
-	margin: 0 auto;
-	width: auto; /* needs to set fixed width */
+.center-me-horizontally {
+	margin-left: auto;
+	margin-right: auto;
+	/* width: needs to set to fixed width */
+}
+/* */
+.center-me-vertically {
+	margin-top: auto;
+	margin-bottom: auto;
+	/* width: needs to set to fixed width */
+}
+/* */
+.center-children-vertically-ghost {
+	position: relative;
+}
+.center-children-vertically-ghost::before {
+	content: " ";
+	display: inline-block;
+	height: 100%;
+	width: 1%;
+	vertical-align: middle;
+}
+.center-children-vertically-ghost > * {
+	display: inline-block;
+	vertical-align: middle;
 }
 
 /* ======================== fit image in div enlarge/shrink (use center-me-hor) ======================== */
