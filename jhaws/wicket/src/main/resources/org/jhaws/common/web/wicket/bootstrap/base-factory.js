@@ -137,5 +137,9 @@ $('[data-toggle=confirmation]').confirmation({
 
 // ;$('.disabled').click(function(e){ e.preventDefault(); });
 
+
+$.fn.selectpicker.Constructor.DEFAULTS.sanitize = false;
+$.fn.selectpicker.Constructor.DEFAULTS.multipleSeparator = ' | ';
+
 console.log("... base-factory.js");
 /* <<<============= base-factory.js ============= */

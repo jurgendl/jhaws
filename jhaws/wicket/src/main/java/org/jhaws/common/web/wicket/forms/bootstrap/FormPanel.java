@@ -21,6 +21,7 @@ import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 import org.jhaws.common.web.wicket.converter.Converter;
 import org.jhaws.common.web.wicket.forms.common.AbstractFormElementSettings;
+import org.jhaws.common.web.wicket.forms.common.BootstrapMultiSelectSettings;
 import org.jhaws.common.web.wicket.forms.common.BootstrapSelectSettings;
 import org.jhaws.common.web.wicket.forms.common.CheckBoxSettings;
 import org.jhaws.common.web.wicket.forms.common.DatePickerSettings;
@@ -260,7 +261,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	public <I extends Serializable> BootstrapSelectPanel<I> addBootstrapSelect(//
-			List<I> propertyPath, //
+			I propertyPath, //
 			BootstrapSelectSettings componentSettings, //
 			IOptionRenderer<I> renderer, //
 			IOptionRenderer<I> contentRenderer, //
@@ -271,7 +272,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	}
 
 	public <I extends Serializable> BootstrapSelectPanel<I> addBootstrapSelect(//
-			List<I> propertyPath, //
+			I propertyPath, //
 			BootstrapSelectSettings componentSettings, //
 			IOptionRenderer<I> renderer, //
 			IOptionRenderer<I> contentRenderer, //
@@ -280,5 +281,28 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	) {
 		return this.addDefaultRow(new BootstrapSelectPanel<>(this.getFormModel(), propertyPath, this.getFormSettings(),
 				componentSettings, renderer, contentRenderer, choices, groupLabels));
+	}
+
+	public <I extends Serializable> BootstrapMultiSelectPanel<I> addBootstrapMultiSelect(//
+			List<I> propertyPath, //
+			BootstrapMultiSelectSettings componentSettings, //
+			IOptionRenderer<I> renderer, //
+			IOptionRenderer<I> contentRenderer, //
+			IModel<? extends List<? extends I>> choices //
+	) {
+		return this.addDefaultRow(new BootstrapMultiSelectPanel<>(this.getFormModel(), propertyPath,
+				this.getFormSettings(), componentSettings, renderer, contentRenderer, choices));
+	}
+
+	public <I extends Serializable> BootstrapMultiSelectPanel<I> addBootstrapMultiSelect(//
+			List<I> propertyPath, //
+			BootstrapMultiSelectSettings componentSettings, //
+			IOptionRenderer<I> renderer, //
+			IOptionRenderer<I> contentRenderer, //
+			IModel<? extends List<? extends I>>[] choices, //
+			IModel<String>[] groupLabels//
+	) {
+		return this.addDefaultRow(new BootstrapMultiSelectPanel<>(this.getFormModel(), propertyPath,
+				this.getFormSettings(), componentSettings, renderer, contentRenderer, choices, groupLabels));
 	}
 }
