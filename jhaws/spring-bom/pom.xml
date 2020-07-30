@@ -22,6 +22,14 @@
 		<version.spring-integration-zip>1.0.3.RELEASE</version.spring-integration-zip>
 		<version.spring-integration-kotlin-dsl>0.0.2.RELEASE</version.spring-integration-kotlin-dsl>
 		<version.spring-integration-hazelcast>2.0.0.RELEASE</version.spring-integration-hazelcast>
+		<version.spring-integration-httpinvoker>2.0.6.RELEASE</version.spring-integration-httpinvoker>
+		<version.spring-integration-adapter>1.0.4.RELEASE</version.spring-integration-adapter>
+		<version.spring-integration-tuple>1.0.0.RELEASE</version.spring-integration-tuple>
+		<version.spring-integration-flow>1.0.0.RELEASE</version.spring-integration-flow>
+		<version.spring-integration-smpp>1.0.0.RELEASE</version.spring-integration-smpp>
+		<version.spring-integration-splunk>1.1.0.RELEASE</version.spring-integration-splunk>
+		<version.spring-integration-java-dsl>1.2.3.RELEASE</version.spring-integration-java-dsl>
+		<version.spring-integration-social-twitter>1.0.0.RELEASE</version.spring-integration-social-twitter>
 		<version.spring-security>5.3.3.RELEASE</version.spring-security>
 		<version.spring-security-jwt>1.1.1.RELEASE</version.spring-security-jwt>
 		<version.spring-security-rsa>1.0.9.RELEASE</version.spring-security-rsa>
@@ -31,6 +39,9 @@
 		<version.spring-data>2.3.1.RELEASE</version.spring-data>
 		<version.spring-data-rest>3.3.1.RELEASE</version.spring-data-rest>
 		<version.spring-data-solr>4.2.1.RELEASE</version.spring-data-solr>
+		<version.spring-asm>3.1.4.RELEASE</version.spring-asm>
+		<version.spring-jca>2.0.8</version.spring-jca>
+		<version.spring-dao>2.0.8</version.spring-dao>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -290,7 +301,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jca</artifactId>
-				<version>2.0.8</version>
+				<version>${version.spring-jca}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -301,7 +312,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-dao</artifactId>
-				<version>2.0.8</version>
+				<version>${version.spring-dao}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -367,7 +378,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-asm</artifactId>
-				<version>3.1.4.RELEASE</version>
+				<version>${version.spring-asm}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1005,7 +1016,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-social-twitter</artifactId>
-				<version>1.0.0.RELEASE</version>
+				<version>${version.spring-integration-social-twitter}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1016,7 +1027,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-java-dsl</artifactId>
-				<version>1.2.3.RELEASE</version>
+				<version>${version.spring-integration-java-dsl}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1027,7 +1038,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-tuple</artifactId>
-				<version>1.0.0.RELEASE</version>
+				<version>${version.spring-integration-tuple}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1038,7 +1049,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-flow</artifactId>
-				<version>1.0.0.RELEASE</version>
+				<version>${version.spring-integration-flow}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1049,7 +1060,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-smpp</artifactId>
-				<version>1.0.0.RELEASE</version>
+				<version>${version.spring-integration-smpp}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1060,7 +1071,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-splunk</artifactId>
-				<version>1.1.0.RELEASE</version>
+				<version>${version.spring-integration-splunk}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1071,7 +1082,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-httpinvoker</artifactId>
-				<version>2.0.6.RELEASE</version>
+				<version>${version.spring-integration-httpinvoker}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1082,7 +1093,7 @@
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-adapter</artifactId>
-				<version>1.0.4.RELEASE</version>
+				<version>${version.spring-integration-adapter}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1222,5 +1233,6 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+		<!-- NOOP -->
 	</dependencies>
 </project>
