@@ -61,18 +61,18 @@
 		<version.commons.math>2.2</version.commons.math>
 		<version.commons.math3>3.6.1</version.commons.math3>
 		<version.commons.text>1.8</version.commons.text>
-		<version.httpcomponents.cache>4.5.10</version.httpcomponents.cache>
-		<version.httpcomponents.win>4.5.10</version.httpcomponents.win>
-		<version.httpcomponents.mime>4.5.10</version.httpcomponents.mime>
-		<version.httpcomponents.core>4.4.12</version.httpcomponents.core>
-		<version.httpcomponents.client>4.5.10</version.httpcomponents.client>
-		<version.httpcomponents.nio>4.4.12</version.httpcomponents.nio>
+		<version.httpcomponents.cache>4.5.12</version.httpcomponents.cache>
+		<version.httpcomponents.win>4.5.12</version.httpcomponents.win>
+		<version.httpcomponents.mime>4.5.12</version.httpcomponents.mime>
+		<version.httpcomponents.client>4.5.12</version.httpcomponents.client>
+		<version.httpcomponents.core>4.4.13</version.httpcomponents.core>
+		<version.httpcomponents.nio>4.4.13</version.httpcomponents.nio>
 		<version.httpcomponents.async>4.1.4</version.httpcomponents.async>
 		<version.httpclient5>5.0.1</version.httpclient5>
 		<version.httpcore5-ab>5.0-alpha3</version.httpcore5-ab>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
 		<version.javax.activation>1.1.1</version.javax.activation>
-		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api><!-- for wicket validation, see version used in Hibernate -->
+		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
 		<version.groovy>2.5.8</version.groovy>
 		<version.jackson>2.10.3</version.jackson>
 		<version.resteasy>3.12.1.Final</version.resteasy>
