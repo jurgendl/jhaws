@@ -1121,13 +1121,31 @@ document.addEventListener('drop', event => event.preventDefault()); */
 	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 	transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
 }
-.bootstrap-select .dropdown-item.active,
-.bootstrap-select .dropdown-item:active {
-	background-color: inherit;
+.bootstrap-select .dropdown-menu.show {
+	padding: 0;
 }
-.bootstrap-select .dropdown-item.active:hover,
-.bootstrap-select .dropdown-item.active:focus {
-	background-color: var(--light); /* same as bootstrap .dropdown-item:hover */
+.bootstrap-select .dropdown-menu {
+	background-color: white;
+}
+.bootstrap-select .dropdown-menu li ,
+.bootstrap-select .dropdown-menu li.selected ,
+.bootstrap-select .dropdown-menu li.active {
+	background-color: transparent;
+}
+.bootstrap-select .dropdown-menu li:hover ,
+.bootstrap-select .dropdown-menu li:focus ,
+.bootstrap-select .dropdown-menu li.selected:hover ,
+.bootstrap-select .dropdown-menu li.selected:focus ,
+.bootstrap-select .dropdown-menu li.active:hover ,
+.bootstrap-select .dropdown-menu li.active:focus {
+	background-color: var(--gray);
+}
+.bootstrap-select .dropdown-menu li .dropdown-item {
+	background-color: transparent;
+}
+.bootstrap-select .bs-actionsbox button.actions-btn {
+	background-color: var(--gray);
+	color: var(--light);
 }
 
 /* <<<============= base.css ============= */

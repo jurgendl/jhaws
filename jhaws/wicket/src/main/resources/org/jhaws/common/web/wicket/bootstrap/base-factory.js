@@ -139,7 +139,7 @@ $('[data-toggle=confirmation]').confirmation({
 
 
 $.fn.selectpicker.Constructor.DEFAULTS.sanitize = false;
-$.fn.selectpicker.Constructor.DEFAULTS.multipleSeparator = ' | ';
+$.fn.selectpicker.Constructor.DEFAULTS.multipleSeparator = ' ';
 
 console.log("... base-factory.js");
 /* <<<============= base-factory.js ============= */
