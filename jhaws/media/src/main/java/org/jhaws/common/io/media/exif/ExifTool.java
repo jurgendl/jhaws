@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -679,5 +680,24 @@ public class ExifTool extends Tool implements MediaCte {
 				return;
 			}
 		}
+	}
+
+	public void keywords(FilePath path, boolean overwrite, String... keywords) {
+		List<String> command = new ArrayList<>();
+		command.add(command(getExecutable()));
+		// command.add("-v3");
+		command.add("-preserve");
+		command.add("-m");
+		if (!overwrite) {
+			// command.add("-if");
+			// command.add("'not defined $IPTC:Keywords'");
+		}
+		command.add("-overwrite_original");
+		Arrays.stream(keywords).map(s -> "-IPTC:Keywords=" + s).forEach(command::add);
+		command.add(command(path));
+		List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command,
+				getExecutable().getParentPath(), null, null, new Lines()).lines().stream().collect(collectList());
+		lines.forEach(System.out::println);
+		return;
 	}
 }
