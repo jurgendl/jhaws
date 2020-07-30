@@ -74,7 +74,7 @@
 		<version.javax.activation>1.1.1</version.javax.activation>
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
 		<version.groovy>2.5.8</version.groovy>
-		<version.jackson>2.10.3</version.jackson>
+		<version.jackson>2.11.1</version.jackson>
 		<version.resteasy>3.12.1.Final</version.resteasy>
 		<version.junit.jupiter>5.6.1</version.junit.jupiter>
 		<version.javax.json>1.1.4</version.javax.json>
@@ -136,6 +136,11 @@
 	</modules>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>${version.javax.validation.api}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-to-slf4j</artifactId>
@@ -608,6 +613,16 @@
 				<groupId>com.fasterxml.jackson.module</groupId>
 				<artifactId>jackson-module-jaxb-annotations</artifactId>
 				<version>${version.jackson}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>jakarta.xml.bind</groupId>
+						<artifactId>jakarta.xml.bind-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>jakarta.activation</groupId>
+						<artifactId>jakarta.activation-api</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -1241,7 +1256,7 @@
 				<artifactId>wicket-core</artifactId>
 				<version>${version.wicket.core}</version>
 			</dependency>
-			<!-- <dependency>
+			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-bean-validation</artifactId>
 				<version>${version.wicket.core}</version>
@@ -1251,7 +1266,7 @@
 						<artifactId>validation-api</artifactId>
 					</exclusion>
 				</exclusions>
-			</dependency> -->
+			</dependency>
 			<dependency>
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-spring</artifactId>
