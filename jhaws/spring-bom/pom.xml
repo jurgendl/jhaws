@@ -11,24 +11,9 @@
 	<name>spring-bom</name>
 	<description>spring-bom</description>
 	<properties>
-		<targetJdk>1.11</targetJdk>
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
-		<maven.javadoc.skip>true</maven.javadoc.skip>
-		<maven.site.skip>false</maven.site.skip>
-		<maven.compiler.optimize>true</maven.compiler.optimize>
-		<maven.compiler.fork>true</maven.compiler.fork>
-		<maven.compiler.source>${targetJdk}</maven.compiler.source>
-		<maven.compiler.target>${targetJdk}</maven.compiler.target>
-		<maven.compiler.verbose>true</maven.compiler.verbose>
-		<maven.compiler.debug>true</maven.compiler.debug>
-		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
-		<maven.javadoc.skip>true</maven.javadoc.skip>
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<!-- versions -->
-		<version.spring>5.2.7.RELEASE</version.spring>
+		<version.spring>5.2.8.RELEASE</version.spring>
 		<version.spring-ws>3.0.9.RELEASE</version.spring-ws>
-		<version.spring-integration>5.3.1.RELEASE</version.spring-integration>
+		<version.spring-integration>5.3.2.RELEASE</version.spring-integration>
 		<version.spring-integration-twitter>5.0.14.RELEASE</version.spring-integration-twitter>
 		<version.spring-integration-aws>2.3.2.RELEASE</version.spring-integration-aws>
 		<version.spring-integration-kafka>3.3.0.RELEASE</version.spring-integration-kafka>
