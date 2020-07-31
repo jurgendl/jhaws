@@ -834,17 +834,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
-				<artifactId>resteasy-jettison-provider</artifactId>
-				<version>${version.resteasy}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.jboss.logging</groupId>
-						<artifactId>jboss-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-atom-provider</artifactId>
 				<version>${version.resteasy}</version>
 				<exclusions>
