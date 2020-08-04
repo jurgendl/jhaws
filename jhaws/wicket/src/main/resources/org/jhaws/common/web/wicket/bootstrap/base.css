@@ -1148,5 +1148,10 @@ document.addEventListener('drop', event => event.preventDefault()); */
 	color: var(--light);
 }
 
+/** flowplayer */
+.vjs-control-bar button.vjs-picture-in-picture-control.vjs-control.vjs-button {
+	display: none;
+}
+
 /* <<<============= base.css ============= */
 

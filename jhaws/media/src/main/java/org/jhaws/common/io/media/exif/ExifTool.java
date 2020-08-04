@@ -40,13 +40,18 @@ import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
-import org.jhaws.common.lang.CollectionUtils8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @see http://www.sno.phy.queensu.ca/~phil/exiftool/
  */
+//
+//https://exiftool.org/forum/index.php?topic=3916.0
+// .ExifTool_config
+//%Image::ExifTool::UserDefined::Options = (
+//	    LargeFileSupport => 1,
+//	);
 public class ExifTool extends Tool implements MediaCte {
 	public static final String EXE = "exiftool";
 
@@ -54,53 +59,55 @@ public class ExifTool extends Tool implements MediaCte {
 
 	private static final String UNKNOWN = "unknown";
 
-	private static final String MIME1 = "MIME Type";
+	private static final Pattern MIME1 = Pattern.compile("^MIME[ ]?Type$", Pattern.CASE_INSENSITIVE);
 
-	private static final String DURATION1 = "Media Duration";
+	private static final Pattern DURATION1 = Pattern.compile("^Duration$", Pattern.CASE_INSENSITIVE);
 
-	private static final String DURATION2 = "Duration";
+	private static final Pattern DURATION2 = Pattern.compile("^Media[ ]?Duration$", Pattern.CASE_INSENSITIVE);
 
-	private static final String DURATION3 = "Play Duration";
+	private static final Pattern DURATION3 = Pattern.compile("^Play[ ]?Duration$", Pattern.CASE_INSENSITIVE);
 
-	private static final String DURATION4 = "Send Duration";
+	private static final Pattern DURATION4 = Pattern.compile("^Send[ ]?Duration$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VIDEO1 = "Compressor ID";
+	private static final Pattern DURATION5 = Pattern.compile("^Track[ ]?Duration$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VIDEO2 = "Video Codec";
+	private static final Pattern VIDEO1 = Pattern.compile("^Compressor[ ]?ID$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VIDEO3 = "Video Encoding";
+	private static final Pattern VIDEO2 = Pattern.compile("^Video[ ]?Codec$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VIDEO4 = "Video Codec Name";
+	private static final Pattern VIDEO3 = Pattern.compile("^Video[ ]?Encoding$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VIDEO5 = "VideoCodecID";
+	private static final Pattern VIDEO4 = Pattern.compile("^Video[ ]?Codec[ ]?Name$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VIDEO6 = "CodecID";
+	private static final Pattern VIDEO5 = Pattern.compile("^Video[ ]?Codec[ ]?ID$", Pattern.CASE_INSENSITIVE);
 
-	private static final String AUDIO1 = "Audio Format";
+	private static final Pattern VIDEO6 = Pattern.compile("^Codec[ ]?ID$", Pattern.CASE_INSENSITIVE);
 
-	private static final String AUDIO2 = "Audio Codec";
+	private static final Pattern AUDIO1 = Pattern.compile("^Audio[ ]?Format$", Pattern.CASE_INSENSITIVE);
 
-	private static final String AUDIO3 = "Audio Encoding";
+	private static final Pattern AUDIO2 = Pattern.compile("^Audio[ ]?Codec$", Pattern.CASE_INSENSITIVE);
 
-	private static final String AUDIO4 = "Audio Codec Name";
+	private static final Pattern AUDIO3 = Pattern.compile("^Audio[ ]?Encoding$", Pattern.CASE_INSENSITIVE);
 
-	private static final String AUDIO5 = "AudioCodecID";
+	private static final Pattern AUDIO4 = Pattern.compile("^Audio[ ]?Codec[ ]?Name$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VFR1 = "Video Frame Rate";
+	private static final Pattern AUDIO5 = Pattern.compile("^Audio[ ]?Codec[ ]?ID$", Pattern.CASE_INSENSITIVE);
 
-	private static final String VFR2 = "Frame Rate";
+	private static final Pattern VFR1 = Pattern.compile("^Video[ ]?Frame[ ]?Rate$", Pattern.CASE_INSENSITIVE);
 
-	private static final String AVGBITRATE1 = "Avg Bitrate";
+	private static final Pattern VFR2 = Pattern.compile("^Frame[ ]?Rate$", Pattern.CASE_INSENSITIVE);
 
-	private static final String AVGBITRATE2 = "Avg Bytes Per Sec";
+	private static final Pattern AVGBITRATE1 = Pattern.compile("^Avg Bitrate$", Pattern.CASE_INSENSITIVE);
 
-	private static final String H = "Source Image Height";
+	private static final Pattern AVGBITRATE2 = Pattern.compile("^Avg Bytes Per Sec$", Pattern.CASE_INSENSITIVE);
 
-	private static final String W = "Source Image Width";
+	private static final Pattern H = Pattern.compile("^Source[ ]?Image[ ]?Height$", Pattern.CASE_INSENSITIVE);
 
-	private static final String IH = "Image Height";
+	private static final Pattern W = Pattern.compile("^Source[ ]?Image[ ]?Width$", Pattern.CASE_INSENSITIVE);
 
-	private static final String IW = "Image Width";
+	private static final Pattern IH = Pattern.compile("^Image[ ]?Height$", Pattern.CASE_INSENSITIVE);
+
+	private static final Pattern IW = Pattern.compile("^Image[ ]?Width$", Pattern.CASE_INSENSITIVE);
 
 	private static final Logger logger = LoggerFactory.getLogger("exif");
 
@@ -163,24 +170,32 @@ public class ExifTool extends Tool implements MediaCte {
 
 		void setOrientation(String orientation);
 
-		default <T> T value(String key) {
-			return value(key, null);
+		default String values(Pattern... keys) {
+			return values(null, keys);
 		}
 
-		@SuppressWarnings("unchecked")
-		default <T> T values(T defaultValue, String... keys) {
-			return (T) Arrays.stream(keys).map(this::value).filter(CollectionUtils8.isNotBlankAndNotNull()).findFirst()
+		default String values(String defaultValue, Pattern... keys) {
+			return getAll()//
+					.entrySet()//
+					.stream()//
+					.filter(e -> Arrays.stream(keys).anyMatch(k -> k.matcher(e.getKey()).find()))//
+					.map(Map.Entry::getValue)//
+					.findAny()//
 					.orElse(defaultValue);
 		}
 
-		@SuppressWarnings("unchecked")
-		default <T> T value(String key, T defaultValue) {
-			T value = (T) getAll().get(key);
-			if (value == null)
-				value = (T) getAll().get(key.replace(" ", ""));
-			if (value == null)
-				value = defaultValue;
-			return value;
+		default String value(Pattern key) {
+			return value(null, key);
+		}
+
+		default String value(String defaultValue, Pattern key) {
+			return getAll()//
+					.entrySet()//
+					.stream()//
+					.filter(e -> key.matcher(e.getKey()).find())//
+					.map(Map.Entry::getValue)//
+					.findAny()//
+					.orElse(defaultValue);
 		}
 	}
 
@@ -518,7 +533,7 @@ public class ExifTool extends Tool implements MediaCte {
 
 				exifinfo.setW(Integer.parseInt(exifinfo.values("0", IW, W)));
 				exifinfo.setH(Integer.parseInt(exifinfo.values("0", IH, H)));
-				exifinfo.setOrientation(exifinfo.value("Orientation"));
+				exifinfo.setOrientation(exifinfo.value(Pattern.compile("^Orientation$", Pattern.CASE_INSENSITIVE)));
 
 				exifinfo.setMimetype(exifinfo.value(MIME1));
 
@@ -534,7 +549,8 @@ public class ExifTool extends Tool implements MediaCte {
 								.replace("m2v", "mpeg"));//
 					}
 
-					exifinfo.setDuration(exifinfo.values(UNKNOWN, DURATION1, DURATION2, DURATION3, DURATION4));
+					exifinfo.setDuration(
+							exifinfo.values(UNKNOWN, DURATION1, DURATION2, DURATION3, DURATION4, DURATION5));
 					exifinfo.setVideo(exifinfo.values(UNKNOWN, VIDEO1, VIDEO3, VIDEO2, VIDEO4, VIDEO5, VIDEO6));
 					exifinfo.setAudio(exifinfo.values(UNKNOWN, AUDIO1, AUDIO3, AUDIO2, AUDIO4, AUDIO5));
 					String vfr = exifinfo.value(VFR1);
