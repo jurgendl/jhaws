@@ -652,6 +652,11 @@
 				</exclusions>
 			</dependency>
 			<dependency>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<artifactId>jackson-dataformat-smile</artifactId>
+				<version>${version.jackson}</version>
+			</dependency>
+			<dependency>
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr353</artifactId>
 				<version>${version.jackson}</version>
@@ -819,17 +824,6 @@
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-jackson2-provider</artifactId>
-				<version>${version.resteasy}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.jboss.logging</groupId>
-						<artifactId>jboss-logging</artifactId>
-					</exclusion>
-				</exclusions>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.resteasy</groupId>
-				<artifactId>resteasy-jettison-provider</artifactId>
 				<version>${version.resteasy}</version>
 				<exclusions>
 					<exclusion>

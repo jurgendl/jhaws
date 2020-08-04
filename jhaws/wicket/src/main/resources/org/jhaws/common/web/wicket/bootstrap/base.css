@@ -340,7 +340,7 @@ body.modal-open {
 .center-me-vertically {
 	margin-top: auto;
 	margin-bottom: auto;
-	/* width: needs to set to fixed width */
+	/* height: needs to set to fixed height */
 }
 /* */
 .center-children-vertically-ghost {
