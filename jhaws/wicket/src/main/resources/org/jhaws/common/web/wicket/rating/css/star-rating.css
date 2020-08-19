@@ -55,7 +55,7 @@
 
 .rating-container .star {
     display: inline-block;
-    margin: 0 0;
+    margin: 0 -1px;
     text-align: center;
 }
 
