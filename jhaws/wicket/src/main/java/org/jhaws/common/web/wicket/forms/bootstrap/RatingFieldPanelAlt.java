@@ -52,7 +52,7 @@ public class RatingFieldPanelAlt extends DefaultFormRowPanel<Integer, NumberText
 		response.render(CssHeaderItem.forReference(Rating.CSS));
 		response.render(
 				OnDomReadyHeaderItem.forScript(";$('input.rating[type=number]').each(function(){$(this).rating({"//
-						+ ",'showCaption':true"//
+						+ "'showCaption':true"//
 						+ ",'size':'xs'"//
 						+ ",min:0"//
 						+ ",max:10"//
