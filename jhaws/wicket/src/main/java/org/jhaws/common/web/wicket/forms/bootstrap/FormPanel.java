@@ -180,9 +180,9 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 				new RatingFieldPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
-	public RatingFieldPanel2 addRatingField2(Integer propertyPath, RatingFieldSettings componentSettings) {
+	public RatingFieldPanelAlt addRatingFieldAlt(Integer propertyPath, RatingFieldSettings componentSettings) {
 		return this.addDefaultRow(
-				new RatingFieldPanel2(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
+				new RatingFieldPanelAlt(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
 	public DatePickerPanel<Date> addDatePicker(Date propertyPath, DatePickerSettings componentSettings) {
