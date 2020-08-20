@@ -348,8 +348,6 @@ public abstract class DefaultWebPage extends WebPage {
 				.add(new NavBarLink("overview", "", org.jhaws.common.web.wicket.demo.TestPage.class, null));
 		demos.getChildLinks().add(new NavBarLink("vue", "", org.jhaws.common.web.wicket.demo.VueTestPage.class, null));
 		demos.getChildLinks()
-				.add(new NavBarLink("pagination", "", org.jhaws.common.web.wicket.demo.PaginationTestPage.class, null));
-		demos.getChildLinks()
 				.add(new NavBarLink("messages", "", org.jhaws.common.web.wicket.demo.TestMessagesPage.class, null));
 		demos.getChildLinks()
 				.add(new NavBarLink("upload", "", org.jhaws.common.web.wicket.demo.UploadTestPage.class, null));
