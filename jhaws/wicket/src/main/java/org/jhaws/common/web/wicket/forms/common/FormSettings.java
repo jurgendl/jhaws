@@ -61,6 +61,8 @@ public class FormSettings implements Serializable {
 
 	protected boolean spinner;
 
+	protected boolean tooltipToggle = false;
+
 	public FormSettings() {
 		super();
 	}
@@ -322,6 +324,15 @@ public class FormSettings implements Serializable {
 
 	public FormSettings setSpinner(boolean spinner) {
 		this.spinner = spinner;
+		return this;
+	}
+
+	public boolean isTooltipToggle() {
+		return this.tooltipToggle;
+	}
+
+	public FormSettings setTooltipToggle(boolean tooltipToggle) {
+		this.tooltipToggle = tooltipToggle;
 		return this;
 	}
 }
