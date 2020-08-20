@@ -8,12 +8,13 @@ import org.apache.wicket.ajax.WicketAjaxDebugJQueryResourceReference;
 import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.ajax.WicketEventJQueryResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.settings.JavaScriptLibrarySettings;
 import org.jhaws.common.web.wicket.jquery.JQuery;
 
 /**
  * combination of resource references with public getters and setters
  */
-public class WicketResourceReferences extends org.apache.wicket.settings.def.JavaScriptLibrarySettings {
+public class WicketResourceReferences extends JavaScriptLibrarySettings {
 	/**
 	 * if possible load resources from CDN when they match any of the patterns
 	 * in this list
@@ -86,22 +87,26 @@ public class WicketResourceReferences extends org.apache.wicket.settings.def.Jav
 	}
 
 	@Override
-	public void setJQueryReference(ResourceReference jQueryReference) {
+	public JavaScriptLibrarySettings setJQueryReference(ResourceReference jQueryReference) {
 		this.jQueryReference = jQueryReference;
+		return this;
 	}
 
 	@Override
-	public void setWicketEventReference(ResourceReference wicketEventReference) {
+	public JavaScriptLibrarySettings setWicketEventReference(ResourceReference wicketEventReference) {
 		this.wicketEventReference = wicketEventReference;
+		return this;
 	}
 
 	@Override
-	public void setWicketAjaxReference(ResourceReference wicketAjaxReference) {
+	public JavaScriptLibrarySettings setWicketAjaxReference(ResourceReference wicketAjaxReference) {
 		this.wicketAjaxReference = wicketAjaxReference;
+		return this;
 	}
 
 	@Override
-	public void setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference) {
+	public JavaScriptLibrarySettings setWicketAjaxDebugReference(ResourceReference wicketAjaxDebugReference) {
 		this.wicketAjaxDebugReference = wicketAjaxDebugReference;
+		return this;
 	}
 }

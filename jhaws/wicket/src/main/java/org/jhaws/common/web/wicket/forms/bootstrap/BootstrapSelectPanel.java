@@ -145,7 +145,7 @@ public class BootstrapSelectPanel<T extends Serializable>
 			IModel<? extends List<? extends T>> choicesModel) {
 		SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
 			@Override
-			protected SelectOption<T> newOption(final String text, final IModel<? extends T> optModel) {
+			protected SelectOption<T> newOption(final String text, final IModel<T> optModel) {
 				final String textF = StringUtils.isBlank(text) ? "..." : text;
 				String data = null;
 				if (contentRenderer != null) {
@@ -158,8 +158,8 @@ public class BootstrapSelectPanel<T extends Serializable>
 		return options;
 	}
 
-	protected SelectOption<T> createSelectOption(final String text, final IModel<? extends T> optModel,
-			final String textF, final String data) {
+	protected SelectOption<T> createSelectOption(final String text, final IModel<T> optModel, final String textF,
+			final String data) {
 		SelectOption<T> selectOption = new SelectOption<T>(OPTION_ID, optModel) {
 			@Override
 			public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {

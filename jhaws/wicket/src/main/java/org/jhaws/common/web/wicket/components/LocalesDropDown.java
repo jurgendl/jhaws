@@ -20,9 +20,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
+@SuppressWarnings("serial")
 public class LocalesDropDown extends DropDownChoice<Locale> {
-	private static final long serialVersionUID = 7959562572371996732L;
-
 	public static JavaScriptResourceReference FLAGS_CSS = new JavaScriptResourceReference(LocalesPanel.class,
 			"flags/flags.css");
 
@@ -46,8 +45,6 @@ public class LocalesDropDown extends DropDownChoice<Locale> {
 	public static IChoiceRenderer<Locale> forDefault(IChoiceRenderer<Locale> renderer) {
 		if (renderer == null) {
 			renderer = new IChoiceRenderer<Locale>() {
-				private static final long serialVersionUID = -8111346182386696927L;
-
 				@Override
 				public String getIdValue(Locale object, int index) {
 					return getId(object);
@@ -56,6 +53,11 @@ public class LocalesDropDown extends DropDownChoice<Locale> {
 				@Override
 				public Object getDisplayValue(Locale locale) {
 					return getLabel(locale);
+				}
+
+				@Override
+				public Locale getObject(String id, IModel<? extends List<? extends Locale>> choices) {
+					return getLocale(choices.getObject(), id);
 				}
 			};
 		}
@@ -72,8 +74,6 @@ public class LocalesDropDown extends DropDownChoice<Locale> {
 	public static IModel<Locale> forDefault(IModel<Locale> valueModel) {
 		if (valueModel == null) {
 			valueModel = new IModel<Locale>() {
-				private static final long serialVersionUID = -676290942608903019L;
-
 				@Override
 				public void detach() {
 					//
@@ -102,6 +102,10 @@ public class LocalesDropDown extends DropDownChoice<Locale> {
 
 	public static String getId(Locale object) {
 		return object.toString();
+	}
+
+	public static Locale getLocale(List<? extends Locale> object, String id) {
+		return object.stream().filter(it -> getId(it).equals(id)).findAny().orElse(null);
 	}
 
 	public static List<Locale> getAvailableLocales() {

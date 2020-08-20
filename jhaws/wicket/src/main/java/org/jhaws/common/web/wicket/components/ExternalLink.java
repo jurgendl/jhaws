@@ -130,18 +130,18 @@ public class ExternalLink extends org.apache.wicket.markup.html.link.ExternalLin
 	protected void construction() {
 		setOutputMarkupPlaceholderTag(true);
 		setRenderBodyOnly(false);
-		setBeforeDisabledLink("<span>");
-		setAfterDisabledLink("</span>");
+		// setBeforeDisabledLink("<span>");
+		// setAfterDisabledLink("</span>");
 	}
 
-	@Override
-	protected boolean isLinkEnabled() {
-		if (whenNull == WhenNull.DISABLE) {
-			return super.isLinkEnabled() && getDefaultModel() != null && getDefaultModelObject() != null
-					&& StringUtils.isNotBlank(getDefaultModelObjectAsString());
-		}
-		return super.isLinkEnabled();
-	}
+//	@Override
+//	protected boolean isLinkEnabled() {
+//		if (whenNull == WhenNull.DISABLE) {
+//			return super.isLinkEnabled() && getDefaultModel() != null && getDefaultModelObject() != null
+//					&& StringUtils.isNotBlank(getDefaultModelObjectAsString());
+//		}
+//		return super.isLinkEnabled();
+//	}
 
 	@Override
 	public boolean isVisible() {
