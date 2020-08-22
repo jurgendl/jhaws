@@ -74,7 +74,7 @@
 		<version.javax.activation>1.1.1</version.javax.activation>
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
 		<version.groovy>2.5.8</version.groovy>
-		<version.jackson>2.11.1</version.jackson>
+		<version.jackson>2.11.2</version.jackson>
 		<version.stax2-api>4.2</version.stax2-api>
 		<version.resteasy>3.12.1.Final</version.resteasy>
 		<version.junit.jupiter>5.6.1</version.junit.jupiter>
@@ -107,7 +107,7 @@
 		<version.guava>29.0-jre</version.guava>
 		<version.itextpdf5>5.5.13.1</version.itextpdf5>
 		<version.flyingsaucer-itext5>9.1.20</version.flyingsaucer-itext5>
-		<version.javassist>3.25.0-GA</version.javassist>
+		<version.javassist>3.27.0-GA</version.javassist>
 		<version.joda-time>2.10.6</version.joda-time>
 		<version.cglib>3.3.0</version.cglib>
 		<version.ehcache>2.10.6</version.ehcache>
@@ -1206,9 +1206,13 @@
 	        </dependency>
 			<dependency>
 				<groupId>net.java.dev.jna</groupId>
+				<artifactId>jna</artifactId>
+				<version>5.6.0</version>
+			</dependency>
+			<dependency>
+				<groupId>net.java.dev.jna</groupId>
 				<artifactId>jna-platform</artifactId>
-				<version>5.5.0</version>
-				<optional>true</optional>
+				<version>5.6.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.ostermiller</groupId>
