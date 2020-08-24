@@ -1153,5 +1153,11 @@ document.addEventListener('drop', event => event.preventDefault()); */
 	display: none;
 }
 
+/* -------------- */
+
+.rating-control {overflow: hidden; flex-wrap: nowrap; white-space: nowrap;}
+.rating-control input {border: none;}
+.rating-control input:focus {outline: none;}
+
 /* <<<============= base.css ============= */
 
