@@ -251,18 +251,8 @@ public class YTDL extends Tool {
 		if (dl.isEmpty()) {
 			throw new NullPointerException();
 		}
-		if (dl.size() == 1) {
-			FilePath from = tmpFolder.child(dl.get(0));
-			FilePath to = targetFolder.child(dl.get(0)).newFileIndex();
-			from.renameTo(to);
-			return Arrays.asList(to);
-		} else if (dl.size() == 2) {
-			FilePath f1 = tmpFolder.child(dl.get(0));
-			FilePath f2 = tmpFolder.child(dl.get(1));
-			return Arrays.asList(f1, f2);
-		} else {
-			return dl.stream().map(FilePath::new).collect(Collectors.toList());
-		}
+		FilePath _tmpFolder = tmpFolder;
+		return dl.stream().map(a -> _tmpFolder.child(a)).filter(f -> f.exists()).collect(Collectors.toList());
 	}
 
 	private void dl(FilePath tmpFolder, List<String> command, List<String> dl) {
