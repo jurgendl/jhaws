@@ -422,12 +422,14 @@ public class FilePath implements Path, Externalizable {
 			return this.invers ? -index : index;
 		}
 
-		public void invers(boolean invers) {
+		public Comparators invers(boolean invers) {
 			this.invers = invers;
+			return this;
 		}
 
-		public void invers() {
+		public Comparators invers() {
 			this.invers = true;
+			return this;
 		}
 
 		public Comparators and(Comparators comparator) {

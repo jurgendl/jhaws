@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -260,7 +261,7 @@ public class YTDL extends Tool {
 			FilePath f2 = tmpFolder.child(dl.get(1));
 			return Arrays.asList(f1, f2);
 		} else {
-			throw new NullPointerException();
+			return dl.stream().map(FilePath::new).collect(Collectors.toList());
 		}
 	}
 
