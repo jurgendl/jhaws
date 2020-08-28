@@ -1308,11 +1308,11 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public long adler32() {
-		return this.checksum(new Adler32());
+		return this.checksum(new Adler32(), null);
 	}
 
-	public long getAdler32() {
-		return adler32();
+	public long adler32(Integer limit) {
+		return this.checksum(new Adler32(), limit);
 	}
 
 	public Iterators.FileByteIterator bytes() {
@@ -1321,8 +1321,10 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath changeExtension(String extension) {
 		return this.getParent() == null
-				? new FilePath(this.getShortFileName() + getFileExtensionSeperator() + extension)
-				: new FilePath(this.getParent(), this.getShortFileName() + getFileExtensionSeperator() + extension);
+				? new FilePath(
+						this.getShortFileName() + (extension == null ? "" : (getFileExtensionSeperator() + extension)))
+				: new FilePath(this.getParent(),
+						this.getShortFileName() + (extension == null ? "" : (getFileExtensionSeperator() + extension)));
 	}
 
 	public FilePath appendExtension(String extension) {
@@ -1363,10 +1365,17 @@ public class FilePath implements Path, Externalizable {
 		return this;
 	}
 
-	public long checksum(Checksum checksum) {
-		try (Iterators.FileByteIterator bytes = this.bytes()) {
-			while (bytes.hasNext()) {
-				checksum.update(bytes.next());
+	public long checksum(Checksum checksum, Integer limit) {
+		byte[] buffer = new byte[1024 * 8];
+		if (limit == null) {
+			limit = Integer.MAX_VALUE;
+		}
+		try (BufferedInputStream in = newBufferedInputStream();) {
+			int read;
+			while ((read = in.read(buffer)) > 0 && limit > 0) {
+				int left = Math.min(read, limit);
+				checksum.update(buffer, 0, left);
+				limit -= left;
 			}
 			return checksum.getValue();
 		} catch (IOException ex) {
@@ -1459,12 +1468,12 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public long getCrc32() {
-		return crc32();
+	public long crc32() {
+		return this.checksum(new CRC32(), null);
 	}
 
-	public long crc32() {
-		return this.checksum(new CRC32());
+	public long crc32(Integer limit) {
+		return this.checksum(new CRC32(), limit);
 	}
 
 	public FilePath createFile(FileAttribute<?>... attrs) {
