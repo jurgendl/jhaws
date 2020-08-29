@@ -97,7 +97,7 @@
 		<version.miglayout>4.2</version.miglayout>
 		<version.poi>4.1.2</version.poi>
 		<version.ostermiller>1.07.00</version.ostermiller>
-		<version.pdfbox>2.0.18</version.pdfbox>
+		<version.pdfbox>2.0.19</version.pdfbox>
 		<version.wicket.core>7.17.0</version.wicket.core>
 		<version.wicket.stuff>7.17.0</version.wicket.stuff>
 		<version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
@@ -115,6 +115,7 @@
 		<version.gson>2.8.6</version.gson>
 		<version.inject>1</version.inject>
 		<version.ldapbp>1.0</version.ldapbp>
+		<version.asm>8.0.1</version.asm>
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -137,6 +138,41 @@
 	</modules>
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm</artifactId>
+				<version>${version.asm}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-analysis</artifactId>
+				<version>${version.asm}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-util</artifactId>
+				<version>${version.asm}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-commons</artifactId>
+				<version>${version.asm}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-xml</artifactId>
+				<version>${version.asm}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-tree</artifactId>
+				<version>${version.asm}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-all</artifactId>
+				<version>${version.asm}</version>
+			</dependency>
 			<dependency>
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>

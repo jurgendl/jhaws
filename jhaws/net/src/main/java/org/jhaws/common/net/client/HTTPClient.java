@@ -321,6 +321,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 		try (CloseableHttpResponse httpResponse = getHttpClient().execute(targetHost, req, getContext(uri))) {
 			response = buildResponse(req, httpResponse, out, requestListener);
 			if (throwException && 500 <= response.getStatusCode() && response.getStatusCode() <= 599) {
+				// System.out.println( new String( response.getContent() ) );
 				throw new HttpException(response, response.getStatusCode(), response.getStatusText());
 			}
 			EntityUtils.consumeQuietly(httpResponse.getEntity());
