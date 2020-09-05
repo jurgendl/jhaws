@@ -40,6 +40,10 @@ import org.jhaws.common.lang.StringValue;
 //By default, youtube-dl will resume
 //downloads if possible.
 //--write-info-json                Write video metadata to a .info.json file
+//
+//
+// cookies
+// https://github.com/ytdl-org/youtube-dl/issues/26152
 public class YTDL extends Tool {
 	public static final String EXE = "youtube-dl";
 
@@ -151,6 +155,11 @@ public class YTDL extends Tool {
 			throw new NullPointerException();
 		List<String> command = new ArrayList<>();
 		command.add(Tool.command(executable));
+		FilePath cookies = executable.getParentPath().child("cookies.txt");
+		if (cookies.exists()) {
+			command.add("--cookies");
+			command.add(Tool.command(cookies));
+		}
 		command.add("--get-filename");
 		command.add(url);
 		StringValue fn = new StringValue();
@@ -173,6 +182,11 @@ public class YTDL extends Tool {
 		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
+		FilePath cookies = executable.getParentPath().child("cookies.txt");
+		if (cookies.exists()) {
+			command.add("--cookies");
+			command.add(Tool.command(cookies));
+		}
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
 		command.add("--embed-thumbnail");
@@ -213,6 +227,11 @@ public class YTDL extends Tool {
 			}
 			List<String> command = new ArrayList<>();
 			command.add(command(executable));
+			FilePath cookies = executable.getParentPath().child("cookies.txt");
+			if (cookies.exists()) {
+				command.add("--cookies");
+				command.add(Tool.command(cookies));
+			}
 			command.add("--verbose");
 			command.add("--embed-thumbnail");
 			command.add("--add-metadata");
@@ -230,6 +249,11 @@ public class YTDL extends Tool {
 			try {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
+				FilePath cookies = executable.getParentPath().child("cookies.txt");
+				if (cookies.exists()) {
+					command.add("--cookies");
+					command.add(Tool.command(cookies));
+				}
 				command.add("--verbose");
 				command.add("--embed-thumbnail");
 				command.add("--add-metadata");
@@ -241,6 +265,11 @@ public class YTDL extends Tool {
 			} catch (Exception ex2) {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
+				FilePath cookies = executable.getParentPath().child("cookies.txt");
+				if (cookies.exists()) {
+					command.add("--cookies");
+					command.add(Tool.command(cookies));
+				}
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add("utf-8");
