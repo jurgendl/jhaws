@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MultiPrintRequestListener implements RequestListener {
+public class MultiRequestListener implements RequestListener {
 	protected List<RequestListener> listeners;
 
-	public MultiPrintRequestListener() {
+	public MultiRequestListener() {
 		this.listeners = new ArrayList<>();
 	}
 
-	public MultiPrintRequestListener(RequestListener... listeners) {
+	public MultiRequestListener(RequestListener... listeners) {
 		this.listeners = Arrays.asList(listeners);
 	}
 
