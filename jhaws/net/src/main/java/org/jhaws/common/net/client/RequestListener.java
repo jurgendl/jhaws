@@ -8,4 +8,6 @@ public interface RequestListener {
 	void start(URI uri, long contentLength);
 
 	void end();
+
+	void write(byte[] b, int off, int len);
 }

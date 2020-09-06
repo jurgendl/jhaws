@@ -17,4 +17,9 @@ public class RequestListenerAdapter implements RequestListener {
 	public void end() {
 		//
 	}
+
+	@Override
+	public void write(byte[] b, int off, int len) {
+		//
+	}
 }
