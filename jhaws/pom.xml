@@ -95,7 +95,6 @@
 		<version.log4j-to-slf4j>2.8.2</version.log4j-to-slf4j>
 		<version.glazedlists>1.9.1</version.glazedlists>
 		<version.miglayout>4.2</version.miglayout>
-		<version.poi>4.1.2</version.poi>
 		<version.ostermiller>1.07.00</version.ostermiller>
 		<version.pdfbox>2.0.19</version.pdfbox>
 		<version.wicket.core>7.17.0</version.wicket.core>
