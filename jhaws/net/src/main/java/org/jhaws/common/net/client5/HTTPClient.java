@@ -258,8 +258,9 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 							.build()//
 			);
 			connectionManager = poolingConnectionManager;
+			poolingConnectionManager.setValidateAfterInactivity(org.apache.hc.core5.util.TimeValue.ofMinutes(3));
 			poolingConnectionManager.setMaxTotal(20);
-			poolingConnectionManager.setDefaultMaxPerRoute(2);
+			poolingConnectionManager.setDefaultMaxPerRoute(3);
 		}
 		return connectionManager;
 	}
