@@ -1159,5 +1159,12 @@ document.addEventListener('drop', event => event.preventDefault()); */
 .rating-control input {border: none;}
 .rating-control input:focus {outline: none;}
 
+/* -------------- */
+
+/*:focus,
+:hover {
+  filter: brightness(120%) saturate(120%);
+}*/
+
 /* <<<============= base.css ============= */
 
