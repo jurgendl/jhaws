@@ -959,8 +959,21 @@ public interface CollectionUtils8 {
     }
 
     public static <T> Stream<T> stream(boolean parallel, Enumeration<T> enumeration) {
-        return enumeration == null ? Stream.empty()
-                : StreamSupport.stream(Spliterators.spliteratorUnknownSize(enumeration.asIterator(), 0), parallel);
+        return enumeration == null ? Stream.empty() : StreamSupport.stream(Spliterators.spliteratorUnknownSize(asIterator(enumeration), 0), parallel);
+    }
+
+    public static <E> Iterator<E> asIterator(Enumeration<E> enumeration) {
+        return new Iterator<E>() {
+            @Override
+            public boolean hasNext() {
+                return enumeration.hasMoreElements();
+            }
+
+            @Override
+            public E next() {
+                return enumeration.nextElement();
+            }
+        };
     }
 
     public static Stream<String> lines(Path path) {
