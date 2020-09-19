@@ -149,8 +149,10 @@ public class Processes {
 			int exitValue = process.waitFor();
 			// if (allConsumers != null)
 			// allConsumers.accept("exit value=" + exitValue);
-			if (exitValue != 0 && throwExitValue)
+			if (exitValue != 0 && throwExitValue) {
+				logger.debug("> {}", command.stream().collect(Collectors.joining(" ")));
 				throw new ExitValueException(exitValue);
+			}
 		} catch (InterruptedException e) {
 			//
 		} finally {

@@ -116,6 +116,13 @@ body.modal-open {
 }
 
 /* ======================== rotated ======================== */
+
+img {
+	display: block;
+}
+
+/* ========================  ======================== */
+
 .rotate45 {
 	-ms-transform: rotate(45deg);
 	-webkit-transform: rotate(45deg);

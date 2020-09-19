@@ -631,6 +631,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			cfg.fixes.fixAudioRate = false;
 			cfg.fixes.fixAudioStrict = false;
 			cfg.fixes.fixDiv2 = false;
+			cfg.fixes.fixFilm = false;
+			cfg.fixes.fixZerolatency = false;
 		}
 		if (cfgEdit != null) {
 			cfgEdit.accept(cfg);
@@ -677,6 +679,16 @@ public class FfmpegTool extends Tool implements MediaCte {
 			cfg.fixes.fixNotHighProfile = false;
 		}
 		//
+		if (lines.lines().stream().anyMatch(s -> s.contains("Unable to parse option value \"film\""))) {
+			needsFixing.set(true);
+			cfg.fixes.fixFilm = true;
+		}
+		//
+		if (lines.lines().stream().anyMatch(s -> s.contains("Unable to parse option value \"zerolatency\""))) {
+			needsFixing.set(true);
+			cfg.fixes.fixZerolatency = true;
+		}
+		//
 		// Cannot load nvcuda.dll
 		// if (lines.lines().stream().anyMatch(s -> s.contains("Cannot load
 		// nvcuda.dll"))) {
@@ -697,6 +709,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 		public boolean fixTooManyPackets;
 
+		public boolean fixZerolatency;
+
+		public boolean fixFilm;
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -710,6 +726,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 			builder.append(this.fixDiv2);
 			builder.append(", fixTooManyPackets=");
 			builder.append(this.fixTooManyPackets);
+			builder.append(", fixZerolatency=");
+			builder.append(this.fixZerolatency);
+			builder.append(", fixFilm=");
+			builder.append(this.fixFilm);
 			builder.append("]");
 			return builder.toString();
 		}
@@ -992,8 +1012,14 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("loop=" + (cfg.repeat - 1) + ":" + cfg.input.fps + ":0");
 		}
 		cfg.defaults.tune.forEach(tune -> {
-			command.add("-tune");
-			command.add(tune);
+			if ("film".equals(tune) && cfg.fixes.fixFilm) {
+				//
+			} else if ("zerolatency".equals(tune) && cfg.fixes.fixZerolatency) {
+				//
+			} else {
+				command.add("-tune");
+				command.add(tune);
+			}
 		});
 		if (cfg.vcopy) {
 			command.add("-vcodec");
