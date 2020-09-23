@@ -14,7 +14,7 @@
 		<version.spring>5.2.9.RELEASE</version.spring>
 		<version.spring-ws>3.0.10.RELEASE</version.spring-ws>
 		<version.spring-integration>5.3.2.RELEASE</version.spring-integration>
-		<version.spring-security>5.4.0</version.spring-security>
+		<version.spring-security>5.3.4.RELEASE</version.spring-security>
 		<version.spring-data>2.3.3.RELEASE</version.spring-data>
 		<version.spring-session>2.3.0.RELEASE</version.spring-session>
 		<!-- .............................................. -->
