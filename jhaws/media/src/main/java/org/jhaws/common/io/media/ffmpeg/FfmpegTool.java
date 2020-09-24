@@ -513,8 +513,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("1");
 			command.add("-strict");
 			command.add("-2");
-			command.add("-movflags");
-			command.add("+faststart");
+			// command.add("-movflags");
+			// command.add("+faststart");
 			command.add("-ss");
 			command.add(from);
 			command.add("-t");
@@ -738,7 +738,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 	public static class RemuxDefaultsCfg implements Serializable {
 		private static final long serialVersionUID = -5591850342277728402L;
 
-		final public List<String> tune = new ArrayList<>(Arrays.asList("film", "zerolatency"));
+		final public List<String> tune = new ArrayList<>(/*
+															 * Arrays.asList(
+															 * "film",
+															 * "zerolatency")
+															 */);
 
 		// HQ 18-23-28 LQ
 		public int cfrHQ = 18;
@@ -1126,8 +1130,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add(String.valueOf(cfg.defaults.qdiff));
 		}
 		if (pass != 1) {
-			command.add("-movflags");
-			command.add("+faststart");
+			// command.add("-movflags");
+			// command.add("+faststart");
 		}
 		if (cfg.input != null) {
 			if (pass == 1 || pass == 2) {
@@ -1276,8 +1280,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-map");
 			command.add("1:a:0");
 			command.add("-shortest");
-			command.add("-movflags");
-			command.add("+faststart");
+			// command.add("-movflags");
+			// command.add("+faststart");
 			command.add(command(output));
 			call(null, lines, output.getParentPath(), command);
 			return true;
@@ -1474,8 +1478,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("1");
 		command.add("-pix_fmt");
 		command.add("yuv420p");
-		command.add("-movflags");
-		command.add("+faststart");
+		// command.add("-movflags");
+		// command.add("+faststart");
 		command.add("-g");
 		command.add("30");
 		command.add("-bf");
