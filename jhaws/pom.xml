@@ -69,7 +69,6 @@
 		<version.httpcomponents.nio>4.4.13</version.httpcomponents.nio>
 		<version.httpcomponents.async>4.1.4</version.httpcomponents.async>
 		<version.httpclient5>5.0.1</version.httpclient5>
-		<version.httpcore5-ab>5.0-alpha3</version.httpcore5-ab>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
 		<version.javax.activation>1.1.1</version.javax.activation>
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
@@ -105,12 +104,13 @@
 		<version.jaxb-runtime>2.4.0-b180830.0438</version.jaxb-runtime>
 		<version.guava>29.0-jre</version.guava>
 		<version.itextpdf5>5.5.13.1</version.itextpdf5>
+		<version.itextpdf7>7.1.12</version.itextpdf7>
 		<version.flyingsaucer-itext5>9.1.20</version.flyingsaucer-itext5>
 		<version.javassist>3.27.0-GA</version.javassist>
 		<version.joda-time>2.10.6</version.joda-time>
 		<version.cglib>3.3.0</version.cglib>
 		<version.ehcache>2.10.6</version.ehcache>
-		<version.sqlite>3.28.0</version.sqlite>
+		<version.sqlite>3.32.3.2</version.sqlite>
 		<version.gson>2.8.6</version.gson>
 		<version.inject>1</version.inject>
 		<version.ldapbp>1.0</version.ldapbp>
@@ -470,14 +470,15 @@
 				<version>${version.itextpdf5}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>itext7-core</artifactId>
+				<version>${version.itextpdf7}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
 				<groupId>javax.activation</groupId>
 				<artifactId>activation</artifactId>
 				<version>${version.javax.activation}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.ow2.asm</groupId>
-				<artifactId>asm</artifactId>
-				<version>7.1</version>
 			</dependency>
 			<dependency>
 				<groupId>joda-time</groupId>
