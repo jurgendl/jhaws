@@ -4,6 +4,7 @@ import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxCfg;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxDefaultsCfg;
 import org.jhaws.common.net.client.GetRequest;
+import org.jhaws.common.net.client.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -237,10 +238,16 @@ public class FToolTest {
 		FilePath target = FilePath.getTempDirectory().child("file_example_MP4_1920_18MG.mp4");
 		if (target.notExists()) {
 			GetRequest get = new GetRequest(
-					"https://file-examples.com/wp-content/uploads/2017/04/file_example_MP4_1920_18MG.mp4");
+					"https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4");
 			get.setOut(target.newOutputStream());
 			try (org.jhaws.common.net.client.HTTPClient hc = new org.jhaws.common.net.client.HTTPClient()) {
-				hc.get(get);
+				Response response = hc.get(get);
+				if (response.getStatusCode() != 200) {
+					throw new IllegalArgumentException();
+				}
+				if (!response.getContentType().startsWith("video/")) {
+					throw new IllegalArgumentException();
+				}
 			} catch (Exception ex) {
 				ex.printStackTrace(System.out);
 			}
