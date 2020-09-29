@@ -17,6 +17,36 @@ public class FToolTest {
 	}
 
 	@Test
+	public void test_getContainersDeMuxing() {
+		t.getContainersDeMuxing().entrySet().stream().forEach(System.out::println);
+	}
+
+	@Test
+	public void test_getContainersMuxing() {
+		t.getContainersMuxing().entrySet().stream().forEach(System.out::println);
+	}
+
+	@Test
+	public void test_getVideoEncoders() {
+		t.getVideoEncoders().entrySet().stream().forEach(System.out::println);
+	}
+
+	@Test
+	public void test_getAudioEncoders() {
+		t.getAudioEncoders().entrySet().stream().forEach(System.out::println);
+	}
+
+	@Test
+	public void test_getVideoDecoders() {
+		t.getVideoDecoders().entrySet().stream().forEach(System.out::println);
+	}
+
+	@Test
+	public void test_getAudioDecoders() {
+		t.getAudioDecoders().entrySet().stream().forEach(System.out::println);
+	}
+
+	@Test
 	public void testH265ToH264() {
 		try {
 			System.out.println(t.getHwAccel());

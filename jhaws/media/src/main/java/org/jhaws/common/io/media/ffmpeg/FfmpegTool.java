@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -39,6 +40,16 @@ import org.jhaws.common.lang.KeyValue;
 import org.jhaws.common.lang.Value;
 import org.jhaws.common.pool.Pooled;
 
+//always: ffmpeg -hide_banner -y
+//
+//https://write.corbpie.com/ffmpeg-list-all-codecs-encoders-decoders-and-formats/
+
+//-codecs
+//-encoders
+//-h encoder=h264_nvenc
+//-decoders
+//-h decoder=?
+//-formats
 /**
  * @see https://ffmpeg.org/
  * @see https://ffmpeg.zeranoe.com/builds/
@@ -63,6 +74,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	protected List<String> hwAccel;
 
 	protected List<KeyValue<ProcessInfo, Process>> actions = new ArrayList<>();
+
+	protected List<String> optimizations = new ArrayList<>(Arrays.asList("-movflags", "+faststart"));
 
 	public static class ProcessInfo {
 		public FilePath getInput() {
@@ -513,8 +526,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("1");
 			command.add("-strict");
 			command.add("-2");
-			// command.add("-movflags");
-			// command.add("+faststart");
+			optimizations.forEach(command::add);
 			command.add("-ss");
 			command.add(from);
 			command.add("-t");
@@ -1062,6 +1074,9 @@ public class FfmpegTool extends Tool implements MediaCte {
 				} else if (accel.contains("dxva2")) {
 					logger.debug("choosing HW accell h264_dxva2: " + accel);
 					command.add("h264_dxva2");
+//				} else if (accel.contains("vulkan")) {
+//					logger.debug("choosing HW accell h264_vulkan: " + accel);
+//					command.add("h264_vulkan");
 				} else {
 					command.add("libx264");
 				}
@@ -1130,8 +1145,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add(String.valueOf(cfg.defaults.qdiff));
 		}
 		if (pass != 1) {
-			// command.add("-movflags");
-			// command.add("+faststart");
+			optimizations.forEach(command::add);
 		}
 		if (cfg.input != null) {
 			if (pass == 1 || pass == 2) {
@@ -1280,8 +1294,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-map");
 			command.add("1:a:0");
 			command.add("-shortest");
-			// command.add("-movflags");
-			// command.add("+faststart");
+			optimizations.forEach(command::add);
 			command.add(command(output));
 			call(null, lines, output.getParentPath(), command);
 			return true;
@@ -1316,8 +1329,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		// }
 		// command.add("-i");
 		// command.add(images);
-		// command.add("-movflags");
-		// command.add("+faststart");
+		// optimizations.forEach(command::add);
 		// command.add("-c:v");
 		// command.add("libx264");
 		// command.add("-tune");
@@ -1478,8 +1490,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("1");
 		command.add("-pix_fmt");
 		command.add("yuv420p");
-		// command.add("-movflags");
-		// command.add("+faststart");
+		optimizations.forEach(command::add);
 		command.add("-g");
 		command.add("30");
 		command.add("-bf");
@@ -1758,5 +1769,167 @@ public class FfmpegTool extends Tool implements MediaCte {
 			System.out.println(command.stream().collect(Collectors.joining(" ")));
 			silentcall(null, new Lines(), input.getParentPath(), command);
 		}
+	}
+
+	public List<String> getOptimizations() {
+		return this.optimizations;
+	}
+
+	public void setOptimizations(List<String> optimizations) {
+		this.optimizations = optimizations;
+	}
+
+	public Map<String, String> getVideoEncoders() {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-y");
+		command.add("-encoders");
+		Lines lines = new Lines();
+		silentcall(null, lines, getFfmpeg().getParentPath(), command);
+		List<String> l = lines.lines();
+		int i = 0;
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("--")) {
+				break;
+			}
+		}
+		Map<String, String> encoders = new LinkedHashMap<>();
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("V")) {
+				encoders.put(l.get(i).trim().split(" ")[1], l.get(i).trim().substring(28));
+			}
+		}
+		return encoders;
+	}
+
+	public Map<String, String> getAudioEncoders() {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-y");
+		command.add("-encoders");
+		Lines lines = new Lines();
+		silentcall(null, lines, getFfmpeg().getParentPath(), command);
+		List<String> l = lines.lines();
+		int i = 0;
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("--")) {
+				break;
+			}
+		}
+		Map<String, String> encoders = new LinkedHashMap<>();
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("A")) {
+				encoders.put(l.get(i).trim().split(" ")[1], l.get(i).trim().substring(28));
+			}
+		}
+		return encoders;
+	}
+
+	public Map<String, String> getVideoDecoders() {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-y");
+		command.add("-decoders");
+		Lines lines = new Lines();
+		silentcall(null, lines, getFfmpeg().getParentPath(), command);
+		List<String> l = lines.lines();
+		int i = 0;
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("--")) {
+				break;
+			}
+		}
+		Map<String, String> decoders = new LinkedHashMap<>();
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("V")) {
+				decoders.put(l.get(i).trim().split(" ")[1], l.get(i).trim().substring(28));
+			}
+		}
+		return decoders;
+	}
+
+	public Map<String, String> getAudioDecoders() {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-y");
+		command.add("-decoders");
+		Lines lines = new Lines();
+		silentcall(null, lines, getFfmpeg().getParentPath(), command);
+		List<String> l = lines.lines();
+		int i = 0;
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("--")) {
+				break;
+			}
+		}
+		Map<String, String> decoders = new LinkedHashMap<>();
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("A")) {
+				decoders.put(l.get(i).trim().split(" ")[1], l.get(i).trim().substring(28));
+			}
+		}
+		return decoders;
+	}
+
+	public Map<String, String> getContainersDeMuxing() {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-y");
+		command.add("-formats");
+		Lines lines = new Lines();
+		silentcall(null, lines, getFfmpeg().getParentPath(), command);
+		List<String> l = lines.lines();
+		int i = 0;
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("--")) {
+				break;
+			}
+		}
+		Map<String, String> demuxing = new LinkedHashMap<>();
+		for (; i < l.size(); i++) {
+			String ll = l.get(i);
+			try {
+				if (ll.charAt(1) == 'D' && ll.charAt(19) == ' ') {
+					demuxing.put(ll.substring(4).split(" ")[0], ll.substring(20));
+				}
+			} catch (RuntimeException ex) {
+				//
+			}
+		}
+		return demuxing;
+	}
+
+	public Map<String, String> getContainersMuxing() {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-y");
+		command.add("-formats");
+		Lines lines = new Lines();
+		silentcall(null, lines, getFfmpeg().getParentPath(), command);
+		List<String> l = lines.lines();
+		int i = 0;
+		for (; i < l.size(); i++) {
+			if (l.get(i).trim().startsWith("--")) {
+				break;
+			}
+		}
+		Map<String, String> muxing = new LinkedHashMap<>();
+		for (; i < l.size(); i++) {
+			String ll = l.get(i);
+			try {
+				if (ll.charAt(2) == 'E' && ll.charAt(19) == ' ') {
+					muxing.put(ll.substring(4).split(" ")[0], ll.substring(20));
+				}
+			} catch (RuntimeException ex) {
+				//
+			}
+		}
+		return muxing;
 	}
 }
