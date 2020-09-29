@@ -482,7 +482,6 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 			req = builder.build();
 		} else if (post.getAttachments().size() > 0) {
 			MultipartEntityBuilder mb = MultipartEntityBuilder.create();
-			// STRICT, BROWSER_COMPATIBLE, RFC6532
 			mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 			post.getAttachments().entrySet()
 					.forEach(entry -> mb.addBinaryBody(entry.getKey(), entry.getValue().toFile()));
@@ -493,8 +492,16 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 			HttpPost.class.cast(req).setEntity(body);
 		} else if (post.getStream() != null) {
 			req = new HttpPost(post.getUri());
-			HttpEntity body = new InputStreamEntity(post.getStream().get());
-			HttpPost.class.cast(req).setEntity(body);
+			if (post.getFormValues() == null || post.getFormValues().isEmpty()) {
+				HttpEntity body = new InputStreamEntity(post.getStream().get());
+				HttpPost.class.cast(req).setEntity(body);
+			} else {
+				MultipartEntityBuilder mb = MultipartEntityBuilder.create();
+				mb.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+				mb.addBinaryBody(post.getName().toString(), post.getStream().get());
+				post.getFormValues().entrySet().forEach(
+						entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
+			}
 		} else if (post.isUrlEncodedFormEntity()) {
 			RequestBuilder builder = RequestBuilder.post().setUri(post.getUri());
 			EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
