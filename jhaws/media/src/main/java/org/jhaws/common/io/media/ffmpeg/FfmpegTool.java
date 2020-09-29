@@ -40,16 +40,16 @@ import org.jhaws.common.lang.KeyValue;
 import org.jhaws.common.lang.Value;
 import org.jhaws.common.pool.Pooled;
 
-//always: ffmpeg -hide_banner -y
+// always: ffmpeg -hide_banner -y
 //
-//https://write.corbpie.com/ffmpeg-list-all-codecs-encoders-decoders-and-formats/
+// https://write.corbpie.com/ffmpeg-list-all-codecs-encoders-decoders-and-formats/
 
-//-codecs
-//-encoders
-//-h encoder=h264_nvenc
-//-decoders
-//-h decoder=?
-//-formats
+// -codecs
+// -encoders
+// -h encoder=h264_nvenc
+// -decoders
+// -h decoder=?
+// -formats
 /**
  * @see https://ffmpeg.org/
  * @see https://ffmpeg.zeranoe.com/builds/
@@ -64,8 +64,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 	public static final String AUDIO = "audio";
 
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
-			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -339,8 +338,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	/**
 	 * @see https://www.peterbe.com/plog/fastest-way-to-take-screencaps-out-of-videos
 	 */
-	public boolean splash(FilePath video, FilePath splashFile, Duration duration, long frames, SplashPow pow,
-			Lines lines) {
+	public boolean splash(FilePath video, FilePath splashFile, Duration duration, long frames, SplashPow pow, Lines lines) {
 		Map<String, Object> context = new HashMap<>();
 		context.put("start", System.currentTimeMillis());
 		KeyValue<ProcessInfo, Process> act = act(context, video, "splash");
@@ -398,8 +396,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add("1");
 				command.add("-qscale:v");
 				command.add("15");// good=1-35=bad, preferred range 2-5
-				FilePath seperate = splashFile.appendExtension(String.valueOf(i))
-						.appendExtension(splashFile.getExtension());
+				FilePath seperate = splashFile.appendExtension(String.valueOf(i)).appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
 				silentcall(act, null, video.getParentPath(), command);
@@ -408,9 +405,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 				seperates.get(0).renameTo(splashFile);
 			} else {
 				BufferedImage bio = ImageTools.tile(
-						seperates.stream().filter(FilePath::exists).map(ImageTools::read)
-								.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()),
-						wh);
+						seperates.stream().filter(FilePath::exists).map(ImageTools::read).map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()), wh);
 				ImageTools.write(bio, splashFile);
 			}
 			seperates.stream().forEach(FilePath::delete);
@@ -505,8 +500,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			output = output.appendExtension(suffix);
 		}
 		if (StringUtils.countMatches(from, ":") == 2) {
-			output = output.appendExtension(
-					from.replaceFirst(":", "h").replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
+			output = output.appendExtension(from.replaceFirst(":", "h").replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
 		} else {
 			output = output.appendExtension(from.replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
 		}
@@ -556,8 +550,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	@Pooled
-	public RemuxCfg remux(Object context, RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener,
-			FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+	public RemuxCfg remux(Object context, RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+		if (input == null) {
+			throw new NullPointerException();
+		}
 		try {
 			output.checkNotExists();
 		} catch (FileAlreadyExistsException ex) {
@@ -568,8 +564,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 		Lines lines = new Lines();
 		try {
-			call(act(context, input, "remux"), lines, input != null ? input.getParentPath() : output.getParentPath(),
-					command, true, listener == null ? null : listener.apply(cfg));
+			call(act(context, input, "remux"), lines, input != null ? input.getParentPath() : output.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
 			exception = ex;
 		}
@@ -585,8 +580,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (needsFixing.is()) {
 			command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 			lines = new Lines();
-			call(act(context, input, "remux-fix"), lines, input.getParentPath(), command, true,
-					listener == null ? null : listener.apply(cfg));
+			call(act(context, input, "remux-fix"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -594,8 +588,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (cfg.defaults.twopass) {
 			command = command(2, cfg);
 			lines = new Lines();
-			call(act(context, input, "remux-two-pass"), lines, input.getParentPath(), command, true,
-					listener == null ? null : listener.apply(cfg));
+			call(act(context, input, "remux-two-pass"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 			input.getParentPath().child("ffmpeg2pass-0.log").delete();
 			input.getParentPath().child("ffmpeg2pass-0.log.mbtree").delete();
 			output.getParentPath().child("ffmpeg2pass-0.log").delete();
@@ -620,11 +613,9 @@ public class FfmpegTool extends Tool implements MediaCte {
 			cfg.input.hq = input.getFileSize() >= defaults.hqTreshold;
 			StreamType videostreaminfo = video(cfg.input.info);
 			StreamType audiostreaminfo = audio(cfg.input.info);
-			cfg.input.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.input.info.getFormat().getBitRate() / 1000)
-					: videostreaminfo.getBitRate() / 1000;
+			cfg.input.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.input.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
 			cfg.input.vt = videostreaminfo.getCodecName();
-			cfg.input.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
-					: audiostreaminfo.getBitRate() / 1000;
+			cfg.input.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
 			cfg.input.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
 			cfg.input.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
 			try {
@@ -634,8 +625,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 				//
 			}
 			cfg.input.vcopy = cfg.input.vt.contains(AVC) || cfg.input.vt.contains(H264);
-			cfg.input.acopy = cfg.input.at != null && (cfg.input.at.contains(MP3) || cfg.input.at.contains(AAC))
-					&& !cfg.input.at.contains(MONO);
+			cfg.input.acopy = cfg.input.at != null && (cfg.input.at.contains(MP3) || cfg.input.at.contains(AAC)) && !cfg.input.at.contains(MONO);
 		}
 		{
 			cfg.fixes.fixNotHighProfile = true;
@@ -680,8 +670,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			cfg.fixes.fixTooManyPackets = true;
 		}
 		//
-		if (lines.lines().stream()
-				.anyMatch(s -> s.contains("No device available for encoder (device type qsv for codec h264_qsv)"))) {
+		if (lines.lines().stream().anyMatch(s -> s.contains("No device available for encoder (device type qsv for codec h264_qsv)"))) {
 			hwAccel.remove("qsv");
 			needsFixing.set(true);
 		}
@@ -751,9 +740,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		private static final long serialVersionUID = -5591850342277728402L;
 
 		final public List<String> tune = new ArrayList<>(/*
-															 * Arrays.asList(
-															 * "film",
-															 * "zerolatency")
+															 * Arrays.asList( "film", "zerolatency")
 															 */);
 
 		// HQ 18-23-28 LQ
@@ -982,8 +969,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
 		if (cfg.vcopy == null)
 			cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
-		if (cfg.forceRemux && cfg.acopy && cfg.vcopy
-				&& cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension()))
+		if (cfg.forceRemux && cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension()))
 			cfg.vcopy = false;
 		if (cfg.hq == null)
 			cfg.hq = cfg.input != null ? cfg.input.hq : true;
@@ -1074,9 +1060,9 @@ public class FfmpegTool extends Tool implements MediaCte {
 				} else if (accel.contains("dxva2")) {
 					logger.debug("choosing HW accell h264_dxva2: " + accel);
 					command.add("h264_dxva2");
-//				} else if (accel.contains("vulkan")) {
-//					logger.debug("choosing HW accell h264_vulkan: " + accel);
-//					command.add("h264_vulkan");
+					// } else if (accel.contains("vulkan")) {
+					// logger.debug("choosing HW accell h264_vulkan: " + accel);
+					// command.add("h264_vulkan");
 				} else {
 					command.add("libx264");
 				}
@@ -1225,8 +1211,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 					+ cfg.input.wh[1] * (cfg.input.fps == null ? 24 : cfg.input.fps) * cfg.defaults.vidRateQ / 1000);
 			if (cfg.input.vr != -1) {
 				if (cfg.vidrate > cfg.input.vr) {
-					if (cfg.hq && cfg.input.vr < 2500 && !Boolean.TRUE.equals(cfg.hi10p)
-							&& !Boolean.TRUE.equals(cfg.hevc)) {
+					if (cfg.hq && cfg.input.vr < 2500 && !Boolean.TRUE.equals(cfg.hi10p) && !Boolean.TRUE.equals(cfg.hevc)) {
 						cfg.vidrate = (int) (cfg.input.vr * 1.25);
 					} else {
 						cfg.vidrate = cfg.input.vr;
@@ -1308,8 +1293,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		}
 	}
 
-	public void slideshow(Integer secondsPerFrame, Integer framesPerSecondIn, Integer framesPerSecondOut,
-			FilePath input, String images, FilePath output, Consumer<String> listener) {
+	public void slideshow(Integer secondsPerFrame, Integer framesPerSecondIn, Integer framesPerSecondOut, FilePath input, String images, FilePath output,
+			Consumer<String> listener) {
 		// In this example each image will have a duration of 5 seconds (the
 		// inverse of 1/5 frames per second). The video stream will have a frame
 		// rate of 30 fps by duplicating the
@@ -1376,20 +1361,15 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	public List<StreamType> videos(FfprobeType finfo) {
-		return finfo == null ? null
-				: finfo.getStreams().getStream().stream()
-						.filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+		return finfo == null ? null : finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	public List<StreamType> audios(FfprobeType finfo) {
-		return finfo == null ? null
-				: finfo.getStreams().getStream().stream()
-						.filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+		return finfo == null ? null : finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	public long frames(StreamType videostreaminfo) {
-		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0
-				: videostreaminfo.getNbFrames().longValue();
+		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0 : videostreaminfo.getNbFrames().longValue();
 	}
 
 	public void loop(FilePath input, int times, FilePath output, Consumer<String> listener) {
@@ -1598,8 +1578,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		call(null, lines, getFfmpeg().getParentPath(), command);
 		int maxw0 = maxw.intValue();
 		double scale = (double) maxw0 / w;
-		List<BufferedImage> list = outDir.list().stream().sorted()
-				.map(f -> ImageTools.getScaledInstance(ImageTools.read(f), scale)).collect(Collectors.toList());
+		List<BufferedImage> list = outDir.list().stream().sorted().map(f -> ImageTools.getScaledInstance(ImageTools.read(f), scale)).collect(Collectors.toList());
 		int cols = (int) Math.ceil(Math.sqrt(list.size()));
 		BufferedImage tile = ImageTools.tile(list, cols);
 		outDir.list().forEach(FilePath::delete);
@@ -1677,10 +1656,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-vf");
 		// https://stackoverflow.com/questions/3937387/rotating-videos-with-ffmpeg
 		// https://github.com/laurentperrinet/photoscripts/blob/master/rotate_video.py
-//		0 = 90 CounterCLockwise and Vertical Flip (default)
-//		1 = 90 Clockwise
-//		2 = 90 CounterClockwise
-//		3 = 90 Clockwise and Vertical Flip
+		// 0 = 90 CounterCLockwise and Vertical Flip (default)
+		// 1 = 90 Clockwise
+		// 2 = 90 CounterClockwise
+		// 3 = 90 Clockwise and Vertical Flip
 		if (degrees == -90 || degrees == 270) {
 			command.add("\"transpose=1\"");
 		} else if (degrees == 90 || degrees == -270) {
@@ -1763,8 +1742,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-q:v");
 			command.add("1");
 			command.add("-vf");
-			command.add("\"select=not(mod(n\\," + $NTH_FRAME + ")),scale=-1:" + $HEIGHT + ",tile=" + $COLS + "x" + $ROWS
-					+ "\"");
+			command.add("\"select=not(mod(n\\," + $NTH_FRAME + ")),scale=-1:" + $HEIGHT + ",tile=" + $COLS + "x" + $ROWS + "\"");
 			command.add(command(output));
 			System.out.println(command.stream().collect(Collectors.joining(" ")));
 			silentcall(null, new Lines(), input.getParentPath(), command);

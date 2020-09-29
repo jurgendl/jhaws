@@ -67,11 +67,9 @@ public class FToolTest {
 	@Test
 	public void testSmallFileToHq() {
 		try {
-			FilePath input = FilePath.getTempDirectory()
-					.child(System.currentTimeMillis() + ".file_example_MP4_480_1_5MG.mp4");
+			FilePath input = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".file_example_MP4_480_1_5MG.mp4");
 			input.write(FfmpegTool.class.getClassLoader().getResourceAsStream("file_example_MP4_480_1_5MG.mp4"));
-			FilePath output = FilePath.getTempDirectory()
-					.child(System.currentTimeMillis() + ".file_example_MP4_480_1_5MG.mp4.mp4");
+			FilePath output = FilePath.getTempDirectory().child(System.currentTimeMillis() + ".file_example_MP4_480_1_5MG.mp4.mp4");
 			RemuxCfg cfg = t.remux(null, null, x -> System.out::println, input, output, c -> {
 				c.vcopy = false;
 				c.hq = true;
@@ -83,139 +81,139 @@ public class FToolTest {
 		}
 	}
 
-//	@Test
-//	public void test2() {
-//		try {
-//			int repeat = 10;
-//			Integer fpsI = 30;
-//			int fpsO = 30;
-//			// runtime config VM arguments -Dsld=
-//			FilePath h = new FilePath(System.getProperty("sld"));
-//			FilePath sourcedir = h.child("sources");
-//			FilePath tmp = h.child("tmp");
-//			tmp.delete();
-//			tmp.createDirectory();
-//			List<FilePath> sources = sourcedir.list().stream().sorted().collect(Collectors.toList());
-//			int nr = sources.size();
-//			if (nr == 0)
-//				return;
-//			if (fpsI == null)
-//				fpsI = nr;
-//			int index = 0;
-//			int sindex = 0;
-//			for (int i = 0; i < nr * repeat; i++) {
-//				for (int j = 0; j < repeat; j++) {
-//					String ii = "";
-//					if (index < 1000) {
-//						ii = "0" + ii;
-//					}
-//					if (index < 100) {
-//						ii = "0" + ii;
-//					}
-//					if (index < 10) {
-//						ii = "0" + ii;
-//					}
-//					ii = ii + index;
-//					sources.get(sindex).copyTo(tmp.child("imgs_" + ii + ".png"));
-//				}
-//				index++;
-//				sindex++;
-//				if (sindex >= nr) {
-//					sindex = 0;
-//				}
-//			}
-//			t.slideshow(null, fpsI, fpsO, new FilePath(tmp.getAbsolutePath()), "imgs_%04d.png",
-//					h.child("output").createDirectory().child("test.mp4"), System.out::println);
-//		} catch (RuntimeException ex) {
-//			ex.printStackTrace(System.out);
-//			throw ex;
-//		}
-//	}
+	// @Test
+	// public void test2() {
+	// try {
+	// int repeat = 10;
+	// Integer fpsI = 30;
+	// int fpsO = 30;
+	// // runtime config VM arguments -Dsld=
+	// FilePath h = new FilePath(System.getProperty("sld"));
+	// FilePath sourcedir = h.child("sources");
+	// FilePath tmp = h.child("tmp");
+	// tmp.delete();
+	// tmp.createDirectory();
+	// List<FilePath> sources = sourcedir.list().stream().sorted().collect(Collectors.toList());
+	// int nr = sources.size();
+	// if (nr == 0)
+	// return;
+	// if (fpsI == null)
+	// fpsI = nr;
+	// int index = 0;
+	// int sindex = 0;
+	// for (int i = 0; i < nr * repeat; i++) {
+	// for (int j = 0; j < repeat; j++) {
+	// String ii = "";
+	// if (index < 1000) {
+	// ii = "0" + ii;
+	// }
+	// if (index < 100) {
+	// ii = "0" + ii;
+	// }
+	// if (index < 10) {
+	// ii = "0" + ii;
+	// }
+	// ii = ii + index;
+	// sources.get(sindex).copyTo(tmp.child("imgs_" + ii + ".png"));
+	// }
+	// index++;
+	// sindex++;
+	// if (sindex >= nr) {
+	// sindex = 0;
+	// }
+	// }
+	// t.slideshow(null, fpsI, fpsO, new FilePath(tmp.getAbsolutePath()), "imgs_%04d.png",
+	// h.child("output").createDirectory().child("test.mp4"), System.out::println);
+	// } catch (RuntimeException ex) {
+	// ex.printStackTrace(System.out);
+	// throw ex;
+	// }
+	// }
 
-//	@Test
-//	public void test3() {
-//		try {
-//			FilePath input = new FilePath(System.getProperty("test3"));
-//			FilePath outputa = input.appendExtension("a.mp4");
-//			outputa.delete();
-//			FilePath outputb = input.appendExtension("b.mp4");
-//			outputb.delete();
-//			RemuxDefaultsCfg def = new RemuxDefaultsCfg();
-//			RemuxCfg cfg = t.remux(null, def, x -> System.out::println, input, outputa, null);
-//			cfg.commands.forEach(System.out::println);
-//			def.twopass = true;
-//			cfg = t.remux(null, def, x -> System.out::println, input, outputb, null);
-//			cfg.commands.forEach(System.out::println);
-//			System.out.println();
-//			System.out.println(
-//					outputa.getAbsolutePath() + " > " + FilePath.getHumanReadableFileSize(input.getFileSize(), 2)
-//							+ " > " + FilePath.getHumanReadableFileSize(outputa.getFileSize(), 2));
-//			System.out.println(
-//					outputb.getAbsolutePath() + " > " + FilePath.getHumanReadableFileSize(input.getFileSize(), 2)
-//							+ " > " + FilePath.getHumanReadableFileSize(outputb.getFileSize(), 2));
-//		} catch (RuntimeException ex) {
-//			ex.printStackTrace(System.out);
-//			throw ex;
-//		}
-//	}
+	// @Test
+	// public void test3() {
+	// try {
+	// FilePath input = new FilePath(System.getProperty("test3"));
+	// FilePath outputa = input.appendExtension("a.mp4");
+	// outputa.delete();
+	// FilePath outputb = input.appendExtension("b.mp4");
+	// outputb.delete();
+	// RemuxDefaultsCfg def = new RemuxDefaultsCfg();
+	// RemuxCfg cfg = t.remux(null, def, x -> System.out::println, input, outputa, null);
+	// cfg.commands.forEach(System.out::println);
+	// def.twopass = true;
+	// cfg = t.remux(null, def, x -> System.out::println, input, outputb, null);
+	// cfg.commands.forEach(System.out::println);
+	// System.out.println();
+	// System.out.println(
+	// outputa.getAbsolutePath() + " > " + FilePath.getHumanReadableFileSize(input.getFileSize(), 2)
+	// + " > " + FilePath.getHumanReadableFileSize(outputa.getFileSize(), 2));
+	// System.out.println(
+	// outputb.getAbsolutePath() + " > " + FilePath.getHumanReadableFileSize(input.getFileSize(), 2)
+	// + " > " + FilePath.getHumanReadableFileSize(outputb.getFileSize(), 2));
+	// } catch (RuntimeException ex) {
+	// ex.printStackTrace(System.out);
+	// throw ex;
+	// }
+	// }
 
-//	@Test
-//	public void test4() {
-//		try {
-//			FilePath sourcedir = new FilePath("c:/tmp").child("loop").delete().createDirectory();
-//			{
-//				BufferedImage bi = new BufferedImage(1280, 720, BufferedImage.TYPE_INT_RGB);
-//				Graphics2D g = (Graphics2D) bi.getGraphics();
-//				g.setColor(Color.white);
-//				int x = 8;
-//				for (int i = 1; i <= 60; i++) {
-//					g.fillRect((i + x) * x, (i + x) * x, x, x);
-//					String other = (i < 10 ? "0" : "") + i + ".png";
-//					System.out.println(other);
-//					ImageIO.write(bi, "png", sourcedir.child(other).newBufferedOutputStream());
-//				}
-//			}
-//			FilePath tmp = sourcedir.child("tmp");
-//			FilePath single = tmp.child("test.mp4");
-//			{
-//				int repeat = 1;
-//				Integer fpsI = 30;
-//				int fpsO = 30;
-//				tmp.delete();
-//				tmp.createDirectory();
-//				List<FilePath> sources = sourcedir.list().stream().filter(FilePath::isFile).sorted()
-//						.collect(Collectors.toList());
-//				IntegerValue idx = new IntegerValue(1);
-//				for (int i = 0; i < repeat; i++) {
-//					sources.forEach(fp -> {
-//						int index = idx.get();
-//						String ii = "";
-//						if (index < 1000) {
-//							ii = "0" + ii;
-//						}
-//						if (index < 100) {
-//							ii = "0" + ii;
-//						}
-//						if (index < 10) {
-//							ii = "0" + ii;
-//						}
-//						ii = ii + index;
-//						FilePath cccc = tmp.child("imgs_" + ii + ".png");
-//						System.out.println(fp);
-//						System.out.println(cccc);
-//						fp.copyTo(cccc);
-//						idx.add();
-//					});
-//				}
-//				t.slideshow(null, fpsI, fpsO, tmp, "imgs_%04d.png", single, System.out::println);
-//			}
-//			{
-//				t.loop(single, 10, single.appendExtension(".multiple.mp4"), System.out::println);
-//			}
-//		} catch (Exception ex) {
-//			ex.printStackTrace(System.out);
-//		}
-//	}
+	// @Test
+	// public void test4() {
+	// try {
+	// FilePath sourcedir = new FilePath("c:/tmp").child("loop").delete().createDirectory();
+	// {
+	// BufferedImage bi = new BufferedImage(1280, 720, BufferedImage.TYPE_INT_RGB);
+	// Graphics2D g = (Graphics2D) bi.getGraphics();
+	// g.setColor(Color.white);
+	// int x = 8;
+	// for (int i = 1; i <= 60; i++) {
+	// g.fillRect((i + x) * x, (i + x) * x, x, x);
+	// String other = (i < 10 ? "0" : "") + i + ".png";
+	// System.out.println(other);
+	// ImageIO.write(bi, "png", sourcedir.child(other).newBufferedOutputStream());
+	// }
+	// }
+	// FilePath tmp = sourcedir.child("tmp");
+	// FilePath single = tmp.child("test.mp4");
+	// {
+	// int repeat = 1;
+	// Integer fpsI = 30;
+	// int fpsO = 30;
+	// tmp.delete();
+	// tmp.createDirectory();
+	// List<FilePath> sources = sourcedir.list().stream().filter(FilePath::isFile).sorted()
+	// .collect(Collectors.toList());
+	// IntegerValue idx = new IntegerValue(1);
+	// for (int i = 0; i < repeat; i++) {
+	// sources.forEach(fp -> {
+	// int index = idx.get();
+	// String ii = "";
+	// if (index < 1000) {
+	// ii = "0" + ii;
+	// }
+	// if (index < 100) {
+	// ii = "0" + ii;
+	// }
+	// if (index < 10) {
+	// ii = "0" + ii;
+	// }
+	// ii = ii + index;
+	// FilePath cccc = tmp.child("imgs_" + ii + ".png");
+	// System.out.println(fp);
+	// System.out.println(cccc);
+	// fp.copyTo(cccc);
+	// idx.add();
+	// });
+	// }
+	// t.slideshow(null, fpsI, fpsO, tmp, "imgs_%04d.png", single, System.out::println);
+	// }
+	// {
+	// t.loop(single, 10, single.appendExtension(".multiple.mp4"), System.out::println);
+	// }
+	// } catch (Exception ex) {
+	// ex.printStackTrace(System.out);
+	// }
+	// }
 
 	@Test
 	public void testHwAccel() {
@@ -267,8 +265,7 @@ public class FToolTest {
 	public void testLargeFileToHq() {
 		FilePath target = FilePath.getTempDirectory().child("file_example_MP4_1920_18MG.mp4");
 		if (target.notExists()) {
-			GetRequest get = new GetRequest(
-					"https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4");
+			GetRequest get = new GetRequest("https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_1920_18MG.mp4");
 			get.setOut(target.newOutputStream());
 			try (org.jhaws.common.net.client.HTTPClient hc = new org.jhaws.common.net.client.HTTPClient()) {
 				Response response = hc.get(get);
