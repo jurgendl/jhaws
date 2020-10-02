@@ -26,20 +26,24 @@ import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.lang.StringValue;
 
+// youtube-dl.exe --list-extractors
+//
+// youtube-dl.exe --extractor-descriptions
+//
 // https://github.com/ytdl-org/youtube-dl
 // https://ytdl-org.github.io/youtube-dl/supportedsites.html
 // --write-info-json
 //
-//https://askubuntu.com/questions/673442/downloading-youtube-playlist-with-youtube-dl-skipping-existing-files
+// https://askubuntu.com/questions/673442/downloading-youtube-playlist-with-youtube-dl-skipping-existing-files
 //
-//--restrict-filenames             Restrict filenames to only ASCII
-//characters, and avoid "&" and spaces in
-//filenames
-//-w, --no-overwrites              Do not overwrite files
-//-c, --continue                   Force resume of partially downloaded files.
-//By default, youtube-dl will resume
-//downloads if possible.
-//--write-info-json                Write video metadata to a .info.json file
+// --restrict-filenames Restrict filenames to only ASCII
+// characters, and avoid "&" and spaces in
+// filenames
+// -w, --no-overwrites Do not overwrite files
+// -c, --continue Force resume of partially downloaded files.
+// By default, youtube-dl will resume
+// downloads if possible.
+// --write-info-json Write video metadata to a .info.json file
 //
 //
 // cookies
@@ -130,8 +134,7 @@ public class YTDL extends Tool {
 			if (Utils.osgroup == OSGroup.Windows) {
 				tmp = tmp + ".exe";
 			}
-			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream();
-					OutputStream out = executable.newBufferedOutputStream()) {
+			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream(); OutputStream out = executable.newBufferedOutputStream()) {
 				IOUtils.copy(in, out);
 			} catch (IOException ex) {
 				logger.error("{}", ex);
