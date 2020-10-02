@@ -86,7 +86,7 @@
 		<version.poi>4.1.2</version.poi>
 		<version.tika>1.24.1</version.tika>
 		<version.opencsv>5.1</version.opencsv>
-		<version.jai>1.3.0</version.jai>
+		<version.jai>1.4.0</version.jai>
 		<version.slf4j>1.7.30</version.slf4j>
 		<version.logback>1.2.3</version.logback>
 		<version.janino>2.7.8</version.janino>
