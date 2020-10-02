@@ -53,8 +53,6 @@ public class YTDL extends Tool {
 
 	public static final String URL = "https://yt-dl.org/downloads/latest/";
 
-	protected FilePath executable;
-
 	public YTDL() {
 		super(System.getenv("YOUTUBEDL"));
 	}
@@ -210,9 +208,8 @@ public class YTDL extends Tool {
 			FilePath to = targetFolder.child(dl.get(0)).newFileIndex();
 			from.renameTo(to);
 			return to;
-		} else {
-			throw new UnsupportedOperationException();
 		}
+		throw new UnsupportedOperationException();
 	}
 
 	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder) {
