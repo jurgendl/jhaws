@@ -2539,6 +2539,10 @@ public class FilePath implements Path, Externalizable {
 	 */
 	@Override
 	public Path relativize(Path other) {
+		return relativizePath(other);
+	}
+
+	public FilePath relativizePath(Path other) {
 		return new FilePath(this.getPath().relativize(getPath(other)));
 	}
 
@@ -3529,6 +3533,10 @@ public class FilePath implements Path, Externalizable {
 		return parent.isParentOf(this);
 	}
 
+	public byte[] hash(String type) {
+		return digest(type);
+	}
+
 	public byte[] digest(String type) {
 		MessageDigest md;
 		try {
@@ -3547,6 +3555,18 @@ public class FilePath implements Path, Externalizable {
 
 	public byte[] sha256() {
 		return digest("SHA-256");
+	}
+
+	public byte[] sha512() {
+		return digest("SHA-512");
+	}
+
+	public byte[] sha3512() {
+		return digest("SHA3-512");
+	}
+
+	public byte[] sha3256() {
+		return digest("SHA3-256");
 	}
 
 	public String base64() {
