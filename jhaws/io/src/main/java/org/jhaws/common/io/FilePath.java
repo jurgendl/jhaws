@@ -1307,14 +1307,6 @@ public class FilePath implements Path, Externalizable {
 				: new FilePath(this.getParent(), this.getFullFileName() + getFileExtensionSeperator() + extension);
 	}
 
-	public long adler32() {
-		return this.checksum(new Adler32(), null);
-	}
-
-	public long adler32(Integer limit) {
-		return this.checksum(new Adler32(), limit);
-	}
-
 	public Iterators.FileByteIterator bytes() {
 		return new Iterators.FileByteIterator(this);
 	}
@@ -1363,24 +1355,6 @@ public class FilePath implements Path, Externalizable {
 			throw new FileAlreadyExistsException(this.toString());
 		}
 		return this;
-	}
-
-	public long checksum(Checksum checksum, Integer limit) {
-		byte[] buffer = new byte[1024 * 8];
-		if (limit == null) {
-			limit = Integer.MAX_VALUE;
-		}
-		try (BufferedInputStream in = newBufferedInputStream();) {
-			int read;
-			while ((read = in.read(buffer)) > 0 && limit > 0) {
-				int left = Math.min(read, limit);
-				checksum.update(buffer, 0, left);
-				limit -= left;
-			}
-			return checksum.getValue();
-		} catch (IOException ex) {
-			throw new UncheckedIOException(ex);
-		}
 	}
 
 	public FilePath child(Path other) {
@@ -1466,14 +1440,6 @@ public class FilePath implements Path, Externalizable {
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
-	}
-
-	public long crc32() {
-		return this.checksum(new CRC32(), null);
-	}
-
-	public long crc32(Integer limit) {
-		return this.checksum(new CRC32(), limit);
 	}
 
 	public FilePath createFile(FileAttribute<?>... attrs) {
@@ -3534,39 +3500,114 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public byte[] hash(String type) {
-		return digest(type);
+		return digest(type, null);
+	}
+
+	public byte[] hash(String type, Integer limit) {
+		return digest(type, limit);
 	}
 
 	public byte[] digest(String type) {
+		return digest(type, null);
+	}
+
+	public byte[] digest(String type, Integer limit) {
 		MessageDigest md;
 		try {
 			md = MessageDigest.getInstance(type);
 		} catch (NoSuchAlgorithmException ex) {
 			throw new RuntimeException(ex);
 		}
-		md.update(readAllBytes());
-		byte[] digest = md.digest();
-		return digest;
+
+		byte[] buffer = new byte[1024 * 8];
+		if (limit == null) {
+			limit = Integer.MAX_VALUE;
+		}
+		try (BufferedInputStream in = newBufferedInputStream();) {
+			int read;
+			while ((read = in.read(buffer)) > 0 && limit > 0) {
+				int left = Math.min(read, limit);
+				md.update(buffer, 0, left);
+				limit -= left;
+			}
+			return md.digest();
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public long checksum(Checksum checksum, Integer limit) {
+		byte[] buffer = new byte[1024 * 8];
+		if (limit == null) {
+			limit = Integer.MAX_VALUE;
+		}
+		try (BufferedInputStream in = newBufferedInputStream();) {
+			int read;
+			while ((read = in.read(buffer)) > 0 && limit > 0) {
+				int left = Math.min(read, limit);
+				checksum.update(buffer, 0, left);
+				limit -= left;
+			}
+			return checksum.getValue();
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
+
+	public long adler32() {
+		return this.checksum(new Adler32(), null);
+	}
+
+	public long adler32(Integer limit) {
+		return this.checksum(new Adler32(), limit);
+	}
+
+	public long crc32() {
+		return this.checksum(new CRC32(), null);
+	}
+
+	public long crc32(Integer limit) {
+		return this.checksum(new CRC32(), limit);
 	}
 
 	public byte[] md5() {
-		return digest("MD5");
+		return md5(null);
 	}
 
 	public byte[] sha256() {
-		return digest("SHA-256");
+		return sha256(null);
 	}
 
 	public byte[] sha512() {
-		return digest("SHA-512");
+		return sha512(null);
 	}
 
 	public byte[] sha3512() {
-		return digest("SHA3-512");
+		return sha3512(null);
 	}
 
 	public byte[] sha3256() {
-		return digest("SHA3-256");
+		return sha3256(null);
+	}
+
+	public byte[] md5(Integer limit) {
+		return digest("MD5", limit);
+	}
+
+	public byte[] sha256(Integer limit) {
+		return digest("SHA-256", limit);
+	}
+
+	public byte[] sha512(Integer limit) {
+		return digest("SHA-512", limit);
+	}
+
+	public byte[] sha3512(Integer limit) {
+		return digest("SHA3-512", limit);
+	}
+
+	public byte[] sha3256(Integer limit) {
+		return digest("SHA3-256", limit);
 	}
 
 	public String base64() {
