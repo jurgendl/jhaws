@@ -9,16 +9,15 @@ import java.util.function.Function;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.util.ListModel;
 
 @SuppressWarnings("serial")
 public class EnhancedListView<T> extends ListView<T> {
-    protected SupplyingListModel<T> model;
-
     protected BooleanSupplier visiblePredicate;
 
     protected Consumer<ListItem<T>> itemizer;
 
-    public EnhancedListView(String id, SupplyingListModel<T> model) {
+    public EnhancedListView(String id, ListModel<T> model) {
         super(id, model);
     }
 
@@ -33,14 +32,6 @@ public class EnhancedListView<T> extends ListView<T> {
     @Override
     protected void populateItem(ListItem<T> item) {
         itemizer.accept(item);
-    }
-
-    public SupplyingListModel<T> getListModel() {
-        return this.model;
-    }
-
-    public void setListModel(SupplyingListModel<T> model) {
-        this.model = model;
     }
 
     public Consumer<ListItem<T>> getItemizer() {
