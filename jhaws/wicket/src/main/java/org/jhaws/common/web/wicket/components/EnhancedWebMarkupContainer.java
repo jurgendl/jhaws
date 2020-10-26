@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.util.ListModel;
 
 @SuppressWarnings("serial")
 public class EnhancedWebMarkupContainer extends WebMarkupContainer {
@@ -37,5 +39,21 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
 
     public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model, P visiblePredicate) {
         setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
+    }
+
+    public void setVisiblePredicate(IModel<String> stringModel) {
+        setVisiblePredicate(stringModel, StringUtils::isNotBlank);
+    }
+
+    public void setVisiblePredicate(ListModel<?> listModel) {
+        setVisiblePredicate(listModel, list -> list != null && !list.isEmpty());
+    }
+
+    public void setVisiblePredicateInvers(IModel<String> stringModel) {
+        setVisiblePredicate(stringModel, StringUtils::isBlank);
+    }
+
+    public void setVisiblePredicateInvers(ListModel<?> listModel) {
+        setVisiblePredicate(listModel, list -> list == null || list.isEmpty());
     }
 }

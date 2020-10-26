@@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
@@ -60,5 +61,13 @@ public class EnhancedListView<T> extends ListView<T> {
 
     public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model, P visiblePredicate) {
         setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
+    }
+
+    public void setVisiblePredicate(IModel<String> stringModel) {
+        setVisiblePredicate(stringModel, StringUtils::isNotBlank);
+    }
+
+    public void setVisiblePredicate(ListModel<?> listModel) {
+        setVisiblePredicate(listModel, list -> list != null && !list.isEmpty());
     }
 }
