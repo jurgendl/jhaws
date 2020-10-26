@@ -38,7 +38,7 @@ public class EnhancedListView<T> extends ListView<T> {
         return this.itemizer;
     }
 
-    public void setItemizer(Consumer<ListItem<T>> itemizer) {
+    public <I extends Consumer<ListItem<T>> & Serializable> void setItemizer(I itemizer) {
         this.itemizer = itemizer;
     }
 
