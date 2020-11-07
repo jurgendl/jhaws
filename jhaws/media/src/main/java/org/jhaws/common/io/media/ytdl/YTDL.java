@@ -288,9 +288,17 @@ public class YTDL extends Tool {
 		call(null, new Lines() {
 			@Override
 			public void accept(String t) {
-				String prefix = "[download] Destination: ";
-				if (t != null && t.startsWith(prefix)) {
-					dl.add(t.substring(prefix.length()));
+				{
+					String prefix = "[download] Destination: ";
+					if (t != null && t.startsWith(prefix)) {
+						dl.add(t.substring(prefix.length()));
+					}
+				}
+				{
+					String prefix = "[atomicparsley] Adding thumbnail to \"";
+					if (t != null && t.startsWith(prefix)) {
+						dl.add(t.substring(prefix.length(), t.length() - 1));
+					}
 				}
 				super.accept(t);
 				logger.info("> " + t);
