@@ -164,13 +164,21 @@ public class YTDL extends Tool {
 		command.add("--get-filename");
 		command.add(url);
 		StringValue fn = new StringValue();
-		call(null, new Lines() {
-			@Override
-			public void accept(String t) {
-				fn.set(t);
-			}
-		}, null, command);
-		return fn.get();
+		List<String> full = new ArrayList<>();
+		try {
+			call(null, new Lines() {
+				@Override
+				public void accept(String t) {
+					fn.set(t);
+					full.add(t);
+				}
+			}, null, command);
+			return fn.get();
+		} catch (RuntimeException ex) {
+			full.forEach(System.out::println);
+			ex.printStackTrace(System.out);
+			throw ex;
+		}
 	}
 
 	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder) {
