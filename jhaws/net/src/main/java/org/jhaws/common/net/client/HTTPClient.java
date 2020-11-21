@@ -127,7 +127,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 	protected transient EnhancedList<HTTPClientAuth> authentication = new EnhancedArrayList<>();
 
 	public HTTPClient() {
-		super();
+		cookieSpec = "standard";
 	}
 
 	public RequestConfig getRequestConfig() {

@@ -36,6 +36,7 @@ import org.apache.hc.client5.http.classic.methods.HttpTrace;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequest;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.cookie.CookieStore;
+import org.apache.hc.client5.http.cookie.StandardCookieSpec;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
@@ -143,7 +144,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 	protected transient EnhancedList<HTTPClientAuth> authentication = new EnhancedArrayList<>();
 
 	public HTTPClient() {
-		super();
+		cookieSpec = StandardCookieSpec.RELAXED;
 	}
 
 	public RequestConfig getRequestConfig() {

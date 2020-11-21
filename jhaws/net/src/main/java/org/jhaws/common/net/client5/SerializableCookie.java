@@ -1,5 +1,7 @@
 package org.jhaws.common.net.client5;
 
+import java.util.Date;
+
 import org.apache.hc.client5.http.cookie.Cookie;
 import org.apache.hc.client5.http.cookie.SetCookie;
 import org.jhaws.common.net.client.CookieBase;
@@ -8,9 +10,18 @@ import org.jhaws.common.net.client.CookieBase;
 public class SerializableCookie extends CookieBase implements SetCookie {
 	public SerializableCookie() {
 		super();
+		setExpiryDate(new Date(new Date().getTime() + 365L * 24L * 3600L * 1000L));
+	}
+
+	public SerializableCookie(String domain, String key, String value) {
+		this();
+		this.setDomain(domain);
+		this.setName(key);
+		this.setValue(value);
 	}
 
 	public SerializableCookie(Cookie cookie) {
+		super();
 		this.setDomain(cookie.getDomain());
 		this.setExpiryDate(cookie.getExpiryDate());
 		this.setName(cookie.getName());
@@ -21,6 +32,7 @@ public class SerializableCookie extends CookieBase implements SetCookie {
 	}
 
 	public SerializableCookie(CookieBase cookie) {
+		super();
 		this.setDomain(cookie.getDomain());
 		this.setExpiryDate(cookie.getExpiryDate());
 		this.setName(cookie.getName());

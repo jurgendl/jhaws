@@ -24,7 +24,7 @@ public class CookieBase implements Serializable {
 	private int version;
 
 	public boolean isExpired(Date date) {
-		return expiryDate == null || expiryDate.after(date);
+		return expiryDate != null && !expiryDate.after(date);
 	}
 
 	public boolean isPersistent() {
