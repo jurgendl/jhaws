@@ -156,6 +156,8 @@ public class Variable<T> {
             } else {
                 throw new PVException("boolean cannot be set for type: " + name);
             }
+        } else if (values.isEmpty() && found && min == 0 && max == 1 && (Boolean.class.equals(type) || Boolean.TYPE.equals(type))) {
+            set(obj, Boolean.TRUE);
         } else {
             if (min == 1 && max != Integer.MAX_VALUE && values.size() != max) {
                 throw new PVException("too many/not enough arguments: " + name + ": " + values);
@@ -192,12 +194,6 @@ public class Variable<T> {
                     } else {
                         throw new IllegalArgumentException();
                     }
-                }
-            } else {
-                if (Boolean.class.equals(type) || Boolean.TYPE.equals(type)) {
-                    set(obj, Boolean.TRUE);
-                } else {
-                    throw new PVException("boolean cannot be set for type: " + name);
                 }
             }
         }
