@@ -20,7 +20,7 @@
 	<alias name="filterChainProxy" alias="spring-security-filter"/>
 
 	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
-		<security:filter-chain-map path-type="ant">
+		<security:filter-chain-map><!--   path-type="ant" -->
 			<security:filter-chain pattern="/auth/**" filters="securityContextFilter, logoutFilter, loginFilter, requestCacheFilter, servletApiFilter, anonAuthenticationFilter, sessionManagementFilter, exceptionTranslator, filterSecurityInterceptor"/>
 			<security:filter-chain pattern="/resource/**" filters="none"/>
 			<security:filter-chain pattern="/images/**" filters="none"/>
