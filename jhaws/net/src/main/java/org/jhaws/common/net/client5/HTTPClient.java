@@ -327,7 +327,11 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 			if (throwException && 500 <= response.getStatusCode() && response.getStatusCode() <= 599) {
 				throw new HttpException(response, response.getStatusCode(), response.getStatusText());
 			}
-			EntityUtils.consumeQuietly(httpResponse.getEntity());
+			try {
+				EntityUtils.consumeQuietly(httpResponse.getEntity());
+			} catch (Exception ex) {
+				logger.warn("{}", ex);
+			}
 		} catch (IOException ioex) {
 			throw new UncheckedIOException(ioex);
 		}
