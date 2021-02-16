@@ -164,14 +164,14 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         if (redirectStrategy == null) {
             redirectStrategy = new LaxRedirectStrategy() {
                 @Override
-                public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
-                    HttpUriRequest redirect = super.getRedirect(request, response, context);
+                public HttpUriRequest getRedirect(HttpRequest request, HttpResponse response, HttpContext _context) throws ProtocolException {
+                    HttpUriRequest redirect = super.getRedirect(request, response, _context);
                     if (chain != null) chain.get().add(redirect.getURI());
                     return redirect;
                 }
 
                 @Override
-                public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+                public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext _context) throws ProtocolException {
                     if (response == null) {
                         throw new IllegalArgumentException("HTTP response may not be null");
                     }

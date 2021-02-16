@@ -179,15 +179,15 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         if (redirectStrategy == null) {
             redirectStrategy = new DefaultRedirectStrategy() {
                 @Override
-                public URI getLocationURI(HttpRequest request, HttpResponse response, HttpContext context)
+                public URI getLocationURI(HttpRequest request, HttpResponse response, HttpContext _context)
                         throws org.apache.hc.core5.http.HttpException {
-                    URI redirect = super.getLocationURI(request, response, context);
+                    URI redirect = super.getLocationURI(request, response, _context);
                     if (chain != null) chain.get().add(redirect);
                     return redirect;
                 }
 
                 @Override
-                public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context) throws ProtocolException {
+                public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext _context) throws ProtocolException {
                     if (response == null) {
                         throw new IllegalArgumentException("HTTP response may not be null");
                     }
@@ -775,8 +775,8 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         return this;
     }
 
-    public HttpClientContext getContext(URI preemptiveCPBaseUrl) {
-        this.preemptiveCPBaseUrl.set(preemptiveCPBaseUrl);
+    public HttpClientContext getContext(URI _preemptiveCPBaseUrl) {
+        this.preemptiveCPBaseUrl.set(_preemptiveCPBaseUrl);
         return context.get();
     }
 
