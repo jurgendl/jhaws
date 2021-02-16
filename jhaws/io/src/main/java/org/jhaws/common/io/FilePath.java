@@ -509,7 +509,7 @@ public class FilePath implements Path, Externalizable {
 
 		public static class WebImageFilter extends Filters.ExtensionFilter {
 			public WebImageFilter() {
-				super("jpg", "jpeg", "png", "gif", "webp");
+				super("jpg", "jpeg", "png", "gif", "webp", "jfif");
 			}
 		}
 
@@ -517,7 +517,7 @@ public class FilePath implements Path, Externalizable {
 			public ImageFilter() {
 				super("jpg", "jpeg", "bmp", "tiff", "tif", "pix", "png", "gif", "jp2", "tga", "pcx", "pnm", "ppm",
 						"pbm", "pgm", "ras", "iff", "raw", "jpe", "wmf", "svg", "jpm", "emf", "rla", "jif", "dpx",
-						"dcx", "pic", "ico", "webp");
+						"dcx", "pic", "ico", "webp", "jfif");
 			}
 		}
 
