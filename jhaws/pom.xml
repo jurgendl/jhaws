@@ -105,7 +105,7 @@
 		<version.guava>29.0-jre</version.guava>
 		<version.itextpdf5>5.5.13.2</version.itextpdf5>
 		<version.flyingsaucer-itext5>9.1.20</version.flyingsaucer-itext5>
-		<version.itextpdf7>7.1.12</version.itextpdf7>
+		<version.itextpdf7>7.1.14</version.itextpdf7>
 		<version.javassist>3.27.0-GA</version.javassist>
 		<version.joda-time>2.10.6</version.joda-time>
 		<version.cglib>3.3.0</version.cglib>
@@ -471,9 +471,79 @@
 			</dependency>
 			<dependency>
 				<groupId>com.itextpdf</groupId>
+				<artifactId>itext-xtra</artifactId>
+				<version>${version.itextpdf5}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>itext-pdfa</artifactId>
+				<version>${version.itextpdf5}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>xmlworker</artifactId>
+				<version>${version.itextpdf5}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
 				<artifactId>itext7-core</artifactId>
 				<version>${version.itextpdf7}</version>
 				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>barcodes</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>font-asian</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>forms</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>hyph</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>io</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>kernel</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>layout</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>pdfa</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>sign</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>styled-xml-parser</artifactId>
+				<version>${version.itextpdf7}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.itextpdf</groupId>
+				<artifactId>svg</artifactId>
+				<version>${version.itextpdf7}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.activation</groupId>
