@@ -235,6 +235,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			new AudioFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
 			guard.addPattern("+*.map");
 			guard.addPattern("+*.tag");
+			guard.addPattern("+*.woff2");
 		}
 
 		ISessionListener sl = new ISessionListener() {
