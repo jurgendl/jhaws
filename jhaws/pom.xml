@@ -134,6 +134,8 @@
 		<module>svn</module>
 		<module>swing</module>
 		<module>media</module>
+		<module>elasticsearch-common</module>
+		<module>elasticsearch-impl</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
