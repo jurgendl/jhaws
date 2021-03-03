@@ -25,7 +25,6 @@ import org.jhaws.common.elasticsearch.common.OnlySave;
 import org.jhaws.common.elasticsearch.common.Tokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
@@ -36,12 +35,16 @@ public class ElasticCustomizer {
 
 	/**
 	 * needs cluster restart!<br>
-	 * client.updateClusterSetting(config -> config.put(ElasticCustomizer.CLUSER_SETTING_SEARCH_MAX_BUCKETS, ElasticCustomizer.CLUSER_SETTING_SEARCH_MAX_BUCKETS_VALUE));
+	 * client.updateClusterSetting(config ->
+	 * config.put(ElasticCustomizer.CLUSER_SETTING_SEARCH_MAX_BUCKETS,
+	 * ElasticCustomizer.CLUSER_SETTING_SEARCH_MAX_BUCKETS_VALUE));
 	 */
 	public static final String CLUSER_SETTING_SEARCH_MAX_BUCKETS = "search.max_buckets";
 
 	/**
-	 * client.updateIndexSetting(${index}, config -> config.put(ElasticCustomizer.INDEX_SETTINGS_MAX_RESULTS, ElasticCustomizer.INDEX_SETTINGS_MAX_RESULTS_VALUE));
+	 * client.updateIndexSetting(${index}, config ->
+	 * config.put(ElasticCustomizer.INDEX_SETTINGS_MAX_RESULTS,
+	 * ElasticCustomizer.INDEX_SETTINGS_MAX_RESULTS_VALUE));
 	 */
 	public static final String INDEX_SETTINGS_MAX_RESULTS = "max_result_window";
 
@@ -112,8 +115,10 @@ public class ElasticCustomizer {
 		filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter());
 		analysis.put(FILTER, filter);
 		Map<String, Object> tokenizer = new LinkedHashMap<>();
-		// tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER, customPunctuationTokenizer());
-		// tokenizer.put(Tokenizers.CUSTOM_FILENAME_TOKENIZER, customFilenameTokenizer());
+		// tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER,
+		// customPunctuationTokenizer());
+		// tokenizer.put(Tokenizers.CUSTOM_FILENAME_TOKENIZER,
+		// customFilenameTokenizer());
 		analysis.put(TOKENIZER, tokenizer);
 		Map<String, Object> analyzer = new LinkedHashMap<>();
 		analyzer.put(Analyzers.CUSTOM_CLEANUP_ANALYZER, customCleanupAnalyzer());
@@ -154,7 +159,8 @@ public class ElasticCustomizer {
 		analyzerConfig.put(TYPE, CUSTOM);
 		analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
 		analyzerConfig.put(CHAR_FILTER, Arrays.asList(CharacterFilter.html_strip.id()));
-		analyzerConfig.put(FILTER, Arrays.asList(Filters.ENGLISH_POSSESSIVE_STEMMER, Filter.lowercase.id(), Filters.ENGLISH_STOP, Filters.ENGLISH_STEMMER));
+		analyzerConfig.put(FILTER, Arrays.asList(Filters.ENGLISH_POSSESSIVE_STEMMER, Filter.lowercase.id(),
+				Filters.ENGLISH_STOP, Filters.ENGLISH_STEMMER));
 		return analyzerConfig;
 	}
 
@@ -302,7 +308,8 @@ public class ElasticCustomizer {
 		return mappings;
 	}
 
-	protected void $mappings_fields(Language language, Class<?> annotatedType, Map<String, Object> typeMapping, String prefix, MappingListener listener) {
+	protected void $mappings_fields(Language language, Class<?> annotatedType, Map<String, Object> typeMapping,
+			String prefix, MappingListener listener) {
 		Arrays.stream(annotatedType.getDeclaredFields())//
 				.filter(f -> !Modifier.isTransient(f.getModifiers()))//
 				.filter(f -> !Modifier.isStatic(f.getModifiers()))//
@@ -311,11 +318,13 @@ public class ElasticCustomizer {
 				.forEach(field -> $mappings_field(language, typeMapping, prefix, field, listener));
 	}
 
-	protected void $mappings_field(Language language, Map<String, Object> mapping, String prefix, java.lang.reflect.Field reflectField, MappingListener listener) {
+	protected void $mappings_field(Language language, Map<String, Object> mapping, String prefix,
+			java.lang.reflect.Field reflectField, MappingListener listener) {
 		OnlySave onlySave = reflectField.getAnnotation(OnlySave.class);
 		if (onlySave != null) {
 			// https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
-			String fullName = prefix + (StringUtils.isBlank(onlySave.name()) ? reflectField.getName() : onlySave.name());
+			String fullName = prefix
+					+ (StringUtils.isBlank(onlySave.name()) ? reflectField.getName() : onlySave.name());
 			Map<String, Object> fieldMapping = new TreeMap<>();
 			fieldMapping.put(TYPE, FieldType.OBJECT.id());
 			fieldMapping.put(ENABLED, Boolean.FALSE);
@@ -327,15 +336,18 @@ public class ElasticCustomizer {
 				FieldMapping fieldMapping = $mappings_field(language, defaultFieldType, field);
 				String fullName = prefix + (StringUtils.isBlank(field.name()) ? reflectField.getName() : field.name());
 				mapping.put(fullName, fieldMapping.fieldMapping);
-				if (listener != null) listener.map(fullName, field, fieldMapping);
+				if (listener != null)
+					listener.map(fullName, field, fieldMapping);
 				if (reflectField.getAnnotation(FieldExtra.class) != null) {
 					Field[] fef = reflectField.getAnnotation(FieldExtra.class).value();
 					if (fef != null && fef.length > 0) {
 						Map<String, Object> extraFields = new TreeMap<>();
 						fieldMapping.put(FIELDS, extraFields);
 						Arrays.stream(fef).forEach(nestedField -> {
-							extraFields.put(nestedField.name(), $mappings_field(fieldMapping.language, fieldMapping.fieldType, nestedField).fieldMapping);
-							if (listener != null) listener.map(fullName + "." + nestedField.name(), nestedField, fieldMapping);
+							extraFields.put(nestedField.name(), $mappings_field(fieldMapping.language,
+									fieldMapping.fieldType, nestedField).fieldMapping);
+							if (listener != null)
+								listener.map(fullName + "." + nestedField.name(), nestedField, fieldMapping);
 						});
 					}
 				}
@@ -350,15 +362,18 @@ public class ElasticCustomizer {
 						throw new IllegalArgumentException("prefix verplicht");
 					}
 					NestedField nestedField = reflectField.getAnnotation(NestedField.class);
-					if (nestedField != null && nestedField.language() != null && nestedField.language() != Language.uninitialized) {
-						$mappings_fields(nestedField.language(), reflectField.getType(), mapping, prefix + nestedPrefix, listener);
+					if (nestedField != null && nestedField.language() != null
+							&& nestedField.language() != Language.uninitialized) {
+						$mappings_fields(nestedField.language(), reflectField.getType(), mapping, prefix + nestedPrefix,
+								listener);
 					} else {
 						$mappings_fields(language, reflectField.getType(), mapping, prefix + nestedPrefix, listener);
 					}
 				} else {
 					Map<String, Object> typeMapping = new TreeMap<>();
 					NestedField nestedField = reflectField.getAnnotation(NestedField.class);
-					if (nestedField != null && nestedField.language() != null && nestedField.language() != Language.uninitialized) {
+					if (nestedField != null && nestedField.language() != null
+							&& nestedField.language() != Language.uninitialized) {
 						$mappings_fields(nestedField.language(), reflectField.getType(), typeMapping, "", listener);
 					} else {
 						$mappings_fields(language, reflectField.getType(), typeMapping, "", listener);
@@ -373,10 +388,13 @@ public class ElasticCustomizer {
 
 	protected FieldMapping $mappings_field(Language language, FieldType fieldType, Field field) {
 		FieldMapping fieldMapping = new FieldMapping();
-		fieldMapping.language = field.language() == null || field.language() == Language.uninitialized ? language : field.language();
-		fieldMapping.fieldType = field.type() == null || field.type() == FieldType.uninitialized ? fieldType : field.type();
+		fieldMapping.language = field.language() == null || field.language() == Language.uninitialized ? language
+				: field.language();
+		fieldMapping.fieldType = field.type() == null || field.type() == FieldType.uninitialized ? fieldType
+				: field.type();
 		fieldMapping.put(TYPE, fieldMapping.fieldType.id());
-		fieldMapping.fieldType.options().entrySet().forEach(option -> fieldMapping.fieldMapping.put(option.getKey(), option.getValue()));
+		fieldMapping.fieldType.options().entrySet()
+				.forEach(option -> fieldMapping.fieldMapping.put(option.getKey(), option.getValue()));
 		if (StringUtils.isNotBlank(field.customAnalyzer())) {
 			if (fieldMapping.fieldType != FieldType.TEXT//
 					&& fieldMapping.fieldType != FieldType.TEXT_VECTOR//
@@ -390,7 +408,8 @@ public class ElasticCustomizer {
 			if (fieldMapping.language == null) {
 				fieldMapping.put(ANALYZER, replaceAnalyze(field.customAnalyzer()));
 			} else {
-				fieldMapping.put(ANALYZER, replaceAnalyze(field.customAnalyzer().replace(Analyzers.LANGUAGE_PARAMETER, fieldMapping.language.id())));
+				fieldMapping.put(ANALYZER, replaceAnalyze(
+						field.customAnalyzer().replace(Analyzers.LANGUAGE_PARAMETER, fieldMapping.language.id())));
 			}
 		} else if (field.analyzer() != null && field.analyzer() != Analyzer.uninitialized) {
 			fieldMapping.put(ANALYZER, replaceAnalyze(field.analyzer().id(fieldMapping.language)));
@@ -514,7 +533,8 @@ public class ElasticCustomizer {
 		Map<String, Object> analyzerConfig = new LinkedHashMap<>();
 		analyzerConfig.put(TYPE, CUSTOM);
 		analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-		analyzerConfig.put(FILTER, Arrays.asList(Filter.word_delimiter_graph.id(), Filter.asciifolding.id(), Filter.lowercase.id()));
+		analyzerConfig.put(FILTER,
+				Arrays.asList(Filter.word_delimiter_graph.id(), Filter.asciifolding.id(), Filter.lowercase.id()));
 		return analyzerConfig;
 	}
 
@@ -550,7 +570,8 @@ public class ElasticCustomizer {
 		Map<String, Object> analyzerConfig = new LinkedHashMap<>();
 		analyzerConfig.put(TYPE, CUSTOM);
 		analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-		analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filters.CUSTOM_REMOVE_SPACE_FILTER, Filter.uppercase.id()));
+		analyzerConfig.put(FILTER,
+				Arrays.asList(Filter.asciifolding.id(), Filters.CUSTOM_REMOVE_SPACE_FILTER, Filter.uppercase.id()));
 		return analyzerConfig;
 	}
 
@@ -567,7 +588,8 @@ public class ElasticCustomizer {
 		Map<String, Object> analyzerConfig = new LinkedHashMap<>();
 		analyzerConfig.put(TYPE, CUSTOM);
 		analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-		analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER));
+		analyzerConfig.put(FILTER,
+				Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER));
 		return analyzerConfig;
 	}
 
@@ -584,17 +606,19 @@ public class ElasticCustomizer {
 		Map<String, Object> analyzerConfig = new LinkedHashMap<>();
 		analyzerConfig.put(TYPE, CUSTOM);
 		analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-		analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER));
+		analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(),
+				Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER));
 		return analyzerConfig;
 	}
 
-	@Value("${elasticCustomizer.index.highlightMaxAnalyzedOffset:1000000}") // 10_000_000
+	// @Value("${elasticCustomizer.index.highlightMaxAnalyzedOffset:1000000}")
+	// // 10_000_000
 	private Integer highlightMaxAnalyzedOffset = 1_000_000;
 
-	@Value("${elasticCustomizer.index.maxResultWindow:10000}") // 100_000
+	// @Value("${elasticCustomizer.index.maxResultWindow:10000}") // 100_000
 	private Integer maxResultWindow = 10_000;
 
-	@Value("${elasticCustomizer.cluster.searchMaxBuckets:10000}") // 100_000
+	// @Value("${elasticCustomizer.cluster.searchMaxBuckets:10000}") // 100_000
 	private Integer searchMaxBuckets = 10_000;
 
 	public Integer getHighlightMaxAnalyzedOffset() {
@@ -625,7 +649,8 @@ public class ElasticCustomizer {
 		Map<String, Object> analyzerConfig = new LinkedHashMap<>();
 		analyzerConfig.put(TYPE, CUSTOM);
 		analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-		analyzerConfig.put(FILTER, Arrays.asList(Filter.apostrophe.id(), Filter.asciifolding.id(), Filter.lowercase.id()));
+		analyzerConfig.put(FILTER,
+				Arrays.asList(Filter.apostrophe.id(), Filter.asciifolding.id(), Filter.lowercase.id()));
 		return analyzerConfig;
 	}
 

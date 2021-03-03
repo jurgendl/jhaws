@@ -140,8 +140,6 @@ import org.jhaws.common.elasticsearch.common.Analyzers;
 import org.jhaws.common.elasticsearch.common.ElasticDocument;
 import org.jhaws.common.elasticsearch.common.FieldType;
 import org.jhaws.common.elasticsearch.common.Pagination;
-import org.springframework.stereotype.Component;
-
 
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-query-builders.html
@@ -208,7 +206,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/_basic_authentication.html
 		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 		credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(getUser(), getPassword()));
-		HttpHost[] array = Arrays.stream(getUrl().split(",")).map(u -> new HttpHost(u, getPort(), getProtocol())).toArray(l -> new HttpHost[l]);
+		HttpHost[] array = Arrays.stream(getUrl().split(",")).map(u -> new HttpHost(u, getPort(), getProtocol()))
+				.toArray(l -> new HttpHost[l]);
 		RestClientBuilder restClientBuilder = RestClient.builder(array)//
 				// https://discuss.elastic.co/t/how-to-avoid-30-000ms-timeout-during-reindexing/231370/2
 				// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/_timeouts.html
@@ -295,7 +294,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 	public boolean deleteIndex(String index) {
 		// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-delete-index.html
 		try {
-			return getClient().indices().delete(new DeleteIndexRequest(index).timeout(getTimeout()), RequestOptions.DEFAULT).isAcknowledged();
+			return getClient().indices()
+					.delete(new DeleteIndexRequest(index).timeout(getTimeout()), RequestOptions.DEFAULT)
+					.isAcknowledged();
 		} catch (ElasticsearchStatusException ex) {
 			return false;
 		} catch (IOException ex) {
@@ -317,8 +318,10 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			CreateIndexRequest request = new CreateIndexRequest(indexName);
 
 			Map<String, Object> config = new LinkedHashMap<>();
-			if (settings != null) config.put(SETTINGS, settings);
-			if (mappings != null) config.put(MAPPINGS, mappings);
+			if (settings != null)
+				config.put(SETTINGS, settings);
+			if (mappings != null)
+				config.put(MAPPINGS, mappings);
 
 			LOGGER.info("\n{}", getObjectMapper().writerFor(Map.class).writeValueAsString(config));
 			request.source(config);
@@ -354,12 +357,16 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			throw new UncheckedIOException(ex);
 		}
 
-		Map<String, Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata>> mappings = response.mappings();
-		Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata> fieldMappings = mappings.get(index);
+		Map<String, Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata>> mappings = response
+				.mappings();
+		Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata> fieldMappings = mappings
+				.get(index);
 		Map<String, Map<String, ?>> info = new TreeMap<>();
 		Arrays.stream(fields).forEach(field -> {
-			org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata metaData = fieldMappings.get(field);
-			info.put(metaData.fullName(), (Map<String, ?>) metaData.sourceAsMap().entrySet().iterator().next().getValue());
+			org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata metaData = fieldMappings
+					.get(field);
+			info.put(metaData.fullName(),
+					(Map<String, ?>) metaData.sourceAsMap().entrySet().iterator().next().getValue());
 		});
 		return info;
 	}
@@ -422,7 +429,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		handleDocWriteResponse(response);
 		ReplicationResponse.ShardInfo shardInfo = response.getShardInfo();
 		if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
-			// LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
+			// LOGGER.debug(shardInfo.getTotal() + "!=" +
+			// shardInfo.getSuccessful());
 		}
 		if (shardInfo.getFailed() > 0) {
 			for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
@@ -450,7 +458,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		return getDocument(index, id, null, null, null);
 	}
 
-	public Map<String, Object> getDocument(String index, String id, Long version, String[] includes, String[] excludes) {
+	public Map<String, Object> getDocument(String index, String id, Long version, String[] includes,
+			String[] excludes) {
 		return performGetRequest(createGetRequest(index, id, version, includes, excludes));
 	}
 
@@ -552,7 +561,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		handleDocWriteResponse(response);
 		ReplicationResponse.ShardInfo shardInfo = response.getShardInfo();
 		if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
-			// LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
+			// LOGGER.debug(shardInfo.getTotal() + "!=" +
+			// shardInfo.getSuccessful());
 		}
 		if (shardInfo.getFailed() > 0) {
 			for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
@@ -575,14 +585,16 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 	}
 
 	public Script script(String script, Map<String, Object> params) {
-		return new Script(ScriptType.INLINE, Script.DEFAULT_SCRIPT_LANG, script, params == null ? Collections.emptyMap() : params);
+		return new Script(ScriptType.INLINE, Script.DEFAULT_SCRIPT_LANG, script,
+				params == null ? Collections.emptyMap() : params);
 	}
 
 	public void performUpdateRequest(UpdateRequest request) {
 		request.retryOnConflict(3);
 		{
 			// request.fetchSource(true);
-			// request.fetchSourceContext(createFetchSourceContext(includes, excludes));
+			// request.fetchSourceContext(createFetchSourceContext(includes,
+			// excludes));
 		}
 		UpdateResponse response;
 		try {
@@ -597,7 +609,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		handleDocWriteResponse(response);
 		ReplicationResponse.ShardInfo shardInfo = response.getShardInfo();
 		if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
-			// LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
+			// LOGGER.debug(shardInfo.getTotal() + "!=" +
+			// shardInfo.getSuccessful());
 		}
 		if (shardInfo.getFailed() > 0) {
 			for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
@@ -672,9 +685,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		BulkRequest request = new BulkRequest(index);
 		requests.forEach(r -> request.add(r));
 		request.timeout(getTimeout());
-		requests.stream().filter(req -> req instanceof UpdateRequest).map(UpdateRequest.class::cast).forEach(req -> req.setRefreshPolicy(UpdateRequest.RefreshPolicy.NONE));
-		requests.stream().filter(req -> req instanceof DeleteRequest).map(DeleteRequest.class::cast).forEach(req -> req.setRefreshPolicy(DeleteRequest.RefreshPolicy.NONE));
-		requests.stream().filter(req -> req instanceof IndexRequest).map(IndexRequest.class::cast).forEach(req -> req.setRefreshPolicy(IndexRequest.RefreshPolicy.NONE));
+		requests.stream().filter(req -> req instanceof UpdateRequest).map(UpdateRequest.class::cast)
+				.forEach(req -> req.setRefreshPolicy(UpdateRequest.RefreshPolicy.NONE));
+		requests.stream().filter(req -> req instanceof DeleteRequest).map(DeleteRequest.class::cast)
+				.forEach(req -> req.setRefreshPolicy(DeleteRequest.RefreshPolicy.NONE));
+		requests.stream().filter(req -> req instanceof IndexRequest).map(IndexRequest.class::cast)
+				.forEach(req -> req.setRefreshPolicy(IndexRequest.RefreshPolicy.NONE));
 		request.setRefreshPolicy(BulkRequest.RefreshPolicy.NONE);
 		BulkResponse bulkResponse;
 		try {
@@ -693,24 +709,25 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		for (BulkItemResponse bulkItemResponse : bulkResponse) {
 			DocWriteResponse itemResponse = bulkItemResponse.getResponse();
 			switch (bulkItemResponse.getOpType()) {
-				case INDEX:
-				case CREATE:
-					IndexResponse indexResponse = (IndexResponse) itemResponse;
-					handleIndexResponse(indexResponse);
-					break;
-				case UPDATE:
-					UpdateResponse updateResponse = (UpdateResponse) itemResponse;
-					handleUpdateResponse(updateResponse);
-					break;
-				case DELETE:
-					DeleteResponse deleteResponse = (DeleteResponse) itemResponse;
-					handleDeleteResponse(deleteResponse);
-					break;
+			case INDEX:
+			case CREATE:
+				IndexResponse indexResponse = (IndexResponse) itemResponse;
+				handleIndexResponse(indexResponse);
+				break;
+			case UPDATE:
+				UpdateResponse updateResponse = (UpdateResponse) itemResponse;
+				handleUpdateResponse(updateResponse);
+				break;
+			case DELETE:
+				DeleteResponse deleteResponse = (DeleteResponse) itemResponse;
+				handleDeleteResponse(deleteResponse);
+				break;
 			}
 		}
 	}
 
-	public List<Map<String, Object>> multiGetDocument(String index, List<String> ids, String[] includes, String[] excludes) {
+	public List<Map<String, Object>> multiGetDocument(String index, List<String> ids, String[] includes,
+			String[] excludes) {
 		// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-multi-get.html
 		return performMultiGetRequest(createMultiGetRequest(index, ids, includes, excludes));
 	}
@@ -761,7 +778,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		// Number of version conflicts
 		// Number of times request had to retry bulk index operations
 		// Number of times request had to retry search operations
-		// The total time this request has throttled itself not including the current
+		// The total time this request has throttled itself not including the
+		// current
 		// throttle time if it is currently sleeping
 		// Remaining delay of any current throttle sleep or 0 if not sleeping
 		// Failures during search phase
@@ -797,16 +815,19 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		return updatedDocs > 0l ? updatedDocs : deletedDocs;
 	}
 
-	public <T extends ElasticDocument> long updateDocumentsByQuery(Class<T> type, QueryBuilder query, Integer max, String script, Map<String, Object> params) {
+	public <T extends ElasticDocument> long updateDocumentsByQuery(Class<T> type, QueryBuilder query, Integer max,
+			String script, Map<String, Object> params) {
 		return updateDocumentsByQuery(index(type), query, max, script, params);
 	}
 
-	public long updateDocumentsByQuery(String index, QueryBuilder query, Integer max, String script, Map<String, Object> params) {
+	public long updateDocumentsByQuery(String index, QueryBuilder query, Integer max, String script,
+			Map<String, Object> params) {
 		// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-update-by-query.html
 		UpdateByQueryRequest request = new UpdateByQueryRequest(index);
 		request.setConflicts(PROCEED);
 		request.setQuery(query == null ? QueryBuilders.matchAllQuery() : query);
-		if (max != null) request.setMaxDocs(max);
+		if (max != null)
+			request.setMaxDocs(max);
 		request.setBatchSize(1_000);
 		request.setScript(script(script, params));
 		request.setTimeout(getTimeout());
@@ -830,7 +851,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		DeleteByQueryRequest request = new DeleteByQueryRequest(index);
 		request.setConflicts(PROCEED);
 		request.setQuery(query == null ? QueryBuilders.matchAllQuery() : query);
-		if (max != null) request.setMaxDocs(max);
+		if (max != null)
+			request.setMaxDocs(max);
 		request.setBatchSize(1_000);
 		request.setTimeout(getTimeout());
 		request.setRefresh(true);
@@ -846,7 +868,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
 	public boolean stopScrolling(Scrolling scrolling) {
 		// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-clear-scroll.html
-		if (scrolling == null || scrolling.getScrollId() == null) return false;
+		if (scrolling == null || scrolling.getScrollId() == null)
+			return false;
 		ClearScrollRequest request = new ClearScrollRequest();
 		request.addScrollId(scrolling.getScrollId());
 		try {
@@ -889,27 +912,36 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		return count;
 	}
 
-	public <T extends ElasticDocument> List<QueryResult<T>> query(Class<T> type, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
-		return $query(index(type), query, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), null);
+	public <T extends ElasticDocument> List<QueryResult<T>> query(Class<T> type, QueryBuilder query,
+			Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
+		return $query(index(type), query, pagination, sort, includes, excludes,
+				Mapper.toObject(getObjectMapper(), type), null);
 	}
 
-	public List<QueryResult<Map<String, Object>>> query(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
+	public List<QueryResult<Map<String, Object>>> query(String index, QueryBuilder query, Pagination pagination,
+			List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
 		return $query(index, query, pagination, sort, includes, excludes, Mapper.toMap(), null);
 	}
 
-	public <T extends ElasticDocument> List<QueryResult<T>> highlight(Class<T> type, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, List<String> highlight) {
-		return $query(index(type), query, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), highlight);
+	public <T extends ElasticDocument> List<QueryResult<T>> highlight(Class<T> type, QueryBuilder query,
+			Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes,
+			List<String> highlight) {
+		return $query(index(type), query, pagination, sort, includes, excludes,
+				Mapper.toObject(getObjectMapper(), type), highlight);
 	}
 
-	public <T> List<QueryResult<Map<String, Object>>> highlight(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, List<String> highlight) {
+	public <T> List<QueryResult<Map<String, Object>>> highlight(String index, QueryBuilder query, Pagination pagination,
+			List<SortBuilder<?>> sort, String[] includes, String[] excludes, List<String> highlight) {
 		return $query(index, query, pagination, sort, includes, excludes, Mapper.toMap(), highlight);
 	}
 
-	public <T extends ElasticDocument> List<AggregationResult> aggregate(Class<T> type, String aggregationField, Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
+	public <T extends ElasticDocument> List<AggregationResult> aggregate(Class<T> type, String aggregationField,
+			Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
 		return aggregate(index(type), aggregationField, aggregations, minDocCount);
 	}
 
-	public List<AggregationResult> aggregate(String index, String aggregationField, Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
+	public List<AggregationResult> aggregate(String index, String aggregationField,
+			Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
 		List<AggregationResult> aggregationResults = new ArrayList<>();
 
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -940,7 +972,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			// https://discuss.elastic.co/t/running-cardinality-for-more-than-10000-buckets/192717/2
 			// .includeExclude(new IncludeExclude(0, 10))//
 		}
-		aggregations.entrySet().forEach(e -> e.getValue().forEach(agg -> buildAggregation(aggBuilder, /* subAggregationField */e.getKey(), agg)));
+		aggregations.entrySet().forEach(e -> e.getValue().forEach(
+				agg -> buildAggregation(aggBuilder, /* subAggregationField */e.getKey(), agg)));
 		searchSourceBuilder.aggregation(aggBuilder);
 
 		SearchRequest searchRequest = new SearchRequest(index);
@@ -960,7 +993,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		// the total number of hits, must be interpreted in the context of
 		// totalHits.relation
 		long numHits = totalHits.value;
-		// whether the number of hits is accurate (EQUAL_TO) or a lower bound of the
+		// whether the number of hits is accurate (EQUAL_TO) or a lower bound of
+		// the
 		// total (GREATER_THAN_OR_EQUAL_TO)
 		TotalHits.Relation relation = totalHits.relation;
 		if (relation != Relation.EQUAL_TO) {
@@ -970,12 +1004,15 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		searchResponse.getAggregations().getAsMap().entrySet().forEach(e -> {
 			if (e.getValue() instanceof ParsedTerms) {
 				ParsedTerms.class.cast(e.getValue()).getBuckets().forEach(bucket -> {
-					AggregationResult aggregationResult = new AggregationResult(bucket.getKeyAsString(), bucket.getDocCount());
+					AggregationResult aggregationResult = new AggregationResult(bucket.getKeyAsString(),
+							bucket.getDocCount());
 					aggregationResults.add(aggregationResult);
-					bucket.getAggregations().forEach(subAggregation -> aggregationResultsParser(aggregationResult, subAggregation));
+					bucket.getAggregations()
+							.forEach(subAggregation -> aggregationResultsParser(aggregationResult, subAggregation));
 				});
 			} else if (e.getValue() instanceof ParsedGlobal) {
-				ParsedGlobal.class.cast(e.getValue()).getAggregations().forEach(subAggregation -> aggregationResults.add(aggregationResultsParser(new AggregationResult(), subAggregation)));
+				ParsedGlobal.class.cast(e.getValue()).getAggregations().forEach(subAggregation -> aggregationResults
+						.add(aggregationResultsParser(new AggregationResult(), subAggregation)));
 			} else {
 				throw new UnsupportedOperationException(e.getValue().getClass().getName());
 			}
@@ -984,15 +1021,19 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		return aggregationResults;
 	}
 
-	public <T extends ElasticDocument> QueryResults<T> multiQuery(Class<T> type, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
-		return $multi_query(index(type), queries, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), null);
+	public <T extends ElasticDocument> QueryResults<T> multiQuery(Class<T> type, List<QueryBuilder> queries,
+			Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
+		return $multi_query(index(type), queries, pagination, sort, includes, excludes,
+				Mapper.toObject(getObjectMapper(), type), null);
 	}
 
-	public QueryResults<Map<String, Object>> multiQuery(String index, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
+	public QueryResults<Map<String, Object>> multiQuery(String index, List<QueryBuilder> queries, Pagination pagination,
+			List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
 		return $multi_query(index, queries, pagination, sort, includes, excludes, Mapper.toMap(), null);
 	}
 
-	protected <T> QueryResults<T> $multi_query(String index, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight) {
+	protected <T> QueryResults<T> $multi_query(String index, List<QueryBuilder> queries, Pagination pagination,
+			List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight) {
 		QueryContext<T> context = new QueryContext<>();
 		context.index = index;
 		context.query = queries.get(0);
@@ -1059,7 +1100,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			partialTotalHits[i] = -1;
 		}
 		for (int i = 1; i < multiResponse.getResponses().length; i++) {
-			partialTotalHits[order[i - 1]] = multiResponse.getResponses()[i].getResponse().getHits().getTotalHits().value;
+			partialTotalHits[order[i - 1]] = multiResponse.getResponses()[i].getResponse().getHits()
+					.getTotalHits().value;
 		}
 		queryResults.setPartialTotalHits(Arrays.stream(partialTotalHits).boxed().collect(Collectors.toList()));
 		return queryResults;
@@ -1095,7 +1137,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		float maxScore;
 	}
 
-	protected <T> List<QueryResult<T>> $query(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight) {
+	protected <T> List<QueryResult<T>> $query(String index, QueryBuilder query, Pagination pagination,
+			List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight) {
 		QueryContext<T> context = new QueryContext<>();
 		context.index = index;
 		context.query = query;
@@ -1131,7 +1174,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		// TODO
 		// if (false) {
 		// Suggest suggest = searchResponse.getSuggest();
-		// TermSuggestion termSuggestion = suggest.getSuggestion("suggest_user");
+		// TermSuggestion termSuggestion =
+		// suggest.getSuggestion("suggest_user");
 		// for (TermSuggestion.Entry entry : termSuggestion.getEntries()) {
 		// for (TermSuggestion.Entry.Option option : entry) {
 		// String suggestText = option.getText().string();
@@ -1149,13 +1193,17 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		// ProfileShardResult profileShardResult = profilingResult.getValue();
 		// List<QueryProfileShardResult> queryProfileShardResults =
 		// profileShardResult.getQueryProfileResults();
-		// for (QueryProfileShardResult queryProfileResult : queryProfileShardResults) {
-		// for (ProfileResult profileResult : queryProfileResult.getQueryResults()) {
+		// for (QueryProfileShardResult queryProfileResult :
+		// queryProfileShardResults) {
+		// for (ProfileResult profileResult :
+		// queryProfileResult.getQueryResults()) {
 		// String queryName = profileResult.getQueryName();
 		// long queryTimeInMillis = profileResult.getTime();
-		// List<ProfileResult> profiledChildren = profileResult.getProfiledChildren();
+		// List<ProfileResult> profiledChildren =
+		// profileResult.getProfiledChildren();
 		// }
-		// CollectorResult collectorResult = queryProfileResult.getCollectorResult();
+		// CollectorResult collectorResult =
+		// queryProfileResult.getCollectorResult();
 		// String collectorName = collectorResult.getName();
 		// Long collectorTimeInMillis = collectorResult.getTime();
 		// List<CollectorResult> profiledChildren =
@@ -1163,10 +1211,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		// }
 		// AggregationProfileShardResult aggsProfileResults =
 		// profileShardResult.getAggregationProfileResults();
-		// for (ProfileResult profileResult : aggsProfileResults.getProfileResults()) {
+		// for (ProfileResult profileResult :
+		// aggsProfileResults.getProfileResults()) {
 		// String aggName = profileResult.getQueryName();
 		// long aggTimeInMillis = profileResult.getTime();
-		// List<ProfileResult> profiledChildren = profileResult.getProfiledChildren();
+		// List<ProfileResult> profiledChildren =
+		// profileResult.getProfiledChildren();
 		// }
 		// }
 		// }
@@ -1181,7 +1231,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		// the total number of hits, must be interpreted in the context of
 		// totalHits.relation
 		long numHits = totalHits.value;
-		// whether the number of hits is accurate (EQUAL_TO) or a lower bound of the
+		// whether the number of hits is accurate (EQUAL_TO) or a lower bound of
+		// the
 		// total (GREATER_THAN_OR_EQUAL_TO)
 		TotalHits.Relation relation = totalHits.relation;
 		if (relation != Relation.EQUAL_TO) {
@@ -1190,7 +1241,10 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		SearchHit[] searchHits = hits.getHits();
 		context.pagination.setTotal(numHits);
 		context.pagination.setResults(searchHits == null ? 0 : searchHits.length);
-		if (context.scrolling != null && context.pagination.getResults() < context.pagination.getMax()) { // FIXME misschien == 0
+		if (context.scrolling != null && context.pagination.getResults() < context.pagination.getMax()) { // FIXME
+																											// misschien
+																											// ==
+																											// 0
 			stopScrolling(context.scrolling);
 		}
 
@@ -1198,7 +1252,10 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		if (searchHits != null && searchHits.length > 0) {
 			for (SearchHit hit : searchHits) {
 				@SuppressWarnings("unchecked")
-				T result = context.mapper == null ? (T) hit.getSourceAsMap() : context.mapper.map(hit.getIndex(), hit.getId(), hit.getVersion() == -1l ? null : hit.getVersion(), hit.getSourceAsString(), hit.getSourceAsMap());
+				T result = context.mapper == null ? (T) hit.getSourceAsMap()
+						: context.mapper.map(hit.getIndex(), hit.getId(),
+								hit.getVersion() == -1l ? null : hit.getVersion(), hit.getSourceAsString(),
+								hit.getSourceAsMap());
 				Map<String, List<String>> highlightC = new LinkedHashMap<String, List<String>>();
 				if (context.highlight != null && !context.highlight.isEmpty()) {
 					Map<String, HighlightField> highlightFields = hit.getHighlightFields();
@@ -1206,7 +1263,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 						HighlightField highlightField = highlightFields.get(veld);
 						if (highlightField != null) {
 							Text[] fragments = highlightField.fragments();
-							highlightC.put(veld, Arrays.stream(fragments).map(Text::string).collect(Collectors.toList()));
+							highlightC.put(veld,
+									Arrays.stream(fragments).map(Text::string).collect(Collectors.toList()));
 						}
 					});
 				}
@@ -1288,7 +1346,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
 		context.searchSourceBuilder = new SearchSourceBuilder();
 
-		if (context.sort != null && !context.sort.isEmpty()) context.searchSourceBuilder.trackScores(true);// adds score when sorting
+		if (context.sort != null && !context.sort.isEmpty())
+			context.searchSourceBuilder.trackScores(true);// adds score when
+															// sorting
 
 		// searchSourceBuilder.profile(true); // werkt niet met pagination
 
@@ -1308,10 +1368,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		context.searchSourceBuilder.fetchSource(fetch(true, context.includes, context.excludes));
 	}
 
-	protected AggregationResult aggregationResultsParser(AggregationResult aggregationResult, Aggregation subAggregation) {
+	protected AggregationResult aggregationResultsParser(AggregationResult aggregationResult,
+			Aggregation subAggregation) {
 		if (subAggregation instanceof NumericMetricsAggregation.SingleValue) {
 			NumericMetricsAggregation.SingleValue p = NumericMetricsAggregation.SingleValue.class.cast(subAggregation);
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + subAggregation.getType() + "]", p.value());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + subAggregation.getType() + "]",
+					p.value());
 		} else if (subAggregation instanceof PercentileRanks) {
 			PercentileRanks p = PercentileRanks.class.cast(subAggregation);
 			Iterator<Percentile> it = p.iterator();
@@ -1323,21 +1385,33 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			aggregationResult.getResults().put(subAggregation.getName() + "[" + subAggregation.getType() + "]", tmp);
 		} else if (subAggregation instanceof ParsedExtendedStats) {
 			ParsedExtendedStats p = ParsedExtendedStats.class.cast(subAggregation);
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.avg + "]", p.getAvg());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.max + "]", p.getMax());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.min + "]", p.getMin());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + "std_deviation" + "]", p.getStdDeviation());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + "std_deviation.lowerBound" + "]", p.getStdDeviationBound(Bounds.LOWER));
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + "std_deviation.upperBound" + "]", p.getStdDeviationBound(Bounds.UPPER));
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.sum + "]", p.getSum());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + "sum_of_squares" + "]", p.getSumOfSquares());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.avg + "]",
+					p.getAvg());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.max + "]",
+					p.getMax());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.min + "]",
+					p.getMin());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + "std_deviation" + "]",
+					p.getStdDeviation());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + "std_deviation.lowerBound" + "]",
+					p.getStdDeviationBound(Bounds.LOWER));
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + "std_deviation.upperBound" + "]",
+					p.getStdDeviationBound(Bounds.UPPER));
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.sum + "]",
+					p.getSum());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + "sum_of_squares" + "]",
+					p.getSumOfSquares());
 			aggregationResult.getResults().put(subAggregation.getName() + "[" + "variance" + "]", p.getVariance());
 		} else if (subAggregation instanceof ParsedStats) {
 			ParsedStats p = ParsedStats.class.cast(subAggregation);
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.avg + "]", p.getAvg());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.max + "]", p.getMax());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.min + "]", p.getMin());
-			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.sum + "]", p.getSum());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.avg + "]",
+					p.getAvg());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.max + "]",
+					p.getMax());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.min + "]",
+					p.getMin());
+			aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.sum + "]",
+					p.getSum());
 		} else {
 			throw new UnsupportedOperationException(subAggregation.getClass().getName());
 		}
@@ -1346,37 +1420,46 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
 	protected void buildAggregation(AggregationBuilder aggBuilder, String subAggregationField, MetricAggregation agg) {
 		switch (agg) {
-			case avg:
-				aggBuilder.subAggregation(AggregationBuilders.avg(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case cardinality:
-				aggBuilder.subAggregation(AggregationBuilders.cardinality(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case max:
-				aggBuilder.subAggregation(AggregationBuilders.max(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case median_absolute_deviation:
-				aggBuilder.subAggregation(AggregationBuilders.medianAbsoluteDeviation(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case min:
-				aggBuilder.subAggregation(AggregationBuilders.min(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case tdigest_percentile_ranks:
-				aggBuilder.subAggregation(AggregationBuilders.percentileRanks(agg + "::" + subAggregationField, IntStream.range(1, 100 + 1).asDoubleStream().toArray()).field(subAggregationField));
-				break;
-			case sum:
-				aggBuilder.subAggregation(AggregationBuilders.sum(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case stats:
-				aggBuilder.subAggregation(AggregationBuilders.stats(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case extended_stats:
-				aggBuilder.subAggregation(AggregationBuilders.extendedStats(agg + "::" + subAggregationField).field(subAggregationField));
-				break;
-			case count:
-				break;
-			default:
-				throw new UnsupportedOperationException("" + agg);
+		case avg:
+			aggBuilder.subAggregation(
+					AggregationBuilders.avg(agg + "::" + subAggregationField).field(subAggregationField));
+			break;
+		case cardinality:
+			aggBuilder.subAggregation(
+					AggregationBuilders.cardinality(agg + "::" + subAggregationField).field(subAggregationField));
+			break;
+		case max:
+			aggBuilder.subAggregation(
+					AggregationBuilders.max(agg + "::" + subAggregationField).field(subAggregationField));
+			break;
+		case median_absolute_deviation:
+			aggBuilder.subAggregation(AggregationBuilders.medianAbsoluteDeviation(agg + "::" + subAggregationField)
+					.field(subAggregationField));
+			break;
+		case min:
+			aggBuilder.subAggregation(
+					AggregationBuilders.min(agg + "::" + subAggregationField).field(subAggregationField));
+			break;
+		case tdigest_percentile_ranks:
+			aggBuilder.subAggregation(AggregationBuilders.percentileRanks(agg + "::" + subAggregationField,
+					IntStream.range(1, 100 + 1).asDoubleStream().toArray()).field(subAggregationField));
+			break;
+		case sum:
+			aggBuilder.subAggregation(
+					AggregationBuilders.sum(agg + "::" + subAggregationField).field(subAggregationField));
+			break;
+		case stats:
+			aggBuilder.subAggregation(
+					AggregationBuilders.stats(agg + "::" + subAggregationField).field(subAggregationField));
+			break;
+		case extended_stats:
+			aggBuilder.subAggregation(
+					AggregationBuilders.extendedStats(agg + "::" + subAggregationField).field(subAggregationField));
+			break;
+		case count:
+			break;
+		default:
+			throw new UnsupportedOperationException("" + agg);
 		}
 	}
 
@@ -1423,7 +1506,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		{
 			XPackInfoRequest request = new XPackInfoRequest();
 			request.setVerbose(true);
-			request.setCategories(EnumSet.of(XPackInfoRequest.Category.BUILD, XPackInfoRequest.Category.LICENSE, XPackInfoRequest.Category.FEATURES));
+			request.setCategories(EnumSet.of(XPackInfoRequest.Category.BUILD, XPackInfoRequest.Category.LICENSE,
+					XPackInfoRequest.Category.FEATURES));
 			XPackInfoResponse response;
 			try {
 				response = getClient().xpack().info(request, RequestOptions.DEFAULT);
@@ -1481,18 +1565,25 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		List<String> collect1 = null;
 		List<String> collect2 = null;
 		List<String> collect3 = null;
-		if (explain && response.detail() != null && response.detail().analyzer() != null && response.detail().analyzer().getTokens() != null) {
-			collect1 = Arrays.stream(response.detail().analyzer().getTokens()).map(token -> token.getTerm()).collect(Collectors.toList());
+		if (explain && response.detail() != null && response.detail().analyzer() != null
+				&& response.detail().analyzer().getTokens() != null) {
+			collect1 = Arrays.stream(response.detail().analyzer().getTokens()).map(token -> token.getTerm())
+					.collect(Collectors.toList());
 		}
 		if (response.getTokens() != null) {
 			collect2 = response.getTokens().stream().map(token -> token.getTerm()).collect(Collectors.toList());
 		}
-		if (response.detail() != null && response.detail().tokenizer() != null && response.detail().tokenizer().getTokens() != null) {
-			collect3 = Arrays.stream(response.detail().tokenizer().getTokens()).map(token -> token.getTerm()).collect(Collectors.toList());
+		if (response.detail() != null && response.detail().tokenizer() != null
+				&& response.detail().tokenizer().getTokens() != null) {
+			collect3 = Arrays.stream(response.detail().tokenizer().getTokens()).map(token -> token.getTerm())
+					.collect(Collectors.toList());
 		}
-		if (collect1 != null) return collect1;
-		if (collect2 != null) return collect2;
-		if (collect3 != null) return collect3;
+		if (collect1 != null)
+			return collect1;
+		if (collect2 != null)
+			return collect2;
+		if (collect3 != null)
+			return collect3;
 		return Collections.emptyList();
 	}
 
@@ -1511,11 +1602,13 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 	// .build("<b>Some text to analyze</b>");
 	// }
 	// if (false) {
-	// request = AnalyzeRequest.withIndexAnalyzer("my_index", "my_analyzer", "some
+	// request = AnalyzeRequest.withIndexAnalyzer("my_index", "my_analyzer",
+	// "some
 	// text to analyze");
 	// }
 	// if (false) {
-	// request = AnalyzeRequest.withNormalizer("my_index", "my_normalizer", "some
+	// request = AnalyzeRequest.withNormalizer("my_index", "my_normalizer",
+	// "some
 	// text to analyze");
 	// }
 
@@ -1618,7 +1711,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		return getObjectMapping(annotatedType, MappingListener.DUMMY);
 	}
 
-	public <T extends ElasticDocument> Map<String, Object> getObjectMapping(Class<T> annotatedType, MappingListener listener) {
+	public <T extends ElasticDocument> Map<String, Object> getObjectMapping(Class<T> annotatedType,
+			MappingListener listener) {
 		return getElasticCustomizer().getObjectMapping(annotatedType, listener);
 	}
 
@@ -1660,7 +1754,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
 	// TODO https://dzone.com/articles/reindexing-data-with-elasticsearch-1
 
-	// TODO https://www.elastic.co/guide/en/elasticsearch/client/java-rest/master/java-rest-high-snapshot-create-repository.html
+	// TODO
+	// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/master/java-rest-high-snapshot-create-repository.html
 
 	public <T extends ElasticDocument> long count(Class<T> type) {
 		return count(index(type));
@@ -1687,7 +1782,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			config.accept(builder);
 			Settings settings = builder.build();
 			request.persistentSettings(settings);
-			ClusterUpdateSettingsResponse updateSettingsResponse = getClient().cluster().putSettings(request, RequestOptions.DEFAULT);
+			ClusterUpdateSettingsResponse updateSettingsResponse = getClient().cluster().putSettings(request,
+					RequestOptions.DEFAULT);
 			LOGGER.info("ack: {}", updateSettingsResponse.isAcknowledged());
 			return updateSettingsResponse.isAcknowledged();
 		} catch (IOException ex) {
@@ -1704,7 +1800,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			UpdateSettingsRequest request = new UpdateSettingsRequest(index);
 			request.settings(config);
 			request.indicesOptions(IndicesOptions.lenientExpandOpen());
-			AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request, RequestOptions.DEFAULT);
+			AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request,
+					RequestOptions.DEFAULT);
 			return updateSettingsResponse.isAcknowledged();
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -1723,7 +1820,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 			Settings settings = builder.build();
 			request.settings(settings);
 			request.indicesOptions(IndicesOptions.lenientExpandOpen());
-			AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request, RequestOptions.DEFAULT);
+			AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request,
+					RequestOptions.DEFAULT);
 			return updateSettingsResponse.isAcknowledged();
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -1751,7 +1849,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		return explainQueryResult(index(document), document.getId(), query, null, null);
 	}
 
-	public <T extends ElasticDocument> Explanation explainQueryResult(String index, String id, QueryBuilder query, String[] includes, String[] excludes) {
+	public <T extends ElasticDocument> Explanation explainQueryResult(String index, String id, QueryBuilder query,
+			String[] includes, String[] excludes) {
 		ExplainRequest request = new ExplainRequest(index, id);
 		request.query(query);
 		request.fetchSourceContext(fetch(true, includes, excludes));
@@ -1832,7 +1931,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
-		List<org.elasticsearch.cluster.metadata.RepositoryMetadata> repositoryMetadataResponse = response.repositories();
+		List<org.elasticsearch.cluster.metadata.RepositoryMetadata> repositoryMetadataResponse = response
+				.repositories();
 		return repositoryMetadataResponse;
 	}
 
@@ -1920,25 +2020,29 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getObjectMappingClean(Class<? extends ElasticDocument> indexClass) {
 		Map<String, Object> properties = (Map<String, Object>) getObjectMapping(indexClass).get("properties");
-		Map<String, Object> jsonToObject = (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class, objectToJson(getObjectMapper(), properties.entrySet().stream().filter(entry -> {
-			Map<String, Object> tmp = (Map<String, Object>) entry.getValue();
-			Object enabled = tmp.get("enabled");
-			if (enabled == null) return true;
-			return !"false".equals(enabled.toString());
-		}).map(entry -> {
-			Map<String, Object> tmp = (Map<String, Object>) entry.getValue();
-			if ("date".equals(tmp.get("type"))) {
-				tmp.remove("format");
-			}
-			return entry;
-		}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
+		Map<String, Object> jsonToObject = (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class,
+				objectToJson(getObjectMapper(), properties.entrySet().stream().filter(entry -> {
+					Map<String, Object> tmp = (Map<String, Object>) entry.getValue();
+					Object enabled = tmp.get("enabled");
+					if (enabled == null)
+						return true;
+					return !"false".equals(enabled.toString());
+				}).map(entry -> {
+					Map<String, Object> tmp = (Map<String, Object>) entry.getValue();
+					if ("date".equals(tmp.get("type"))) {
+						tmp.remove("format");
+					}
+					return entry;
+				}).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
 		return jsonToObject;
 	}
 
 	@SuppressWarnings("unchecked")
 	public Map<String, Object> getIndexMappingClean(Class<? extends ElasticDocument> indexClass) {
 		Map<String, Object> jsonToObject = (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class,
-				objectToJson(getObjectMapper(), getIndexMapping(indexClass).entrySet().stream().filter(entry -> !entry.getKey().contains(".")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
+				objectToJson(getObjectMapper(), getIndexMapping(indexClass).entrySet().stream()
+						.filter(entry -> !entry.getKey().contains("."))
+						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
 		return jsonToObject;
 	}
 }

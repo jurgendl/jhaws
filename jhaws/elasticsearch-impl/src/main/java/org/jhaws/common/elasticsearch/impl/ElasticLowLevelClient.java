@@ -33,8 +33,6 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -47,18 +45,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 // curl -XGET --user elastic:??? "http://localhost:9200/INDEX/_mapping"
 // curl -XGET --user elastic:??? "http://localhost:9200/INDEX/_mapping/settings"
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-index.html
-public class ElasticLowLevelClient extends ElasticConfig implements InitializingBean {
+public class ElasticLowLevelClient extends ElasticConfig {
 	protected final Logger LOGGER;
 
 	public static final String UTF_8 = "utf-8";
 
-	//@Autowired(required = false)
+	// @Autowired(required = false)
 	protected ObjectMapper objectMapper;
 
-	//@Autowired(required = false)
+	// @Autowired(required = false)
 	protected ElasticCustomizer elasticCustomizer;
 
-	//@Autowired(required = false)
+	// @Autowired(required = false)
 	protected ElasticHelper elasticHelper;
 
 	protected transient AtomicReference<CloseableHttpClient> httpClientReference;
@@ -70,7 +68,6 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 	}
 
 	@PostConstruct
-	@Override
 	public void afterPropertiesSet() {
 		LOGGER.trace("startup->");
 		httpClient();
@@ -115,7 +112,8 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 		}
 	}
 
-	protected <R extends HttpResponse & HttpEntityContainer> byte[] _response(R response) throws ClientProtocolException {
+	protected <R extends HttpResponse & HttpEntityContainer> byte[] _response(R response)
+			throws ClientProtocolException {
 		LOGGER.debug("status: {}", new StatusLine(response));
 		HttpEntity responseEntity = response.getEntity();
 		if (responseEntity == null) {
@@ -132,11 +130,13 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 			try {
 				String stringResponse = new String(entity, UTF_8);
 				try {
-					stringResponse = objectToJson(getObjectMapper(), jsonToObject(getObjectMapper(), Map.class, stringResponse));
+					stringResponse = objectToJson(getObjectMapper(),
+							jsonToObject(getObjectMapper(), Map.class, stringResponse));
 				} catch (Exception ex) {
 					//
 				}
-				throw new ClientProtocolException(new StatusLine(response).toString(), new RuntimeException("\n" + stringResponse));
+				throw new ClientProtocolException(new StatusLine(response).toString(),
+						new RuntimeException("\n" + stringResponse));
 			} catch (ClientProtocolException ex) {
 				throw ex;
 			} catch (Exception ex) {
@@ -195,16 +195,20 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 		}
 	}
 
-	protected boolean _customCharacterFilter(String index, String characterFilterName, Map<String, Object> characterFilterConfig) {
-		return _analysisConfig(index, Collections.singletonMap("char_filter", Collections.singletonMap(characterFilterName, characterFilterConfig)));
+	protected boolean _customCharacterFilter(String index, String characterFilterName,
+			Map<String, Object> characterFilterConfig) {
+		return _analysisConfig(index, Collections.singletonMap("char_filter",
+				Collections.singletonMap(characterFilterName, characterFilterConfig)));
 	}
 
 	protected boolean _customTokenizer(String index, String tokenizerName, Map<String, Object> tokenizerConfig) {
-		return _analysisConfig(index, Collections.singletonMap("tokenizer", Collections.singletonMap(tokenizerName, tokenizerConfig)));
+		return _analysisConfig(index,
+				Collections.singletonMap("tokenizer", Collections.singletonMap(tokenizerName, tokenizerConfig)));
 	}
 
 	protected boolean _customFilter(String index, String filterName, Map<String, Object> filterConfig) {
-		return _analysisConfig(index, Collections.singletonMap("filter", Collections.singletonMap(filterName, filterConfig)));
+		return _analysisConfig(index,
+				Collections.singletonMap("filter", Collections.singletonMap(filterName, filterConfig)));
 	}
 
 	protected boolean _customAnalyzer(String index, String analyzerName, Map<String, Object> analyzerConfig) {
@@ -212,7 +216,8 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 		// https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
 		// https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-elision-tokenfilter.html
 		analyzerConfig.put("type", "custom");
-		return _analysisConfig(index, Collections.singletonMap("analyzer", Collections.singletonMap(analyzerName, analyzerConfig)));
+		return _analysisConfig(index,
+				Collections.singletonMap("analyzer", Collections.singletonMap(analyzerName, analyzerConfig)));
 	}
 
 	public boolean _analysisConfig(String index, Map<String, Object> analysis) {
@@ -229,7 +234,8 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class, new String(result, UTF_8));
 			LOGGER.debug("result: {}", map);
-			boolean success = map != null && ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
+			boolean success = map != null
+					&& ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
 			return success;
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
@@ -241,7 +247,8 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 	public boolean _indexHighlightMaxAnalyzedOffset(String index) {
 		try {
 			Map<String, Object> indexSettings = new LinkedHashMap<>();
-			indexSettings.put(ElasticCustomizer.INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET, getElasticCustomizer().getHighlightMaxAnalyzedOffset());
+			indexSettings.put(ElasticCustomizer.INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET,
+					getElasticCustomizer().getHighlightMaxAnalyzedOffset());
 			Map<String, Object> settings = new LinkedHashMap<>();
 			settings.put("index", indexSettings);
 			String json = ElasticHelper.objectToJson(getObjectMapper(), settings);
@@ -254,7 +261,8 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class, new String(result, UTF_8));
 			LOGGER.debug("result: {}", map);
-			boolean success = map != null && ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
+			boolean success = map != null
+					&& ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
 			return success;
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
