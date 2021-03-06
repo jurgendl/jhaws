@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -2044,5 +2046,73 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 						.filter(entry -> !entry.getKey().contains("."))
 						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
 		return jsonToObject;
+	}
+
+	private boolean skip(Object o) {
+		if (o == null)
+			return true;
+		if (o instanceof String)
+			return StringUtils.isBlank(String.class.cast(o));
+		if (o instanceof Collection)
+			return Collection.class.cast(o).isEmpty();
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends ElasticDocument> void debug(T example) {
+		String idx = index(example);
+		String json = objectToJson(getObjectMapper(), example);
+		Map<String, Object> values = jsonToObject(getObjectMapper(), Map.class, json);
+		Map<String, Object> mapping = getObjectMappingClean(example.getClass());
+		values.entrySet().stream()//
+				.filter(a -> !skip(a.getValue()))//
+				.filter(a -> !"id".equals(a.getKey()))//
+				.forEach(e -> {
+					Map<String, Object> x = (Map<String, Object>) mapping.get(e.getKey());
+					Object value = e.getValue();
+					{
+						String analyzer = String.class.cast(x.get("analyzer"));
+						if (analyzer != null) {
+							System.out.println(e.getKey() + "/" + x.get("type") + "/" + analyzer + "/" + value);
+							if (value instanceof Collection) {
+								Collection.class.cast(value).forEach(v -> {
+									if (v instanceof String) {
+										System.out.println(
+												"\t" + v + ">" + analyzeIndex(idx, analyzer, String.class.cast(v)));
+									}
+								});
+							} else {
+								if (value instanceof String) {
+									System.out.println(
+											"\t" + value + ">" + analyzeIndex(idx, analyzer, String.class.cast(value)));
+								}
+							}
+						}
+					}
+					Map<String, Object> fields = (Map<String, Object>) x.get("fields");
+					if (fields != null) {
+						fields.entrySet().forEach(fe -> {
+							Map<String, Object> fv = (Map<String, Object>) fe.getValue();
+							String analyzer = String.class.cast(fv.get("analyzer"));
+							if (analyzer != null) {
+								System.out.println(e.getKey() + "." + fe.getKey() + "/" + fv.get("type") + "/"
+										+ analyzer + "/" + value);
+								if (value instanceof Collection) {
+									Collection.class.cast(value).forEach(v -> {
+										if (v instanceof String) {
+											System.out.println(
+													"\t" + v + ">" + analyzeIndex(idx, analyzer, String.class.cast(v)));
+										}
+									});
+								} else {
+									if (value instanceof String) {
+										System.out.println("\t" + value + ">"
+												+ analyzeIndex(idx, analyzer, String.class.cast(value)));
+									}
+								}
+							}
+						});
+					}
+				});
 	}
 }
