@@ -6,7 +6,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -14,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
@@ -25,6 +29,7 @@ import org.jhaws.common.io.console.Processes.ExitValueException;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.lang.StringValue;
+import org.jhaws.common.lang.Value;
 
 // youtube-dl.exe --list-extractors
 //
@@ -196,11 +201,14 @@ public class YTDL extends Tool {
 			command.add("--cookies");
 			command.add(Tool.command(cookies));
 		}
+		// command.add("--verbose");
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
 		command.add("--embed-thumbnail");
 		command.add("--add-metadata");
 		command.add("--no-check-certificate");
+		command.add("-o");
+		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
 		command.add(url);
 		List<String> dl = new ArrayList<>();
 		try {
@@ -213,7 +221,7 @@ public class YTDL extends Tool {
 		}
 		if (dl.size() == 1) {
 			FilePath from = tmpFolder.child(dl.get(0));
-			FilePath to = targetFolder.child(dl.get(0)).newFileIndex();
+			FilePath to = targetFolder.child(from.getFileNameString()).newFileIndex();
 			from.renameTo(to);
 			return to;
 		}
@@ -240,7 +248,7 @@ public class YTDL extends Tool {
 				command.add("--cookies");
 				command.add(Tool.command(cookies));
 			}
-			command.add("--verbose");
+			// command.add("--verbose");
 			command.add("--embed-thumbnail");
 			command.add("--add-metadata");
 			command.add("--no-check-certificate");
@@ -250,7 +258,7 @@ public class YTDL extends Tool {
 			// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 			command.add("bestvideo,bestaudio");
 			command.add("-o");
-			command.add("%(title)s.f%(format_id)s.%(ext)s");
+			command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
 			command.add(url);
 			dl(tmpFolder, command, dl);
 		} catch (ExitValueException ex) {
@@ -262,12 +270,14 @@ public class YTDL extends Tool {
 					command.add("--cookies");
 					command.add(Tool.command(cookies));
 				}
-				command.add("--verbose");
+				// command.add("--verbose");
 				command.add("--embed-thumbnail");
 				command.add("--add-metadata");
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add("utf-8");
+				command.add("-o");
+				command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
 				command.add(url);
 				dl(tmpFolder, command, dl);
 			} catch (Exception ex2) {
@@ -281,6 +291,8 @@ public class YTDL extends Tool {
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add("utf-8");
+				command.add("-o");
+				command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
 				command.add(url);
 				dl(tmpFolder, command, dl);
 			}
@@ -289,28 +301,57 @@ public class YTDL extends Tool {
 			throw new NullPointerException();
 		}
 		FilePath _tmpFolder = tmpFolder;
-		return dl.stream().map(a -> _tmpFolder.child(a)).filter(f -> f.exists()).collect(Collectors.toList());
+		return dl.stream().map(a -> {
+			FilePath fp = new FilePath(a);
+			if (fp.exists())
+				return fp;
+			fp = _tmpFolder.child(a);
+			if (fp.exists())
+				return fp;
+			return null;
+		}).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	private void dl(FilePath tmpFolder, List<String> command, List<String> dl) {
-		call(null, new Lines() {
+		Set<String> u = new HashSet<>();
+		Lines lines = new Lines() {
 			@Override
 			public void accept(String t) {
 				{
 					String prefix = "[download] Destination: ";
 					if (t != null && t.startsWith(prefix)) {
-						dl.add(t.substring(prefix.length()));
+						u.add(t.substring(prefix.length()));
+					}
+				}
+				{
+					String prefix = "[download] ";
+					String suffix = " has already been downloaded";
+					if (t != null && t.startsWith(prefix) && t.endsWith(suffix)) {
+						u.add(t.substring(prefix.length(), t.length() - suffix.length()));
 					}
 				}
 				{
 					String prefix = "[atomicparsley] Adding thumbnail to \"";
 					if (t != null && t.startsWith(prefix)) {
-						dl.add(t.substring(prefix.length(), t.length() - 1));
+						u.add(t.substring(prefix.length(), t.length() - 1));
+					}
+				}
+				{
+					String prefix = "[atomicparsley] Adding thumbnail to '";
+					if (t != null && t.startsWith(prefix)) {
+						u.add(t.substring(prefix.length(), t.length() - 1));
 					}
 				}
 				super.accept(t);
 				logger.info("> " + t);
 			}
-		}, tmpFolder, command, true, null, true, Arrays.asList(executable.getParentPath()));
+		};
+		Value<Process> processHolder = null;
+		boolean log = true;
+		Consumer<String> listener = null;
+		boolean throwExitValue = true;
+		List<FilePath> paths = Arrays.asList(executable.getParentPath());
+		call(processHolder, lines, tmpFolder, command, log, listener, throwExitValue, paths);
+		dl.addAll(u);
 	}
 }

@@ -3,6 +3,7 @@ package org.jhaws.common.io.media.ffmpeg;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxCfg;
 import org.jhaws.common.io.media.ffmpeg.FfmpegTool.RemuxDefaultsCfg;
+import org.jhaws.common.io.media.ytdl.YTDL;
 import org.jhaws.common.net.client.GetRequest;
 import org.jhaws.common.net.client.Response;
 import org.junit.jupiter.api.BeforeAll;
@@ -381,5 +382,17 @@ public class FToolTest {
 					cfg.hq = true;
 				});
 		}
+	}
+
+	@Test
+	public void testAudio() {
+		FilePath t = new FilePath("c:/1/temp").createDirectory();
+		FilePath d = new FilePath("c:/1/" + System.currentTimeMillis()).createDirectory();
+		YTDL ytdl = new YTDL();
+		// ytdl.downloadAudio("https://www.youtube.com/watch?v=fLRzM5R5ggI", t, d);
+		// ytdl.downloadAudio("https://www.youtube.com/watch?v=cI7MuUNwoCs", t, d);
+		// ytdl.downloadAudio("https://www.youtube.com/watch?v=8BzprBSrB-E", t, d);
+		// ytdl.downloadAudio("https://www.youtube.com/watch?v=GvnYzbjKBMI", t, d);
+		// ytdl.downloadAudio("https://www.youtube.com/watch?v=jScDYcwWw50", t, d);
 	}
 }
