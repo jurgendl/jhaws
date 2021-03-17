@@ -204,8 +204,9 @@ public class YTDL extends Tool {
 		// command.add("--verbose");
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
-		command.add("--embed-thumbnail");
-		command.add("--add-metadata");
+		// command.add("--embed-thumbnail");
+		// command.add("--ignore-errors");
+		// command.add("--add-metadata");
 		command.add("--no-check-certificate");
 		command.add("-o");
 		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
@@ -249,8 +250,9 @@ public class YTDL extends Tool {
 				command.add(Tool.command(cookies));
 			}
 			// command.add("--verbose");
-			command.add("--embed-thumbnail");
-			command.add("--add-metadata");
+			// command.add("--embed-thumbnail");
+			// command.add("--ignore-errors");
+			// command.add("--add-metadata");
 			command.add("--no-check-certificate");
 			command.add("--encoding");
 			command.add("utf-8");
@@ -271,8 +273,9 @@ public class YTDL extends Tool {
 					command.add(Tool.command(cookies));
 				}
 				// command.add("--verbose");
-				command.add("--embed-thumbnail");
-				command.add("--add-metadata");
+				// command.add("--embed-thumbnail");
+				// command.add("--ignore-errors");
+				// command.add("--add-metadata");
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add("utf-8");
@@ -317,6 +320,7 @@ public class YTDL extends Tool {
 		Lines lines = new Lines() {
 			@Override
 			public void accept(String t) {
+				System.out.println(t);
 				{
 					String prefix = "[download] Destination: ";
 					if (t != null && t.startsWith(prefix)) {
@@ -337,11 +341,12 @@ public class YTDL extends Tool {
 					}
 				}
 				{
-					String prefix = "[atomicparsley] Adding thumbnail to '";
+					String prefix = "[ffmpeg] Adding metadata to '";
 					if (t != null && t.startsWith(prefix)) {
 						u.add(t.substring(prefix.length(), t.length() - 1));
 					}
 				}
+
 				super.accept(t);
 				logger.info("> " + t);
 			}
