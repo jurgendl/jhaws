@@ -177,9 +177,11 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		// library resources
 		this.setJavaScriptLibrarySettings(new WicketResourceReferences());
 
+		// http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
 		// to put javascript down on the page (DefaultWebPage.html must contain
 		// wicket:id='footer-bucket'
-		this.setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
+		// this.setHeaderResponseDecorator(new
+		// RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
 
 		// store
 		this.initStore();

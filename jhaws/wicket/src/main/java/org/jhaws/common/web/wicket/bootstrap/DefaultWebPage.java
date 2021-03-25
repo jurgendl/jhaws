@@ -17,7 +17,6 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -160,7 +159,7 @@ public abstract class DefaultWebPage extends WebPage {
 		addCheckAddBlock(html);
 
 		// add header response (javascript) down below on page
-		addJavasScriptOnBottom(html);
+		addJavaScriptOnBottom(html);
 
 		// meta description
 		addMetaDescription(html);
@@ -198,12 +197,14 @@ public abstract class DefaultWebPage extends WebPage {
 		html.add(new WebMarkupContainer("meta_description").setVisible(false));
 	}
 
-	protected void addJavasScriptOnBottom(MarkupContainer html) {
-		if (WicketApplication.get().getSettings().isJavascriptAtBottom()) {
-			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
-		} else {
-			html.add(new EmptyPanel("footer-container").setVisible(false));
-		}
+	protected void addJavaScriptOnBottom(MarkupContainer html) {
+		// http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
+		// if (WicketApplication.get().getSettings().isJavascriptAtBottom()) {
+		// html.add(new HeaderResponseContainer("footer-container",
+		// "footer-bucket"));
+		// } else {
+		// html.add(new EmptyPanel("footer-container").setVisible(false));
+		// }
 	}
 
 	protected void addCheckAddBlock(MarkupContainer html) {
