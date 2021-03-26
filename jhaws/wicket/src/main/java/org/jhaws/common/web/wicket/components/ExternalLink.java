@@ -5,9 +5,9 @@ import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.jhaws.common.web.wicket.AbstractReadOnlyModel;
 
 public class ExternalLink extends org.apache.wicket.markup.html.link.ExternalLink {
 	private static final long serialVersionUID = 822282823515079064L;

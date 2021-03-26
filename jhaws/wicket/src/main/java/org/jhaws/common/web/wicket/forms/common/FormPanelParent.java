@@ -350,7 +350,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 				@Override
 				public boolean isVisible() {
 					for (int i = 0; i < this.size(); i++) {
-						if (!this.get(i).isVisible()) {
+						if (!this.stream().skip(i).findFirst().get().isVisible()) {
 							return false;
 						}
 					}
@@ -405,10 +405,9 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 			WebMarkupContainer cancel;
 			if (this.getFormSettings().isAjax()) {
 				cancel = new AjaxSubmitLink(FormConstants.FORM_CANCEL, this.form) {
-					@SuppressWarnings("unchecked")
 					@Override
-					protected void onAfterSubmit(AjaxRequestTarget target, Form<?> f) {
-						getFormActions().afterCancel(target, (Form<T>) f, getFormModel());
+					protected void onAfterSubmit(AjaxRequestTarget target) {
+						getFormActions().afterCancel(target, form, getFormModel());
 					}
 
 					@Override
@@ -448,7 +447,7 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 				@Override
 				public boolean isVisible() {
 					for (int i = 0; i < this.size(); i++) {
-						if (!this.get(i).isVisible()) {
+						if (!this.stream().skip(i).findFirst().get().isVisible()) {
 							return false;
 						}
 					}
@@ -507,10 +506,9 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
 
 	protected WebMarkupContainer createAjaxSubmit() {
 		return new AjaxSubmitLink(FormConstants.FORM_SUBMIT, this.form) {
-			@SuppressWarnings("unchecked")
 			@Override
-			protected void onAfterSubmit(AjaxRequestTarget target, Form<?> f) {
-				getFormActions().afterSubmit(target, (Form<T>) f, getFormModel());
+			protected void onAfterSubmit(AjaxRequestTarget target) {
+				getFormActions().afterSubmit(target, form, getFormModel());
 				if (getFormSettings().isSpinner()) {
 					target.appendJavaScript(Spin.HIDE);
 				}

@@ -27,7 +27,7 @@ public class WicketAppSettings implements Serializable {
 
 	protected Boolean javascriptAtBottom = true;
 
-	protected String cacheDuration;
+	protected Integer cacheDuration;
 
 	protected Boolean gatherBrowserInfo = true;
 
@@ -149,11 +149,11 @@ public class WicketAppSettings implements Serializable {
 		// FIXME this.javascriptAtBottom = javascriptAtBottom;
 	}
 
-	public String getCacheDuration() {
+	public Integer getCacheDuration() {
 		return this.cacheDuration;
 	}
 
-	public void setCacheDuration(String cacheDuration) {
+	public void setCacheDuration(Integer cacheDuration) {
 		this.cacheDuration = cacheDuration;
 	}
 

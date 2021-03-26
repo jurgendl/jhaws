@@ -2,28 +2,23 @@ package org.jhaws.common.web.wicket;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ConverterLocator;
-import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.ISessionListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.mapper.MountedMapper;
-import org.apache.wicket.devutils.diskstore.DebugDiskDataStore;
 import org.apache.wicket.devutils.stateless.StatelessChecker;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.pageStore.IDataStore;
-import org.apache.wicket.pageStore.memory.HttpSessionDataStore;
-import org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
@@ -36,7 +31,6 @@ import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.convert.converter.DateConverter;
-import org.apache.wicket.util.time.Duration;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.FilePath.Filters.AudioFilter;
 import org.jhaws.common.io.FilePath.Filters.ImageFilter;
@@ -117,6 +111,11 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 
 		WicketAppSettings s = getSettings();
 
+		// library resources
+//		JavaScriptLibrarySettings javaScriptLibrarySettings = getJavaScriptLibrarySettings();
+//		javaScriptLibrarySettings
+//				.setJQueryReference(JQuery.JS/* JQueryResourceReference.get() */);
+
 		boolean deployed = this.usesDeploymentConfig();
 		boolean inDevelopment = !deployed;
 
@@ -161,9 +160,8 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		this.getResourceSettings().setUseMinifiedResources(deployed);
 		this.getResourceSettings().setEncodeJSessionId(deployed);
 		this.getResourceSettings()
-				.setDefaultCacheDuration(StringUtils.isNotBlank(s.getCacheDuration())
-						? ("none".equals(s.getCacheDuration()) ? Duration.NONE : Duration.valueOf(s.getCacheDuration()))
-						: (inDevelopment ? Duration.NONE : WebResponse.MAX_CACHE_DURATION));
+				.setDefaultCacheDuration(s.getCacheDuration() != null ? (Duration.ofSeconds(s.getCacheDuration()))
+						: (inDevelopment ? Duration.ZERO : WebResponse.MAX_CACHE_DURATION));
 
 		if (deployed) {
 			// // minify your resources on deploy
@@ -174,14 +172,9 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			// de.agilecoders.wicket.extensions.javascript.YuiCssCompressor());
 		}
 
-		// library resources
-		this.setJavaScriptLibrarySettings(new WicketResourceReferences());
-
-		// http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
 		// to put javascript down on the page (DefaultWebPage.html must contain
 		// wicket:id='footer-bucket'
-		// this.setHeaderResponseDecorator(new
-		// RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
+		this.setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
 
 		// store
 		this.initStore();
@@ -190,6 +183,10 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		if (inDevelopment) {
 			this.getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
 		}
+
+		// WICKET UPGRADE
+		// disable CSP
+		getCspSettings().blocking().disabled();
 
 		addBundles();
 
@@ -282,30 +279,31 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 	}
 
 	protected void initStore() {
-		WicketAppSettings s = getSettings();
-		if (this.usesDevelopmentConfig()) {
-			if (!s.isDiskStore()) {
-				this.setPageManagerProvider(new DefaultPageManagerProvider(this) {
-					@Override
-					protected IDataStore newDataStore() {
-						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(),
-								new PageNumberEvictionStrategy(20));
-					}
-				});
-			} else {
-				DebugDiskDataStore.register(this);
-			}
-		} else {
-			if (!s.isDiskStore()) {
-				this.setPageManagerProvider(new DefaultPageManagerProvider(this) {
-					@Override
-					protected IDataStore newDataStore() {
-						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(),
-								new PageNumberEvictionStrategy(20));
-					}
-				});
-			} // no else
-		}
+		// WICKET UPDATE
+//		WicketAppSettings s = getSettings();
+//		if (this.usesDevelopmentConfig()) {
+//			if (!s.isDiskStore()) {
+//				this.setPageManagerProvider(new DefaultPageManagerProvider(this) {
+//					@Override
+//					protected IDataStore newDataStore() {
+//						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(),
+//								new PageNumberEvictionStrategy(20));
+//					}
+//				});
+//			} else {
+//				DebugDiskDataStore.register(this);
+//			}
+//		} else {
+//			if (!s.isDiskStore()) {
+//				this.setPageManagerProvider(new DefaultPageManagerProvider(this) {
+//					@Override
+//					protected IDataStore newDataStore() {
+//						return new HttpSessionDataStore(WicketApplication.this.getPageManagerContext(),
+//								new PageNumberEvictionStrategy(20));
+//					}
+//				});
+//			} // no else
+//		}
 	}
 
 	protected void mountImages() {
@@ -456,7 +454,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			settings = new WicketAppSettings();
 			GoogleLogin.init(settings);
 			setSettings(settings);
-			settings.setCacheDuration("none");
+			settings.setCacheDuration(0);
 			settings.setShowDebugbars(false);
 		}
 		return this.settings;

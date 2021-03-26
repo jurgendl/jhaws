@@ -5,8 +5,8 @@ import java.net.URL;
 
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.web.wicket.AbstractReadOnlyModel;
 
 public class LinkPanel extends Panel {
 	public static final String LINK_ID = "link";

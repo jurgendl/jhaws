@@ -8,94 +8,97 @@ import org.apache.wicket.model.IModel;
 
 @SuppressWarnings("serial")
 public class ConfirmationAjaxSubmitLink extends AjaxSubmitLink {
-    private BootBoxHelper builder = new BootBoxHelper();
+	private BootBoxHelper builder = new BootBoxHelper();
 
-    public ConfirmationAjaxSubmitLink(String id, Form<?> form) {
-        super(id, form);
-    }
+	protected Form<?> form;
 
-    public ConfirmationAjaxSubmitLink(String id) {
-        super(id);
-    }
+	public ConfirmationAjaxSubmitLink(String id, Form<?> form) {
+		super(id, form);
+		this.form = form;
+	}
 
-    @Override
-    protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-        target.add(form);
-    }
+	public ConfirmationAjaxSubmitLink(String id) {
+		super(id);
+	}
 
-    @Override
-    protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-        super.updateAjaxAttributes(attributes);
+	@Override
+	protected void onSubmit(AjaxRequestTarget target) {
+		target.add(form);
+	}
 
-        BootBoxAjaxCallListener handler = new BootBoxAjaxCallListener();
-        handler.setMessage(builder.getMessage());
-        handler.setTitle(builder.getTitle());
-        handler.setOkButton(builder.getOkButton());
-        handler.setOkButtonIcon(builder.getOkButtonIcon());
-        handler.setCancelButton(builder.getCancelButton());
-        handler.setCancelButtonIcon(builder.getCancelButtonIcon());
+	@Override
+	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+		super.updateAjaxAttributes(attributes);
 
-        attributes.getAjaxCallListeners().add(handler);
-    }
+		BootBoxAjaxCallListener handler = new BootBoxAjaxCallListener();
+		handler.setMessage(builder.getMessage());
+		handler.setTitle(builder.getTitle());
+		handler.setOkButton(builder.getOkButton());
+		handler.setOkButtonIcon(builder.getOkButtonIcon());
+		handler.setCancelButton(builder.getCancelButton());
+		handler.setCancelButtonIcon(builder.getCancelButtonIcon());
 
-    // @Override
-    // public void renderHead(IHeaderResponse response) {
-    // super.renderHead(response);
-    // response.render(JavaScriptHeaderItem.forReference(BootBox.JS));
-    // response.render(JavaScriptHeaderItem.forReference(BootBox.JS_LOCALE));
-    // }
+		attributes.getAjaxCallListeners().add(handler);
+	}
 
-    public IModel<String> getOkButton() {
-        return this.builder.getOkButton();
-    }
+	// @Override
+	// public void renderHead(IHeaderResponse response) {
+	// super.renderHead(response);
+	// response.render(JavaScriptHeaderItem.forReference(BootBox.JS));
+	// response.render(JavaScriptHeaderItem.forReference(BootBox.JS_LOCALE));
+	// }
 
-    public ConfirmationAjaxSubmitLink setOkButton(IModel<String> okButton) {
-        this.builder.setOkButton(okButton);
-        return this;
-    }
+	public IModel<String> getOkButton() {
+		return this.builder.getOkButton();
+	}
 
-    public IModel<String> getCancelButton() {
-        return this.builder.getCancelButton();
-    }
+	public ConfirmationAjaxSubmitLink setOkButton(IModel<String> okButton) {
+		this.builder.setOkButton(okButton);
+		return this;
+	}
 
-    public ConfirmationAjaxSubmitLink setCancelButton(IModel<String> cancelButton) {
-        this.builder.setCancelButton(cancelButton);
-        return this;
-    }
+	public IModel<String> getCancelButton() {
+		return this.builder.getCancelButton();
+	}
 
-    public IModel<String> getOkButtonIcon() {
-        return this.builder.getOkButtonIcon();
-    }
+	public ConfirmationAjaxSubmitLink setCancelButton(IModel<String> cancelButton) {
+		this.builder.setCancelButton(cancelButton);
+		return this;
+	}
 
-    public ConfirmationAjaxSubmitLink setOkButtonIcon(IModel<String> okButtonIcon) {
-        this.builder.setOkButtonIcon(okButtonIcon);
-        return this;
-    }
+	public IModel<String> getOkButtonIcon() {
+		return this.builder.getOkButtonIcon();
+	}
 
-    public IModel<String> getCancelButtonIcon() {
-        return this.builder.getCancelButtonIcon();
-    }
+	public ConfirmationAjaxSubmitLink setOkButtonIcon(IModel<String> okButtonIcon) {
+		this.builder.setOkButtonIcon(okButtonIcon);
+		return this;
+	}
 
-    public ConfirmationAjaxSubmitLink setCancelButtonIcon(IModel<String> cancelButtonIcon) {
-        this.builder.setCancelButtonIcon(cancelButtonIcon);
-        return this;
-    }
+	public IModel<String> getCancelButtonIcon() {
+		return this.builder.getCancelButtonIcon();
+	}
 
-    public IModel<String> getTitle() {
-        return this.builder.getTitle();
-    }
+	public ConfirmationAjaxSubmitLink setCancelButtonIcon(IModel<String> cancelButtonIcon) {
+		this.builder.setCancelButtonIcon(cancelButtonIcon);
+		return this;
+	}
 
-    public ConfirmationAjaxSubmitLink setTitle(IModel<String> title) {
-        this.builder.setTitle(title);
-        return this;
-    }
+	public IModel<String> getTitle() {
+		return this.builder.getTitle();
+	}
 
-    public IModel<String> getMessage() {
-        return this.builder.getMessage();
-    }
+	public ConfirmationAjaxSubmitLink setTitle(IModel<String> title) {
+		this.builder.setTitle(title);
+		return this;
+	}
 
-    public ConfirmationAjaxSubmitLink setMessage(IModel<String> message) {
-        this.builder.setMessage(message);
-        return this;
-    }
+	public IModel<String> getMessage() {
+		return this.builder.getMessage();
+	}
+
+	public ConfirmationAjaxSubmitLink setMessage(IModel<String> message) {
+		this.builder.setMessage(message);
+		return this;
+	}
 }

@@ -20,13 +20,8 @@ public class LocalesPanel extends Panel {
 			private static final long serialVersionUID = -4402883308787625917L;
 
 			@Override
-			protected boolean wantOnSelectionChangedNotifications() {
-				return true;
-			}
-
-			@Override
-			protected void onSelectionChanged(Locale newSelection) {
-				getSession().setLocale(newSelection);
+			protected void onModelChanged() {
+				getSession().setLocale(getModelObject());
 			}
 		};
 		this.changeLocale.setNullValid(false);

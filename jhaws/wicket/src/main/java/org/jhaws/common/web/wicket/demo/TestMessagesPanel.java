@@ -16,7 +16,7 @@ public class TestMessagesPanel extends Panel {
 		form.add(new BootstrapFencedFeedbackPanel("feedback", this));
 		form.add(new AjaxSubmitLink("submit") {
 			@Override
-			protected void onSubmit(AjaxRequestTarget target, Form<?> _form) {
+			protected void onSubmit(AjaxRequestTarget target) {
 				getFeedbackMessages().fatal(form, form.getId() + " fatal");
 				getFeedbackMessages().error(getPage(), getPage().getId() + " info");
 				getFeedbackMessages().warn(form, form.getId() + " fatal");

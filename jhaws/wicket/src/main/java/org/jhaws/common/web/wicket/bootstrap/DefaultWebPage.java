@@ -158,8 +158,9 @@ public abstract class DefaultWebPage extends WebPage {
 		// check if ads are not blocked
 		addCheckAddBlock(html);
 
+		// WICKET UPDATE
 		// add header response (javascript) down below on page
-		addJavaScriptOnBottom(html);
+		// addJavasScriptOnBottom(html);
 
 		// meta description
 		addMetaDescription(html);
@@ -197,15 +198,13 @@ public abstract class DefaultWebPage extends WebPage {
 		html.add(new WebMarkupContainer("meta_description").setVisible(false));
 	}
 
-	protected void addJavaScriptOnBottom(MarkupContainer html) {
-		// http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
-		// if (WicketApplication.get().getSettings().isJavascriptAtBottom()) {
-		// html.add(new HeaderResponseContainer("footer-container",
-		// "footer-bucket"));
-		// } else {
-		// html.add(new EmptyPanel("footer-container").setVisible(false));
-		// }
-	}
+//	protected void addJavasScriptOnBottom(MarkupContainer html) {
+//		if (WicketApplication.get().getSettings().isJavascriptAtBottom()) {
+//			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
+//		} else {
+//			html.add(new EmptyPanel("footer-container").setVisible(false));
+//		}
+//	}
 
 	protected void addCheckAddBlock(MarkupContainer html) {
 		try {
