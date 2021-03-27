@@ -1,7 +1,6 @@
 package org.jhaws.common.web.wicket;
 
 import org.apache.wicket.settings.JavaScriptLibrarySettings;
-import org.jhaws.common.web.wicket.jquery.JQuery;
 
 /**
  * combination of resource references with public getters and setters
@@ -52,7 +51,7 @@ public class WicketResourceReferences extends JavaScriptLibrarySettings {
 //
 	public WicketResourceReferences(boolean init) {
 		if (init) {
-			setJQueryReference(JQuery.JS/* JQueryResourceReference.get() */);
+//			setJQueryReference(JQuery.JS/* JQueryResourceReference.get() */);
 //			setJQueryReference(JQuery.JS/* JQueryResourceReference.get() */);
 //			setWicketEventReference(WicketEventJQueryResourceReference.get());
 //			setWicketAjaxReference(WicketAjaxJQueryResourceReference.get());
