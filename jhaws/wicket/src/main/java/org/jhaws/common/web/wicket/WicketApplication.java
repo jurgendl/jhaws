@@ -19,6 +19,8 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.ResourceIsolationRequestCycleListener;
+import org.apache.wicket.protocol.http.ResourceIsolationRequestCycleListener.CsrfAction;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
@@ -189,6 +191,20 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		// WICKET UPGRADE
 		// disable CSP
 		getCspSettings().blocking().disabled();
+
+		// Csrf
+		if (false) {
+			// https://ci.apache.org/projects/wicket/apidocs/9.x/org/apache/wicket/protocol/http/CsrfPreventionRequestCycleListener.html
+			// getRequestCycleListeners().add(new
+			// CsrfPreventionRequestCycleListener());
+
+			// https://stackoverflow.com/questions/64675854/apache-wicket-9-1-csrf-enabled-formtester-submits-blocked-by-resource-isolation/64688636#64688636
+			ResourceIsolationRequestCycleListener resourceIsolationRequestCycleListener = new ResourceIsolationRequestCycleListener();
+			resourceIsolationRequestCycleListener.setDisallowedOutcomeAction(CsrfAction.ABORT);
+			resourceIsolationRequestCycleListener.setUnknownOutcomeAction(CsrfAction.ABORT);
+			// resourceIsolationRequestCycleListener.addExemptedPaths("");
+			getRequestCycleListeners().add(resourceIsolationRequestCycleListener);
+		}
 
 		addBundles();
 
