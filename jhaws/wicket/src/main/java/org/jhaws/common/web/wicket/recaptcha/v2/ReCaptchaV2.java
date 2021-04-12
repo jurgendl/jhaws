@@ -3,10 +3,10 @@ package org.jhaws.common.web.wicket.recaptcha.v2;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
+import org.apache.wicket.model.IModel;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.web.wicket.WicketRoot;
 import org.jhaws.common.web.wicket.recaptcha.ReCaptcha;
@@ -85,23 +85,37 @@ public class ReCaptchaV2 implements ReCaptcha {
 	 * callback uitvoert en dus submit zoals normaal
 	 */
 	@Override
-	public SubmitLink adjustNonAjaxReCaptchaSubmit(SubmitLink submitLink) {
-		submitLink.add(getNonAjaxSubmitAttributeModifier());
-		return submitLink;
-	}
+	public SubmitLink adjustNonAjaxReCaptchaSubmit(String id, IModel<?> model, Form<?> form) {
+		// WICKET-6/7
+		// SubmitLink submitLink = new SubmitLink(id, model, form);
+		// AttributeModifier am = new AttributeModifier("onclick", "") {
+		// @Override
+		// protected String newValue(String currentValue, String
+		// replacementValue) {
+		// if (getVisible()) {
+		// return currentValue;
+		// }
+		// return ";window." + RECAPTCHA_CALLBACK + "=function(){" +
+		// currentValue.toString() +
+		// "};event.preventDefault();grecaptcha.execute();";
+		// }
+		// };
+		// submitLink.add(am);
 
-	@Override
-	public AttributeModifier getNonAjaxSubmitAttributeModifier() {
-		return new AttributeModifier("onclick", "") {
+		// WICKET-9
+		SubmitLink submitLink = new SubmitLink(id, model, form) {
 			@Override
-			protected String newValue(String currentValue, String replacementValue) {
-				if (getVisible()) {
-					return currentValue;
+			protected CharSequence getTriggerJavaScript() {
+				CharSequence triggerJavaScript = super.getTriggerJavaScript();
+				if (triggerJavaScript != null) {
+					return ";window." + RECAPTCHA_CALLBACK + "=function(){" + triggerJavaScript
+							+ "};event.preventDefault();grecaptcha.execute();";
 				}
-				return ";window." + RECAPTCHA_CALLBACK + "=function(){" + currentValue
-						+ "};event.preventDefault();grecaptcha.execute();";
+				return triggerJavaScript;
 			}
 		};
+
+		return submitLink;
 	}
 
 	@Override

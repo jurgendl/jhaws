@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
+import org.apache.wicket.model.IModel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,9 +16,7 @@ public interface ReCaptcha extends Serializable {
 
 	static final ObjectMapper OBJECT_MAPPER = new ReCaptchaObjectMapper();
 
-	SubmitLink adjustNonAjaxReCaptchaSubmit(SubmitLink submitLink);
-
-	AttributeModifier getNonAjaxSubmitAttributeModifier();
+	SubmitLink adjustNonAjaxReCaptchaSubmit(String id, IModel<?> model, Form<?> form);
 
 	AjaxCallListener getAjaxSubmitAjaxCallListener();
 

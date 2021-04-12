@@ -7,10 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Request;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.SubmitLink;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.IRequestParameters;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.jhaws.common.io.FilePath;
@@ -156,34 +156,55 @@ public class ReCaptchaV3 implements ReCaptcha {
 	}
 
 	@Override
-	public SubmitLink adjustNonAjaxReCaptchaSubmit(SubmitLink submitLink) {
-		submitLink.add(getNonAjaxSubmitAttributeModifier());
+	public SubmitLink adjustNonAjaxReCaptchaSubmit(String id, IModel<?> model, Form<?> form) {
+		// WICKET-6/7
+		// SubmitLink submitLink = new SubmitLink(id, model, form);
+		// AttributeModifier am = new AttributeModifier("onclick", "") {
+		// @Override
+		// protected String newValue(String currentValue, String
+		// replacementValue) {
+		// String js = ";event.preventDefault();"//
+		// + "var " + ReCaptchaV3.TOKEN_JS + ";"//
+		// + "grecaptcha.ready(function(){"//
+		// + "grecaptcha.execute('" + sitekey + "',{action: 'submit'})"//
+		// + ".then(function(token){"//
+		// + ReCaptchaV3.TOKEN_JS + "=token;"//
+		// + "$('#" + ReCaptcha.G_RECAPTCHA_RESPONSE + "').val(token);"//
+		// + currentValue + ";"//
+		// + "})})";
+		// return js;
+		// }
+		// };
+		// submitLink.add(am);
+
+		// WICKET-9
+		SubmitLink submitLink = new SubmitLink(id, model, form) {
+			@Override
+			protected CharSequence getTriggerJavaScript() {
+				CharSequence triggerJavaScript = super.getTriggerJavaScript();
+				if (triggerJavaScript != null) {
+					triggerJavaScript = ";event.preventDefault();"//
+							+ "var " + ReCaptchaV3.TOKEN_JS + ";"//
+							+ "grecaptcha.ready(function(){"//
+							+ "grecaptcha.execute('" + sitekey + "',{action: 'submit'})"//
+							+ ".then(function(token){"//
+							+ ReCaptchaV3.TOKEN_JS + "=token;"//
+							+ "$('#" + ReCaptcha.G_RECAPTCHA_RESPONSE + "').val(token);"//
+							+ triggerJavaScript + ";"//
+							+ "})})";
+				}
+				return triggerJavaScript;
+			}
+		};
+
 		// submitLink.add(AttributeModifier.append("class", " g-recaptcha"));
 		// submitLink.add(new AttributeModifier("data-sitekey",
 		// reCaptchaV3.getSitekey()));
 		// submitLink.add(new AttributeModifier("data-action", "submit"));
 		// submitLink.add(new AttributeModifier("data-callback",
 		// RECAPTCHA_CALLBACK)); // welke functie moet uitgevoerd worden
-		return submitLink;
-	}
 
-	@Override
-	public AttributeModifier getNonAjaxSubmitAttributeModifier() {
-		return new AttributeModifier("onclick", "") {
-			@Override
-			protected String newValue(String currentValue, String replacementValue) {
-				String js = ";event.preventDefault();"//
-						+ "var " + ReCaptchaV3.TOKEN_JS + ";"//
-						+ "grecaptcha.ready(function(){"//
-						+ "grecaptcha.execute('" + sitekey + "',{action: 'submit'})"//
-						+ ".then(function(token){"//
-						+ ReCaptchaV3.TOKEN_JS + "=token;"//
-						+ "$('#" + ReCaptcha.G_RECAPTCHA_RESPONSE + "').val(token);"//
-						+ currentValue + ";"//
-						+ "})})";
-				return js;
-			}
-		};
+		return submitLink;
 	}
 
 	@Override
