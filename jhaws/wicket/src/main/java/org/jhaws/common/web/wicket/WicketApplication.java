@@ -195,8 +195,13 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		// Csrf
 		if (false) {
 			// https://ci.apache.org/projects/wicket/apidocs/9.x/org/apache/wicket/protocol/http/CsrfPreventionRequestCycleListener.html
-			// getRequestCycleListeners().add(new
-			// CsrfPreventionRequestCycleListener());
+			// CsrfPreventionRequestCycleListener
+			// csrfPreventionRequestCycleListener = new
+			// CsrfPreventionRequestCycleListener();
+			// if (csrfAddLocalAsAcceptedOrigin) {
+			// csrfPreventionRequestCycleListener.addAcceptedOrigin("local.host.com");
+			// }
+			// getRequestCycleListeners().add(csrfPreventionRequestCycleListener);
 
 			// https://stackoverflow.com/questions/64675854/apache-wicket-9-1-csrf-enabled-formtester-submits-blocked-by-resource-isolation/64688636#64688636
 			ResourceIsolationRequestCycleListener resourceIsolationRequestCycleListener = new ResourceIsolationRequestCycleListener();
