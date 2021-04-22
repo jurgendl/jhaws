@@ -14,6 +14,10 @@ import org.apache.wicket.ISessionListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.mapper.MountedMapper;
+import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPDirectiveSrcValue;
+import org.apache.wicket.csp.CSPHeaderConfiguration;
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.devutils.stateless.StatelessChecker;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
@@ -188,9 +192,8 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			this.getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
 		}
 
-		// WICKET UPGRADE
-		// disable CSP
-		getCspSettings().blocking().disabled();
+		// CSP
+		csp();
 
 		// Csrf
 		if (false) {
@@ -274,20 +277,53 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		getSessionListeners().add(sl);
 	}
 
+	protected void csp() {
+		if (false) {
+			ContentSecurityPolicySettings cspSettings = getCspSettings();
+			CSPHeaderConfiguration cfg = cspSettings.blocking().clear();
+			cfg//
+					.add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_EVAL,
+							CSPDirectiveSrcValue.NONCE)//
+					// .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF,
+					// CSPDirectiveSrcValue.UNSAFE_INLINE)//
+					.add(CSPDirective.CONNECT_SRC, CSPDirectiveSrcValue.SELF)//
+					// .add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)//
+					.add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)//
+					.add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)//
+					.add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)//
+			;
+			cspSettings.enforce(this);
+		} else {
+			getCspSettings().blocking().disabled();
+		}
+	}
+
 	protected void addBundles() {
 		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js",
 				new JavaScriptResourceReference[] { //
-						BootstrapTinyMCE.JS, BootstrapTinyMCE.JS_JQUERY, BootstrapTinyMCE.JS_PLUGIN_LINK,
-						BootstrapTinyMCE.JS_PLUGIN_CODE, BootstrapTinyMCE.JS_PLUGIN_LISTS,
-						BootstrapTinyMCE.JS_PLUGIN_ADVLIST, BootstrapTinyMCE.JS_PLUGIN_AUTOLINK,
-						BootstrapTinyMCE.JS_PLUGIN_PRINT, BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE,
-						BootstrapTinyMCE.JS_PLUGIN_TABLE, BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS,
-						BootstrapTinyMCE.JS_PLUGIN_PASTE, BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT,
-						BootstrapTinyMCE.JS_PLUGIN_CHARMAP, BootstrapTinyMCE.JS_PLUGIN_ANCHOR,
-						BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR, BootstrapTinyMCE.JS_PLUGIN_COLORPICKER,
-						BootstrapTinyMCE.JS_PLUGIN_MEDIA, BootstrapTinyMCE.JS_PLUGIN_HR,
-						BootstrapTinyMCE.JS_PLUGIN_IMAGE, BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME,
-						BootstrapTinyMCE.JS_PLUGIN_HELP, BootstrapTinyMCE.JS_PLUGIN_PREVIEW//
+						BootstrapTinyMCE.JS, //
+						BootstrapTinyMCE.JS_JQUERY, //
+						BootstrapTinyMCE.JS_PLUGIN_LINK, //
+						BootstrapTinyMCE.JS_PLUGIN_CODE, //
+						BootstrapTinyMCE.JS_PLUGIN_LISTS, //
+						BootstrapTinyMCE.JS_PLUGIN_ADVLIST, //
+						BootstrapTinyMCE.JS_PLUGIN_AUTOLINK, //
+						BootstrapTinyMCE.JS_PLUGIN_PRINT, //
+						BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE, //
+						BootstrapTinyMCE.JS_PLUGIN_TABLE, //
+						BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS, //
+						BootstrapTinyMCE.JS_PLUGIN_PASTE, //
+						BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT, //
+						BootstrapTinyMCE.JS_PLUGIN_CHARMAP, //
+						BootstrapTinyMCE.JS_PLUGIN_ANCHOR, //
+						BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR, //
+						BootstrapTinyMCE.JS_PLUGIN_COLORPICKER, //
+						BootstrapTinyMCE.JS_PLUGIN_MEDIA, //
+						BootstrapTinyMCE.JS_PLUGIN_HR, //
+						BootstrapTinyMCE.JS_PLUGIN_IMAGE, //
+						BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME, //
+						BootstrapTinyMCE.JS_PLUGIN_HELP, //
+						BootstrapTinyMCE.JS_PLUGIN_PREVIEW//
 				});
 
 		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "waypoints-bundle.js",
