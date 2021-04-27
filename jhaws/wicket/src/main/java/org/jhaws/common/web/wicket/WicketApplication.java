@@ -18,6 +18,7 @@ import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.csp.CSPDirectiveSrcValue;
 import org.apache.wicket.csp.CSPHeaderConfiguration;
 import org.apache.wicket.csp.ContentSecurityPolicySettings;
+import org.apache.wicket.csp.FixedCSPValue;
 import org.apache.wicket.devutils.stateless.StatelessChecker;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
@@ -283,42 +284,73 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		if (enableCSP) {
 			ContentSecurityPolicySettings cspSettings = getCspSettings();
 			CSPHeaderConfiguration cfg = cspSettings.blocking().clear();
-			cfg//
-					.add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_EVAL,
-							CSPDirectiveSrcValue.NONCE)//
-					// .add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF,
-					// CSPDirectiveSrcValue.UNSAFE_INLINE)//
-					.add(CSPDirective.CONNECT_SRC, CSPDirectiveSrcValue.SELF)//
-					// .add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)//
-					.add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)//
-					.add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)//
-					.add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)//
-					// //
-					// ======================================================================
-					// // Google tracking
-					// (be.ugent.gismo.researchweb.wicket.TrackerConfig)
-					.add(CSPDirective.SCRIPT_SRC, "https://www.googletagmanager.com")//
-					.add(CSPDirective.SCRIPT_SRC, "https://www.google-analytics.com")//
-					.add(CSPDirective.STYLE_SRC, "https://www.googletagmanager.com")//
-					.add(CSPDirective.STYLE_SRC, "https://fonts.googleapis.com")//
-					// .add(CSPDirective.IMG_SRC, "https://ssl.gstatic.com")//
-					// .add(CSPDirective.IMG_SRC, "https://www.gstatic.com")//
-					// .add(CSPDirective.IMG_SRC,
-					// "https://www.google-analytics.com")//
-					.add(CSPDirective.FONT_SRC, "https://fonts.gstatic.com")//
-					.add(CSPDirective.FONT_SRC, "data:")//
-					.add(CSPDirective.CONNECT_SRC, "https://www.google-analytics.com/")//
-					// //
-					// ======================================================================
-					// // Google Recaptcha (overlaps with Google tracking)
-					.add(CSPDirective.SCRIPT_SRC, "https://www.google.com")//
-					.add(CSPDirective.SCRIPT_SRC, "https://www.gstatic.com")//
-					.add(CSPDirective.FRAME_SRC, "https://www.google.com")//
-			;
+			csp(cfg);
 			cspSettings.enforce(this);
 		} else {
 			getCspSettings().blocking().disabled();
 		}
+	}
+
+	protected void csp(CSPHeaderConfiguration cfg) {
+		cfg//
+			// ======================================================================
+			// .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.SELF)//
+			//
+			// disabled: .add(CSPDirective.SCRIPT_SRC,
+			// CSPDirectiveSrcValue.SELF,
+			// CSPDirectiveSrcValue.UNSAFE_INLINE,
+			// CSPDirectiveSrcValue.UNSAFE_EVAL)//
+			// strict: .add(CSPDirective.SCRIPT_SRC,
+			// CSPDirectiveSrcValue.STRICT_DYNAMIC,
+			// CSPDirectiveSrcValue.NONCE)
+			// .add(CSPDirective.SCRIPT_SRC,
+			// CSPDirectiveSrcValue.STRICT_DYNAMIC,
+			// CSPDirectiveSrcValue.UNSAFE_INLINE,
+			// CSPDirectiveSrcValue.NONCE)
+				.add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF, /*
+																			 * CSPDirectiveSrcValue
+																			 * .
+																			 * UNSAFE_INLINE,
+																			 *///
+						CSPDirectiveSrcValue.UNSAFE_EVAL, //
+						CSPDirectiveSrcValue.NONCE)
+				//
+				.add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_INLINE)//
+				// .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.CONNECT_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.CHILD_SRC, new FixedCSPValue("blob:") {
+					@Override
+					public void checkValidityForSrc() {
+						/**/
+					}
+				})//
+				.add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)//
+				// ======================================================================
+				// .add(CSPDirective.IMG_SRC, "data:")//
+				// ======================================================================
+				// // Google tracking
+				// (be.ugent.gismo.researchweb.wicket.TrackerConfig)
+				.add(CSPDirective.SCRIPT_SRC, "https://www.googletagmanager.com")//
+				.add(CSPDirective.SCRIPT_SRC, "https://www.google-analytics.com")//
+				.add(CSPDirective.STYLE_SRC, "https://www.googletagmanager.com")//
+				.add(CSPDirective.STYLE_SRC, "https://fonts.googleapis.com")//
+				// .add(CSPDirective.IMG_SRC, "https://ssl.gstatic.com")//
+				// .add(CSPDirective.IMG_SRC, "https://www.gstatic.com")//
+				// .add(CSPDirective.IMG_SRC,
+				// "https://www.google-analytics.com")//
+				.add(CSPDirective.FONT_SRC, "https://fonts.gstatic.com")//
+				.add(CSPDirective.FONT_SRC, "data:")//
+				.add(CSPDirective.CONNECT_SRC, "https://www.google-analytics.com/")//
+				// //
+				// ======================================================================
+				// // Google Recaptcha (overlaps with Google tracking)
+				.add(CSPDirective.SCRIPT_SRC, "https://www.google.com")//
+				.add(CSPDirective.SCRIPT_SRC, "https://www.gstatic.com")//
+				.add(CSPDirective.FRAME_SRC, "https://www.google.com")//
+		;
 	}
 
 	protected void addBundles() {
