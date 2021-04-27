@@ -6,6 +6,7 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.protocol.http.WebSession;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.jhaws.common.web.wicket.NonceInlineScript;
 import org.jhaws.common.web.wicket.recaptcha.ReCaptcha;
 import org.jhaws.common.web.wicket.recaptcha.ReCaptchaPanel;
 
@@ -77,7 +78,7 @@ public class ReCaptchaV2Panel extends ReCaptchaPanel {
 
 	public ReCaptchaV2Panel(String id) {
 		super(id);
-		add(new WebMarkupContainer("recaptcha_js") {
+		add(new NonceInlineScript("recaptcha_js") {
 			@Override
 			protected void onComponentTag(ComponentTag tag) {
 				super.onComponentTag(tag);
