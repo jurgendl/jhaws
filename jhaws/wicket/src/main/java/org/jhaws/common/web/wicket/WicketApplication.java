@@ -277,8 +277,10 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		getSessionListeners().add(sl);
 	}
 
+	protected boolean enableCSP = false;
+
 	protected void csp() {
-		if (false) {
+		if (enableCSP) {
 			ContentSecurityPolicySettings cspSettings = getCspSettings();
 			CSPHeaderConfiguration cfg = cspSettings.blocking().clear();
 			cfg//
