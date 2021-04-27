@@ -293,6 +293,27 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 					.add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)//
 					.add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)//
 					.add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)//
+					// //
+					// ======================================================================
+					// // Google tracking
+					// (be.ugent.gismo.researchweb.wicket.TrackerConfig)
+					.add(CSPDirective.SCRIPT_SRC, "https://www.googletagmanager.com")//
+					.add(CSPDirective.SCRIPT_SRC, "https://www.google-analytics.com")//
+					.add(CSPDirective.STYLE_SRC, "https://www.googletagmanager.com")//
+					.add(CSPDirective.STYLE_SRC, "https://fonts.googleapis.com")//
+					// .add(CSPDirective.IMG_SRC, "https://ssl.gstatic.com")//
+					// .add(CSPDirective.IMG_SRC, "https://www.gstatic.com")//
+					// .add(CSPDirective.IMG_SRC,
+					// "https://www.google-analytics.com")//
+					.add(CSPDirective.FONT_SRC, "https://fonts.gstatic.com")//
+					.add(CSPDirective.FONT_SRC, "data:")//
+					.add(CSPDirective.CONNECT_SRC, "https://www.google-analytics.com/")//
+					// //
+					// ======================================================================
+					// // Google Recaptcha (overlaps with Google tracking)
+					.add(CSPDirective.SCRIPT_SRC, "https://www.google.com")//
+					.add(CSPDirective.SCRIPT_SRC, "https://www.gstatic.com")//
+					.add(CSPDirective.FRAME_SRC, "https://www.google.com")//
 			;
 			cspSettings.enforce(this);
 		} else {
