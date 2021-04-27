@@ -23,7 +23,7 @@ public class BootboxJavascriptEventConfirmation extends AttributeModifier {
 	private BootBoxHelper helper;
 
 	public BootboxJavascriptEventConfirmation() {
-		super("onclick", Model.of("confirmation.box.cancel.knop.label"));
+		super("onclick", Model.of("confirmation.box.cancel.button.label"));
 		helper = new BootBoxHelper();
 	}
 

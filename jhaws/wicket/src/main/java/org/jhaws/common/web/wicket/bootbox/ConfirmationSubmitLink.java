@@ -17,22 +17,22 @@ public class ConfirmationSubmitLink extends SubmitLink {
 
 	public ConfirmationSubmitLink(String id, Form<?> form) {
 		super(id, form);
-		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.knop.label", (IModel<String>) null));
+		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.button.label", (IModel<String>) null));
 	}
 
 	public ConfirmationSubmitLink(String id, IModel<?> model, Form<?> form) {
 		super(id, model, form);
-		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.knop.label", (IModel<String>) null));
+		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.button.label", (IModel<String>) null));
 	}
 
 	public ConfirmationSubmitLink(String id, IModel<?> model) {
 		super(id, model);
-		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.knop.label", (IModel<String>) null));
+		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.button.label", (IModel<String>) null));
 	}
 
 	public ConfirmationSubmitLink(String id) {
 		super(id);
-		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.knop.label", (IModel<String>) null));
+		builder.setCancelButton(new ResourceModel("confirmation.box.cancel.button.label", (IModel<String>) null));
 	}
 
 	@Override
