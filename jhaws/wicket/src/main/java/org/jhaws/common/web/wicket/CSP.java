@@ -101,6 +101,11 @@ public class CSP {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		try {
+			cfg.add(CSPDirective.SCRIPT_SRC, cspSha256("topFunction()"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	public static String cspSha256(String script) {
