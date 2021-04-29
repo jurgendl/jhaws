@@ -12,6 +12,10 @@ import org.jhaws.common.web.wicket.forms.common.TextFieldSettings;
 
 @SuppressWarnings("serial")
 public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<T, TextField<T>, TextFieldSettings> {
+	public static final String ONDROP = ";event.preventDefault();$(event.target).val(event.dataTransfer.getData('text'));";
+
+	public static final String ONCLICK = ";this.setSelectionRange(0,this.value.length);";
+
 	public TextFieldPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings,
 			TextFieldSettings componentSettings) {
 		super(model, propertyPath, formSettings, componentSettings);
@@ -33,11 +37,10 @@ public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<
 			WebHelper.tag(tag, "pattern", getComponentSettings().getPattern());
 		}
 		if (Boolean.TRUE.equals(getComponentSettings().getReplaceAllOnDrop())) {
-			WebHelper.tag(tag, "ondrop",
-					";event.preventDefault();$(event.target).val(event.dataTransfer.getData('text'));");
+			WebHelper.tag(tag, "ondrop", ONDROP);
 		}
 		if (Boolean.TRUE.equals(getComponentSettings().getSelectAllOnFocus())) {
-			WebHelper.tag(tag, "onClick", ";this.setSelectionRange(0,this.value.length);");
+			WebHelper.tag(tag, "onclick", ONCLICK);
 		}
 	}
 

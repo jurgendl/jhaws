@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class JAXBMarshalling {
 
 	protected final String defaultNameSpace;
 
-	protected String charSet = "UTF-8";
+	protected String charSet = StandardCharsets.UTF_8.toString();
 
 	protected boolean formatOutput = true;
 

@@ -3,6 +3,7 @@ package org.jhaws.common.elasticsearch.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -47,8 +48,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-index.html
 public class ElasticLowLevelClient extends ElasticConfig {
 	protected final Logger LOGGER;
-
-	public static final String UTF_8 = "utf-8";
 
 	// @Autowired(required = false)
 	protected ObjectMapper objectMapper;
@@ -128,7 +127,7 @@ public class ElasticLowLevelClient extends ElasticConfig {
 		}
 		if (!(200 <= response.getCode() && response.getCode() < 300)) {
 			try {
-				String stringResponse = new String(entity, UTF_8);
+				String stringResponse = new String(entity, StandardCharsets.UTF_8.toString());
 				try {
 					stringResponse = objectToJson(getObjectMapper(),
 							jsonToObject(getObjectMapper(), Map.class, stringResponse));
@@ -151,7 +150,7 @@ public class ElasticLowLevelClient extends ElasticConfig {
 		try {
 			String uri = getProtocol() + "://" + getUrl().split(",")[0] + ":" + getPort() + "/";
 			LOGGER.debug(uri);
-			return new String(_execute(new HttpGet(uri)), UTF_8);
+			return new String(_execute(new HttpGet(uri)), StandardCharsets.UTF_8.toString());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -171,7 +170,8 @@ public class ElasticLowLevelClient extends ElasticConfig {
 		// request.setHeader("Accept", "application/json");
 		// request.setHeader("Content-type", "application/json");
 		try {
-			return new InputStreamEntity(json, json.available(), ContentType.APPLICATION_JSON, UTF_8);
+			return new InputStreamEntity(json, json.available(), ContentType.APPLICATION_JSON,
+					StandardCharsets.UTF_8.toString());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -180,7 +180,7 @@ public class ElasticLowLevelClient extends ElasticConfig {
 	protected StringEntity jsonEntity(String json) {
 		// request.setHeader("Accept", "application/json");
 		// request.setHeader("Content-type", "application/json");
-		return new StringEntity(json, ContentType.APPLICATION_JSON, UTF_8, false);
+		return new StringEntity(json, ContentType.APPLICATION_JSON, StandardCharsets.UTF_8.toString(), false);
 	}
 
 	protected <T> StringEntity jsonEntity(T object) {
@@ -232,7 +232,8 @@ public class ElasticLowLevelClient extends ElasticConfig {
 			put.setEntity(jsonEntity(json));
 			byte[] result = _execute(put);
 			@SuppressWarnings("unchecked")
-			Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class, new String(result, UTF_8));
+			Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class,
+					new String(result, StandardCharsets.UTF_8.toString()));
 			LOGGER.debug("result: {}", map);
 			boolean success = map != null
 					&& ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
@@ -259,7 +260,8 @@ public class ElasticLowLevelClient extends ElasticConfig {
 			put.setEntity(jsonEntity(json));
 			byte[] result = _execute(put);
 			@SuppressWarnings("unchecked")
-			Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class, new String(result, UTF_8));
+			Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class,
+					new String(result, StandardCharsets.UTF_8.toString()));
 			LOGGER.debug("result: {}", map);
 			boolean success = map != null
 					&& ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));

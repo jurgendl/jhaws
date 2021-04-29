@@ -35,7 +35,7 @@ public class PasswordFieldPanel<T extends Serializable>
 			WebHelper.tag(tag, "pattern", getComponentSettings().getPattern());
 		}
 		if (Boolean.TRUE.equals(getComponentSettings().getSelectAllOnFocus())) {
-			WebHelper.tag(tag, "onClick", ";this.setSelectionRange(0,this.value.length);");
+			WebHelper.tag(tag, "onclick", TextFieldPanel.ONCLICK);
 		}
 	}
 

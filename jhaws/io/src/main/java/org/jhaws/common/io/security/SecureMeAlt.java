@@ -2,6 +2,7 @@ package org.jhaws.common.io.security;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
 import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
@@ -62,7 +63,7 @@ public class SecureMeAlt implements Security {
 		pbeCipher.init(Cipher.ENCRYPT_MODE, key);
 		AlgorithmParameters parameters = pbeCipher.getParameters();
 		IvParameterSpec ivParameterSpec = parameters.getParameterSpec(IvParameterSpec.class);
-		byte[] cryptoText = pbeCipher.doFinal(property.getBytes("UTF-8"));
+		byte[] cryptoText = pbeCipher.doFinal(property.getBytes(StandardCharsets.UTF_8.toString()));
 		byte[] iv = ivParameterSpec.getIV();
 		return Base64.getEncoder().encodeToString(iv) + ":" + Base64.getEncoder().encodeToString(cryptoText);
 	}
@@ -72,7 +73,7 @@ public class SecureMeAlt implements Security {
 		String property = string.split(":")[1];
 		Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		pbeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(iv)));
-		return new String(pbeCipher.doFinal(Base64.getDecoder().decode(property)), "UTF-8");
+		return new String(pbeCipher.doFinal(Base64.getDecoder().decode(property)), StandardCharsets.UTF_8.toString());
 	}
 
 	@Override

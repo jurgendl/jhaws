@@ -19,7 +19,7 @@ public class PositionTest {
 //    @Test
 //    public void testPosition() {
 //        try {
-//            String t = new FilePath(getClass(), "text.txt").readAll(Charset.forName("utf-8"));
+//            String t = new FilePath(getClass(), "text.txt").readAll(StandardCharsets.UTF_8);
 //            Text text = new Text();
 //            text.setText(t);
 //            LuceneIndex li = new LuceneIndex(new FilePath("c:/tmp/--index--" + System.currentTimeMillis())) {

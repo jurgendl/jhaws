@@ -14,11 +14,6 @@ import org.apache.wicket.ISessionListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.mapper.MountedMapper;
-import org.apache.wicket.csp.CSPDirective;
-import org.apache.wicket.csp.CSPDirectiveSrcValue;
-import org.apache.wicket.csp.CSPHeaderConfiguration;
-import org.apache.wicket.csp.ContentSecurityPolicySettings;
-import org.apache.wicket.csp.FixedCSPValue;
 import org.apache.wicket.devutils.stateless.StatelessChecker;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
@@ -193,27 +188,9 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			this.getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
 		}
 
-		// CSP
-		csp();
+		CSP.csp(this, enableCSP);
 
-		// Csrf
-		if (false) {
-			// https://ci.apache.org/projects/wicket/apidocs/9.x/org/apache/wicket/protocol/http/CsrfPreventionRequestCycleListener.html
-			// CsrfPreventionRequestCycleListener
-			// csrfPreventionRequestCycleListener = new
-			// CsrfPreventionRequestCycleListener();
-			// if (csrfAddLocalAsAcceptedOrigin) {
-			// csrfPreventionRequestCycleListener.addAcceptedOrigin("local.host.com");
-			// }
-			// getRequestCycleListeners().add(csrfPreventionRequestCycleListener);
-
-			// https://stackoverflow.com/questions/64675854/apache-wicket-9-1-csrf-enabled-formtester-submits-blocked-by-resource-isolation/64688636#64688636
-			ResourceIsolationRequestCycleListener resourceIsolationRequestCycleListener = new ResourceIsolationRequestCycleListener();
-			resourceIsolationRequestCycleListener.setDisallowedOutcomeAction(CsrfAction.ABORT);
-			resourceIsolationRequestCycleListener.setUnknownOutcomeAction(CsrfAction.ABORT);
-			// resourceIsolationRequestCycleListener.addExemptedPaths("");
-			getRequestCycleListeners().add(resourceIsolationRequestCycleListener);
-		}
+		csrf();
 
 		addBundles();
 
@@ -278,80 +255,29 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		getSessionListeners().add(sl);
 	}
 
-	protected boolean enableCSP = false;
+	protected boolean enableCsrf = false;
 
-	protected void csp() {
-		if (enableCSP) {
-			ContentSecurityPolicySettings cspSettings = getCspSettings();
-			CSPHeaderConfiguration cfg = cspSettings.blocking().clear();
-			csp(cfg);
-			cspSettings.enforce(this);
-		} else {
-			getCspSettings().blocking().disabled();
+	protected void csrf() {
+		if (enableCsrf) {
+			// https://ci.apache.org/projects/wicket/apidocs/9.x/org/apache/wicket/protocol/http/CsrfPreventionRequestCycleListener.html
+			// CsrfPreventionRequestCycleListener
+			// csrfPreventionRequestCycleListener = new
+			// CsrfPreventionRequestCycleListener();
+			// if (csrfAddLocalAsAcceptedOrigin) {
+			// csrfPreventionRequestCycleListener.addAcceptedOrigin("local.host.com");
+			// }
+			// getRequestCycleListeners().add(csrfPreventionRequestCycleListener);
+
+			// https://stackoverflow.com/questions/64675854/apache-wicket-9-1-csrf-enabled-formtester-submits-blocked-by-resource-isolation/64688636#64688636
+			ResourceIsolationRequestCycleListener resourceIsolationRequestCycleListener = new ResourceIsolationRequestCycleListener();
+			resourceIsolationRequestCycleListener.setDisallowedOutcomeAction(CsrfAction.ABORT);
+			resourceIsolationRequestCycleListener.setUnknownOutcomeAction(CsrfAction.ABORT);
+			// resourceIsolationRequestCycleListener.addExemptedPaths("");
+			getRequestCycleListeners().add(resourceIsolationRequestCycleListener);
 		}
 	}
 
-	protected void csp(CSPHeaderConfiguration cfg) {
-		cfg//
-			// ======================================================================
-			// .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.SELF)//
-			//
-			// disabled: .add(CSPDirective.SCRIPT_SRC,
-			// CSPDirectiveSrcValue.SELF,
-			// CSPDirectiveSrcValue.UNSAFE_INLINE,
-			// CSPDirectiveSrcValue.UNSAFE_EVAL)//
-			// strict: .add(CSPDirective.SCRIPT_SRC,
-			// CSPDirectiveSrcValue.STRICT_DYNAMIC,
-			// CSPDirectiveSrcValue.NONCE)
-			// .add(CSPDirective.SCRIPT_SRC,
-			// CSPDirectiveSrcValue.STRICT_DYNAMIC,
-			// CSPDirectiveSrcValue.UNSAFE_INLINE,
-			// CSPDirectiveSrcValue.NONCE)
-				.add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF, /*
-																			 * CSPDirectiveSrcValue
-																			 * .
-																			 * UNSAFE_INLINE,
-																			 *///
-						CSPDirectiveSrcValue.UNSAFE_EVAL, //
-						CSPDirectiveSrcValue.NONCE)
-				//
-				.add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_INLINE)//
-				// .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)//
-				.add(CSPDirective.CONNECT_SRC, CSPDirectiveSrcValue.SELF)//
-				.add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)//
-				.add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)//
-				.add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)//
-				.add(CSPDirective.CHILD_SRC, new FixedCSPValue("blob:") {
-					@Override
-					public void checkValidityForSrc() {
-						/**/
-					}
-				})//
-				.add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)//
-				// ======================================================================
-				// .add(CSPDirective.IMG_SRC, "data:")//
-				// ======================================================================
-				// // Google tracking
-				// (be.ugent.gismo.researchweb.wicket.TrackerConfig)
-				.add(CSPDirective.SCRIPT_SRC, "https://www.googletagmanager.com")//
-				.add(CSPDirective.SCRIPT_SRC, "https://www.google-analytics.com")//
-				.add(CSPDirective.STYLE_SRC, "https://www.googletagmanager.com")//
-				.add(CSPDirective.STYLE_SRC, "https://fonts.googleapis.com")//
-				// .add(CSPDirective.IMG_SRC, "https://ssl.gstatic.com")//
-				// .add(CSPDirective.IMG_SRC, "https://www.gstatic.com")//
-				// .add(CSPDirective.IMG_SRC,
-				// "https://www.google-analytics.com")//
-				.add(CSPDirective.FONT_SRC, "https://fonts.gstatic.com")//
-				.add(CSPDirective.FONT_SRC, "data:")//
-				.add(CSPDirective.CONNECT_SRC, "https://www.google-analytics.com/")//
-				// //
-				// ======================================================================
-				// // Google Recaptcha (overlaps with Google tracking)
-				.add(CSPDirective.SCRIPT_SRC, "https://www.google.com")//
-				.add(CSPDirective.SCRIPT_SRC, "https://www.gstatic.com")//
-				.add(CSPDirective.FRAME_SRC, "https://www.google.com")//
-		;
-	}
+	protected boolean enableCSP = false;
 
 	protected void addBundles() {
 		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js",

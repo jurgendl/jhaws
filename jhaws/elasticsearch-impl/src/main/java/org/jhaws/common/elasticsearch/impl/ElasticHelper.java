@@ -69,18 +69,20 @@ public class ElasticHelper {
 	}
 
 	public static <T> T jsonToObject(ObjectMapper om, Class<T> type, String json) {
-		if (json == null) return null;
+		if (json == null)
+			return null;
 		try {
-			return om.readValue(json.getBytes("utf-8"), type);
+			return om.readValue(json.getBytes(StandardCharsets.UTF_8.toString()), type);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
 	public static <T> T jsonToObject(ObjectMapper om, TypeReference<T> type, String json) {
-		if (json == null) return null;
+		if (json == null)
+			return null;
 		try {
-			return om.readValue(json.getBytes("utf-8"), type);
+			return om.readValue(json.getBytes(StandardCharsets.UTF_8.toString()), type);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -102,7 +104,9 @@ public class ElasticHelper {
 	public static <T> Optional<Method> initializer(Class<T> type) {
 		Optional<Method> value = initializers.get(type);
 		if (value == null) {
-			value = Arrays.stream(type.getDeclaredMethods()).filter(method -> method.getParameterCount() == 0).filter(method -> Modifier.isPublic(method.getModifiers())).filter(method -> method.getDeclaredAnnotation(PostConstruct.class) != null).findAny();
+			value = Arrays.stream(type.getDeclaredMethods()).filter(method -> method.getParameterCount() == 0)
+					.filter(method -> Modifier.isPublic(method.getModifiers()))
+					.filter(method -> method.getDeclaredAnnotation(PostConstruct.class) != null).findAny();
 			initializers.put(type, value);
 		}
 		return value;
@@ -130,7 +134,8 @@ public class ElasticHelper {
 					.filter(f -> f.getAnnotation(Id.class) != null)//
 					.findAny().orElseThrow();
 			// if (field.getAnnotation(JsonIgnore.class) == null) {
-			// throw new IllegalArgumentException("JsonIgnore missing on " + field);
+			// throw new IllegalArgumentException("JsonIgnore missing on " +
+			// field);
 			// }
 			field.setAccessible(true);
 			id.put(type, field);
@@ -160,7 +165,8 @@ public class ElasticHelper {
 					.filter(f -> f.getAnnotation(Id.class) != null)//
 					.findAny().orElseThrow();
 			if (field.getAnnotation(JsonIgnore.class) == null) {
-				// throw new IllegalArgumentException("JsonIgnore missing on " + field);
+				// throw new IllegalArgumentException("JsonIgnore missing on " +
+				// field);
 			}
 			field.setAccessible(true);
 			id.put(type, field);
@@ -191,7 +197,8 @@ public class ElasticHelper {
 	}
 
 	public static <T> T version(T o, Long v) {
-		if (v == null) return o;
+		if (v == null)
+			return o;
 		Class<? extends Object> type = o.getClass();
 		Field field = version.get(type);
 		if (field == null) {
@@ -227,11 +234,14 @@ public class ElasticHelper {
 	}
 
 	public static <T> T toObject(ObjectMapper om, Class<T> type, GetResponse response) {
-		if (!response.isExists()) return null;
-		return toObject(om, type, response.getIndex(), response.getId(), response.getVersion(), response.getSourceAsString());
+		if (!response.isExists())
+			return null;
+		return toObject(om, type, response.getIndex(), response.getId(), response.getVersion(),
+				response.getSourceAsString());
 	}
 
-	public static <T> T toObject(ObjectMapper om, Class<T> type, @SuppressWarnings("unused") String _index, String _id, Long _version, String json) {
+	public static <T> T toObject(ObjectMapper om, Class<T> type, @SuppressWarnings("unused") String _index, String _id,
+			Long _version, String json) {
 		T o = jsonToObject(om, type, json);
 		id(o, _id);
 		version(o, _version);
@@ -283,7 +293,7 @@ public class ElasticHelper {
 
 	public static String readText(String resourceName) {
 		try {
-			return new String(readBytes(resourceName), "utf-8");
+			return new String(readBytes(resourceName), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -291,7 +301,7 @@ public class ElasticHelper {
 
 	public static List<String> readLines(String resourceName) {
 		try {
-			return IOUtils.readLines(readInputStream(resourceName), "utf-8");
+			return IOUtils.readLines(readInputStream(resourceName), StandardCharsets.UTF_8.toString());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -327,7 +337,7 @@ public class ElasticHelper {
 
 	public static String readString(InputStream in) {
 		try {
-			return new String(read(in), "utf-8");
+			return new String(read(in), StandardCharsets.UTF_8.toString());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

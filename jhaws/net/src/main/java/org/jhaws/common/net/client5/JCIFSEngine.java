@@ -2,6 +2,7 @@ package org.jhaws.common.net.client5;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 
@@ -28,7 +29,7 @@ public class JCIFSEngine implements NTLMEngine {
 
 	private static String base64EncodeToString(byte[] data) {
 		try {
-			return new String(base64Encode(data), "utf-8");
+			return new String(base64Encode(data), StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex);
 		}

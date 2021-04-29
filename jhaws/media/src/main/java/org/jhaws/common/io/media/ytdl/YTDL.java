@@ -54,6 +54,8 @@ import org.jhaws.common.lang.Value;
 // cookies
 // https://github.com/ytdl-org/youtube-dl/issues/26152
 public class YTDL extends Tool {
+	private static final String UTF_8 = "utf-8";
+
 	public static final String EXE = "youtube-dl";
 
 	public static final String URL = "https://yt-dl.org/downloads/latest/";
@@ -255,7 +257,7 @@ public class YTDL extends Tool {
 			// command.add("--add-metadata");
 			command.add("--no-check-certificate");
 			command.add("--encoding");
-			command.add("utf-8");
+			command.add(UTF_8);
 			command.add("-f");
 			// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 			command.add("bestvideo,bestaudio");
@@ -278,7 +280,7 @@ public class YTDL extends Tool {
 				// command.add("--add-metadata");
 				command.add("--no-check-certificate");
 				command.add("--encoding");
-				command.add("utf-8");
+				command.add(UTF_8);
 				command.add("-o");
 				command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
 				command.add(url);
@@ -293,7 +295,7 @@ public class YTDL extends Tool {
 				}
 				command.add("--no-check-certificate");
 				command.add("--encoding");
-				command.add("utf-8");
+				command.add(UTF_8);
 				command.add("-o");
 				command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
 				command.add(url);

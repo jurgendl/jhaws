@@ -8,6 +8,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +68,7 @@ public abstract class StreamingServlet extends HttpServlet {
 
 	public static String decode(String name) {
 		try {
-			return URLDecoder.decode(name, "UTF-8");
+			return URLDecoder.decode(name, StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException ex) {
 			throw new IllegalArgumentException(ex);
 		}
@@ -75,7 +76,7 @@ public abstract class StreamingServlet extends HttpServlet {
 
 	public static String encode(String name) {
 		try {
-			return URLEncoder.encode(name, "UTF-8");
+			return URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
 		} catch (UnsupportedEncodingException ex) {
 			throw new IllegalArgumentException(ex);
 		}

@@ -1,5 +1,6 @@
 package org.jhaws.common.lang;
 
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +17,7 @@ import org.apache.commons.text.StringEscapeUtils;
 // or negative lookahead: a(?!b), which is a not followed by b
 // or negative lookbehind: (?<!a)b, which is b not preceeded by a
 public interface StringUtils {
-	public static final String UTF8 = "UTF-8";
+	public static final String UTF8 = StandardCharsets.UTF_8.toString();
 
 	public static final String REGULAR_STRING = "\\<([{^-=$!|]})?*+.>";
 
