@@ -90,10 +90,16 @@ public class CSP {
 				.add(CSPDirective.FRAME_SRC, "https://www.google.com")//
 		;
 
-		{
-			cfg.add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue_UNSAFE_HASHES);
+		cfg.add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue_UNSAFE_HASHES);
+		try {
 			cfg.add(CSPDirective.SCRIPT_SRC, cspSha256(TextFieldPanel.ONCLICK));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
 			cfg.add(CSPDirective.SCRIPT_SRC, cspSha256(TextFieldPanel.ONDROP));
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
