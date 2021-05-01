@@ -628,6 +628,11 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			ex.printStackTrace();
 		}
 		try {
+			cfg.add(CSPDirective.SCRIPT_SRC, CSP.CSPDirectiveSrcValue_EMPTYJS);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
 			cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256("topFunction()"));
 		} catch (Exception ex) {
 			ex.printStackTrace();

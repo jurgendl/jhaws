@@ -18,6 +18,10 @@ public class CSP {
 
 	public static final String CSPDirectiveSrcValue_UNSAFE_HASHES = "'unsafe-hashes'";
 
+	public static final String EMPTYJS = "javascript:;";
+
+	public static final String CSPDirectiveSrcValue_EMPTYJS = CSP.cspSha256(EMPTYJS);
+
 	public static String cspSha256(String script) {
 		return "'" + "sha256-" + base64(sha256(script)) + "'";
 	}
