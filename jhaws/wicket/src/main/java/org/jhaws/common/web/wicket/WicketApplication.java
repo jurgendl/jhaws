@@ -14,6 +14,10 @@ import org.apache.wicket.ISessionListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.core.request.mapper.MountedMapper;
+import org.apache.wicket.csp.CSPDirective;
+import org.apache.wicket.csp.CSPDirectiveSrcValue;
+import org.apache.wicket.csp.CSPHeaderConfiguration;
+import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.devutils.stateless.StatelessChecker;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
@@ -38,6 +42,7 @@ import org.jhaws.common.io.FilePath.Filters.AudioFilter;
 import org.jhaws.common.io.FilePath.Filters.ImageFilter;
 import org.jhaws.common.io.FilePath.Filters.VideoFilter;
 import org.jhaws.common.web.wicket.css.WicketCSSRoot;
+import org.jhaws.common.web.wicket.forms.bootstrap.TextFieldPanel;
 import org.jhaws.common.web.wicket.icons.WicketIconsRoot;
 import org.jhaws.common.web.wicket.js.GoogleLogin;
 import org.jhaws.common.web.wicket.js.WicketJSRoot;
@@ -188,7 +193,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			this.getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
 		}
 
-		CSP.csp(this, enableCSP);
+		csp();
 
 		csrf();
 
@@ -276,8 +281,6 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			getRequestCycleListeners().add(resourceIsolationRequestCycleListener);
 		}
 	}
-
-	protected boolean enableCSP = false;
 
 	protected void addBundles() {
 		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js",
@@ -543,4 +546,91 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 	// protected Class<? extends WebPage> getSignInPageClass() {
 	// return LoginPage.class;
 	// }
+
+	protected boolean enableCSP = false;
+
+	public void csp() {
+		if (enableCSP) {
+			ContentSecurityPolicySettings cspSettings = getCspSettings();
+			CSPHeaderConfiguration cfg = cspSettings.blocking().clear();
+			csp(cfg);
+			cspSettings.enforce(this);
+		} else {
+			getCspSettings().blocking().disabled();
+		}
+	}
+
+	public void csp(CSPHeaderConfiguration cfg) {
+		cfg//
+			// ======================================================================
+			// .add(CSPDirective.DEFAULT_SRC, CSPDirectiveSrcValue.SELF)//
+			//
+			// disabled: .add(CSPDirective.SCRIPT_SRC,
+			// CSPDirectiveSrcValue.SELF,
+			// CSPDirectiveSrcValue.UNSAFE_INLINE,
+			// CSPDirectiveSrcValue.UNSAFE_EVAL)//
+			// strict: .add(CSPDirective.SCRIPT_SRC,
+			// CSPDirectiveSrcValue.STRICT_DYNAMIC,
+			// CSPDirectiveSrcValue.NONCE)
+			// .add(CSPDirective.SCRIPT_SRC,
+			// CSPDirectiveSrcValue.STRICT_DYNAMIC,
+			// CSPDirectiveSrcValue.UNSAFE_INLINE,
+			// CSPDirectiveSrcValue.NONCE)
+				.add(CSPDirective.SCRIPT_SRC, CSPDirectiveSrcValue.SELF, /*
+																			 * CSPDirectiveSrcValue
+																			 * .
+																			 * UNSAFE_INLINE,
+																			 *///
+						CSPDirectiveSrcValue.UNSAFE_EVAL, //
+						CSPDirectiveSrcValue.NONCE)
+				//
+				.add(CSPDirective.STYLE_SRC, CSPDirectiveSrcValue.SELF, CSPDirectiveSrcValue.UNSAFE_INLINE)//
+				// .add(CSPDirective.IMG_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.CONNECT_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.FONT_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.MANIFEST_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.CHILD_SRC, CSPDirectiveSrcValue.SELF)//
+				.add(CSPDirective.CHILD_SRC, CSP.CSPDirectiveSrcValue_BLOB)//
+				.add(CSPDirective.BASE_URI, CSPDirectiveSrcValue.SELF)//
+				// ======================================================================
+				// .add(CSPDirective.IMG_SRC, "data:")//
+				// ======================================================================
+				// // Google tracking
+				// (be.ugent.gismo.researchweb.wicket.TrackerConfig)
+				.add(CSPDirective.SCRIPT_SRC, "https://www.googletagmanager.com")//
+				.add(CSPDirective.SCRIPT_SRC, "https://www.google-analytics.com")//
+				.add(CSPDirective.STYLE_SRC, "https://www.googletagmanager.com")//
+				.add(CSPDirective.STYLE_SRC, "https://fonts.googleapis.com")//
+				// .add(CSPDirective.IMG_SRC, "https://ssl.gstatic.com")//
+				// .add(CSPDirective.IMG_SRC, "https://www.gstatic.com")//
+				// .add(CSPDirective.IMG_SRC,
+				// "https://www.google-analytics.com")//
+				.add(CSPDirective.FONT_SRC, "https://fonts.gstatic.com")//
+				.add(CSPDirective.FONT_SRC, "data:")//
+				.add(CSPDirective.CONNECT_SRC, "https://www.google-analytics.com/")//
+				// //
+				// ======================================================================
+				// // Google Recaptcha (overlaps with Google tracking)
+				.add(CSPDirective.SCRIPT_SRC, "https://www.google.com")//
+				.add(CSPDirective.SCRIPT_SRC, "https://www.gstatic.com")//
+				.add(CSPDirective.FRAME_SRC, "https://www.google.com")//
+		;
+
+		cfg.add(CSPDirective.SCRIPT_SRC, CSP.CSPDirectiveSrcValue_UNSAFE_HASHES);
+		try {
+			cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256(TextFieldPanel.ONCLICK));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256(TextFieldPanel.ONDROP));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		try {
+			cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256("topFunction()"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 }
