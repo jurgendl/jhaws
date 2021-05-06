@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.jhaws.common.web.wicket.videojs.VideoJs7;
 
+//https://docs.videojs.com/
 // https://github.com/videojs/video.js/issues/3773
 // http://jsbin.com/faxayot/edit?html,output
 // https://blog.videojs.com/video-js-5-s-fluid-mode-and-playlist-picker/

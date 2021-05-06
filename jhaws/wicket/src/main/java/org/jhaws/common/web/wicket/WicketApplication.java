@@ -33,7 +33,11 @@ import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.caching.FilenameWithVersionResourceCachingStrategy;
 import org.apache.wicket.request.resource.caching.version.MessageDigestResourceVersion;
+import org.apache.wicket.settings.DebugSettings;
 import org.apache.wicket.settings.ExceptionSettings;
+import org.apache.wicket.settings.MarkupSettings;
+import org.apache.wicket.settings.RequestLoggerSettings;
+import org.apache.wicket.settings.ResourceSettings;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.convert.converter.DateConverter;
@@ -117,59 +121,56 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		super.init();
 
 		WicketAppSettings s = getSettings();
-
-		// library resources
-//		JavaScriptLibrarySettings javaScriptLibrarySettings = getJavaScriptLibrarySettings();
-//		javaScriptLibrarySettings
-//				.setJQueryReference(JQuery.JS/* JQueryResourceReference.get() */);
-
 		boolean deployed = this.usesDeploymentConfig();
-		boolean inDevelopment = !deployed;
+		springInjection();
+		gatherBrowserInfo(s.isGatherBrowserInfo());
+		markupSettings(getMarkupSettings(), deployed);
+		requestLoggerSettings(getRequestLoggerSettings(), deployed);
+		debugSettings(s, getDebugSettings(), deployed);
+		resourceSettings(s, getResourceSettings(), deployed);
+		javascriptAtBottom(WicketApplication.get().getSettings().isJavascriptAtBottom());
+		initStore();
+		statelessChecker(deployed);
+		csp(enableCSP);
+		csrf(enableCsrf);
+		addBundles();
+		mountImages();
+		mountResources();
+		mountPages();
+		exceptionHandling(deployed);
+		packageResourceGuard();
+		sessionListener();
+	}
 
-		// spring injector
-		this.getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-		Injector.get().inject(this);
-
-		// gather browser info
-		if (s.isGatherBrowserInfo()) {
-			this.getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
-			// =>
-			// ((WebClientInfo)WebRequestCycle.get().getClientInfo()).getProperties().isJavaEnabled()
-		}
-
+	protected void markupSettings(MarkupSettings markupSettings, boolean deployed) {
 		// markup settings
-		this.getMarkupSettings().setStripComments(deployed);
+		markupSettings.setStripComments(deployed);
 
-		this.getMarkupSettings().setCompressWhitespace(deployed);
+		markupSettings.setCompressWhitespace(deployed);
 
 		// breaks layout if not on
-		this.getMarkupSettings().setStripWicketTags(true);
+		markupSettings.setStripWicketTags(true);
 
 		if (deployed) {
-			this.getMarkupSettings().setMarkupFactory(new HtmlCompressingMarkupFactory());
+			markupSettings.setMarkupFactory(new HtmlCompressingMarkupFactory());
 		}
+	}
 
+	protected void requestLoggerSettings(RequestLoggerSettings requestLoggerSettings, boolean deployed) {
 		// request logger settings
-		this.getRequestLoggerSettings().setRecordSessionSize(inDevelopment);
-		this.getRequestLoggerSettings().setRequestLoggerEnabled(inDevelopment);
+		requestLoggerSettings.setRecordSessionSize(!deployed);
+		requestLoggerSettings.setRequestLoggerEnabled(!deployed);
+	}
 
-		// debug settings
-		this.getDebugSettings().setAjaxDebugModeEnabled(s.isShowDebugbars() && inDevelopment);
-		this.getDebugSettings().setComponentUseCheck(inDevelopment);
-		this.getDebugSettings().setDevelopmentUtilitiesEnabled(inDevelopment);
-		this.getDebugSettings().setOutputMarkupContainerClassName(inDevelopment);
-		this.getDebugSettings().setDevelopmentUtilitiesEnabled(inDevelopment);
-		// getDebugSettings().setOutputComponentPath(inDevelopment);
-
+	protected void resourceSettings(WicketAppSettings s, ResourceSettings resourceSettings, boolean deployed) {
 		// resource settings
-		this.getResourceSettings()
+		resourceSettings
 				.setCachingStrategy(new FilenameWithVersionResourceCachingStrategy(new MessageDigestResourceVersion()));
-		this.getResourceSettings().setUseMinifiedResources(deployed);
-		this.getResourceSettings().setEncodeJSessionId(deployed);
-		this.getResourceSettings()
+		resourceSettings.setUseMinifiedResources(deployed);
+		resourceSettings.setEncodeJSessionId(deployed);
+		resourceSettings
 				.setDefaultCacheDuration(s.getCacheDuration() != null ? (Duration.ofSeconds(s.getCacheDuration()))
-						: (inDevelopment ? Duration.ZERO : WebResponse.MAX_CACHE_DURATION));
-
+						: (!deployed ? Duration.ZERO : WebResponse.MAX_CACHE_DURATION));
 		if (deployed) {
 			// // minify your resources on deploy
 			// getResourceSettings()
@@ -178,74 +179,19 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			// getResourceSettings().setCssCompressor(new
 			// de.agilecoders.wicket.extensions.javascript.YuiCssCompressor());
 		}
+	}
 
-		// http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
-		// to put javascript down on the page (DefaultWebPage.html must contain
-		// wicket:id='footer-bucket'
-		// this.setHeaderResponseDecorator(new
-		// RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
+	protected void debugSettings(WicketAppSettings s, DebugSettings debugSettings, boolean deployed) {
+		// debug settings
+		debugSettings.setAjaxDebugModeEnabled(s.isShowDebugbars() && !deployed);
+		debugSettings.setComponentUseCheck(!deployed);
+		debugSettings.setDevelopmentUtilitiesEnabled(!deployed);
+		debugSettings.setOutputMarkupContainerClassName(!deployed);
+		debugSettings.setDevelopmentUtilitiesEnabled(!deployed);
+		// getDebugSettings().setOutputComponentPath(!deployed);
+	}
 
-		// store
-		this.initStore();
-
-		// stateless checker
-		if (inDevelopment) {
-			this.getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
-		}
-
-		csp();
-
-		csrf();
-
-		addBundles();
-
-		// jsr bean validation: special models can implement IPropertyResolver
-		// to return the propertyname
-		// BeanValidationConfiguration beanValidationConfiguration = new
-		// BeanValidationConfiguration();
-		// beanValidationConfiguration.configure(this);
-		// beanValidationConfiguration.add(component -> {
-		// IModel<?> model = component.getModel();
-		// if (model instanceof IPropertyResolver) {
-		// return ((IPropertyResolver) model).resolveProperty(component);
-		// }
-		// return null;
-		// });
-
-		// mount resources
-		this.mountImages();
-		this.mountResources();
-		this.mountPages();
-
-		// defaults
-		// this.getMarkupSettings().setDefaultBeforeDisabledLink("");
-		// this.getMarkupSettings().setDefaultAfterDisabledLink("");
-
-		// exceptions
-		this.getExceptionSettings().setUnexpectedExceptionDisplay(
-				inDevelopment ? ExceptionSettings.SHOW_EXCEPTION_PAGE : ExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
-		/*
-		 * getApplicationSettings().setPageExpiredErrorPage(MyExpiredPage.class)
-		 * ;
-		 * getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class
-		 * ); getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.
-		 * class);
-		 */
-
-		// http://wicketguide.comsysto.com/guide/chapter19.html#chapter19_4
-		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
-		if (packageResourceGuard instanceof SecurePackageResourceGuard) {
-			SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
-			guard.addPattern("+*.scss");
-			guard.addPattern("+*.less");
-			new ImageFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
-			new VideoFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
-			new AudioFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
-			guard.addPattern("+*.map");
-			guard.addPattern("+*.tag");
-			guard.addPattern("+*.woff2");
-		}
-
+	protected void sessionListener() {
 		ISessionListener sl = new ISessionListener() {
 			@Override
 			public void onCreated(Session session) {
@@ -260,9 +206,68 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		getSessionListeners().add(sl);
 	}
 
+	protected void javascriptAtBottom(boolean javascriptAtBottom) {
+		// http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
+		// to put javascript down on the page (DefaultWebPage.html must contain
+		// wicket:id='footer-bucket'
+		if (false && javascriptAtBottom) {
+			this.setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
+		}
+	}
+
+	protected void gatherBrowserInfo(boolean gatherBrowserInfo) {
+		// gather browser info
+		if (gatherBrowserInfo) {
+			this.getRequestCycleSettings().setGatherExtendedBrowserInfo(true);
+			// =>
+			// ((WebClientInfo)WebRequestCycle.get().getClientInfo()).getProperties().isJavaEnabled()
+		}
+	}
+
+	protected void springInjection() {
+		// spring injector
+		this.getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+		Injector.get().inject(this);
+	}
+
+	protected void packageResourceGuard() {
+		// http://wicketguide.comsysto.com/guide/chapter19.html#chapter19_4
+		IPackageResourceGuard packageResourceGuard = getResourceSettings().getPackageResourceGuard();
+		if (packageResourceGuard instanceof SecurePackageResourceGuard) {
+			SecurePackageResourceGuard guard = (SecurePackageResourceGuard) packageResourceGuard;
+			guard.addPattern("+*.scss");
+			guard.addPattern("+*.less");
+			new ImageFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
+			new VideoFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
+			new AudioFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
+			guard.addPattern("+*.map");
+			guard.addPattern("+*.tag");
+			guard.addPattern("+*.woff2");
+		}
+	}
+
+	protected void exceptionHandling(boolean deployed) {
+		this.getExceptionSettings().setUnexpectedExceptionDisplay(
+				!deployed ? ExceptionSettings.SHOW_EXCEPTION_PAGE : ExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
+		/*
+		 * getApplicationSettings().setPageExpiredErrorPage(MyExpiredPage.class)
+		 * ;
+		 * getApplicationSettings().setAccessDeniedPage(MyAccessDeniedPage.class
+		 * ); getApplicationSettings().setInternalErrorPage(MyInternalErrorPage.
+		 * class);
+		 */
+	}
+
+	protected void statelessChecker(boolean deployed) {
+		// stateless checker
+		if (!deployed) {
+			this.getComponentPostOnBeforeRenderListeners().add(new StatelessChecker());
+		}
+	}
+
 	protected boolean enableCsrf = false;
 
-	protected void csrf() {
+	protected void csrf(boolean enableCsrf) {
 		if (enableCsrf) {
 			// https://ci.apache.org/projects/wicket/apidocs/9.x/org/apache/wicket/protocol/http/CsrfPreventionRequestCycleListener.html
 			// CsrfPreventionRequestCycleListener
@@ -549,7 +554,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 
 	protected boolean enableCSP = false;
 
-	public void csp() {
+	public void csp(boolean enableCSP) {
 		if (enableCSP) {
 			ContentSecurityPolicySettings cspSettings = getCspSettings();
 			CSPHeaderConfiguration cfg = cspSettings.blocking().clear();

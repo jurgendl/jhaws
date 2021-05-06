@@ -17,6 +17,7 @@ import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.filter.HeaderResponseContainer;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -199,11 +200,12 @@ public abstract class DefaultWebPage extends WebPage {
 	}
 
 	protected void addJavaScriptOnBottom(MarkupContainer html) {
-//		if (WicketApplication.get().getSettings().isJavascriptAtBottom()) {
-//			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
-//		} else {
-//			html.add(new EmptyPanel("footer-container").setVisible(false));
-//		}
+		boolean javascriptAtBottom = WicketApplication.get().getSettings().isJavascriptAtBottom();
+		if (false && javascriptAtBottom) {
+			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
+		} else {
+			html.add(new EmptyPanel("footer-container").setVisible(false));
+		}
 	}
 
 	protected void addCheckAddBlock(MarkupContainer html) {
