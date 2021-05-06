@@ -1,14 +1,20 @@
 package org.jhaws.common.web.wicket;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.jhaws.common.web.wicket.videojs.VideoJs7;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 //https://docs.videojs.com/
 // https://github.com/videojs/video.js/issues/3773
@@ -20,8 +26,13 @@ import org.jhaws.common.web.wicket.videojs.VideoJs7;
 // https://blog.videojs.com/
 @SuppressWarnings("serial")
 public class VideoJs7Panel extends Panel {
-	@SuppressWarnings("unused")
 	private VideoJs7PanelConfig config;
+
+	protected WebMarkupContainer container;
+
+	protected WebMarkupContainer videocontainer;
+
+	protected WebMarkupContainer video;
 
 	public VideoJs7Panel(String id, VideoJs7PanelConfig config) {
 		super(id);
@@ -31,7 +42,8 @@ public class VideoJs7Panel extends Panel {
 	}
 
 	protected WebMarkupContainer createContainer(VideoJs7PanelConfig _config) {
-		WebMarkupContainer container = new WebMarkupContainer("container");
+		container = new WebMarkupContainer("container");
+		container.setOutputMarkupId(true);
 		container.add(createPlayer(_config));
 		container.add(createActions(_config));
 		return container;
@@ -40,9 +52,11 @@ public class VideoJs7Panel extends Panel {
 	protected WebMarkupContainer createPlayer(VideoJs7PanelConfig _config) {
 		boolean size = _config.getW() != null && _config.getH() != null && _config.getW() > 0 && _config.getH() > 0;
 
-		WebMarkupContainer videocontainer = new WebMarkupContainer("videocontainer");
+		videocontainer = new WebMarkupContainer("videocontainer");
+		videocontainer.setOutputMarkupId(true);
 
-		WebMarkupContainer video = new WebMarkupContainer("video");
+		video = new WebMarkupContainer("video");
+		video.setOutputMarkupId(true);
 		videocontainer.add(video);
 
 		RepeatingView sourceRepeater = new RepeatingView("source");
@@ -71,6 +85,7 @@ public class VideoJs7Panel extends Panel {
 		if (Boolean.TRUE.equals(_config.getMute())) {
 			video.add(new AttributeModifier("muted", "true"));
 		}
+		// video.add(new AttributeModifier("data-setup", getSettings()));
 
 //		video.add(new AttributeModifier("fill", "true"));
 //		video.add(new AttributeModifier("responsive", "true"));
@@ -98,5 +113,42 @@ public class VideoJs7Panel extends Panel {
 		response.render(CssHeaderItem.forReference(VideoJs7.CSS));
 		response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS));
 		response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS_PREVENT_MULTIPLE));
+		response.render(
+				OnDomReadyHeaderItem.forScript(";videojs('" + getVideo().getMarkupId() + "'," + getSettings() + ");"));
+	}
+
+	protected Map<String, Object> settings = new HashMap<>();
+
+	public void settting(String key, Object value) {
+		if (value == null)
+			settings.remove(key);
+		else
+			settings.put(key, value);
+	}
+
+	public String getSettings() {
+		try {
+			String s = WicketApplication.get().getObjectMapper().writeValueAsString(settings);
+			return s;
+		} catch (JsonProcessingException ex) {
+			ex.printStackTrace();
+			return "{}";
+		}
+	}
+
+	public VideoJs7PanelConfig getConfig() {
+		return this.config;
+	}
+
+	public WebMarkupContainer getContainer() {
+		return this.container;
+	}
+
+	public WebMarkupContainer getVideocontainer() {
+		return this.videocontainer;
+	}
+
+	public WebMarkupContainer getVideo() {
+		return this.video;
 	}
 }

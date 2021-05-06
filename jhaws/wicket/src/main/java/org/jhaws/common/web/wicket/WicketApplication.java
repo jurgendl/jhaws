@@ -45,6 +45,7 @@ import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.FilePath.Filters.AudioFilter;
 import org.jhaws.common.io.FilePath.Filters.ImageFilter;
 import org.jhaws.common.io.FilePath.Filters.VideoFilter;
+import org.jhaws.common.web.resteasy.CustomObjectMapper;
 import org.jhaws.common.web.wicket.css.WicketCSSRoot;
 import org.jhaws.common.web.wicket.forms.bootstrap.TextFieldPanel;
 import org.jhaws.common.web.wicket.icons.WicketIconsRoot;
@@ -67,6 +68,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.wicketstuff.annotation.scan.AnnotatedMountScanner;
 import org.wicketstuff.htmlcompressor.HtmlCompressingMarkupFactory;
 import org.wicketstuff.logback.ConfiguratorPage;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 // getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
 // getApplicationSettings().setPageExpiredErrorPage(MyExpiredPage.class);
@@ -642,5 +645,14 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	@SpringBean(name = "objectMapper", required = false)
+	protected ObjectMapper objectMapper;
+
+	public synchronized ObjectMapper getObjectMapper() {
+		if (objectMapper == null)
+			objectMapper = new CustomObjectMapper();
+		return this.objectMapper;
 	}
 }
