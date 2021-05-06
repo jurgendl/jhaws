@@ -16,6 +16,7 @@ import org.jhaws.common.web.wicket.videojs.VideoJs7;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+//https://docs.videojs.com/tutorial-embeds.html
 //https://docs.videojs.com/
 // https://github.com/videojs/video.js/issues/3773
 // http://jsbin.com/faxayot/edit?html,output
