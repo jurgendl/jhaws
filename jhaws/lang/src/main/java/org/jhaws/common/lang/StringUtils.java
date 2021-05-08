@@ -3,6 +3,7 @@ package org.jhaws.common.lang;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -135,6 +136,10 @@ public interface StringUtils {
 	}
 
 	public static String sortable(String string) {
+		return sortable(string, null);
+	}
+
+	public static String sortable(String string, Collection<Character> keep) {
 		if (org.apache.commons.lang3.StringUtils.isBlank(string)) {
 			return null;
 		}
@@ -142,10 +147,10 @@ public interface StringUtils {
 		for (char c : Normalizer.normalize(string, Normalizer.Form.NFKD).toUpperCase().toCharArray()) {
 			if (('A' <= c) && (c <= 'Z')) {
 				sb.append(c);
-			} else {
-				if (('0' <= c) && (c <= '9')) {
-					sb.append(c);
-				}
+			} else if (('0' <= c) && (c <= '9')) {
+				sb.append(c);
+			} else if (keep != null && keep.contains(c)) {
+				sb.append(c);
 			}
 		}
 		return sb.toString();
