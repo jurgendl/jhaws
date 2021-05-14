@@ -158,16 +158,12 @@ public class YTDL extends Tool {
 		return lines.lines().get(0);
 	}
 
-	public String fileName(String url) {
+	public String fileName(String url, String cookiesLoc) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
 		List<String> command = new ArrayList<>();
 		command.add(Tool.command(executable));
-		FilePath cookies = executable.getParentPath().child("cookies.txt");
-		if (cookies.exists()) {
-			command.add("--cookies");
-			command.add(Tool.command(cookies));
-		}
+		cookies(command, cookiesLoc);
 		command.add("--get-filename");
 		command.add(url);
 		StringValue fn = new StringValue();
@@ -188,7 +184,7 @@ public class YTDL extends Tool {
 		}
 	}
 
-	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder) {
+	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
 		if (tmpFolder == null)
@@ -198,11 +194,7 @@ public class YTDL extends Tool {
 		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
-		FilePath cookies = executable.getParentPath().child("cookies.txt");
-		if (cookies.exists()) {
-			command.add("--cookies");
-			command.add(Tool.command(cookies));
-		}
+		cookies(command, cookiesLoc);
 		// command.add("--verbose");
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
@@ -231,7 +223,7 @@ public class YTDL extends Tool {
 		throw new UnsupportedOperationException();
 	}
 
-	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder) {
+	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
 		if (tmpFolder == null)
@@ -246,11 +238,7 @@ public class YTDL extends Tool {
 			}
 			List<String> command = new ArrayList<>();
 			command.add(command(executable));
-			FilePath cookies = executable.getParentPath().child("cookies.txt");
-			if (cookies.exists()) {
-				command.add("--cookies");
-				command.add(Tool.command(cookies));
-			}
+			cookies(command, cookiesLoc);
 			// command.add("--verbose");
 			// command.add("--embed-thumbnail");
 			// command.add("--ignore-errors");
@@ -269,11 +257,7 @@ public class YTDL extends Tool {
 			try {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
-				FilePath cookies = executable.getParentPath().child("cookies.txt");
-				if (cookies.exists()) {
-					command.add("--cookies");
-					command.add(Tool.command(cookies));
-				}
+				cookies(command, cookiesLoc);
 				// command.add("--verbose");
 				// command.add("--embed-thumbnail");
 				// command.add("--ignore-errors");
@@ -288,11 +272,7 @@ public class YTDL extends Tool {
 			} catch (Exception ex2) {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
-				FilePath cookies = executable.getParentPath().child("cookies.txt");
-				if (cookies.exists()) {
-					command.add("--cookies");
-					command.add(Tool.command(cookies));
-				}
+				cookies(command, cookiesLoc);
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add(UTF_8);
@@ -315,6 +295,19 @@ public class YTDL extends Tool {
 				return fp;
 			return null;
 		}).filter(Objects::nonNull).collect(Collectors.toList());
+	}
+
+	protected void cookies(List<String> command, String cookiesLoc) {
+		FilePath cookies;
+		if (StringUtils.isNotBlank(cookiesLoc)) {
+			cookies = new FilePath(cookiesLoc);
+		} else {
+			cookies = executable.getParentPath().child("cookies.txt");
+		}
+		if (cookies.exists()) {
+			command.add("--cookies");
+			command.add(Tool.command(cookies));
+		}
 	}
 
 	private void dl(FilePath tmpFolder, List<String> command, List<String> dl) {
