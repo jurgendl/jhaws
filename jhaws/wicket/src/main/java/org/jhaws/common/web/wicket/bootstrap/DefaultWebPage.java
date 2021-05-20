@@ -3,9 +3,7 @@ package org.jhaws.common.web.wicket.bootstrap;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
@@ -28,10 +26,12 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.EmptyPanel;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.web.wicket.AbstractReadOnlyModel;
 import org.jhaws.common.web.wicket.Bootstrap4;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.jhaws.common.web.wicket.WicketApplication;
@@ -89,27 +89,32 @@ public abstract class DefaultWebPage extends WebPage {
 		add(htmlTag);
 	}
 
-	protected String getLanguageIsocode() {
-		return getSession().getLocale().toString();
+	protected IModel<String> getLanguageIsocode() {
+		return new AbstractReadOnlyModel<>() {
+			@Override
+			public String getObject() {
+				return getSession().getLocale().toString();
+			}
+		};
 	}
 
-	protected String getPageTitle(PageParameters parameters) {
-		return getString("page.title");
+	protected IModel<String> getPageTitle(PageParameters parameters) {
+		return Model.of(getString("page.title"));
 	}
 
-	protected String[] getPageKeywords(PageParameters parameters) {
+	protected IModel<String> getPageKeywords(PageParameters parameters) {
 		return null;
 	}
 
-	protected String getPageDescription(PageParameters parameters) {
+	protected IModel<String> getPageDescription(PageParameters parameters) {
 		return null;
 	}
 
-	protected String getPageAuthor(PageParameters parameters) {
+	protected IModel<String> getPageAuthor(PageParameters parameters) {
 		return null;
 	}
 
-	protected URL getPageAuthorLink(PageParameters parameters) {
+	protected IModel<URL> getPageAuthorLink(PageParameters parameters) {
 		return null;
 	}
 
@@ -117,15 +122,15 @@ public abstract class DefaultWebPage extends WebPage {
 	 * "Open Graph Reference Documentation _ og_type.pdf"
 	 * https://developers.facebook.com/docs/reference/opengraph/
 	 */
-	protected String getOgType(PageParameters parameters) {
+	protected IModel<String> getOgType(PageParameters parameters) {
 		return null;
 	}
 
-	protected URL getOgImage(PageParameters parameters) {
+	protected IModel<URL> getOgImage(PageParameters parameters) {
 		return null;
 	}
 
-	protected URL getOgUrl(PageParameters parameters) {
+	protected IModel<URL> getOgUrl(PageParameters parameters) {
 		return null;
 	}
 
@@ -159,7 +164,7 @@ public abstract class DefaultWebPage extends WebPage {
 		// check if ads are not blocked
 		addCheckAddBlock(html);
 
-		// WICKET UPDATE
+		// FIXME WICKET UPDATE
 		// add header response (javascript) down below on page
 		addJavaScriptOnBottom(html);
 
@@ -253,29 +258,42 @@ public abstract class DefaultWebPage extends WebPage {
 	protected void addMetaTags(PageParameters parameters, MarkupContainer html) {
 		{
 			WebMarkupContainer pageKeywords = new WebMarkupContainer("page.keywords");
-			if (getPageKeywords(parameters) != null) {
-				pageKeywords.add(new AttributeModifier("content",
-						Arrays.stream(getPageKeywords(parameters)).collect(Collectors.joining(","))));
+			IModel<String> pageKeywordsModel = getPageKeywords(parameters);
+			if (pageKeywordsModel != null) {
+				pageKeywords.add(new AttributeModifier("content", pageKeywordsModel));
 			} else {
 				pageKeywords.setVisible(false);
 			}
 			html.add(pageKeywords);
 		}
+		IModel<String> pageDescriptionModel = getPageDescription(parameters);
 		{
 			WebMarkupContainer pageDescription = new WebMarkupContainer("page.description");
-			if (StringUtils.isNotBlank(getPageDescription(parameters))) {
-				pageDescription.add(new AttributeModifier("content", getPageDescription(parameters)));
+			if (pageDescriptionModel != null) {
+				pageDescription.add(new AttributeModifier("content", pageDescriptionModel));
 			} else {
 				pageDescription.setVisible(false);
 			}
 			html.add(pageDescription);
 		}
 		{
+			WebMarkupContainer pageRobots = new WebMarkupContainer("page.robots");
+			IModel<String> pageRobotsModel = getPageRobots(parameters);
+			if (pageRobotsModel != null) {
+				pageRobots.add(new AttributeModifier("content", pageRobotsModel));
+			} else {
+				pageRobots.setVisible(false);
+			}
+			html.add(pageRobots);
+		}
+		{
 			WebMarkupContainer pageAuthor = new WebMarkupContainer("page.author");
-			if (StringUtils.isNotBlank(getPageAuthor(parameters))) {
-				pageAuthor.add(new AttributeModifier("content", getPageAuthor(parameters)));
-				if (getPageAuthorLink(parameters) != null) {
-					pageAuthor.add(new AttributeModifier("href", getPageAuthorLink(parameters).toString()));
+			IModel<String> pageAuthorModel = getPageAuthor(parameters);
+			if (pageAuthorModel != null) {
+				pageAuthor.add(new AttributeModifier("content", pageAuthorModel));
+				IModel<URL> pageAuthorLinkModel = getPageAuthorLink(parameters);
+				if (pageAuthorLinkModel != null) {
+					pageAuthor.add(new AttributeModifier("href", pageAuthorLinkModel));
 				}
 			} else {
 				pageAuthor.setVisible(false);
@@ -284,11 +302,23 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 	}
 
+	/**
+	 * https://developers.google.com/search/docs/advanced/robots/robots_meta_tag#directives
+	 */
+	protected IModel<String> getPageRobots(PageParameters parameters) {
+		return Model.of("index, follow");
+	}
+
 	protected void addFacebookOpenGraph(PageParameters parameters, MarkupContainer html, boolean show) {
 		{
 			WebMarkupContainer ogTitle = new WebMarkupContainer("og.title");
-			if (show && StringUtils.isNotBlank(getPageTitle(parameters))) {
-				ogTitle.add(new AttributeModifier("content", getPageTitle(parameters)));
+			if (show) {
+				IModel<String> pageTitle = getPageTitle(parameters);
+				if (pageTitle != null) {
+					ogTitle.add(new AttributeModifier("content", pageTitle));
+				} else {
+					ogTitle.setVisible(false);
+				}
 			} else {
 				ogTitle.setVisible(false);
 			}
@@ -296,8 +326,13 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogType = new WebMarkupContainer("og.type");
-			if (show && StringUtils.isNotBlank(getOgType(parameters))) {
-				ogType.add(new AttributeModifier("content", getOgType(parameters)));
+			if (show) {
+				IModel<String> ogTypeModel = getOgType(parameters);
+				if (ogTypeModel != null) {
+					ogType.add(new AttributeModifier("content", ogTypeModel));
+				} else {
+					ogType.setVisible(false);
+				}
 			} else {
 				ogType.setVisible(false);
 			}
@@ -305,8 +340,13 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogImage = new WebMarkupContainer("og.image");
-			if (show && getOgImage(parameters) != null) {
-				ogImage.add(new AttributeModifier("content", getOgImage(parameters).toString()));
+			if (show) {
+				IModel<URL> ogImageModel = getOgImage(parameters);
+				if (ogImageModel != null) {
+					ogImage.add(new AttributeModifier("content", ogImageModel.toString()));
+				} else {
+					ogImage.setVisible(false);
+				}
 			} else {
 				ogImage.setVisible(false);
 			}
@@ -314,8 +354,13 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogUrl = new WebMarkupContainer("og.url");
-			if (show && getOgUrl(parameters) != null) {
-				ogUrl.add(new AttributeModifier("content", getOgUrl(parameters).toString()));
+			if (show) {
+				IModel<URL> ogUrlModel = getOgUrl(parameters);
+				if (ogUrlModel != null) {
+					ogUrl.add(new AttributeModifier("content", ogUrlModel.toString()));
+				} else {
+					ogUrl.setVisible(false);
+				}
 			} else {
 				ogUrl.setVisible(false);
 			}
@@ -323,8 +368,13 @@ public abstract class DefaultWebPage extends WebPage {
 		}
 		{
 			WebMarkupContainer ogDescription = new WebMarkupContainer("og.description");
-			if (show && StringUtils.isNotBlank(getPageDescription(parameters))) {
-				ogDescription.add(new AttributeModifier("content", getPageDescription(parameters)));
+			if (show) {
+				IModel<String> pageDescription = getPageDescription(parameters);
+				if (pageDescription != null) {
+					ogDescription.add(new AttributeModifier("content", pageDescription));
+				} else {
+					ogDescription.setVisible(false);
+				}
 			} else {
 				ogDescription.setVisible(false);
 			}
