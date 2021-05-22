@@ -3,6 +3,7 @@ package org.jhaws.common.io.media.ytdl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,8 @@ import org.jhaws.common.io.media.Tool;
 import org.jhaws.common.lang.StringValue;
 import org.jhaws.common.lang.Value;
 
+// https://github.com/ytdl-org/youtube-dl/blob/master/README.md
+//
 // youtube-dl.exe --list-extractors
 //
 // youtube-dl.exe --extractor-descriptions
@@ -353,5 +356,185 @@ public class YTDL extends Tool {
 		List<FilePath> paths = Arrays.asList(executable.getParentPath());
 		call(processHolder, lines, tmpFolder, command, log, listener, throwExitValue, paths);
 		dl.addAll(u);
+	}
+
+	public List<YTDLFormat> formats(String url, String cookiesLoc) {
+		if (executable == null || executable.notExists())
+			throw new NullPointerException();
+		List<String> command = new ArrayList<>();
+		command.add(command(executable));
+		cookies(command, cookiesLoc);
+		command.add("--no-check-certificate");
+		command.add("--encoding");
+		command.add(UTF_8);
+		command.add("--list-formats");
+		command.add(url);
+		Value<Process> processHolder = null;
+		boolean log = true;
+		Consumer<String> listener = null;
+		boolean throwExitValue = true;
+		List<FilePath> paths = Arrays.asList(executable.getParentPath());
+		FilePath tmpFolder = getExecutable().getParentPath();
+		List<YTDLFormat> rv = new ArrayList<>();
+		Lines lines = new Lines() {
+			@Override
+			public void accept(String t) {
+				if (!(t.startsWith("[youtube]") || t.startsWith("[info]") || t.startsWith("format code"))) {
+					YTDLFormat f = new YTDLFormat();
+					f.formatCode = t.substring(0, 13).trim();
+					f.extension = t.substring(13, 24).trim();
+					f.resolution = t.substring(24, 35).trim();
+					f.note = t.substring(35).trim();
+					String tmp = t.substring(t.lastIndexOf(",") + 1).trim();
+					int p = tmp.indexOf("KiB");
+					if (p != -1) {
+						f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0);
+					} else {
+						p = tmp.indexOf("MiB");
+						if (p != -1) {
+							f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0);
+						} else {
+							p = tmp.indexOf("GiB");
+							if (p != -1) {
+								f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0 * 1024.0);
+							}
+						}
+					}
+					if (f.resolution.contains("x")) {
+						String[] pa = f.resolution.split("x");
+						f.width = Integer.parseInt(pa[0]);
+						f.height = Integer.parseInt(pa[1]);
+					}
+					rv.add(f);
+				}
+				super.accept(t);
+			}
+		};
+		call(processHolder, lines, tmpFolder, command, log, listener, throwExitValue, paths);
+		return rv;
+	}
+
+	public FilePath downloadFormat(String url, YTDLFormat format, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc) {
+		if (executable == null || executable.notExists())
+			throw new NullPointerException();
+		if (tmpFolder == null)
+			tmpFolder = FilePath.getTempDirectory();
+		if (targetFolder == null)
+			targetFolder = FilePath.getTempDirectory();
+		tmpFolder = tmpFolder.child(String.valueOf(System.currentTimeMillis())).createDirectory();
+		List<String> dl = new ArrayList<>();
+		List<String> command = new ArrayList<>();
+		command.add(command(executable));
+		cookies(command, cookiesLoc);
+		command.add("--no-check-certificate");
+		command.add("--encoding");
+		command.add(UTF_8);
+		command.add("--format");
+		command.add("'" + format.formatCode + "'");
+		command.add(url);
+		dl(tmpFolder, command, dl);
+		return null;
+	}
+
+	@SuppressWarnings("serial")
+	public static class YTDLFormat implements Serializable {
+		private Integer height;
+		private Integer width;
+		private String formatCode;
+		private String extension;
+		private String resolution;
+		private String note;
+		private Long size;
+
+		public String getFormatCode() {
+			return this.formatCode;
+		}
+
+		public void setFormatCode(String formatCode) {
+			this.formatCode = formatCode;
+		}
+
+		public String getExtension() {
+			return this.extension;
+		}
+
+		public void setExtension(String extension) {
+			this.extension = extension;
+		}
+
+		public String getResolution() {
+			return this.resolution;
+		}
+
+		public void setResolution(String resolution) {
+			this.resolution = resolution;
+		}
+
+		public String getNote() {
+			return this.note;
+		}
+
+		public void setNote(String note) {
+			this.note = note;
+		}
+
+		@Override
+		public String toString() {
+			return "YTDLFormat [height=" + this.height + ", width=" + this.width + ", formatCode=" + this.formatCode + ", extension=" + this.extension + ", resolution="
+					+ this.resolution + ", note=" + this.note + ", size=" + this.size + "]";
+		}
+
+		public Long getSize() {
+			return this.size;
+		}
+
+		public void setSize(Long size) {
+			this.size = size;
+		}
+
+		public Integer getHeight() {
+			return this.height;
+		}
+
+		public void setHeight(Integer height) {
+			this.height = height;
+		}
+
+		public Integer getWidth() {
+			return this.width;
+		}
+
+		public void setWidth(Integer width) {
+			this.width = width;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((this.formatCode == null) ? 0 : this.formatCode.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			YTDLFormat other = (YTDLFormat) obj;
+			if (this.formatCode == null) {
+				if (other.formatCode != null)
+					return false;
+			} else if (!this.formatCode.equals(other.formatCode))
+				return false;
+			return true;
+		}
+	}
+
+	public static void main(String[] args) {
+		new YTDL().formats("https://www.youtube.com/watch?v=Jm932Sqwf5E", null).forEach(System.out::println);
 	}
 }
