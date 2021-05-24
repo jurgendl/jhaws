@@ -379,6 +379,7 @@ public class YTDL extends Tool {
 		Lines lines = new Lines() {
 			@Override
 			public void accept(String t) {
+				System.out.println(t);
 				if (!(t.startsWith("[youtube]") || t.startsWith("[info]") || t.startsWith("format code"))) {
 					YTDLFormat f = new YTDLFormat();
 					f.formatCode = t.substring(0, 13).trim();
@@ -430,7 +431,7 @@ public class YTDL extends Tool {
 		command.add("--encoding");
 		command.add(UTF_8);
 		command.add("--format");
-		command.add("'" + format.formatCode + "'");
+		command.add(format.formatCode);
 		command.add(url);
 		dl(tmpFolder, command, dl);
 		return null;
