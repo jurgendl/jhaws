@@ -395,4 +395,9 @@ public class FToolTest {
 		// ytdl.downloadAudio("https://www.youtube.com/watch?v=GvnYzbjKBMI", t, d);
 		// ytdl.downloadAudio("https://www.youtube.com/watch?v=jScDYcwWw50", t, d);
 	}
+
+	@Test
+	public void testExtract() {
+
+	}
 }

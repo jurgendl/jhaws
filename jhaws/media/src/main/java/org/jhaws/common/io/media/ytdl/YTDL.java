@@ -434,7 +434,11 @@ public class YTDL extends Tool {
 		command.add(format.formatCode);
 		command.add(url);
 		dl(tmpFolder, command, dl);
-		return null;
+		FilePath s = tmpFolder.listFiles().get(0);
+		if (tmpFolder.equals(targetFolder)) {
+			return s;
+		}
+		return s.moveTo(targetFolder);
 	}
 
 	@SuppressWarnings("serial")

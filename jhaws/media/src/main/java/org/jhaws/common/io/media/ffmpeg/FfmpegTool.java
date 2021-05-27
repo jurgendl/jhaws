@@ -564,7 +564,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 		Lines lines = new Lines();
 		try {
-			call(act(context, input, "remux"), lines, input != null ? input.getParentPath() : output.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			call(act(context, input, "remux"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
 			exception = ex;
 		}
@@ -598,13 +598,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	protected RemuxCfg config(RemuxDefaultsCfg defaults, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+		RemuxCfg cfg = new RemuxCfg();
 		if (defaults == null) {
 			defaults = new RemuxDefaultsCfg();
 		}
-		RemuxCfg cfg = new RemuxCfg();
-		if (defaults != null) {
-			cfg.defaults = defaults;
-		}
+		cfg.defaults = defaults;
 		cfg.output = output;
 		if (input != null) {
 			cfg.input = new RemuxInput();
@@ -1529,7 +1527,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			v.delete();
 			a.delete();
 			return to;
-		} else {
+		}
+		{
 			FilePath to1 = output.child(v.getName() + ".mkv").newFileIndex();
 			merge(v, a, to1, lines);
 			FilePath to2 = to1.appendExtension("mp4").newFileIndex();
@@ -1909,5 +1908,47 @@ public class FfmpegTool extends Tool implements MediaCte {
 			}
 		}
 		return muxing;
+	}
+
+	public FilePath extractAudio(FilePath in, FilePath out) {
+		if (in == null || in.notExists())
+			throw new IllegalArgumentException();
+		if (out == null)
+			throw new IllegalArgumentException();
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-i");
+		command.add(command(in));
+		command.add("-vn");
+		command.add("-acodec");
+		command.add("copy");
+		if (out.isDirectory())
+			out = out.child("output-audio.mp4");
+		command.add(command(out));
+		Lines lines = new Lines();
+		call(null, lines, getFfmpeg().getParentPath(), command);
+		return out;
+	}
+
+	public FilePath extractVideo(FilePath in, FilePath out) {
+		if (in == null || in.notExists())
+			throw new IllegalArgumentException();
+		if (out == null)
+			throw new IllegalArgumentException();
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-i");
+		command.add(command(in));
+		command.add("-an");
+		command.add("-vcodec");
+		command.add("copy");
+		if (out.isDirectory())
+			out = out.child("output-video.mp4");
+		command.add(command(out));
+		Lines lines = new Lines();
+		call(null, lines, getFfmpeg().getParentPath(), command);
+		return out;
 	}
 }
