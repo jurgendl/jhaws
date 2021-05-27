@@ -118,19 +118,107 @@ public abstract class DefaultWebPage extends WebPage {
 		return null;
 	}
 
-	/**
-	 * "Open Graph Reference Documentation _ og_type.pdf"
-	 * https://developers.facebook.com/docs/reference/opengraph/
-	 */
-	protected IModel<String> getOgType(PageParameters parameters) {
+	protected IModel<String> getOpenGraphType(PageParameters parameters) {
 		return null;
 	}
 
-	protected IModel<URL> getOgImage(PageParameters parameters) {
+	protected IModel<URL> getOpenGraphImage(PageParameters parameters) {
 		return null;
 	}
 
-	protected IModel<URL> getOgUrl(PageParameters parameters) {
+	protected IModel<URL> getOpenGraphUrl(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphTitle(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphVideo(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphSiteName(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphLocaleAlternate(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphLocale(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphDeterminer(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphAudio(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenGraphDescription(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenImageUrl(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenImageSecureUrl(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenImageType(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenImageWidth(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenImageHeight(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenImageAlt(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenVideoUrl(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenVideoSecureUrl(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenVideoType(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenVideoWidth(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenVideoHeight(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenVideoAlt(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenAudioType(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenAudioSecureUrl(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getOpenAudioUrl(PageParameters parameters) {
 		return null;
 	}
 
@@ -138,10 +226,13 @@ public abstract class DefaultWebPage extends WebPage {
 		// http://www.iacquire.com/blog/18-meta-tags-every-webpage-should-have-in-2013
 
 		// meta tags
-		addMetaTags(parameters, html);
+		addMetaTags(parameters, html, true);
 
-		// Facebook Open Graph
-		addFacebookOpenGraph(parameters, html, true);
+		// Open Graph
+		addOpenGraph(parameters, html, true);
+
+		// twitter
+		addTwitter(parameters, html, true);
 
 		// title
 		addTitle(parameters, html, "page.title");
@@ -168,11 +259,9 @@ public abstract class DefaultWebPage extends WebPage {
 		// add header response (javascript) down below on page
 		addJavaScriptOnBottom(html);
 
-		// meta description
-		addMetaDescription(html);
-
 		// add google meta tags
-		addGoogleId(html);
+		addGoogleId(parameters, html, true);
+		addGoogleSiteVerification(parameters, html, true);
 
 		// navbar
 		addNavigationBar(parameters, html, "navbar");
@@ -191,22 +280,70 @@ public abstract class DefaultWebPage extends WebPage {
 		html.add(new Label(id, getPageTitle(parameters)));
 	}
 
-	protected void addGoogleId(MarkupContainer html) {
-		String googleSigninClientId = WicketApplication.get().getSettings().getGoogleSigninClientId();
-		html.add(new WebMarkupContainer("meta_google_signin_scope")
-				.setVisible(StringUtils.isNotBlank(googleSigninClientId)));
-		html.add(new WebMarkupContainer("meta_google_signin_client_id")
-				.add(new AttributeModifier("content", googleSigninClientId))
-				.setVisible(StringUtils.isNotBlank(googleSigninClientId)));
+	protected void addGoogleSiteVerification(PageParameters parameters, MarkupContainer html, boolean show) {
+		WebMarkupContainer metaContainer = new WebMarkupContainer("google.site.verification");
+		if (show) {
+			IModel<String> metaModel = getGoogleSiteVerification(parameters);
+			if (metaModel != null) {
+				metaContainer.add(new AttributeModifier("content", metaModel));
+			} else {
+				metaContainer.setVisible(false);
+			}
+		} else {
+			metaContainer.setVisible(false);
+		}
+		html.add(metaContainer);
 	}
 
-	protected void addMetaDescription(MarkupContainer html) {
-		html.add(new WebMarkupContainer("meta_description").setVisible(false));
+	protected IModel<String> getGoogleSiteVerification(PageParameters parameters) {
+		return null;
+	}
+
+	protected void addGoogleId(PageParameters parameters, MarkupContainer html, boolean show) {
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("google.signin.scope");
+			if (show) {
+				IModel<String> metaModel = getGoogleSigninScope(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("google.signin.client.id");
+			if (show) {
+				IModel<String> metaModel = getGoogleSigninClientId(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+	}
+
+	protected IModel<String> getGoogleSigninClientId(PageParameters parameters) {
+		String googleSigninClientId = WicketApplication.get().getSettings().getGoogleSigninClientId();
+		return StringUtils.isBlank(googleSigninClientId) ? null : Model.of(googleSigninClientId);
+	}
+
+	protected IModel<String> getGoogleSigninScope(PageParameters parameters) {
+		String googleSigninClientId = WicketApplication.get().getSettings().getGoogleSigninClientId();
+		return StringUtils.isBlank(googleSigninClientId) ? null : Model.of("profile email");
 	}
 
 	protected void addJavaScriptOnBottom(MarkupContainer html) {
 		boolean javascriptAtBottom = WicketApplication.get().getSettings().isJavascriptAtBottom();
-		if (false && javascriptAtBottom) {
+		javascriptAtBottom = false;// FIXME
+		if (javascriptAtBottom) {
 			html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
 		} else {
 			html.add(new EmptyPanel("footer-container").setVisible(false));
@@ -255,7 +392,7 @@ public abstract class DefaultWebPage extends WebPage {
 		html.add(new BootstrapFencedFeedbackPanel(id));
 	}
 
-	protected void addMetaTags(PageParameters parameters, MarkupContainer html) {
+	protected void addMetaTags(PageParameters parameters, MarkupContainer html, boolean show) {
 		{
 			WebMarkupContainer pageKeywords = new WebMarkupContainer("page.keywords");
 			IModel<String> pageKeywordsModel = getPageKeywords(parameters);
@@ -309,76 +446,513 @@ public abstract class DefaultWebPage extends WebPage {
 		return Model.of("index, follow");
 	}
 
-	protected void addFacebookOpenGraph(PageParameters parameters, MarkupContainer html, boolean show) {
+	protected void addTwitter(PageParameters parameters, MarkupContainer html, boolean show) {
+		// https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/summary
 		{
-			WebMarkupContainer ogTitle = new WebMarkupContainer("og.title");
+			WebMarkupContainer metaContainer = new WebMarkupContainer("twitter.card");
 			if (show) {
-				IModel<String> pageTitle = getPageTitle(parameters);
-				if (pageTitle != null) {
-					ogTitle.add(new AttributeModifier("content", pageTitle));
+				IModel<String> metaModel = getTwitterCard(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
 				} else {
-					ogTitle.setVisible(false);
+					metaContainer.setVisible(false);
 				}
 			} else {
-				ogTitle.setVisible(false);
+				metaContainer.setVisible(false);
 			}
-			html.add(ogTitle);
+			html.add(metaContainer);
 		}
 		{
-			WebMarkupContainer ogType = new WebMarkupContainer("og.type");
+			WebMarkupContainer metaContainer = new WebMarkupContainer("twitter.site");
 			if (show) {
-				IModel<String> ogTypeModel = getOgType(parameters);
-				if (ogTypeModel != null) {
-					ogType.add(new AttributeModifier("content", ogTypeModel));
+				IModel<String> metaModel = getTwitterSite(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
 				} else {
-					ogType.setVisible(false);
+					metaContainer.setVisible(false);
 				}
 			} else {
-				ogType.setVisible(false);
+				metaContainer.setVisible(false);
 			}
-			html.add(ogType);
+			html.add(metaContainer);
 		}
 		{
-			WebMarkupContainer ogImage = new WebMarkupContainer("og.image");
+			WebMarkupContainer metaContainer = new WebMarkupContainer("twitter.title");
 			if (show) {
-				IModel<URL> ogImageModel = getOgImage(parameters);
-				if (ogImageModel != null) {
-					ogImage.add(new AttributeModifier("content", ogImageModel.toString()));
+				IModel<String> metaModel = getTwitterTitle(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
 				} else {
-					ogImage.setVisible(false);
+					metaContainer.setVisible(false);
 				}
 			} else {
-				ogImage.setVisible(false);
+				metaContainer.setVisible(false);
 			}
-			html.add(ogImage);
+			html.add(metaContainer);
 		}
 		{
-			WebMarkupContainer ogUrl = new WebMarkupContainer("og.url");
+			WebMarkupContainer metaContainer = new WebMarkupContainer("twitter.description");
 			if (show) {
-				IModel<URL> ogUrlModel = getOgUrl(parameters);
-				if (ogUrlModel != null) {
-					ogUrl.add(new AttributeModifier("content", ogUrlModel.toString()));
+				IModel<String> metaModel = getTwitterDescription(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
 				} else {
-					ogUrl.setVisible(false);
+					metaContainer.setVisible(false);
 				}
 			} else {
-				ogUrl.setVisible(false);
+				metaContainer.setVisible(false);
 			}
-			html.add(ogUrl);
+			html.add(metaContainer);
 		}
 		{
-			WebMarkupContainer ogDescription = new WebMarkupContainer("og.description");
+			WebMarkupContainer metaContainer = new WebMarkupContainer("twitter.image");
 			if (show) {
-				IModel<String> pageDescription = getPageDescription(parameters);
-				if (pageDescription != null) {
-					ogDescription.add(new AttributeModifier("content", pageDescription));
+				IModel<String> metaModel = getTwitterImage(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
 				} else {
-					ogDescription.setVisible(false);
+					metaContainer.setVisible(false);
 				}
 			} else {
-				ogDescription.setVisible(false);
+				metaContainer.setVisible(false);
 			}
-			html.add(ogDescription);
+			html.add(metaContainer);
+		}
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("twitter.image.alt");
+			if (show) {
+				IModel<String> metaModel = getTwitterImageAlt(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+	}
+
+	protected IModel<String> getTwitterImageAlt(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getTwitterImage(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getTwitterDescription(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getTwitterTitle(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getTwitterSite(PageParameters parameters) {
+		return null;
+	}
+
+	protected IModel<String> getTwitterCard(PageParameters parameters) {
+		return null;
+	}
+
+	/**
+	 * "Open Graph Reference Documentation _ og_type.pdf"<br>
+	 * https://developers.facebook.com/docs/reference/opengraph/<br>
+	 * https://ogp.me/<br>
+	 */
+	protected void addOpenGraph(PageParameters parameters, MarkupContainer html, boolean show) {
+//		og:title - The title of your object as it should appear within the graph, e.g., "The Rock".
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.title");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphTitle(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:type - The type of your object, e.g., "video.movie". Depending on the type you specify, other properties may also be required.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.type");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphType(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:image - An image URL which should represent your object within the graph.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.image");
+			if (show) {
+				IModel<URL> metaModel = getOpenGraphImage(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel.toString()));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:url - The canonical URL of your object that will be used as its permanent ID in the graph, e.g., "https://www.imdb.com/title/tt0117500/".
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.url");
+			if (show) {
+				IModel<URL> metaModel = getOpenGraphUrl(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel.toString()));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:description - A one to two sentence description of your object.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.description");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphDescription(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:audio - A URL to an audio file to accompany this object.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.audio");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphAudio(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:determiner - The word that appears before this object's title in a sentence. An enum of (a, an, the, "", auto). If auto is chosen, the consumer of your data should chose between "a" or "an". Default is "" (blank).
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.determiner");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphDeterminer(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:locale - The locale these tags are marked up in. Of the format language_TERRITORY. Default is en_US.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.locale");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphLocale(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:locale:alternate - An array of other locales this page is available in.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.locale.alternate");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphLocaleAlternate(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:site_name - If your object is part of a larger web site, the name which should be displayed for the overall site. e.g., "IMDb".
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.site_name");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphSiteName(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:video - A URL to a video file that complements this object.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.video");
+			if (show) {
+				IModel<String> metaModel = getOpenGraphVideo(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:image:url - Identical to og:image.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.image.url");
+			if (show) {
+				IModel<String> metaModel = getOpenImageUrl(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:image:secure_url - An alternate url to use if the webpage requires HTTPS.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.image.secure_url");
+			if (show) {
+				IModel<String> metaModel = getOpenImageSecureUrl(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:image:type - A MIME type for this image.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.image.type");
+			if (show) {
+				IModel<String> metaModel = getOpenImageType(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:image:width - The number of pixels wide.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.image.width");
+			if (show) {
+				IModel<String> metaModel = getOpenImageWidth(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:image:height - The number of pixels high.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.image.height");
+			if (show) {
+				IModel<String> metaModel = getOpenImageHeight(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:image:alt - A description of what is in the image (not a caption). If the page specifies an og:image it should specify og:image:alt.
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.image.alt");
+			if (show) {
+				IModel<String> metaModel = getOpenImageAlt(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:video
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.video.url");
+			if (show) {
+				IModel<String> metaModel = getOpenVideoUrl(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:video:secure_url
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.video.secure_url");
+			if (show) {
+				IModel<String> metaModel = getOpenVideoSecureUrl(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:video:type
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.video.type");
+			if (show) {
+				IModel<String> metaModel = getOpenVideoType(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:video:width
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.video.width");
+			if (show) {
+				IModel<String> metaModel = getOpenVideoWidth(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:video:height
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.video.height");
+			if (show) {
+				IModel<String> metaModel = getOpenVideoHeight(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:video:alt
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.video.alt");
+			if (show) {
+				IModel<String> metaModel = getOpenVideoAlt(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:audio
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.audio.url");
+			if (show) {
+				IModel<String> metaModel = getOpenAudioUrl(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:audio:secure_url
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.audio.secure_url");
+			if (show) {
+				IModel<String> metaModel = getOpenAudioSecureUrl(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
+		}
+//		og:audio:type
+		{
+			WebMarkupContainer metaContainer = new WebMarkupContainer("og.audio.type");
+			if (show) {
+				IModel<String> metaModel = getOpenAudioType(parameters);
+				if (metaModel != null) {
+					metaContainer.add(new AttributeModifier("content", metaModel));
+				} else {
+					metaContainer.setVisible(false);
+				}
+			} else {
+				metaContainer.setVisible(false);
+			}
+			html.add(metaContainer);
 		}
 	}
 
