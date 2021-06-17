@@ -1506,7 +1506,15 @@ public class FfmpegTool extends Tool implements MediaCte {
 			throw new NullPointerException();
 		}
 		if (as.size() == 2 && vs.size() == 2) {
-			throw new NullPointerException();
+			FilePath av;
+			if (as.get(0).getFileSize() > as.get(1).getFileSize()) {
+				av = as.get(0);
+			} else {
+				av = as.get(1);
+			}
+			FilePath to1 = output.child(av.getName()).newFileIndex();
+			av.moveTo(to1);
+			return to1;
 		}
 		FilePath a;
 		FilePath v;
