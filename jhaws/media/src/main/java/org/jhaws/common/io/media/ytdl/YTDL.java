@@ -63,6 +63,8 @@ public class YTDL extends Tool {
 
 	public static final String URL = "https://yt-dl.org/downloads/latest/";
 
+	private String userAgent;
+
 	public YTDL() {
 		super(System.getenv("YOUTUBEDL"));
 	}
@@ -167,6 +169,10 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(Tool.command(executable));
 		cookies(command, cookiesLoc);
+		if (StringUtils.isNotBlank(userAgent)) {
+			command.add("--user-agent");
+			command.add("\"" + userAgent + "\"");
+		}
 		command.add("--get-filename");
 		command.add(url);
 		StringValue fn = new StringValue();
@@ -198,6 +204,10 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
+		if (StringUtils.isNotBlank(userAgent)) {
+			command.add("--user-agent");
+			command.add("\"" + userAgent + "\"");
+		}
 		// command.add("--verbose");
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
@@ -246,6 +256,10 @@ public class YTDL extends Tool {
 			// command.add("--embed-thumbnail");
 			// command.add("--ignore-errors");
 			// command.add("--add-metadata");
+			if (StringUtils.isNotBlank(userAgent)) {
+				command.add("--user-agent");
+				command.add("\"" + userAgent + "\"");
+			}
 			command.add("--no-check-certificate");
 			command.add("--encoding");
 			command.add(UTF_8);
@@ -261,6 +275,10 @@ public class YTDL extends Tool {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
 				cookies(command, cookiesLoc);
+				if (StringUtils.isNotBlank(userAgent)) {
+					command.add("--user-agent");
+					command.add("\"" + userAgent + "\"");
+				}
 				// command.add("--verbose");
 				// command.add("--embed-thumbnail");
 				// command.add("--ignore-errors");
@@ -276,6 +294,10 @@ public class YTDL extends Tool {
 				List<String> command = new ArrayList<>();
 				command.add(command(executable));
 				cookies(command, cookiesLoc);
+				if (StringUtils.isNotBlank(userAgent)) {
+					command.add("--user-agent");
+					command.add("\"" + userAgent + "\"");
+				}
 				command.add("--no-check-certificate");
 				command.add("--encoding");
 				command.add(UTF_8);
@@ -364,6 +386,10 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
+		if (StringUtils.isNotBlank(userAgent)) {
+			command.add("--user-agent");
+			command.add("\"" + userAgent + "\"");
+		}
 		command.add("--no-check-certificate");
 		command.add("--encoding");
 		command.add(UTF_8);
@@ -427,6 +453,10 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
+		if (StringUtils.isNotBlank(userAgent)) {
+			command.add("--user-agent");
+			command.add("\"" + userAgent + "\"");
+		}
 		command.add("--no-check-certificate");
 		command.add("--encoding");
 		command.add(UTF_8);
@@ -539,7 +569,11 @@ public class YTDL extends Tool {
 		}
 	}
 
-	public static void main(String[] args) {
-		new YTDL().formats("https://www.youtube.com/watch?v=Jm932Sqwf5E", null).forEach(System.out::println);
+	public String getUserAgent() {
+		return this.userAgent;
+	}
+
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
 	}
 }
