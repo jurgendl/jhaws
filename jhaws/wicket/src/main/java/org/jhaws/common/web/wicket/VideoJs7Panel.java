@@ -114,8 +114,16 @@ public class VideoJs7Panel extends Panel {
 		response.render(CssHeaderItem.forReference(VideoJs7.CSS));
 		response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS));
 		response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS_PREVENT_MULTIPLE));
-		response.render(
-				OnDomReadyHeaderItem.forScript(";videojs('" + getVideo().getMarkupId() + "'," + getSettings() + ");"));
+		response.render(OnDomReadyHeaderItem.forScript(";videojs('" + getVideo().getMarkupId() + "'," + getSettings()
+				+ ").muted(" + isVideoDefaultMuted() + ");" + getPostCreate() + ";"));
+	}
+
+	public String getPostCreate() {
+		return "";
+	}
+
+	public String isVideoDefaultMuted() {
+		return String.valueOf(Boolean.TRUE.equals(config.getMute()));
 	}
 
 	protected Map<String, Object> settings = new HashMap<>();
