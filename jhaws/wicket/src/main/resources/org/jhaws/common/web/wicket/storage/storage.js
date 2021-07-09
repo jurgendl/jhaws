@@ -2,6 +2,9 @@
 //https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage?retiredLocale=nl
 //https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage?retiredLocale=nl
 
+//sessionStorage maintains a separate storage area for each given origin that's available for the duration of the page session (as long as the browser is open, including page reloads and restores).
+//localStorage does the same thing, but persists even when the browser is closed and reopened.
+
 function storageAvailable(type) {
 	var storage;
 	try {
@@ -28,13 +31,13 @@ function storageAvailable(type) {
 }
 
 if (storageAvailable('localStorage')) {
-	console.log('Yippee! We can use localStorage awesomeness');
+	//console.log('Yippee! We can use localStorage awesomeness');
 } else {
-	console.log('Too bad, no localStorage for us');
+	//console.log('Too bad, no localStorage for us');
 }
 
 if (storageAvailable('sessionStorage')) {
-	console.log('Yippee! We can use sessionStorage awesomeness');
+	//console.log('Yippee! We can use sessionStorage awesomeness');
 } else {
-	console.log('Too bad, no sessionStorage for us');
+	//console.log('Too bad, no sessionStorage for us');
 }
