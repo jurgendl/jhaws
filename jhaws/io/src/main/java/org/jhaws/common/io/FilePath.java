@@ -1961,6 +1961,10 @@ public class FilePath implements Path, Externalizable {
 	 */
 	@Override
 	public Path getRoot() {
+		return getRootPatch();
+	}
+
+	public FilePath getRootPatch() {
 		return new FilePath(this.getPath().getRoot());
 	}
 
@@ -2073,7 +2077,7 @@ public class FilePath implements Path, Externalizable {
 		return this.list(iterate, new Filters.AcceptAllFilter());
 	}
 
-	public List<FilePath> list(boolean iterate, DirectoryStream.Filter<? super Path> filter) {
+	public <P extends Path> List<FilePath> list(boolean iterate, DirectoryStream.Filter<? super Path> filter) {
 		if (notExists())
 			return Collections.emptyList();
 		Deque<FilePath> stack = new ArrayDeque<>();
@@ -3616,5 +3620,29 @@ public class FilePath implements Path, Externalizable {
 
 	public String inlineHtml() {
 		return "data:" + getMimeType() + ";base64," + base64();
+	}
+
+	public long getTotalSpace() {
+		return toFile().getTotalSpace();
+	}
+
+	public long getFreeSpace() {
+		return toFile().getFreeSpace();
+	}
+
+	public long getUsableSpace() {
+		return toFile().getUsableSpace();
+	}
+
+	public long getRootTotalSpace() {
+		return getRootPatch().getTotalSpace();
+	}
+
+	public long getRootFreeSpace() {
+		return getRootPatch().getFreeSpace();
+	}
+
+	public long getRootUsableSpace() {
+		return getRootPatch().getUsableSpace();
 	}
 }
