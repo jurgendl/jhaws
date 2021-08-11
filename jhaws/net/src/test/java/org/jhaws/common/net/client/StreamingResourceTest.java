@@ -91,7 +91,8 @@ public class StreamingResourceTest {
     private static ResteasyWebTarget target;
 
     private static ResteasyWebTarget target() {
-        if (target == null) target = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build()))
+        if (target == null) target = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder())
+                .httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build()))
                 .build()
                 .target(getBaseInclResourcePath());
         return target;
@@ -100,7 +101,10 @@ public class StreamingResourceTest {
     private static StreamingResourceI proxy;
 
     private static StreamingResourceI proxy() {
-        if (proxy == null) proxy = new ResteasyClientBuilder().httpEngine(new ApacheHttpClient43Engine(/* HttpClientBuilder.create().build() */))
+        if (proxy == null) proxy = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder())
+                .httpEngine(new ApacheHttpClient43Engine(/*
+                                                          * HttpClientBuilder .create().build()
+                                                          */))
                 .build()
                 .target(server.baseUri())
                 .proxy(StreamingResourceI.class);

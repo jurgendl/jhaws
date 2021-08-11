@@ -10,7 +10,6 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -30,6 +29,8 @@ import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 @Path(TestResource.PATH)
+@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+@Produces(MediaType.TEXT_PLAIN)
 public interface TestResourceI /* extends RestResource */ {
     String IS = "=";
 
@@ -50,6 +51,8 @@ public interface TestResourceI /* extends RestResource */ {
     String PATH = "testresource";
 
     String GET = "get";
+
+    // String HEAD = "head";
 
     String GET_DOUBLE = "getdouble";
 
@@ -78,7 +81,7 @@ public interface TestResourceI /* extends RestResource */ {
     String STREAM_OUT = "streamout";
 
     @GET
-    @HEAD
+    // @HEAD
     @Produces(MediaType.TEXT_PLAIN)
     @Path("ping")
     String ping();
@@ -89,10 +92,13 @@ public interface TestResourceI /* extends RestResource */ {
     TestBody getBody();
 
     @GET
-    @HEAD
     @Produces(MediaType.TEXT_PLAIN)
     @Path(GET)
     String get();
+
+    // @HEAD
+    // @Path(HEAD)
+    // void head();
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
@@ -115,6 +121,7 @@ public interface TestResourceI /* extends RestResource */ {
 
     @POST
     @Path(POST)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     String post(@FormParam(FORM_PARAM) String formParam);
 
     @POST
@@ -124,6 +131,7 @@ public interface TestResourceI /* extends RestResource */ {
 
     @POST
     @Path(STREAM_IN)
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     void stream(@HeaderParam("filename") String filename, InputStream fileinput);
 
     @GET

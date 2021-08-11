@@ -5,18 +5,13 @@ import java.net.URI;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScheme;
-import org.apache.http.client.AuthCache;
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.protocol.BasicHttpContext;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
+import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
+import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
@@ -25,13 +20,13 @@ import org.slf4j.LoggerFactory;
 public class NewRestEasyClient<R> {
     protected Logger logger = LoggerFactory.getLogger(RestEasyClient.class);
 
-    private String serviceUrl;
+    protected String serviceUrl;
 
-    private final Class<R> resourceClass;
+    protected final Class<R> resourceClass;
 
-    private ResteasyWebTarget clientExecutor;
+    protected ResteasyWebTarget clientExecutor;
 
-    private ResteasyProviderFactory resteasyProvider;
+    protected ResteasyProviderFactory resteasyProvider;
 
     public NewRestEasyClient(URI serviceUrl, Class<R> resourceClass) {
         this(serviceUrl.toASCIIString(), resourceClass);
@@ -67,25 +62,25 @@ public class NewRestEasyClient<R> {
 
     public ResteasyWebTarget getClientExecutor() {
         if (clientExecutor == null) {
-            AuthCache authCache = new BasicAuthCache();
-            AuthScheme basicAuth = new BasicScheme();
-            authCache.put(new HttpHost(getServiceUrl()), basicAuth);
-            BasicHttpContext localContext = new BasicHttpContext();
-            localContext.setAttribute(URI.create(getServiceUrl()).getHost(), authCache);
+            // AuthCache authCache = new BasicAuthCache();
+            // AuthScheme basicAuth = new BasicScheme();
+            // authCache.put(new HttpHost(getServiceUrl()), basicAuth);
+            // BasicHttpContext localContext = new BasicHttpContext();
+            // localContext.setAttribute(URI.create(getServiceUrl()).getHost(),
+            // authCache);
             HttpClient httpClient = HttpClientBuilder.create().build();
-            ResteasyClient client = new ResteasyClientBuilder()//
-                    .httpEngine(new ApacheHttpClient4Engine(httpClient, true))//
+            ResteasyClient client = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder())//
+                    .httpEngine(new ApacheHttpClient43Engine(httpClient, true))//
                     .providerFactory(getResteasyProvider())//
                     .build();
-            ResteasyWebTarget target = client.target(getServiceUrl());
-            return target;
+            clientExecutor = client.target(getServiceUrl());
         }
         return this.clientExecutor;
     }
 
     public ResteasyProviderFactory getResteasyProvider() {
         if (resteasyProvider == null) {
-            resteasyProvider = new ResteasyProviderFactory();
+            resteasyProvider = new LocalResteasyProviderFactory();
             resteasyProvider.registerProviderInstance(new JsonProvider());
             RegisterBuiltin.register(resteasyProvider);
         }

@@ -1,113 +1,121 @@
 package org.jhaws.common.net.client;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.Application;
-
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
+import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient43Engine;
+import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
+import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.server.embedded.SecurityDomain;
-import org.jboss.resteasy.spi.ResteasyDeployment;
+import org.jboss.resteasy.plugins.server.sun.http.HttpContextBuilder;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
+import org.jhaws.common.net.resteasy.client.JsonProvider;
+
+import com.sun.net.httpserver.HttpContext;
+import com.sun.net.httpserver.HttpServer;
 
 public class TestRestServer implements AutoCloseable {
-	public int port;
+    public int port;
 
-	public Set<Object> objects = new HashSet<>();
+    public final String bindAddress = "localhost";
 
-	public Set<Class<?>> classes = new HashSet<>();
+    public boolean chunked = true;
 
-	@SuppressWarnings("deprecation")
-	public org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer server;
+    public ResteasyClient resteasyClient;
 
-	public SecurityDomain securityDomain;
+    public ResteasyWebTarget resteasyWebTarget;
 
-	public ResteasyClient resteasyClient;
+    public Set<Object> objects = new HashSet<>();
 
-	public String bindAddress = "localhost";
+    public Set<Class<?>> classes = new HashSet<>();
 
-	private TestRestServer(Object... objects) {
-		append(objects);
-	}
+    public HttpContextBuilder contextBuilder;
 
-	public static TestRestServer create(Object... objects) throws IOException {
-		return create(null, objects);
-	}
+    public HttpServer httpServer;
 
-	public static TestRestServer create(SecurityDomain securityDomain, Object... objects) throws IOException {
-		TestRestServer inMemoryRestServer = new TestRestServer(objects);
-		inMemoryRestServer.withDefaults(securityDomain);
-		inMemoryRestServer.start();
-		return inMemoryRestServer;
-	}
+    public SecurityDomain securityDomain;
 
-	private void append(Object... _objects) {
-		for (Object object : _objects) {
-			if (object instanceof Class) {
-				classes.add((Class<?>) object);
-			} else {
-				this.objects.add(object);
-			}
-		}
-	}
+    public HttpContext httpContext;
 
-	private void withDefaults(SecurityDomain _securityDomain) {
-		this.securityDomain = _securityDomain;
-		this.resteasyClient = new ResteasyClientBuilder().build();
-	}
+    private TestRestServer(Object... objects) {
+        append(objects);
+    }
 
-	@SuppressWarnings("deprecation")
-	private void start() throws IOException {
-		port = findFreePort();
-		server = new org.jboss.resteasy.plugins.server.tjws.TJWSEmbeddedJaxrsServer();
-		server.setPort(port);
-		server.setBindAddress(bindAddress);
-		server.setSecurityDomain(securityDomain);
-		System.out.println(bindAddress + ":" + port);
-		ResteasyDeployment deployment = server.getDeployment();
-		for (Object object : objects) {
-			if (object instanceof Application) {
-				deployment.setApplication((Application) object);
-			} else {
-				deployment.getResources().add(object);
-			}
-		}
-		for (Class<?> resourceOrProvider : classes) {
-			if (Application.class.isAssignableFrom(resourceOrProvider)) {
-				deployment.setApplicationClass(resourceOrProvider.getName());
-			} else {
-				deployment.getProviderClasses().add(resourceOrProvider.getName());
-			}
-		}
-		deployment.getProviderClasses().add(MatrixTestBeanMessageBodyReader.class.getName());
-		server.start();
-	}
+    public static TestRestServer create(SecurityDomain securityDomain, Object... objects) throws IOException {
+        TestRestServer inMemoryRestServer = new TestRestServer(objects);
+        inMemoryRestServer.withDefaults(securityDomain);
+        inMemoryRestServer.start();
+        return inMemoryRestServer;
+    }
 
-	public String baseUri() {
-		return "http://" + bindAddress + ":" + port;
-	}
+    public static TestRestServer create(Object... objects) throws IOException {
+        return create(null, objects);
+    }
 
-	public ResteasyWebTarget newRequest(String uriTemplate) {
-		return resteasyClient.target(baseUri() + uriTemplate);
-	}
+    private void append(Object... _objects) {
+        for (Object object : _objects) {
+            if (object instanceof Class) {
+                classes.add((Class<?>) object);
+            } else {
+                this.objects.add(object);
+            }
+        }
+    }
 
-	public static int findFreePort() throws IOException {
-		try (ServerSocket server = new ServerSocket(0)) {
-			int port = server.getLocalPort();
-			server.close();
-			return port;
-		}
-	}
+    private void start() throws IOException {
+        port = findFreePort();
+        httpServer = HttpServer.create(new InetSocketAddress(port), 10);
+        contextBuilder = new HttpContextBuilder();
+        for (Object object : objects) {
+            contextBuilder.getDeployment().getResources().add(object);
+        }
+        for (Class<?> resourceClass : classes) {
+            contextBuilder.getDeployment().getActualResourceClasses().add(resourceClass);
+        }
+        contextBuilder.setSecurityDomain(securityDomain);
+        httpContext = contextBuilder.bind(httpServer);
+        // context.getAttributes().put("some.config.info", "42");
+        httpServer.start();
+    }
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void close() {
-		if (server != null) {
-			server.stop();
-			server = null;
-		}
-	}
+    private void withDefaults(SecurityDomain _securityDomain) {
+        this.securityDomain = _securityDomain;
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        ResteasyProviderFactory resteasyProvider = new LocalResteasyProviderFactory();
+        resteasyProvider.registerProviderInstance(new JsonProvider());
+        RegisterBuiltin.register(resteasyProvider);
+        resteasyClient = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder())//
+                .httpEngine(new ApacheHttpClient43Engine(httpClient, true))//
+                .providerFactory(resteasyProvider)//
+                .build();
+        resteasyWebTarget = resteasyClient.target(baseUri());
+        resteasyWebTarget.setChunked(chunked);
+    }
+
+    public String baseUri() {
+        return "http://" + bindAddress + ":" + port;
+    }
+
+    public static int findFreePort() throws IOException {
+        try (ServerSocket server = new ServerSocket(0)) {
+            int port = server.getLocalPort();
+            server.close();
+            return port;
+        }
+    }
+
+    @Override
+    public void close() {
+        contextBuilder.cleanup();
+        httpServer.stop(0);
+    }
 }
