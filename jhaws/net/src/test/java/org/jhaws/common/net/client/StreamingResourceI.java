@@ -28,6 +28,7 @@ public interface StreamingResourceI {
 
     static final String LIST = "/list";
 
+    @Deprecated
     static final String DOWNLOAD_STREAM = "/downloadstream";
 
     static final String DOWNLOAD_STREAM_IN_RESPONSE = "/downloadstreaminresponse";
@@ -60,6 +61,7 @@ public interface StreamingResourceI {
     @GET
     @Path(DOWNLOAD_STREAM)
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Deprecated
     StreamingOutput downloadStream(@Context HttpServletResponse response, @QueryParam("file") String file);
 
     @GET

@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -101,7 +100,8 @@ public class StreamingResource implements StreamingResourceI {
     }
 
     @Override
-    public StreamingOutput downloadStream(HttpServletResponse response, String file) {
+    @Deprecated
+    public StreamingOutput downloadStream(javax.servlet.http.HttpServletResponse response, String file) {
         response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file + "\"");
         response.addIntHeader(HttpHeaders.CONTENT_LENGTH, (int) (long) len.get(file));
         return stream(file);

@@ -270,26 +270,26 @@ public class StreamingResourceTest {
         }
     }
 
-    @Test
-    public void test_DownloadStream() {
-        if (!runDirect) return;
-        Response response = null;
-        try {
-            response = target().path(StreamingResourceI.DOWNLOAD_STREAM)
-                    .queryParam("file", file.getFileName().toString())
-                    .request()
-                    .buildGet()
-                    .invoke();
-            Assert.assertEquals(200, response.getStatus());
-            InputStream readEntity = response.readEntity(InputStream.class);
-            System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            Assert.fail("" + ex);
-        } finally {
-            if (response != null) response.close();
-        }
-    }
+    // @Test
+    // public void test_DownloadStream() {
+    // if (!runDirect) return;
+    // Response response = null;
+    // try {
+    // response = target().path(StreamingResourceI.DOWNLOAD_STREAM)
+    // .queryParam("file", file.getFileName().toString())
+    // .request()
+    // .buildGet()
+    // .invoke();
+    // Assert.assertEquals(200, response.getStatus());
+    // InputStream readEntity = response.readEntity(InputStream.class);
+    // System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
+    // } catch (Exception ex) {
+    // ex.printStackTrace();
+    // Assert.fail("" + ex);
+    // } finally {
+    // if (response != null) response.close();
+    // }
+    // }
 
     @Test
     public void proxy_UploadStream() {
