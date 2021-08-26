@@ -82,7 +82,7 @@
 		<version.ostermiller>1.07.00</version.ostermiller>
 		<version.htmlcleaner>2.8</version.htmlcleaner>
 		<version.jtidy>r938</version.jtidy>
-		<version.jsoup>1.13.1</version.jsoup>
+		<version.jsoup>1.14.2</version.jsoup>
 		<version.poi>4.1.2</version.poi>
 		<version.tika>1.24.1</version.tika>
 		<version.opencsv>5.1</version.opencsv>
