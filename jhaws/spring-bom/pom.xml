@@ -11,22 +11,23 @@
 	<name>spring-bom</name>
 	<description>spring-bom</description>
 	<properties>
-		<version.spring>5.3.8</version.spring>
-		<version.spring-web>${version.spring}</version.spring-web>
-		<version.spring-ws>3.1.1</version.spring-ws>
-		<version.spring-integration>5.5.1</version.spring-integration>
-		<version.spring-security>5.5.1</version.spring-security>
-		<version.spring-data>2.5.2</version.spring-data>
-		<version.spring-session>2.5.1</version.spring-session>
+		<version.spring>5.3.9</version.spring><!-- spring-core -->
+		<!-- <version.spring-web>${version.spring}</version.spring-web> -->
+		<version.spring-ws>3.1.1</version.spring-ws><!-- spring-ws-core -->
+		<version.spring-integration>5.5.3</version.spring-integration><!-- spring-integration-core -->
+		<version.spring-security>5.5.2</version.spring-security><!-- spring-security-core -->
+		<version.spring-data>2.5.4</version.spring-data><!-- spring-data-commons -->
+		<version.spring-data-rest>3.5.4</version.spring-data-rest><!-- spring-data-rest-core -->
+		<version.spring-session>2.5.2</version.spring-session><!-- spring-session-core -->
 		<!-- .............................................. -->
 		<!-- .............................................. -->
 		<version.spring-integration-twitter>5.0.14.RELEASE</version.spring-integration-twitter>
-		<version.spring-integration-kafka>3.3.0.RELEASE</version.spring-integration-kafka>
+		<version.spring-integration-kafka>3.3.1.RELEASE</version.spring-integration-kafka>
 		<version.spring-integration-smb>1.2.1.RELEASE</version.spring-integration-smb>
-		<version.spring-integration-cassandra>0.8.0.RELEASE</version.spring-integration-cassandra>
-		<version.spring-integration-zip>1.0.3.RELEASE</version.spring-integration-zip>
+		<version.spring-integration-cassandra>0.9.0</version.spring-integration-cassandra>
+		<version.spring-integration-zip>2.0.0</version.spring-integration-zip>
 		<version.spring-integration-kotlin-dsl>0.0.2.RELEASE</version.spring-integration-kotlin-dsl>
-		<version.spring-integration-hazelcast>2.0.0.RELEASE</version.spring-integration-hazelcast>
+		<version.spring-integration-hazelcast>3.0.0</version.spring-integration-hazelcast>
 		<version.spring-integration-httpinvoker>2.0.6.RELEASE</version.spring-integration-httpinvoker>
 		<version.spring-integration-adapter>1.0.4.RELEASE</version.spring-integration-adapter>
 		<version.spring-integration-tuple>1.0.0.RELEASE</version.spring-integration-tuple>
@@ -39,11 +40,10 @@
 		<version.spring-security-rsa>1.0.9.RELEASE</version.spring-security-rsa>
 		<version.spring-security-saml-dsl-core>1.0.5.RELEASE</version.spring-security-saml-dsl-core>
 		<version.spring-security-saml2-core>2.0.0.M31</version.spring-security-saml2-core>
-		<version.spring-ldap>2.3.3.RELEASE</version.spring-ldap>
+		<version.spring-ldap>2.3.4.RELEASE</version.spring-ldap><!-- spring-ldap-core -->
 		<version.spring-session-data-mongo>1.3.5.RELEASE</version.spring-session-data-mongo>
-		<version.spring-data-rest>3.3.1.RELEASE</version.spring-data-rest>
-		<version.spring-data-solr>4.2.1.RELEASE</version.spring-data-solr>
-		<version.spring-asm>3.1.4.RELEASE</version.spring-asm>
+		<version.spring-data-solr>4.3.12</version.spring-data-solr><!-- spring-data-solr -->
+		<version.spring-asm>3.1.4.RELEASE</version.spring-asm><!-- spring-asm -->
 		<version.spring-jca>2.0.8</version.spring-jca>
 		<version.spring-dao>2.0.8</version.spring-dao>
 	</properties>
@@ -711,6 +711,17 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.integration</groupId>
+				<artifactId>spring-integration-mongodb</artifactId>
+				<version>${version.spring-integration}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-logging</artifactId>
+						<groupId>commons-logging</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.integration</groupId>
 				<artifactId>spring-integration-file</artifactId>
 				<version>${version.spring-integration}</version>
 				<exclusions>
@@ -1229,6 +1240,17 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-commons</artifactId>
+				<version>${version.spring-data}</version>
+				<exclusions>
+					<exclusion>
+						<artifactId>commons-logging</artifactId>
+						<groupId>commons-logging</groupId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.data</groupId>
+				<artifactId>spring-data-envers</artifactId>
 				<version>${version.spring-data}</version>
 				<exclusions>
 					<exclusion>
