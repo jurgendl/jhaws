@@ -49,7 +49,7 @@
 		<deploy.skip.demo>true</deploy.skip.demo>
 		<deploy.skip.web>true</deploy.skip.web>
 		<!-- DEPENDENCIES -->
-		<version.bouncycastle>1.68</version.bouncycastle>
+		<version.bouncycastle>1.69</version.bouncycastle>
 		<version.commons.codec>1.14</version.commons.codec>
 		<version.commons.beanutils>1.9.4</version.commons.beanutils>
 		<version.commons.io>2.8.0</version.commons.io>
