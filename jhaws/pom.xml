@@ -68,7 +68,7 @@
 		<version.httpcomponents.core>4.4.13</version.httpcomponents.core>
 		<version.httpcomponents.nio>4.4.13</version.httpcomponents.nio>
 		<version.httpcomponents.async>4.1.4</version.httpcomponents.async>
-		<version.httpclient5>5.0.3</version.httpclient5>
+		<version.httpclient5>5.1</version.httpclient5>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
 		<version.javax.activation>1.1.1</version.javax.activation>
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
@@ -84,7 +84,7 @@
 		<version.jtidy>r938</version.jtidy>
 		<version.jsoup>1.14.2</version.jsoup>
 		<version.poi>4.1.2</version.poi>
-		<version.tika>1.24.1</version.tika>
+		<version.tika>1.27</version.tika>
 		<version.opencsv>5.1</version.opencsv>
 		<version.jai>1.4.0</version.jai>
 		<version.slf4j>1.7.30</version.slf4j>
@@ -105,8 +105,8 @@
 		<version.guava>30.1-jre</version.guava>
 		<version.itextpdf5>5.5.13.2</version.itextpdf5>
 		<version.flyingsaucer-itext5>9.1.20</version.flyingsaucer-itext5>
-		<version.itextpdf7>7.1.14</version.itextpdf7>
-		<version.javassist>3.27.0-GA</version.javassist>
+		<version.itextpdf7>7.1.16</version.itextpdf7>
+		<version.javassist>3.28.0-GA</version.javassist>
 		<version.joda-time>2.10.6</version.joda-time>
 		<version.cglib>3.3.0</version.cglib>
 		<version.ehcache>2.10.6</version.ehcache>
