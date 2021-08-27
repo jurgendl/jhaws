@@ -2,6 +2,7 @@ package org.jhaws.common.web.wicket.twentytwenty;
 
 import org.jhaws.common.web.wicket.CssResourceReference;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
+import org.jhaws.common.web.wicket.eventmove.JQueryEventMove;
 import org.jhaws.common.web.wicket.jquery.JQuery;
 
 // $(".twentytwenty").twentytwenty({
@@ -29,20 +30,20 @@ import org.jhaws.common.web.wicket.jquery.JQuery;
 // https://zurb.com/playground/twentytwenty
 // https://github.com/zurb/twentytwenty/
 public class Twentytwenty {
-    public static JavaScriptResourceReference JS_EVENT = new JavaScriptResourceReference(Twentytwenty.class, "js/jquery.event.move.js");
+	public static JavaScriptResourceReference JS_MOVE = new JavaScriptResourceReference(Twentytwenty.class,
+			"js/jquery.twentytwenty.js");
 
-    public static JavaScriptResourceReference JS_MOVE = new JavaScriptResourceReference(Twentytwenty.class, "js/jquery.twentytwenty.js");
+	public static CssResourceReference CSS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty.css");
 
-    public static CssResourceReference CSS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty.css");
+	public static CssResourceReference CSS_NO_COMPASS = new CssResourceReference(Twentytwenty.class,
+			"css/twentytwenty-no-compass.css");
 
-    public static CssResourceReference CSS_NO_COMPASS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty-no-compass.css");
-
-    static {
-        try {
-            JS_EVENT.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-            JS_MOVE.addJavaScriptResourceReferenceDependency(JS_EVENT);
-        } catch (Exception ex) {
-            //
-        }
-    }
+	static {
+		try {
+			JS_MOVE.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+			JS_MOVE.addJavaScriptResourceReferenceDependency(JQueryEventMove.JS_EVENT_MOVE);
+		} catch (Exception ex) {
+			//
+		}
+	}
 }
