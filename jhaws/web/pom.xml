@@ -25,6 +25,13 @@
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.29</version>
+			<type>bundle</type>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${version.javax.servlet-api}</version>
