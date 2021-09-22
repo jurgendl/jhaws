@@ -19,7 +19,7 @@
 
 <div style="width: 100%; max-width: 800px; margin: 0 auto;">
 
-    <h1>Country_v2 Demo</h1>
+    <h1>AsyncResult_v1 Demo</h1>
 
     <ul>
         <li>
@@ -115,6 +115,7 @@
             order: "asc",
             group: true,
             maxItemPerGroup: 3,
+            asyncResult: true,
             groupOrder: function (node, query, result, resultCount, resultCountPerGroup) {
 
                 var scope = this,
@@ -147,11 +148,36 @@
             template: "{{display}}, <small><em>{{group}}</em></small>",
             emptyTemplate: "no result for {{query}}",
             source: {
+                user: {
+                    dynamic: true,
+                    template: "{{login}}, <small><em>{{group}}</em></small>",
+                    href: "https://www.github.com/{{username}}",
+                    data: [{
+                        "id": 415849,
+                        "username": "an inserted user that is not inside the database",
+                        "avatar": "https://avatars3.githubusercontent.com/u/415849"
+                    }],
+                    display: ['login'],
+                    ajax: {
+                        url: "https://api.github.com/repos/running-coder/jquery-typeahead/contributors",
+                    }
+                },
                 country: {
                     data: data.countries
                 },
                 capital: {
-                    data: data.capitals
+                    data: function() {
+                    var deferred = $.Deferred();
+                    // Gather your data, and resolve the deferred object with an array of objects
+                    // setTimeout is used only to show that the data is async
+                    setTimeout(function() {
+                        deferred.resolve(data.capitals);
+                    }, 3000);
+                    deferred.always(function() {
+                        console.log("yay! :D");
+                    });
+                    return deferred;
+                    }
                 }
             },
             callback: {
@@ -175,6 +201,29 @@
                         text = objCount + ' elements matching "' + query + '"';
                     }
                     $('.js-result-container').text(text);
+
+                },
+                onLayoutBuiltBefore: function (node, query, result, resultHtmlList) {
+                    if (!resultHtmlList
+                        || !this.generateGroups.length
+                        || this.displayEmptyTemplate
+                        || this.generatedGroupCount === this.generateGroups.length
+                    ) return;
+
+
+                    this.generateGroups.forEach(function (group) {
+                        if (!resultHtmlList.find('[data-search-group="' + group + '"]').length) {
+                            resultHtmlList.append('<li class="typeahead__group" data-search-group="' + group + '">\
+                                    <a href="javascript:;" tabindex="-1">' + group + '</a>\
+                                </li>\
+                                <li class="typeahead__item" data-group="" data-index="-1">\
+                                    <span style="padding: 0.5rem 0.75rem;display: block;">Loading...</span>\
+                                </li>'
+                            );
+                        }
+                    });
+
+                    return resultHtmlList;
 
                 }
             },

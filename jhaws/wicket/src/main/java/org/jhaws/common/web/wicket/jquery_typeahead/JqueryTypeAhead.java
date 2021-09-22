@@ -4,7 +4,7 @@ import org.jhaws.common.web.wicket.CssResourceReference;
 import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 import org.jhaws.common.web.wicket.jquery.JQuery;
 
-//v2.10.6
+//v2.11.0
 //
 //http://www.runningcoder.org/jquerytypeahead/overview/
 //http://www.runningcoder.org/jquerytypeahead/version/
