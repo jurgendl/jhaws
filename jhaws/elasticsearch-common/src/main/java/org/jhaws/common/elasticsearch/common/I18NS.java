@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +14,52 @@ import org.apache.commons.lang3.StringUtils;
 // @NestedField
 @SuppressWarnings("serial")
 public class I18NS implements Serializable {
+    public static void main(String[] args) {
+        if (false) {
+            String t = "case \"${ISO}\": if (${L} == null) ${L} = new ArrayList<>(); ${L}.add(value); break;";
+            Arrays.stream(Language.values()).filter(a -> a.iso() != null).forEach(a -> {
+                System.out.println(t.replace("${L}", a.name()).replace("${ISO}", a.iso().toUpperCase()));
+            });
+        }
+        if (false) {
+            String t = " @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.${L})\n"//
+                    + " private List<String> ${L};";//
+            Arrays.stream(Language.values()).filter(a -> a.iso() != null).forEach(a -> {
+                System.out.println(t.replace("${L}", a.name()).replace("${ISO}", a.iso().toUpperCase()));
+            });
+        }
+        if (false) {
+            String t = "if(${L}!=null) { return ${L}; }";//
+            Arrays.stream(Language.values()).filter(a -> a.iso() != null).forEach(a -> {
+                System.out.println(t.replace("${L}", a.name()).replace("${ISO}", a.iso().toUpperCase()));
+            });
+        }
+        if (false) {
+            String t = "case ${L}: if(${L}==null) ${L}=new ArrayList<>(); ${L}.add(value); break;";
+            Arrays.stream(Language.values()).filter(a -> a.iso() != null).forEach(a -> {
+                System.out.println(t.replace("${L}", a.name()).replace("${ISO}", a.iso().toUpperCase()));
+            });
+        }
+        if (false) {
+            String t = "${L}=null;";
+            Arrays.stream(Language.values()).filter(a -> a.iso() != null).forEach(a -> {
+                System.out.println(t.replace("${L}", a.name()).replace("${ISO}", a.iso().toUpperCase()));
+            });
+        }
+        if (false) {
+            String t = "if (${L} != null && ${L}.size() > 1) ${L} = ${L}.stream().distinct().collect(Collectors.toList());";
+            Arrays.stream(Language.values()).filter(a -> a.iso() != null).forEach(a -> {
+                System.out.println(t.replace("${L}", a.name()).replace("${ISO}", a.iso().toUpperCase()));
+            });
+        }
+        if (true) {
+            String t = "if (${L} != null) set.addAll(${L});";
+            Arrays.stream(Language.values()).filter(a -> a.iso() != null).forEach(a -> {
+                System.out.println(t.replace("${L}", a.name()).replace("${ISO}", a.iso().toUpperCase()));
+            });
+        }
+    }
+
     @Field(type = FieldType.TEXT, customAnalyzer = Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER)
     private List<String> unknown;
 
@@ -142,6 +191,96 @@ public class I18NS implements Serializable {
     @Override
     public String toString() {
         return String.valueOf(getValue());
+    }
+
+    public SortedSet<String> collect() {
+        SortedSet<String> set = new TreeSet<>();
+
+        if (unknown != null) set.addAll(unknown);
+
+        if (arabic != null) set.addAll(arabic);
+        if (armenian != null) set.addAll(armenian);
+        if (basque != null) set.addAll(basque);
+        if (bengali != null) set.addAll(bengali);
+        if (bulgarian != null) set.addAll(bulgarian);
+        if (catalan != null) set.addAll(catalan);
+        if (czech != null) set.addAll(czech);
+        if (danish != null) set.addAll(danish);
+        if (dutch != null) set.addAll(dutch);
+        if (english != null) set.addAll(english);
+        if (estonian != null) set.addAll(estonian);
+        if (finnish != null) set.addAll(finnish);
+        if (french != null) set.addAll(french);
+        if (galician != null) set.addAll(galician);
+        if (german != null) set.addAll(german);
+        if (greek != null) set.addAll(greek);
+        if (hindi != null) set.addAll(hindi);
+        if (hungarian != null) set.addAll(hungarian);
+        if (indonesian != null) set.addAll(indonesian);
+        if (irish != null) set.addAll(irish);
+        if (italian != null) set.addAll(italian);
+        if (latvian != null) set.addAll(latvian);
+        if (lithuanian != null) set.addAll(lithuanian);
+        if (norwegian != null) set.addAll(norwegian);
+        if (persian != null) set.addAll(persian);
+        if (portuguese != null) set.addAll(portuguese);
+        if (romanian != null) set.addAll(romanian);
+        if (russian != null) set.addAll(russian);
+        if (spanish != null) set.addAll(spanish);
+        if (swedish != null) set.addAll(swedish);
+        if (turkish != null) set.addAll(turkish);
+        if (thai != null) set.addAll(thai);
+        if (japanese != null) set.addAll(japanese);
+        if (chinese != null) set.addAll(chinese);
+        if (korean != null) set.addAll(korean);
+        if (ukrainian != null) set.addAll(ukrainian);
+        if (polish != null) set.addAll(polish);
+
+        return set;
+    }
+
+    public I18NS distinct() {
+        if (arabic != null && arabic.size() > 1) arabic = arabic.stream().distinct().collect(Collectors.toList());
+        if (armenian != null && armenian.size() > 1) armenian = armenian.stream().distinct().collect(Collectors.toList());
+        if (basque != null && basque.size() > 1) basque = basque.stream().distinct().collect(Collectors.toList());
+        if (bengali != null && bengali.size() > 1) bengali = bengali.stream().distinct().collect(Collectors.toList());
+        if (bulgarian != null && bulgarian.size() > 1) bulgarian = bulgarian.stream().distinct().collect(Collectors.toList());
+        if (catalan != null && catalan.size() > 1) catalan = catalan.stream().distinct().collect(Collectors.toList());
+        if (czech != null && czech.size() > 1) czech = czech.stream().distinct().collect(Collectors.toList());
+        if (danish != null && danish.size() > 1) danish = danish.stream().distinct().collect(Collectors.toList());
+        if (dutch != null && dutch.size() > 1) dutch = dutch.stream().distinct().collect(Collectors.toList());
+        if (english != null && english.size() > 1) english = english.stream().distinct().collect(Collectors.toList());
+        if (estonian != null && estonian.size() > 1) estonian = estonian.stream().distinct().collect(Collectors.toList());
+        if (finnish != null && finnish.size() > 1) finnish = finnish.stream().distinct().collect(Collectors.toList());
+        if (french != null && french.size() > 1) french = french.stream().distinct().collect(Collectors.toList());
+        if (galician != null && galician.size() > 1) galician = galician.stream().distinct().collect(Collectors.toList());
+        if (german != null && german.size() > 1) german = german.stream().distinct().collect(Collectors.toList());
+        if (greek != null && greek.size() > 1) greek = greek.stream().distinct().collect(Collectors.toList());
+        if (hindi != null && hindi.size() > 1) hindi = hindi.stream().distinct().collect(Collectors.toList());
+        if (hungarian != null && hungarian.size() > 1) hungarian = hungarian.stream().distinct().collect(Collectors.toList());
+        if (indonesian != null && indonesian.size() > 1) indonesian = indonesian.stream().distinct().collect(Collectors.toList());
+        if (irish != null && irish.size() > 1) irish = irish.stream().distinct().collect(Collectors.toList());
+        if (italian != null && italian.size() > 1) italian = italian.stream().distinct().collect(Collectors.toList());
+        if (latvian != null && latvian.size() > 1) latvian = latvian.stream().distinct().collect(Collectors.toList());
+        if (lithuanian != null && lithuanian.size() > 1) lithuanian = lithuanian.stream().distinct().collect(Collectors.toList());
+        if (norwegian != null && norwegian.size() > 1) norwegian = norwegian.stream().distinct().collect(Collectors.toList());
+        if (persian != null && persian.size() > 1) persian = persian.stream().distinct().collect(Collectors.toList());
+        if (portuguese != null && portuguese.size() > 1) portuguese = portuguese.stream().distinct().collect(Collectors.toList());
+        if (romanian != null && romanian.size() > 1) romanian = romanian.stream().distinct().collect(Collectors.toList());
+        if (russian != null && russian.size() > 1) russian = russian.stream().distinct().collect(Collectors.toList());
+        if (spanish != null && spanish.size() > 1) spanish = spanish.stream().distinct().collect(Collectors.toList());
+        if (swedish != null && swedish.size() > 1) swedish = swedish.stream().distinct().collect(Collectors.toList());
+        if (turkish != null && turkish.size() > 1) turkish = turkish.stream().distinct().collect(Collectors.toList());
+        if (thai != null && thai.size() > 1) thai = thai.stream().distinct().collect(Collectors.toList());
+        //
+        if (japanese != null && japanese.size() > 1) japanese = japanese.stream().distinct().collect(Collectors.toList());
+        if (chinese != null && chinese.size() > 1) chinese = chinese.stream().distinct().collect(Collectors.toList());
+        if (korean != null && korean.size() > 1) korean = korean.stream().distinct().collect(Collectors.toList());
+        if (ukrainian != null && ukrainian.size() > 1) ukrainian = ukrainian.stream().distinct().collect(Collectors.toList());
+        if (polish != null && polish.size() > 1) polish = polish.stream().distinct().collect(Collectors.toList());
+        //
+        if (unknown != null && unknown.size() > 1) unknown = unknown.stream().distinct().collect(Collectors.toList());
+        return this;
     }
 
     public I18NS resetValues() {
