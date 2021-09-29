@@ -70,4 +70,6 @@ public interface Analyzers {
 	public static final String CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER = "custom_sortable_only_alphanumeric_analyzer";
 
 	public static final String CUSTOM_ANY_LANGUAGE_ANALYZER = "custom_any_language_analyzer";
+
+	public static final String CUSTOM_FRENCH_LANGUAGE_ANALYZER = "custom_french_language_analyzer";
 }

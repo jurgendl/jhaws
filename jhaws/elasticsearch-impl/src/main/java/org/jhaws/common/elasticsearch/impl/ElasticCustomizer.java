@@ -22,6 +22,7 @@ import org.jhaws.common.elasticsearch.common.Ignore;
 import org.jhaws.common.elasticsearch.common.Language;
 import org.jhaws.common.elasticsearch.common.NestedField;
 import org.jhaws.common.elasticsearch.common.OnlySave;
+import org.jhaws.common.elasticsearch.common.Stemmer;
 import org.jhaws.common.elasticsearch.common.Tokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,6 +93,10 @@ public class ElasticCustomizer {
 
 	private static final String TOKENIZER = "tokenizer";
 
+	private static final String ARTICLES = "articles";
+
+	private static final String ARTICLES_CASE = "articles_case";
+
 	public Map<String, Object> settings() {
 		// "mappings": {
 		// "_source": {
@@ -113,6 +118,9 @@ public class ElasticCustomizer {
 		filter.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter());
 		filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter());
 		filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter());
+		filter.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter());
+		filter.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter());
+		filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter());
 		analysis.put(FILTER, filter);
 		Map<String, Object> tokenizer = new LinkedHashMap<>();
 		// tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER,
@@ -137,6 +145,7 @@ public class ElasticCustomizer {
 		analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER, customSortableOnlyAlphaAnalyzer());
 		analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER, customSortableOnlyAlphaNumericAnalyzer());
 		analyzer.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
+		analyzer.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
 		analysis.put(ANALYZER, analyzer);
 		Map<String, Object> settings = new LinkedHashMap<>();
 		settings.put(ANALYSIS, analysis);
@@ -213,19 +222,27 @@ public class ElasticCustomizer {
 	}
 
 	public Map<String, Object> customDutchStemmerFilter() {
-		return customStemmerFilter(Language.dutch);
+		return customStemmerFilter(Stemmer.dutch);
+	}
+
+	public Map<String, Object> customEnglishStemmerFilter() {
+		return customStemmerFilter(Stemmer.english);
+	}
+
+	public Map<String, Object> customFrenchStemmerFilter() {
+		return customStemmerFilter(Stemmer.french);
 	}
 
 	public Map<String, Object> customDutchStopFilter() {
 		return customStopFilter(Language.dutch);
 	}
 
-	public Map<String, Object> customEnglishStemmerFilter() {
-		return customStemmerFilter(Language.english);
-	}
-
 	public Map<String, Object> customEnglishStopFilter() {
 		return customStopFilter(Language.english);
+	}
+
+	public Map<String, Object> customFrenchStopFilter() {
+		return customStopFilter(Language.french);
 	}
 
 	public Map<String, Object> customEmailAnalyzer() {
@@ -286,7 +303,7 @@ public class ElasticCustomizer {
 		return filterConfig;
 	}
 
-	public Map<String, Object> customStemmerFilter(Language language) {
+	public Map<String, Object> customStemmerFilter(Stemmer language) {
 		Map<String, Object> filterConfig = new LinkedHashMap<>();
 		filterConfig.put(TYPE, Filter.stemmer.id());
 		filterConfig.put(LANGUAGE, language.id());
@@ -674,5 +691,28 @@ public class ElasticCustomizer {
 
 	public String replaceAnalyze(String analyzer) {
 		return Optional.ofNullable(replaceAnalyzers.get(analyzer)).orElse(analyzer);
+	}
+
+	public Map<String, Object> customFrenchElisionFilter() {
+		Map<String, Object> filterConfig = new LinkedHashMap<>();
+		filterConfig.put(TYPE, Filter.elision.id());
+		filterConfig.put(ARTICLES_CASE, true);
+		filterConfig.put(ARTICLES,
+				Arrays.asList("l", "m", "t", "qu", "n", "s", "j", "d", "c", "jusqu", "quoiqu", "lorsqu", "puisqu"));
+		return filterConfig;
+	}
+
+	public Map<String, Object> customFrenchLanguageAnalyzer() {
+		Map<String, Object> analyzerConfig = new LinkedHashMap<>();
+		analyzerConfig.put(TYPE, CUSTOM);
+		analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
+		analyzerConfig.put(FILTER, Arrays.asList(//
+				Filters.CUSTOM_FRENCH_ELISION_FILTER, //
+				Filter.lowercase.id(), //
+				Filter.asciifolding.id(), //
+				Filters.CUSTOM_FRENCH_STOP_FILTER, //
+				Filters.CUSTOM_FRENCH_STEMMER_FILTER//
+		));
+		return analyzerConfig;
 	}
 }
