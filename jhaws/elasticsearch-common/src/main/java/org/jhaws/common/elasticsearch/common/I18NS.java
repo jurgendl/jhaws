@@ -100,6 +100,7 @@ public class I18NS implements Serializable {
     private List<String> finnish;
 
     @Field(type = FieldType.TEXT, customAnalyzer = Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER)
+    // @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.french)
     private List<String> french;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.galician)
