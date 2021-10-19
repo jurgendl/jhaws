@@ -8,8 +8,6 @@ import java.util.function.UnaryOperator;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.codehaus.janino.util.Producer;
-
 @XmlRootElement
 public class Value<T> implements Serializable, Supplier<T> {
     private static final long serialVersionUID = -5341543889953418944L;
@@ -124,11 +122,11 @@ public class Value<T> implements Serializable, Supplier<T> {
         return this;
     }
 
-    public Value<T> operate(Predicate<T> when, UnaryOperator<T> operation, Producer<T> elseOperation) {
+    public Value<T> operate(Predicate<T> when, UnaryOperator<T> operation, Supplier<T> elseOperation) {
         if (when.test(value)) {
             value = operation.apply(value);
         } else {
-            value = elseOperation.produce();
+            value = elseOperation.get();
         }
         return this;
     }
@@ -144,11 +142,11 @@ public class Value<T> implements Serializable, Supplier<T> {
         return this;
     }
 
-    public Value<T> consume(Predicate<T> when, Consumer<T> consume, Producer<T> elseOperation) {
+    public Value<T> consume(Predicate<T> when, Consumer<T> consume, Supplier<T> elseOperation) {
         if (when.test(value)) {
             consume.accept(value);
         } else {
-            value = elseOperation.produce();
+            value = elseOperation.get();
         }
         return this;
     }
