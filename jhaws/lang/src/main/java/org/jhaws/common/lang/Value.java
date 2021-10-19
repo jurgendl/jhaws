@@ -152,4 +152,8 @@ public class Value<T> implements Serializable, Supplier<T> {
         }
         return this;
     }
+
+    public boolean is(Predicate<T> voorwaarde) {
+        return voorwaarde.test(get());
+    }
 }
