@@ -18,7 +18,7 @@
 		<version.spring-security>5.5.2</version.spring-security><!-- spring-security-core -->
 		<version.spring-data>2.5.4</version.spring-data><!-- spring-data-commons -->
 		<version.spring-data-rest>3.5.4</version.spring-data-rest><!-- spring-data-rest-core -->
-		<version.spring-session>2.5.2</version.spring-session><!-- spring-session-core -->
+		<version.spring-session>2.5.3</version.spring-session><!-- spring-session-core -->
 		<!-- .............................................. -->
 		<!-- .............................................. -->
 		<version.spring-integration-twitter>5.0.14.RELEASE</version.spring-integration-twitter>
