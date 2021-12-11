@@ -31,13 +31,18 @@ import com.sun.jna.platform.win32.Crypt32Util;
 public class ChromeCookieStoreBase {
 	protected NamedParameterJdbcTemplate jdbc;
 
-	public ChromeCookieStoreBase(FilePath cookieStore) {
-		SQLiteDataSource dataSource = new SQLiteDataSource();
-		cookieStore = cookieStore.copyTo(cookieStore.appendExtension("backup"));
-		String url = "jdbc:sqlite:" + cookieStore.getAbsolutePath();
-		System.out.println(url);
-		dataSource.setUrl(url);
-		jdbc = new NamedParameterJdbcTemplate(dataSource);
+	public ChromeCookieStoreBase(FilePath... cookieStores) {
+		for (FilePath cookieStore : cookieStores) {
+			if (cookieStore.exists()) {
+				SQLiteDataSource dataSource = new SQLiteDataSource();
+				cookieStore = cookieStore.copyTo(cookieStore.appendExtension("backup"));
+				String url = "jdbc:sqlite:" + cookieStore.getAbsolutePath();
+				System.out.println(url);
+				dataSource.setUrl(url);
+				jdbc = new NamedParameterJdbcTemplate(dataSource);
+				break;
+			}
+		}
 	}
 
 	public ChromeCookieStoreBase() {
@@ -48,7 +53,17 @@ public class ChromeCookieStoreBase {
 				.child("Chrome")//
 				.child("User Data")//
 				.child("Default")//
+				.child("Network")//
 				.child("Cookies")//
+				, FilePath.getUserHomeDirectory()//
+						.child("AppData")//
+						.child("Local")//
+						.child("Google")//
+						.child("Chrome")//
+						.child("User Data")//
+						.child("Default")//
+						.child("Cookies")//
+
 		);
 	}
 
