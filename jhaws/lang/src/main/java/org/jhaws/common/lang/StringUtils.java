@@ -330,4 +330,47 @@ public interface StringUtils {
 		map.entrySet().forEach(e -> html.operate(t -> t.replace(e.getKey(), e.getValue())));
 		return html.get();
 	}
+
+	public static final Normalizer.Form CompatibilityDecomposition = Normalizer.Form.NFKD;
+
+	public static final Normalizer.Form CanonicalDecomposition = Normalizer.Form.NFD;
+
+	public static char[] compatibilityDecomposition(char c) {
+		return Normalizer.normalize(String.valueOf(c), CompatibilityDecomposition).toCharArray();
+	}
+
+	public static char[] canonicalDecomposition(char c) {
+		return Normalizer.normalize(String.valueOf(c), CanonicalDecomposition).toCharArray();
+	}
+
+	/**
+	 * @see http://en.wikipedia.org/wiki/Unicode_equivalence
+	 * @see http://www.unicode.org/charts/
+	 * @since 1.6
+	 */
+	public static String normalize(String s) {
+		if ((s == null) || "".equals(s.trim())) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (char c : s.toCharArray()) {
+			for (char nc : canonicalDecomposition(c)) {
+				sb.append(nc);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String compatible(String s) {
+		if ((s == null) || "".equals(s.trim())) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (char c : s.toCharArray()) {
+			for (char nc : compatibilityDecomposition(c)) {
+				sb.append(nc);
+			}
+		}
+		return sb.toString();
+	}
 }

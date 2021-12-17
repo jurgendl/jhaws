@@ -2158,6 +2158,10 @@ public class FilePath implements Path, Externalizable {
 		return moveTo(target, options);
 	}
 
+	public FilePath renameTo(String name, CopyOption... options) {
+		return moveTo(getParentPath().child(name), options);
+	}
+
 	private static FilePath move(Path from, Path to, CopyOption... options) {
 		try {
 			return new FilePath(Files.move(getPath(from), getPath(to), options));

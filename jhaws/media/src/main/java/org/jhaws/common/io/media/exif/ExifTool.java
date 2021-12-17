@@ -522,9 +522,10 @@ public class ExifTool extends Tool implements MediaCte {
 					}
 				}
 
+				String jsonString = lines.stream().collect(Collectors.joining(" "));
 				JsonStructure jso = Json
 						.createReader(new InputStreamReader(
-								new ByteArrayInputStream(lines.stream().collect(Collectors.joining(" ")).getBytes())))
+								new ByteArrayInputStream(jsonString.getBytes())))
 						.read();
 				@SuppressWarnings("unchecked")
 				Map<String, Object> all = (Map<String, Object>) jso.asJsonArray().get(0);
