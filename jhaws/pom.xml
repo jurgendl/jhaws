@@ -50,13 +50,15 @@
 		<deploy.skip.web>true</deploy.skip.web>
 		<!-- DEPENDENCIES -->
 		<version.bouncycastle>1.70</version.bouncycastle>
-		<version.commons.codec>1.14</version.commons.codec>
+		<version.commons.codec>1.15</version.commons.codec>
 		<version.commons.beanutils>1.9.4</version.commons.beanutils>
-		<version.commons.io>2.8.0</version.commons.io>
+		<version.commons.exec>1.3</version.commons.exec>
+		<version.commons.io>2.10.0</version.commons.io>
+		<version.apache.commons.io>1.3.2</version.apache.commons.io>
 		<version.commons.compress>1.21</version.commons.compress>
 		<version.commons.collections>3.2.2</version.commons.collections>
 		<version.commons.collections4>4.4</version.commons.collections4>
-		<version.commons.lang3>3.10</version.commons.lang3>
+		<version.commons.lang3>3.12.0</version.commons.lang3>
 		<version.commons.lang>2.6</version.commons.lang>
 		<version.commons.math>2.2</version.commons.math>
 		<version.commons.math3>3.6.1</version.commons.math3>
@@ -73,14 +75,14 @@
 		<version.javax.activation>1.1.1</version.javax.activation>
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
 		<version.groovy>3.0.8</version.groovy>
-		<version.jackson>2.12.4</version.jackson>
+		<version.jackson>2.13.0</version.jackson>
 		<version.stax2-api>4.2</version.stax2-api>
-		<version.resteasy>4.7.1.Final</version.resteasy>
+		<version.resteasy>4.7.4.Final</version.resteasy>
 		<version.junit.jupiter>5.8.2</version.junit.jupiter>
 		<version.javax.json>1.1.4</version.javax.json>
 		<version.jcifs>1.3.17</version.jcifs>
 		<version.ostermiller>1.07.00</version.ostermiller>
-		<version.htmlcleaner>2.8</version.htmlcleaner>
+		<version.htmlcleaner>2.25</version.htmlcleaner>
 		<version.jtidy>r938</version.jtidy>
 		<version.jsoup>1.14.3</version.jsoup>
 		<version.poi>4.1.2</version.poi>
@@ -111,7 +113,7 @@
 		<version.cglib>3.3.0</version.cglib>
 		<version.ehcache>2.10.6</version.ehcache>
 		<version.sqlite>3.32.3.2</version.sqlite>
-		<version.gson>2.8.6</version.gson>
+		<version.gson>2.8.7</version.gson>
 		<version.inject>1</version.inject>
 		<version.ldapbp>1.0</version.ldapbp>
 		<version.asm>8.0.1</version.asm>
@@ -279,6 +281,11 @@
 				<version>${version.commons.lang3}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-exec</artifactId>
+				<version>${version.commons.exec}</version>
+			</dependency>
+			<dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
 				<version>${version.commons.codec}</version>
@@ -292,6 +299,11 @@
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${version.commons.io}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${version.apache.commons.io}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
