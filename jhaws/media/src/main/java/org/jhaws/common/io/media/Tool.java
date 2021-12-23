@@ -81,23 +81,22 @@ public abstract class Tool {
 		return "\"" + string + "\"";
 	}
 
-	public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command) {
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
 		return call(processHolder, lines, dir, command, true, null);
 	}
 
-	public static Lines silentcall(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command) {
+	public static <C extends Consumer<String>> C silentcall(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
 		return call(processHolder, lines, dir, command, false, null);
 	}
 
-	public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log,
-			Consumer<String> listener) {
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
 		return call(processHolder, lines, dir, command, log, listener, true, null);
 	}
 
-	public static Lines call(Value<Process> processHolder, Lines lines, FilePath dir, List<String> command, boolean log,
-			Consumer<String> listener, boolean throwExitValue, List<FilePath> paths) {
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener,
+			boolean throwExitValue, List<FilePath> paths) {
 		if (lines == null)
-			lines = new Lines();
+			lines = (C) new Lines();
 		Consumer<String> consumers = log ? lines.andThen(new Lines()) : lines;
 		if (listener != null) {
 			consumers = consumers.andThen(listener);

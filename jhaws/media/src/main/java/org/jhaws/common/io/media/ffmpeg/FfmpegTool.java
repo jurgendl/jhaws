@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
@@ -175,7 +174,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 		List<Properties> propslist = new ArrayList<>();
 		Value<Properties> props = new Value<>();
-		silentcall(null, new Lines() {
+		silentcall(null, new org.jhaws.common.io.console.Processes.Lines() {
 			@Override
 			public void accept(String t) {
 				if (t.contains("[STREAM]")) {
@@ -200,7 +199,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	public synchronized List<String> getHwAccel() {
 		if (hwAccel == null) {
 			List<String> command = Arrays.asList(command(getFfmpeg()), "-hwaccels", "-hide_banner", "-y");
-			Lines lines = new Lines();
+			org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 			silentcall(null, lines, FilePath.getTempDirectory(), command);
 			hwAccel = new ArrayList<>(lines.lines());
 			hwAccel.remove("Hardware acceleration methods:");
@@ -268,7 +267,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add(command(output));
 				logger.info("{}", join(command));// FIXME JOIN FALSE
 				try {
-					lines = new Lines();
+					lines = new org.jhaws.common.io.console.Processes.Lines();
 					silentcall(null, lines, FilePath.getTempDirectory(), command);
 					if (!hwAccel.contains("cuvid")) {
 						hwAccel.add("cuvid");
@@ -287,10 +286,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return jaxbMarshalling.unmarshall(FfprobeType.class, xml);
 	}
 
-	public FfprobeType info(FilePath input, Lines lines) {
+	public FfprobeType info(FilePath input, org.jhaws.common.io.console.Processes.Lines lines) {
 		// https://trac.ffmpeg.org/wiki/FFprobeTips
 		if (lines == null)
-			lines = new Lines();
+			lines = new org.jhaws.common.io.console.Processes.Lines();
 		try {
 			List<String> command = new ArrayList<>();
 			command.add(command(getFfprobe()));
@@ -338,7 +337,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	/**
 	 * @see https://www.peterbe.com/plog/fastest-way-to-take-screencaps-out-of-videos
 	 */
-	public boolean splash(FilePath video, FilePath splashFile, Duration duration, long frames, SplashPow pow, Lines lines) {
+	public boolean splash(FilePath video, FilePath splashFile, Duration duration, long frames, SplashPow pow) {
 		Map<String, Object> context = new HashMap<>();
 		context.put("start", System.currentTimeMillis());
 		KeyValue<ProcessInfo, Process> act = act(context, video, "splash");
@@ -353,7 +352,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		try {
 			// List<String> accel = getHwAccel();
 			if (duration == null) {
-				FfprobeType info = info(video, new Lines());
+				FfprobeType info = info(video, null);
 				duration = Duration.ofSeconds(info.getFormat().getDuration().longValue());
 				frames = frames(video(info));
 			}
@@ -526,7 +525,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-t");
 			command.add(length);
 			command.add(command(output));
-			call(null, new Lines(), input.getParentPath(), command);
+			call(null, null, input.getParentPath(), command);
 			if (output.exists() && output.getFileSize() > 500) {
 				logger.info("done {}", output);
 			} else {
@@ -562,7 +561,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		RemuxCfg cfg = config(defaults, input, output, cfgEdit);
 		RuntimeException exception = null;
 		List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		try {
 			call(act(context, input, "remux"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
@@ -579,7 +578,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		}
 		if (needsFixing.is()) {
 			command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
-			lines = new Lines();
+			lines = new org.jhaws.common.io.console.Processes.Lines();
 			call(act(context, input, "remux-fix"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
@@ -587,7 +586,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		}
 		if (cfg.defaults.twopass) {
 			command = command(2, cfg);
-			lines = new Lines();
+			lines = new org.jhaws.common.io.console.Processes.Lines();
 			call(act(context, input, "remux-two-pass"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 			input.getParentPath().child("ffmpeg2pass-0.log").delete();
 			input.getParentPath().child("ffmpeg2pass-0.log.mbtree").delete();
@@ -607,7 +606,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (input != null) {
 			cfg.input = new RemuxInput();
 			cfg.input.input = input;
-			cfg.input.info = info(input, new Lines());
+			cfg.input.info = info(input, null);
 			cfg.input.hq = input.getFileSize() >= defaults.hqTreshold;
 			StreamType videostreaminfo = video(cfg.input.info);
 			StreamType audiostreaminfo = audio(cfg.input.info);
@@ -640,7 +639,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return cfg;
 	}
 
-	protected void handle(RemuxCfg cfg, Lines lines, BooleanValue needsFixing, BooleanValue resetException) {
+	protected void handle(RemuxCfg cfg, org.jhaws.common.io.console.Processes.Lines lines, BooleanValue needsFixing, BooleanValue resetException) {
 		if (lines.lines().stream().anyMatch(s -> s.startsWith("x264 [error]: high profile doesn't support"))) {
 			needsFixing.set(true);
 			cfg.fixes.fixNotHighProfile = false;
@@ -1241,7 +1240,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return cfg.vidrate;
 	}
 
-	public boolean merge(FilePath video, FilePath audio, FilePath output, Lines lines) {
+	public boolean merge(FilePath video, FilePath audio, FilePath output, Consumer<String> lines) {
 		if (video == null || video.notExists() || audio == null || audio.notExists()) {
 			return false;
 		}
@@ -1253,7 +1252,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		// remux(null, new RemuxDefaultsCfg(), null, video, tmp, null);
 		// video = tmp;
 		// }
-		StreamType a = audio(info(audio, new Lines()));
+		StreamType a = audio(info(audio, null));
 		try {
 			List<String> command = new ArrayList<>();
 			command.add(command(getFfmpeg()));
@@ -1283,8 +1282,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			return true;
 		} catch (RuntimeException ex) {
 			logger.error("", ex);
-			if (lines != null) {
-				lines.lines().forEach(l -> logger.error("{}", l));
+			if (lines != null && lines instanceof org.jhaws.common.io.console.Processes.Lines) {
+				org.jhaws.common.io.console.Processes.Lines.class.cast(lines).lines().forEach(l -> logger.error("{}", l));
 			}
 			output.delete();
 			throw ex;
@@ -1370,6 +1369,16 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0 : videostreaminfo.getNbFrames().longValue();
 	}
 
+	public int[] frameRateSpec(StreamType videostreaminfo) {
+		return videostreaminfo == null || videostreaminfo.getRFrameRate() == null ? null
+				: new int[] { Integer.parseInt(videostreaminfo.getRFrameRate().split("/")[0]), Integer.parseInt(videostreaminfo.getRFrameRate().split("/")[1]) };
+	}
+
+	public double frameRate(StreamType videostreaminfo) {
+		int[] i = frameRateSpec(videostreaminfo);
+		return i == null ? 0 : (double) i[0] / (double) i[1];
+	}
+
 	public void loop(FilePath input, int times, FilePath output, Consumer<String> listener) {
 		if (input == null || input.notExists())
 			throw new IllegalArgumentException();
@@ -1386,7 +1395,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return this.actions;
 	}
 
-	public FilePath dash(URL manifest, FilePath out, Lines lines) {
+	public <C extends Consumer<String>> FilePath dash(URL manifest, FilePath out, C lines) {
 		if (manifest == null)
 			throw new IllegalArgumentException();
 		List<String> command = new ArrayList<>();
@@ -1406,7 +1415,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return out;
 	}
 
-	public FilePath hls(URL hls, FilePath out, Lines lines) {
+	public <C extends Consumer<String>> FilePath hls(URL hls, FilePath out, C lines) {
 		if (hls == null)
 			throw new IllegalArgumentException();
 		List<String> command = new ArrayList<>();
@@ -1434,7 +1443,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 	// return null; // TODO
 	// }
 
-	public FilePath encodeForYT(FilePath in, FilePath out, Lines lines) {
+	public <C extends Consumer<String>> FilePath encodeForYT(FilePath in, FilePath out, C lines) {
 		if (in == null || in.notExists())
 			throw new IllegalArgumentException();
 		// https://gist.github.com/mikoim/27e4e0dc64e384adbcb91ff10a2d3678
@@ -1485,9 +1494,9 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return out;
 	}
 
-	public FilePath mergeUnknowns(FilePath f1, FilePath f2, FilePath output, Lines lines) {
-		FfprobeType i1 = info(f1, new Lines());
-		FfprobeType i2 = info(f2, new Lines());
+	public FilePath mergeUnknowns(FilePath f1, FilePath f2, FilePath output, Consumer<String> lines) {
+		FfprobeType i1 = info(f1, null);
+		FfprobeType i2 = info(f2, null);
 		List<FilePath> as = new ArrayList<>();
 		List<FilePath> vs = new ArrayList<>();
 		if (video(i1) != null) {
@@ -1552,14 +1561,46 @@ public class FfmpegTool extends Tool implements MediaCte {
 	@Override
 	protected String getVersionImpl() {
 		List<String> command = Arrays.asList(command(getFfmpeg()), "-version");
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		Tool.call(null, lines, getFfmpeg().getParentPath(), command);
 		return lines.lines().get(0);
 	}
 
+	// https://www.binpress.com/generate-video-previews-ffmpeg/
+	public <C extends Consumer<String>> FilePath strip(FilePath input, Integer count, Integer height, FilePath out, C lines) {
+		if (input == null || input.notExists())
+			throw new IllegalArgumentException();
+		if (count == null)
+			count = 100;
+		if (height == null)
+			height = 120;
+		FfprobeType info = info(input, null);
+		StreamType video = video(info);
+		long frames = frames(video);
+		long eachFrames = frames / count;
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-i");
+		command.add(command(input));
+		command.add("-frames");
+		command.add("1");
+		command.add("-q:v");
+		command.add("1");
+		command.add("-vf");
+		command.add("\"select=not(mod(n\\," + eachFrames + ")),scale=-1:" + height + ",tile=" + count + "x1\"");
+		if (out == null)
+			out = input.getParentPath();
+		if (out.isDirectory())
+			out = out.child(input.getFileNameString()).appendExtension("png");
+		command.add("\"" + out + "\"");
+		call(null, lines, getFfmpeg().getParentPath(), command);
+		return out;
+	}
+
 	// https://www.webtvsolutions.com/support.php?s=ws_webtv_docs&d=clips_video_thumbnails&lang=en
 	// https://stackoverflow.com/questions/20022006/generate-all-the-files-vtt-sprite-for-the-tooltip-thumbnails-options-of-jwp
-	public void thumbs(FilePath input, FilePath outDir, Integer maxw, Integer perSeconds, Lines lines) {
+	public <C extends Consumer<String>> void thumbs(FilePath input, FilePath outDir, Integer maxw, Integer perSeconds, C lines) {
 		if (input == null || input.notExists())
 			throw new IllegalArgumentException();
 		if (maxw == null)
@@ -1592,7 +1633,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		ImageTools.write(tile, outDir.child("tile").createDirectory().child("tile.png"));
 	}
 
-	public FilePath mp3(FilePath in, FilePath out, Lines lines) {
+	public <C extends Consumer<String>> FilePath mp3(FilePath in, FilePath out, C lines) {
 		if (in == null || in.notExists())
 			throw new IllegalArgumentException();
 		if (out == null)
@@ -1622,7 +1663,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return out;
 	}
 
-	public FilePath animatedGif(FilePath in, FilePath out, Lines lines) {
+	public <C extends Consumer<String>> FilePath animatedGif(FilePath in, FilePath out, C lines) {
 		if (in == null || in.notExists())
 			throw new IllegalArgumentException();
 		if (out == null)
@@ -1645,7 +1686,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return out;
 	}
 
-	public FilePath rotate(FilePath in, FilePath out, Lines lines, int degrees) {
+	public <C extends Consumer<String>> FilePath rotate(FilePath in, FilePath out, C lines, int degrees) {
 		if (in == null || in.notExists())
 			throw new IllegalArgumentException();
 		if (out == null)
@@ -1718,7 +1759,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("NUL");
 			System.out.println(command.stream().collect(Collectors.joining(" ")));
 			Pattern P = Pattern.compile("frame= (\\d++)");
-			Lines lines = new Lines() {
+			org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines() {
 				@Override
 				public void accept(String t) {
 					Matcher M = P.matcher(t);
@@ -1752,7 +1793,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("\"select=not(mod(n\\," + $NTH_FRAME + ")),scale=-1:" + $HEIGHT + ",tile=" + $COLS + "x" + $ROWS + "\"");
 			command.add(command(output));
 			System.out.println(command.stream().collect(Collectors.joining(" ")));
-			silentcall(null, new Lines(), input.getParentPath(), command);
+			silentcall(null, null, input.getParentPath(), command);
 		}
 	}
 
@@ -1770,7 +1811,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-encoders");
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		silentcall(null, lines, getFfmpeg().getParentPath(), command);
 		List<String> l = lines.lines();
 		int i = 0;
@@ -1794,7 +1835,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-encoders");
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		silentcall(null, lines, getFfmpeg().getParentPath(), command);
 		List<String> l = lines.lines();
 		int i = 0;
@@ -1818,7 +1859,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-decoders");
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		silentcall(null, lines, getFfmpeg().getParentPath(), command);
 		List<String> l = lines.lines();
 		int i = 0;
@@ -1842,7 +1883,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-decoders");
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		silentcall(null, lines, getFfmpeg().getParentPath(), command);
 		List<String> l = lines.lines();
 		int i = 0;
@@ -1866,7 +1907,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-formats");
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		silentcall(null, lines, getFfmpeg().getParentPath(), command);
 		List<String> l = lines.lines();
 		int i = 0;
@@ -1895,7 +1936,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add("-hide_banner");
 		command.add("-y");
 		command.add("-formats");
-		Lines lines = new Lines();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		silentcall(null, lines, getFfmpeg().getParentPath(), command);
 		List<String> l = lines.lines();
 		int i = 0;
@@ -1934,8 +1975,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (out.isDirectory())
 			out = out.child("output-audio.mp4");
 		command.add(command(out));
-		Lines lines = new Lines();
-		call(null, lines, getFfmpeg().getParentPath(), command);
+		call(null, null, getFfmpeg().getParentPath(), command);
 		return out;
 	}
 
@@ -1955,8 +1995,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (out.isDirectory())
 			out = out.child("output-video.mp4");
 		command.add(command(out));
-		Lines lines = new Lines();
-		call(null, lines, getFfmpeg().getParentPath(), command);
+		call(null, null, getFfmpeg().getParentPath(), command);
 		return out;
 	}
 }
