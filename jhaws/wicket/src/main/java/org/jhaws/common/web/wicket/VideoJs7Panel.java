@@ -27,7 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 // https://blog.videojs.com/
 @SuppressWarnings("serial")
 public class VideoJs7Panel extends Panel {
-	private VideoJs7PanelConfig config;
+	protected VideoJs7PanelConfig config;
 
 	protected WebMarkupContainer container;
 
@@ -114,15 +114,18 @@ public class VideoJs7Panel extends Panel {
 		response.render(CssHeaderItem.forReference(VideoJs7.CSS));
 		response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS));
 		response.render(JavaScriptHeaderItem.forReference(VideoJs7.JS_PREVENT_MULTIPLE));
-		response.render(OnDomReadyHeaderItem.forScript(";videojs('" + getVideo().getMarkupId() + "'," + getSettings()
-				+ ").muted(" + isVideoDefaultMuted() + ");" + getPostCreate() + ";"));
+		String videoWicketId = getVideo().getMarkupId();
+		String playerId = "player_" + videoWicketId;
+		response.render(OnDomReadyHeaderItem.forScript(";var " + playerId + " = videojs('" + videoWicketId + "',"
+				+ getSettings() + ");" + playerId + ".muted(" + isVideoDefaultMuted(config, videoWicketId, playerId)
+				+ ");" + getPostCreate(config, videoWicketId, playerId) + ";"));
 	}
 
-	public String getPostCreate() {
+	public String getPostCreate(VideoJs7PanelConfig config, String videoWicketId, String playerId) {
 		return "";
 	}
 
-	public String isVideoDefaultMuted() {
+	public String isVideoDefaultMuted(VideoJs7PanelConfig config, String videoWicketId, String playerId) {
 		return String.valueOf(Boolean.TRUE.equals(config.getMute()));
 	}
 
