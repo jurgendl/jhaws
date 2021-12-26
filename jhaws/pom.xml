@@ -90,7 +90,7 @@
 		<version.opencsv>5.1</version.opencsv>
 		<version.jai>1.4.0</version.jai>
 		<version.slf4j>1.7.30</version.slf4j>
-		<version.logback>1.2.6</version.logback>
+		<version.logback>1.2.10</version.logback>
 		<version.janino>2.7.8</version.janino>
 		<version.logback.spring>0.1.5</version.logback.spring>
 		<version.log4j-to-slf4j>2.8.2</version.log4j-to-slf4j>
