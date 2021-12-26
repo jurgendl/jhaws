@@ -3,25 +3,39 @@
 <head>
   <meta charset="utf-8">
   <title>videojs-theater-mode Demo</title>
-  <link href="node_modules/video.js/dist/video-js.css" rel="stylesheet">
+  <script
+			  src="https://code.jquery.com/jquery-3.6.0.min.js"
+			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+			  crossorigin="anonymous"></script>
+  <link href="../video-js-7.9.1/video-js.css" rel="stylesheet">
+  <link href="dist/videojs.theaterMode.css" rel="stylesheet">
   
 </head>
-<body>
+<body id="page">
   <video id="videojs-theater-mode-player" class="video-js vjs-default-skin" controls>
-    <source src="//vjs.zencdn.net/v/oceans.mp4" type='video/mp4'>
-    <source src="//vjs.zencdn.net/v/oceans.webm" type='video/webm'>
+      <source src="http://vjs.zencdn.net/v/oceans.mp4" type='video/mp4'>
+      <source src="http://vjs.zencdn.net/v/oceans.webm" type='video/webm'>
+      <source src="http://vjs.zencdn.net/v/oceans.ogv" type='video/ogg'>
   </video>
   <ul>
     <li><a href="test/">Run unit tests in browser.</a></li>
     
   </ul>
   
-  <script src="node_modules/video.js/dist/video.js"></script>
-  <script src="dist/videojs-theater-mode.js"></script>
+  <script src="../video-js-7.9.1/video.js"></script>
+  <script src="dist/videojs.theaterMode.js"></script>
   <script>
     (function(window, videojs) {
       var player = window.player = videojs('videojs-theater-mode-player');
-      player.theaterMode();
+     player.theaterMode({ elementToToggle: 'videojs-theater-mode-player', className: 'theater-mode' });
+ player.on('theaterMode', function(elm, data) {
+    if (data.theaterModeIsOn) {
+      //$('#page').turnOnTheaterMode(); // or whatever
+    } else {
+      //$('#page').turnOffTheaterMode();
+    }
+  });
+
     }(window, window.videojs));
   </script>
 </body>
