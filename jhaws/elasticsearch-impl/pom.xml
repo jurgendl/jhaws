@@ -11,7 +11,7 @@
 	<description>elasticsearch-impl</description>
 	<properties>
 		<version.elasticsearch>7.10.2</version.elasticsearch>
-		<version.logback>1.2.3</version.logback>
+		<version.logback>1.2.10</version.logback>
 		<version.log4j2>2.13.3</version.log4j2><!-- log4j 2 bridge naar slf4j zit in log4j -->
 	</properties>
 	<dependencyManagement>
