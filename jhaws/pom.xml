@@ -89,11 +89,7 @@
 		<version.tika>1.27</version.tika>
 		<version.opencsv>5.1</version.opencsv>
 		<version.jai>1.4.0</version.jai>
-		<version.slf4j>1.7.30</version.slf4j>
-		<version.logback>1.2.10</version.logback>
 		<version.janino>2.7.8</version.janino>
-		<version.logback.spring>0.1.5</version.logback.spring>
-		<version.log4j-to-slf4j>2.8.2</version.log4j-to-slf4j>
 		<version.glazedlists>1.9.1</version.glazedlists>
 		<version.miglayout>4.2</version.miglayout>
 		<version.ostermiller>1.07.00</version.ostermiller>
@@ -117,6 +113,12 @@
 		<version.inject>1</version.inject>
 		<version.ldapbp>1.0</version.ldapbp>
 		<version.asm>8.0.1</version.asm>
+		<!-- logging -->
+		<version.slf4j>1.7.32</version.slf4j>
+		<version.logback>1.2.10</version.logback>
+		<version.janino>3.1.2</version.janino>
+		<version.logback.spring>0.1.5</version.logback.spring>
+		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j><!-- log4j 2 bridge naar slf4j zit in log4j -->
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -180,6 +182,11 @@
 				<groupId>javax.validation</groupId>
 				<artifactId>validation-api</artifactId>
 				<version>${version.javax.validation.api}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${version.log4j-to-slf4j}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
