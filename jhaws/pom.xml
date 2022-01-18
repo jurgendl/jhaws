@@ -1483,11 +1483,13 @@
 	<distributionManagement>
 		<repository>
 			<id>repo</id>
-			<url>https://github.com/jurgendl/mvn-repo/raw/master/releases</url>
+			<!--<url>https://github.com/jurgendl/mvn-repo/raw/master/releases</url>-->
+			<url>https://raw.githubusercontent.com/jurgendl/mvn-repo/master/releases</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshot-repo</id>
-			<url>https://github.com/jurgendl/mvn-repo/raw/master/snapshots</url>
+			<!--<url>https://github.com/jurgendl/mvn-repo/raw/master/snapshots</url>-->
+			<url>https://raw.githubusercontent.com/jurgendl/mvn-repo/master/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<inceptionYear>2013</inceptionYear>
@@ -1511,7 +1513,8 @@
 	<repositories>
 		<repository>
 			<id>jurgendl.github.com</id>
-			<url>http://github.com/jurgendl/mvn-repo/raw/master/releases/</url>
+			<!--<url>http://github.com/jurgendl/mvn-repo/raw/master/releases/</url>-->
+			<url>https://raw.githubusercontent.com/jurgendl/mvn-repo/master/releases/</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>

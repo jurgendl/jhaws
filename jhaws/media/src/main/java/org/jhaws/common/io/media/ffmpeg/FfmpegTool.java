@@ -937,6 +937,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 		public Boolean hevc;
 
+		public Boolean stereoToMono;
+
 		@Override
 		public String toString() {
 			StringBuilder builder = new StringBuilder();
@@ -955,24 +957,41 @@ public class FfmpegTool extends Tool implements MediaCte {
 			builder.append("]");
 			return builder.toString();
 		}
+
+		public Boolean getStereoToMono() {
+			return this.stereoToMono;
+		}
+
+		public void setStereoToMono(Boolean stereoToMono) {
+			this.stereoToMono = stereoToMono;
+		}
 	}
 
 	protected List<String> command(int pass, RemuxCfg cfg) {
-		if (cfg.slideshowCfg != null && cfg.defaults.twopass)
+		if (cfg.slideshowCfg != null && cfg.defaults.twopass) {
 			throw new IllegalArgumentException();
-		if (cfg.repeat != null && cfg.repeat <= 1)
+		}
+		if (cfg.repeat != null && cfg.repeat <= 1) {
 			cfg.repeat = null;
-		if (cfg.acopy == null)
+		}
+		if (cfg.acopy == null) {
 			cfg.acopy = cfg.input != null ? cfg.input.acopy : false;
-		if (cfg.vcopy == null)
+		}
+		if (cfg.vcopy == null) {
 			cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
-		if (cfg.forceRemux && cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension()))
+		}
+		if (cfg.forceRemux && cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension())) {
 			cfg.vcopy = false;
-		if (cfg.hq == null)
+		}
+		if (cfg.hq == null) {
 			cfg.hq = cfg.input != null ? cfg.input.hq : true;
+		}
 		if (cfg.repeat != null) {
 			cfg.vcopy = false;
 			cfg.acopy = false;
+		}
+		if (cfg.stereoToMono == null) {
+			cfg.stereoToMono = false;
 		}
 
 		List<String> accel = getHwAccel();
@@ -1141,7 +1160,10 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add("-an");
 			} else {
 				if (cfg.input.ar > 0) {
-					if (cfg.acopy) {
+					if (cfg.stereoToMono) {
+						command.add("-ac");
+						command.add("1");
+					} else if (cfg.acopy) {
 						command.add("-acodec");
 						command.add("copy");
 					} else {
@@ -1977,6 +1999,35 @@ public class FfmpegTool extends Tool implements MediaCte {
 		command.add(command(out));
 		call(null, null, getFfmpeg().getParentPath(), command);
 		return out;
+	}
+
+	// https://trac.ffmpeg.org/wiki/AudioChannelManipulation#stereo2monofiles
+	public List<FilePath> extractAudioSeparateChannels(FilePath in, FilePath outLeft, FilePath outRight) {
+		if (in == null || in.notExists())
+			throw new IllegalArgumentException();
+		if (outLeft == null)
+			throw new IllegalArgumentException();
+		if (outRight == null)
+			throw new IllegalArgumentException();
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-hide_banner");
+		command.add("-i");
+		command.add(command(in));
+		command.add("-filter_complex");
+		command.add("\"[0:a]channelsplit=channel_layout=stereo[left][right]\"");
+		command.add("-map");
+		command.add("\"[left]\"");
+		if (outLeft.isDirectory())
+			outLeft = outLeft.child("output-audio-left.wav");
+		command.add(command(outLeft));
+		command.add("-map");
+		command.add("\"[right]\"");
+		if (outRight.isDirectory())
+			outRight = outRight.child("output-audio-right.wav");
+		command.add(command(outRight));
+		call(null, null, getFfmpeg().getParentPath(), command);
+		return Arrays.asList(outLeft, outRight);
 	}
 
 	public FilePath extractVideo(FilePath in, FilePath out) {
