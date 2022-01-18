@@ -5,8 +5,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -56,18 +58,37 @@ public class Variables<T> {
 			Variable<?> currentVariable = null;
 			while (!queue.isEmpty()) {
 				String q = queue.remove();
-				String value = q.contains("=") ? q.substring(0, q.indexOf("=")) : q;
-				Variable<?> variable = vars.stream().filter(var -> var.name(value)).findFirst().orElse(null);
+				if ((q.startsWith("--") || q.startsWith("-+") || q.startsWith("+")) && q.contains("=")) {
+					throw new PVException("parameter not processed: " + q);
+				}
+				String key = q;
+				String value = null;
+				if (q.startsWith("--")) {
+					key = "-" + q.substring(2);
+					value = "false";
+				} else if (q.startsWith("-+")) {
+					key = "-" + q.substring(2);
+					value = "true";
+				} else if (q.startsWith("+")) {
+					key = "-" + q.substring(1);
+					value = "true";
+				} else if (q.contains("=")) {
+					String[] p = q.split("=");
+					key = p[0];
+					value = p[1];
+				}
+				final String _k = key;
+				Variable<?> variable = vars.stream().filter(var -> var.name(_k)).findFirst().orElse(null);
 				if (variable != null) {
 					variable.found();
 					currentVariable = variable;
 				} else {
 					if (currentVariable == null)
-						throw new PVException("parameter not processed: " + value);
-					currentVariable.add(value);
+						throw new PVException("parameter not processed: " + key);
+					currentVariable.add(key);
 				}
-				if (q.contains("=")) {
-					currentVariable.add(q.substring(1 + q.indexOf("=")));
+				if (value != null) {
+					currentVariable.add(value);
 				}
 			}
 		} catch (PVException ex) {
@@ -86,9 +107,31 @@ public class Variables<T> {
 		if (parameters != null)
 			IntStream.range(0, parameters.length).mapToObj(i -> (i + 1) + ": " + parameters[i])
 					.forEach(System.out::println);
-		if (vars != null)
-			IntStream.range(0, vars.size()).mapToObj(i -> "parameter " + (i + 1) + ": " + vars.get(i))
+		if (vars != null) {
+			Map<Integer, Integer> ii = new HashMap<>();
+			for (Variable<?> v : vars) {
+				List<String> info = v.info();
+				for (int j = 0; j < info.size(); j++) {
+					Integer len = ii.get(j);
+					if (len == null) {
+						len = info.get(j).toString().length();
+					} else {
+						len = Math.max(len, info.get(j).toString().length());
+					}
+					ii.put(j, len);
+				}
+			}
+			StringBuilder format = new StringBuilder();
+			for (int j = 0; j < ii.size(); j++) {
+				format.append("%-" + ii.get(j) + "s\t");
+			}
+			String _format = format.toString();
+			IntStream.range(0, vars.size())
+					.mapToObj(i -> "#" + (i < 9 ? "0" : "") + (i + 1) + ": "
+							+ String.format(_format,
+									vars.get(i).info().stream().map(s -> (Object) s).toArray(a -> new Object[a])))
 					.forEach(System.out::println);
+		}
 		return this;
 	}
 
