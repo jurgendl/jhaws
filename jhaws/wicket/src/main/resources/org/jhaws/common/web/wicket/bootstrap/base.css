@@ -1194,6 +1194,22 @@ document.addEventListener('drop', event => event.preventDefault()); */
 	border-color: var(--success);
 	background-color: var(--success);
 }
+.custom-control-primary .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--primary);
+	background-color: var(--primary);
+}
+.custom-control-secondary .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--secondary);
+	background-color: var(--secondary);
+}
+.custom-control-light .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--light);
+	background-color: var(--light);
+}
+.custom-control-dark .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--dark);
+	background-color: var(--dark);
+}
 
 /* <<<============= base.css ============= */
 
