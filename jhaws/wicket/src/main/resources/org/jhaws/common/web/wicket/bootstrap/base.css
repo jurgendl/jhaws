@@ -1176,5 +1176,24 @@ document.addEventListener('drop', event => event.preventDefault()); */
   filter: brightness(120%) saturate(120%);
 }*/
 
+/* -------------- */
+
+.custom-control-danger .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--danger);
+	background-color: var(--danger);
+}
+.custom-control-warning .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--warning);
+	background-color: var(--warning);
+}
+.custom-control-info .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--info);
+	background-color: var(--info);
+}
+.custom-control-success .custom-control-input:checked~.custom-control-label::before {
+	border-color: var(--success);
+	background-color: var(--success);
+}
+
 /* <<<============= base.css ============= */
 
