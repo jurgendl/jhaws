@@ -19,6 +19,7 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -2044,5 +2045,51 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                         });
                     }
                 });
+    }
+
+    public <T extends ElasticDocument> Map<String, Boolean> updateDocumentsByQuery(Class<T> type, QueryBuilder query, Pagination pagination,
+            Consumer<T> changer) {
+        return updateDocumentsByQuery(type, query, pagination, (T doc) -> {
+            changer.accept(doc);
+            return true;
+        });
+    }
+
+    public <T extends ElasticDocument> Map<String, Boolean> updateDocumentsByQuery(Class<T> type, QueryBuilder query, Pagination pagination,
+            Predicate<T> changer) {
+        Map<String, Boolean> changed = new LinkedHashMap<>();
+        for (QueryResult<T> result : query(type, query, pagination, null, null, null)) {
+            T document = result.getResult();
+            if (changer.test(document)) {
+                indexDocument(document);
+                changed.put(document.getId(), true);
+            } else {
+                changed.put(document.getId(), false);
+            }
+        }
+        return changed;
+    }
+
+    public Map<String, Boolean> updateDocumentsByQuery(String index, QueryBuilder query, Pagination pagination,
+            Consumer<Map<String, Object>> changer) {
+        return updateDocumentsByQuery(index, query, pagination, (Map<String, Object> doc) -> {
+            changer.accept(doc);
+            return true;
+        });
+    }
+
+    public Map<String, Boolean> updateDocumentsByQuery(String index, QueryBuilder query, Pagination pagination,
+            Predicate<Map<String, Object>> changer) {
+        Map<String, Boolean> changed = new LinkedHashMap<>();
+        for (QueryResult<Map<String, Object>> result : query(index, query, pagination, null, null, null)) {
+            Map<String, Object> document = result.getResult();
+            if (changer.test(document)) {
+                indexDocument(index, result.getId(), document);
+                changed.put(result.getId(), true);
+            } else {
+                changed.put(result.getId(), false);
+            }
+        }
+        return changed;
     }
 }
