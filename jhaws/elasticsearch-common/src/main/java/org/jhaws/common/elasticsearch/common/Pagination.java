@@ -11,69 +11,72 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @SuppressWarnings("serial")
 @JsonInclude(Include.NON_NULL)
 public class Pagination implements Serializable {
-	/** start position */
-	@Min(0)
-	protected int start = 0;
+    public static final int DEFAULT_MAX = 100;
 
-	/** max results */
-	@Min(0)
-	@Max(50_000)
-	protected int max = 100;
+    /** start position */
+    @Min(0)
+    protected int start = 0;
 
-	/** [0-max] */
-	protected Integer results;
+    /** max results */
+    @Min(0)
+    @Max(50_000)
+    protected int max = DEFAULT_MAX;
 
-	/** total results */
-	protected Long total;
+    /** [0-max] */
+    protected Integer results;
 
-	public Pagination() {
-		super();
-	}
+    /** total results */
+    protected Long total;
 
-	// wanneer pagineren per positie
-	public Pagination(int start, int max) {
-		this.start = start;
-		this.max = max;
-	}
+    public Pagination() {
+        super();
+    }
 
-	@Override
-	public String toString() {
-		return "Pagination [start=" + this.start + ", max=" + this.max + ", " + (this.results != null ? "results=" + this.results + ", " : "") + (this.total != null ? "total=" + this.total : "") + "]";
-	}
+    // wanneer pagineren per positie
+    public Pagination(int start, int max) {
+        this.start = start;
+        this.max = max;
+    }
 
-	public int getStart() {
-		return this.start;
-	}
+    @Override
+    public String toString() {
+        return "Pagination [start=" + this.start + ", max=" + this.max + ", " + (this.results != null ? "results=" + this.results + ", " : "")
+                + (this.total != null ? "total=" + this.total : "") + "]";
+    }
 
-	public void setStart(int start) {
-		this.start = start;
-	}
+    public int getStart() {
+        return this.start;
+    }
 
-	public int getMax() {
-		return this.max;
-	}
+    public void setStart(int start) {
+        this.start = start;
+    }
 
-	public void setMax(int max) {
-		this.max = max;
-	}
+    public int getMax() {
+        return this.max;
+    }
 
-	public Integer getResults() {
-		return this.results;
-	}
+    public void setMax(int max) {
+        this.max = max;
+    }
 
-	public void setResults(Integer results) {
-		this.results = results;
-	}
+    public Integer getResults() {
+        return this.results;
+    }
 
-	public Long getTotal() {
-		return this.total;
-	}
+    public void setResults(Integer results) {
+        this.results = results;
+    }
 
-	public void setTotal(Long total) {
-		this.total = total;
-	}
+    public Long getTotal() {
+        return this.total;
+    }
 
-	public boolean canContinue() {
-		return results != null && start + max < total;
-	}
+    public void setTotal(Long total) {
+        this.total = total;
+    }
+
+    public boolean canContinue() {
+        return results != null && start + max < total;
+    }
 }

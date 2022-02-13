@@ -108,10 +108,12 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.core.TimeValue;
+import org.elasticsearch.index.query.ExistsQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
+import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.index.reindex.ScrollableHitSource;
 import org.elasticsearch.index.reindex.UpdateByQueryRequest;
 import org.elasticsearch.repositories.fs.FsRepository;
@@ -183,8 +185,6 @@ import org.jhaws.common.elasticsearch.common.Pagination;
 // https://stackoverflow.com/questions/9075098/start-windows-service-from-java
 // @Component
 public class ElasticSuperClient extends ElasticLowLevelClient {
-	public static final int DEFAULT_MAX = 100;
-
 	public static final String _NONE_ = "_none_";
 
 	public static final String PROCEED = "proceed";
@@ -364,14 +364,16 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 				.mappings();
 		Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata> fieldMappings = mappings
 				.get(index);
-		Map<String, Map<String, ?>> info = new TreeMap<>();
-		Arrays.stream(fields).forEach(field -> {
-			org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata metaData = fieldMappings
-					.get(field);
-			info.put(metaData.fullName(),
-					(Map<String, ?>) metaData.sourceAsMap().entrySet().iterator().next().getValue());
-		});
-		return info;
+        Map<String, Map<String, ?>> info = new TreeMap<>();
+        for (String field : fields) {
+            org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata metaData = fieldMappings.get(field);
+            if (metaData != null) {
+                info.put(metaData.fullName(), (Map<String, ?>) metaData.sourceAsMap().entrySet().iterator().next().getValue());
+            } else {
+                info.put(field, null);
+            }
+        }
+        return info;
 	}
 
 	public void indexDocument(String index, String id, String jsonString) {
@@ -1372,7 +1374,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
 	protected <T> void $$query_prepare(QueryContext<T> context) {
 		if (context.pagination == null) {
-			context.pagination = new Pagination(0, DEFAULT_MAX);
+            context.pagination = new Pagination();
 		}
 		if (context.pagination instanceof Scrolling) {
 			context.scrolling = Scrolling.class.cast(context.pagination);
@@ -2203,4 +2205,48 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 		}
 		return changed;
 	}
+
+    // https://stackoverflow.com/questions/29002215/remove-a-field-from-a-elasticsearch-document
+    public long removePropertyFromDocuments(String index, String property) {
+        String parent = "";
+        if (property.contains(".")) {
+            int pos = property.lastIndexOf(".") + 1;
+            parent = property.substring(0, pos);
+            property = property.substring(pos);
+        }
+        String del_field_name = "del_field_name";
+        String script = ElasticHelper.SCRIPT_SOURCE + parent + "remove(" + ElasticHelper.SCRIPT_PARAMS + del_field_name + ")";
+        Map<String, Object> params = Collections.singletonMap(del_field_name, parent + property);
+        ExistsQueryBuilder query = QueryBuilders.existsQuery(parent + property);
+        return updateDocumentsByQuery(index, query, null, script, params);
+    }
+
+    public <T extends ElasticDocument> long removePropertyFromDocuments(Class<T> type, String property) {
+        return removePropertyFromDocuments(index(type), property);
+    }
+
+    public <T extends ElasticDocument> void reindex(Class<T> type, String destIndex) {
+        performReindexRequest(createReindexRequest(index(type), destIndex));
+    }
+
+    public void reindex(String index, String destIndex) {
+        performReindexRequest(createReindexRequest(index, destIndex));
+    }
+
+    public void performReindexRequest(ReindexRequest reindexRequest) {
+        BulkByScrollResponse response;
+        try {
+            response = getClient().reindex(reindexRequest, RequestOptions.DEFAULT);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+        handleBulkByScrollResponse(response);
+    }
+
+    public ReindexRequest createReindexRequest(String index, String destIndex) {
+        ReindexRequest reindexRequest = new ReindexRequest();
+        reindexRequest.setSourceIndices(index);
+        reindexRequest.setDestIndex(destIndex);
+        return reindexRequest;
+    }
 }
