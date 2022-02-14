@@ -43,7 +43,6 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
-     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -55,7 +54,6 @@ public class CA implements Serializable, Comparable<CA> {
      * na
      *
      * @return
-     *
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
@@ -75,7 +73,6 @@ public class CA implements Serializable, Comparable<CA> {
      * na
      *
      * @return
-     *
      * @throws CertificateException na
      * @throws CRLException na
      * @throws IOException na
@@ -88,7 +85,6 @@ public class CA implements Serializable, Comparable<CA> {
      * na
      *
      * @return
-     *
      * @throws CertificateException na
      * @throws CRLException na
      * @throws IOException na
@@ -212,7 +208,6 @@ public class CA implements Serializable, Comparable<CA> {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override

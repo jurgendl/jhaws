@@ -8,14 +8,12 @@ import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 // https://github.com/seiyria/bootstrap-slider
 // 10.6.1
 public class BootstrapSlider {
-	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapSlider.class,
-			"js/bootstrap-slider.js");
+    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(BootstrapSlider.class, "js/bootstrap-slider.js");
 
-	public static final CssResourceReference CSS = new CssResourceReference(BootstrapSlider.class,
-			"css/bootstrap-slider.css");
+    public static final CssResourceReference CSS = new CssResourceReference(BootstrapSlider.class, "css/bootstrap-slider.css");
 
-	static {
-		JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
-		// CSS.addCssResourceReferenceDependency(Bootstrap4.getCSS());
-	}
+    static {
+        JS.addJavaScriptResourceReferenceDependency(Bootstrap4.JS);
+        // CSS.addCssResourceReferenceDependency(Bootstrap4.getCSS());
+    }
 }

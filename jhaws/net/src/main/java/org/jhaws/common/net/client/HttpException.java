@@ -5,20 +5,20 @@ import java.io.UncheckedIOException;
 
 @SuppressWarnings("serial")
 public class HttpException extends UncheckedIOException {
-	private final Response response;
-	private final int statusCode;
+    private final Response response;
+    private final int statusCode;
 
-	public HttpException(Response response, int statusCode, String statusText) {
-		super(new IOException(statusCode + ": " + statusText));
-		this.response = response;
-		this.statusCode = statusCode;
-	}
+    public HttpException(Response response, int statusCode, String statusText) {
+        super(new IOException(statusCode + ": " + statusText));
+        this.response = response;
+        this.statusCode = statusCode;
+    }
 
-	public Response getResponse() {
-		return this.response;
-	}
+    public Response getResponse() {
+        return this.response;
+    }
 
-	public int getStatusCode() {
-		return this.statusCode;
-	}
+    public int getStatusCode() {
+        return this.statusCode;
+    }
 }

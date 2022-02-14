@@ -375,17 +375,15 @@ public class SystemSettings extends PropertyChangeParent {
      * @param libname libname
      * @param ext lib extentie, neem null voor default op besturingssysteem
      * @param temp maak een temp file en probeer van daar in te laden
-     * @param tempSuffix enkel van belang wanneer temp=true; bv versie library als die niet in libname zelf zit, wanneer null wordt dat niet in de
-     *            temp filename gestoken; als deze waarde niet null is wordt een tmp file met een vaste naam gegenereerd zodat deze bij volgende keer
-     *            kan worden hergebruikt in tegenstelling tot volledig random naam wanneer deze parameter null is
-     *
+     * @param tempSuffix enkel van belang wanneer temp=true; bv versie library als die niet in libname zelf zit, wanneer null wordt dat niet in de temp filename gestoken; als deze
+     *            waarde niet null is wordt een tmp file met een vaste naam gegenereerd zodat deze bij volgende keer kan worden hergebruikt in tegenstelling tot volledig random
+     *            naam wanneer deze parameter null is
      * @throws IOException
      * @throws NullPointerException
      * @throws UnsatisfiedLinkError
      * @throws RuntimeException
      */
-    public static void dynamicLoadLibrary(String libname, String ext, boolean temp, String tempSuffix)
-            throws IOException, NullPointerException, UnsatisfiedLinkError {
+    public static void dynamicLoadLibrary(String libname, String ext, boolean temp, String tempSuffix) throws IOException, NullPointerException, UnsatisfiedLinkError {
         if (ext == null) {
             ext = SystemSettings.getDefaultLibraryExtention();
         }
@@ -613,8 +611,8 @@ public class SystemSettings extends PropertyChangeParent {
     }
 
     /**
-     * can also be set via command line parameter: "-Duser.country=UK -Duser.language=en"; use this instead of {@link Locale#setDefault(Locale)} to
-     * change Locale of all {@link EComponentI}s dynamically
+     * can also be set via command line parameter: "-Duser.country=UK -Duser.language=en"; use this instead of {@link Locale#setDefault(Locale)} to change Locale of all
+     * {@link EComponentI}s dynamically
      */
     public static void setCurrentLocale(Locale currentLocale) {
         Locale old = G11n.getCurrentLocale();

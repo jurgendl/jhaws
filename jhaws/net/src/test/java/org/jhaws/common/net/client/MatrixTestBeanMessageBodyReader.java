@@ -25,8 +25,7 @@ public class MatrixTestBeanMessageBodyReader implements MessageBodyReader<Matrix
     }
 
     @Override
-    public MatrixTestBeanI readFrom(Class<MatrixTestBeanI> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-            MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
+    public MatrixTestBeanI readFrom(Class<MatrixTestBeanI> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
         System.out.println("READING");
         final BeanGenerator beanGenerator = new BeanGenerator();
         beanGenerator.setNamingPolicy((prefix, source, key, names) -> type.getName());

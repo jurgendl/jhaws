@@ -23,7 +23,6 @@ import org.jhaws.common.io.filter.OnlyFilesFilter;
  *
  * @author Jurgen
  * @version 29 January 2007
- *
  * @see IOGeneralFile
  * @see IODirectory
  */
@@ -184,7 +183,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * return a subdirectory in the temp dir
      *
      * @param relativeName relative name in temp dir
-     *
      * @return IODirectory
      */
     public static IODirectory newTempDir(String relativeName) {
@@ -195,7 +193,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * return a subdirectory in the user home dir
      *
      * @param relativeName relative name in user home dir
-     *
      * @return IODirectory
      */
     public static IODirectory newUserDir(String relativeName) {
@@ -277,7 +274,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * checks for parameter, throws exception if needed
      *
      * @return
-     *
      * @throws ObjectIsNoDirectoryException : thrown exception
      */
     protected IODirectory checkIfDirectory() throws IOException {
@@ -295,7 +291,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      *
      * @param dir : IODirectory : directory to compare with
      * @param listener : IODirectoryCompareListener : results of comparing are passed to an implementation of this inteface
-     *
      * @return this
      */
     public IODirectory compare(final IODirectory dir, final IODirectoryCompareListener listener) throws FileNotFoundException {
@@ -378,7 +373,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * does this directory contains given file at any level
      *
      * @param dir IOFfile
-     *
      * @return boolean
      */
     public boolean contains(final IODirectory dir) {
@@ -389,7 +383,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * does this directory contains given file at any level
      *
      * @param file IOFfile
-     *
      * @return boolean
      */
     public boolean contains(final IOFile file) {
@@ -400,7 +393,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * does this directory contains given file at first level
      *
      * @param dir IOFfile
-     *
      * @return boolean
      */
     public boolean containsDirectly(final IODirectory dir) {
@@ -411,7 +403,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * does this directory contains given file at first level
      *
      * @param file IOFfile
-     *
      * @return boolean
      */
     public boolean containsDirectly(final IOFile file) {
@@ -422,9 +413,7 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * copies a complete directory to another directory (binary copy), does not overwrite, does not delete source, always recursive
      *
      * @param destinationDir : File : target directory
-     *
      * @return : IODirectory : destination
-     *
      * @throws IOException : thrown exception
      */
     public IODirectory copy2(final IODirectory destinationDir) throws IOException {
@@ -432,14 +421,11 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * copies a complete directory to another directory (binary copy), does not delete source, always recursive, use parameters to define when to
-     * overwrite
+     * copies a complete directory to another directory (binary copy), does not delete source, always recursive, use parameters to define when to overwrite
      *
      * @param destination : IODirectory : destinationDir directory
      * @param parameter : int : OVERWRITE_ALWAYS, OVERWRITE_WHEN_NEWER, OVERWRITE_WHEN_LARGER, RENAME_EXISTING
-     *
      * @return : IODirectory : destination directory
-     *
      * @throws IOException : thrown exception
      */
     public IODirectory copy2(final IODirectory destination, final int parameter) throws IOException {
@@ -457,7 +443,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     *
      * @see java.io.File#delete()
      */
     @Override
@@ -473,8 +458,8 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
-     * equal, the complete file (bounded by 16MB) (optimized for speed)
+     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
+     * (bounded by 16MB) (optimized for speed)
      *
      * @return : Vector : vector of deleted files
      */
@@ -483,11 +468,10 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
-     * equal, the complete file (bounded by superSize) (optimized for speed)
+     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
+     * (bounded by superSize) (optimized for speed)
      *
      * @param superSize : int : compare size when file match first block (can be set to zero to suppress second check)
-     *
      * @return : Vector : vector of deleted files
      */
     public Vector<?> deleteDoubles(final int superSize) {
@@ -495,13 +479,11 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
-     * equal, the complete file (bounded by superSize) (optimized for speed)
+     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
+     * (bounded by superSize) (optimized for speed)
      *
      * @param superSize : int : compare size when file match first block (can be set to zero to suppress second check)
-     * @param trashCanDir : IODirectory : directory to put trash to (null permanently removes files) (see function checkFileIndex for naming of moved
-     *            files)
-     *
+     * @param trashCanDir : IODirectory : directory to put trash to (null permanently removes files) (see function checkFileIndex for naming of moved files)
      * @return : Vector : vector of deleted files
      */
     public Vector<?> deleteDoubles(final int superSize, final IODirectory trashCanDir) {
@@ -572,11 +554,10 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if
-     * equal, the complete file (bounded by 16MB) (optimized for speed)
+     * removes all doubles from directory checking the size, then the the first bytes from the file (bounded by MAX_COMPARE_SIZE) first and then if equal, the complete file
+     * (bounded by 16MB) (optimized for speed)
      *
      * @param trashCanDir : IODirectory : directory to put trash to (null permanently removes files)
-     *
      * @return : Vector : vector of deleted files
      */
     public Vector<?> deleteDoubles(final IODirectory trashCanDir) {
@@ -587,7 +568,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * na
      *
      * @param relativePath na
-     *
      * @return
      */
     public IODirectory dir(String relativePath) {
@@ -619,7 +599,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * na
      *
      * @param relativePath na
-     *
      * @return
      */
     public IOFile file(String relativePath) {
@@ -627,20 +606,17 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * flattens this directory, copies all files in all subdirectories to this directory, do not copy doubles, rename if file already exists and isn't
-     * the same, delete all subdirectories afterwards
+     * flattens this directory, copies all files in all subdirectories to this directory, do not copy doubles, rename if file already exists and isn't the same, delete all
+     * subdirectories afterwards
      *
      * @return this
-     *
      * @throws IOException : thrown exceptions
      */
     public IODirectory flatten() throws IOException {
         IODirectory[] iod = this.listIODirectories();
 
         for (IODirectory element : iod) {
-            this.join(element,
-                    IODirectory.DEFAULTS | IODirectory.DELETE_SOURCE | IODirectory.FLATTEN | IODirectory.RENAME_EXISTING | IODirectory.RECURSIVE,
-                    9999999);
+            this.join(element, IODirectory.DEFAULTS | IODirectory.DELETE_SOURCE | IODirectory.FLATTEN | IODirectory.RENAME_EXISTING | IODirectory.RECURSIVE, 9999999);
         }
 
         return this;
@@ -701,7 +677,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -710,15 +685,12 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * used by copy, move, etc. functions or atomic use, don't forget that the current directory is the TARGET unlike other functions where the GIVEN
-     * dir is the target
+     * used by copy, move, etc. functions or atomic use, don't forget that the current directory is the TARGET unlike other functions where the GIVEN dir is the target
      *
      * @param source : IODirectory : target directory
-     * @param modifier : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or
-     *            OVERWRITE_WHEN_LARGER in this order of importance ), DELETE_SOURCE
-     *
+     * @param modifier : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or OVERWRITE_WHEN_LARGER in this order of importance
+     *            ), DELETE_SOURCE
      * @return : IODirectory : this object
-     *
      * @throws IOException : when something fails
      */
     public IODirectory join(final IODirectory source, final int modifier) throws IOException {
@@ -726,16 +698,13 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     * used by copy, move, etc. functions or atomic use, don't forget that the current directory is the TARGET unlike other functions where the GIVEN
-     * dir is the target
+     * used by copy, move, etc. functions or atomic use, don't forget that the current directory is the TARGET unlike other functions where the GIVEN dir is the target
      *
      * @param source : IODirectory : target directory
-     * @param modifier : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or
-     *            OVERWRITE_WHEN_LARGER in this order of importance ), DELETE_SOURCE
+     * @param modifier : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or OVERWRITE_WHEN_LARGER in this order of importance
+     *            ), DELETE_SOURCE
      * @param maxcomparesize : int : maximum size to compare
-     *
      * @return : IODirectory : this object
-     *
      * @throws IOException : when something fails
      */
     public IODirectory join(final IODirectory source, final int modifier, final int maxcomparesize) throws IOException {
@@ -749,7 +718,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     /**
      * used by join function <br>
      * <br>
-     *
      * <pre>
      * 0 0 0 0 0 0 0 0 (defaults)
      *  - - - - - - - 1 (recursive)
@@ -759,17 +727,13 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      *  - - - 1 - - - - (delete source - move action) - - 1 - - - - - (flatten)
      *  - 0 - - - - - - (not used, future parameter)
      *  0 - - - - - - - (not used, future parameter)
-     * </pre>
-     *
-     * <br>
+     * </pre> <br>
      * <br>
      * if renaming: all overwrite options will be false (___?001?<br>
      *
      * @param source : IODirectory : target directory
-     * @param modifier : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or in this order of
-     *            importance ), DELETE_SOURCE
+     * @param modifier : int : combination (with |) of RECURSIVE, (RENAME_EXISTING or ALWAYS_OVERWRITE or OVERWRITE_WHEN_NEWER or in this order of importance ), DELETE_SOURCE
      * @param maxcomparesize : int : maximum size to compare
-     *
      * @throws IOException : when something fails
      */
     protected void join0(final IODirectory source, final int modifier, final int maxcomparesize) throws IOException {
@@ -865,7 +829,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * lists all existing subdirectories
      *
      * @param ff : AbstractFileFilter : additional file filter
-     *
      * @return : IODirectory[] : all subdirectories
      */
     public IODirectory[] listIODirectories(final FileFilter ff) {
@@ -937,7 +900,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * lists all existing subdirectories
      *
      * @param ff : AbstractFileFilter : additional file filter
-     *
      * @return : IODirectory[] : all subdirectories
      */
     public IOFile[] listIOFiles(final FileFilter ff) {
@@ -978,7 +940,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * lists all existing files in this directories and its subdirectories
      *
      * @param ff : AbstractFileFilter : file filter
-     *
      * @return : IOFile[] : all files
      */
     public IOFile[] listIOFilesRecursive(final FileFilter ff) {
@@ -1015,9 +976,7 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * moves (copy & delete) a complete directory to another directory (binary copy), does never overwrite, always recursive
      *
      * @param destinationDir : IODirectory : destinationDir directory
-     *
      * @return : IODirectory : destinationDir directory
-     *
      * @throws IOException : IOException
      */
     public IODirectory move2(final IODirectory destinationDir) throws IOException {
@@ -1029,9 +988,7 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      *
      * @param destinationDir : IODirectory : destinationDir directory
      * @param parameter : int : OVERWRITE_ALWAYS, OVERWRITE_WHEN_NEWER, OVERWRITE_WHEN_LARGER, RENAME_EXISTING
-     *
      * @return : IODirectory : destinationDir directory
-     *
      * @throws IOException : IOException
      */
     public IODirectory move2(final IODirectory destinationDir, final int parameter) throws IOException {
@@ -1039,7 +996,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
     }
 
     /**
-     *
      * @see util.io.jni.Recycler#recycle(java.io.File)
      */
     public boolean recycle() {
@@ -1059,7 +1015,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * recycle doubles in directory using the default trash directory or OS dependant recycling (if available)
      *
      * @param superSize : int : compare size when file match first block (can be set to zero to suppress second check)
-     *
      * @return : Vector : vector of recycled files
      */
     public Vector<?> recycleDoubles(final int superSize) {
@@ -1070,7 +1025,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * sync
      *
      * @param other
-     *
      * @throws IOException
      */
     public void sync(IODirectory other) throws IOException {
@@ -1082,7 +1036,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      *
      * @param other
      * @param listener
-     *
      * @throws IOException
      */
     public void sync(IODirectory other, IOCopyListener listener) throws IOException {
@@ -1094,7 +1047,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      *
      * @param other
      * @param pattern
-     *
      * @throws IOException
      */
     public void sync(IODirectory other, Pattern pattern) throws IOException {
@@ -1107,7 +1059,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * @param other
      * @param pattern
      * @param listener
-     *
      * @throws IOException
      */
     public void sync(IODirectory other, Pattern pattern, IOCopyListener listener) throws IOException {
@@ -1121,7 +1072,6 @@ public class IODirectory extends IOGeneralFile<IODirectory> {
      * @param pattern
      * @param other
      * @param listener
-     *
      * @throws IOException
      */
     public void syncOneWay(Pattern pattern, IODirectory other, IOCopyListener listener) throws IOException {

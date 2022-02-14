@@ -6,13 +6,13 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 public abstract class XMLGregorianCalendarAdapter<X> extends XmlAdapter<XMLGregorianCalendar, X> {
-	protected DatatypeFactory datatypeFactory;
+    protected DatatypeFactory datatypeFactory;
 
-	public XMLGregorianCalendarAdapter() {
-		try {
-			datatypeFactory = DatatypeFactory.newInstance();
-		} catch (DatatypeConfigurationException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public XMLGregorianCalendarAdapter() {
+        try {
+            datatypeFactory = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -31,8 +31,7 @@ public class TypeAheadTextFieldPanel extends DefaultFormRowPanel<String, TextFie
 
     protected IModel<? extends List<String>> choices;
 
-    public TypeAheadTextFieldPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings,
-            TypeAheadTextFieldSettings componentSettings, IModel<? extends List<String>> choices) {
+    public TypeAheadTextFieldPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, TypeAheadTextFieldSettings componentSettings, IModel<? extends List<String>> choices) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
     }
@@ -64,17 +63,14 @@ public class TypeAheadTextFieldPanel extends DefaultFormRowPanel<String, TextFie
         if (StringUtils.isNotBlank(getComponentSettings().getRemote())) {
             if (getComponentSettings().isRemoteFilters()) {
                 String script = new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-remote-filter-factory.js").readAll();
-                response.render(
-                        OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
+                response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
             } else {
                 String script = new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-remote-factory.js").readAll();
-                response.render(
-                        OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
+                response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
             }
         } else if (StringUtils.isNotBlank(getComponentSettings().getLocal())) {
             String script = new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-local-factory.js").readAll();
-            response.render(
-                    OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$OPTIONS$", getComponentSettings().getLocal())));
+            response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$OPTIONS$", getComponentSettings().getLocal())));
         } else if (choices != null && choices.getObject() != null && !choices.getObject().isEmpty()) {
             String script = new FilePath(TagItTextFieldPanel.class, "TypeAheadTextFieldPanel-local-factory.js").readAll();
             response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$OPTIONS$", typeAheadChoices(choices))));

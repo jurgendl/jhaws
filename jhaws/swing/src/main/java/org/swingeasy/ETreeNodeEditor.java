@@ -19,7 +19,6 @@ public class ETreeNodeEditor extends AbstractCellEditor implements TreeCellEdito
     protected ETreeNode<?> editingNode;
 
     /**
-     *
      * @see javax.swing.CellEditor#getCellEditorValue()
      */
     @Override
@@ -28,7 +27,6 @@ public class ETreeNodeEditor extends AbstractCellEditor implements TreeCellEdito
     }
 
     /**
-     *
      * @see javax.swing.tree.TreeCellEditor#getTreeCellEditorComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int)
      */
     @Override
@@ -39,7 +37,6 @@ public class ETreeNodeEditor extends AbstractCellEditor implements TreeCellEdito
     }
 
     /**
-     *
      * @see javax.swing.AbstractCellEditor#isCellEditable(java.util.EventObject)
      */
     @Override

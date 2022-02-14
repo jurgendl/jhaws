@@ -5,13 +5,13 @@ import org.apache.wicket.markup.html.form.Button;
 @SuppressWarnings("serial")
 public class NoDoubleClickButton extends Button {
 
-	public NoDoubleClickButton(String id) {
-		super(id);
-	}
+    public NoDoubleClickButton(String id) {
+        super(id);
+    }
 
-	@Override
-	protected String getOnClickScript() {
-		return PreventDoubleClickBehaviorButtons.getEnableDisableJavascript(NoDoubleClickButton.this, true);
-	}
+    @Override
+    protected String getOnClickScript() {
+        return PreventDoubleClickBehaviorButtons.getEnableDisableJavascript(NoDoubleClickButton.this, true);
+    }
 
 }

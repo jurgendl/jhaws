@@ -12,8 +12,7 @@ public class EventHelper {
     }
 
     public static boolean isModified(KeyEvent e) {
-        return EventHelper.keyEvent(e, EventModifier.CTRL_DOWN) || EventHelper.keyEvent(e, EventModifier.ALT_DOWN)
-                || EventHelper.keyEvent(e, EventModifier.SHIFT_DOWN);
+        return EventHelper.keyEvent(e, EventModifier.CTRL_DOWN) || EventHelper.keyEvent(e, EventModifier.ALT_DOWN) || EventHelper.keyEvent(e, EventModifier.SHIFT_DOWN);
     }
 
     public static boolean isMouse1xMB1(MouseEvent e) {
@@ -53,8 +52,7 @@ public class EventHelper {
     }
 
     public static boolean isNavigate(KeyEvent e) {
-        return e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_LEFT
-                || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_HOME || e.getKeyCode() == KeyEvent.VK_END;
+        return e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_HOME || e.getKeyCode() == KeyEvent.VK_END;
     }
 
     public static boolean keyEvent(KeyEvent event, char character) {

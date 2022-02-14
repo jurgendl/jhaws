@@ -330,14 +330,12 @@ public class I18NS implements Serializable {
     }
 
     public I18NS addValues(String iso, String... values) {
-        Language lan = StringUtils.isBlank(iso) ? null
-                : Arrays.stream(Language.values()).filter(l -> l.iso() != null).filter(l -> l.iso().equalsIgnoreCase(iso)).findAny().orElse(null);
+        Language lan = StringUtils.isBlank(iso) ? null : Arrays.stream(Language.values()).filter(l -> l.iso() != null).filter(l -> l.iso().equalsIgnoreCase(iso)).findAny().orElse(null);
         return addValues(lan, values);
     }
 
     public I18NS addValue(String iso, String value) {
-        Language lan = StringUtils.isBlank(iso) ? null
-                : Arrays.stream(Language.values()).filter(l -> l.iso() != null).filter(l -> l.iso().equalsIgnoreCase(iso)).findAny().orElse(null);
+        Language lan = StringUtils.isBlank(iso) ? null : Arrays.stream(Language.values()).filter(l -> l.iso() != null).filter(l -> l.iso().equalsIgnoreCase(iso)).findAny().orElse(null);
         addValue(lan, value);
         return this;
     }

@@ -126,7 +126,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#activateAutoCompletion()
      */
     @Override
@@ -140,7 +139,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#activateScrolling()
      */
     @Override
@@ -152,7 +150,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#addRecord(org.swingeasy.EComboBoxRecord)
      */
     @Override
@@ -161,7 +158,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#addRecords(java.util.Collection)
      */
     @Override
@@ -170,7 +166,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#addValueChangeListener(org.swingeasy.ValueChangeListener)
      */
     @Override
@@ -179,7 +174,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#clearValueChangeListeners()
      */
     @Override
@@ -188,7 +182,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
      */
     @Override
@@ -201,7 +194,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#deactivateScrolling()
      */
     @Override
@@ -213,7 +205,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see java.awt.Container#doLayout()
      */
     @Override
@@ -231,7 +222,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.HasParentComponent#getParentComponent()
      */
     @Override
@@ -240,7 +230,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#getRecords()
      */
     @Override
@@ -249,7 +238,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#getSelectedRecord()
      */
     @Override
@@ -281,7 +269,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see java.awt.Component#getSize()
      */
     @Override
@@ -294,7 +281,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see javax.swing.JComponent#getToolTipText()
      */
     @Override
@@ -311,7 +297,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#getValue()
      */
     @Override
@@ -385,7 +370,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#removeAllRecords()
      */
     @Override
@@ -394,7 +378,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#removeRecord(org.swingeasy.EComboBoxRecord)
      */
     @Override
@@ -403,7 +386,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#removeValueChangeListener(org.swingeasy.ValueChangeListener)
      */
     @Override
@@ -412,7 +394,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.ETableI#setLocale(java.util.Locale)
      */
     @Override
@@ -422,7 +403,6 @@ public class EComboBox<T> extends JComboBox<T> implements EComboBoxI<T>, Iterabl
     }
 
     /**
-     *
      * @see org.swingeasy.EComboBoxI#setSelectedRecord(org.swingeasy.EComboBoxRecord)
      */
     @Override

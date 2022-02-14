@@ -22,8 +22,8 @@ import javax.swing.plaf.basic.BasicLabelUI;
  * <P>
  * Extends {@link BasicLabelUI}.
  * <P>
- * The only difference between the appearance of labels in the Basic and Metal L&Fs is the manner in which diabled text is painted. As VerticalLabelUI
- * does not override the method paintDisabledText, this class can be adapted for Metal L&F by extending MetalLabelUI instead of BasicLabelUI.
+ * The only difference between the appearance of labels in the Basic and Metal L&Fs is the manner in which diabled text is painted. As VerticalLabelUI does not override the method
+ * paintDisabledText, this class can be adapted for Metal L&F by extending MetalLabelUI instead of BasicLabelUI.
  * <P>
  * No other changes are required.
  *
@@ -135,8 +135,8 @@ public class VerticalLabelUI extends BasicLabelUI {
     }
 
     /**
-     * Transposes the view rectangles as appropriate for a vertical view before invoking the super method and copies them after they have been altered
-     * by {@link SwingUtilities#layoutCompoundLabel(FontMetrics, String, Icon, int, int, int, int, Rectangle, Rectangle, Rectangle, int)}
+     * Transposes the view rectangles as appropriate for a vertical view before invoking the super method and copies them after they have been altered by
+     * {@link SwingUtilities#layoutCompoundLabel(FontMetrics, String, Icon, int, int, int, int, Rectangle, Rectangle, Rectangle, int)}
      */
     @Override
     protected String layoutCL(JLabel label, FontMetrics fontMetrics, String text, Icon icon, Rectangle viewR, Rectangle iconR, Rectangle textR) {

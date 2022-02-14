@@ -280,7 +280,7 @@ public class EList<T> extends JList<EListRecord<T>> implements EListI<T>, Iterab
 
     @SuppressWarnings("unchecked")
     public EList(EListConfig cfg) {
-        super(EList.<T> createModel(cfg.lock()));
+        super(EList.<T>createModel(cfg.lock()));
         this.init(this.cfg = cfg);
     }
 
@@ -764,7 +764,6 @@ public class EList<T> extends JList<EListRecord<T>> implements EListI<T>, Iterab
     }
 
     /**
-     *
      * @see java.awt.Component#addMouseListener(java.awt.event.MouseListener)
      */
     @Override

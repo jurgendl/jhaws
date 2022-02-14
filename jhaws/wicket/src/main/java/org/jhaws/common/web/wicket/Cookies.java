@@ -19,8 +19,8 @@ public class Cookies implements Serializable {
     public static final String USER_ALLOWED_COOKIES = "cookies_on";
 
     /**
-     * null=unknown => ask user for info; true/false user allowed/disallowed cookies; false => info only available for the duration of the session in
-     * which it is saved; true => info available for duration of cookies in which it is saved; user needs page to change these settings
+     * null=unknown => ask user for info; true/false user allowed/disallowed cookies; false => info only available for the duration of the session in which it is saved; true =>
+     * info available for duration of cookies in which it is saved; user needs page to change these settings
      */
     protected Boolean userAllowedCookies = null;
 

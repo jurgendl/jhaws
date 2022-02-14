@@ -16,11 +16,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for libraryVersionsType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="libraryVersionsType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -31,8 +28,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "libraryVersionsType", propOrder = { "libraryVersion" })
@@ -43,23 +38,15 @@ public class LibraryVersionsType {
 
     /**
      * Gets the value of the libraryVersion property.
-     *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
-     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the libraryVersion property.
-     *
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the libraryVersion property.
      * <p>
-     * For example, to add a new item, do as follows:
-     *
-     * <pre>
+     * For example, to add a new item, do as follows: <pre>
      * getLibraryVersion().add(newItem);
      * </pre>
-     *
-     *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link LibraryVersionType }
-     *
-     *
      */
     public List<LibraryVersionType> getLibraryVersion() {
         if (libraryVersion == null) {
@@ -70,7 +57,6 @@ public class LibraryVersionsType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

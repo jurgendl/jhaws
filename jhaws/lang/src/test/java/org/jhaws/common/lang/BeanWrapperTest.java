@@ -53,29 +53,25 @@ public class BeanWrapperTest {
             BeanInfo bi;
             bi = Introspector.getBeanInfo(ParentClass.class);
             for (PropertyDescriptor o : bi.getPropertyDescriptors()) {
-                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":"
-                        + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
+                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":" + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
                         + o.isHidden() + ":" + o.isPreferred());
             }
             System.out.println("---------------------");
             bi = Introspector.getBeanInfo(ParentInterface.class);
             for (PropertyDescriptor o : bi.getPropertyDescriptors()) {
-                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":"
-                        + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
+                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":" + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
                         + o.isHidden() + ":" + o.isPreferred());
             }
             System.out.println("---------------------");
             bi = Introspector.getBeanInfo(ChildClass.class);
             for (PropertyDescriptor o : bi.getPropertyDescriptors()) {
-                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":"
-                        + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
+                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":" + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
                         + o.isHidden() + ":" + o.isPreferred());
             }
             System.out.println("---------------------");
             bi = Introspector.getBeanInfo(ChildInterface.class);
             for (PropertyDescriptor o : bi.getPropertyDescriptors()) {
-                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":"
-                        + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
+                System.out.println(o.getName() + ":" + o.getDisplayName() + ":" + o.getShortDescription() + ":" + o.getPropertyType() + ":" + o.getReadMethod() + ":" + o.getWriteMethod() + ":" + o.isBound() + ":" + o.isConstrained() + ":" + o.isExpert() + ":"
                         + o.isHidden() + ":" + o.isPreferred());
             }
             System.out.println("---------------------");

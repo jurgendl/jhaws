@@ -3,11 +3,11 @@ package org.swingeasy;
 /**
  * MySwing: Advanced Swing Utilites Copyright (C) 2005 Santhosh Kumar T
  * <p/>
- * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation;
+ * either version 2.1 of the License, or (at your option) any later version.
  * <p/>
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU Lesser General Public License for more details.
  */
 import java.awt.Component;
 import java.awt.Container;
@@ -82,8 +82,7 @@ public class ComponentTitledBorder implements Border, MouseListener, MouseMotion
         pt.translate(-offset, 0);
 
         comp.setSize(rect.width, rect.height);
-        comp.dispatchEvent(
-                new MouseEvent(comp, id, me.getWhen(), me.getModifiers(), pt.x, pt.y, me.getClickCount(), me.isPopupTrigger(), me.getButton()));
+        comp.dispatchEvent(new MouseEvent(comp, id, me.getWhen(), me.getModifiers(), pt.x, pt.y, me.getClickCount(), me.isPopupTrigger(), me.getButton()));
         if (!comp.isValid()) {
             container.repaint();
         }

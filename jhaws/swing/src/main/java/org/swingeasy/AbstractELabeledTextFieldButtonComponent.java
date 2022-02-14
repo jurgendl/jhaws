@@ -14,8 +14,7 @@ import org.swingeasy.EComponentPopupMenu.ReadableComponent;
 /**
  * @author Jurgen
  */
-public abstract class AbstractELabeledTextFieldButtonComponent<LABEL extends JComponent, INPUT extends JComponent, BUTTON extends JComponent>
-        extends JComponent implements EComponentI, ReadableComponent {
+public abstract class AbstractELabeledTextFieldButtonComponent<LABEL extends JComponent, INPUT extends JComponent, BUTTON extends JComponent> extends JComponent implements EComponentI, ReadableComponent {
     private static final long serialVersionUID = 3916693177023150847L;
 
     protected INPUT input;

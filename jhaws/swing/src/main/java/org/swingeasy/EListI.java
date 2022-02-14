@@ -6,7 +6,6 @@ import java.util.List;
 
 /**
  * @author Jurgen
- *
  * @param <T>
  */
 public interface EListI<T> extends EComponentI {

@@ -22,7 +22,6 @@ public class ETreeTableCsvExporter<T> extends ETreeTableExporterImpl<T> {
     private String text = "\"";
 
     /**
-     *
      * @see org.swingeasy.ETableExporterImpl#exportStream(org.swingeasy.ETable, java.io.OutputStream)
      */
     @Override
@@ -52,7 +51,6 @@ public class ETreeTableCsvExporter<T> extends ETreeTableExporterImpl<T> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableExporter#getAction()
      */
     @Override
@@ -61,7 +59,6 @@ public class ETreeTableCsvExporter<T> extends ETreeTableExporterImpl<T> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableExporter#getFileExtension()
      */
     @Override

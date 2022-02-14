@@ -23,13 +23,10 @@ public class ECheckBoxTreeNodeRenderer implements TreeCellRenderer {
     }
 
     /**
-     *
-     * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int,
-     *      boolean)
+     * @see javax.swing.tree.TreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int, boolean)
      */
     @Override
-    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row,
-            boolean hasFocus) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         @SuppressWarnings("rawtypes")
         ECheckBoxTreeNode node = ECheckBoxTreeNode.class.cast(value);
 

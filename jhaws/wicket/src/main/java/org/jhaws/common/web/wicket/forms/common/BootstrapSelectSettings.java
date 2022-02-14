@@ -4,37 +4,37 @@ package org.jhaws.common.web.wicket.forms.common;
 @SuppressWarnings("serial")
 public class BootstrapSelectSettings extends AbstractSelectSettings<BootstrapSelectSettings> {
 
-	private Integer size = null;
+    private Integer size = null;
 
-	public BootstrapSelectSettings() {
-		super();
-	}
+    public BootstrapSelectSettings() {
+        super();
+    }
 
-	public BootstrapSelectSettings(BootstrapSelectSettings other) {
-		super(other);
-	}
+    public BootstrapSelectSettings(BootstrapSelectSettings other) {
+        super(other);
+    }
 
-	public BootstrapSelectSettings(boolean required) {
-		super(required);
-	}
+    public BootstrapSelectSettings(boolean required) {
+        super(required);
+    }
 
-	@Override
-	public boolean isNullValid() {
-		return this.nullValid;
-	}
+    @Override
+    public boolean isNullValid() {
+        return this.nullValid;
+    }
 
-	@Override
-	public BootstrapSelectSettings setNullValid(boolean nullValid) {
-		this.nullValid = nullValid;
-		return this;
-	}
+    @Override
+    public BootstrapSelectSettings setNullValid(boolean nullValid) {
+        this.nullValid = nullValid;
+        return this;
+    }
 
-	public Integer getSize() {
-		return this.size;
-	}
+    public Integer getSize() {
+        return this.size;
+    }
 
-	public BootstrapSelectSettings setSize(Integer size) {
-		this.size = size;
-		return this;
-	}
+    public BootstrapSelectSettings setSize(Integer size) {
+        this.size = size;
+        return this;
+    }
 }

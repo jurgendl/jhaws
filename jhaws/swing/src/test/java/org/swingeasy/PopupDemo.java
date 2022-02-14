@@ -42,8 +42,7 @@ public class PopupDemo {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 value = "<html><i>" + value + "</i><html>";
-                DefaultListCellRenderer listCellRendererComponent = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index,
-                        isSelected, cellHasFocus);
+                DefaultListCellRenderer listCellRendererComponent = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 return listCellRendererComponent;
             }
         });

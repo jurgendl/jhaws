@@ -257,7 +257,6 @@ public class EListTransferHandler<T> extends TransferHandler {
     }
 
     /**
-     *
      * @see javax.swing.TransferHandler#importData(javax.swing.JComponent, java.awt.datatransfer.Transferable)
      */
     @Override

@@ -29,12 +29,10 @@ public class ETreeNodeRenderer extends DefaultTreeCellRenderer {
     }
 
     /**
-     * @see javax.swing.tree.DefaultTreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int,
-     *      boolean)
+     * @see javax.swing.tree.DefaultTreeCellRenderer#getTreeCellRendererComponent(javax.swing.JTree, java.lang.Object, boolean, boolean, boolean, int, boolean)
      */
     @Override
-    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row,
-            boolean focusOverridden) {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean focusOverridden) {
         focused = row == lastSelected;
         init();
         if (focused && focusColor != null) {

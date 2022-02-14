@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface LdapKey {
     /**
-     *
      * key order index, default 0
      *
      * @return index

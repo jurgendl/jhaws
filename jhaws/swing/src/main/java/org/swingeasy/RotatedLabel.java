@@ -53,7 +53,6 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     *
      * @see javax.swing.Icon#getIconWidth()
      */
     @Override
@@ -62,7 +61,6 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     *
      * @see javax.swing.JComponent#getPreferredSize()
      */
     @Override
@@ -81,7 +79,6 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     *
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
     @Override
@@ -122,7 +119,6 @@ public class RotatedLabel extends JPanel implements Icon {
     }
 
     /**
-     *
      * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
      */
     @Override

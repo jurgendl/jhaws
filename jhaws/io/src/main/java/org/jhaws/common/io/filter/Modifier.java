@@ -20,6 +20,7 @@ public enum Modifier {
     EQUALS,
     /** != */
     DIFFERS;
+
     /**
      * gets description
      *

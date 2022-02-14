@@ -7,7 +7,6 @@ import org.jhaws.common.io.IODirectory;
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -29,7 +28,6 @@ public class OnlyDirectoriesFileFilter extends DirectoryFilter {
     }
 
     /**
-     *
      * @see org.jhaws.common.io.filter.DirectoryFilter#acceptDirectory(util.io.IODirectory)
      */
     @Override

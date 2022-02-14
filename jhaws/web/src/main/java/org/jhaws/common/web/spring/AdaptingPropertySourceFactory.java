@@ -75,10 +75,7 @@ public class AdaptingPropertySourceFactory implements PropertySourceFactory {
     }
 
     protected List<MapPropertySource> convertEntrySet(Set<Map.Entry<String, Object>> entrySet, Optional<String> parentKey) {
-        return entrySet.stream()
-                .map((Map.Entry<String, Object> e) -> convertToPropertySourceList(e, parentKey))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+        return entrySet.stream().map((Map.Entry<String, Object> e) -> convertToPropertySourceList(e, parentKey)).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     protected List<MapPropertySource> convertToPropertySourceList(Map.Entry<String, Object> e, Optional<String> parentKey) {

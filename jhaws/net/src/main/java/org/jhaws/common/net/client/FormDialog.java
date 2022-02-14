@@ -172,8 +172,7 @@ public class FormDialog extends JDialog {
                         private static final long serialVersionUID = 5621985439026030982L;
 
                         @Override
-                        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-                                boolean cellHasFocus) {
+                        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                             if (value != null) {
                                 @SuppressWarnings("unchecked")
                                 Map.Entry<String, String> entry = (Entry<String, String>) value;
@@ -183,8 +182,7 @@ public class FormDialog extends JDialog {
                         }
                     });
 
-                    jList.setSelectionMode(
-                            selection.isMultiple() ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION);
+                    jList.setSelectionMode(selection.isMultiple() ? ListSelectionModel.MULTIPLE_INTERVAL_SELECTION : ListSelectionModel.SINGLE_SELECTION);
 
                     if (sl != null) {
                         jList.setSelectedValue(sl, true);

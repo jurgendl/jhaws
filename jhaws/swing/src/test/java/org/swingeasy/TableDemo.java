@@ -109,21 +109,9 @@ public class TableDemo {
             for (int i = 0; i < 100; i++) {
                 int next = r.nextInt(1000);
                 long ts = new Date().getTime() + next * 1000000l;
-                safetable.addRecord(new ETableRecordArray<>(new Object[] {
-                        next,
-                        String.valueOf(next),
-                        Boolean.TRUE,
-                        new Date(ts),
-                        new java.sql.Date(ts),
-                        new Time(ts),
-                        r.nextDouble(),
-                        r.nextFloat(),
-                        r.nextInt(1000),
-                        r.nextLong(),
-                        new BigDecimal(String.valueOf(r.nextLong())).multiply(new BigDecimal(String.valueOf(r.nextDouble()))),
-                        new BigInteger(String.valueOf(r.nextLong())).multiply(new BigInteger(String.valueOf(r.nextInt(500)))),
-                        new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)),
-                        EnumTest.VALUE1 }));
+                safetable.addRecord(new ETableRecordArray<>(new Object[] { next, String.valueOf(next), Boolean.TRUE, new Date(ts), new java.sql.Date(ts), new Time(ts), r.nextDouble(), r.nextFloat(), r.nextInt(1000), r.nextLong(),
+                        new BigDecimal(String.valueOf(r.nextLong())).multiply(new BigDecimal(String.valueOf(r.nextDouble()))), new BigInteger(String.valueOf(r.nextLong())).multiply(new BigInteger(String.valueOf(r.nextInt(500)))),
+                        new Color(r.nextInt(255), r.nextInt(255), r.nextInt(255)), EnumTest.VALUE1 }));
             }
             for (int i = 0; i < headers.getColumnCount(); i++) {
                 table.packColumn(i, 3);

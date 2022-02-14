@@ -33,7 +33,6 @@ public class ColorTableCellRenderer extends ETableCellRenderer<Color> {
     }
 
     /**
-     *
      * @see javax.swing.table.DefaultTableCellRenderer#setValue(java.lang.Object)
      */
     @Override

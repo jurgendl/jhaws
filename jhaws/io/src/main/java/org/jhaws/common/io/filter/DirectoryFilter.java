@@ -9,7 +9,6 @@ import org.jhaws.common.io.IODirectory;
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -24,7 +23,6 @@ public abstract class DirectoryFilter extends AbstractFileFilter {
     }
 
     /**
-     *
      * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
      */
     @Override
@@ -36,7 +34,6 @@ public abstract class DirectoryFilter extends AbstractFileFilter {
      * accepts this directory?
      *
      * @param f IODirectory
-     *
      * @return boolean
      */
     public abstract boolean acceptDirectory(IODirectory f);

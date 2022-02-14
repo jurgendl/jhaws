@@ -11,22 +11,22 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Field {
-	String name() default "";
+    String name() default "";
 
-	FieldType type() default FieldType.uninitialized;
+    FieldType type() default FieldType.uninitialized;
 
-	/**
-	 * standard, english, dutch
-	 * 
-	 * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html
-	 */
-	Analyzer analyzer() default Analyzer.uninitialized;
+    /**
+     * standard, english, dutch
+     * 
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html
+     */
+    Analyzer analyzer() default Analyzer.uninitialized;
 
-	String customAnalyzer() default "";
+    String customAnalyzer() default "";
 
-	Bool store() default Bool.uninitialized;
+    Bool store() default Bool.uninitialized;
 
-	Bool fielddata() default Bool.uninitialized;
+    Bool fielddata() default Bool.uninitialized;
 
-	Language language() default Language.uninitialized;
+    Language language() default Language.uninitialized;
 }

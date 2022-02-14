@@ -33,8 +33,7 @@ public class FormDemo {
 
         EComboBoxConfig cfg = new EComboBoxConfig();
         EComboBox<String> component = new EComboBox<String>(cfg).stsi();
-        component.addRecord(new EComboBoxRecord<>(
-                "aaaaaaaaazzzzzzzzzzeeeeeeeeerrrrrrrrrtttttttttttttyyyyyyyyyyyy111111111222222223333333334444444444455555555566666666777777788888888889999999"));
+        component.addRecord(new EComboBoxRecord<>("aaaaaaaaazzzzzzzzzzeeeeeeeeerrrrrrrrrtttttttttttttyyyyyyyyyyyy111111111222222223333333334444444444455555555566666666777777788888888889999999"));
         Dimension preferredSize = component.getPreferredSize();
         System.out.println(preferredSize);
         component.setPreferredSize(new Dimension(222, preferredSize.height));

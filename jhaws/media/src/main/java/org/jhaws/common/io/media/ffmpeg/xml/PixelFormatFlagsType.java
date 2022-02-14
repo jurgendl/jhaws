@@ -12,11 +12,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for pixelFormatFlagsType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="pixelFormatFlagsType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -32,8 +29,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "pixelFormatFlagsType")
@@ -65,7 +60,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the bigEndian property.
-     *
      */
     public int getBigEndian() {
         return bigEndian;
@@ -73,7 +67,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the bigEndian property.
-     *
      */
     public void setBigEndian(int value) {
         this.bigEndian = value;
@@ -81,7 +74,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the palette property.
-     *
      */
     public int getPalette() {
         return palette;
@@ -89,7 +81,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the palette property.
-     *
      */
     public void setPalette(int value) {
         this.palette = value;
@@ -97,7 +88,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the bitstream property.
-     *
      */
     public int getBitstream() {
         return bitstream;
@@ -105,7 +95,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the bitstream property.
-     *
      */
     public void setBitstream(int value) {
         this.bitstream = value;
@@ -113,7 +102,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the hwaccel property.
-     *
      */
     public int getHwaccel() {
         return hwaccel;
@@ -121,7 +109,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the hwaccel property.
-     *
      */
     public void setHwaccel(int value) {
         this.hwaccel = value;
@@ -129,7 +116,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the planar property.
-     *
      */
     public int getPlanar() {
         return planar;
@@ -137,7 +123,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the planar property.
-     *
      */
     public void setPlanar(int value) {
         this.planar = value;
@@ -145,7 +130,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the rgb property.
-     *
      */
     public int getRgb() {
         return rgb;
@@ -153,7 +137,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the rgb property.
-     *
      */
     public void setRgb(int value) {
         this.rgb = value;
@@ -161,7 +144,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the pseudopal property.
-     *
      */
     public int getPseudopal() {
         return pseudopal;
@@ -169,7 +151,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the pseudopal property.
-     *
      */
     public void setPseudopal(int value) {
         this.pseudopal = value;
@@ -177,7 +158,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Gets the value of the alpha property.
-     *
      */
     public int getAlpha() {
         return alpha;
@@ -185,7 +165,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Sets the value of the alpha property.
-     *
      */
     public void setAlpha(int value) {
         this.alpha = value;
@@ -193,7 +172,6 @@ public class PixelFormatFlagsType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

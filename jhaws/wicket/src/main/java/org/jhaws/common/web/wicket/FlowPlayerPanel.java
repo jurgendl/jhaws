@@ -33,14 +33,12 @@ public class FlowPlayerPanel extends Panel {
             flowplayer.add(AttributeModifier.append("class", "is-splash"));
             if (_config.getSplashFile().exists()) {
                 if (_config.getW() != 0 && _config.getH() != 0) {
-                    flowplayer.add(new AttributeModifier("style",
-                            ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"
+                    flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"
                     // + ";max-width:" + _config.getW() + "px"
                     // + ";max-height:" + _config.getH() + "px"
                     ));
                 } else {
-                    flowplayer.add(new AttributeModifier("style",
-                            ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
+                    flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
                 }
             } else {
                 if (_config.getW() != 0 && _config.getH() != 0) {
@@ -106,8 +104,7 @@ public class FlowPlayerPanel extends Panel {
                 "}" + //
                 ");"));
         if (config.getLoop()) {
-            response.render(CssHeaderItem.forCSS(".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }",
-                    "flowplayer_hide_play"));
+            response.render(CssHeaderItem.forCSS(".is-splash.flowplayer .fp-ui, .is-paused.flowplayer .fp-ui { background: none !important; }", "flowplayer_hide_play"));
         }
     }
 }

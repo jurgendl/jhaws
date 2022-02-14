@@ -30,7 +30,6 @@ public class ECheckBox extends JCheckBox implements EComponentI, HasValue<Boolea
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#addValueChangeListener(org.swingeasy.ValueChangeListener)
      */
     @Override
@@ -39,7 +38,6 @@ public class ECheckBox extends JCheckBox implements EComponentI, HasValue<Boolea
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#clearValueChangeListeners()
      */
     @Override
@@ -64,7 +62,6 @@ public class ECheckBox extends JCheckBox implements EComponentI, HasValue<Boolea
     }
 
     /**
-     *
      * @see javax.swing.JComponent#getToolTipText()
      */
     @Override
@@ -81,7 +78,6 @@ public class ECheckBox extends JCheckBox implements EComponentI, HasValue<Boolea
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#getValue()
      */
     @Override
@@ -118,7 +114,6 @@ public class ECheckBox extends JCheckBox implements EComponentI, HasValue<Boolea
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#removeValueChangeListener(org.swingeasy.ValueChangeListener)
      */
     @Override

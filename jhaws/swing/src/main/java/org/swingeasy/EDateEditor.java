@@ -45,7 +45,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
      */
     @Override
@@ -58,14 +57,12 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#doAction()
      */
     @Override
     protected void doAction() {
         JPopupMenu pop = getPopup();
-        pop.setLocation(
-                new Point(getLocationOnScreen().x + getWidth() - (int) pop.getPreferredSize().getWidth(), getLocationOnScreen().y + getHeight()));
+        pop.setLocation(new Point(getLocationOnScreen().x + getWidth() - (int) pop.getPreferredSize().getWidth(), getLocationOnScreen().y + getHeight()));
         Date date = getInput().get();
         if (date == null) {
             date = new Date();
@@ -75,7 +72,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#getAction()
      */
     @Override
@@ -84,7 +80,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getButton()
      */
     @Override
@@ -147,7 +142,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.ELabeledTextFieldButtonComponent#getIcon()
      */
     @Override
@@ -156,7 +150,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getInput()
      */
     @Override
@@ -172,7 +165,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.AbstractELabeledTextFieldButtonComponent#getLabel()
      */
     @Override
@@ -185,7 +177,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see org.swingeasy.HasParentComponent#getParentComponent()
      */
     @Override
@@ -249,7 +240,6 @@ public class EDateEditor extends AbstractELabeledTextFieldButtonComponent<ELabel
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

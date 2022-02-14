@@ -43,7 +43,7 @@ public abstract class DefaultFormRowPanel<T, C extends FormComponent<T>, S exten
                 this.propertyType = WebHelper.type(propertyPath);
             } catch (ch.lambdaj.function.argument.ArgumentConversionException ex) {
                 try {
-                    this.propertyType = WebHelper.<T> getImplementation(this, DefaultFormRowPanel.class);
+                    this.propertyType = WebHelper.<T>getImplementation(this, DefaultFormRowPanel.class);
                 } catch (IllegalArgumentException ex2) {
                     this.propertyType = (Class<T>) Serializable.class;
                 }

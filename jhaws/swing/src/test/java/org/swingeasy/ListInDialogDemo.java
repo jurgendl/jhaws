@@ -51,8 +51,8 @@ public class ListInDialogDemo {
                 list.stsi().addRecord(new EListRecord<>(new DemoValue(r.nextInt(1000))));
             }
 
-            ResultType returnValue = CustomizableOptionPane.showCustomDialog(parent, container, "Demo", MessageType.QUESTION, OptionType.OK_CANCEL,
-                    parent.getIconImage() == null ? null : new ImageIcon(parent.getIconImage()), new ListOptionPaneCustomizer<>(list));
+            ResultType returnValue = CustomizableOptionPane.showCustomDialog(parent, container, "Demo", MessageType.QUESTION, OptionType.OK_CANCEL, parent.getIconImage() == null ? null : new ImageIcon(parent.getIconImage()),
+                    new ListOptionPaneCustomizer<>(list));
             System.out.println(returnValue + ": " + list.getSelectedRecord());
         } catch (Exception ex) {
             ex.printStackTrace();

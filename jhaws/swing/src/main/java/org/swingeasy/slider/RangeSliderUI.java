@@ -302,8 +302,8 @@ class RangeSliderUI extends BasicSliderUI {
     }
 
     /**
-     * Sets the location of the upper thumb, and repaints the slider. This is called when the upper thumb is dragged to repaint the slider. The
-     * <code>setThumbLocation()</code> method performs the same task for the lower thumb.
+     * Sets the location of the upper thumb, and repaints the slider. This is called when the upper thumb is dragged to repaint the slider. The <code>setThumbLocation()</code>
+     * method performs the same task for the lower thumb.
      */
     private void setUpperThumbLocation(int x, int y) {
         Rectangle upperUnionRect = new Rectangle();
@@ -356,8 +356,7 @@ class RangeSliderUI extends BasicSliderUI {
     }
 
     /**
-     * Listener to handle model change events. This calculates the thumb locations and repaints the slider if the value change is not caused by
-     * dragging a thumb.
+     * Listener to handle model change events. This calculates the thumb locations and repaints the slider if the value change is not caused by dragging a thumb.
      */
     public class ChangeHandler implements ChangeListener {
         @Override

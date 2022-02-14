@@ -43,7 +43,6 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
      * na
      *
      * @param attributes
-     *
      * @return
      */
     private final T convertAttributesToObject(final Attributes attributes) {
@@ -91,7 +90,6 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
      * na
      *
      * @param object
-     *
      * @return
      */
     private final Attributes convertObjectToAttributes(T bean) {
@@ -241,7 +239,6 @@ public abstract class AbstractLdapDao<T extends Serializable & Comparable<? supe
     }
 
     /**
-     *
      * @see org.jhaws.common.ldap.interfaces.LdapDAOCommonSuperclass#search(java.lang.String, javax.naming.directory.SearchControls)
      */
     @Override

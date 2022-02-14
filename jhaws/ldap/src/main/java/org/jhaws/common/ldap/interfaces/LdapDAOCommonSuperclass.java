@@ -59,9 +59,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
      * maakt distinguished name van bestaand object (maw de base-dn/key)
      *
      * @param object bean object
-     *
      * @return distinguished Name
-     *
      * @throws InvalidNameException
      */
     protected final Name buildDn(final Properties keyprops) throws InvalidNameException {
@@ -89,9 +87,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
      * maakt distinguished name van bestaand object (maw de base-dn/key)
      *
      * @param object bean object
-     *
      * @return distinguished Name
-     *
      * @throws InvalidNameException
      */
     protected final Name buildDn(final T bean) throws InvalidNameException {
@@ -118,7 +114,6 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
      * zoekt met query string (gebruik handmatig opgestelde string of classes zoals AndFilter etc)
      *
      * @param query querystring
-     *
      * @return List van T objecten (mogelijks gelimiteerd aantal door ldap server); nooit null maar lege lijst
      */
     protected final List<T> findBeans(final String query) {
@@ -183,7 +178,6 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
     }
 
     /**
-     *
      * @see org.jhaws.common.ldap.interfaces.LdapDao#getSearchDepth()
      */
     @Override
@@ -195,7 +189,6 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
      * nieuwe instantie van bean; kan overridden worden in subclass en daarom private
      *
      * @return T
-     *
      * @throws UnsupportedOperationException wanneer er geen default constructor is
      */
     protected T newBean() throws UnsupportedOperationException {
@@ -203,9 +196,8 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
             return this.pojoClass.newInstance();
         } catch (final InstantiationException ex) {
             // wanneer er geen default constructor is
-            throw new UnsupportedOperationException(
-                    "default constructor not present: override Bean creation: 'private " + this.pojoClass.getSimpleName() //$NON-NLS-1$
-                            + " newBean()' in class " + this.getClass().getName()); //$NON-NLS-1$
+            throw new UnsupportedOperationException("default constructor not present: override Bean creation: 'private " + this.pojoClass.getSimpleName() //$NON-NLS-1$
+                    + " newBean()' in class " + this.getClass().getName()); //$NON-NLS-1$
         } catch (final IllegalAccessException ex) {
             // constructor is bv private
             throw new UnsupportedOperationException("make sure the constructor is public or override Bean creation: 'private " //$NON-NLS-1$
@@ -239,9 +231,7 @@ public abstract class LdapDAOCommonSuperclass<T extends Serializable & Comparabl
      *
      * @param query String
      * @param controls SearchControls
-     *
      * @return List T
-     *
      * @throws IllegalArgumentException login gegevens mogelijks verkeerd
      */
     protected abstract List<T> search(String query, SearchControls controls);

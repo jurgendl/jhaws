@@ -38,7 +38,6 @@ public class ECheckBoxTree<T> extends JTree implements ECheckBoxTreeI<T>, Readab
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentPopupMenu.ReadableComponent#copy(java.awt.event.ActionEvent)
      */
     @Override
@@ -52,7 +51,6 @@ public class ECheckBoxTree<T> extends JTree implements ECheckBoxTreeI<T>, Readab
     }
 
     /**
-     *
      * @see org.swingeasy.HasParentComponent#getParentComponent()
      */
     @Override
@@ -115,7 +113,6 @@ public class ECheckBoxTree<T> extends JTree implements ECheckBoxTreeI<T>, Readab
     }
 
     /**
-     *
      * @see org.swingeasy.ETableI#setLocale(java.util.Locale)
      */
     @Override

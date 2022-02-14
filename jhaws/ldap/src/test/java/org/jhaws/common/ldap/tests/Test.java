@@ -179,7 +179,6 @@ public class Test {
      * @param cert na
      * @param ROOT_CA_CERT na
      * @param OCSP_SERVER_CERT na
-     *
      * @return
      */
     @SuppressWarnings({ "nls", "rawtypes", "unchecked" })

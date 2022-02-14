@@ -35,7 +35,6 @@ public class EnumTableCellEditor<T extends Enum<T>> extends DefaultCellEditor im
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setEnabled(boolean)
      */
     @Override
@@ -44,7 +43,6 @@ public class EnumTableCellEditor<T extends Enum<T>> extends DefaultCellEditor im
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
      */
     @Override

@@ -32,8 +32,7 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
         this.dateConverter = null;
     }
 
-    public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings,
-            DatePickerSettings componentSettings) {
+    public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings, DatePickerSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
         this.dateConverter = dateConverter;
     }
@@ -64,8 +63,7 @@ public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel
                     break;
             }
         }
-        org.apache.wicket.extensions.markup.html.form.DateTextField textField = new org.apache.wicket.extensions.markup.html.form.DateTextField(VALUE,
-                model, dateFormat) {
+        org.apache.wicket.extensions.markup.html.form.DateTextField textField = new org.apache.wicket.extensions.markup.html.form.DateTextField(VALUE, model, dateFormat) {
             @Override
             protected void onComponentTag(ComponentTag tag) {
                 super.onComponentTag(tag);

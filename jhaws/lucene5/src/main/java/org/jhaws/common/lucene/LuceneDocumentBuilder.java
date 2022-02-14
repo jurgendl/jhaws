@@ -139,8 +139,7 @@ public abstract class LuceneDocumentBuilder<T> {
         T o;
         try {
             o = getType().getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-                | SecurityException ex) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
         }
         return retrieveFromDocument(d, o);

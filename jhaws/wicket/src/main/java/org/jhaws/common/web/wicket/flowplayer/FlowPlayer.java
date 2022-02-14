@@ -59,8 +59,7 @@ public class FlowPlayer {
                         public InputStream getInputStream() throws ResourceStreamNotFoundException {
                             if (inputStream == null) {
                                 try {
-                                    inputStream = FlowPlayer.class.getClassLoader()
-                                            .getResourceAsStream(FlowPlayer.class.getPackage().getName().replace('.', '/') + "/" + swf);
+                                    inputStream = FlowPlayer.class.getClassLoader().getResourceAsStream(FlowPlayer.class.getPackage().getName().replace('.', '/') + "/" + swf);
                                 } catch (Exception e) {
                                     throw new ResourceStreamNotFoundException(e);
                                 }

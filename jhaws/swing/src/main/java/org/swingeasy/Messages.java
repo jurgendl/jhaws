@@ -66,7 +66,6 @@ public class Messages implements Translator {
     }
 
     /**
-     *
      * @see org.swingeasy.validation.Translator#getString(java.lang.String, java.lang.Object[])
      */
     @Override

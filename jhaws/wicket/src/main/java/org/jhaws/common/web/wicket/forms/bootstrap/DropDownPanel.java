@@ -12,23 +12,19 @@ import org.jhaws.common.web.wicket.forms.common.FormSettings;
 
 @SuppressWarnings("serial")
 public class DropDownPanel<T extends Serializable> extends SelectPanel<T, Select<T>, DropDownSettings> {
-    public DropDownPanel(IModel<?> model, T propertyPath, FormSettings formSettings, DropDownSettings componentSettings, IOptionRenderer<T> renderer,
-            IModel<? extends List<? extends T>> choices) {
+    public DropDownPanel(IModel<?> model, T propertyPath, FormSettings formSettings, DropDownSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
         super(model, propertyPath, formSettings, componentSettings, renderer, choices);
     }
 
-    public DropDownPanel(IModel<?> model, T propertyPath, FormSettings formSettings, DropDownSettings componentSettings, IOptionRenderer<T> renderer,
-            IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+    public DropDownPanel(IModel<?> model, T propertyPath, FormSettings formSettings, DropDownSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(model, propertyPath, formSettings, componentSettings, renderer, choices, groupLabels);
     }
 
-    public DropDownPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, DropDownSettings componentSettings,
-            IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
+    public DropDownPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, DropDownSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
         super(propertyPath, valueModel, formSettings, componentSettings, renderer, choices);
     }
 
-    public DropDownPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, DropDownSettings componentSettings,
-            IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+    public DropDownPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, DropDownSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(propertyPath, valueModel, formSettings, componentSettings, renderer, choices, groupLabels);
     }
 

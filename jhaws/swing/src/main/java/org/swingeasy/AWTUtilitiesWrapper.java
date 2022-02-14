@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 /**
  * @author Anthony Petrov
- *
  * @see http://java.sun.com/developer/technicalArticles/GUI/translucent_shaped_windows/
  */
 public class AWTUtilitiesWrapper {

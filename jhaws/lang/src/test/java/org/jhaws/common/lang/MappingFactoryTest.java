@@ -61,8 +61,7 @@ public class MappingFactoryTest {
         Assert.assertEquals(pojo.getNestedPojo().getNestedVeld(), dto.getNestedDTOVeld());
         Assert.assertEquals(pojo.getNestedPojoVeld(), dto.getNestedDTO().getNestedVeld());
         Assert.assertEquals(pojo.getCommonNested().getCommonNestedField(), dto.getCommonNested().getCommonNestedField());
-        Assert.assertEquals(pojo.getCollection().iterator().next().getCommonNestedField(),
-                dto.getCollection().iterator().next().getCommonNestedField());
+        Assert.assertEquals(pojo.getCollection().iterator().next().getCommonNestedField(), dto.getCollection().iterator().next().getCommonNestedField());
     }
 
     @Test

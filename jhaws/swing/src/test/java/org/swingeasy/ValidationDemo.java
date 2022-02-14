@@ -120,7 +120,6 @@ public class ValidationDemo {
         vm2.setShowWhenValid(true);
         vm2.setIsValid();
 
-        new ValidationFactory().install(parent, comp5, new NotNullValidator<String>(), new EmailValidator(), new RegexValidator(regex))
-                .setShowWhenValid(true);
+        new ValidationFactory().install(parent, comp5, new NotNullValidator<String>(), new EmailValidator(), new RegexValidator(regex)).setShowWhenValid(true);
     }
 }

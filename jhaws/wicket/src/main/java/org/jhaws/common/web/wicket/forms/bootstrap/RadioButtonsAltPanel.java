@@ -14,8 +14,7 @@ public class RadioButtonsAltPanel<T extends Serializable> extends DefaultFormRow
 
     protected IChoiceRenderer<T> renderer;
 
-    public RadioButtonsAltPanel(IModel<?> model, T propertyPath, FormSettings formSettings, FormElementSettings componentSettings,
-            IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer) {
+    public RadioButtonsAltPanel(IModel<?> model, T propertyPath, FormSettings formSettings, FormElementSettings componentSettings, IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
         this.renderer = renderer;

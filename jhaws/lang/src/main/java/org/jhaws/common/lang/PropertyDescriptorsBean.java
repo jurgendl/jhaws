@@ -29,28 +29,14 @@ public class PropertyDescriptorsBean {
     private final Map<String, Method> is = new HashMap<>();
 
     public PropertyDescriptorsBean(Class<?> clazz) {
-        Predicate<Method> mf = ((Predicate<Method>) m -> isPublic(m.getModifiers())).and(m -> !isStatic(m.getModifiers()))
-                .and(m -> !isAbstract(m.getModifiers()));
+        Predicate<Method> mf = ((Predicate<Method>) m -> isPublic(m.getModifiers())).and(m -> !isStatic(m.getModifiers())).and(m -> !isAbstract(m.getModifiers()));
         stream(new ParentClassIterator(clazz)).forEach(current -> {
             Method[] methods = current.getDeclaredMethods();
-            get.putAll(streamArray(true, methods).filter(mf)
-                    .filter(m -> m.getName().matches("^get.+"))
-                    .filter(m -> !Void.TYPE.isAssignableFrom(m.getReturnType()))
-                    .filter(m -> m.getParameterTypes().length == 0)
-                    .collect(collectMap(this::getKey)));
-            is.putAll(streamArray(true, methods).filter(mf)
-                    .filter(m -> m.getName().matches("^is.+"))
-                    .filter(m -> !Void.TYPE.isAssignableFrom(m.getReturnType()))
-                    .filter(m -> m.getParameterTypes().length == 0)
-                    .collect(collectMap(this::isKey)));
-            set.putAll(streamArray(true, methods).filter(mf)
-                    .filter(m -> m.getName().matches("^set.+"))
-                    .filter(m -> Void.TYPE.isAssignableFrom(m.getReturnType()))
-                    .filter(m -> m.getParameterTypes().length == 1)
-                    .collect(collectMap(this::setKey)));
+            get.putAll(streamArray(true, methods).filter(mf).filter(m -> m.getName().matches("^get.+")).filter(m -> !Void.TYPE.isAssignableFrom(m.getReturnType())).filter(m -> m.getParameterTypes().length == 0).collect(collectMap(this::getKey)));
+            is.putAll(streamArray(true, methods).filter(mf).filter(m -> m.getName().matches("^is.+")).filter(m -> !Void.TYPE.isAssignableFrom(m.getReturnType())).filter(m -> m.getParameterTypes().length == 0).collect(collectMap(this::isKey)));
+            set.putAll(streamArray(true, methods).filter(mf).filter(m -> m.getName().matches("^set.+")).filter(m -> Void.TYPE.isAssignableFrom(m.getReturnType())).filter(m -> m.getParameterTypes().length == 1).collect(collectMap(this::setKey)));
         });
-        this.propertyDescriptors = unmodifiableMap(
-                streamMaps(get, is).map(this::create).filter(isNotNull()).collect(collectMap(PropertyDescriptor::getName)));
+        this.propertyDescriptors = unmodifiableMap(streamMaps(get, is).map(this::create).filter(isNotNull()).collect(collectMap(PropertyDescriptor::getName)));
     }
 
     private String getKey(Method m) {

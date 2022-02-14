@@ -51,15 +51,11 @@ public class SecureMe implements Security {
         // initialise the cipher for decryption
         cipher.init(false, new KeyParameter(this.key.key));
 
-        /*
-         * As the decryption is from our preformatted file, and we know that it's a hex encoded format, then we wrap the InputStream with a
-         * BufferedReader so that we can read it easily.
-         */
+        /* As the decryption is from our preformatted file, and we know that it's a hex encoded format, then we wrap the InputStream with a BufferedReader so that we can read it
+         * easily. */
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
-        /*
-         * now, read the file, and output the chunks
-         */
+        /* now, read the file, and output the chunks */
         int outL;
         byte[] inblock = null;
         byte[] outblock = null;
@@ -71,17 +67,13 @@ public class SecureMe implements Security {
 
             outL = cipher.processBytes(inblock, 0, inblock.length, outblock, 0);
 
-            /*
-             * Before we write anything out, we need to make sure that we've got something to write out.
-             */
+            /* Before we write anything out, we need to make sure that we've got something to write out. */
             if (outL > 0) {
                 out.write(outblock, 0, outL);
             }
         }
 
-        /*
-         * Now, process the bytes that are still buffered within the cipher.
-         */
+        /* Now, process the bytes that are still buffered within the cipher. */
         outL = cipher.doFinal(outblock, 0);
 
         if (outL > 0) {
@@ -98,13 +90,8 @@ public class SecureMe implements Security {
         // initialise the cipher with the key bytes, for encryption
         cipher.init(true, new KeyParameter(this.key.key));
 
-        /*
-         * Create some temporary byte arrays for use in encryption, make them a reasonable size so that we don't spend forever reading small chunks
-         * from a file.
-         *
-         * There is no particular reason for using getBlockSize() to determine the size of the input chunk. It just was a convenient number for the
-         * example.
-         */
+        /* Create some temporary byte arrays for use in encryption, make them a reasonable size so that we don't spend forever reading small chunks from a file. There is no
+         * particular reason for using getBlockSize() to determine the size of the input chunk. It just was a convenient number for the example. */
 
         // int inBlockSize = cipher.getBlockSize() * 5;
         int inBlockSize = 47;
@@ -113,9 +100,7 @@ public class SecureMe implements Security {
         byte[] inblock = new byte[inBlockSize];
         byte[] outblock = new byte[outBlockSize];
 
-        /*
-         * now, read the file, and output the chunks
-         */
+        /* now, read the file, and output the chunks */
         int inL;
         int outL;
         byte[] rv = null;
@@ -123,9 +108,7 @@ public class SecureMe implements Security {
         while ((inL = in.read(inblock, 0, inBlockSize)) > 0) {
             outL = cipher.processBytes(inblock, 0, inL, outblock, 0);
 
-            /*
-             * Before we write anything out, we need to make sure that we've got something to write out.
-             */
+            /* Before we write anything out, we need to make sure that we've got something to write out. */
             if (outL > 0) {
                 rv = Hex.encode(outblock, 0, outL);
                 out.write(rv, 0, rv.length);
@@ -133,9 +116,7 @@ public class SecureMe implements Security {
             }
         }
 
-        /*
-         * Now, process the bytes that are still buffered within the cipher.
-         */
+        /* Now, process the bytes that are still buffered within the cipher. */
         outL = cipher.doFinal(outblock, 0);
 
         if (outL > 0) {

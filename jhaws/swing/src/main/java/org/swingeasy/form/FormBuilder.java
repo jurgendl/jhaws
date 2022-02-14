@@ -66,8 +66,7 @@ public class FormBuilder {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public <T> FormBuilder addComponent(String label, JComponent component, int colspan, int rowspan, HAlign halign, VAlign valign,
-            List<Validator<T>> validators) {
+    public <T> FormBuilder addComponent(String label, JComponent component, int colspan, int rowspan, HAlign halign, VAlign valign, List<Validator<T>> validators) {
         this.debug(label);
         ELabel labelComponent = new ELabel(label);
         labelComponent.setLabelFor(component);
@@ -110,8 +109,7 @@ public class FormBuilder {
 
     protected FormBuilder addToContainer(Component component, String constraint) {
         if (!initialized) {
-            container.setLayout(new MigLayout(this.debug(getMigLayoutContraints()), this.debug(getMigLayoutColumnContraints()),
-                    this.debug(getMigLayoutRowContraints())));
+            container.setLayout(new MigLayout(this.debug(getMigLayoutContraints()), this.debug(getMigLayoutColumnContraints()), this.debug(getMigLayoutRowContraints())));
             initialized = true;
         }
         container.add(component, constraint);
@@ -202,16 +200,12 @@ public class FormBuilder {
      */
     protected String getMigLayoutContraints() {
         StringBuilder lc = new StringBuilder("insets ")// insets...
-                .append(FormBuilder.UNRELATED)
-                .append(" ")// ...top: unrelated
-                .append(FormBuilder.UNRELATED)
-                .append(" ") // ...left: unrelated
-                .append(0)
-                .append(" ")// ...bottom: geen
+                .append(FormBuilder.UNRELATED).append(" ")// ...top: unrelated
+                .append(FormBuilder.UNRELATED).append(" ") // ...left: unrelated
+                .append(0).append(" ")// ...bottom: geen
                 .append(FormBuilder.UNRELATED)// ...right: unrelated
                 .append(", fillx") // componenten nemen altijd volledige ruimte in horizontaal
-                .append(", wrap ")
-                .append(2 * cols); // wrap achter # (maw 2x aantal cols)
+                .append(", wrap ").append(2 * cols); // wrap achter # (maw 2x aantal cols)
         if (debug) {
             lc.append(", debug");
         }

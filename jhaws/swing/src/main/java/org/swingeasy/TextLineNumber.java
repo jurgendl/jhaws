@@ -32,10 +32,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.Utilities;
 
 /**
- * This class will display line numbers for a related text component. The text component must use the same line height for each line. TextLineNumber
- * supports wrapped lines and will highlight the line number of the current line in the text component.
- *
- * This class was designed to be used as a component added to the row header of a JScrollPane.
+ * This class will display line numbers for a related text component. The text component must use the same line height for each line. TextLineNumber supports wrapped lines and will
+ * highlight the line number of the current line in the text component. This class was designed to be used as a component added to the row header of a JScrollPane.
  *
  * @see http://tips4java.wordpress.com/2009/05/23/text-component-line-number/
  */
@@ -136,9 +134,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
         documentChanged();
     }
 
-    /*
-     * A document change may affect the number of displayed lines of text. Therefore the lines numbers will also change.
-     */
+    /* A document change may affect the number of displayed lines of text. Therefore the lines numbers will also change. */
     private void documentChanged() {
         // View of the component has not been updated at the time
         // the DocumentEvent is fired
@@ -194,16 +190,12 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
         return minimumDisplayDigits;
     }
 
-    /*
-     * Determine the X offset to properly align the line number when drawn
-     */
+    /* Determine the X offset to properly align the line number when drawn */
     private int getOffsetX(int availableWidth, int stringWidth) {
         return (int) ((availableWidth - stringWidth) * digitAlignment);
     }
 
-    /*
-     * Determine the Y offset for the current row
-     */
+    /* Determine the Y offset for the current row */
     private int getOffsetY(int rowStartOffset, FontMetrics fontMetrics) throws BadLocationException {
         // Get the bounding rectangle of the row
 
@@ -250,9 +242,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
         return y - descent;
     }
 
-    /*
-     * Get the line number to be drawn. The empty string will be returned when a line of text has wrapped.
-     */
+    /* Get the line number to be drawn. The empty string will be returned when a line of text has wrapped. */
     protected String getTextLineNumber(int rowStartOffset) {
         Element root = component.getDocument().getDefaultRootElement();
         int index = root.getElementIndex(rowStartOffset);
@@ -278,9 +268,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
         documentChanged();
     }
 
-    /*
-     * We need to know if the caret is currently positioned on the line we are about to paint so the line number can be highlighted.
-     */
+    /* We need to know if the caret is currently positioned on the line we are about to paint so the line number can be highlighted. */
     private boolean isCurrentLine(int rowStartOffset) {
         int caretPosition = component.getCaretPosition();
         Element root = component.getDocument().getDefaultRootElement();
@@ -433,8 +421,7 @@ public class TextLineNumber extends JPanel implements CaretListener, DocumentLis
     }
 
     /**
-     * Set the update font property. Indicates whether this Font should be updated automatically when the Font of the related text component is
-     * changed.
+     * Set the update font property. Indicates whether this Font should be updated automatically when the Font of the related text component is changed.
      *
      * @param updateFont when true update the Font and repaint the line numbers, otherwise just repaint the line numbers.
      */

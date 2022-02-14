@@ -27,15 +27,13 @@ public class ListDemo2 {
     public static void main(String[] args) {
         UIUtils.systemLookAndFeel();
         SystemSettings.setCurrentLocale(Locale.ENGLISH);
-        EListConfig cfg = new EListConfig().setBackgroundRenderer(
-                new EComponentGradientRenderer(EComponentGradientRenderer.GradientOrientation.VERTICAL, Color.white, new Color(212, 212, 212)));
+        EListConfig cfg = new EListConfig().setBackgroundRenderer(new EComponentGradientRenderer(EComponentGradientRenderer.GradientOrientation.VERTICAL, Color.white, new Color(212, 212, 212)));
         cfg.setSortable(false);
         @SuppressWarnings("rawtypes")
         EList cc = new EList(cfg);
         {
             JFrame f = new JFrame();
-            JScrollPane scroller = new JScrollPane(cc, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            JScrollPane scroller = new JScrollPane(cc, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             cc.addRowHeader(scroller);
             f.getContentPane().add(scroller, BorderLayout.CENTER);
             f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -61,8 +59,7 @@ public class ListDemo2 {
             }
             {
                 JButton btn = new JButton("non localized - dialog");
-                btn.addActionListener(e -> CustomizableOptionPane.showCustomDialog(null, new JLabel("non localized - dialogcomponent"),
-                        "non localized - title", MessageType.QUESTION, OptionType.YES_NO_CANCEL, null, null));
+                btn.addActionListener(e -> CustomizableOptionPane.showCustomDialog(null, new JLabel("non localized - dialogcomponent"), "non localized - title", MessageType.QUESTION, OptionType.YES_NO_CANCEL, null, null));
                 f.getContentPane().add(btn, BorderLayout.SOUTH);
             }
             f.setVisible(true);

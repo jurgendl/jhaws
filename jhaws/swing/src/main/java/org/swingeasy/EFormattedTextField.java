@@ -45,7 +45,6 @@ public class EFormattedTextField<T> extends JFormattedTextField implements EComp
     }
 
     /**
-     *
      * @see javax.swing.JComponent#getToolTipText()
      */
     @Override
@@ -114,7 +113,6 @@ public class EFormattedTextField<T> extends JFormattedTextField implements EComp
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

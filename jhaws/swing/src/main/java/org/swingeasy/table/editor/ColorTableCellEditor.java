@@ -74,7 +74,6 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
     }
 
     /**
-     *
      * @see javax.swing.CellEditor#getCellEditorValue()
      */
     @Override
@@ -104,7 +103,6 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
     }
 
     /**
-     *
      * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
      */
     @Override
@@ -114,7 +112,6 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setEnabled(boolean)
      */
     @Override
@@ -123,7 +120,6 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
      */
     @Override

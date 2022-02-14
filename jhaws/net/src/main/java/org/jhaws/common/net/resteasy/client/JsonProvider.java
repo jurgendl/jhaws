@@ -11,5 +11,5 @@ import org.jhaws.common.web.resteasy.CustomResteasyJackson2Provider;
 @Produces({ "application/json", "application/*+json", "text/json" })
 // @javax.annotation.Priority(0)
 public class JsonProvider extends CustomResteasyJackson2Provider {
-	//
+    //
 }

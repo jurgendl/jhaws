@@ -11,6 +11,5 @@ import org.jhaws.common.web.wicket.CssResourceReference;
 // https://fontawesome.com/how-to-use/svg-with-js
 // 5.13.0
 public class FontAwesome {
-	public static CssResourceReference CSS5 = new CssResourceReference(FontAwesome.class,
-			"fontawesome-free-5.13.0-web/css/all.css");
+    public static CssResourceReference CSS5 = new CssResourceReference(FontAwesome.class, "fontawesome-free-5.13.0-web/css/all.css");
 }

@@ -1,7 +1,6 @@
 package org.jhaws.common.web.wicket.forms.common;
 
-public abstract class AbstractNumberFieldSettings<N extends Number & Comparable<N>, T extends AbstractNumberFieldSettings<N, T>>
-        extends AbstractFormElementSettings<T> {
+public abstract class AbstractNumberFieldSettings<N extends Number & Comparable<N>, T extends AbstractNumberFieldSettings<N, T>> extends AbstractFormElementSettings<T> {
     private static final long serialVersionUID = 5784680461033564819L;
 
     protected N minimum;

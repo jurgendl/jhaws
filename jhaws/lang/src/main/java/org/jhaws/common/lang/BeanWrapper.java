@@ -447,8 +447,7 @@ public class BeanWrapper {
     }
 
     /**
-     * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan
-     * {@link #getFields()}
+     * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan {@link #getFields()}
      */
     public final Map<String, PropertyDescriptor> getFields(boolean removeStatic, boolean removeFinal, Class<?> exclusiveClass) {
         Map<String, PropertyDescriptor> map = new HashMap<>();
@@ -477,8 +476,7 @@ public class BeanWrapper {
     }
 
     /**
-     * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan
-     * {@link #getFields()}
+     * configureerbaar wat juist nodig is, subset wordt niet gecached (de volledige set wel) waardoor deze functie net iets trager is dan {@link #getFields()}
      */
     public final Map<String, Class<?>> getTypes(boolean removeStatic, boolean removeFinal, Class<?> exclusiveClass) {
         Map<String, Class<?>> types = new HashMap<>();

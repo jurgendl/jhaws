@@ -28,8 +28,7 @@ public interface SilentInvokerFactory {
                 final MethodType samMethodType = SilentInvoker.SIGNATURE;
                 final MethodHandle implMethod = lookup.findVirtual(Callable.class, "call", MethodType.methodType(Object.class));
                 final MethodType instantiatedMethodType = SilentInvoker.SIGNATURE;
-                final CallSite site = LambdaMetafactory.metafactory(caller, invokedName, invokedType, samMethodType, implMethod,
-                        instantiatedMethodType);
+                final CallSite site = LambdaMetafactory.metafactory(caller, invokedName, invokedType, samMethodType, implMethod, instantiatedMethodType);
                 return (SilentInvoker) site.getTarget().invokeExact();
             } catch (Throwable ex) {
                 throw new ExceptionInInitializerError(ex);

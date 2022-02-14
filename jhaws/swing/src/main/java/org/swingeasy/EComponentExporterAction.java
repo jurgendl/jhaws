@@ -22,7 +22,6 @@ public class EComponentExporterAction<T extends JComponent & EComponentI & Reada
     }
 
     /**
-     *
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
     @Override
@@ -31,7 +30,6 @@ public class EComponentExporterAction<T extends JComponent & EComponentI & Reada
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentPopupMenu.EComponentPopupMenuAction#checkEnabled(org.swingeasy.EComponentPopupMenu.CheckEnabled)
      */
     @Override

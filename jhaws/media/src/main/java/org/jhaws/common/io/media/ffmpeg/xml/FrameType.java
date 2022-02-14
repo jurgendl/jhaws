@@ -17,11 +17,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for frameType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="frameType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -62,8 +59,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "frameType", propOrder = { "tag", "sideDataList" })
@@ -163,23 +158,15 @@ public class FrameType {
 
     /**
      * Gets the value of the tag property.
-     *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
-     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tag property.
-     *
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the tag property.
      * <p>
-     * For example, to add a new item, do as follows:
-     *
-     * <pre>
+     * For example, to add a new item, do as follows: <pre>
      * getTag().add(newItem);
      * </pre>
-     *
-     *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link TagType }
-     *
-     *
      */
     public List<TagType> getTag() {
         if (tag == null) {
@@ -192,7 +179,6 @@ public class FrameType {
      * Gets the value of the sideDataList property.
      *
      * @return possible object is {@link FrameSideDataListType }
-     *
      */
     public FrameSideDataListType getSideDataList() {
         return sideDataList;
@@ -202,7 +188,6 @@ public class FrameType {
      * Sets the value of the sideDataList property.
      *
      * @param value allowed object is {@link FrameSideDataListType }
-     *
      */
     public void setSideDataList(FrameSideDataListType value) {
         this.sideDataList = value;
@@ -212,7 +197,6 @@ public class FrameType {
      * Gets the value of the mediaType property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getMediaType() {
         return mediaType;
@@ -222,7 +206,6 @@ public class FrameType {
      * Sets the value of the mediaType property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setMediaType(String value) {
         this.mediaType = value;
@@ -232,7 +215,6 @@ public class FrameType {
      * Gets the value of the streamIndex property.
      *
      * @return possible object is {@link Integer }
-     *
      */
     public Integer getStreamIndex() {
         return streamIndex;
@@ -242,7 +224,6 @@ public class FrameType {
      * Sets the value of the streamIndex property.
      *
      * @param value allowed object is {@link Integer }
-     *
      */
     public void setStreamIndex(Integer value) {
         this.streamIndex = value;
@@ -250,7 +231,6 @@ public class FrameType {
 
     /**
      * Gets the value of the keyFrame property.
-     *
      */
     public int getKeyFrame() {
         return keyFrame;
@@ -258,7 +238,6 @@ public class FrameType {
 
     /**
      * Sets the value of the keyFrame property.
-     *
      */
     public void setKeyFrame(int value) {
         this.keyFrame = value;
@@ -268,7 +247,6 @@ public class FrameType {
      * Gets the value of the pts property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getPts() {
         return pts;
@@ -278,7 +256,6 @@ public class FrameType {
      * Sets the value of the pts property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setPts(Long value) {
         this.pts = value;
@@ -288,7 +265,6 @@ public class FrameType {
      * Gets the value of the ptsTime property.
      *
      * @return possible object is {@link Float }
-     *
      */
     public Float getPtsTime() {
         return ptsTime;
@@ -298,7 +274,6 @@ public class FrameType {
      * Sets the value of the ptsTime property.
      *
      * @param value allowed object is {@link Float }
-     *
      */
     public void setPtsTime(Float value) {
         this.ptsTime = value;
@@ -308,7 +283,6 @@ public class FrameType {
      * Gets the value of the pktPts property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getPktPts() {
         return pktPts;
@@ -318,7 +292,6 @@ public class FrameType {
      * Sets the value of the pktPts property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setPktPts(Long value) {
         this.pktPts = value;
@@ -328,7 +301,6 @@ public class FrameType {
      * Gets the value of the pktPtsTime property.
      *
      * @return possible object is {@link Float }
-     *
      */
     public Float getPktPtsTime() {
         return pktPtsTime;
@@ -338,7 +310,6 @@ public class FrameType {
      * Sets the value of the pktPtsTime property.
      *
      * @param value allowed object is {@link Float }
-     *
      */
     public void setPktPtsTime(Float value) {
         this.pktPtsTime = value;
@@ -348,7 +319,6 @@ public class FrameType {
      * Gets the value of the pktDts property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getPktDts() {
         return pktDts;
@@ -358,7 +328,6 @@ public class FrameType {
      * Sets the value of the pktDts property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setPktDts(Long value) {
         this.pktDts = value;
@@ -368,7 +337,6 @@ public class FrameType {
      * Gets the value of the pktDtsTime property.
      *
      * @return possible object is {@link Float }
-     *
      */
     public Float getPktDtsTime() {
         return pktDtsTime;
@@ -378,7 +346,6 @@ public class FrameType {
      * Sets the value of the pktDtsTime property.
      *
      * @param value allowed object is {@link Float }
-     *
      */
     public void setPktDtsTime(Float value) {
         this.pktDtsTime = value;
@@ -388,7 +355,6 @@ public class FrameType {
      * Gets the value of the bestEffortTimestamp property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getBestEffortTimestamp() {
         return bestEffortTimestamp;
@@ -398,7 +364,6 @@ public class FrameType {
      * Sets the value of the bestEffortTimestamp property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setBestEffortTimestamp(Long value) {
         this.bestEffortTimestamp = value;
@@ -408,7 +373,6 @@ public class FrameType {
      * Gets the value of the bestEffortTimestampTime property.
      *
      * @return possible object is {@link Float }
-     *
      */
     public Float getBestEffortTimestampTime() {
         return bestEffortTimestampTime;
@@ -418,7 +382,6 @@ public class FrameType {
      * Sets the value of the bestEffortTimestampTime property.
      *
      * @param value allowed object is {@link Float }
-     *
      */
     public void setBestEffortTimestampTime(Float value) {
         this.bestEffortTimestampTime = value;
@@ -428,7 +391,6 @@ public class FrameType {
      * Gets the value of the pktDuration property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getPktDuration() {
         return pktDuration;
@@ -438,7 +400,6 @@ public class FrameType {
      * Sets the value of the pktDuration property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setPktDuration(Long value) {
         this.pktDuration = value;
@@ -448,7 +409,6 @@ public class FrameType {
      * Gets the value of the pktDurationTime property.
      *
      * @return possible object is {@link Float }
-     *
      */
     public Float getPktDurationTime() {
         return pktDurationTime;
@@ -458,7 +418,6 @@ public class FrameType {
      * Sets the value of the pktDurationTime property.
      *
      * @param value allowed object is {@link Float }
-     *
      */
     public void setPktDurationTime(Float value) {
         this.pktDurationTime = value;
@@ -468,7 +427,6 @@ public class FrameType {
      * Gets the value of the pktPos property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getPktPos() {
         return pktPos;
@@ -478,7 +436,6 @@ public class FrameType {
      * Sets the value of the pktPos property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setPktPos(Long value) {
         this.pktPos = value;
@@ -488,7 +445,6 @@ public class FrameType {
      * Gets the value of the pktSize property.
      *
      * @return possible object is {@link Integer }
-     *
      */
     public Integer getPktSize() {
         return pktSize;
@@ -498,7 +454,6 @@ public class FrameType {
      * Sets the value of the pktSize property.
      *
      * @param value allowed object is {@link Integer }
-     *
      */
     public void setPktSize(Integer value) {
         this.pktSize = value;
@@ -508,7 +463,6 @@ public class FrameType {
      * Gets the value of the sampleFmt property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getSampleFmt() {
         return sampleFmt;
@@ -518,7 +472,6 @@ public class FrameType {
      * Sets the value of the sampleFmt property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setSampleFmt(String value) {
         this.sampleFmt = value;
@@ -528,7 +481,6 @@ public class FrameType {
      * Gets the value of the nbSamples property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getNbSamples() {
         return nbSamples;
@@ -538,7 +490,6 @@ public class FrameType {
      * Sets the value of the nbSamples property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setNbSamples(Long value) {
         this.nbSamples = value;
@@ -548,7 +499,6 @@ public class FrameType {
      * Gets the value of the channels property.
      *
      * @return possible object is {@link Integer }
-     *
      */
     public Integer getChannels() {
         return channels;
@@ -558,7 +508,6 @@ public class FrameType {
      * Sets the value of the channels property.
      *
      * @param value allowed object is {@link Integer }
-     *
      */
     public void setChannels(Integer value) {
         this.channels = value;
@@ -568,7 +517,6 @@ public class FrameType {
      * Gets the value of the channelLayout property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getChannelLayout() {
         return channelLayout;
@@ -578,7 +526,6 @@ public class FrameType {
      * Sets the value of the channelLayout property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setChannelLayout(String value) {
         this.channelLayout = value;
@@ -588,7 +535,6 @@ public class FrameType {
      * Gets the value of the width property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getWidth() {
         return width;
@@ -598,7 +544,6 @@ public class FrameType {
      * Sets the value of the width property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setWidth(Long value) {
         this.width = value;
@@ -608,7 +553,6 @@ public class FrameType {
      * Gets the value of the height property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getHeight() {
         return height;
@@ -618,7 +562,6 @@ public class FrameType {
      * Sets the value of the height property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setHeight(Long value) {
         this.height = value;
@@ -628,7 +571,6 @@ public class FrameType {
      * Gets the value of the pixFmt property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getPixFmt() {
         return pixFmt;
@@ -638,7 +580,6 @@ public class FrameType {
      * Sets the value of the pixFmt property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setPixFmt(String value) {
         this.pixFmt = value;
@@ -648,7 +589,6 @@ public class FrameType {
      * Gets the value of the sampleAspectRatio property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getSampleAspectRatio() {
         return sampleAspectRatio;
@@ -658,7 +598,6 @@ public class FrameType {
      * Sets the value of the sampleAspectRatio property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setSampleAspectRatio(String value) {
         this.sampleAspectRatio = value;
@@ -668,7 +607,6 @@ public class FrameType {
      * Gets the value of the pictType property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getPictType() {
         return pictType;
@@ -678,7 +616,6 @@ public class FrameType {
      * Sets the value of the pictType property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setPictType(String value) {
         this.pictType = value;
@@ -688,7 +625,6 @@ public class FrameType {
      * Gets the value of the codedPictureNumber property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getCodedPictureNumber() {
         return codedPictureNumber;
@@ -698,7 +634,6 @@ public class FrameType {
      * Sets the value of the codedPictureNumber property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setCodedPictureNumber(Long value) {
         this.codedPictureNumber = value;
@@ -708,7 +643,6 @@ public class FrameType {
      * Gets the value of the displayPictureNumber property.
      *
      * @return possible object is {@link Long }
-     *
      */
     public Long getDisplayPictureNumber() {
         return displayPictureNumber;
@@ -718,7 +652,6 @@ public class FrameType {
      * Sets the value of the displayPictureNumber property.
      *
      * @param value allowed object is {@link Long }
-     *
      */
     public void setDisplayPictureNumber(Long value) {
         this.displayPictureNumber = value;
@@ -728,7 +661,6 @@ public class FrameType {
      * Gets the value of the interlacedFrame property.
      *
      * @return possible object is {@link Integer }
-     *
      */
     public Integer getInterlacedFrame() {
         return interlacedFrame;
@@ -738,7 +670,6 @@ public class FrameType {
      * Sets the value of the interlacedFrame property.
      *
      * @param value allowed object is {@link Integer }
-     *
      */
     public void setInterlacedFrame(Integer value) {
         this.interlacedFrame = value;
@@ -748,7 +679,6 @@ public class FrameType {
      * Gets the value of the topFieldFirst property.
      *
      * @return possible object is {@link Integer }
-     *
      */
     public Integer getTopFieldFirst() {
         return topFieldFirst;
@@ -758,7 +688,6 @@ public class FrameType {
      * Sets the value of the topFieldFirst property.
      *
      * @param value allowed object is {@link Integer }
-     *
      */
     public void setTopFieldFirst(Integer value) {
         this.topFieldFirst = value;
@@ -768,7 +697,6 @@ public class FrameType {
      * Gets the value of the repeatPict property.
      *
      * @return possible object is {@link Integer }
-     *
      */
     public Integer getRepeatPict() {
         return repeatPict;
@@ -778,7 +706,6 @@ public class FrameType {
      * Sets the value of the repeatPict property.
      *
      * @param value allowed object is {@link Integer }
-     *
      */
     public void setRepeatPict(Integer value) {
         this.repeatPict = value;
@@ -786,7 +713,6 @@ public class FrameType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

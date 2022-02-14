@@ -5,8 +5,8 @@ import org.jhaws.common.web.wicket.WicketApplication;
 
 @SuppressWarnings("serial")
 public class CheckJavaScriptEnabled extends Panel {
-	public CheckJavaScriptEnabled() {
-		super("check.javascript.enabled");
-		setVisible(WicketApplication.get().getSettings().isCheckJavaScriptEnabled());
-	}
+    public CheckJavaScriptEnabled() {
+        super("check.javascript.enabled");
+        setVisible(WicketApplication.get().getSettings().isCheckJavaScriptEnabled());
+    }
 }

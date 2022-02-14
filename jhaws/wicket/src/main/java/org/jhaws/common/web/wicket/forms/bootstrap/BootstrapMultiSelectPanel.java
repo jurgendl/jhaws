@@ -23,184 +23,178 @@ import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.renderer.DefaultOptionRenderer;
 
 @SuppressWarnings("serial")
-public class BootstrapMultiSelectPanel<T extends Serializable>
-		extends DefaultFormRowPanel<List<T>, Select<List<T>>, BootstrapMultiSelectSettings> {
-	public static final String OPTIONS_CONTAINER_ID = "optionsContainer";
+public class BootstrapMultiSelectPanel<T extends Serializable> extends DefaultFormRowPanel<List<T>, Select<List<T>>, BootstrapMultiSelectSettings> {
+    public static final String OPTIONS_CONTAINER_ID = "optionsContainer";
 
-	public static final String OPTGROUP_ID = "optgroup";
+    public static final String OPTGROUP_ID = "optgroup";
 
-	public static final String OPTION_ID = "option";
+    public static final String OPTION_ID = "option";
 
-	protected IModel<? extends List<? extends T>>[] choices;
+    protected IModel<? extends List<? extends T>>[] choices;
 
-	protected IModel<String>[] groupLabels;
+    protected IModel<String>[] groupLabels;
 
-	protected IOptionRenderer<T> renderer;
+    protected IOptionRenderer<T> renderer;
 
-	protected IOptionRenderer<T> contentRenderer;
+    protected IOptionRenderer<T> contentRenderer;
 
-	@SuppressWarnings("unchecked")
-	public BootstrapMultiSelectPanel(IModel<?> model, List<T> propertyPath, FormSettings formSettings,
-			BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer,
-			IOptionRenderer<T> contentRenderer, IModel<? extends List<? extends T>> choices) {
-		super(model, propertyPath, formSettings, componentSettings);
-		this.choices = new IModel[] { choices };
-		this.renderer = fallback(renderer);
-		this.contentRenderer = contentRenderer;
-	}
+    @SuppressWarnings("unchecked")
+    public BootstrapMultiSelectPanel(IModel<?> model, List<T> propertyPath, FormSettings formSettings, BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer, IOptionRenderer<T> contentRenderer,
+            IModel<? extends List<? extends T>> choices) {
+        super(model, propertyPath, formSettings, componentSettings);
+        this.choices = new IModel[] { choices };
+        this.renderer = fallback(renderer);
+        this.contentRenderer = contentRenderer;
+    }
 
-	public BootstrapMultiSelectPanel(IModel<?> model, List<T> propertyPath, FormSettings formSettings,
-			BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer,
-			IOptionRenderer<T> contentRenderer, IModel<? extends List<? extends T>>[] choices,
-			IModel<String>[] groupLabels) {
-		super(model, propertyPath, formSettings, componentSettings);
-		this.choices = choices;
-		this.renderer = fallback(renderer);
-		this.groupLabels = groupLabels;
-		this.contentRenderer = contentRenderer;
-	}
+    public BootstrapMultiSelectPanel(IModel<?> model, List<T> propertyPath, FormSettings formSettings, BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer, IOptionRenderer<T> contentRenderer,
+            IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+        super(model, propertyPath, formSettings, componentSettings);
+        this.choices = choices;
+        this.renderer = fallback(renderer);
+        this.groupLabels = groupLabels;
+        this.contentRenderer = contentRenderer;
+    }
 
-	protected IOptionRenderer<T> fallback(IOptionRenderer<T> r) {
-		if (r == null) {
-			r = new DefaultOptionRenderer<>();
-		}
-		return r;
-	}
+    protected IOptionRenderer<T> fallback(IOptionRenderer<T> r) {
+        if (r == null) {
+            r = new DefaultOptionRenderer<>();
+        }
+        return r;
+    }
 
-	@Override
-	protected void onFormComponentTag(ComponentTag tag) {
-		super.onFormComponentTag(tag);
+    @Override
+    protected void onFormComponentTag(ComponentTag tag) {
+        super.onFormComponentTag(tag);
 
-		WebHelper.tag(tag, "data-actions-box", "true");
-		if (getComponentSettings().getMax() != null) {
-			WebHelper.tag(tag, "data-max-options", getComponentSettings().getMax());
-		}
+        WebHelper.tag(tag, "data-actions-box", "true");
+        if (getComponentSettings().getMax() != null) {
+            WebHelper.tag(tag, "data-max-options", getComponentSettings().getMax());
+        }
 
-		if (getComponentSettings().getSize() != null) {
-			WebHelper.tag(tag, "data-size", getComponentSettings().getSize());
-		}
-	}
+        if (getComponentSettings().getSize() != null) {
+            WebHelper.tag(tag, "data-size", getComponentSettings().getSize());
+        }
+    }
 
-	@Override
-	protected void setupPlaceholder(ComponentTag tag) {
-		if (StringUtils.isNotBlank(getComponentSettings().getPlaceholder())) {
-			WebHelper.tag(tag, TITLE, getComponentSettings().getPlaceholder());
-		}
-	}
+    @Override
+    protected void setupPlaceholder(ComponentTag tag) {
+        if (StringUtils.isNotBlank(getComponentSettings().getPlaceholder())) {
+            WebHelper.tag(tag, TITLE, getComponentSettings().getPlaceholder());
+        }
+    }
 
-	@Override
-	protected void setupReadOnly(ComponentTag tag) {
-		if ((this.componentSettings != null) && this.componentSettings.isReadOnly()) {
-			WebHelper.tag(tag, DISABLED, DISABLED);
-		}
-	}
+    @Override
+    protected void setupReadOnly(ComponentTag tag) {
+        if ((this.componentSettings != null) && this.componentSettings.isReadOnly()) {
+            WebHelper.tag(tag, DISABLED, DISABLED);
+        }
+    }
 
-	@Override
-	protected Select<List<T>> createComponent(IModel<List<T>> model, Class<List<T>> valueType) {
-		Select<List<T>> choice = new Select<List<T>>(VALUE, model) {
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				onFormComponentTag(tag);
-				WebHelper.tag(tag, "multiple", "yes");
-			}
-		};
+    @Override
+    protected Select<List<T>> createComponent(IModel<List<T>> model, Class<List<T>> valueType) {
+        Select<List<T>> choice = new Select<List<T>>(VALUE, model) {
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                onFormComponentTag(tag);
+                WebHelper.tag(tag, "multiple", "yes");
+            }
+        };
 
-		RepeatingView optgroupRepeater = new RepeatingView(OPTGROUP_ID);
-		WebHelper.show(optgroupRepeater);
-		choice.add(optgroupRepeater);
+        RepeatingView optgroupRepeater = new RepeatingView(OPTGROUP_ID);
+        WebHelper.show(optgroupRepeater);
+        choice.add(optgroupRepeater);
 
-		if (isNullValid()) {
-			WebMarkupContainer optgroupWebcontainer = new WebMarkupContainer(optgroupRepeater.newChildId());
-			optgroupWebcontainer.setRenderBodyOnly(true);
-			optgroupRepeater.add(optgroupWebcontainer);
-			SelectOptions<T> options = createSelectOptions(OPTIONS_CONTAINER_ID,
-					new ListModel<>(Collections.singletonList((T) null)));
-			optgroupWebcontainer.add(options);
-		}
+        if (isNullValid()) {
+            WebMarkupContainer optgroupWebcontainer = new WebMarkupContainer(optgroupRepeater.newChildId());
+            optgroupWebcontainer.setRenderBodyOnly(true);
+            optgroupRepeater.add(optgroupWebcontainer);
+            SelectOptions<T> options = createSelectOptions(OPTIONS_CONTAINER_ID, new ListModel<>(Collections.singletonList((T) null)));
+            optgroupWebcontainer.add(options);
+        }
 
-		for (int i = 0; i < choices.length; i++) {
-			final int I = i;
-			WebMarkupContainer optgroupWebcontainer = new WebMarkupContainer(optgroupRepeater.newChildId()) {
-				@Override
-				protected void onComponentTag(ComponentTag tag) {
-					super.onComponentTag(tag);
-					if (groupLabels != null) {
-						tag.put(LABEL, groupLabels[I].getObject());
-					}
-				}
-			};
-			if (groupLabels != null) {
-				WebHelper.show(optgroupWebcontainer);
-			} else {
-				optgroupWebcontainer.setRenderBodyOnly(true);
-			}
-			optgroupRepeater.add(optgroupWebcontainer);
-			SelectOptions<T> options = createSelectOptions(OPTIONS_CONTAINER_ID, this.choices[i]
+        for (int i = 0; i < choices.length; i++) {
+            final int I = i;
+            WebMarkupContainer optgroupWebcontainer = new WebMarkupContainer(optgroupRepeater.newChildId()) {
+                @Override
+                protected void onComponentTag(ComponentTag tag) {
+                    super.onComponentTag(tag);
+                    if (groupLabels != null) {
+                        tag.put(LABEL, groupLabels[I].getObject());
+                    }
+                }
+            };
+            if (groupLabels != null) {
+                WebHelper.show(optgroupWebcontainer);
+            } else {
+                optgroupWebcontainer.setRenderBodyOnly(true);
+            }
+            optgroupRepeater.add(optgroupWebcontainer);
+            SelectOptions<T> options = createSelectOptions(OPTIONS_CONTAINER_ID, this.choices[i]
 
-			);
-			optgroupWebcontainer.add(options);
-		}
+            );
+            optgroupWebcontainer.add(options);
+        }
 
-		return choice;
-	}
+        return choice;
+    }
 
-	protected SelectOptions<T> createSelectOptions(String id, //
-			IModel<? extends List<? extends T>> choicesModel) {
-		SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
-			@Override
-			protected SelectOption<T> newOption(final String text, final IModel<T> optModel) {
-				final String textF = StringUtils.isBlank(text) ? "..." : text;
-				String data = null;
-				if (contentRenderer != null) {
-					data = contentRenderer.getDisplayValue(optModel.getObject());
-				}
-				SelectOption<T> selectOption = createSelectOption(text, optModel, textF, data);
-				return selectOption;
-			}
-		};
-		return options;
-	}
+    protected SelectOptions<T> createSelectOptions(String id, //
+            IModel<? extends List<? extends T>> choicesModel) {
+        SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
+            @Override
+            protected SelectOption<T> newOption(final String text, final IModel<T> optModel) {
+                final String textF = StringUtils.isBlank(text) ? "..." : text;
+                String data = null;
+                if (contentRenderer != null) {
+                    data = contentRenderer.getDisplayValue(optModel.getObject());
+                }
+                SelectOption<T> selectOption = createSelectOption(text, optModel, textF, data);
+                return selectOption;
+            }
+        };
+        return options;
+    }
 
-	protected SelectOption<T> createSelectOption(final String text, final IModel<T> optModel, final String textF,
-			final String data) {
-		SelectOption<T> selectOption = new SelectOption<T>(OPTION_ID, optModel) {
-			@Override
-			public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
-				replaceComponentTagBody(markupStream, openTag, textF);
-			}
+    protected SelectOption<T> createSelectOption(final String text, final IModel<T> optModel, final String textF, final String data) {
+        SelectOption<T> selectOption = new SelectOption<T>(OPTION_ID, optModel) {
+            @Override
+            public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
+                replaceComponentTagBody(markupStream, openTag, textF);
+            }
 
-			@Override
-			protected void onComponentTag(ComponentTag tag) {
-				super.onComponentTag(tag);
-				tag.setType(TagType.OPEN);
-				if (StringUtils.isNotBlank(data)) {
-					tag.put("data-content", data);
-				}
-			}
+            @Override
+            protected void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.setType(TagType.OPEN);
+                if (StringUtils.isNotBlank(data)) {
+                    tag.put("data-content", data);
+                }
+            }
 
-			@Override
-			public String getValue() {
-				if (getComponentSettings().isInheritValue()) {
-					return String.valueOf(getModelObject());
-				}
-				return super.getValue();
-			}
-		};
-		return selectOption;
-	}
+            @Override
+            public String getValue() {
+                if (getComponentSettings().isInheritValue()) {
+                    return String.valueOf(getModelObject());
+                }
+                return super.getValue();
+            }
+        };
+        return selectOption;
+    }
 
-	protected boolean isNullValid() {
-		return false;
-	}
+    protected boolean isNullValid() {
+        return false;
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		// response.render(CssHeaderItem.forReference(BootstrapSelect.CSS));
-		// response.render(JavaScriptHeaderItem.forReference(BootstrapSelect.JS));
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        // response.render(CssHeaderItem.forReference(BootstrapSelect.CSS));
+        // response.render(JavaScriptHeaderItem.forReference(BootstrapSelect.JS));
+    }
 }

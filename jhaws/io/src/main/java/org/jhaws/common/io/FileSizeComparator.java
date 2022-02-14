@@ -13,7 +13,6 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 @Deprecated
 public class FileSizeComparator implements Comparator<IOFile> {
     /**
-     *
      * sorting
      *
      * @author Jurgen
@@ -23,6 +22,7 @@ public class FileSizeComparator implements Comparator<IOFile> {
         LARGEST_FIRST,
         /** SMALLEST_FIRST */
         SMALLEST_FIRST;
+
         /**
          * returns 1 or -1
          *
@@ -62,7 +62,6 @@ public class FileSizeComparator implements Comparator<IOFile> {
     }
 
     /**
-     *
      * @see java.util.Comparator#compare(java.lang.Object,java.lang.Object)
      */
     @Override

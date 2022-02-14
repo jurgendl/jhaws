@@ -30,20 +30,18 @@ import org.jhaws.common.web.wicket.jquery.JQuery;
 // https://zurb.com/playground/twentytwenty
 // https://github.com/zurb/twentytwenty/
 public class Twentytwenty {
-	public static JavaScriptResourceReference JS_MOVE = new JavaScriptResourceReference(Twentytwenty.class,
-			"js/jquery.twentytwenty.js");
+    public static JavaScriptResourceReference JS_MOVE = new JavaScriptResourceReference(Twentytwenty.class, "js/jquery.twentytwenty.js");
 
-	public static CssResourceReference CSS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty.css");
+    public static CssResourceReference CSS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty.css");
 
-	public static CssResourceReference CSS_NO_COMPASS = new CssResourceReference(Twentytwenty.class,
-			"css/twentytwenty-no-compass.css");
+    public static CssResourceReference CSS_NO_COMPASS = new CssResourceReference(Twentytwenty.class, "css/twentytwenty-no-compass.css");
 
-	static {
-		try {
-			JS_MOVE.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-			JS_MOVE.addJavaScriptResourceReferenceDependency(JQueryEventMove.JS_EVENT_MOVE);
-		} catch (Exception ex) {
-			//
-		}
-	}
+    static {
+        try {
+            JS_MOVE.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+            JS_MOVE.addJavaScriptResourceReferenceDependency(JQueryEventMove.JS_EVENT_MOVE);
+        } catch (Exception ex) {
+            //
+        }
+    }
 }

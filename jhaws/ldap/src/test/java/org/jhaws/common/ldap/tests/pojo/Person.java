@@ -49,7 +49,6 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -70,7 +69,6 @@ public class Person implements Serializable, Comparable<Person> {
      * na
      *
      * @return
-     *
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
@@ -226,7 +224,6 @@ public class Person implements Serializable, Comparable<Person> {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -238,7 +235,6 @@ public class Person implements Serializable, Comparable<Person> {
                 .append("givenName", this.givenName) //$NON-NLS-1$
                 .append("cn", this.cn) //$NON-NLS-1$
                 .append("userCertificate", (this.userCertificate != null) && (this.userCertificate.length > 0)) //$NON-NLS-1$
-                .append("objectClass", this.objectClass)
-                .toString();
+                .append("objectClass", this.objectClass).toString();
     }
 }

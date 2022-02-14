@@ -7,33 +7,33 @@ import org.apache.wicket.markup.html.form.StatelessForm;
 import org.apache.wicket.markup.html.panel.Panel;
 
 public class LocalesPanel extends Panel {
-	private static final long serialVersionUID = 645790077354220643L;
+    private static final long serialVersionUID = 645790077354220643L;
 
-	protected StatelessForm<Locale> localeForm;
+    protected StatelessForm<Locale> localeForm;
 
-	protected DropDownChoice<Locale> changeLocale;
+    protected DropDownChoice<Locale> changeLocale;
 
-	public LocalesPanel(String id) {
-		super(id);
+    public LocalesPanel(String id) {
+        super(id);
 
-		this.changeLocale = new LocalesDropDown("localeOptions", null, null, null) {
-			private static final long serialVersionUID = -4402883308787625917L;
+        this.changeLocale = new LocalesDropDown("localeOptions", null, null, null) {
+            private static final long serialVersionUID = -4402883308787625917L;
 
-			@Override
-			protected void onModelChanged() {
-				getSession().setLocale(getModelObject());
-			}
-		};
-		this.changeLocale.setNullValid(false);
-		localeForm = new StatelessForm<Locale>("localeForm") {
-			private static final long serialVersionUID = -7717228617856599476L;
+            @Override
+            protected void onModelChanged() {
+                getSession().setLocale(getModelObject());
+            }
+        };
+        this.changeLocale.setNullValid(false);
+        localeForm = new StatelessForm<Locale>("localeForm") {
+            private static final long serialVersionUID = -7717228617856599476L;
 
-			@Override
-			protected void onSubmit() {
-				getSession().setLocale(changeLocale.getModelObject());
-			}
-		};
-		localeForm.setMarkupId(localeForm.getId());
-		add(localeForm.add(changeLocale));
-	}
+            @Override
+            protected void onSubmit() {
+                getSession().setLocale(changeLocale.getModelObject());
+            }
+        };
+        localeForm.setMarkupId(localeForm.getId());
+        add(localeForm.add(changeLocale));
+    }
 }

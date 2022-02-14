@@ -22,135 +22,127 @@ import org.jhaws.common.web.wicket.JavaScriptResourceReference;
 
 @SuppressWarnings("serial")
 public class LocalesDropDown extends DropDownChoice<Locale> {
-	public static JavaScriptResourceReference FLAGS_CSS = new JavaScriptResourceReference(LocalesPanel.class,
-			"flags/flags.css");
+    public static JavaScriptResourceReference FLAGS_CSS = new JavaScriptResourceReference(LocalesPanel.class, "flags/flags.css");
 
-	public static class LocaleComparator implements Comparator<Locale> {
-		@Override
-		public int compare(Locale o1, Locale o2) {
-			return new CompareToBuilder()//
-					.append(o1.getDisplayLanguage(o1).toLowerCase(), o2.getDisplayLanguage(o2).toLowerCase())//
-					.append(o1.getDisplayCountry(o1).toLowerCase(), o2.getDisplayCountry(o2).toLowerCase())//
-					.append(o1.getDisplayVariant(o1).toLowerCase(), o2.getDisplayVariant(o2).toLowerCase())//
-					.append(o1.getDisplayScript(o1).toLowerCase(), o2.getDisplayScript(o2).toLowerCase())//
-					.toComparison();//
-		}
-	}
+    public static class LocaleComparator implements Comparator<Locale> {
+        @Override
+        public int compare(Locale o1, Locale o2) {
+            return new CompareToBuilder()//
+                    .append(o1.getDisplayLanguage(o1).toLowerCase(), o2.getDisplayLanguage(o2).toLowerCase())//
+                    .append(o1.getDisplayCountry(o1).toLowerCase(), o2.getDisplayCountry(o2).toLowerCase())//
+                    .append(o1.getDisplayVariant(o1).toLowerCase(), o2.getDisplayVariant(o2).toLowerCase())//
+                    .append(o1.getDisplayScript(o1).toLowerCase(), o2.getDisplayScript(o2).toLowerCase())//
+                    .toComparison();//
+        }
+    }
 
-	public LocalesDropDown(String id, IModel<List<Locale>> optionsModel, IModel<Locale> valueModel,
-			IChoiceRenderer<Locale> renderer) {
-		super(id, forDefault(valueModel), forChoicesDefault(optionsModel), forDefault(renderer));
-	}
+    public LocalesDropDown(String id, IModel<List<Locale>> optionsModel, IModel<Locale> valueModel, IChoiceRenderer<Locale> renderer) {
+        super(id, forDefault(valueModel), forChoicesDefault(optionsModel), forDefault(renderer));
+    }
 
-	public static IChoiceRenderer<Locale> forDefault(IChoiceRenderer<Locale> renderer) {
-		if (renderer == null) {
-			renderer = new IChoiceRenderer<Locale>() {
-				@Override
-				public String getIdValue(Locale object, int index) {
-					return getId(object);
-				}
+    public static IChoiceRenderer<Locale> forDefault(IChoiceRenderer<Locale> renderer) {
+        if (renderer == null) {
+            renderer = new IChoiceRenderer<Locale>() {
+                @Override
+                public String getIdValue(Locale object, int index) {
+                    return getId(object);
+                }
 
-				@Override
-				public Object getDisplayValue(Locale locale) {
-					return getLabel(locale);
-				}
+                @Override
+                public Object getDisplayValue(Locale locale) {
+                    return getLabel(locale);
+                }
 
-				@Override
-				public Locale getObject(String id, IModel<? extends List<? extends Locale>> choices) {
-					return getLocale(choices.getObject(), id);
-				}
-			};
-		}
-		return renderer;
-	}
+                @Override
+                public Locale getObject(String id, IModel<? extends List<? extends Locale>> choices) {
+                    return getLocale(choices.getObject(), id);
+                }
+            };
+        }
+        return renderer;
+    }
 
-	public static IModel<List<Locale>> forChoicesDefault(IModel<List<Locale>> optionsModel) {
-		if (optionsModel == null) {
-			optionsModel = new ListModel<>(getAvailableLocales());
-		}
-		return optionsModel;
-	}
+    public static IModel<List<Locale>> forChoicesDefault(IModel<List<Locale>> optionsModel) {
+        if (optionsModel == null) {
+            optionsModel = new ListModel<>(getAvailableLocales());
+        }
+        return optionsModel;
+    }
 
-	public static IModel<Locale> forDefault(IModel<Locale> valueModel) {
-		if (valueModel == null) {
-			valueModel = new IModel<Locale>() {
-				@Override
-				public void detach() {
-					//
-				}
+    public static IModel<Locale> forDefault(IModel<Locale> valueModel) {
+        if (valueModel == null) {
+            valueModel = new IModel<Locale>() {
+                @Override
+                public void detach() {
+                    //
+                }
 
-				@Override
-				public Locale getObject() {
-					return Session.get().getLocale();
-				}
+                @Override
+                public Locale getObject() {
+                    return Session.get().getLocale();
+                }
 
-				@Override
-				public void setObject(Locale locale) {
-					Session.get().setLocale(locale);
-				}
-			};
-		}
-		return valueModel;
-	}
+                @Override
+                public void setObject(Locale locale) {
+                    Session.get().setLocale(locale);
+                }
+            };
+        }
+        return valueModel;
+    }
 
-	public static String getLabel(Locale object) {
-		return object.getDisplayLanguage(object)
-				+ (StringUtils.isBlank(object.getCountry()) ? "" : ", " + object.getDisplayCountry(object))
-				+ (StringUtils.isBlank(object.getVariant()) ? "" : ", " + object.getDisplayVariant(object))
-				+ (StringUtils.isBlank(object.getScript()) ? "" : ", " + object.getDisplayScript(object));
-	}
+    public static String getLabel(Locale object) {
+        return object.getDisplayLanguage(object) + (StringUtils.isBlank(object.getCountry()) ? "" : ", " + object.getDisplayCountry(object)) + (StringUtils.isBlank(object.getVariant()) ? "" : ", " + object.getDisplayVariant(object))
+                + (StringUtils.isBlank(object.getScript()) ? "" : ", " + object.getDisplayScript(object));
+    }
 
-	public static String getId(Locale object) {
-		return object.toString();
-	}
+    public static String getId(Locale object) {
+        return object.toString();
+    }
 
-	public static Locale getLocale(List<? extends Locale> object, String id) {
-		return object.stream().filter(it -> getId(it).equals(id)).findAny().orElse(null);
-	}
+    public static Locale getLocale(List<? extends Locale> object, String id) {
+        return object.stream().filter(it -> getId(it).equals(id)).findAny().orElse(null);
+    }
 
-	public static List<Locale> getAvailableLocales() {
-		List<Locale> locales = new ArrayList<>(Arrays.asList(Locale.getAvailableLocales()));
-		for (Locale locale : locales.toArray(new Locale[locales.size()])) {
-			if (StringUtils.isBlank(locale.getLanguage())) {
-				locales.remove(locale);
-			}
-		}
-		Collections.sort(locales, new LocaleComparator());
-		return locales;
-	}
+    public static List<Locale> getAvailableLocales() {
+        List<Locale> locales = new ArrayList<>(Arrays.asList(Locale.getAvailableLocales()));
+        for (Locale locale : locales.toArray(new Locale[locales.size()])) {
+            if (StringUtils.isBlank(locale.getLanguage())) {
+                locales.remove(locale);
+            }
+        }
+        Collections.sort(locales, new LocaleComparator());
+        return locales;
+    }
 
-	@Override
-	public void renderHead(IHeaderResponse response) {
-		super.renderHead(response);
-		if (!isEnabledInHierarchy()) {
-			return;
-		}
-		// response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_JS));
-		response.render(CssHeaderItem.forReference(FLAGS_CSS));
-		{
-			StringBuilder script = new StringBuilder("var options_").append(getMarkupId()).append(" = new Array(\n");
-			boolean add = false;
-			for (Locale locale : getChoices()) {
-				if (add) {
-					script.append(",");
-				} else {
-					add = true;
-				}
-				script.append("{ label: '").append(getLabel(locale)).append("' , value: '").append(getId(locale))
-						.append("' , country: '").append(locale.getCountry().toLowerCase()).append("' }");
-				script.append("\n");
-			}
-			script.append(");\n");
-			response.render(JavaScriptHeaderItem.forScript(script.toString(), "js_options_" + getMarkupId()));
-		}
-		{
-			StringBuilder script = new StringBuilder();
-			script.append("$('#").append(getMarkupId()).append(
-					"').text('').puidropdown({ width: 'auto', filter: true, filterMatchMode: 'contains', data: options_")
-					.append(getMarkupId())
-					.append(", content: function(option) { return '<img class=\"flag flag-' + option['country'] + '\"/> ' + option['label']; } ")
-					.append("}).puidropdown('selectValue', '" + getId(getModel().getObject()) + "');\n");
-			response.render(OnLoadHeaderItem.forScript(script.toString()));
-		}
-	}
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        if (!isEnabledInHierarchy()) {
+            return;
+        }
+        // response.render(JavaScriptHeaderItem.forReference(PrimeUI.PRIME_UI_JS));
+        response.render(CssHeaderItem.forReference(FLAGS_CSS));
+        {
+            StringBuilder script = new StringBuilder("var options_").append(getMarkupId()).append(" = new Array(\n");
+            boolean add = false;
+            for (Locale locale : getChoices()) {
+                if (add) {
+                    script.append(",");
+                } else {
+                    add = true;
+                }
+                script.append("{ label: '").append(getLabel(locale)).append("' , value: '").append(getId(locale)).append("' , country: '").append(locale.getCountry().toLowerCase()).append("' }");
+                script.append("\n");
+            }
+            script.append(");\n");
+            response.render(JavaScriptHeaderItem.forScript(script.toString(), "js_options_" + getMarkupId()));
+        }
+        {
+            StringBuilder script = new StringBuilder();
+            script.append("$('#").append(getMarkupId()).append("').text('').puidropdown({ width: 'auto', filter: true, filterMatchMode: 'contains', data: options_").append(getMarkupId())
+                    .append(", content: function(option) { return '<img class=\"flag flag-' + option['country'] + '\"/> ' + option['label']; } ").append("}).puidropdown('selectValue', '" + getId(getModel().getObject()) + "');\n");
+            response.render(OnLoadHeaderItem.forScript(script.toString()));
+        }
+    }
 }

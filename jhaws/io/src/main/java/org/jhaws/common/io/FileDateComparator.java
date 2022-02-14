@@ -15,7 +15,6 @@ import java.util.Comparator;
 @Deprecated
 public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
     /**
-     *
      * sorting
      *
      * @author Jurgen
@@ -25,6 +24,7 @@ public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
         NEWEST_FIRST,
         /** OLDEST_FIRST */
         OLDEST_FIRST;
+
         /**
          * returns 1 or -1
          *
@@ -70,7 +70,6 @@ public class FileDateComparator implements Comparator<IOGeneralFile<?>> {
     }
 
     /**
-     *
      * @see java.util.Comparator#compare(java.lang.Object,java.lang.Object)
      */
     @Override

@@ -9,7 +9,6 @@ public class EmailValidator extends RegexValidator {
     }
 
     /**
-     *
      * @see org.swingeasy.validation.Validator#getArguments(java.lang.Object)
      */
     @Override

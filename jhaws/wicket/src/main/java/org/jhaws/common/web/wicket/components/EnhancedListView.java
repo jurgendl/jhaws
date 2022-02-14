@@ -14,66 +14,65 @@ import org.apache.wicket.model.util.ListModel;
 
 @SuppressWarnings("serial")
 public class EnhancedListView<T> extends ListView<T> {
-	protected BooleanSupplier visiblePredicate;
+    protected BooleanSupplier visiblePredicate;
 
-	protected Consumer<ListItem<T>> itemizer;
+    protected Consumer<ListItem<T>> itemizer;
 
-	public EnhancedListView(String id, ListModel<T> model) {
-		super(id, model);
-	}
+    public EnhancedListView(String id, ListModel<T> model) {
+        super(id, model);
+    }
 
-	public EnhancedListView(String id, List<T> list) {
-		super(id, list);
-	}
+    public EnhancedListView(String id, List<T> list) {
+        super(id, list);
+    }
 
-	public EnhancedListView(String id) {
-		super(id);
-	}
+    public EnhancedListView(String id) {
+        super(id);
+    }
 
-	@Override
-	protected void populateItem(ListItem<T> item) {
-		itemizer.accept(item);
-	}
+    @Override
+    protected void populateItem(ListItem<T> item) {
+        itemizer.accept(item);
+    }
 
-	public Consumer<ListItem<T>> getItemizer() {
-		return this.itemizer;
-	}
+    public Consumer<ListItem<T>> getItemizer() {
+        return this.itemizer;
+    }
 
-	public <I extends Consumer<ListItem<T>> & Serializable> void setItemizer(I itemizer) {
-		this.itemizer = itemizer;
-	}
+    public <I extends Consumer<ListItem<T>> & Serializable> void setItemizer(I itemizer) {
+        this.itemizer = itemizer;
+    }
 
-	public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView<T> itemizer(I itemizer) {
-		setItemizer(itemizer);
-		return this;
-	}
+    public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView<T> itemizer(I itemizer) {
+        setItemizer(itemizer);
+        return this;
+    }
 
-	@Override
-	protected void onConfigure() {
-		super.onConfigure();
-		if (visiblePredicate != null) {
-			setVisible(visiblePredicate.getAsBoolean());
-		}
-	}
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+        if (visiblePredicate != null) {
+            setVisible(visiblePredicate.getAsBoolean());
+        }
+    }
 
-	public BooleanSupplier getVisiblePredicate() {
-		return this.visiblePredicate;
-	}
+    public BooleanSupplier getVisiblePredicate() {
+        return this.visiblePredicate;
+    }
 
-	public <P extends BooleanSupplier & Serializable> void setVisiblePredicate(P visiblePredicate) {
-		this.visiblePredicate = visiblePredicate;
-	}
+    public <P extends BooleanSupplier & Serializable> void setVisiblePredicate(P visiblePredicate) {
+        this.visiblePredicate = visiblePredicate;
+    }
 
-	public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model,
-			P visiblePredicate) {
-		setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
-	}
+    public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model, P visiblePredicate) {
+        setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
+    }
 
-	public void setVisiblePredicate(IModel<String> stringModel) {
-		setVisiblePredicate(stringModel, StringUtils::isNotBlank);
-	}
+    public void setVisiblePredicate(IModel<String> stringModel) {
+        setVisiblePredicate(stringModel, StringUtils::isNotBlank);
+    }
 
-	public void setVisiblePredicate(ListModel<?> listModel) {
-		setVisiblePredicate(listModel, list -> list != null && !list.isEmpty());
-	}
+    public void setVisiblePredicate(ListModel<?> listModel) {
+        setVisiblePredicate(listModel, list -> list != null && !list.isEmpty());
+    }
 }

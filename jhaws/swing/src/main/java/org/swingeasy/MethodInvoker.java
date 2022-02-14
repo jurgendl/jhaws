@@ -52,9 +52,7 @@ public final class MethodInvoker {
      * @param invoker
      * @param methodName
      * @param types
-     *
      * @return
-     *
      * @throws InvocationException
      */
     public static final Method getMethod(Object invoker, String methodName, Class<?>[] types) throws InvocationException {
@@ -109,8 +107,7 @@ public final class MethodInvoker {
         return MethodInvoker.invoke(invoker, methodName, new Class[] { type }, new Object[] { parameter }, Object.class);
     }
 
-    public static final <T> T invoke(Object invoker, String methodName, Class<?> type, Object parameter, Class<T> returns)
-            throws InvocationException {
+    public static final <T> T invoke(Object invoker, String methodName, Class<?> type, Object parameter, Class<T> returns) throws InvocationException {
         return MethodInvoker.invoke(invoker, methodName, new Class[] { type }, new Object[] { parameter }, returns);
     }
 
@@ -118,8 +115,7 @@ public final class MethodInvoker {
         return MethodInvoker.invoke(invoker, methodName, types, parameters, Object.class);
     }
 
-    public static final <T> T invoke(Object invoker, String methodName, Class<?>[] types, Object[] parameters, Class<T> returns)
-            throws InvocationException {
+    public static final <T> T invoke(Object invoker, String methodName, Class<?>[] types, Object[] parameters, Class<T> returns) throws InvocationException {
         Method method = MethodInvoker.getMethod(invoker, methodName, types);
         Object invoked = MethodInvoker.invoke0(method, invoker, parameters);
         return returns.cast(invoked);
@@ -221,7 +217,6 @@ public final class MethodInvoker {
      * @param methodName
      * @param types
      * @param parameters
-     *
      * @throws InvocationException
      */
     public MethodInvoker(Object invoker, String methodName, Class<?>... types) throws InvocationException {
@@ -231,7 +226,6 @@ public final class MethodInvoker {
     }
 
     /**
-     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -246,10 +240,7 @@ public final class MethodInvoker {
 
         MethodInvoker castOther = (MethodInvoker) other;
 
-        return new EqualsBuilder().append(invoker, castOther.invoker)
-                .append(methodName, castOther.methodName)
-                .append(types, castOther.types)
-                .isEquals();
+        return new EqualsBuilder().append(invoker, castOther.invoker).append(methodName, castOther.methodName).append(types, castOther.types).isEquals();
     }
 
     /**
@@ -265,7 +256,6 @@ public final class MethodInvoker {
      * Getter voor method
      *
      * @return Returns the method.
-     *
      * @throws InvocationException
      */
     public final Method getMethod() throws InvocationException {
@@ -314,7 +304,6 @@ public final class MethodInvoker {
     }
 
     /**
-     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -326,7 +315,6 @@ public final class MethodInvoker {
      * invoke method with parameters
      *
      * @return
-     *
      * @throws InvocationException
      */
     public final Object invoke(Object... p) throws InvocationException {
@@ -373,18 +361,11 @@ public final class MethodInvoker {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).appendSuper(super.toString())
-                .append("invoker", invoker)
-                .append("methodName", methodName)
-                .append("types", types)
-                .append("method", method)
-                .append("parameters", parameters)
-                .append("returns", returns)
-                .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).appendSuper(super.toString()).append("invoker", invoker).append("methodName", methodName).append("types", types).append("method", method).append("parameters", parameters)
+                .append("returns", returns).toString();
     }
 }

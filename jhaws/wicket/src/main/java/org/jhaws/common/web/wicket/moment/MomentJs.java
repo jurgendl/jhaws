@@ -18,16 +18,14 @@ public class MomentJs {
 
     public static JavaScriptResourceReference JS_LOCALE = new JavaScriptResourceReference(MomentJs.class, "moment-with-locales.js");
 
-    public static JavaScriptResourceReference JS_I18N = new JavaScriptResourceReference(MomentJs.class, "locales.js")
-            .addJavaScriptResourceReferenceDependency(JS);
+    public static JavaScriptResourceReference JS_I18N = new JavaScriptResourceReference(MomentJs.class, "locales.js").addJavaScriptResourceReferenceDependency(JS);
 
     public static String FACTORY = ";moment.locale(" + PROP_CURRENT_LANGUAGE + ");";
 
     // https://codebox.net/pages/moment-date-range-plugin
     // https://github.com/codebox/moment-precise-range/releases
     // 1.2.4
-    public static JavaScriptResourceReference JS_PLUGIN_PRECISE_RANGE = new JavaScriptResourceReference(MomentJs.class,
-            "plugins/preciserange/moment-precise-range.js").addJavaScriptResourceReferenceDependency(JS);
+    public static JavaScriptResourceReference JS_PLUGIN_PRECISE_RANGE = new JavaScriptResourceReference(MomentJs.class, "plugins/preciserange/moment-precise-range.js").addJavaScriptResourceReferenceDependency(JS);
 
     // public static JavaScriptResourceReference JS_PLUGIN_JAVA_DATE_FORMAT = new JavaScriptResourceReference(MomentJs.class,
     // "moment-jdateformatparser.js");

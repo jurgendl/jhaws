@@ -36,7 +36,6 @@ public class NumberListCellRenderer extends EListCellRenderer<Number> {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

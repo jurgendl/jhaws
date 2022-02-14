@@ -32,13 +32,9 @@ public class CustomFocusTraversalPolicy extends FocusTraversalPolicy {
 
     protected static final Logger logger = Logger.getLogger(CustomFocusTraversalPolicy.class.getName());
 
-    public static final Comparator<Component> XY = (o1, o2) -> new CompareToBuilder().append(o1.getX(), o2.getX())
-            .append(o1.getY(), o2.getY())
-            .toComparison();
+    public static final Comparator<Component> XY = (o1, o2) -> new CompareToBuilder().append(o1.getX(), o2.getX()).append(o1.getY(), o2.getY()).toComparison();
 
-    public static final Comparator<Component> YX = (o1, o2) -> new CompareToBuilder().append(o1.getY(), o2.getY())
-            .append(o1.getX(), o2.getX())
-            .toComparison();
+    public static final Comparator<Component> YX = (o1, o2) -> new CompareToBuilder().append(o1.getY(), o2.getY()).append(o1.getX(), o2.getX()).toComparison();
 
     protected CustomFocusTraversalPolicy(List<Component> fixedList) {
         this(fixedList, CustomFocusTraversalPolicy.XY);

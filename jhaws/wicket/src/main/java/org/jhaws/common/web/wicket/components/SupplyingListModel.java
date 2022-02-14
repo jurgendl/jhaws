@@ -8,8 +8,8 @@ import java.util.function.Supplier;
 import org.apache.wicket.model.IModel;
 
 /**
- * {@link IModel} van {@link List}, opgevuld met een {@link Serializable} {@link Supplier} (ps {@link Supplier} is niet {@link Serializable} by
- * default en geeft normaal problemen in Wicket maar deze class dus niet), je hoeft dus ook niet telkens een subclass te maken<br>
+ * {@link IModel} van {@link List}, opgevuld met een {@link Serializable} {@link Supplier} (ps {@link Supplier} is niet {@link Serializable} by default en geeft normaal problemen
+ * in Wicket maar deze class dus niet), je hoeft dus ook niet telkens een subclass te maken<br>
  * <br>
  * bv. IModel<List<String>> listModel = new ListModel<>(() -> new ArrayList<>());
  */

@@ -12,11 +12,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for libraryVersionType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="libraryVersionType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -30,8 +27,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "libraryVersionType")
@@ -59,7 +54,6 @@ public class LibraryVersionType {
      * Gets the value of the name property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getName() {
         return name;
@@ -69,7 +63,6 @@ public class LibraryVersionType {
      * Sets the value of the name property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setName(String value) {
         this.name = value;
@@ -77,7 +70,6 @@ public class LibraryVersionType {
 
     /**
      * Gets the value of the major property.
-     *
      */
     public int getMajor() {
         return major;
@@ -85,7 +77,6 @@ public class LibraryVersionType {
 
     /**
      * Sets the value of the major property.
-     *
      */
     public void setMajor(int value) {
         this.major = value;
@@ -93,7 +84,6 @@ public class LibraryVersionType {
 
     /**
      * Gets the value of the minor property.
-     *
      */
     public int getMinor() {
         return minor;
@@ -101,7 +91,6 @@ public class LibraryVersionType {
 
     /**
      * Sets the value of the minor property.
-     *
      */
     public void setMinor(int value) {
         this.minor = value;
@@ -109,7 +98,6 @@ public class LibraryVersionType {
 
     /**
      * Gets the value of the micro property.
-     *
      */
     public int getMicro() {
         return micro;
@@ -117,7 +105,6 @@ public class LibraryVersionType {
 
     /**
      * Sets the value of the micro property.
-     *
      */
     public void setMicro(int value) {
         this.micro = value;
@@ -125,7 +112,6 @@ public class LibraryVersionType {
 
     /**
      * Gets the value of the version property.
-     *
      */
     public int getVersion() {
         return version;
@@ -133,7 +119,6 @@ public class LibraryVersionType {
 
     /**
      * Sets the value of the version property.
-     *
      */
     public void setVersion(int value) {
         this.version = value;
@@ -143,7 +128,6 @@ public class LibraryVersionType {
      * Gets the value of the ident property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getIdent() {
         return ident;
@@ -153,7 +137,6 @@ public class LibraryVersionType {
      * Sets the value of the ident property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setIdent(String value) {
         this.ident = value;
@@ -161,7 +144,6 @@ public class LibraryVersionType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

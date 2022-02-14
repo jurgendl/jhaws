@@ -29,8 +29,7 @@ public class FileSelection extends JPanel implements ActionListener {
     public FileSelection(final FileSelectionConfig config) {
         super(new BorderLayout());
         cfg = config;
-        textfield = new ETextField(new ETextFieldConfig(config.getDefaultSelected() == null ? "" : config.getDefaultSelected().getAbsolutePath())
-                .setSelectAllOnFocus(true).setEnabled(config.isEditable()));
+        textfield = new ETextField(new ETextFieldConfig(config.getDefaultSelected() == null ? "" : config.getDefaultSelected().getAbsolutePath()).setSelectAllOnFocus(true).setEnabled(config.isEditable()));
         textfield.setDragEnabled(true);
         textfield.setTransferHandler(new TransferHandler("file") {
             private static final long serialVersionUID = 76844729202962516L;

@@ -14,6 +14,7 @@ public enum EventModifier {
     CTR_SHIFT_DOWN(java.awt.event.InputEvent.CTRL_DOWN_MASK | java.awt.event.InputEvent.SHIFT_DOWN_MASK), //
     ALT_SHIFT_DOWN(java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.SHIFT_DOWN_MASK), //
     ALL_DOWN(java.awt.event.InputEvent.CTRL_DOWN_MASK | java.awt.event.InputEvent.ALT_DOWN_MASK | java.awt.event.InputEvent.SHIFT_DOWN_MASK);//
+
     int real;
 
     private EventModifier(int real) {

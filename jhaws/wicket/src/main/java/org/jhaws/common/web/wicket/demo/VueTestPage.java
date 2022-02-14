@@ -34,8 +34,7 @@ public class VueTestPage extends DefaultWebPage {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(JavaScriptHeaderItem.forReference(Vue.JS_APP));
-        response.render(JavaScriptHeaderItem.forScript(
-                ";var testVueApplication = AppVue('" + WicketApplication.getRestPath() + VueTestRest.PATH + "','appVueTest');", "vuetest_rest_init"));
+        response.render(JavaScriptHeaderItem.forScript(";var testVueApplication = AppVue('" + WicketApplication.getRestPath() + VueTestRest.PATH + "','appVueTest');", "vuetest_rest_init"));
         response.render(CssHeaderItem.forReference(new CssResourceReference(getClass(), getClass().getSimpleName() + ".css")));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(getClass(), getClass().getSimpleName() + ".js")));
     }

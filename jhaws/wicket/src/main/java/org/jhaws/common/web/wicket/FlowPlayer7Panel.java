@@ -59,11 +59,9 @@ public class FlowPlayer7Panel extends Panel {
             flowplayer.add(AttributeModifier.append("class", "is-splash"));
             if (_config.getSplashFile().exists()) {
                 if (size) {
-                    flowplayer.add(new AttributeModifier("style",
-                            ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
+                    flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
                 } else {
-                    flowplayer.add(new AttributeModifier("style",
-                            ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
+                    flowplayer.add(new AttributeModifier("style", ";background:url(" + _config.getSplashUrl() + ") no-repeat;background-size:cover;background-position-x:center"));
                 }
             } else {
                 if (size) {} else {

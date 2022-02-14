@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class NotNullValidator<T> implements Validator<T> {
     /**
-     *
      * @see org.swingeasy.validation.Validator#getArguments(java.lang.Object)
      */
     @Override

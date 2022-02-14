@@ -22,7 +22,6 @@ public class EToolBarButtonCustomizer extends EButtonCustomizer {
     }
 
     /**
-     *
      * @see org.swingeasy.EButtonCustomizer#customize(javax.swing.AbstractButton, java.awt.Dimension)
      */
     @Override

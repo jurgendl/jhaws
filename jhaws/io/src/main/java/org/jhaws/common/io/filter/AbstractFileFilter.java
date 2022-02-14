@@ -17,7 +17,6 @@ import java.io.FilenameFilter;
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- *
  * @see java.io.FileFilter
  * @see java.io.FilenameFilter
  * @see javax.swing.filechooser.FileFilter
@@ -28,7 +27,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
      * na
      *
      * @param filter na
-     *
      * @return
      */
     public static AbstractFileFilter convert(final java.io.FileFilter filter) {
@@ -44,7 +42,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
      * na
      *
      * @param filter na
-     *
      * @return
      */
     public static AbstractFileFilter convert(final java.io.FilenameFilter filter) {
@@ -60,7 +57,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
      * na
      *
      * @param filter na
-     *
      * @return
      */
     public static AbstractFileFilter convert(final javax.swing.filechooser.FileFilter filter) {
@@ -88,7 +84,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
     }
 
     /**
-     *
      * @see java.io.FileFilter#accept(java.io.File)
      */
     @Override
@@ -97,7 +92,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
     }
 
     /**
-     *
      * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
      */
     @Override
@@ -109,7 +103,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
      * accept file?
      *
      * @param f File
-     *
      * @return boolean
      */
     public abstract boolean acceptFile(File f);
@@ -142,7 +135,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
     }
 
     /**
-     *
      * @see javax.swing.filechooser.FileFilter#getDescription()
      */
     @Override
@@ -205,7 +197,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
      * sets NOT/invers
      *
      * @param not The not to set.
-     *
      * @return
      */
     public final AbstractFileFilter setNot(boolean not) {
@@ -215,7 +206,6 @@ public abstract class AbstractFileFilter extends javax.swing.filechooser.FileFil
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override

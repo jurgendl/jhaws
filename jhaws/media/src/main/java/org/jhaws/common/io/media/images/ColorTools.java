@@ -8,19 +8,16 @@ public class ColorTools {
      * converts a Color object to its hexadecimal representation ( #000000 - #FFFFFF )
      *
      * @param c : Color : color
-     *
      * @return : String : hexadecimal representation ( #000000 - #FFFFFF )
      */
     public static String colorToHex(final Color c) {
-        return "#" + HexString.bufferToHex(new byte[] { (byte) c.getRed() }) + HexString.bufferToHex(new byte[] { (byte) c.getGreen() })
-                + HexString.bufferToHex(new byte[] { (byte) c.getBlue() });
+        return "#" + HexString.bufferToHex(new byte[] { (byte) c.getRed() }) + HexString.bufferToHex(new byte[] { (byte) c.getGreen() }) + HexString.bufferToHex(new byte[] { (byte) c.getBlue() });
     }
 
     /**
      * converts a Color to it's int value
      *
      * @param color : Color : color
-     *
      * @return : int : color int value
      */
     public static int convertColor2Pixel(final Color color) {
@@ -31,7 +28,6 @@ public class ColorTools {
      * converts a Color to it's RGB int values (0-255)
      *
      * @param color : Color : color
-     *
      * @return : int[] : RGB values (0-255)
      */
     public static int[] convertColor2Rgb(final Color color) {
@@ -42,7 +38,6 @@ public class ColorTools {
      * na
      *
      * @param color na
-     *
      * @return
      */
     public static int[] convertColor2Rgba(final Color color) {
@@ -53,7 +48,6 @@ public class ColorTools {
      * converts a int color value to a Color objects
      *
      * @param rgbpixel : int : color int value
-     *
      * @return : Color : color
      */
     public static Color convertPixel2Color(final int rgbpixel) {
@@ -64,7 +58,6 @@ public class ColorTools {
      * converts a int color value to RGB int values (0-255)
      *
      * @param rgbpixel : int : color int value
-     *
      * @return : int[] : RGB values (0-255)
      */
     public static int[] convertPixel2Rgb(final int rgbpixel) {
@@ -77,7 +70,6 @@ public class ColorTools {
      * na
      *
      * @param pixel na
-     *
      * @return
      */
     public static int[] convertPixel2Rgba(final int pixel) {
@@ -145,7 +137,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param halfnumberdifs : int : half the number of changes
-     *
      * @return : Color[] : two analog colors for given base color
      */
     public static Color[] getAnalog(final Color baseColor, final int halfnumberdifs) {
@@ -158,7 +149,6 @@ public class ColorTools {
      * @param baseColor : Color : base color
      * @param halfnumberdifs : int : half the number of changes
      * @param degreedif : int : difference per step in �
-     *
      * @return : Color[] : two analog colors for given base color
      */
     public static Color[] getAnalog(final Color baseColor, final int halfnumberdifs, final int degreedif) {
@@ -170,7 +160,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : total number of variances
-     *
      * @return : Color[] : monotone cromatic variances of given base color
      */
     public static Color[] getBrightnessDifs(final Color baseColor, final int differences) {
@@ -182,7 +171,6 @@ public class ColorTools {
      *
      * @param c : Color : color
      * @param alpha : int : alpha (0=transparent - 255=opaque)
-     *
      * @return : int : color int rgba value
      */
     public static int getColor(final Color c, final int alpha) {
@@ -194,7 +182,6 @@ public class ColorTools {
      *
      * @param rgb : int : rgb value (when rgba, alpha will be dropped first)
      * @param alpha : int : alpha (0=transparent - 255=opaque)
-     *
      * @return : int : color int rgba value
      */
     public static int getColor(final int rgb, final int alpha) {
@@ -210,7 +197,6 @@ public class ColorTools {
      * @param green : int : green (0-255)
      * @param blue : int : blue (0-255)
      * @param alpha : int : alpha (0=transparent - 255=opaque)
-     *
      * @return : int : color int rgba value
      */
     public static int getColor(final int red, final int green, final int blue, final int alpha) {
@@ -223,7 +209,6 @@ public class ColorTools {
      * returns the complementary color for given color
      *
      * @param baseColor : Color : base color
-     *
      * @return : Color : it's complementary color
      */
     public static Color getComplementary(final Color baseColor) {
@@ -236,7 +221,6 @@ public class ColorTools {
      * @param baseColor : Colors : base color
      * @param halfnumberdifs : int : will search for #halfnumberdifs colors clockwise and #halfnumberdifs colors counter-clockwise
      * @param degrees : int : number of degrees (counter-)colockwise to turn
-     *
      * @return : Color[] : 2 #halfnumberdifs + 1 long array of colors, middle one is original color
      */
     public static Color[] getDegreeColors(final Color baseColor, final int halfnumberdifs, final int degrees) {
@@ -263,7 +247,6 @@ public class ColorTools {
      * gets grayscale of color
      *
      * @param pixel : Color : color
-     *
      * @return : int : color int value
      */
     public static int getGrayscale(final Color pixel) {
@@ -274,7 +257,6 @@ public class ColorTools {
      * gets grayscale of color
      *
      * @param pixel : int : color int value
-     *
      * @return : int : color int value
      */
     public static int getGrayscale(final int pixel) {
@@ -299,7 +281,6 @@ public class ColorTools {
      * @param r : int : red (0-255)
      * @param g : int : green (0-255)
      * @param b : int : blue (0-255)
-     *
      * @return : int : color int value
      */
     public static int getGrayscale(final int r, final int g, final int b) {
@@ -312,7 +293,6 @@ public class ColorTools {
      * @param baseColor internal use
      * @param differences internal use
      * @param hsbi internal use
-     *
      * @return internal use
      */
     public static Color[] getHSBDifs(final Color baseColor, final int differences, final int hsbi) {
@@ -361,7 +341,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : total number of variances
-     *
      * @return : Color[] : saturation difference of given color (given color is part of the array)
      */
     public static Color[] getHueDifs(final Color baseColor, final int differences) {
@@ -373,9 +352,7 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : total number of variances
-     *
      * @return : Color[] : saturation difference of given color (given color is part of the array)
-     *
      * @see #getSaturationDifs(Color, int)
      */
     public static Color[] getIntensityDifs(final Color baseColor, final int differences) {
@@ -386,7 +363,6 @@ public class ColorTools {
      * returns the inverse color for given color
      *
      * @param baseColor : Color : base color
-     *
      * @return : Color : it's inverse color
      */
     public static Color getInverse(final Color baseColor) {
@@ -398,7 +374,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : total number of variances
-     *
      * @return : Color[] : monotone acromatic variances of given base color
      */
     public static Color[] getMonotoneAcromatic(final Color baseColor, final int differences) {
@@ -416,7 +391,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : total number of variances
-     *
      * @return : Color[] : monotone cromatic variances of given base color
      */
     public static Color[] getMonotoneCromatic(final Color baseColor, final int differences) {
@@ -427,7 +401,6 @@ public class ColorTools {
      * converts rgba to rgb
      *
      * @param c : Color : rgb color
-     *
      * @return : int : color int rgb value
      */
     public static int getOpaqueColor(final Color c) {
@@ -438,7 +411,6 @@ public class ColorTools {
      * converts rgba to rgb
      *
      * @param argb : int : color int rgba value
-     *
      * @return : int : color int rgb value
      */
     public static int getOpaqueColor(final int argb) {
@@ -456,7 +428,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : total number of variances
-     *
      * @return : Color[] : saturation difference of given color (given color is part of the array)
      */
     public static Color[] getSaturationDifs(final Color baseColor, final int differences) {
@@ -468,7 +439,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : number of shades you want
-     *
      * @return : Color : shades of the given color
      */
     public static Color[] getShades(final Color baseColor, final int differences) {
@@ -488,7 +458,6 @@ public class ColorTools {
      * gets the 2 split complementary colors for given base color
      *
      * @param baseColor : Color : base color
-     *
      * @return Color[] : 2 split complementary colors
      */
     public static Color[] getSplitComplementary(final Color baseColor) {
@@ -499,7 +468,6 @@ public class ColorTools {
      * gets the 2 triad colors of given base color (counterclockwise)
      *
      * @param baseColor : Color : base color
-     *
      * @return : Color[] : triad colors
      */
     public static Color[] getTetrad(final Color baseColor) {
@@ -518,7 +486,6 @@ public class ColorTools {
      *
      * @param baseColor : Color : base color
      * @param differences : int : number of tints you want
-     *
      * @return : Color[] : tints of the given color
      */
     public static Color[] getTints(final Color baseColor, final int differences) {
@@ -529,7 +496,6 @@ public class ColorTools {
      * gets the 2 triad colors of given base color (first the counterclockwise, the the clockwise)
      *
      * @param baseColor : Color : base color
-     *
      * @return : Color[] : triad colors
      */
     public static Color[] getTriad(final Color baseColor) {
@@ -544,7 +510,6 @@ public class ColorTools {
      * converts a hexstring to a Color object
      *
      * @param hex : String : hex string either with or without the # sign
-     *
      * @return : Color : color
      */
     public static Color hexToColor(String hex) {
@@ -586,7 +551,6 @@ public class ColorTools {
      * @param hue : float : hue (0.0 - 1.0)
      * @param sat : float : saturation (0.0 - 1.0)
      * @param bri : float : brightness/value (0.0 - 1.0)
-     *
      * @return : int : color int value
      */
     public static int hsb2RGB(final float hue, final float sat, final float bri) {
@@ -599,7 +563,6 @@ public class ColorTools {
      * @param hue : int : hue (0 - 255)
      * @param sat : int : saturation (0 - 255)
      * @param bri : int : brightness/value (0 - 255)
-     *
      * @return : int : color int value
      */
     public static int hsb2RGB(final int hue, final int sat, final int bri) {
@@ -614,7 +577,6 @@ public class ColorTools {
      * converts a Color to HSB values (0-255)
      *
      * @param color : Color : color
-     *
      * @return : int[] : HSB values (0-255)
      */
     public static int[] rgb2HSB(final Color color) {
@@ -632,7 +594,6 @@ public class ColorTools {
      * converts a color int value to HSB values (0-255)
      *
      * @param rgbpixel : color int value
-     *
      * @return : int[] : HSB values (0-255)
      */
     public static int[] rgb2HSB(final int rgbpixel) {
@@ -653,7 +614,6 @@ public class ColorTools {
      * @param red : int : red (0-255)
      * @param grn : int : green (0-255)
      * @param blu : int : blue (0-255)
-     *
      * @return : int[] : RGB int values (0-255)
      */
     public static int[] rgb2HSB(final int red, final int grn, final int blu) {
@@ -671,7 +631,6 @@ public class ColorTools {
      * converts a Color to HSB values (0.0 - 1.0)
      *
      * @param color : Color : color
-     *
      * @return : float[] : HSB values (0.0 - 1.0)
      */
     public static float[] rgb2HSBFloat(final Color color) {
@@ -685,7 +644,6 @@ public class ColorTools {
      * converts a color int value to HSB values (0.0 - 1.0)
      *
      * @param rgbpixel : int : color int value
-     *
      * @return : float[] : HSB values (0.0 - 1.0)
      */
     public static float[] rgb2HSBFloat(final int rgbpixel) {
@@ -702,7 +660,6 @@ public class ColorTools {
      * @param red : int : red (0-255)
      * @param grn : int : green (0-255)
      * @param blu : int : blue (0-255)
-     *
      * @return : float[] : HSB values (0.0 - 1.0)
      */
     public static float[] rgb2HSBFloat(final int red, final int grn, final int blu) {
@@ -716,7 +673,6 @@ public class ColorTools {
      * converts a color to cmy floats
      *
      * @param co : Color : color
-     *
      * @return : float[] : cmy (cyan/magenta/yellow => printer) components (0.0 - 1.0)
      */
     public static float[] rgbToCmy(final Color co) {
@@ -734,7 +690,6 @@ public class ColorTools {
      * converts a color to cmy floats
      *
      * @param pixel : int : pixel color integer
-     *
      * @return : float[] : cmy (cyan/magenta/yellow => printer) components (0.0 - 1.0)
      */
     public static float[] rgbToCmy(final int pixel) {
@@ -747,7 +702,6 @@ public class ColorTools {
      * @param r : int : red (0 - 255)
      * @param g : int : green (0 - 255)
      * @param b : int : blue (0 - 255)
-     *
      * @return : float[] : cmy (cyan/magenta/yellow => printer) components (0.0 - 1.0)
      */
     public static float[] rgbToCmy(final int r, final int g, final int b) {
@@ -759,7 +713,6 @@ public class ColorTools {
      *
      * @param f float
      * @param d d
-     *
      * @return rounded float
      */
     public static float round(float f, int d) {

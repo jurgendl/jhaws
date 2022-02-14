@@ -19,67 +19,63 @@ import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
 public class LoginPage extends WebPage {
-	public LoginPage(PageParameters parameters) {
-		super(parameters);
-		add(new LoginForm("loginForm"));
-	}
+    public LoginPage(PageParameters parameters) {
+        super(parameters);
+        add(new LoginForm("loginForm"));
+    }
 
-	private class LoginForm extends Form<Void> {
-		private transient RequestCache requestCache = new HttpSessionRequestCache();
+    private class LoginForm extends Form<Void> {
+        private transient RequestCache requestCache = new HttpSessionRequestCache();
 
-		private String username;
+        private String username;
 
-		private String password;
+        private String password;
 
-		public LoginForm(String id) {
-			super(id);
-			setModel(new CompoundPropertyModel(this));
-			add(new RequiredTextField<>("username"));
-			add(new PasswordTextField("password"));
-			add(new FeedbackPanel("feedback"));
-		}
+        public LoginForm(String id) {
+            super(id);
+            setModel(new CompoundPropertyModel(this));
+            add(new RequiredTextField<>("username"));
+            add(new PasswordTextField("password"));
+            add(new FeedbackPanel("feedback"));
+        }
 
-		@Override
-		protected void onSubmit() {
-			HttpServletRequest servletRequest = (HttpServletRequest) RequestCycle.get().getRequest()
-					.getContainerRequest();
-			String originalUrl = getOriginalUrl(servletRequest.getSession());
-			AuthenticatedWebSession session = AuthenticatedWebSession.get();
-			try {
-				boolean signin = session.signIn(username, password);
-				if (signin) {
-					if (originalUrl != null) {
-						// logger.info(String.format("redirecting to %s",
-						// originalUrl));
-						throw new RedirectToUrlException(originalUrl);
-					} else {
-						// logger.info("redirecting to home page");
-						setResponsePage(getApplication().getHomePage());
-					}
-				}
-			} catch (AuthenticationException e) {
-				error(e.getMessage());
-			}
-		}
+        @Override
+        protected void onSubmit() {
+            HttpServletRequest servletRequest = (HttpServletRequest) RequestCycle.get().getRequest().getContainerRequest();
+            String originalUrl = getOriginalUrl(servletRequest.getSession());
+            AuthenticatedWebSession session = AuthenticatedWebSession.get();
+            try {
+                boolean signin = session.signIn(username, password);
+                if (signin) {
+                    if (originalUrl != null) {
+                        // logger.info(String.format("redirecting to %s",
+                        // originalUrl));
+                        throw new RedirectToUrlException(originalUrl);
+                    } else {
+                        // logger.info("redirecting to home page");
+                        setResponsePage(getApplication().getHomePage());
+                    }
+                }
+            } catch (AuthenticationException e) {
+                error(e.getMessage());
+            }
+        }
 
-		/**
-		 * Returns the URL the user accessed before he was redirected to the
-		 * login page. This URL has been stored in the session by spring
-		 * security.
-		 *
-		 * @return the original URL the user accessed or null if no URL has been
-		 * stored in the session.
-		 */
-		private String getOriginalUrl(HttpSession session) {
-			// TODO: The following session attribute seems to be null the very
-			// first time a user accesses a secured page. Find out why
-			// spring security doesn't set this parameter the very first time.
-			SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
-			if (savedRequest != null) {
-				return savedRequest.getRedirectUrl();
-			} else {
-				return null;
-			}
-		}
-	}
+        /**
+         * Returns the URL the user accessed before he was redirected to the login page. This URL has been stored in the session by spring security.
+         *
+         * @return the original URL the user accessed or null if no URL has been stored in the session.
+         */
+        private String getOriginalUrl(HttpSession session) {
+            // TODO: The following session attribute seems to be null the very
+            // first time a user accesses a secured page. Find out why
+            // spring security doesn't set this parameter the very first time.
+            SavedRequest savedRequest = (SavedRequest) session.getAttribute("SPRING_SECURITY_SAVED_REQUEST");
+            if (savedRequest != null) {
+                return savedRequest.getRedirectUrl();
+            } else {
+                return null;
+            }
+        }
+    }
 }

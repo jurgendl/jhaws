@@ -55,8 +55,7 @@ public class TabDemo {
 
     private void add(JTabbedPane tab) {
         for (int i = 0; i < 5; i++) {
-            tab.addTab("tab " + tab.getName() + " - " + i, FileSystemView.getFileSystemView().getSystemIcon(new File(".")),
-                    new JTextField("content " + tab.getName() + " - " + i), "tooltip " + tab.getName() + " - " + i);
+            tab.addTab("tab " + tab.getName() + " - " + i, FileSystemView.getFileSystemView().getSystemIcon(new File(".")), new JTextField("content " + tab.getName() + " - " + i), "tooltip " + tab.getName() + " - " + i);
             // tab.setEnabledAt(i, (i % 2) == 0);
         }
     }

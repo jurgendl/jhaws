@@ -5,13 +5,13 @@ import java.util.Date;
 import org.jhaws.common.io.FilePath;
 
 public interface CookieStoreInterceptor<S> {
-	public static final FilePath user_home = FilePath.getUserHomeDirectory();
+    public static final FilePath user_home = FilePath.getUserHomeDirectory();
 
-	public void beforeAddCookie(S store);
+    public void beforeAddCookie(S store);
 
-	public void beforeClear(S store);
+    public void beforeClear(S store);
 
-	public void beforeClearExpired(S store, Date date);
+    public void beforeClearExpired(S store, Date date);
 
-	public void beforeGetCookies(S store);
+    public void beforeGetCookies(S store);
 }

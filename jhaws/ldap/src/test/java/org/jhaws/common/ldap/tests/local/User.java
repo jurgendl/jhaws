@@ -45,7 +45,6 @@ public class User implements Serializable, Comparable<User> {
     private String[] objectClass;
 
     /**
-     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -54,7 +53,6 @@ public class User implements Serializable, Comparable<User> {
     }
 
     /**
-     *
      * @see java.lang.Object#equals(Object)
      */
     @Override
@@ -65,14 +63,8 @@ public class User implements Serializable, Comparable<User> {
 
         User rhs = (User) object;
 
-        return new EqualsBuilder().appendSuper(super.equals(object))
-                .append(this.cn, rhs.cn)
-                .append(this.description, rhs.description)
-                .append(this.telephoneNumber, rhs.telephoneNumber)
-                .append(this.surname, rhs.surname)
-                .append(this.objectClass, rhs.objectClass)
-                .append(this.reference, rhs.reference)
-                .isEquals();
+        return new EqualsBuilder().appendSuper(super.equals(object)).append(this.cn, rhs.cn).append(this.description, rhs.description).append(this.telephoneNumber, rhs.telephoneNumber).append(this.surname, rhs.surname).append(this.objectClass, rhs.objectClass)
+                .append(this.reference, rhs.reference).isEquals();
     }
 
     /**
@@ -130,19 +122,11 @@ public class User implements Serializable, Comparable<User> {
     }
 
     /**
-     *
      * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(-1529639275, 107903843).appendSuper(super.hashCode())
-                .append(this.cn)
-                .append(this.description)
-                .append(this.telephoneNumber)
-                .append(this.surname)
-                .append(this.objectClass)
-                .append(this.reference)
-                .toHashCode();
+        return new HashCodeBuilder(-1529639275, 107903843).appendSuper(super.hashCode()).append(this.cn).append(this.description).append(this.telephoneNumber).append(this.surname).append(this.objectClass).append(this.reference).toHashCode();
     }
 
     /**
@@ -200,7 +184,6 @@ public class User implements Serializable, Comparable<User> {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override

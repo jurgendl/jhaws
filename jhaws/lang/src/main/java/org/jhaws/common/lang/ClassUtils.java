@@ -32,10 +32,8 @@ public class ClassUtils {
     /**
      * @see http://stackoverflow.com/questions/28400408/what-is-the-new-way-of-getting-all-methods-of-a-class-including-inherited-defau
      */
-    public static Collection<Method> getAllMethods(Class<?> clazz, boolean includeAllPackageAndPrivateMethodsOfSuperclasses,
-            boolean includeOverridenAndHidden) {
-        Predicate<Method> include = m -> !m.isBridge() && !m.isSynthetic() && Character.isJavaIdentifierStart(m.getName().charAt(0))
-                && m.getName().chars().skip(1).allMatch(Character::isJavaIdentifierPart);
+    public static Collection<Method> getAllMethods(Class<?> clazz, boolean includeAllPackageAndPrivateMethodsOfSuperclasses, boolean includeOverridenAndHidden) {
+        Predicate<Method> include = m -> !m.isBridge() && !m.isSynthetic() && Character.isJavaIdentifierStart(m.getName().charAt(0)) && m.getName().chars().skip(1).allMatch(Character::isJavaIdentifierPart);
 
         Set<Method> methods = new LinkedHashSet<>();
         Collections.addAll(methods, clazz.getMethods());
@@ -62,8 +60,7 @@ public class ClassUtils {
             }
             include = include.and(m -> {
                 int acc = m.getModifiers() & access;
-                return acc != 0 ? acc == Modifier.PRIVATE || types.putIfAbsent(methodKey(m), pkgIndependent) == null
-                        : noPkgOverride(m, types, pkgIndependent);
+                return acc != 0 ? acc == Modifier.PRIVATE || types.putIfAbsent(methodKey(m), pkgIndependent) == null : noPkgOverride(m, types, pkgIndependent);
             });
         }
         for (clazz = clazz.getSuperclass(); clazz != null; clazz = clazz.getSuperclass())
@@ -118,12 +115,9 @@ public class ClassUtils {
                 Class<?> typeArgumentsClass = (Class<?>) typeArgument;
 
                 return typeArgumentsClass;
-            } /*
-               * else { TypeVariable typeArgumentsTypeVariable = (TypeVariable) typeArgument; GenericDeclaration
-               * typeArgumentsTypeVariableGenericDeclaration = typeArgumentsTypeVariable.getGenericDeclaration(); Type[]
-               * typeArgumentsTypeVariableBounds = typeArgumentsTypeVariable.getBounds(); for (Type typeArgumentsTypeVariableBound :
-               * typeArgumentsTypeVariableBounds) { //ignore } }
-               */
+            } /* else { TypeVariable typeArgumentsTypeVariable = (TypeVariable) typeArgument; GenericDeclaration typeArgumentsTypeVariableGenericDeclaration =
+               * typeArgumentsTypeVariable.getGenericDeclaration(); Type[] typeArgumentsTypeVariableBounds = typeArgumentsTypeVariable.getBounds(); for (Type
+               * typeArgumentsTypeVariableBound : typeArgumentsTypeVariableBounds) { //ignore } } */
             // }
         }
 

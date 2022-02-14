@@ -1,9 +1,9 @@
 package org.jhaws.common.web.wicket.components.tree;
 
 public interface DataNode<T> extends Node<T>, Comparable<DataNode<T>> {
-	Boolean checked();
+    Boolean checked();
 
-	String name();
+    String name();
 
-	String value();
+    String value();
 }

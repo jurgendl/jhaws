@@ -7,83 +7,83 @@ import org.jhaws.common.io.FilePath;
 
 @SuppressWarnings("serial")
 public class Html5VideoPanelConfig implements Serializable {
-	private List<Html5VideoElement> sources;
+    private List<Html5VideoElement> sources;
 
-	private boolean splash;
+    private boolean splash;
 
-	private FilePath splashFile;
+    private FilePath splashFile;
 
-	private String splashUrl;
+    private String splashUrl;
 
-	private Integer w;
+    private Integer w;
 
-	private Integer h;
+    private Integer h;
 
-	private Boolean loop;
+    private Boolean loop;
 
-	private Boolean mute = Boolean.TRUE;
+    private Boolean mute = Boolean.TRUE;
 
-	public List<Html5VideoElement> getSources() {
-		return this.sources;
-	}
+    public List<Html5VideoElement> getSources() {
+        return this.sources;
+    }
 
-	public void setSources(List<Html5VideoElement> sources) {
-		this.sources = sources;
-	}
+    public void setSources(List<Html5VideoElement> sources) {
+        this.sources = sources;
+    }
 
-	public boolean isSplash() {
-		return this.splash;
-	}
+    public boolean isSplash() {
+        return this.splash;
+    }
 
-	public void setSplash(boolean splash) {
-		this.splash = splash;
-	}
+    public void setSplash(boolean splash) {
+        this.splash = splash;
+    }
 
-	public FilePath getSplashFile() {
-		return this.splashFile;
-	}
+    public FilePath getSplashFile() {
+        return this.splashFile;
+    }
 
-	public void setSplashFile(FilePath splashFile) {
-		this.splashFile = splashFile;
-	}
+    public void setSplashFile(FilePath splashFile) {
+        this.splashFile = splashFile;
+    }
 
-	public String getSplashUrl() {
-		return this.splashUrl;
-	}
+    public String getSplashUrl() {
+        return this.splashUrl;
+    }
 
-	public void setSplashUrl(String splashUrl) {
-		this.splashUrl = splashUrl;
-	}
+    public void setSplashUrl(String splashUrl) {
+        this.splashUrl = splashUrl;
+    }
 
-	public Integer getW() {
-		return this.w;
-	}
+    public Integer getW() {
+        return this.w;
+    }
 
-	public void setW(Integer w) {
-		this.w = w;
-	}
+    public void setW(Integer w) {
+        this.w = w;
+    }
 
-	public Integer getH() {
-		return this.h;
-	}
+    public Integer getH() {
+        return this.h;
+    }
 
-	public void setH(Integer h) {
-		this.h = h;
-	}
+    public void setH(Integer h) {
+        this.h = h;
+    }
 
-	public Boolean getLoop() {
-		return this.loop;
-	}
+    public Boolean getLoop() {
+        return this.loop;
+    }
 
-	public void setLoop(Boolean loop) {
-		this.loop = loop;
-	}
+    public void setLoop(Boolean loop) {
+        this.loop = loop;
+    }
 
-	public Boolean getMute() {
-		return this.mute;
-	}
+    public Boolean getMute() {
+        return this.mute;
+    }
 
-	public void setMute(Boolean mute) {
-		this.mute = mute;
-	}
+    public void setMute(Boolean mute) {
+        this.mute = mute;
+    }
 }

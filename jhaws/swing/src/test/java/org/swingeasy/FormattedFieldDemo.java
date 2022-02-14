@@ -38,24 +38,19 @@ public class FormattedFieldDemo {
         container.add(new ELabel(""));
         container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Default)), 1234.5678));
         container.add(new ELabel("currency"));
-        container
-                .add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Currency)), 1234.5678));
+        container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Currency)), 1234.5678));
         container.add(new ELabel("integer"));
         container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Integer)), 1234));
         container.add(new ELabel("number"));
         container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Number)), 1234.5678));
         container.add(new ELabel("percent"));
-        container.add(
-                new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Percentage)), 0.12345678));
+        container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new NumberFormatBuilder(NumberFormatBuilder.Type.Percentage)), 0.12345678));
         container.add(new ELabel("date"));
-        container.add(new EFormattedTextField<>(
-                new EFormattedTextFieldConfig(new DateFormatBuilder(DateFormatBuilder.Type.Date, DateFormatBuilder.Length.Default)), new Date()));
+        container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new DateFormatBuilder(DateFormatBuilder.Type.Date, DateFormatBuilder.Length.Default)), new Date()));
         container.add(new ELabel("time"));
-        container.add(new EFormattedTextField<>(
-                new EFormattedTextFieldConfig(new DateFormatBuilder(DateFormatBuilder.Type.Time, DateFormatBuilder.Length.Default)), new Date()));
+        container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new DateFormatBuilder(DateFormatBuilder.Type.Time, DateFormatBuilder.Length.Default)), new Date()));
         container.add(new ELabel("date/time"));
-        container.add(new EFormattedTextField<>(
-                new EFormattedTextFieldConfig(new DateFormatBuilder(DateFormatBuilder.Type.Both, DateFormatBuilder.Length.Default)), new Date()));
+        container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new DateFormatBuilder(DateFormatBuilder.Type.Both, DateFormatBuilder.Length.Default)), new Date()));
         container.add(new ELabel("mask"));
         container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new MaskFormatter("(###) ###-###")), "(032) 111-222"));
         // container.add(new ELabel("url"));
@@ -63,8 +58,7 @@ public class FormattedFieldDemo {
         container.add(new ELabel("ip4"));
         container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new IPAddressFormatter()), new byte[] { (byte) 130, 65, 86, 66 }));
         container.add(new ELabel("ip6"));
-        container.add(
-                new EFormattedTextField<>(new EFormattedTextFieldConfig(new IPAddressFormatter(true)), new byte[] { (byte) 130, 65, 86, 66, 2, 3 }));
+        container.add(new EFormattedTextField<>(new EFormattedTextFieldConfig(new IPAddressFormatter(true)), new byte[] { (byte) 130, 65, 86, 66, 2, 3 }));
     }
 
     public static void main(String[] args) {

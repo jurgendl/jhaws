@@ -59,7 +59,6 @@ public class DateTimeListCellRenderer extends EListCellRenderer<Date> {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

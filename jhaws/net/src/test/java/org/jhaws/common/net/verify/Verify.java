@@ -18,9 +18,7 @@ public class Verify {
                 hashtext = "0" + hashtext;
             }
             System.out.println(hashtext);
-            System.out.println(hc.get(
-                    "https://www.apache.org/dist/tomcat/tomcat-connectors/native/1.2.23/binaries/tomcat-native-1.2.23-openssl-1.1.1c-win32-bin.zip.sha512")
-                    .getContentString());
+            System.out.println(hc.get("https://www.apache.org/dist/tomcat/tomcat-connectors/native/1.2.23/binaries/tomcat-native-1.2.23-openssl-1.1.1c-win32-bin.zip.sha512").getContentString());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

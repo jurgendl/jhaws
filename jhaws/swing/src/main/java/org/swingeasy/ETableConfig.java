@@ -33,8 +33,7 @@ public class ETableConfig extends EComponentConfig<ETableConfig> {
         vertical = false;
     }
 
-    public ETableConfig(boolean threadSafe, boolean sortable, boolean filterable, boolean editable, boolean reorderable, boolean resizable,
-            boolean vertical, boolean draggable) {
+    public ETableConfig(boolean threadSafe, boolean sortable, boolean filterable, boolean editable, boolean reorderable, boolean resizable, boolean vertical, boolean draggable) {
         super();
         this.threadSafe = threadSafe;
         this.sortable = sortable;

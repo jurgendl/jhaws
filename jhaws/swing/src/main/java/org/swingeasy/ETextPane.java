@@ -248,8 +248,7 @@ public class ETextPane extends JTextPane implements EComponentI, ReadableCompone
                 @Override
                 public void customize(JFileChooser jfc) {
                     jfc.resetChoosableFileFilters();
-                    jfc.addChoosableFileFilter(new ExtensionFileFilter(UIUtils.getDescriptionForFileType(OpenAction.this.delegate.getFileExt()) + " ("
-                            + OpenAction.this.delegate.getFileExt() + ")", OpenAction.this.delegate.getFileExt()));
+                    jfc.addChoosableFileFilter(new ExtensionFileFilter(UIUtils.getDescriptionForFileType(OpenAction.this.delegate.getFileExt()) + " (" + OpenAction.this.delegate.getFileExt() + ")", OpenAction.this.delegate.getFileExt()));
                 }
             });
             if (file == null) {
@@ -375,10 +374,8 @@ public class ETextPane extends JTextPane implements EComponentI, ReadableCompone
                 file = new File(file.getParentFile(), file.getName() + "." + fileExt);
             }
             if (file.exists()) {
-                if (ResultType.YES != CustomizableOptionPane.showCustomDialog(getParentComponent(),
-                        new JLabel(Messages.getString((Locale) null, "SaveAction.overwrite.warning.message")),
-                        Messages.getString((Locale) null, "SaveAction.overwrite.warning.title"), MessageType.WARNING, OptionType.YES_NO, null,
-                        null)) {
+                if (ResultType.YES != CustomizableOptionPane.showCustomDialog(getParentComponent(), new JLabel(Messages.getString((Locale) null, "SaveAction.overwrite.warning.message")), Messages.getString((Locale) null, "SaveAction.overwrite.warning.title"),
+                        MessageType.WARNING, OptionType.YES_NO, null, null)) {
                     return;
                 }
             }
@@ -522,19 +519,8 @@ public class ETextPane extends JTextPane implements EComponentI, ReadableCompone
 
     protected void installPopupMenuAction(EComponentPopupMenu popupMenu) {
         popupMenu.addSeparator();
-        actions = new Action[] {
-                new OpenAction(this),
-                new SaveAction(this),
-                new PrintAction(this),
-                null,
-                new FontAction(this),
-                new BoldAction(this),
-                new ItalicAction(this),
-                new UnderlineAction(this),
-                new JustifyAction(this),
-                new LeftJustifyAction(this),
-                new CenterJustifyAction(this),
-                new RightJustifyAction(this) };
+        actions = new Action[] { new OpenAction(this), new SaveAction(this), new PrintAction(this), null, new FontAction(this), new BoldAction(this), new ItalicAction(this), new UnderlineAction(this), new JustifyAction(this), new LeftJustifyAction(this),
+                new CenterJustifyAction(this), new RightJustifyAction(this) };
         for (Action action : actions) {
             if (action == null) {
                 popupMenu.addSeparator();

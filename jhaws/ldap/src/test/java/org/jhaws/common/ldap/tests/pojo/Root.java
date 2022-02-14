@@ -34,7 +34,6 @@ public class Root implements Serializable, Comparable<Root> {
     }
 
     /**
-     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -46,7 +45,6 @@ public class Root implements Serializable, Comparable<Root> {
      * na
      *
      * @return
-     *
      * @throws CertificateException na
      */
     public X509Certificate getCertificate() throws CertificateException {
@@ -121,7 +119,6 @@ public class Root implements Serializable, Comparable<Root> {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override

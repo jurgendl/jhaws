@@ -23,8 +23,7 @@ public class EFontChooser extends JPanel implements EComponentI {
 
     public static Font showDialog(JComponent parent, Font defaultFont) {
         EFontChooser fc = new EFontChooser(defaultFont);
-        if (ResultType.OK == CustomizableOptionPane.showCustomDialog(parent, fc, Messages.getString(fc.getLocale(), "font-chooser-title"),
-                MessageType.QUESTION, OptionType.OK_CANCEL, null, null)) {
+        if (ResultType.OK == CustomizableOptionPane.showCustomDialog(parent, fc, Messages.getString(fc.getLocale(), "font-chooser-title"), MessageType.QUESTION, OptionType.OK_CANCEL, null, null)) {
             return fc.getSelectedFont();
         }
         return null;
@@ -32,8 +31,7 @@ public class EFontChooser extends JPanel implements EComponentI {
 
     public static Font showDialog(JComponent parent, String defaultFont) {
         EFontChooser fc = new EFontChooser(defaultFont);
-        if (ResultType.OK == CustomizableOptionPane.showCustomDialog(parent, fc, Messages.getString(fc.getLocale(), "font-chooser-title"),
-                MessageType.QUESTION, OptionType.OK_CANCEL, null, null)) {
+        if (ResultType.OK == CustomizableOptionPane.showCustomDialog(parent, fc, Messages.getString(fc.getLocale(), "font-chooser-title"), MessageType.QUESTION, OptionType.OK_CANCEL, null, null)) {
             return fc.getSelectedFont();
         }
         return null;

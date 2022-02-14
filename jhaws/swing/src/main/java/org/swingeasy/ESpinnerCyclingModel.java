@@ -8,7 +8,6 @@ import javax.swing.SpinnerModel;
 
 /**
  * @see http://docs.oracle.com/javase/tutorial/uiswing/components/spinner.html
- *
  * @author Jurgen
  */
 public class ESpinnerCyclingModel<T> extends SpinnerListModel {

@@ -15,8 +15,7 @@ import org.jhaws.common.web.wicket.settings.WicketAppSettings;
 public class GoogleLogin {
     public static final String VALIDATION_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=";
 
-    public static final CachingUrlResourceReference JS_PLATFORM = new CachingUrlResourceReference(URI.create("http://apis.google.com/js/platform.js"),
-            "google-platform");
+    public static final CachingUrlResourceReference JS_PLATFORM = new CachingUrlResourceReference(URI.create("http://apis.google.com/js/platform.js"), "google-platform");
 
     public static void init(WicketAppSettings settings) {
         try {

@@ -20,7 +20,6 @@ public class ETablePdfExporter<T> extends ETableExporterImpl<T> {
     };
 
     /**
-     *
      * @see org.swingeasy.ETableExporterImpl#exportStream(org.swingeasy.ETable, java.io.OutputStream)
      */
     @Override
@@ -29,7 +28,6 @@ public class ETablePdfExporter<T> extends ETableExporterImpl<T> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableExporter#getAction()
      */
     @Override
@@ -38,7 +36,6 @@ public class ETablePdfExporter<T> extends ETableExporterImpl<T> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableExporter#getFileExtension()
      */
     @Override

@@ -36,7 +36,6 @@ public class Info {
 
     @Override
     public String toString() {
-        return "Info [" + (wcrootAbspath != null ? "wcrootAbspath=" + wcrootAbspath + ", " : "")
-                + (schedule != null ? "schedule=" + schedule + ", " : "") + (depth != null ? "depth=" + depth : "") + "]";
+        return "Info [" + (wcrootAbspath != null ? "wcrootAbspath=" + wcrootAbspath + ", " : "") + (schedule != null ? "schedule=" + schedule + ", " : "") + (depth != null ? "depth=" + depth : "") + "]";
     }
 }

@@ -148,7 +148,6 @@ public class BatchStep implements Serializable {
 
     @Override
     public String toString() {
-        return "BatchStep[" + id + ":" + (total > 0 ? progress + "/" + total : "") + ":" + state
-                + (steps == null ? "" : ":\n\t" + steps.stream().map(Object::toString).collect(Collectors.joining("\n\t")) + "\n") + "]";
+        return "BatchStep[" + id + ":" + (total > 0 ? progress + "/" + total : "") + ":" + state + (steps == null ? "" : ":\n\t" + steps.stream().map(Object::toString).collect(Collectors.joining("\n\t")) + "\n") + "]";
     }
 }

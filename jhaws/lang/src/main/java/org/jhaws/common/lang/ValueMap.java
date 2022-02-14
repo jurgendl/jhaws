@@ -73,7 +73,6 @@ public interface ValueMap<K, N extends Number> extends EnhancedMap<K, N> {
     }
 
     default EnhancedLinkedHashMap<K, N> sortedMap(Comparator<N> order) {
-        return entrySet().stream().sorted((a, b) -> order.compare(a.getValue(), b.getValue())).collect(
-                Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> a, EnhancedLinkedHashMap::new));
+        return entrySet().stream().sorted((a, b) -> order.compare(a.getValue(), b.getValue())).collect(Collectors.toMap(Entry::getKey, Entry::getValue, (a, b) -> a, EnhancedLinkedHashMap::new));
     }
 }

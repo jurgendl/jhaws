@@ -6,9 +6,7 @@ import java.io.Serializable;
  * hernoemd naar {@link LdapDAOCommonSuperclass}, behouden voor backwards compatibility
  *
  * @author Jurgen
- *
  * @param <T>
- *
  * @deprecated
  */
 @Deprecated

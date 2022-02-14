@@ -56,16 +56,14 @@ public class ValidationFactory {
         return this.install(parentPane, component, validators);
     }
 
-    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1,
-            final Validator<T> validator2) {
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1, final Validator<T> validator2) {
         List<Validator<T>> validators = new ArrayList<>();
         validators.add(validator1);
         validators.add(validator2);
         return this.install(parentPane, component, validators);
     }
 
-    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1,
-            final Validator<T> validator2, final Validator<T> validator3) {
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1, final Validator<T> validator2, final Validator<T> validator3) {
         List<Validator<T>> validators = new ArrayList<>();
         validators.add(validator1);
         validators.add(validator2);
@@ -73,8 +71,7 @@ public class ValidationFactory {
         return this.install(parentPane, component, validators);
     }
 
-    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1,
-            final Validator<T> validator2, final Validator<T> validator3, final Validator<T> validator4) {
+    public <T> EValidationMessageI install(final EValidationPane parentPane, final HasValue<T> component, final Validator<T> validator1, final Validator<T> validator2, final Validator<T> validator3, final Validator<T> validator4) {
         List<Validator<T>> validators = new ArrayList<>();
         validators.add(validator1);
         validators.add(validator2);

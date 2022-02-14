@@ -123,7 +123,6 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
     private int messageOffset = 75;
 
     /**
-     *
      * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
      */
     @Override
@@ -216,7 +215,6 @@ public class ProgressGlassPane extends NonBlockingGlassPane {
     // }
 
     /**
-     *
      * @see javax.swing.JComponent#setVisible(boolean)
      */
     @Override

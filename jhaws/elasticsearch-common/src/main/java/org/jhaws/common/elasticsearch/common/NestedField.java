@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface NestedField {
-	Language language() default Language.uninitialized;
+    Language language() default Language.uninitialized;
 }

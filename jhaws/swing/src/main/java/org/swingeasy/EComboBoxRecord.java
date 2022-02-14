@@ -20,7 +20,6 @@ public class EComboBoxRecord<T> implements Comparable<EComboBoxRecord<? super T>
     }
 
     /**
-     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
@@ -29,7 +28,6 @@ public class EComboBoxRecord<T> implements Comparable<EComboBoxRecord<? super T>
     }
 
     /**
-     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -55,7 +53,6 @@ public class EComboBoxRecord<T> implements Comparable<EComboBoxRecord<? super T>
     }
 
     /**
-     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -68,7 +65,6 @@ public class EComboBoxRecord<T> implements Comparable<EComboBoxRecord<? super T>
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override

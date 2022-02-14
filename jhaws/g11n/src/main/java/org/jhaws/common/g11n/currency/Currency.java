@@ -29,22 +29,13 @@ public class Currency {
 
     public static SortedSet<CurrencyInfo> all() {
         ISO_4217 ISO_4217 = jaxb.unmarshall(Currency.class.getClassLoader().getResourceAsStream("g11n/currency/list_one.xml"));
-        SortedSet<CurrencyInfo> arr = Arrays.asList(ISO_4217.getCcyTbl().getCcyNtry())
-                .stream()
-                .filter(ci -> ci.getCode() != null)
-                .distinct()
-                .collect(Collectors.toCollection(TreeSet::new));
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(Currency.class.getClassLoader().getResourceAsStream("g11n/currency/currency_symbol.csv")))) {
+        SortedSet<CurrencyInfo> arr = Arrays.asList(ISO_4217.getCcyTbl().getCcyNtry()).stream().filter(ci -> ci.getCode() != null).distinct().collect(Collectors.toCollection(TreeSet::new));
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(Currency.class.getClassLoader().getResourceAsStream("g11n/currency/currency_symbol.csv")))) {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(";");
                 try {
-                    String c = Arrays.stream(parts[1].split(","))
-                            .map(String::trim)
-                            .map(hex -> Integer.parseInt(hex, 16))
-                            .map(i -> String.valueOf((char) (int) i))
-                            .collect(Collectors.joining());
+                    String c = Arrays.stream(parts[1].split(",")).map(String::trim).map(hex -> Integer.parseInt(hex, 16)).map(i -> String.valueOf((char) (int) i)).collect(Collectors.joining());
                     arr.stream().filter(ci -> parts[0].equals(ci.getCode())).forEach(ci -> ci.setSign(c));
                 } catch (RuntimeException ex) {
                     //
@@ -131,8 +122,7 @@ public class Currency {
 
         @Override
         public String toString() {
-            return (this.code != null ? "code=" + this.code + ", " : "") + (this.name != null ? "name=" + this.name + ", " : "")
-                    + (this.number != null ? "number=" + this.number + ", " : "") + (this.sign != null ? "sign=" + this.sign : "");
+            return (this.code != null ? "code=" + this.code + ", " : "") + (this.name != null ? "name=" + this.name + ", " : "") + (this.number != null ? "number=" + this.number + ", " : "") + (this.sign != null ? "sign=" + this.sign : "");
         }
 
         @Override

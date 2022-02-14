@@ -46,7 +46,6 @@ public class TransparencyFilter extends RGBImageFilter {
     }
 
     /**
-     *
      * @see java.awt.image.RGBImageFilter#filterRGB(int, int, int)
      */
     @Override

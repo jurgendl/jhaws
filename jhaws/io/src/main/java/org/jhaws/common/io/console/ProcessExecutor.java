@@ -113,9 +113,7 @@ public class ProcessExecutor {
     }
 
     public static int print(File dir, Map<String, String> env, String... cmd) throws IOException {
-        ProcessBuilder create = create(dir, env, cmd).redirectInput(Redirect.INHERIT)
-                .redirectOutput(Redirect.INHERIT)
-                .redirectError(Redirect.INHERIT);
+        ProcessBuilder create = create(dir, env, cmd).redirectInput(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).redirectError(Redirect.INHERIT);
         return start(create);
     }
 
@@ -154,8 +152,7 @@ public class ProcessExecutor {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
             OutParseProcessOutput boutppo = new OutParseProcessOutput(bout);
-            returnValue.setValue(ProcessExecutor.parseProcessOutput(ProcessExecutor.create(projectdir, null, cmds).start(),
-                    print ? new ProcessExecutor.MultiParseProcessOutput(boutppo, line -> logger.info("{}", line)) : boutppo));
+            returnValue.setValue(ProcessExecutor.parseProcessOutput(ProcessExecutor.create(projectdir, null, cmds).start(), print ? new ProcessExecutor.MultiParseProcessOutput(boutppo, line -> logger.info("{}", line)) : boutppo));
         } catch (IOException ex) {
             throw new UncheckedIOException(ex);
         }

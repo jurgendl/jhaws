@@ -110,8 +110,7 @@ public class PassGen {
             length -= 1;
             S += STRING_SP;
         }
-        RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random).chars().mapToObj(c -> String.valueOf((char) c)).forEach(
-                list::add);
+        RandomStringUtils.random(length, 0, 0, false, false, S.toCharArray(), random).chars().mapToObj(c -> String.valueOf((char) c)).forEach(list::add);
         Collections.shuffle(list);
         String p = list.stream().collect(Collectors.joining());
         return p;

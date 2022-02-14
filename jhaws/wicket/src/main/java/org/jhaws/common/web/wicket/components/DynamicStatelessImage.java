@@ -7,36 +7,36 @@ import org.apache.wicket.request.resource.ResourceReference;
 
 @SuppressWarnings("serial")
 public class DynamicStatelessImage extends Image {
-	protected ImageDataProvider imageDataProvider;
+    protected ImageDataProvider imageDataProvider;
 
-	public DynamicStatelessImage(String id, ImageDataProvider imageProvider) {
-		this(DynamicStatelessImage.class, id, imageProvider);
-	}
+    public DynamicStatelessImage(String id, ImageDataProvider imageProvider) {
+        this(DynamicStatelessImage.class, id, imageProvider);
+    }
 
-	public DynamicStatelessImage(Class<?> scope, String id, ImageDataProvider imageProvider) {
-		super(id);
-		this.imageDataProvider = imageProvider;
-		setImageResource(new DynamicImageResource() {
-			@Override
-			protected byte[] getImageData(Attributes attributes) {
-				return imageDataProvider.getImageData(attributes);
-			}
-		});
-		setImageResourceReference(new ResourceReference(scope, imageProvider.getName()) {
-			@Override
-			public IResource getResource() {
-				return getImageResource();
-			}
-		});
-	}
+    public DynamicStatelessImage(Class<?> scope, String id, ImageDataProvider imageProvider) {
+        super(id);
+        this.imageDataProvider = imageProvider;
+        setImageResource(new DynamicImageResource() {
+            @Override
+            protected byte[] getImageData(Attributes attributes) {
+                return imageDataProvider.getImageData(attributes);
+            }
+        });
+        setImageResourceReference(new ResourceReference(scope, imageProvider.getName()) {
+            @Override
+            public IResource getResource() {
+                return getImageResource();
+            }
+        });
+    }
 
-	@Override
-	public IResource getImageResource() {
-		return super.getImageResource();
-	}
+    @Override
+    public IResource getImageResource() {
+        return super.getImageResource();
+    }
 
-	@Override
-	public ResourceReference getImageResourceReference() {
-		return super.getImageResourceReference();
-	}
+    @Override
+    public ResourceReference getImageResourceReference() {
+        return super.getImageResourceReference();
+    }
 }

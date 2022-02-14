@@ -27,6 +27,6 @@ public class JavaScript {
     }
 
     public static <T> T run(Class<T> cast, String script) {
-        return cast.cast(JavaScript.<T> run(script));
+        return cast.cast(JavaScript.<T>run(script));
     }
 }

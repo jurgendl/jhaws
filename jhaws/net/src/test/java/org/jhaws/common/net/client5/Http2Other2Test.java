@@ -22,7 +22,7 @@ import org.apache.hc.core5.util.TimeValue;
 public class Http2Other2Test {
     public static void main(String[] args) {
         try {
-            AsyncClientConnectionManager connManager = new PoolingAsyncClientConnectionManager(RegistryBuilder.<TlsStrategy> create()//
+            AsyncClientConnectionManager connManager = new PoolingAsyncClientConnectionManager(RegistryBuilder.<TlsStrategy>create()//
                     .register("https", DefaultClientTlsStrategy.getDefault())//
                     .build()//
                     , PoolConcurrencyPolicy.STRICT//

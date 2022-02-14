@@ -52,7 +52,6 @@ public class ExtensionFileFilter extends FileFilter {
     }
 
     /**
-     *
      * @see javax.swing.filechooser.FileFilter#accept(java.io.File)
      */
     @Override
@@ -72,7 +71,6 @@ public class ExtensionFileFilter extends FileFilter {
     }
 
     /**
-     *
      * @see javax.swing.filechooser.FileFilter#getDescription()
      */
     @Override

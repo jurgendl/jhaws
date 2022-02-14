@@ -5,14 +5,13 @@ import org.jhaws.common.web.wicket.jquery.JQuery;
 
 // https://github.com/stephband/jquery.event.move
 public class JQueryEventMove {
-	public static JavaScriptResourceReference JS_EVENT_MOVE = new JavaScriptResourceReference(JQueryEventMove.class,
-			"jquery.event.move.js");
+    public static JavaScriptResourceReference JS_EVENT_MOVE = new JavaScriptResourceReference(JQueryEventMove.class, "jquery.event.move.js");
 
-	static {
-		try {
-			JS_EVENT_MOVE.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-		} catch (Exception ex) {
-			//
-		}
-	}
+    static {
+        try {
+            JS_EVENT_MOVE.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+        } catch (Exception ex) {
+            //
+        }
+    }
 }

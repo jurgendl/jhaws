@@ -99,7 +99,6 @@ public class Utils {
          * set buffer data
          *
          * @param data
-         *
          * @throws RuntimeException
          */
         public void setBytes(byte[] data) {
@@ -152,7 +151,6 @@ public class Utils {
      * voert command uit
      *
      * @throws IOException
-     *
      * @see {@link #process(String, boolean, boolean)} met true false
      */
     public static List<String> capture(String command) throws IOException {
@@ -201,10 +199,7 @@ public class Utils {
      * @throws IOException
      */
     public static void copyFile(File in, File out) throws IOException {
-        try (FileInputStream fin = new FileInputStream(in);
-                FileChannel inChannel = fin.getChannel();
-                FileOutputStream fout = new FileOutputStream(out);
-                FileChannel outChannel = fout.getChannel()) {
+        try (FileInputStream fin = new FileInputStream(in); FileChannel inChannel = fin.getChannel(); FileOutputStream fout = new FileOutputStream(out); FileChannel outChannel = fout.getChannel()) {
             // fix copy bestanden groter dan 64MB (zie link)
             // // magic number for Windows, 64Mb - 32Kb)
             // int maxCount = (64 * 1024 * 1024) - (32 * 1024);
@@ -339,7 +334,6 @@ public class Utils {
      * execute command
      *
      * @throws IOException
-     *
      * @see {@link #process(String, boolean, boolean)} met false false
      */
     public static void execute(String command) throws IOException {
@@ -533,9 +527,7 @@ public class Utils {
      * @param command het commando
      * @param capture wanneer dit aan staat zal de uitvoerende thread blokeren tot wanneer alle uitvoer van het commando voltooid is!!!
      * @param log wanneer capture aan staat, log ook naar System.out
-     *
      * @return wanneer capture aan staat, de uitvoer ervan, lijnen
-     *
      * @throws IOException
      */
     private static List<String> process(String command, boolean capture, boolean log) throws IOException {
@@ -544,9 +536,7 @@ public class Utils {
         Process p = pb.start();
 
         if (capture) {
-            try (InputStream is = p.getInputStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    BufferedReader br = new BufferedReader(isr)) {
+            try (InputStream is = p.getInputStream(); InputStreamReader isr = new InputStreamReader(is); BufferedReader br = new BufferedReader(isr)) {
                 String line;
 
                 while ((line = br.readLine()) != null) {
@@ -644,7 +634,6 @@ public class Utils {
      *
      * @param data
      * @param file
-     *
      * @throws NullPointerException
      * @throws FileNotFoundException
      * @throws IOException
@@ -657,7 +646,6 @@ public class Utils {
      * zip entries from multiple files
      *
      * @param out
-     *
      * @throws IOException
      */
     public static void zip(OutputStream out, File... files) throws IOException {
@@ -700,7 +688,6 @@ public class Utils {
      * @param out
      * @param entryname
      * @param data
-     *
      * @throws IOException
      */
     public static void zip(OutputStream out, String entryname, byte[] data) throws IOException {
@@ -713,7 +700,6 @@ public class Utils {
      * @param out
      * @param entryname
      * @param in
-     *
      * @throws IOException
      */
     public static void zip(OutputStream out, String entryname, InputStream in) throws IOException {

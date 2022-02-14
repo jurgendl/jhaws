@@ -52,17 +52,13 @@ public class WebHelper {
      *
      * @param object de implementatie class (this waar opgeroepen)
      * @param classOrInterfaceWithGenericType class of interface waardat de generic type naam op gedeclareerd staat
-     * @param genericTypeIndex de index binnen de &lt; en &gt; waar de generic type naam op gedeclareerd staat; als er maar 1 is wordt die zowiezo
-     *            genomen (maw index 0)
+     * @param genericTypeIndex de index binnen de &lt; en &gt; waar de generic type naam op gedeclareerd staat; als er maar 1 is wordt die zowiezo genomen (maw index 0)
      * @param requiredGenericType vereiste class (alternatief voor index)
-     *
      * @return de effectieve implementatie
-     *
      * @throws IllegalArgumentException wanneer index niet gevonden wordt of geen implementatie van class c
      */
     @SuppressWarnings("unchecked")
-    private static <P, G extends P> Class<G> _getImplementation(Object object, Class<?> classOrInterfaceWithGenericType, int genericTypeIndex,
-            Class<P> requiredGenericType) throws IllegalArgumentException {
+    private static <P, G extends P> Class<G> _getImplementation(Object object, Class<?> classOrInterfaceWithGenericType, int genericTypeIndex, Class<P> requiredGenericType) throws IllegalArgumentException {
         if (object == null || classOrInterfaceWithGenericType == null) {
             throw new NullPointerException();
         }
@@ -133,16 +129,14 @@ public class WebHelper {
     /**
      * @see #getImplementation(Object, Class, int)
      */
-    public static <G> Class<G> getImplementation(Object object, Class<?> classOrInterfaceWithGenericType, int genericTypeIndex)
-            throws IllegalArgumentException {
+    public static <G> Class<G> getImplementation(Object object, Class<?> classOrInterfaceWithGenericType, int genericTypeIndex) throws IllegalArgumentException {
         return _getImplementation(object, classOrInterfaceWithGenericType, genericTypeIndex, null);
     }
 
     /**
      * @see #getImplementation(Object, Class, int)
      */
-    public static <P, G extends P> Class<G> getImplementation(Object object, Class<?> classOrInterfaceWithGenericType, Class<P> requiredGenericType)
-            throws IllegalArgumentException {
+    public static <P, G extends P> Class<G> getImplementation(Object object, Class<?> classOrInterfaceWithGenericType, Class<P> requiredGenericType) throws IllegalArgumentException {
         return _getImplementation(object, classOrInterfaceWithGenericType, -1, requiredGenericType);
     }
 

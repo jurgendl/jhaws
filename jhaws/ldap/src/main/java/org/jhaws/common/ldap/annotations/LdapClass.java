@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface LdapClass {
     /**
-     *
      * find properties via class properties instead of via LdapField annotation (default false)
      *
      * @return boolean
@@ -38,7 +37,6 @@ public @interface LdapClass {
     boolean inherited() default false;
 
     /**
-     *
      * wordt gebruikt bij findAll, update en create
      *
      * @return String[]

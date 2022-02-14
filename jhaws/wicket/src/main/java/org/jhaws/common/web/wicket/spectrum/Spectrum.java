@@ -14,8 +14,7 @@ public class Spectrum {
 
     public static CssResourceReference SPECTRUM_CSS = new CssResourceReference(Spectrum.class, "spectrum.css");
 
-    public static JavaScriptResourceReference SPECTRUM_I18N_JS = new JavaScriptResourceReference(Spectrum.class,
-            RESOURCE_I18N_PATH + "jquery.spectrum.js").addJavaScriptResourceReferenceDependency(SPECTRUM_JS);
+    public static JavaScriptResourceReference SPECTRUM_I18N_JS = new JavaScriptResourceReference(Spectrum.class, RESOURCE_I18N_PATH + "jquery.spectrum.js").addJavaScriptResourceReferenceDependency(SPECTRUM_JS);
 
     static {
         try {

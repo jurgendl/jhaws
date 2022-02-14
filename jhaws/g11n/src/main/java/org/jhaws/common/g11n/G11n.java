@@ -49,8 +49,8 @@ public class G11n {
     }
 
     /**
-     * can also be set via command line parameter: "-Duser.country=UK -Duser.language=en"; use this instead of {@link Locale#setDefault(Locale)} to
-     * change Locale of all {@link EComponentI}s dynamically
+     * can also be set via command line parameter: "-Duser.country=UK -Duser.language=en"; use this instead of {@link Locale#setDefault(Locale)} to change Locale of all
+     * {@link EComponentI}s dynamically
      */
     public static void setCurrentLocale(Locale currentLocale) {
         Locale.setDefault(currentLocale);

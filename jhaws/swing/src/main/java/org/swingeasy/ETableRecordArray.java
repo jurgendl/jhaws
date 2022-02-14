@@ -20,7 +20,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableRecord#get(int)
      */
     @Override
@@ -29,7 +28,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableRecord#getBean()
      */
     @Override
@@ -38,7 +36,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableRecord#getStringValue(int)
      */
     @Override
@@ -48,7 +45,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableRecord#getTooltip(int)
      */
     @Override
@@ -57,7 +53,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableRecord#hasChanged(int)
      */
     @Override
@@ -68,7 +63,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see java.lang.Iterable#iterator()
      */
     @Override
@@ -77,7 +71,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableRecord#set(int, java.lang.Object)
      */
     @SuppressWarnings("unchecked")
@@ -91,7 +84,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableRecord#size()
      */
     @Override
@@ -100,7 +92,6 @@ public class ETableRecordArray<E> implements ETableRecord<E[]> {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override

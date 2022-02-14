@@ -26,8 +26,7 @@ public class DecimalSystem {
         }
         {
             Map<Locale, List<String>> tmp = new HashMap<>();
-            tmp.put(null, Arrays.asList("atto", "femto", "pico", "nano", "micro", "milli", "centi", "deci", "", "deca", "hecto", "kilo", "mega",
-                    "giga", "tera", "peta", "exa", "zetta", "yotta", "xona", "weka"));
+            tmp.put(null, Arrays.asList("atto", "femto", "pico", "nano", "micro", "milli", "centi", "deci", "", "deca", "hecto", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta", "xona", "weka"));
             longdata = Collections.unmodifiableMap(tmp);
         }
     }

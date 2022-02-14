@@ -170,7 +170,6 @@ public class UIUtils {
         }
 
         /**
-         *
          * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
          */
         @Override
@@ -190,7 +189,6 @@ public class UIUtils {
         }
 
         /**
-         *
          * @see java.lang.Object#toString()
          */
         @Override
@@ -202,7 +200,6 @@ public class UIUtils {
 
     private static class StaticPropertyChangeListener implements PropertyChangeListener {
         /**
-         *
          * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
          */
         @Override
@@ -282,7 +279,6 @@ public class UIUtils {
         }
 
         /**
-         *
          * @see org.swingeasy.UIUtils.UncaughtExceptionHandler#handle(java.lang.Throwable)
          */
         public void handle(Throwable t) {
@@ -290,7 +286,6 @@ public class UIUtils {
         }
 
         /**
-         *
          * @see java.lang.Thread.UncaughtExceptionHandler#uncaughtException(java.lang.Thread, java.lang.Throwable)
          */
         @Override
@@ -353,8 +348,7 @@ public class UIUtils {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(frame, Messages.getString((Locale) null, "tray.exit.confirmation"),
-                            Messages.getString((Locale) null, "tray.exit.title"), JOptionPane.YES_NO_OPTION)) {
+                    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(frame, Messages.getString((Locale) null, "tray.exit.confirmation"), Messages.getString((Locale) null, "tray.exit.title"), JOptionPane.YES_NO_OPTION)) {
                         System.exit(0);
                     }
                 }
@@ -452,7 +446,7 @@ public class UIUtils {
                 if (!org.swingeasy.WeakReferencedListener.isWrapped(pclp.getListener())) {
                     continue;
                 }
-                Object component = WeakReferencedListener.<PropertyChangeListenerDelegate> unwrap(pclp.getListener()).getReference().getDelageting();
+                Object component = WeakReferencedListener.<PropertyChangeListenerDelegate>unwrap(pclp.getListener()).getReference().getDelageting();
                 out.println((component == null ? null : component.hashCode()) + " : " + component);
             } catch (Exception ex) {
                 out.println(ex);
@@ -604,9 +598,7 @@ public class UIUtils {
      */
     public static boolean registerLocaleChangeListener(final Component component) {
         component.setLocale(SystemSettings.getCurrentLocale());
-        SystemSettings.getSingleton()
-                .addPropertyChangeListener(SystemSettings.LOCALE,
-                        WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
+        SystemSettings.getSingleton().addPropertyChangeListener(SystemSettings.LOCALE, WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
         return true;
     }
 
@@ -620,8 +612,7 @@ public class UIUtils {
                 if (!org.swingeasy.WeakReferencedListener.isWrapped(pclp.getListener())) {
                     continue;
                 }
-                PropertyChangeListenerDelegate reference = WeakReferencedListener.<PropertyChangeListenerDelegate> unwrap(pclp.getListener())
-                        .getReference();
+                PropertyChangeListenerDelegate reference = WeakReferencedListener.<PropertyChangeListenerDelegate>unwrap(pclp.getListener()).getReference();
                 if (reference == null) {
                     continue;
                 }
@@ -635,9 +626,7 @@ public class UIUtils {
         }
 
         component.setLocale(SystemSettings.getCurrentLocale());
-        SystemSettings.getSingleton()
-                .addPropertyChangeListener(SystemSettings.LOCALE,
-                        WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
+        SystemSettings.getSingleton().addPropertyChangeListener(SystemSettings.LOCALE, WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
         return true;
     }
 
@@ -753,8 +742,7 @@ public class UIUtils {
     }
 
     /**
-     * sets localization, expects a properties file with name {prefix}_{locale.toString()}.properties in the directory javax/swing; for all possible
-     * keys, see source documentation
+     * sets localization, expects a properties file with name {prefix}_{locale.toString()}.properties in the directory javax/swing; for all possible keys, see source documentation
      *
      * @param resource
      * @param baseName

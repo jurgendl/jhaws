@@ -107,10 +107,8 @@ public class CustomizableOptionPane {
         }
 
         @SuppressWarnings("unchecked")
-        private static <T> T showDialog(Component parentComponent, JComponent component, String title, MessageType messageType, OptionType optionType,
-                Icon icon, OptionPaneCustomizer customizer, T[] options, T initialValue) throws HeadlessException {
-            CustomizableOptionPaneImpl pane = new CustomizableOptionPaneImpl(component, messageType.code,
-                    optionType == null ? OptionType.OK_CANCEL.code : optionType.code, icon, options, initialValue);
+        private static <T> T showDialog(Component parentComponent, JComponent component, String title, MessageType messageType, OptionType optionType, Icon icon, OptionPaneCustomizer customizer, T[] options, T initialValue) throws HeadlessException {
+            CustomizableOptionPaneImpl pane = new CustomizableOptionPaneImpl(component, messageType.code, optionType == null ? OptionType.OK_CANCEL.code : optionType.code, icon, options, initialValue);
             pane.setInitialValue(null);
             pane.setComponentOrientation((parentComponent == null ? JOptionPane.getRootFrame() : parentComponent).getComponentOrientation());
 
@@ -160,8 +158,7 @@ public class CustomizableOptionPane {
         private Method getCreateDialogMethod() {
             // thank you for private methods but no use setting this one anything but private
             try {
-                CustomizableOptionPaneImpl.createDialogMethod = JOptionPane.class.getDeclaredMethod("createDialog", Component.class, String.class,
-                        Integer.TYPE);
+                CustomizableOptionPaneImpl.createDialogMethod = JOptionPane.class.getDeclaredMethod("createDialog", Component.class, String.class, Integer.TYPE);
                 CustomizableOptionPaneImpl.createDialogMethod.setAccessible(true);
                 return CustomizableOptionPaneImpl.createDialogMethod;
             } catch (SecurityException ex) {
@@ -184,18 +181,14 @@ public class CustomizableOptionPane {
      * @param optionType
      * @param icon
      * @param customizer
-     *
      * @return
-     *
      * @throws HeadlessException
      */
-    public static ResultType showCustomDialog(Component parentComponent, JComponent component, String title, MessageType messageType,
-            OptionType optionType, Icon icon, OptionPaneCustomizer customizer) throws HeadlessException {
+    public static ResultType showCustomDialog(Component parentComponent, JComponent component, String title, MessageType messageType, OptionType optionType, Icon icon, OptionPaneCustomizer customizer) throws HeadlessException {
         return CustomizableOptionPaneImpl.showDialog(parentComponent, component, title, messageType, optionType, icon, customizer, null, null);
     }
 
-    public static <T> T showCustomDialog(Component parentComponent, JComponent component, String title, MessageType messageType, T[] options,
-            T initialValue, Icon icon, OptionPaneCustomizer customizer) throws HeadlessException {
+    public static <T> T showCustomDialog(Component parentComponent, JComponent component, String title, MessageType messageType, T[] options, T initialValue, Icon icon, OptionPaneCustomizer customizer) throws HeadlessException {
         return CustomizableOptionPaneImpl.showDialog(parentComponent, component, title, messageType, null, icon, customizer, options, initialValue);
     }
 

@@ -21,7 +21,6 @@ public @interface LdapKeyValue {
     String key();
 
     /**
-     *
      * value
      *
      * @return value

@@ -69,7 +69,6 @@ public class ETabbedPane extends DnDTabbedPane {
     }
 
     /**
-     *
      * @see javax.swing.JTabbedPane#insertTab(java.lang.String, javax.swing.Icon, java.awt.Component, java.lang.String, int)
      */
     @Override

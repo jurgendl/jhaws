@@ -16,11 +16,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for chapterType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="chapterType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -37,8 +34,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "chapterType", propOrder = { "tag" })
@@ -66,23 +61,15 @@ public class ChapterType {
 
     /**
      * Gets the value of the tag property.
-     *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
-     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the tag property.
-     *
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the tag property.
      * <p>
-     * For example, to add a new item, do as follows:
-     *
-     * <pre>
+     * For example, to add a new item, do as follows: <pre>
      * getTag().add(newItem);
      * </pre>
-     *
-     *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link TagType }
-     *
-     *
      */
     public List<TagType> getTag() {
         if (tag == null) {
@@ -93,7 +80,6 @@ public class ChapterType {
 
     /**
      * Gets the value of the id property.
-     *
      */
     public int getId() {
         return id;
@@ -101,7 +87,6 @@ public class ChapterType {
 
     /**
      * Sets the value of the id property.
-     *
      */
     public void setId(int value) {
         this.id = value;
@@ -111,7 +96,6 @@ public class ChapterType {
      * Gets the value of the timeBase property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getTimeBase() {
         return timeBase;
@@ -121,7 +105,6 @@ public class ChapterType {
      * Sets the value of the timeBase property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setTimeBase(String value) {
         this.timeBase = value;
@@ -129,7 +112,6 @@ public class ChapterType {
 
     /**
      * Gets the value of the start property.
-     *
      */
     public int getStart() {
         return start;
@@ -137,7 +119,6 @@ public class ChapterType {
 
     /**
      * Sets the value of the start property.
-     *
      */
     public void setStart(int value) {
         this.start = value;
@@ -147,7 +128,6 @@ public class ChapterType {
      * Gets the value of the startTime property.
      *
      * @return possible object is {@link Float }
-     *
      */
     public Float getStartTime() {
         return startTime;
@@ -157,7 +137,6 @@ public class ChapterType {
      * Sets the value of the startTime property.
      *
      * @param value allowed object is {@link Float }
-     *
      */
     public void setStartTime(Float value) {
         this.startTime = value;
@@ -165,7 +144,6 @@ public class ChapterType {
 
     /**
      * Gets the value of the end property.
-     *
      */
     public int getEnd() {
         return end;
@@ -173,7 +151,6 @@ public class ChapterType {
 
     /**
      * Sets the value of the end property.
-     *
      */
     public void setEnd(int value) {
         this.end = value;
@@ -181,7 +158,6 @@ public class ChapterType {
 
     /**
      * Gets the value of the endTime property.
-     *
      */
     public float getEndTime() {
         return endTime;
@@ -189,7 +165,6 @@ public class ChapterType {
 
     /**
      * Sets the value of the endTime property.
-     *
      */
     public void setEndTime(float value) {
         this.endTime = value;
@@ -197,7 +172,6 @@ public class ChapterType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

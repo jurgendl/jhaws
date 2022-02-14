@@ -2,6 +2,7 @@ package org.jhaws.common.io;
 
 public enum ByteTo {
     Byte, GigaByte, KiloByte, MegaByte, TerraByte;
+
     /** 1 */
     private static final long O = 1L;
 

@@ -32,6 +32,7 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
     private enum VerticalSortIcon implements Icon {
 
         ASCENDING(UIManager.getIcon("Table.ascendingSortIcon")), DESCENDING(UIManager.getIcon("Table.descendingSortIcon")); //$NON-NLS-1$ //$NON-NLS-2$
+
         private final Icon icon;// = ;
 
         private VerticalSortIcon(Icon icon) {
@@ -59,8 +60,8 @@ public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRende
         }
 
         /**
-         * Paints an icon suitable for the header of a sorted table column, rotated by 90° clockwise. This rotation is applied to compensate the
-         * rotation already applied to the passed in Graphics reference by the VerticalLabelUI.
+         * Paints an icon suitable for the header of a sorted table column, rotated by 90° clockwise. This rotation is applied to compensate the rotation already applied to the
+         * passed in Graphics reference by the VerticalLabelUI.
          * <P>
          * The icon is retrieved from the UIManager to obtain an icon appropriate to the L&F.
          *

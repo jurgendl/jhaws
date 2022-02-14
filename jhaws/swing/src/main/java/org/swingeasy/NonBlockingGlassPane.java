@@ -13,8 +13,8 @@ import javax.swing.SwingUtilities;
 /**
  * GlassPane tutorial "A well-behaved GlassPane" http://weblogs.java.net/blog/alexfromsun/
  * <p/>
- * This is the final version of the GlassPane it is transparent for MouseEvents, and respects underneath component's cursors by default, it is also
- * friedly for other users, if someone adds a mouseListener to this GlassPane or set a new cursor it will respect them
+ * This is the final version of the GlassPane it is transparent for MouseEvents, and respects underneath component's cursors by default, it is also friedly for other users, if
+ * someone adds a mouseListener to this GlassPane or set a new cursor it will respect them
  *
  * @author Alexander Potochkin
  */
@@ -32,20 +32,18 @@ public class NonBlockingGlassPane extends JPanel implements AWTEventListener {
     }
 
     /**
-     * If someone adds a mouseListener to the GlassPane or set a new cursor we expect that he knows what he is doing and return the super.contains(x,
-     * y) otherwise we return false to respect the cursors for the underneath components
+     * If someone adds a mouseListener to the GlassPane or set a new cursor we expect that he knows what he is doing and return the super.contains(x, y) otherwise we return false
+     * to respect the cursors for the underneath components
      */
     @Override
     public boolean contains(int x, int y) {
-        if (getMouseListeners().length == 0 && getMouseMotionListeners().length == 0 && getMouseWheelListeners().length == 0
-                && getCursor() == Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) {
+        if (getMouseListeners().length == 0 && getMouseMotionListeners().length == 0 && getMouseWheelListeners().length == 0 && getCursor() == Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)) {
             return false;
         }
         return super.contains(x, y);
     }
 
     /**
-     *
      * @see java.awt.event.AWTEventListener#eventDispatched(java.awt.AWTEvent)
      */
     @Override

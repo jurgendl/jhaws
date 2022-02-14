@@ -5,7 +5,6 @@ package org.jhaws.common.io.filter;
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated

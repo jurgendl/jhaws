@@ -16,12 +16,11 @@ public class FileTextExtracterService {
     private Map<ExtensionFilter, List<FileTextExtracter>> fileTextExtractersMap;
 
     public FileTextExtracterService() {
-        fileTextExtractersMap = CollectionUtils8.stream(ServiceLoader.load(org.jhaws.common.documents.FileTextExtracter.class).iterator())
-                .collect(Collectors.groupingBy(//
-                        fileTextExtracter -> new ExtensionFilter(fileTextExtracter.accepts())//
-                        , LinkedHashMap::new//
-                        , Collectors.toList()//
-                ));
+        fileTextExtractersMap = CollectionUtils8.stream(ServiceLoader.load(org.jhaws.common.documents.FileTextExtracter.class).iterator()).collect(Collectors.groupingBy(//
+                fileTextExtracter -> new ExtensionFilter(fileTextExtracter.accepts())//
+                , LinkedHashMap::new//
+                , Collectors.toList()//
+        ));
     }
 
     public boolean supports(FilePath file) {
@@ -33,13 +32,7 @@ public class FileTextExtracterService {
     }
 
     public List<FileTextExtracter> getFileTextExtracters(FilePath file) {
-        return fileTextExtractersMap.entrySet()
-                .stream()
-                .filter(ex -> ex.getKey().accept(file))
-                .map(ex -> ex.getValue())
-                .map(ex -> ex.stream())
-                .flatMap(Function.identity())
-                .collect(Collectors.toList());
+        return fileTextExtractersMap.entrySet().stream().filter(ex -> ex.getKey().accept(file)).map(ex -> ex.getValue()).map(ex -> ex.stream()).flatMap(Function.identity()).collect(Collectors.toList());
     }
 
     public String extract(FilePath file, boolean writeFile) throws IOException {

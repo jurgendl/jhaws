@@ -29,8 +29,7 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
 
     protected IModel<? extends List<String>> choices;
 
-    public TagItTextFieldPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, TagItTextFieldSettings componentSettings,
-            IModel<? extends List<String>> choices) {
+    public TagItTextFieldPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, TagItTextFieldSettings componentSettings, IModel<? extends List<String>> choices) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
     }
@@ -66,12 +65,10 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
 
         if (StringUtils.isNotBlank(getComponentSettings().getRemote())) {
             String script = new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-remote-factory.js").readAll();
-            response.render(
-                    OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
+            response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$URL$", getComponentSettings().getRemote())));
         } else if (StringUtils.isNotBlank(getComponentSettings().getLocal())) {
             String script = new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-local-factory.js").readAll();
-            response.render(
-                    OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$OPTIONS$", getComponentSettings().getLocal())));
+            response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$OPTIONS$", getComponentSettings().getLocal())));
         } else if (choices != null && choices.getObject() != null && !choices.getObject().isEmpty()) {
             String script = new FilePath(TagItTextFieldPanel.class, "TagItTextFieldPanel-local-factory.js").readAll();
             response.render(OnDomReadyHeaderItem.forScript(replace(script, getComponentSettings()).replace("$OPTIONS$", tagItChoices(choices))));
@@ -81,8 +78,7 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
         }
 
         if (getComponentSettings().isReadOnly()) {
-            response.render(OnDomReadyHeaderItem.forScript(";$('#" + getComponent().getMarkupId()
-                    + "').on('beforeItemAdd',function(event){event.cancel=true;}).on('beforeItemRemove',function(event){event.cancel=true;});"));
+            response.render(OnDomReadyHeaderItem.forScript(";$('#" + getComponent().getMarkupId() + "').on('beforeItemAdd',function(event){event.cancel=true;}).on('beforeItemRemove',function(event){event.cancel=true;});"));
         }
     }
 

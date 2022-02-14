@@ -77,8 +77,8 @@ public class EComponentHelper {
     }
 
     /**
-     * Sets the preferred width of the visible column specified by vColIndex. The column will be just wide enough to show the column head and the
-     * widest cell in the column. margin pixels are added to the left and right (resulting in an additional width of 2*margin pixels).
+     * Sets the preferred width of the visible column specified by vColIndex. The column will be just wide enough to show the column head and the widest cell in the column. margin
+     * pixels are added to the left and right (resulting in an additional width of 2*margin pixels).
      *
      * @param table
      * @param vColIndex
@@ -114,12 +114,6 @@ public class EComponentHelper {
     }
 
     public static String removeHtml(String s) {
-        return s.replace("&nbsp;", " ")
-                .replace("<br>", "\n")
-                .replace("<br/>", "\n")
-                .replace("<html>", "")
-                .replace("</html>", "")
-                .replace("<body>", "")
-                .replace("</body>", "");
+        return s.replace("&nbsp;", " ").replace("<br>", "\n").replace("<br/>", "\n").replace("<html>", "").replace("</html>", "").replace("<body>", "").replace("</body>", "");
     }
 }

@@ -6,14 +6,14 @@ import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 @SuppressWarnings("serial")
 public class NoDoubleClickAjaxButton extends AjaxButton {
 
-	public NoDoubleClickAjaxButton(String id) {
-		super(id);
-	}
+    public NoDoubleClickAjaxButton(String id) {
+        super(id);
+    }
 
-	@Override
-	protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-		super.updateAjaxAttributes(attributes);
+    @Override
+    protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+        super.updateAjaxAttributes(attributes);
 
-		attributes.getAjaxCallListeners().add(new PreventDoubleClickBehaviorButtons());
-	}
+        attributes.getAjaxCallListeners().add(new PreventDoubleClickBehaviorButtons());
+    }
 }

@@ -9,8 +9,7 @@ import org.jhaws.common.web.wicket.WicketApplication;
  * @see http://qtip2.com
  */
 public class QTip {
-    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(QTip.class, "jquery.qtip.js")
-            .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
+    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(QTip.class, "jquery.qtip.js").addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
 
     public static CssResourceReference CSS = new CssResourceReference(QTip.class, "jquery.qtip.css");
 }

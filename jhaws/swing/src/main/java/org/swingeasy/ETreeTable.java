@@ -357,18 +357,17 @@ public class ETreeTable<T> extends JTable implements ETreeTableI<T>, Iterable<ET
             }
         };
 
-        DefaultExternalExpansionModel<ETreeTableRecord<T>> expansionModel = new DefaultExternalExpansionModel<>(
-                new ExpansionModel<ETreeTableRecord<T>>() {
-                    @Override
-                    public boolean isExpanded(ETreeTableRecord<T> element, List<ETreeTableRecord<T>> path) {
-                        return false; // all start of collapsed
-                    }
+        DefaultExternalExpansionModel<ETreeTableRecord<T>> expansionModel = new DefaultExternalExpansionModel<>(new ExpansionModel<ETreeTableRecord<T>>() {
+            @Override
+            public boolean isExpanded(ETreeTableRecord<T> element, List<ETreeTableRecord<T>> path) {
+                return false; // all start of collapsed
+            }
 
-                    @Override
-                    public void setExpanded(ETreeTableRecord<T> element, List<ETreeTableRecord<T>> path, boolean expanded) {
-                        //
-                    }
-                });
+            @Override
+            public void setExpanded(ETreeTableRecord<T> element, List<ETreeTableRecord<T>> path, boolean expanded) {
+                //
+            }
+        });
         this.treeList = new TreeList<>(this.records, this.format, expansionModel);
 
         this.tableModel = new DefaultEventTableModel<>(this.treeList, this.tableFormat);

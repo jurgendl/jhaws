@@ -226,9 +226,9 @@ public class TestResource implements TestResourceI {
     }
 
     /**
-     * @see org.jhaws.common.net.client.TestResourceI#headers(java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-     *      java.lang.String, java.lang.String, java.lang.String, java.lang.Long, java.lang.String, java.util.Date, java.lang.String,
-     *      java.lang.String, java.util.Date, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     * @see org.jhaws.common.net.client.TestResourceI#headers(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
+     *      java.lang.String, java.lang.Long, java.lang.String, java.util.Date, java.lang.String, java.lang.String, java.util.Date, java.lang.String, java.lang.String,
+     *      java.lang.String, java.lang.String)
      */
     @Override
     public String headers(//

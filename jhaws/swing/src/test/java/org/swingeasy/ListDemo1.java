@@ -44,9 +44,7 @@ public class ListDemo1 {
         EList<ListDemo1Value> cc = new EList<>(cfg);
         JFrame f = new JFrame();
         {
-            f.getContentPane().add(
-                    new JScrollPane(cc, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                    BorderLayout.CENTER);
+            f.getContentPane().add(new JScrollPane(cc, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
             f.getContentPane().add(cc.getFiltercomponent(), BorderLayout.NORTH);
             f.getContentPane().add(cc.getSearchComponent(), BorderLayout.SOUTH);
             f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

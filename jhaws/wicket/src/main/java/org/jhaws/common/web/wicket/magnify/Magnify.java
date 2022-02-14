@@ -8,8 +8,7 @@ import org.jhaws.common.web.wicket.jquery.JQuery;
  * @see http://dimsemenov.com/plugins/magnific-popup/documentation.html
  */
 public class Magnify {
-    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(Magnify.class, "magnific-popup.js")
-            .addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(Magnify.class, "magnific-popup.js").addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
 
     public static CssResourceReference CSS = new CssResourceReference(Magnify.class, "magnific-popup.css");
 

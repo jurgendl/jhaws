@@ -13,26 +13,23 @@ import com.fasterxml.jackson.databind.type.ReferenceType;
 
 @SuppressWarnings("serial")
 public class CustomDeserializers extends Deserializers.Base implements java.io.Serializable {
-	@Override
-	public JsonDeserializer<?> findReferenceDeserializer(ReferenceType refType, DeserializationConfig config,
-			BeanDescription beanDesc, TypeDeserializer contentTypeDeserializer, JsonDeserializer<?> contentDeserializer)
-			throws JsonMappingException {
-		final Class<?> raw = refType.getRawClass();
-		// System.out.println("? " + raw);
-		if (Image.class.isAssignableFrom(raw)) {
-			return new ImageDeserializer();
-		}
-		return null;
-	}
+    @Override
+    public JsonDeserializer<?> findReferenceDeserializer(ReferenceType refType, DeserializationConfig config, BeanDescription beanDesc, TypeDeserializer contentTypeDeserializer, JsonDeserializer<?> contentDeserializer) throws JsonMappingException {
+        final Class<?> raw = refType.getRawClass();
+        // System.out.println("? " + raw);
+        if (Image.class.isAssignableFrom(raw)) {
+            return new ImageDeserializer();
+        }
+        return null;
+    }
 
-	@Override
-	public JsonDeserializer<?> findBeanDeserializer(JavaType type, DeserializationConfig config,
-			BeanDescription beanDesc) throws JsonMappingException {
-		final Class<?> raw = type.getRawClass();
-		// System.out.println("? " + raw);
-		if (Image.class.isAssignableFrom(raw)) {
-			return new ImageDeserializer();
-		}
-		return null;
-	}
+    @Override
+    public JsonDeserializer<?> findBeanDeserializer(JavaType type, DeserializationConfig config, BeanDescription beanDesc) throws JsonMappingException {
+        final Class<?> raw = type.getRawClass();
+        // System.out.println("? " + raw);
+        if (Image.class.isAssignableFrom(raw)) {
+            return new ImageDeserializer();
+        }
+        return null;
+    }
 }

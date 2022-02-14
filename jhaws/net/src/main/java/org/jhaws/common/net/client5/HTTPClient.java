@@ -179,8 +179,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         if (redirectStrategy == null) {
             redirectStrategy = new DefaultRedirectStrategy() {
                 @Override
-                public URI getLocationURI(HttpRequest request, HttpResponse response, HttpContext _context)
-                        throws org.apache.hc.core5.http.HttpException {
+                public URI getLocationURI(HttpRequest request, HttpResponse response, HttpContext _context) throws org.apache.hc.core5.http.HttpException {
                     URI redirect = super.getLocationURI(request, response, _context);
                     if (chain != null) chain.get().add(redirect);
                     return redirect;
@@ -198,12 +197,10 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
 
                     switch (statusCode) {
                         case HttpStatus.SC_MOVED_TEMPORARILY:
-                            return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
-                                    || method.equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
+                            return (method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method.equalsIgnoreCase(HttpHead.METHOD_NAME)) && (locationHeader != null);
                         case HttpStatus.SC_MOVED_PERMANENTLY:
                         case HttpStatus.SC_TEMPORARY_REDIRECT:
-                            return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME)
-                                    || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
+                            return method.equalsIgnoreCase(HttpGet.METHOD_NAME) || method.equalsIgnoreCase(HttpPost.METHOD_NAME) || method.equalsIgnoreCase(HttpHead.METHOD_NAME);
                         case HttpStatus.SC_SEE_OTHER:
                             return true;
                         default:
@@ -233,7 +230,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         ;
         if (ntlm) {
             httpClientBuilder.setDefaultAuthSchemeRegistry(//
-                    RegistryBuilder.<AuthSchemeFactory> create()//
+                    RegistryBuilder.<AuthSchemeFactory>create()//
                             .register(AuthSchemes.NTLM, new JCIFSNTLMSchemeFactory())//
                             .build()//
             );
@@ -248,7 +245,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         if (connectionManager == null) {
             // replaces ThreadSafeClientConnManager
             PoolingHttpClientConnectionManager poolingConnectionManager = new PoolingHttpClientConnectionManager(//
-                    RegistryBuilder.<ConnectionSocketFactory> create()//
+                    RegistryBuilder.<ConnectionSocketFactory>create()//
                             .register(URIScheme.HTTP.id, PlainConnectionSocketFactory.getSocketFactory())//
                             .register(URIScheme.HTTPS.id, getSSLConnectionSocketFactory())//
                             .build()//
@@ -262,9 +259,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
     }
 
     protected SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
-        TLS[] tlsva = Arrays.stream(tlsVersions)
-                .map(t -> Arrays.stream(TLS.values()).filter(tls -> tls.id.equals(t)).findAny().get())
-                .toArray(length -> new TLS[length]);
+        TLS[] tlsva = Arrays.stream(tlsVersions).map(t -> Arrays.stream(TLS.values()).filter(tls -> tls.id.equals(t)).findAny().get()).toArray(length -> new TLS[length]);
         return SSLConnectionSocketFactoryBuilder.create()//
                 .setSslContext(getSSLContext())//
                 .setTlsVersions(tlsva)//
@@ -291,8 +286,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         return execute(params, req, null, null);
     }
 
-    public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out,
-            RequestListener requestListener) {
+    public Response execute(AbstractRequest<? extends AbstractRequest<?>> params, HttpUriRequest req, OutputStream out, RequestListener requestListener) {
         if (params != null) {
             prepareRequest(params, req);
         }
@@ -333,8 +327,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         return response;
     }
 
-    protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse, OutputStream out, RequestListener requestListener)
-            throws IOException {
+    protected Response buildResponse(HttpUriRequest req, CloseableHttpResponse httpResponse, OutputStream out, RequestListener requestListener) throws IOException {
         Response response = new Response();
         EnhancedList<URI> uris = chain.get();
         URI _uri_;
@@ -461,11 +454,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         // FIXME
         if (!put.getFormValues().isEmpty()) {
             EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
-            put.getFormValues()
-                    .entrySet()
-                    .stream()
-                    .filter(kv -> kv.getKey() != null)
-                    .forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
+            put.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null).forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
             httpPut.setEntity(new UrlEncodedFormEntity(nvps));
         }
         return httpPut;
@@ -498,29 +487,19 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
                 MultipartEntityBuilder mb = MultipartEntityBuilder.create();
                 mb.setMode(HttpMultipartMode.EXTENDED);
                 mb.addBinaryBody(post.getName().toString(), post.getStream().get());
-                post.getFormValues()
-                        .entrySet()
-                        .forEach(entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
+                post.getFormValues().entrySet().forEach(entry -> entry.getValue().stream().forEach(element -> mb.addTextBody(entry.getKey(), element)));
             }
         } else if (post.isUrlEncodedFormEntity()) {
             HttpPost httpPost = new HttpPost(post.getUri());
             EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
-            post.getFormValues()
-                    .entrySet()
-                    .stream()
-                    .filter(kv -> kv.getKey() != null)
-                    .forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
+            post.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null).forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
             req = httpPost;
         } else {
             // FIXME
             HttpPost httpPost = new HttpPost(post.getUri());
             EnhancedList<NameValuePair> nvps = new EnhancedArrayList<>();
-            post.getFormValues()
-                    .entrySet()
-                    .stream()
-                    .filter(kv -> kv.getKey() != null)
-                    .forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
+            post.getFormValues().entrySet().stream().filter(kv -> kv.getKey() != null).forEach(kv -> kv.getValue().forEach(v -> nvps.add(new BasicNameValuePair(kv.getKey(), v))));
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
             req = httpPost;
         }
@@ -567,12 +546,7 @@ public class HTTPClient extends HTTPClientBase<HTTPClient> {
         URI uri = isBlank(form.getAction()) ? form.getUrl() : URIUtils.resolve(form.getUrl(), form.getAction());
         PostRequest post = new PostRequest(uri);
         form.getInputElements().stream().filter(e -> !(e instanceof FileInput)).forEach(e -> post.addFormValue(e.getName(), e.getValue()));
-        form.getInputElements()
-                .stream()
-                .filter(e -> StringUtils.isNotBlank(e.getName()))
-                .filter(e -> StringUtils.isNotBlank(e.getValue()))
-                .filter(e -> e instanceof FileInput)
-                .map(e -> FileInput.class.cast(e))
+        form.getInputElements().stream().filter(e -> StringUtils.isNotBlank(e.getName())).filter(e -> StringUtils.isNotBlank(e.getValue())).filter(e -> e instanceof FileInput).map(e -> FileInput.class.cast(e))
                 .forEach(e -> post.addAttachment(e.getName(), new FilePath(e.getFile())));
         post.setName(form.getId());
         return post;

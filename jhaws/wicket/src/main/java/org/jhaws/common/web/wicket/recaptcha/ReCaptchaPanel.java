@@ -4,14 +4,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 @SuppressWarnings("serial")
 public abstract class ReCaptchaPanel extends Panel {
-	public ReCaptchaPanel(String id) {
-		super(id);
-	}
+    public ReCaptchaPanel(String id) {
+        super(id);
+    }
 
-	/**
-	 * toe te voegen in form submit
-	 */
-	abstract public boolean verify();
+    /**
+     * toe te voegen in form submit
+     */
+    abstract public boolean verify();
 
-	abstract public ReCaptcha getReCaptcha();
+    abstract public ReCaptcha getReCaptcha();
 }

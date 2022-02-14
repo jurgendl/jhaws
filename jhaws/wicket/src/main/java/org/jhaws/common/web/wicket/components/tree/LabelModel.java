@@ -6,43 +6,43 @@ import org.jhaws.common.web.wicket.WebHelper;
 
 public class LabelModel implements IModel<String> {
 
-	private static final long serialVersionUID = -2309269739547743819L;
+    private static final long serialVersionUID = -2309269739547743819L;
 
-	protected final Component component;
+    protected final Component component;
 
-	protected final String key;
+    protected final String key;
 
-	public LabelModel(Component component, Object key) {
-		this.component = component;
-		String k;
-		try {
-			k = WebHelper.name(key);
-		} catch (Exception ex) {
-			k = (String) key;
-		}
-		this.key = k;
-	}
+    public LabelModel(Component component, Object key) {
+        this.component = component;
+        String k;
+        try {
+            k = WebHelper.name(key);
+        } catch (Exception ex) {
+            k = (String) key;
+        }
+        this.key = k;
+    }
 
-	@Override
-	public void detach() {
-		//
-	}
+    @Override
+    public void detach() {
+        //
+    }
 
-	public Component getComponent() {
-		return component;
-	}
+    public Component getComponent() {
+        return component;
+    }
 
-	public String getKey() {
-		return key;
-	}
+    public String getKey() {
+        return key;
+    }
 
-	@Override
-	public String getObject() {
-		return component.getString(key);
-	}
+    @Override
+    public String getObject() {
+        return component.getString(key);
+    }
 
-	@Override
-	public void setObject(String object) {
-		//
-	}
+    @Override
+    public void setObject(String object) {
+        //
+    }
 }

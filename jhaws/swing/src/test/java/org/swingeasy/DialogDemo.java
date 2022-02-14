@@ -22,7 +22,6 @@ public class DialogDemo {
         JLabel n = new JLabel("north");
         frame.getContentPane().add(n, BorderLayout.NORTH);
         String[] options = { "1a", "2b" };
-        System.out.println(
-                CustomizableOptionPane.showCustomDialog(n, new JLabel("on top of north"), "", MessageType.QUESTION, options, options[0], null, null));
+        System.out.println(CustomizableOptionPane.showCustomDialog(n, new JLabel("on top of north"), "", MessageType.QUESTION, options, options[0], null, null));
     }
 }

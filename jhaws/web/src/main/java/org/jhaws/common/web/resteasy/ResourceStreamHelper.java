@@ -71,34 +71,28 @@ public interface ResourceStreamHelper {
         };
     }
 
-    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, javax.ws.rs.core.MediaType mime,
-            Consumer<OutputStream> consumer, Consumer<Exception> inCaseOfException) {
+    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, javax.ws.rs.core.MediaType mime, Consumer<OutputStream> consumer, Consumer<Exception> inCaseOfException) {
         return response(inline, length, filename, mime.toString(), consumer, inCaseOfException);
     }
 
-    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, String mime, Consumer<OutputStream> consumer,
-            Consumer<Exception> inCaseOfException) {
+    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, String mime, Consumer<OutputStream> consumer, Consumer<Exception> inCaseOfException) {
         javax.ws.rs.core.StreamingOutput entity = stream(consumer, inCaseOfException);
         return response(inline, length, filename, mime, entity);
     }
 
-    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, javax.ws.rs.core.MediaType mime, byte[] in,
-            Consumer<Exception> inCaseOfException) {
+    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, javax.ws.rs.core.MediaType mime, byte[] in, Consumer<Exception> inCaseOfException) {
         return response(inline, length, filename, mime.toString(), new ByteArrayInputStream(in), inCaseOfException);
     }
 
-    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, String mime, byte[] in,
-            Consumer<Exception> inCaseOfException) {
+    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, String mime, byte[] in, Consumer<Exception> inCaseOfException) {
         return response(inline, length, filename, mime, new ByteArrayInputStream(in), inCaseOfException);
     }
 
-    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, javax.ws.rs.core.MediaType mime, InputStream in,
-            Consumer<Exception> inCaseOfException) {
+    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, javax.ws.rs.core.MediaType mime, InputStream in, Consumer<Exception> inCaseOfException) {
         return response(inline, length, filename, mime.toString(), in, inCaseOfException);
     }
 
-    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, String mime, InputStream in,
-            Consumer<Exception> inCaseOfException) {
+    static javax.ws.rs.core.Response response(boolean inline, long length, String filename, String mime, InputStream in, Consumer<Exception> inCaseOfException) {
         javax.ws.rs.core.StreamingOutput entity = stream(in, inCaseOfException);
         return response(inline, length, filename, mime, entity);
     }

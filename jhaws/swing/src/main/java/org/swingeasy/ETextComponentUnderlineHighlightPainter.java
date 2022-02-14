@@ -20,7 +20,6 @@ public class ETextComponentUnderlineHighlightPainter extends ETextComponentAbstr
     }
 
     /**
-     *
      * @see org.swingeasy.ETextComponentHighlightPainter#getColor()
      */
     @Override
@@ -37,7 +36,6 @@ public class ETextComponentUnderlineHighlightPainter extends ETextComponentAbstr
     }
 
     /**
-     *
      * @see org.swingeasy.ETextComponentAbstractHighlightPainter#paintHighlight(java.awt.Graphics2D, java.awt.Rectangle)
      */
     @Override
@@ -55,7 +53,6 @@ public class ETextComponentUnderlineHighlightPainter extends ETextComponentAbstr
     }
 
     /**
-     *
      * @see org.swingeasy.ETextComponentHighlightPainter#setColor(java.awt.Color)
      */
     @Override

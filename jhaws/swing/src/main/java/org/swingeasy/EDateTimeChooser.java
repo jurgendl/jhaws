@@ -393,7 +393,6 @@ public class EDateTimeChooser extends JPanel {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

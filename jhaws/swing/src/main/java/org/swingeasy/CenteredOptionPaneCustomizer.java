@@ -12,9 +12,7 @@ import javax.swing.JOptionPane;
  */
 public class CenteredOptionPaneCustomizer implements OptionPaneCustomizer {
     /**
-     *
-     * @see org.swingeasy.OptionPaneCustomizer#customize(java.awt.Component, org.swingeasy.MessageType, org.swingeasy.OptionType,
-     *      javax.swing.JOptionPane, javax.swing.JDialog)
+     * @see org.swingeasy.OptionPaneCustomizer#customize(java.awt.Component, org.swingeasy.MessageType, org.swingeasy.OptionType, javax.swing.JOptionPane, javax.swing.JDialog)
      */
     @Override
     public void customize(Component parentComponent, MessageType messageType, OptionType optionType, JOptionPane pane, JDialog dialog) {

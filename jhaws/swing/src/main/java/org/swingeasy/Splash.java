@@ -115,10 +115,8 @@ public class Splash extends JComponent {
 
         g2.setColor(color);
         g2.fillRect(progressBarLocation.x, progressBarLocation.y, progressBarLocation.width, progressBarLocation.height);
-        g2.fillOval(progressBarLocation.x - progressBarLocation.height / 2, progressBarLocation.y, progressBarLocation.height,
-                progressBarLocation.height);
-        g2.fillOval(progressBarLocation.x + progressBarLocation.width - progressBarLocation.height / 2, progressBarLocation.y,
-                progressBarLocation.height, progressBarLocation.height);
+        g2.fillOval(progressBarLocation.x - progressBarLocation.height / 2, progressBarLocation.y, progressBarLocation.height, progressBarLocation.height);
+        g2.fillOval(progressBarLocation.x + progressBarLocation.width - progressBarLocation.height / 2, progressBarLocation.y, progressBarLocation.height, progressBarLocation.height);
         g2.setColor(colorInv);
         int rx = progressBarLocation.x + INSINT;
         int ry = progressBarLocation.y + INSINT;

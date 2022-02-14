@@ -16,9 +16,7 @@ public class LuceneTokenizerTest {
     public void test() {
         List<String> l = Arrays.asList("4.5", "some", "stuff", "need", "analysis", "we", "love", "words", "class");
         List<String> t = new ArrayList<>();
-        try (Analyzer analyzer = new LuceneIndexAnalyzer();
-                TokenStream tokenStream = analyzer.tokenStream("fieldName",
-                        "4.5 Some stuff that is in need of analysis, we love words and classes.")) {
+        try (Analyzer analyzer = new LuceneIndexAnalyzer(); TokenStream tokenStream = analyzer.tokenStream("fieldName", "4.5 Some stuff that is in need of analysis, we love words and classes.")) {
             tokenStream.reset();
             CharTermAttribute token = tokenStream.getAttribute(CharTermAttribute.class);
             while (tokenStream.incrementToken()) {

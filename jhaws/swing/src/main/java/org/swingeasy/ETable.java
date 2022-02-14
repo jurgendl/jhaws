@@ -245,9 +245,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
              */
             @Override
             public String toString() {
-                return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("popupForColumn", this.popupForColumn)
-                        .append("popupFilters", this.popupFilters)
-                        .toString();
+                return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append("popupForColumn", this.popupForColumn).append("popupFilters", this.popupFilters).toString();
             }
         }
 
@@ -370,8 +368,7 @@ public class ETable<T> extends JTable implements ETableI<T>, Reorderable, Iterab
             if (!ETable.this.cfg.isSortable()) {
                 return;
             }
-            this.tableSorter = TableComparatorChooser.install(ETable.this, this.sortedRecords,
-                    AbstractTableComparatorChooser.MULTIPLE_COLUMN_MOUSE_WITH_UNDO, ETable.this.tableFormat);
+            this.tableSorter = TableComparatorChooser.install(ETable.this, this.sortedRecords, AbstractTableComparatorChooser.MULTIPLE_COLUMN_MOUSE_WITH_UNDO, ETable.this.tableFormat);
         }
 
         protected void sort(int col) {

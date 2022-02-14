@@ -33,43 +33,43 @@ package org.jhaws.common.elasticsearch.common;
 // CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER -> custom_sortable_only_alpha_analyzer -> [THEQUCKBROWNFOXJUMPSVERTHELAZYDOG]
 // CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER -> custom_sortable_only_alphanumeric_analyzer -> [THEQUCKBROWNFOXJUMPS0VERTHELAZYDOG]
 public interface Analyzers {
-	public static final String LANGUAGE_PARAMETER = "{language}";
+    public static final String LANGUAGE_PARAMETER = "{language}";
 
-	public static final String CUSTOM_WHITESPACE_LOWERCASE_ANALYZER = "custom_whitespace_lowercase_analyzer";
+    public static final String CUSTOM_WHITESPACE_LOWERCASE_ANALYZER = "custom_whitespace_lowercase_analyzer";
 
-	public static final String CUSTOM_HTML_ANALYZER = "custom_" + LANGUAGE_PARAMETER + "_html_analyzer";
+    public static final String CUSTOM_HTML_ANALYZER = "custom_" + LANGUAGE_PARAMETER + "_html_analyzer";
 
-	/** see {@link #CUSTOM_HTML_ANALYZER} */
-	public static final String CUSTOM_ENGLISH_HTML_ANALYZER = "custom_english_html_analyzer";
+    /** see {@link #CUSTOM_HTML_ANALYZER} */
+    public static final String CUSTOM_ENGLISH_HTML_ANALYZER = "custom_english_html_analyzer";
 
-	/** see {@link #CUSTOM_HTML_ANALYZER} */
-	public static final String CUSTOM_DUTCH_HTML_ANALYZER = "custom_dutch_html_analyzer";
+    /** see {@link #CUSTOM_HTML_ANALYZER} */
+    public static final String CUSTOM_DUTCH_HTML_ANALYZER = "custom_dutch_html_analyzer";
 
-	public static final String CUSTOM_CLEANUP_ANALYZER = "custom_cleanup_analyzer";
+    public static final String CUSTOM_CLEANUP_ANALYZER = "custom_cleanup_analyzer";
 
-	public static final String CUSTOM_ASCIIFOLDING_ANALYZER = "custom_asciifolding_analyzer";
+    public static final String CUSTOM_ASCIIFOLDING_ANALYZER = "custom_asciifolding_analyzer";
 
-	public static final String CUSTOM_EMAIL_ANALYZER = "custom_email_analyzer";
+    public static final String CUSTOM_EMAIL_ANALYZER = "custom_email_analyzer";
 
-	public static final String CUSTOM_EMAIL_DOMAIN_ANALYZER = "custom_email_domain_analyzer";
+    public static final String CUSTOM_EMAIL_DOMAIN_ANALYZER = "custom_email_domain_analyzer";
 
-	public static final String CUSTOM_EMAIL_NAME_ANALYZER = "custom_email_name_analyzer";
+    public static final String CUSTOM_EMAIL_NAME_ANALYZER = "custom_email_name_analyzer";
 
-	public static final String CUSTOM_EMAIL_NAME_KEEP_TOGETHER_ANALYZER = "custom_email_name_keep_together_analyzer";
+    public static final String CUSTOM_EMAIL_NAME_KEEP_TOGETHER_ANALYZER = "custom_email_name_keep_together_analyzer";
 
-	public static final String CUSTOM_FILENAME_ANALYZER = "custom_filename_analyzer";
+    public static final String CUSTOM_FILENAME_ANALYZER = "custom_filename_analyzer";
 
-	public static final String CUSTOM_WORD_DELIMITER_GRAPH_ANALYZER = "custom_word_delimiter_graph_analyzer";
+    public static final String CUSTOM_WORD_DELIMITER_GRAPH_ANALYZER = "custom_word_delimiter_graph_analyzer";
 
-	public static final String CUSTOM_NAME_KEEP_TOGETHER_ANALYZER = "custom_name_keep_together_analyzer";
+    public static final String CUSTOM_NAME_KEEP_TOGETHER_ANALYZER = "custom_name_keep_together_analyzer";
 
-	public static final String CUSTOM_SORTABLE_ANALYZER = "custom_sortable_analyzer";
+    public static final String CUSTOM_SORTABLE_ANALYZER = "custom_sortable_analyzer";
 
-	public static final String CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER = "custom_sortable_only_alpha_analyzer";
+    public static final String CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER = "custom_sortable_only_alpha_analyzer";
 
-	public static final String CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER = "custom_sortable_only_alphanumeric_analyzer";
+    public static final String CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER = "custom_sortable_only_alphanumeric_analyzer";
 
-	public static final String CUSTOM_ANY_LANGUAGE_ANALYZER = "custom_any_language_analyzer";
+    public static final String CUSTOM_ANY_LANGUAGE_ANALYZER = "custom_any_language_analyzer";
 
-	public static final String CUSTOM_FRENCH_LANGUAGE_ANALYZER = "custom_french_language_analyzer";
+    public static final String CUSTOM_FRENCH_LANGUAGE_ANALYZER = "custom_french_language_analyzer";
 }

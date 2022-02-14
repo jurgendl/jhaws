@@ -22,7 +22,6 @@ public class NumberTableCellRenderer extends ETableCellRenderer<Number> {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override
@@ -32,7 +31,6 @@ public class NumberTableCellRenderer extends ETableCellRenderer<Number> {
     }
 
     /**
-     *
      * @see javax.swing.table.DefaultTableCellRenderer#setValue(java.lang.Object)
      */
     @Override

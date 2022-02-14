@@ -9,7 +9,6 @@ import javax.swing.JFormattedTextField;
  */
 public class FormattedTextFieldVerifier extends InputVerifier {
     /**
-     *
      * @see javax.swing.InputVerifier#verify(javax.swing.JComponent)
      */
     @Override

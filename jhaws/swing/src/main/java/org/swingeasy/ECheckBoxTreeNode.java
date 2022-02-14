@@ -45,7 +45,6 @@ public class ECheckBoxTreeNode<T> extends DefaultMutableTreeNode {
     }
 
     /**
-     *
      * @see javax.swing.tree.DefaultMutableTreeNode#toString()
      */
     @Override

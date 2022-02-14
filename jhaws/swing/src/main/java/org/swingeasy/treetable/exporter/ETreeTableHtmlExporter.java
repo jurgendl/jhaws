@@ -15,7 +15,6 @@ import org.swingeasy.ETreeTableRecord;
  */
 public class ETreeTableHtmlExporter<T> extends ETreeTableExporterImpl<T> {
     /**
-     *
      * @see org.swingeasy.ETableExporterImpl#exportStream(org.swingeasy.ETable, java.io.OutputStream)
      */
     @Override
@@ -49,7 +48,6 @@ public class ETreeTableHtmlExporter<T> extends ETreeTableExporterImpl<T> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableExporter#getAction()
      */
     @Override
@@ -58,7 +56,6 @@ public class ETreeTableHtmlExporter<T> extends ETreeTableExporterImpl<T> {
     }
 
     /**
-     *
      * @see org.swingeasy.ETableExporter#getFileExtension()
      */
     @Override

@@ -27,8 +27,7 @@ import com.itextpdf.text.DocumentException;
  * @author Jurgen
  */
 public abstract class EComponentExporterImpl<T extends JComponent & EComponentI> implements EComponentStreamExporter<T> {
-    public static <T extends JComponent & EComponentI> void exportHtmlToPdf(EComponentStreamExporter<T> exporter, T component, OutputStream out)
-            throws IOException {
+    public static <T extends JComponent & EComponentI> void exportHtmlToPdf(EComponentStreamExporter<T> exporter, T component, OutputStream out) throws IOException {
         try {
             Pipe pipe = PipeFactory.create();
             exporter.exportStream(component, pipe.getOutputStream());
@@ -47,8 +46,7 @@ public abstract class EComponentExporterImpl<T extends JComponent & EComponentI>
         } catch (SAXParseException ex) {
             ByteArrayOutputStream bout = new ByteArrayOutputStream();
             exporter.exportStream(component, bout);
-            throw new RuntimeException("line " + ex.getLineNumber() + ", column " + ex.getColumnNumber() + "\n\n" + new String(bout.toByteArray()),
-                    ex);
+            throw new RuntimeException("line " + ex.getLineNumber() + ", column " + ex.getColumnNumber() + "\n\n" + new String(bout.toByteArray()), ex);
         } catch (SAXException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
@@ -75,10 +73,8 @@ public abstract class EComponentExporterImpl<T extends JComponent & EComponentI>
     }
 
     protected boolean canOverwrite(T component) {
-        if (ResultType.OK != CustomizableOptionPane.showCustomDialog(component,
-                new JLabel(Messages.getString((Locale) null, this.overwriteWarningMessage)),
-                Messages.getString((Locale) null, this.overwriteWarningTitle), MessageType.WARNING, OptionType.OK_CANCEL, null,
-                new CenteredOptionPaneCustomizer())) {
+        if (ResultType.OK != CustomizableOptionPane.showCustomDialog(component, new JLabel(Messages.getString((Locale) null, this.overwriteWarningMessage)), Messages.getString((Locale) null, this.overwriteWarningTitle), MessageType.WARNING,
+                OptionType.OK_CANCEL, null, new CenteredOptionPaneCustomizer())) {
             return false;
         }
         return true;
@@ -136,8 +132,7 @@ public abstract class EComponentExporterImpl<T extends JComponent & EComponentI>
     }
 
     protected void whenDone(T component) {
-        CustomizableOptionPane.showCustomDialog(component, new JLabel(Messages.getString((Locale) null, this.completionMessage)),
-                Messages.getString((Locale) null, this.completionTitle), MessageType.INFORMATION, OptionType.OK, null,
+        CustomizableOptionPane.showCustomDialog(component, new JLabel(Messages.getString((Locale) null, this.completionMessage)), Messages.getString((Locale) null, this.completionTitle), MessageType.INFORMATION, OptionType.OK, null,
                 new CenteredOptionPaneCustomizer());
     }
 }

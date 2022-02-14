@@ -64,13 +64,7 @@ public class Pojo {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this).appendSuper(super.toString())
-                .append("veld1", veld1)
-                .append("veld2", veld2)
-                .append("veld3", veld3)
-                .append("nestedPojo", nestedPojo)
-                .append("nestedPojoVeld", nestedPojoVeld)
-                .append("commonNested", commonNested)
+        return new ToStringBuilder(this).appendSuper(super.toString()).append("veld1", veld1).append("veld2", veld2).append("veld3", veld3).append("nestedPojo", nestedPojo).append("nestedPojoVeld", nestedPojoVeld).append("commonNested", commonNested)
                 .toString();
     }
 

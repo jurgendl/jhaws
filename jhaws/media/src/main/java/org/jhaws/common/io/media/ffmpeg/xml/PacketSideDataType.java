@@ -12,11 +12,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for packetSideDataType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="packetSideDataType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -26,8 +23,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "packetSideDataType")
@@ -43,7 +38,6 @@ public class PacketSideDataType {
      * Gets the value of the sideDataType property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getSideDataType() {
         return sideDataType;
@@ -53,7 +47,6 @@ public class PacketSideDataType {
      * Sets the value of the sideDataType property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setSideDataType(String value) {
         this.sideDataType = value;
@@ -63,7 +56,6 @@ public class PacketSideDataType {
      * Gets the value of the sideDataSize property.
      *
      * @return possible object is {@link Integer }
-     *
      */
     public Integer getSideDataSize() {
         return sideDataSize;
@@ -73,7 +65,6 @@ public class PacketSideDataType {
      * Sets the value of the sideDataSize property.
      *
      * @param value allowed object is {@link Integer }
-     *
      */
     public void setSideDataSize(Integer value) {
         this.sideDataSize = value;
@@ -81,7 +72,6 @@ public class PacketSideDataType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

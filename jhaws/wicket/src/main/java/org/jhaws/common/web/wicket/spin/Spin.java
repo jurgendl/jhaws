@@ -72,8 +72,8 @@ public class Spin {
 
     public static CssResourceReference SPIN_CSS_CELL = new CssResourceReference(Spin.class, "loader-smartphone.css");
 
-    public static List<CssResourceReference> css = Arrays.asList(SPIN_CSS_DEFAULT, SPIN_CSS_BALL, SPIN_CSS_BAR, SPIN_CSS_PING_PONG, SPIN_CSS_BORDER,
-            SPIN_CSS_BOUNCING, SPIN_CSS_CLOCK, SPIN_CSS_CURTAIN, SPIN_CSS_DOULE, SPIN_CSS_MUSIC, SPIN_CSS_POKEBALL, SPIN_CSS_CELL);
+    public static List<CssResourceReference> css = Arrays.asList(SPIN_CSS_DEFAULT, SPIN_CSS_BALL, SPIN_CSS_BAR, SPIN_CSS_PING_PONG, SPIN_CSS_BORDER, SPIN_CSS_BOUNCING, SPIN_CSS_CLOCK, SPIN_CSS_CURTAIN, SPIN_CSS_DOULE, SPIN_CSS_MUSIC, SPIN_CSS_POKEBALL,
+            SPIN_CSS_CELL);
 
     public static String show() {
         return SHOW;

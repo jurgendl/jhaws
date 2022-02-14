@@ -18,8 +18,7 @@ public class ECheckBoxList extends EList<Boolean> {
         private static final long serialVersionUID = -8324269006694944760L;
 
         @Override
-        public Component getListCellRendererComponent(JList<? extends EListRecord<Boolean>> list, EListRecord<Boolean> record, int index,
-                boolean isSelected, boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<? extends EListRecord<Boolean>> list, EListRecord<Boolean> record, int index, boolean isSelected, boolean cellHasFocus) {
             boolean selected = record != null && Boolean.TRUE.equals(record.get());
             setText(record == null ? null : record.getStringValue());
             setSelected(selected);

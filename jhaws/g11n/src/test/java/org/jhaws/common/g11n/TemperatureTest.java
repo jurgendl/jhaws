@@ -7,15 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TemperatureTest {
-    TemperatureUnit[] units = {
-            TemperatureUnit.Celsius,
-            TemperatureUnit.Fahrenheit,
-            TemperatureUnit.Kelvin,
-            TemperatureUnit.Rankine,
-            TemperatureUnit.Delisle,
-            TemperatureUnit.Newton,
-            TemperatureUnit.Réaumur,
-            TemperatureUnit.Rømer };
+    TemperatureUnit[] units = { TemperatureUnit.Celsius, TemperatureUnit.Fahrenheit, TemperatureUnit.Kelvin, TemperatureUnit.Rankine, TemperatureUnit.Delisle, TemperatureUnit.Newton, TemperatureUnit.Réaumur, TemperatureUnit.Rømer };
 
     boolean[] doTest = { true, true, true, true, true, true, true, true };
 

@@ -35,8 +35,7 @@ public class CheckCookiesEnabled extends Panel {
             }
         });
 
-        cookiesQ.setVisible(
-                WicketApplication.get().getSettings().isCheckCookiesEnabled() && WicketSession.get().getCookies().getUserAllowedCookies() == null);
+        cookiesQ.setVisible(WicketApplication.get().getSettings().isCheckCookiesEnabled() && WicketSession.get().getCookies().getUserAllowedCookies() == null);
         add(cookiesQ);
     }
 

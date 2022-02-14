@@ -7,7 +7,6 @@ import org.jhaws.common.io.IOFile;
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -42,7 +41,6 @@ public class FileSizeFilter extends FileFilter {
     }
 
     /**
-     *
      * @see org.jhaws.common.io.filter.FileFilter#acceptRealFile(util.io.IOFile)
      */
     @Override

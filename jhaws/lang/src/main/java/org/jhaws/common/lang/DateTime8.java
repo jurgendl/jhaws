@@ -100,20 +100,10 @@ public class DateTime8 {
         return formatted.toString();
     }
 
-    private static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY)
-            .appendLiteral(":")
-            .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
-            .appendLiteral(":")
-            .appendValue(ChronoField.SECOND_OF_MINUTE, 2)
-            .appendLiteral(".")
-            .appendValue(ChronoField.MILLI_OF_SECOND)
-            .toFormatter();
+    private static final DateTimeFormatter TIME_PARSER_MILLIS = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":").appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+            .appendLiteral(".").appendValue(ChronoField.MILLI_OF_SECOND).toFormatter();
 
-    private static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY)
-            .appendLiteral(":")
-            .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
-            .appendLiteral(":")
-            .appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+    private static final DateTimeFormatter TIME_PARSER_SEC = new DateTimeFormatterBuilder().appendValue(ChronoField.HOUR_OF_DAY).appendLiteral(":").appendValue(ChronoField.MINUTE_OF_HOUR, 2).appendLiteral(":").appendValue(ChronoField.SECOND_OF_MINUTE, 2)
             .toFormatter();
 
     public static Pattern TIME_PATTERN = Pattern.compile("^(\\d{1,2}:){0,1}(\\d{1,2}:){0,1}(\\d{1,2}){1}(\\.\\d{1,3}){0,1}$");

@@ -1,22 +1,22 @@
 package org.jhaws.common.elasticsearch.impl;
 
 public enum HighlighterType {
-	unified//
-	, plain//
-	, fvh//
-	;
+    unified//
+    , plain//
+    , fvh//
+    ;
 
-	private String id;
+    private String id;
 
-	private HighlighterType() {
-		this.id = name();
-	}
+    private HighlighterType() {
+        this.id = name();
+    }
 
-	private HighlighterType(String id) {
-		this.id = id;
-	}
+    private HighlighterType(String id) {
+        this.id = id;
+    }
 
-	public String id() {
-		return id;
-	}
+    public String id() {
+        return id;
+    }
 }

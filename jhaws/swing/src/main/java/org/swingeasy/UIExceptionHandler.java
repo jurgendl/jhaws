@@ -126,9 +126,7 @@ public class UIExceptionHandler {
         }
 
         /**
-         *
-         * @see be.ugent.komodo.exceptions.ExceptionHandlerUtils.Out#println(java.lang.String,
-         *      be.ugent.komodo.exceptions.ExceptionHandlerUtils.OutType)
+         * @see be.ugent.komodo.exceptions.ExceptionHandlerUtils.Out#println(java.lang.String, be.ugent.komodo.exceptions.ExceptionHandlerUtils.OutType)
          */
         @Override
         public void println(String line, OutType outType) {
@@ -143,11 +141,10 @@ public class UIExceptionHandler {
     }
 
     /**
-     * There is an easy an elegant way to convert or store an exception stack trace to a string variable. The following method takes an exception
-     * object as a parameter and returns the string representation of the stack trace.
+     * There is an easy an elegant way to convert or store an exception stack trace to a string variable. The following method takes an exception object as a parameter and returns
+     * the string representation of the stack trace.
      *
      * @param ex
-     *
      * @return
      */
     public static String getStackTrace(Throwable ex) {
@@ -183,7 +180,6 @@ public class UIExceptionHandler {
     }
 
     /**
-     *
      * @see java.lang.Throwable#printStackTrace(java.io.PrintStream)
      */
     public static synchronized void printStackTrace(final Throwable top, final Out out) {
@@ -201,8 +197,7 @@ public class UIExceptionHandler {
 
     public void show(Thread thread, Exception ex, String message) {
         System.out.println(thread);
-        String stackTrace = (thread == null ? "" : String.valueOf(thread) + SystemSettings.getNewline() + SystemSettings.getNewline())
-                + UIExceptionHandler.getStackTrace(ex);
+        String stackTrace = (thread == null ? "" : String.valueOf(thread) + SystemSettings.getNewline() + SystemSettings.getNewline()) + UIExceptionHandler.getStackTrace(ex);
         System.out.println(stackTrace);
         final ETextArea view = new ETextArea(new ETextAreaConfig(), stackTrace);
         view.setEditable(false);
@@ -232,11 +227,10 @@ public class UIExceptionHandler {
             jdialog.getValue().pack();
             jdialog.getValue().setLocationRelativeTo(null);
         });
-        CustomizableOptionPane.showCustomDialog(null, panel, Messages.getString((Locale) null, "Error"), MessageType.ERROR, OptionType.OK, null,
-                (parentComponent, messageType, optionType, pane, dialog) -> {
-                    jdialog.setValue(dialog);
-                    dialog.pack();
-                    dialog.setLocationRelativeTo(null);
-                });
+        CustomizableOptionPane.showCustomDialog(null, panel, Messages.getString((Locale) null, "Error"), MessageType.ERROR, OptionType.OK, null, (parentComponent, messageType, optionType, pane, dialog) -> {
+            jdialog.setValue(dialog);
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+        });
     }
 }

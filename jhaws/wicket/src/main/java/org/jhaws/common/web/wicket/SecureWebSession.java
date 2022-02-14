@@ -16,48 +16,46 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 
 @SuppressWarnings("serial")
 public class SecureWebSession extends AuthenticatedWebSession {
-	private HttpSession httpSession;
+    private HttpSession httpSession;
 
-	@SpringBean(name = "authenticationManger")
-	private AuthenticationManager authenticationManager;
+    @SpringBean(name = "authenticationManger")
+    private AuthenticationManager authenticationManager;
 
-	public SecureWebSession(Request request) {
-		super(request);
-		this.httpSession = ((HttpServletRequest) request.getContainerRequest()).getSession();
-		Injector.get().inject(this);
-	}
+    public SecureWebSession(Request request) {
+        super(request);
+        this.httpSession = ((HttpServletRequest) request.getContainerRequest()).getSession();
+        Injector.get().inject(this);
+    }
 
-	@Override
-	public boolean authenticate(String username, String password) {
-		Authentication auth = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		if (auth.isAuthenticated()) {
-			// the authentication object has to be stored in the
-			// SecurityContextHolder and in the HttpSession manually, so that
-			// the
-			// security context will be accessible in the next request
-			SecurityContextHolder.getContext().setAuthentication(auth);
-			httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-					SecurityContextHolder.getContext());
-			return true;
-		} else {
-			return false;
-		}
-	}
+    @Override
+    public boolean authenticate(String username, String password) {
+        Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        if (auth.isAuthenticated()) {
+            // the authentication object has to be stored in the
+            // SecurityContextHolder and in the HttpSession manually, so that
+            // the
+            // security context will be accessible in the next request
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	@Override
-	public Roles getRoles() {
-		throw new UnsupportedOperationException("Not supported yet.");
-		// To
-		// change
-		// body
-		// of
-		// generated
-		// methods,
-		// choose
-		// Tools
-		// |
-		// Templates.
-	}
+    @Override
+    public Roles getRoles() {
+        throw new UnsupportedOperationException("Not supported yet.");
+        // To
+        // change
+        // body
+        // of
+        // generated
+        // methods,
+        // choose
+        // Tools
+        // |
+        // Templates.
+    }
 
 }

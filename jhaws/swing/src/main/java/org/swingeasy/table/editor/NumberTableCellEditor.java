@@ -40,7 +40,6 @@ public class NumberTableCellEditor extends DefaultCellEditor implements ECompone
             }
 
             /**
-             *
              * @see javax.swing.DefaultCellEditor.EditorDelegate#setValue(java.lang.Object)
              */
             @Override
@@ -62,7 +61,6 @@ public class NumberTableCellEditor extends DefaultCellEditor implements ECompone
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setEnabled(boolean)
      */
     @Override
@@ -71,7 +69,6 @@ public class NumberTableCellEditor extends DefaultCellEditor implements ECompone
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
      */
     @Override

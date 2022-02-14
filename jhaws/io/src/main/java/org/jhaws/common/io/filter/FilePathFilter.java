@@ -7,7 +7,6 @@ import java.io.File;
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -53,7 +52,6 @@ public class FilePathFilter extends RegexFileFilter {
     }
 
     /**
-     *
      * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
      */
     @Override

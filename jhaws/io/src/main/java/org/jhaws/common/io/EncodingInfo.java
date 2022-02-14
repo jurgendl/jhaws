@@ -35,7 +35,6 @@ public class EncodingInfo {
      * gets encoding info on first bytes read from a file
      *
      * @param bomBuffer : byte[] : first bytes read from file
-     *
      * @return : EncodingInfo : appropriate encoding info
      */
     public static EncodingInfo getEncodingInfo(final byte[] bomBuffer) {
@@ -46,7 +45,6 @@ public class EncodingInfo {
      * gets encoding info on first bytes read from a file
      *
      * @param bomBuffer : char[] : first bytes read from file as a char array
-     *
      * @return : EncodingInfo : appropriate encoding info
      */
     public static EncodingInfo getEncodingInfo(final char[] bomBuffer) {
@@ -57,7 +55,6 @@ public class EncodingInfo {
      * gets encoding info on first bytes read from a file
      *
      * @param bom : String : first bytes read from file as a string
-     *
      * @return : EncodingInfo : appropriate encoding info
      */
     public static EncodingInfo getEncodingInfo(final String bom) {
@@ -145,7 +142,6 @@ public class EncodingInfo {
     }
 
     /**
-     *
      * @see java.lang.Object#toString()
      */
     @Override

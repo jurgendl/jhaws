@@ -39,7 +39,6 @@ public class ByteArrayListCellRenderer extends EListCellRenderer<Object> {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

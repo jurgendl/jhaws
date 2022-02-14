@@ -65,8 +65,7 @@ public class SettingsPage extends DefaultWebPage {
             }
         }, new FormSettings());
         WicketAppSettings p = form.proxy();
-        form.addDropDown(p.getTheme(), new DropDownSettings(), new StringOptionRenderer(),
-                new ListModel<>(Arrays.stream(Theme.values()).map(Theme::id).collect(Collectors.toList())));
+        form.addDropDown(p.getTheme(), new DropDownSettings(), new StringOptionRenderer(), new ListModel<>(Arrays.stream(Theme.values()).map(Theme::id).collect(Collectors.toList())));
         form.addDropDown(p.getSpinner(), new DropDownSettings(), new StringOptionRenderer(), new ListModel<>(Spin.types));
         form.addToggle(p.getCheckAdsEnabled(), new CheckBoxSettings());
         form.addTextField(p.getCacheDuration(), new TextFieldSettings());

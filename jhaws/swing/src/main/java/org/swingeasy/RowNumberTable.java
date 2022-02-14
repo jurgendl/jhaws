@@ -16,8 +16,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 /**
- * Use a JTable as a renderer for row numbers of a given main table. This table must be added to the row header of the scrollpane that contains the
- * main table.
+ * Use a JTable as a renderer for row numbers of a given main table. This table must be added to the row header of the scrollpane that contains the main table.
  *
  * @see http://tips4java.wordpress.com/2008/11/18/row-number-table/
  */
@@ -58,7 +57,6 @@ public class RowNumberTable extends JTable implements ChangeListener, PropertyCh
     }
 
     /**
-     *
      * @see javax.swing.JTable#addNotify()
      */
     @Override
@@ -84,7 +82,6 @@ public class RowNumberTable extends JTable implements ChangeListener, PropertyCh
     }
 
     /**
-     *
      * @see javax.swing.JTable#getRowHeight(int)
      */
     @Override

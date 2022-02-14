@@ -9,8 +9,7 @@ import org.jhaws.common.web.wicket.jquery_appear.JqueryAppear;
  * @see https://github.com/joemottershaw/pro-bars
  */
 public class ProBars {
-    public static JavaScriptResourceReference ProBars_JS = new JavaScriptResourceReference(ProBars.class, "pro-bars.js")
-            .addJavaScriptResourceReferenceDependency(JqueryAppear.JqueryAppear_JS)
+    public static JavaScriptResourceReference ProBars_JS = new JavaScriptResourceReference(ProBars.class, "pro-bars.js").addJavaScriptResourceReferenceDependency(JqueryAppear.JqueryAppear_JS)
             .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
 
     public static CssResourceReference ProBars_CSS = new CssResourceReference(ProBars.class, "pro-bars.css");

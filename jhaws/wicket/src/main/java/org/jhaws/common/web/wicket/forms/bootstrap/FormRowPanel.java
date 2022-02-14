@@ -8,8 +8,7 @@ import org.jhaws.common.web.wicket.forms.common.FormRowPanelParent;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 
 @SuppressWarnings("serial")
-public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSettings extends AbstractFormElementSettings<ElementSettings>>
-        extends FormRowPanelParent<P, T, C, ElementSettings> {
+public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSettings extends AbstractFormElementSettings<ElementSettings>> extends FormRowPanelParent<P, T, C, ElementSettings> {
     public FormRowPanel(IModel<?> model, P propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }

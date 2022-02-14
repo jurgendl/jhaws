@@ -91,23 +91,14 @@ public class StreamingResourceTest {
     private static ResteasyWebTarget target;
 
     private static ResteasyWebTarget target() {
-        if (target == null) target = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder())
-                .httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build()))
-                .build()
-                .target(getBaseInclResourcePath());
+        if (target == null) target = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder()).httpEngine(new ApacheHttpClient43Engine(HttpClientBuilder.create().build())).build().target(getBaseInclResourcePath());
         return target;
     }
 
     private static StreamingResourceI proxy;
 
     private static StreamingResourceI proxy() {
-        if (proxy == null) proxy = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder())
-                .httpEngine(new ApacheHttpClient43Engine(/*
-                                                          * HttpClientBuilder .create().build()
-                                                          */))
-                .build()
-                .target(server.baseUri())
-                .proxy(StreamingResourceI.class);
+        if (proxy == null) proxy = ((ResteasyClientBuilder) ResteasyClientBuilder.newBuilder()).httpEngine(new ApacheHttpClient43Engine(/* HttpClientBuilder .create().build() */)).build().target(server.baseUri()).proxy(StreamingResourceI.class);
         return proxy;
     }
 
@@ -320,11 +311,7 @@ public class StreamingResourceTest {
         if (!runDirect) return;
         Response response = null;
         try {
-            response = target().path(StreamingResourceI.DOWNLOAD_STREAM_IN_RESPONSE)
-                    .queryParam("file", file.getFileNameString())
-                    .request()
-                    .buildGet()
-                    .invoke();
+            response = target().path(StreamingResourceI.DOWNLOAD_STREAM_IN_RESPONSE).queryParam("file", file.getFileNameString()).request().buildGet().invoke();
             Assert.assertEquals(200, response.getStatus());
             InputStream readEntity = response.readEntity(InputStream.class);
             System.out.println(new String(IOUtils.readFully(readEntity, response.getLength())));
@@ -375,11 +362,7 @@ public class StreamingResourceTest {
         if (!runDirect) return;
         Response response = null;
         try {
-            response = target().path(StreamingResourceI.UPLOAD_STREAM)
-                    .request()
-                    .header("file", file.getFileNameString())
-                    .buildPost(Entity.entity(file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM))
-                    .invoke();
+            response = target().path(StreamingResourceI.UPLOAD_STREAM).request().header("file", file.getFileNameString()).buildPost(Entity.entity(file.newBufferedInputStream(), MediaType.APPLICATION_OCTET_STREAM)).invoke();
             Assert.assertEquals(200, response.getStatus());
             String s = response.readEntity(String.class);
             System.out.println(s);

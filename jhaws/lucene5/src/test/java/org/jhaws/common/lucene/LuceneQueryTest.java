@@ -29,9 +29,7 @@ public class LuceneQueryTest {
         LuceneIndex i = new LuceneIndex();
         String string = i.buildQuery("some sentence to query", "defaultfield").toString();
         System.out.println(string);
-        Assert.assertEquals(
-                "defaultfield:\"some sentence query\"~2^15.0 ((defaultfield:some defaultfield:sentence defaultfield:query)~2^6.0) ((defaultfield:some defaultfield:sentence defaultfield:query)~3^9.0)",
-                string);
+        Assert.assertEquals("defaultfield:\"some sentence query\"~2^15.0 ((defaultfield:some defaultfield:sentence defaultfield:query)~2^6.0) ((defaultfield:some defaultfield:sentence defaultfield:query)~3^9.0)", string);
         // defaultfield:"some sentence to query"~2^20.0 ((defaultfield:some defaultfield:sentence defaultfield:to defaultfield:query)~2^6.0)
         // ((defaultfield:some defaultfield:sentence defaultfield:to defaultfield:query)~3^9.0) ((defaultfield:some defaultfield:sentence
         // defaultfield:to defaultfield:query)~4^12.0)

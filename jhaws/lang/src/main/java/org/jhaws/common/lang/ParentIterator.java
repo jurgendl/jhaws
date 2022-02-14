@@ -23,7 +23,7 @@ public class ParentIterator<T> implements EnhancedIterator<T> {
         Objects.nonNull(initial);
         this.initial = initial;
         this.nextItem = new BufferUnaryOperator<>(nextItem);
-        this.accept = accept == null ? CollectionUtils8.<T> isNotNull() : CollectionUtils8.<T> isNotNull().and(accept);
+        this.accept = accept == null ? CollectionUtils8.<T>isNotNull() : CollectionUtils8.<T>isNotNull().and(accept);
     }
 
     @Override

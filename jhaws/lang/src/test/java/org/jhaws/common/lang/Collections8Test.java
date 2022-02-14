@@ -70,8 +70,7 @@ public class Collections8Test {
         // FIXME
         Assert.assertEquals("test string, [1/2]3, abc, the end", it.streamFunction(match -> "[" + match.group(1) + "/" + match.group(2) + "]"));
         Assert.assertEquals("test string, 3, abc, the end", it.streamFunction(match -> ""));
-        Assert.assertEquals("test string, 0.53, abc, the end",
-                it.streamFunction(match -> Double.parseDouble(match.group(1)) / Double.parseDouble(match.group(2))));
+        Assert.assertEquals("test string, 0.53, abc, the end", it.streamFunction(match -> Double.parseDouble(match.group(1)) / Double.parseDouble(match.group(2))));
         Assert.assertEquals(Arrays.asList("12"), it.simple());
         Assert.assertEquals(Arrays.asList(Arrays.asList("1", "2")), it.all());
     }
@@ -252,10 +251,8 @@ public class Collections8Test {
 
     @Test
     public void testProjectionIterator() {
-        Assert.assertEquals(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
-                CollectionUtils8.stream(new ProjectionIterator<>(0, true, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
-        Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9), CollectionUtils8
-                .stream(new ProjectionIterator<>(0, false, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
+        Assert.assertEquals(Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9), CollectionUtils8.stream(new ProjectionIterator<>(0, true, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
+        Assert.assertEquals(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9), CollectionUtils8.stream(new ProjectionIterator<>(0, false, i -> i < 9 ? i + 1 : null)).limit(100).collect(Collectors.toList()));
     }
 
     @Test

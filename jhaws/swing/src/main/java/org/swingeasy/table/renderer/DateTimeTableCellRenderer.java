@@ -52,7 +52,6 @@ public class DateTimeTableCellRenderer extends ETableCellRenderer<Date> {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override
@@ -62,7 +61,6 @@ public class DateTimeTableCellRenderer extends ETableCellRenderer<Date> {
     }
 
     /**
-     *
      * @see javax.swing.table.DefaultTableCellRenderer#setValue(java.lang.Object)
      */
     @Override

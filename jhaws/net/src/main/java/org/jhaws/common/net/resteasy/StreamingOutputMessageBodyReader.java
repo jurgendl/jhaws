@@ -21,8 +21,7 @@ public class StreamingOutputMessageBodyReader implements MessageBodyReader<Strea
     }
 
     @Override
-    public StreamingOutput readFrom(Class<StreamingOutput> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-            MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
+    public StreamingOutput readFrom(Class<StreamingOutput> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
         return output -> IOUtils.copy(entityStream, output);
     }
 }

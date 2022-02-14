@@ -17,8 +17,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 /**
  * A default cell renderer for a JTableHeader.
  * <P>
- * DefaultTableHeaderCellRenderer attempts to provide identical behavior to the renderer which the Swing subsystem uses by default, the Sun
- * proprietary class sun.swing.table.DefaultTableCellHeaderRenderer.
+ * DefaultTableHeaderCellRenderer attempts to provide identical behavior to the renderer which the Swing subsystem uses by default, the Sun proprietary class
+ * sun.swing.table.DefaultTableCellHeaderRenderer.
  * <P>
  * To apply any desired customization, DefaultTableHeaderCellRenderer may be suitably extended.
  *
@@ -84,8 +84,7 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
     /**
      * Returns the default table header cell renderer.
      * <P>
-     * If the column is sorted, the approapriate icon is retrieved from the current Look and Feel, and a border appropriate to a table header cell is
-     * applied.
+     * If the column is sorted, the approapriate icon is retrieved from the current Look and Feel, and a border appropriate to a table header cell is applied.
      * <P>
      * Subclasses may overide this method to provide custom content or formatting.
      *

@@ -246,11 +246,7 @@ public class HttpClientTest {
 
     @Test
     public void test_matrix_1() {
-        URI uri = getBase().path(TestResourceI.MATRIX_PATH)
-                .matrixParam("key1", "value1a")
-                .matrixParam("key1", "value1b")
-                .matrixParam("key2", "value2")
-                .build();
+        URI uri = getBase().path(TestResourceI.MATRIX_PATH).matrixParam("key1", "value1a").matrixParam("key1", "value1b").matrixParam("key2", "value2").build();
         GetRequest get = new GetRequest(uri);
         System.out.println(uri);
         System.out.println(hc.get(get).getContentString());

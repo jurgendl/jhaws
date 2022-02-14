@@ -36,8 +36,8 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
     }
 
     /**
-     * @see org.jhaws.common.web.wicket.forms.common.FormActions#afterSubmit(org.apache.wicket.ajax.AjaxRequestTarget,
-     *      org.apache.wicket.markup.html.form.Form, org.apache.wicket.model.IModel)
+     * @see org.jhaws.common.web.wicket.forms.common.FormActions#afterSubmit(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.markup.html.form.Form,
+     *      org.apache.wicket.model.IModel)
      */
     @Override
     public void afterSubmit(AjaxRequestTarget target, Form<T> form, IModel<T> model) {
@@ -45,8 +45,8 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
     }
 
     /**
-     * @see org.jhaws.common.web.wicket.forms.common.FormActions#afterCancel(org.apache.wicket.ajax.AjaxRequestTarget,
-     *      org.apache.wicket.markup.html.form.Form, org.apache.wicket.model.IModel)
+     * @see org.jhaws.common.web.wicket.forms.common.FormActions#afterCancel(org.apache.wicket.ajax.AjaxRequestTarget, org.apache.wicket.markup.html.form.Form,
+     *      org.apache.wicket.model.IModel)
      */
     @Override
     public void afterCancel(AjaxRequestTarget target, Form<T> form, IModel<T> model) {
@@ -54,7 +54,6 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.forms.common.FormActions#submitModel(org.apache.wicket.model.IModel)
      */
     @Override
@@ -68,7 +67,6 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.forms.common.FormActions#submitObject(java.lang.Object)
      */
     @Override
@@ -77,7 +75,6 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.forms.common.FormActions#loadModel()
      */
     @Override
@@ -86,7 +83,7 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
             try {
                 formModel = WebHelper.model(loadObject());
             } catch (UnsupportedOperationException ex) {
-                formModel = Model.<T> of();
+                formModel = Model.<T>of();
                 logger.error("{}", ex);
             }
         }
@@ -94,7 +91,6 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.forms.common.FormActions#loadObject()
      */
     @Override
@@ -110,11 +106,10 @@ public abstract class DefaultFormActions<T extends Serializable> implements Form
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.forms.common.FormActions#forObjectClass()
      */
     @Override
     public Class<T> forObjectClass() {
-        return WebHelper.<T> getImplementation(this, DefaultFormActions.class);
+        return WebHelper.<T>getImplementation(this, DefaultFormActions.class);
     }
 }

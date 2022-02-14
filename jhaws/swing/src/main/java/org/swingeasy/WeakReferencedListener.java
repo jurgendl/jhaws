@@ -20,8 +20,7 @@ public final class WeakReferencedListener<T> implements java.lang.reflect.Invoca
 
     @SuppressWarnings("unchecked")
     public static <T> T wrap(final Class<T> interfaceClass, final T delegate) {
-        return (T) java.lang.reflect.Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[] { interfaceClass },
-                new WeakReferencedListener<>(interfaceClass, delegate).getInvocationHandler());
+        return (T) java.lang.reflect.Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class[] { interfaceClass }, new WeakReferencedListener<>(interfaceClass, delegate).getInvocationHandler());
     }
 
     private final WeakReference<T> weakreference;
@@ -57,7 +56,6 @@ public final class WeakReferencedListener<T> implements java.lang.reflect.Invoca
     }
 
     /**
-     *
      * @see java.lang.reflect.InvocationHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.Object[])
      */
     @Override
@@ -76,9 +74,7 @@ public final class WeakReferencedListener<T> implements java.lang.reflect.Invoca
             if (args != null && args.length == 1 && args[0] instanceof EventObject) {
                 EventObject event = EventObject.class.cast(args[0]);
                 Object source = event.getSource();
-                source.getClass()
-                        .getMethod("remove" + WeakReferencedListener.this.interfaceClass.getSimpleName(), WeakReferencedListener.this.interfaceClass)
-                        .invoke(source, proxy);
+                source.getClass().getMethod("remove" + WeakReferencedListener.this.interfaceClass.getSimpleName(), WeakReferencedListener.this.interfaceClass).invoke(source, proxy);
             }
             return null;
         }

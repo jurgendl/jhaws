@@ -49,9 +49,7 @@ import org.swingeasy.EComponentPopupMenu.EComponentPopupMenuAction;
 import org.swingeasy.EComponentPopupMenu.ReadableTextComponent;
 
 /**
- * TODO
- * http://andreinc.net/2013/07/15/how-to-customize-the-font-inside-a-jtextpane-component-java-swing-highlight-java-keywords-inside-a-jtextpane/#more
- * -1129
+ * TODO http://andreinc.net/2013/07/15/how-to-customize-the-font-inside-a-jtextpane-component-java-swing-highlight-java-keywords-inside-a-jtextpane/#more -1129
  *
  * @author Jurgen
  */
@@ -65,7 +63,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         }
 
         /**
-         *
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         @Override
@@ -79,8 +76,7 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
                 @Override
                 public void customize(JFileChooser jfc) {
                     jfc.resetChoosableFileFilters();
-                    jfc.addChoosableFileFilter(new ExtensionFileFilter(UIUtils.getDescriptionForFileType(OpenAction.this.delegate.getFileExt()) + " ("
-                            + OpenAction.this.delegate.getFileExt() + ")", OpenAction.this.delegate.getFileExt()));
+                    jfc.addChoosableFileFilter(new ExtensionFileFilter(UIUtils.getDescriptionForFileType(OpenAction.this.delegate.getFileExt()) + " (" + OpenAction.this.delegate.getFileExt() + ")", OpenAction.this.delegate.getFileExt()));
                 }
             });
             if (file == null) {
@@ -98,7 +94,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         }
 
         /**
-         *
          * @see org.swingeasy.EComponentPopupMenu.EComponentPopupMenuAction#checkEnabled(org.swingeasy.EComponentPopupMenu.CheckEnabled)
          */
         @Override
@@ -118,7 +113,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         }
 
         /**
-         *
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         @Override
@@ -136,7 +130,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         }
 
         /**
-         *
          * @see org.swingeasy.EComponentPopupMenu.EComponentPopupMenuAction#checkEnabled(org.swingeasy.EComponentPopupMenu.CheckEnabled)
          */
         @Override
@@ -155,7 +148,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         }
 
         /**
-         *
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         @Override
@@ -180,10 +172,8 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
                 file = new File(file.getParentFile(), file.getName() + "." + fileExt);
             }
             if (file.exists()) {
-                if (ResultType.YES != CustomizableOptionPane.showCustomDialog(getParentComponent(),
-                        new JLabel(Messages.getString((Locale) null, "SaveAction.overwrite.warning.message")),
-                        Messages.getString((Locale) null, "SaveAction.overwrite.warning.title"), MessageType.WARNING, OptionType.YES_NO, null,
-                        null)) {
+                if (ResultType.YES != CustomizableOptionPane.showCustomDialog(getParentComponent(), new JLabel(Messages.getString((Locale) null, "SaveAction.overwrite.warning.message")), Messages.getString((Locale) null, "SaveAction.overwrite.warning.title"),
+                        MessageType.WARNING, OptionType.YES_NO, null, null)) {
                     return;
                 }
             }
@@ -199,7 +189,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
         }
 
         /**
-         *
          * @see org.swingeasy.EComponentPopupMenu.EComponentPopupMenuAction#checkEnabled(org.swingeasy.EComponentPopupMenu.CheckEnabled)
          */
         @Override
@@ -251,7 +240,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#addValueChangeListener(org.swingeasy.ValueChangeListener)
      */
     @Override
@@ -260,7 +248,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#clearValueChangeListeners()
      */
     @Override
@@ -383,7 +370,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
     }
 
     /**
-     *
      * @see org.swingeasy.ValidationDemo.HasValue#getValue()
      */
     @Override
@@ -500,7 +486,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
     }
 
     /**
-     *
      * @see org.swingeasy.HasValue#removeValueChangeListener(org.swingeasy.ValueChangeListener)
      */
     @Override
@@ -529,7 +514,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
     }
 
     /**
-     *
      * @see org.swingeasy.ETextComponentI#setCaret(int)
      */
     @Override
@@ -539,7 +523,6 @@ public class ETextArea extends JTextArea implements EComponentI, HasValue<String
     }
 
     /**
-     *
      * @see org.swingeasy.ETextComponentI#setCaret(int, int)
      */
     @Override

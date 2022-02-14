@@ -15,11 +15,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for programsType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="programsType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -30,8 +27,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "programsType", propOrder = { "program" })
@@ -41,23 +36,15 @@ public class ProgramsType {
 
     /**
      * Gets the value of the program property.
-     *
      * <p>
-     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be
-     * present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for the program property.
-     *
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the program property.
      * <p>
-     * For example, to add a new item, do as follows:
-     *
-     * <pre>
+     * For example, to add a new item, do as follows: <pre>
      * getProgram().add(newItem);
      * </pre>
-     *
-     *
      * <p>
      * Objects of the following type(s) are allowed in the list {@link ProgramType }
-     *
-     *
      */
     public List<ProgramType> getProgram() {
         if (program == null) {
@@ -68,7 +55,6 @@ public class ProgramsType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

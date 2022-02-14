@@ -15,13 +15,11 @@ import org.jhaws.common.web.wicket.flowplayer.FlowPlayer;
  * @see http://www.easy-bits.com/products/http-streaming-for-flash/flowplayer
  */
 public class EasybitsFlowplayerHttpstreaming {
-    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class,
-            "easybits-flash-streaming.js");
+    public static JavaScriptResourceReference JS = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class, "easybits-flash-streaming.js");
 
     public static JavaScriptResourceReference JS2 = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class, "easybits-helper.js");
 
-    public static JavaScriptResourceReference JS3 = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class,
-            "easybits-multistreaming.js");
+    public static JavaScriptResourceReference JS3 = new JavaScriptResourceReference(EasybitsFlowplayerHttpstreaming.class, "easybits-multistreaming.js");
 
     static {
         JS//
@@ -57,8 +55,7 @@ public class EasybitsFlowplayerHttpstreaming {
                         public InputStream getInputStream() throws ResourceStreamNotFoundException {
                             if (inputStream == null) {
                                 try {
-                                    inputStream = EasybitsFlowplayerHttpstreaming.class.getClassLoader().getResourceAsStream(
-                                            EasybitsFlowplayerHttpstreaming.class.getPackage().getName().replace('.', '/') + "/" + swf);
+                                    inputStream = EasybitsFlowplayerHttpstreaming.class.getClassLoader().getResourceAsStream(EasybitsFlowplayerHttpstreaming.class.getPackage().getName().replace('.', '/') + "/" + swf);
                                 } catch (Exception e) {
                                     throw new ResourceStreamNotFoundException(e);
                                 }

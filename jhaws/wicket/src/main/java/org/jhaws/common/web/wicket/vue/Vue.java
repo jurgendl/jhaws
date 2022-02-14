@@ -14,11 +14,10 @@ public class Vue {
     /**
      * Wicket renderHead:<br>
      * response.render(JavaScriptHeaderItem.forReference(Vue.JS_APP));<br>
-     * response.render(JavaScriptHeaderItem.forScript(";var testVueApplication = AppVue('" + RestCte.getRestPath() + VueTestRest.PATH +
-     * "','appVueTest');", "vuetest_rest_init"));<br>
+     * response.render(JavaScriptHeaderItem.forScript(";var testVueApplication = AppVue('" + RestCte.getRestPath() + VueTestRest.PATH + "','appVueTest');",
+     * "vuetest_rest_init"));<br>
      * <br>
      * RestEasy:<br>
-     *
      * <pre>
      * &#64;Path(VueTestRest.PATH)
      * &#64;Pretty
@@ -55,11 +54,8 @@ public class Vue {
      *         return map;
      *     }
      * }
-     * </pre>
-     *
-     * <br>
+     * </pre> <br>
      * Html:<br>
-     *
      * <pre>
         &lt;div style="display:none" id="appVueTest"&gt;
             &lt;span v-for="(element, index) in elements"&gt;

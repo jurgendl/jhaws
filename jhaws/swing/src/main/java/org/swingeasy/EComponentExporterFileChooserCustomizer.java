@@ -20,7 +20,6 @@ public class EComponentExporterFileChooserCustomizer<T extends JComponent & ECom
     }
 
     /**
-     *
      * @see org.swingeasy.FileChooserCustomizer#customize(java.awt.Component, javax.swing.JDialog)
      */
     @Override
@@ -29,18 +28,14 @@ public class EComponentExporterFileChooserCustomizer<T extends JComponent & ECom
     }
 
     /**
-     *
      * @see org.swingeasy.FileChooserCustomizer#customize(javax.swing.JFileChooser)
      */
     @Override
     public void customize(JFileChooser jfc) {
         if (EComponentExporterFileChooserCustomizer.lastFile != null) {
-            jfc.setCurrentDirectory(EComponentExporterFileChooserCustomizer.lastFile.isDirectory() ? EComponentExporterFileChooserCustomizer.lastFile
-                    : EComponentExporterFileChooserCustomizer.lastFile.getParentFile());
+            jfc.setCurrentDirectory(EComponentExporterFileChooserCustomizer.lastFile.isDirectory() ? EComponentExporterFileChooserCustomizer.lastFile : EComponentExporterFileChooserCustomizer.lastFile.getParentFile());
         }
         jfc.resetChoosableFileFilters();
-        jfc.addChoosableFileFilter(new ExtensionFileFilter(
-                UIUtils.getDescriptionForFileType(this.componentExporter.getFileExtension()) + " (" + this.componentExporter.getFileExtension() + ")",
-                this.componentExporter.getFileExtension()));
+        jfc.addChoosableFileFilter(new ExtensionFileFilter(UIUtils.getDescriptionForFileType(this.componentExporter.getFileExtension()) + " (" + this.componentExporter.getFileExtension() + ")", this.componentExporter.getFileExtension()));
     }
 }

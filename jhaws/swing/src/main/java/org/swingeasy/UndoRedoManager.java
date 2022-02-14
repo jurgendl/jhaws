@@ -16,7 +16,6 @@ import javax.swing.undo.UndoableEdit;
  * UndoRedoManager tool
  *
  * @author Jurgen
- *
  * @see http://www.javaworld.com/javaworld/jw-06-1998/jw-06-undoredo.html
  */
 public class UndoRedoManager {
@@ -95,7 +94,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#addEdit(javax.swing.undo.UndoableEdit)
      */
     public void addEdit(UndoableEdit event) {
@@ -103,7 +101,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#canRedo()
      */
     public boolean canRedo() {
@@ -111,7 +108,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#canUndo()
      */
     public boolean canUndo() {
@@ -119,7 +115,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#clearEdits()
      */
     public void clearEdits() {
@@ -136,7 +131,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#getRedoString()
      */
     public String getRedoString() {
@@ -153,7 +147,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#getUndoString()
      */
     public String getUndoString() {
@@ -161,7 +154,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#isPaused()
      */
     public boolean isPaused() {
@@ -169,7 +161,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#redoEdit()
      */
     public boolean redoEdit() throws CannotRedoException {
@@ -183,7 +174,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#undoEdit()
      */
     public boolean undoEdit() throws CannotUndoException {
@@ -197,7 +187,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#undoRedoPause()
      */
     public void undoRedoPause() {
@@ -208,7 +197,6 @@ public class UndoRedoManager {
     }
 
     /**
-     *
      * @see util.swing.UndoRedoAble#undoRedoResume()
      */
     public void undoRedoResume() {

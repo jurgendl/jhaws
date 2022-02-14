@@ -9,26 +9,26 @@ import org.springframework.security.core.userdetails.User;
 
 public class UserPage extends WebPage {
 
-	public UserPage(PageParameters parameters) {
-		super(parameters);
+    public UserPage(PageParameters parameters) {
+        super(parameters);
 
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User) {
-			String username = ((User) principal).getUsername();
-			add(new Label("username", username));
-		} else {
-			add(new Label("username", "error"));
-		}
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof User) {
+            String username = ((User) principal).getUsername();
+            add(new Label("username", username));
+        } else {
+            add(new Label("username", "error"));
+        }
 
-		add(new Link<Void>("logoutLink") {
+        add(new Link<Void>("logoutLink") {
 
-			@Override
-			public void onClick() {
-				getSession().invalidate();
-			}
+            @Override
+            public void onClick() {
+                getSession().invalidate();
+            }
 
-		});
+        });
 
-	}
+    }
 
 }

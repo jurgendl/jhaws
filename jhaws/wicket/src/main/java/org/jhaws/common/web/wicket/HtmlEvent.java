@@ -63,8 +63,7 @@ public interface HtmlEvent {
         public static final String BLUR = "onblur";
 
         /**
-         * when the content of a form element, the selection, or the checked state have changed (for &lt;input&gt;, &lt;select&gt;, and
-         * &lt;textarea&gt;)
+         * when the content of a form element, the selection, or the checked state have changed (for &lt;input&gt;, &lt;select&gt;, and &lt;textarea&gt;)
          */
         public static final String CHANGE = "onchange";
 

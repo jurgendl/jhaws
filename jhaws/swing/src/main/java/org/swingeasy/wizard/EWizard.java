@@ -54,8 +54,7 @@ public class EWizard extends JPanel implements EComponentI {
         }
 
         @Override
-        public Component getListCellRendererComponent(JList<? extends WizardPage> list, WizardPage page, int index, boolean isSelected,
-                boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<? extends WizardPage> list, WizardPage page, int index, boolean isSelected, boolean cellHasFocus) {
             setFont(wizardPages.get(wizardPage) == page ? selectedFont : font);
             String stringValue = null;
             if (page != null) {
@@ -189,19 +188,12 @@ public class EWizard extends JPanel implements EComponentI {
         pageList.setBorder(new EmptyBorder(4, 14, 10, 10));
         pageList.setOpaque(false);
         GroupLayout gl_leftPanel = new GroupLayout(leftPanel);
-        gl_leftPanel.setHorizontalGroup(
-                gl_leftPanel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING, gl_leftPanel.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(gl_leftPanel.createParallelGroup(Alignment.TRAILING)
-                                .addComponent(lblPages, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE)
-                                .addComponent(pageList, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
+        gl_leftPanel.setHorizontalGroup(gl_leftPanel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
+                gl_leftPanel.createSequentialGroup().addContainerGap().addGroup(
+                        gl_leftPanel.createParallelGroup(Alignment.TRAILING).addComponent(lblPages, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE).addComponent(pageList, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 216, Short.MAX_VALUE))
                         .addContainerGap()));
-        gl_leftPanel.setVerticalGroup(gl_leftPanel.createParallelGroup(Alignment.LEADING).addGroup(gl_leftPanel.createSequentialGroup()
-                .addGap(8)
-                .addComponent(lblPages)
-                .addPreferredGap(ComponentPlacement.RELATED)
-                .addComponent(pageList, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
-                .addContainerGap()));
+        gl_leftPanel.setVerticalGroup(gl_leftPanel.createParallelGroup(Alignment.LEADING)
+                .addGroup(gl_leftPanel.createSequentialGroup().addGap(8).addComponent(lblPages).addPreferredGap(ComponentPlacement.RELATED).addComponent(pageList, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE).addContainerGap()));
         leftPanel.setLayout(gl_leftPanel);
 
         JSeparator separator = new JSeparator();
@@ -402,7 +394,6 @@ public class EWizard extends JPanel implements EComponentI {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override
@@ -427,8 +418,7 @@ public class EWizard extends JPanel implements EComponentI {
 
         WizardPage page = wizardPages.get(wizardPage);
         getLblTitle().setText(page.getTitle());
-        getLblDescription()
-                .setText("<html><p>" + page.getDescription().replace("\r\n", "<br>").replace("\n", "<br>").replace("\r", "<br>") + "</p></html>");
+        getLblDescription().setText("<html><p>" + page.getDescription().replace("\r\n", "<br>").replace("\n", "<br>").replace("\r", "<br>") + "</p></html>");
 
         getBtnBack().setEnabled(0 < wizardPage);
         getBtnNext().setEnabled(wizardPage < wizardPages.size() - 1 && wizardPages.get(wizardPage + 1).validate());

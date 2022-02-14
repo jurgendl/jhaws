@@ -72,7 +72,6 @@ public class JavassistEventThreadSafeWrapper<C> implements MethodHandler {
     }
 
     /**
-     *
      * @see javassist.util.proxy.MethodHandler#invoke(java.lang.Object, java.lang.reflect.Method, java.lang.reflect.Method, java.lang.Object[])
      */
     @Override

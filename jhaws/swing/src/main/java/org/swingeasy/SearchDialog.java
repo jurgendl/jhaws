@@ -43,8 +43,7 @@ public class SearchDialog extends JDialog implements EComponentI {
     protected ECheckBox cbReplace;
 
     public SearchDialog(boolean replacing, ETextArea textComponent) {
-        super(UIUtils.getRootWindow(textComponent), Messages.getString(SystemSettings.getCurrentLocale(), "SearchDialog.title"),
-                ModalityType.MODELESS);
+        super(UIUtils.getRootWindow(textComponent), Messages.getString(SystemSettings.getCurrentLocale(), "SearchDialog.title"), ModalityType.MODELESS);
         this.textComponent = textComponent;
         init();
         setLocationRelativeTo(UIUtils.getRootWindow(textComponent));
@@ -240,7 +239,6 @@ public class SearchDialog extends JDialog implements EComponentI {
     }
 
     /**
-     *
      * @see java.awt.Component#setLocale(java.util.Locale)
      */
     @Override

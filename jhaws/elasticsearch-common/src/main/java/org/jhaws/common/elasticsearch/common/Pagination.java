@@ -40,8 +40,7 @@ public class Pagination implements Serializable {
 
     @Override
     public String toString() {
-        return "Pagination [start=" + this.start + ", max=" + this.max + ", " + (this.results != null ? "results=" + this.results + ", " : "")
-                + (this.total != null ? "total=" + this.total : "") + "]";
+        return "Pagination [start=" + this.start + ", max=" + this.max + ", " + (this.results != null ? "results=" + this.results + ", " : "") + (this.total != null ? "total=" + this.total : "") + "]";
     }
 
     public int getStart() {

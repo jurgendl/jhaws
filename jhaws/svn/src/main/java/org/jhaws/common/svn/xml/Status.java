@@ -48,7 +48,6 @@ public class Status {
 
     @Override
     public String toString() {
-        return "Status [" + (item != null ? "item=" + item + ", " : "") + (props != null ? "props=" + props + ", " : "") + "revision=" + revision
-                + ", " + (commit != null ? "commit=" + commit : "") + "]";
+        return "Status [" + (item != null ? "item=" + item + ", " : "") + (props != null ? "props=" + props + ", " : "") + "revision=" + revision + ", " + (commit != null ? "commit=" + commit : "") + "]";
     }
 }

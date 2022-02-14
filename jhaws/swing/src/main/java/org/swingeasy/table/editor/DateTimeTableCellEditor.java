@@ -47,7 +47,6 @@ public class DateTimeTableCellEditor extends DefaultCellEditor implements ECompo
             }
 
             /**
-             *
              * @see javax.swing.DefaultCellEditor.EditorDelegate#setValue(java.lang.Object)
              */
             @Override
@@ -80,7 +79,6 @@ public class DateTimeTableCellEditor extends DefaultCellEditor implements ECompo
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setEnabled(boolean)
      */
     @Override
@@ -89,7 +87,6 @@ public class DateTimeTableCellEditor extends DefaultCellEditor implements ECompo
     }
 
     /**
-     *
      * @see org.swingeasy.EComponentI#setLocale(java.util.Locale)
      */
     @Override

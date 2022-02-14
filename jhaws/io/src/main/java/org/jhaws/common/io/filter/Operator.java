@@ -7,7 +7,6 @@ import java.io.File;
  *
  * @author Jurgen
  * @version 2.0.0 - 27 June 2006
- *
  * @see org.jhaws.common.io.filter.AbstractFileFilter
  */
 @Deprecated
@@ -16,7 +15,6 @@ public abstract class Operator {
      * filter1 AND filter2 AND filter3 AND ...
      *
      * @param description description
-     *
      * @return AbstractFileFilter
      */
     public static final AbstractFileFilter and(String description, AbstractFileFilter... filters) {
@@ -27,7 +25,6 @@ public abstract class Operator {
      * filter1 OR filter2 OR filter3 OR ...
      *
      * @param description description
-     *
      * @return AbstractFileFilter
      */
     public static final AbstractFileFilter or(String description, AbstractFileFilter... filters) {
@@ -40,7 +37,6 @@ public abstract class Operator {
      * @param description description
      * @param filter1 AbstractFileFilter
      * @param filter2 AbstractFileFilter
-     *
      * @return AbstractFileFilter
      */
     public static final AbstractFileFilter and(String description, AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -53,7 +49,6 @@ public abstract class Operator {
      * @param description description
      * @param filter1 AbstractFileFilter
      * @param filter2 AbstractFileFilter
-     *
      * @return AbstractFileFilter
      */
     public static final AbstractFileFilter or(String description, AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -83,7 +78,6 @@ public abstract class Operator {
      *
      * @param filter1 AbstractFileFilter
      * @param filter2 AbstractFileFilter
-     *
      * @return AbstractFileFilter
      */
     public static final AbstractFileFilter and(AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -95,7 +89,6 @@ public abstract class Operator {
      *
      * @param filter1 AbstractFileFilter
      * @param filter2 AbstractFileFilter
-     *
      * @return AbstractFileFilter
      */
     public static final AbstractFileFilter or(AbstractFileFilter filter1, AbstractFileFilter filter2) {
@@ -106,7 +99,6 @@ public abstract class Operator {
      * returns description of multiple filters with given operator
      *
      * @param op operator as string
-     *
      * @return description string
      */
     private static String getDescription(String op, AbstractFileFilter... filters) {
@@ -146,7 +138,6 @@ public abstract class Operator {
         }
 
         /**
-         *
          * @see java.lang.Object#toString()
          */
         @Override
@@ -169,7 +160,6 @@ public abstract class Operator {
         }
 
         /**
-         *
          * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
          */
         @Override
@@ -205,7 +195,6 @@ public abstract class Operator {
         }
 
         /**
-         *
          * @see java.lang.Object#toString()
          */
         @Override
@@ -228,7 +217,6 @@ public abstract class Operator {
         }
 
         /**
-         *
          * @see org.jhaws.common.io.filter.AbstractFileFilter#acceptFile(java.io.File)
          */
         @Override

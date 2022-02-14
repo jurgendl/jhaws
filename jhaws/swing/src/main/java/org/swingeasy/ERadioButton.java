@@ -42,7 +42,6 @@ public class ERadioButton extends JRadioButton implements EComponentI, ReadableC
     }
 
     /**
-     *
      * @see javax.swing.JComponent#getToolTipText()
      */
     @Override

@@ -465,8 +465,7 @@ public interface CollectionUtils8 {
 
         protected Set<Characteristics> characteristics;
 
-        public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Function<A, R> finisher,
-                Set<Characteristics> characteristics) {
+        public CustomCollector(Supplier<A> supplier, BiConsumer<A, T> accumulator, BinaryOperator<A> combiner, Function<A, R> finisher, Set<Characteristics> characteristics) {
             this.supplier = supplier;
             this.accumulator = accumulator;
             this.combiner = combiner;
@@ -682,7 +681,7 @@ public interface CollectionUtils8 {
     }
 
     public static <T> T[] newArray(Class<T> componentType, int size) {
-        return CollectionUtils8.<T> newArray(componentType).apply(size);
+        return CollectionUtils8.<T>newArray(componentType).apply(size);
     }
 
     @SuppressWarnings("unchecked")
@@ -706,19 +705,19 @@ public interface CollectionUtils8 {
     @SuppressWarnings("unchecked")
     public static <T, C extends Collection<T>> Collector<T, ?, C> collector(C collection) {
         if (collection instanceof Deque) {
-            return (Collector<T, ?, C>) CollectionUtils8.<T> collectDeque();
+            return (Collector<T, ?, C>) CollectionUtils8.<T>collectDeque();
         }
         if (collection instanceof Queue) {
-            return (Collector<T, ?, C>) CollectionUtils8.<T> collectQueue();
+            return (Collector<T, ?, C>) CollectionUtils8.<T>collectQueue();
         }
         if (collection instanceof List) {
-            return (Collector<T, ?, C>) CollectionUtils8.<T> collectList();
+            return (Collector<T, ?, C>) CollectionUtils8.<T>collectList();
         }
         if (collection instanceof SortedSet) {
-            return (Collector<T, ?, C>) CollectionUtils8.<T> collectSortedSet();
+            return (Collector<T, ?, C>) CollectionUtils8.<T>collectSortedSet();
         }
         if (collection instanceof Set) {
-            return (Collector<T, ?, C>) CollectionUtils8.<T> collectSet();
+            return (Collector<T, ?, C>) CollectionUtils8.<T>collectSet();
         }
         throw new UnsupportedOperationException(collection.getClass().getName());
     }
@@ -750,17 +749,17 @@ public interface CollectionUtils8 {
     }
 
     public static <K, V> EnhancedMap<K, V> map(Stream<? extends Map.Entry<K, V>> stream) {
-        return map(stream, CollectionUtils8.<K, V> newLinkedMap());
+        return map(stream, CollectionUtils8.<K, V>newLinkedMap());
     }
 
     public static <K, V, M extends Map<K, V>> M map(Stream<? extends Map.Entry<K, V>> stream, Supplier<M> mapSupplier) {
-        BinaryOperator<V> keepLast = CollectionUtils8.<V> keepLast();
+        BinaryOperator<V> keepLast = CollectionUtils8.<V>keepLast();
         return map(stream, mapSupplier, keepLast);
     }
 
     public static <K, V, M extends Map<K, V>> M map(Stream<? extends Map.Entry<K, V>> stream, Supplier<M> mapSupplier, BinaryOperator<V> choice) {
-        Function<Entry<K, V>, K> keyMapper = CollectionUtils8.<K, V> keyMapper();
-        Function<Entry<K, V>, V> valueMapper = CollectionUtils8.<K, V> valueMapper();
+        Function<Entry<K, V>, K> keyMapper = CollectionUtils8.<K, V>keyMapper();
+        Function<Entry<K, V>, V> valueMapper = CollectionUtils8.<K, V>valueMapper();
         Collector<Entry<K, V>, ?, M> c = Collectors.toMap(keyMapper, valueMapper, choice, mapSupplier);
         return stream.collect(c);
     }
@@ -882,8 +881,7 @@ public interface CollectionUtils8 {
     }
 
     public static <T, A> Comparator<T> comparator(List<A> orderByMe, Function<T, A> map) {
-        return (x, y) -> Integer.valueOf(noNegIndex(orderByMe.indexOf(map.apply(x))))
-                .compareTo(Integer.valueOf(noNegIndex(orderByMe.indexOf(map.apply(y)))));
+        return (x, y) -> Integer.valueOf(noNegIndex(orderByMe.indexOf(map.apply(x)))).compareTo(Integer.valueOf(noNegIndex(orderByMe.indexOf(map.apply(y)))));
     }
 
     public static <T> Comparator<T> comparator(List<T> orderByMe) {
@@ -1295,11 +1293,7 @@ public interface CollectionUtils8 {
     }
 
     public static <T> List<Map.Entry<T, T>> match(List<T> keys, List<T> values) {
-        return values.stream()
-                .parallel()
-                .filter(containedIn(keys))
-                .map(value -> new Pair<>(keys.get(keys.indexOf(value)), value))
-                .collect(collectList());
+        return values.stream().parallel().filter(containedIn(keys)).map(value -> new Pair<>(keys.get(keys.indexOf(value)), value)).collect(collectList());
     }
 
     public static <T> T optional(T value, Supplier<T> orElse) {
@@ -1373,9 +1367,7 @@ public interface CollectionUtils8 {
 
     /**
      * !!!!!!!!!!! terminates source stream !!!!!!!!!!! <br>
-     * !!!!!!!!!!! cannot be used on endless streams !!!!!!!!!!!
-     *
-     * stackoverflow.com/questions/24010109/java-8-stream-reverse-order
+     * !!!!!!!!!!! cannot be used on endless streams !!!!!!!!!!! stackoverflow.com/questions/24010109/java-8-stream-reverse-order
      */
     @SuppressWarnings("unchecked")
     public static <T> Stream<T> reverse(Stream<T> input) {
@@ -1484,8 +1476,7 @@ public interface CollectionUtils8 {
         return collectMap(keyMapper, valueMapper, rejectDuplicateKeys());
     }
 
-    public static <T, K, V> Collector<T, ?, EnhancedMap<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
-            BinaryOperator<V> duplicateValues) {
+    public static <T, K, V> Collector<T, ?, EnhancedMap<K, V>> collectMap(Function<T, K> keyMapper, Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
         return Collectors.toMap(keyMapper, valueMapper, duplicateValues, newMap());
     }
 
@@ -1507,8 +1498,7 @@ public interface CollectionUtils8 {
         return collectSortedMap(keyMapper, valueMapper, rejectDuplicateKeys());
     }
 
-    public static <T, K, V> Collector<T, ?, EnhancedSortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
-            BinaryOperator<V> duplicateValues) {
+    public static <T, K, V> Collector<T, ?, EnhancedSortedMap<K, V>> collectSortedMap(Function<T, K> keyMapper, Function<T, V> valueMapper, BinaryOperator<V> duplicateValues) {
         return Collectors.toMap(keyMapper, valueMapper, duplicateValues, newSortedMap());
     }
 
@@ -1521,11 +1511,11 @@ public interface CollectionUtils8 {
     }
 
     public static <T extends Comparable<? super T>> Comparator<T> natural() {
-        return Comparator.<T> naturalOrder();
+        return Comparator.<T>naturalOrder();
     }
 
     public static <T extends Comparable<? super T>> BinaryOperator<T> keepMin() {
-        return keepMin(CollectionUtils8.<T> natural());
+        return keepMin(CollectionUtils8.<T>natural());
     }
 
     public static <T> BinaryOperator<T> keepMin(Comparator<T> comparator) {
@@ -1533,7 +1523,7 @@ public interface CollectionUtils8 {
     }
 
     public static <T extends Comparable<? super T>> BinaryOperator<T> keepMax() {
-        return keepMax(CollectionUtils8.<T> natural());
+        return keepMax(CollectionUtils8.<T>natural());
     }
 
     public static <T> BinaryOperator<T> keepMax(Comparator<T> comparator) {
@@ -1678,8 +1668,7 @@ public interface CollectionUtils8 {
                 return this;
             }
         }
-        return Collector.of(IntersectAcc::new, IntersectAcc::accept, IntersectAcc::combine,
-                acc -> acc.result == null ? Collections.emptySet() : acc.result, Collector.Characteristics.UNORDERED);
+        return Collector.of(IntersectAcc::new, IntersectAcc::accept, IntersectAcc::combine, acc -> acc.result == null ? Collections.emptySet() : acc.result, Collector.Characteristics.UNORDERED);
     }
 
     /**
@@ -1706,7 +1695,6 @@ public interface CollectionUtils8 {
      * @param teVerwijderenAct nullable, actie op te roepen indien verwijderen, krijgt key en bestaand object binnen
      * @param aanTeMakenAct nullable, actie op te roepen indien nieuw object aan te maken, krijgt key en nieuw object binnen
      * @param teBewaren nullable, actie op te roepen indien overeenkomst, krijgt key en nieuw en bestaand object binnen
-     *
      * @param <K> key waarop vergeleken moet worden
      * @param <N> nieuwe object
      * @param <B> bestaand object
@@ -1830,8 +1818,7 @@ public interface CollectionUtils8 {
     }
 
     @SafeVarargs
-    public static <T> List<T> sortBy(Collection<T> collection, Function<T, ? extends Comparable<?>> map,
-            Function<T, ? extends Comparable<?>>... mapAdditional) {
+    public static <T> List<T> sortBy(Collection<T> collection, Function<T, ? extends Comparable<?>> map, Function<T, ? extends Comparable<?>>... mapAdditional) {
         return collection.stream().sorted(comparator(map, mapAdditional)).collect(collectList());
     }
 
@@ -1842,15 +1829,13 @@ public interface CollectionUtils8 {
     }
 
     @SafeVarargs
-    public static <T> List<T> sortInPlace(List<T> list, Function<T, ? extends Comparable<?>> map,
-            Function<T, ? extends Comparable<?>>... mapAdditional) {
+    public static <T> List<T> sortInPlace(List<T> list, Function<T, ? extends Comparable<?>> map, Function<T, ? extends Comparable<?>>... mapAdditional) {
         list.sort(comparator(map, mapAdditional));
         return list;
     }
 
     @SafeVarargs
-    public static <T> Comparator<T> comparator(Function<T, ? extends Comparable<?>> compare,
-            Function<T, ? extends Comparable<?>>... compareAdditional) {
+    public static <T> Comparator<T> comparator(Function<T, ? extends Comparable<?>> compare, Function<T, ? extends Comparable<?>>... compareAdditional) {
         return (t1, t2) -> {
             CompareToBuilder cb = new CompareToBuilder();
             cb.append(compare.apply(t1), compare.apply(t2));
@@ -1896,8 +1881,7 @@ public interface CollectionUtils8 {
     }
 
     public static <K, V> EnhancedMap<V, List<K>> groupByValue(Map<K, V> map) {
-        return stream(map.entrySet())
-                .collect(Collectors.groupingBy(e -> e.getValue(), newMap(), Collectors.mapping(e -> e.getKey(), Collectors.toList())));
+        return stream(map.entrySet()).collect(Collectors.groupingBy(e -> e.getValue(), newMap(), Collectors.mapping(e -> e.getKey(), Collectors.toList())));
     }
 
     @SuppressWarnings("unchecked")
@@ -2137,8 +2121,7 @@ public interface CollectionUtils8 {
         return tmp;
     }
 
-    public static <R, K, V> List<R> flatten(Collection<R> records, Function<R, K> toKey, Function<R, V> toValue, BinaryOperator<V> mergeValue,
-            BiFunction<K, V, R> mergeToRecord) {
+    public static <R, K, V> List<R> flatten(Collection<R> records, Function<R, K> toKey, Function<R, V> toValue, BinaryOperator<V> mergeValue, BiFunction<K, V, R> mergeToRecord) {
         Map<K, List<R>> map = records.stream().collect(Collectors.groupingBy(toKey));
         return map.entrySet().stream().map(entry -> {
             return new KeyValue<>(entry.getKey(), entry.getValue().stream().map(toValue).reduce(mergeValue).get());
@@ -2204,10 +2187,7 @@ public interface CollectionUtils8 {
     }
 
     public static <K, V> LinkedHashMap<K, V> sortByValue(Map<K, V> map, Comparator<V> comparator) {
-        return map.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(comparator))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        return map.entrySet().stream().sorted(Map.Entry.comparingByValue(comparator)).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
     public static <T> List<T> repeat(int times, T object) {
@@ -2263,8 +2243,7 @@ public interface CollectionUtils8 {
     }
 
     public static <A, B, C, D, E> QuintuplePredicate<A, B, C, D, E> notNullQuintuplePredicate() {
-        return (a, b, c, d, e) -> notNullPredicate().test(a) || notNullPredicate().test(b) || notNullPredicate().test(c) || notNullPredicate().test(d)
-                || notNullPredicate().test(e);
+        return (a, b, c, d, e) -> notNullPredicate().test(a) || notNullPredicate().test(b) || notNullPredicate().test(c) || notNullPredicate().test(d) || notNullPredicate().test(e);
     }
 
     public static <T> List<T> replaceOrAdd(List<T> list, T object) {

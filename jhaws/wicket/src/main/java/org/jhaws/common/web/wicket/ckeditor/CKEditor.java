@@ -26,30 +26,21 @@ public class CKEditor {
 
     public static UrlResourceReference CDN_CKEDITOR_FULL_JS = new UrlResourceReference(Url.parse(URL + CKEType.full.toString() + "/" + CKEDITOR_JS));
 
-    public static UrlResourceReference CDN_CKEDITOR_STANDARD_JS = new UrlResourceReference(
-            Url.parse(URL + CKEType.standard.toString() + "/" + CKEDITOR_JS));
+    public static UrlResourceReference CDN_CKEDITOR_STANDARD_JS = new UrlResourceReference(Url.parse(URL + CKEType.standard.toString() + "/" + CKEDITOR_JS));
 
-    public static UrlResourceReference CDN_CKEDITOR_BASIC_JS = new UrlResourceReference(
-            Url.parse(URL + CKEType.basic.toString() + "/" + CKEDITOR_JS));
+    public static UrlResourceReference CDN_CKEDITOR_BASIC_JS = new UrlResourceReference(Url.parse(URL + CKEType.basic.toString() + "/" + CKEDITOR_JS));
 
-    public static UrlResourceReference CDN_CKEDITOR_FULL_JQUERY_JS = new UrlResourceReference(
-            Url.parse(URL + CKEType.full.toString() + "/" + ADAPTERS_JQUERY_JS)).addJavaScriptResourceReferenceDependency(CDN_CKEDITOR_FULL_JS);
+    public static UrlResourceReference CDN_CKEDITOR_FULL_JQUERY_JS = new UrlResourceReference(Url.parse(URL + CKEType.full.toString() + "/" + ADAPTERS_JQUERY_JS)).addJavaScriptResourceReferenceDependency(CDN_CKEDITOR_FULL_JS);
 
-    public static UrlResourceReference CDN_CKEDITOR_STANDARD_JQUERY_JS = new UrlResourceReference(
-            Url.parse(URL + CKEType.standard.toString() + "/" + ADAPTERS_JQUERY_JS))
-                    .addJavaScriptResourceReferenceDependency(CDN_CKEDITOR_STANDARD_JS);
+    public static UrlResourceReference CDN_CKEDITOR_STANDARD_JQUERY_JS = new UrlResourceReference(Url.parse(URL + CKEType.standard.toString() + "/" + ADAPTERS_JQUERY_JS)).addJavaScriptResourceReferenceDependency(CDN_CKEDITOR_STANDARD_JS);
 
-    public static UrlResourceReference CDN_CKEDITOR_BASIC_JQUERY_JS = new UrlResourceReference(
-            Url.parse(URL + CKEType.basic.toString() + "/" + ADAPTERS_JQUERY_JS)).addJavaScriptResourceReferenceDependency(CDN_CKEDITOR_BASIC_JS);
+    public static UrlResourceReference CDN_CKEDITOR_BASIC_JQUERY_JS = new UrlResourceReference(Url.parse(URL + CKEType.basic.toString() + "/" + ADAPTERS_JQUERY_JS)).addJavaScriptResourceReferenceDependency(CDN_CKEDITOR_BASIC_JS);
 
     static {
         try {
-            CDN_CKEDITOR_FULL_JQUERY_JS
-                    .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
-            CDN_CKEDITOR_STANDARD_JQUERY_JS
-                    .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
-            CDN_CKEDITOR_BASIC_JQUERY_JS
-                    .addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
+            CDN_CKEDITOR_FULL_JQUERY_JS.addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
+            CDN_CKEDITOR_STANDARD_JQUERY_JS.addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
+            CDN_CKEDITOR_BASIC_JQUERY_JS.addJavaScriptResourceReferenceDependency(WicketApplication.get().getJavaScriptLibrarySettings().getJQueryReference());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -73,7 +64,6 @@ public class CKEditor {
     }
 
     public static UrlResourceReference forLanguage(CKEType type, Locale locale) {
-        return new UrlResourceReference(Url.parse(URL + type.toString() + "/lang/" + locale.getLanguage() + ".js"))
-                .addJavaScriptResourceReferenceDependency(forType(type));
+        return new UrlResourceReference(Url.parse(URL + type.toString() + "/lang/" + locale.getLanguage() + ".js")).addJavaScriptResourceReferenceDependency(forType(type));
     }
 }

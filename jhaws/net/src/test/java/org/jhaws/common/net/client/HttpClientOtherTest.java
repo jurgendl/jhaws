@@ -33,9 +33,7 @@ public class HttpClientOtherTest {
         try {
             SecureMe sn = new SecureMe();
             String data = sn.getClass().getName();
-            Assert.assertEquals(
-                    "[111, 114, 103, 46, 106, 104, 97, 119, 115, 46, 99, 111, 109, 109, 111, 110, 46, 105, 111, 46, 115, 101, 99, 117, 114, 105, 116, 121, 46, 83, 101, 99, 117, 114, 101, 77, 101]",
-                    Arrays.toString(data.getBytes()));
+            Assert.assertEquals("[111, 114, 103, 46, 106, 104, 97, 119, 115, 46, 99, 111, 109, 109, 111, 110, 46, 105, 111, 46, 115, 101, 99, 117, 114, 105, 116, 121, 46, 83, 101, 99, 117, 114, 101, 77, 101]", Arrays.toString(data.getBytes()));
             byte[] encrypt = sn.encrypt(data);
             Assert.assertEquals(data, sn.decrypt(encrypt));
         } catch (Exception e) {

@@ -16,8 +16,7 @@ import javax.swing.border.EmptyBorder;
 public class CheckBoxList extends JList<JCheckBox> {
     protected class CellRenderer implements ListCellRenderer<JCheckBox> {
         @Override
-        public Component getListCellRendererComponent(JList<? extends JCheckBox> list, JCheckBox checkbox, int index, boolean isSelected,
-                boolean cellHasFocus) {
+        public Component getListCellRendererComponent(JList<? extends JCheckBox> list, JCheckBox checkbox, int index, boolean isSelected, boolean cellHasFocus) {
             checkbox.setBackground(isSelected ? CheckBoxList.this.getSelectionBackground() : CheckBoxList.this.getBackground());
             checkbox.setForeground(isSelected ? CheckBoxList.this.getSelectionForeground() : CheckBoxList.this.getForeground());
             checkbox.setEnabled(CheckBoxList.this.isEnabled());

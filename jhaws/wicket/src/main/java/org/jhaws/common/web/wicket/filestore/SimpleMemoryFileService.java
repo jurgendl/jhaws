@@ -15,7 +15,6 @@ public class SimpleMemoryFileService implements FileService {
     private Map<FileMeta, byte[]> files = new HashMap<>();
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.filestore.FileService#add(org.jhaws.common.web.wicket.filestore.FileMeta, java.io.InputStream)
      */
     @Override
@@ -27,7 +26,6 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.filestore.FileService#deleteFiles(java.lang.String)
      */
     @Override
@@ -38,7 +36,6 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.filestore.FileService#getFile(java.lang.String)
      */
     @Override
@@ -51,7 +48,6 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.filestore.FileService#getFiles()
      */
     @Override
@@ -60,7 +56,6 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.filestore.FileService#getFiles(java.lang.String)
      */
     @Override
@@ -69,7 +64,6 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.filestore.FileService#readFile(org.jhaws.common.web.wicket.filestore.FileMeta, java.io.OutputStream)
      */
     @Override
@@ -79,7 +73,6 @@ public class SimpleMemoryFileService implements FileService {
     }
 
     /**
-     *
      * @see org.jhaws.common.web.wicket.filestore.FileService#remove(org.jhaws.common.web.wicket.filestore.FileMeta)
      */
     @Override

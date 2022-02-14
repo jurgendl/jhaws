@@ -12,11 +12,8 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
 /**
  * <p>
  * Java class for programVersionType complex type.
- *
  * <p>
- * The following schema fragment specifies the expected content contained within this class.
- *
- * <pre>
+ * The following schema fragment specifies the expected content contained within this class. <pre>
  * &lt;complexType name="programVersionType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
@@ -30,8 +27,6 @@ import org.apache.cxf.xjc.runtime.JAXBToStringStyle;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "programVersionType")
@@ -59,7 +54,6 @@ public class ProgramVersionType {
      * Gets the value of the version property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getVersion() {
         return version;
@@ -69,7 +63,6 @@ public class ProgramVersionType {
      * Sets the value of the version property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setVersion(String value) {
         this.version = value;
@@ -79,7 +72,6 @@ public class ProgramVersionType {
      * Gets the value of the copyright property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getCopyright() {
         return copyright;
@@ -89,7 +81,6 @@ public class ProgramVersionType {
      * Sets the value of the copyright property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setCopyright(String value) {
         this.copyright = value;
@@ -99,7 +90,6 @@ public class ProgramVersionType {
      * Gets the value of the buildDate property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getBuildDate() {
         return buildDate;
@@ -109,7 +99,6 @@ public class ProgramVersionType {
      * Sets the value of the buildDate property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setBuildDate(String value) {
         this.buildDate = value;
@@ -119,7 +108,6 @@ public class ProgramVersionType {
      * Gets the value of the buildTime property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getBuildTime() {
         return buildTime;
@@ -129,7 +117,6 @@ public class ProgramVersionType {
      * Sets the value of the buildTime property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setBuildTime(String value) {
         this.buildTime = value;
@@ -139,7 +126,6 @@ public class ProgramVersionType {
      * Gets the value of the compilerIdent property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getCompilerIdent() {
         return compilerIdent;
@@ -149,7 +135,6 @@ public class ProgramVersionType {
      * Sets the value of the compilerIdent property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setCompilerIdent(String value) {
         this.compilerIdent = value;
@@ -159,7 +144,6 @@ public class ProgramVersionType {
      * Gets the value of the configuration property.
      *
      * @return possible object is {@link String }
-     *
      */
     public String getConfiguration() {
         return configuration;
@@ -169,7 +153,6 @@ public class ProgramVersionType {
      * Sets the value of the configuration property.
      *
      * @param value allowed object is {@link String }
-     *
      */
     public void setConfiguration(String value) {
         this.configuration = value;
@@ -177,7 +160,6 @@ public class ProgramVersionType {
 
     /**
      * Generates a String representation of the contents of this type. This is an extension method, produced by the 'ts' xjc plugin
-     *
      */
     @Override
     public String toString() {

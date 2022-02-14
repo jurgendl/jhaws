@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
  * case sensitivity
  *
  * @version 2.0.0 - 27 June 2006
- *
  * @author Jurgen
  */
 @Deprecated
@@ -15,11 +14,11 @@ public enum Case {
     SENSITIVE,
     /** case insensitive */
     INSENSITIVE;
+
     /**
      * na
      *
      * @return
-     *
      * @throws IllegalArgumentException na
      */
     public int getPattern() {
