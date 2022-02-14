@@ -774,7 +774,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         TimeValue timeTaken = bulkResponse.getTook();
         LOGGER.trace("{}", timeTaken);
         boolean timedOut = bulkResponse.isTimedOut();
-        LOGGER.trace("{}", timedOut);
+        if (timedOut) LOGGER.error("{}", timedOut);
         long totalDocs = bulkResponse.getTotal();
         LOGGER.trace("{}", totalDocs);
         long updatedDocs = bulkResponse.getUpdated();
@@ -786,7 +786,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         long noops = bulkResponse.getNoops();
         LOGGER.trace("{}", noops);
         long versionConflicts = bulkResponse.getVersionConflicts();
-        LOGGER.trace("{}", versionConflicts);
+        if (versionConflicts > 0) LOGGER.error("{}", versionConflicts);
         long bulkRetries = bulkResponse.getBulkRetries();
         LOGGER.trace("{}", bulkRetries);
         long searchRetries = bulkResponse.getSearchRetries();
@@ -796,9 +796,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         TimeValue throttledUntilMillis = bulkResponse.getStatus().getThrottledUntil();
         LOGGER.trace("{}", throttledUntilMillis);
         List<ScrollableHitSource.SearchFailure> searchFailures = bulkResponse.getSearchFailures();
-        LOGGER.trace("{}", searchFailures);
+        searchFailures.forEach(i -> LOGGER.error("{}", i));
         List<BulkItemResponse.Failure> bulkFailures = bulkResponse.getBulkFailures();
-        bulkFailures.forEach(bulkFailure -> LOGGER.error("{}", bulkFailure));
+        bulkFailures.forEach(i -> LOGGER.error("{}", i));
         return updatedDocs > 0l ? updatedDocs : deletedDocs;
     }
 
