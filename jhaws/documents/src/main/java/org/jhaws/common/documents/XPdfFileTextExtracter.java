@@ -68,7 +68,7 @@ public class XPdfFileTextExtracter implements FileTextExtracter {
         // https://dl.xpdfreader.com/xpdf-tools-mac-4.03.tar.gz
         FilePath xpdf = new FilePath(System.getProperty("user.home")).child("xpdf" + "-" + version).createDirectory();
         FilePath xpdfarchive;
-        String os = "win";
+        String os;
         String file;
         String ext;
         switch (SystemSettings.osgroup) {
