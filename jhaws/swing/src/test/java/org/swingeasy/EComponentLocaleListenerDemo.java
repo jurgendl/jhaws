@@ -22,9 +22,9 @@ public class EComponentLocaleListenerDemo {
             }
         };
         UIUtils.registerLocaleChangeListener(tester);
-        SystemSettings.getSingleton().firePropertyChange("boolean", false, true);
+        SystemSettings.propertyChangeParent.firePropertyChange("boolean", false, true);
         System.out.println("l:");
-        for (PropertyChangeListener l : SystemSettings.getSingleton().getPropertyChangeListeners(SystemSettings.LOCALE)) {
+        for (PropertyChangeListener l : SystemSettings.propertyChangeParent.getPropertyChangeListeners(SystemSettings.LOCALE)) {
             System.out.println(l);
         }
         SystemSettings.setCurrentLocale(Locale.GERMANY);
@@ -33,7 +33,7 @@ public class EComponentLocaleListenerDemo {
         System.out.println();
         SystemSettings.setCurrentLocale(Locale.ITALY);
         System.out.println("l:");
-        for (PropertyChangeListener l : SystemSettings.getSingleton().getPropertyChangeListeners(SystemSettings.LOCALE)) {
+        for (PropertyChangeListener l : SystemSettings.propertyChangeParent.getPropertyChangeListeners(SystemSettings.LOCALE)) {
             System.out.println(l);
         }
     }

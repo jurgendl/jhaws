@@ -440,7 +440,7 @@ public class UIUtils {
      * lists all current locale change listeners
      */
     public static void debugLocaleChangeListeners(PrintStream out) {
-        for (Object o : SystemSettings.getSingleton().propertyChangeSupport.getPropertyChangeListeners()) {
+        for (Object o : SystemSettings.propertyChangeParent.propertyChangeSupport.getPropertyChangeListeners()) {
             try {
                 PropertyChangeListenerProxy pclp = (PropertyChangeListenerProxy) o;
                 if (!org.swingeasy.WeakReferencedListener.isWrapped(pclp.getListener())) {
@@ -598,7 +598,7 @@ public class UIUtils {
      */
     public static boolean registerLocaleChangeListener(final Component component) {
         component.setLocale(SystemSettings.getCurrentLocale());
-        SystemSettings.getSingleton().addPropertyChangeListener(SystemSettings.LOCALE, WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
+        SystemSettings.propertyChangeParent.addPropertyChangeListener(SystemSettings.LOCALE, WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
         return true;
     }
 
@@ -606,7 +606,7 @@ public class UIUtils {
      * register component as a locale change listener
      */
     public static boolean registerLocaleChangeListener(final EComponentI component) {
-        for (Object o : SystemSettings.getSingleton().propertyChangeSupport.getPropertyChangeListeners()) {
+        for (Object o : SystemSettings.propertyChangeParent.propertyChangeSupport.getPropertyChangeListeners()) {
             try {
                 PropertyChangeListenerProxy pclp = (PropertyChangeListenerProxy) o;
                 if (!org.swingeasy.WeakReferencedListener.isWrapped(pclp.getListener())) {
@@ -626,7 +626,7 @@ public class UIUtils {
         }
 
         component.setLocale(SystemSettings.getCurrentLocale());
-        SystemSettings.getSingleton().addPropertyChangeListener(SystemSettings.LOCALE, WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
+        SystemSettings.propertyChangeParent.addPropertyChangeListener(SystemSettings.LOCALE, WeakReferencedListener.wrap(PropertyChangeListener.class, new PropertyChangeListenerDelegate(component)));
         return true;
     }
 
@@ -881,7 +881,7 @@ public class UIUtils {
     }
 
     {
-        SystemSettings.getSingleton().addPropertyChangeListener(SystemSettings.LOCALE, new StaticPropertyChangeListener());
+        SystemSettings.propertyChangeParent.addPropertyChangeListener(SystemSettings.LOCALE, new StaticPropertyChangeListener());
     }
 
     static {
