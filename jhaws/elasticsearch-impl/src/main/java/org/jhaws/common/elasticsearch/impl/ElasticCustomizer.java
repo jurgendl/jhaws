@@ -49,6 +49,8 @@ public class ElasticCustomizer {
 
     public static final String INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET = "highlight.max_analyzed_offset";
 
+    public static final String INDEX_SETTINGS__BLOCKS_READ_ONLY = "blocks.read_only";
+
     private static final String CUSTOM = "custom";
 
     private static final String REPLACEMENT = "replacement";
@@ -374,16 +376,16 @@ public class ElasticCustomizer {
                         $mappings_fields(language, reflectField.getType(), mapping, prefix + nestedPrefix, listener);
                     }
                 } else {
-                    Map<String, Object> typeMapping = new TreeMap<>();
                     NestedField nestedField = reflectField.getAnnotation(NestedField.class);
                     if (nestedField != null && nestedFieldLanguage(nestedField) != null && nestedFieldLanguage(nestedField) != Language.uninitialized) {
+                        Map<String, Object> typeMapping = new TreeMap<>();
                         $mappings_fields(nestedFieldLanguage(nestedField), reflectField.getType(), typeMapping, "", listener);
+                        Map<String, Object> mappings = new TreeMap<>();
+                        mappings.put(PROPERTIES, typeMapping);
+                        mapping.put(reflectField.getName(), mappings);
                     } else {
-                        $mappings_fields(language, reflectField.getType(), typeMapping, "", listener);
+                        // $mappings_fields(language, reflectField.getType(), typeMapping, "", listener);
                     }
-                    Map<String, Object> mappings = new TreeMap<>();
-                    mappings.put(PROPERTIES, typeMapping);
-                    mapping.put(reflectField.getName(), mappings);
                 }
             }
         }

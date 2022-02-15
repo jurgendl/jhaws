@@ -51,6 +51,8 @@ import org.elasticsearch.action.admin.cluster.snapshots.get.GetSnapshotsRequest;
 import org.elasticsearch.action.admin.cluster.snapshots.get.GetSnapshotsResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
+import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequest;
+import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -94,6 +96,8 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetFieldMappingsRequest;
 import org.elasticsearch.client.indices.GetFieldMappingsResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.client.indices.GetMappingsRequest;
+import org.elasticsearch.client.indices.GetMappingsResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.client.xpack.XPackInfoRequest;
 import org.elasticsearch.client.xpack.XPackInfoResponse;
@@ -337,33 +341,47 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return getIndexMapping(index(type), allFields(type).toArray(l -> new String[l]));
     }
 
+    public Map<String, Map<String, ?>> getIndexMapping(String index) {
+        return getIndexMapping(index, null);
+    }
+
     @SuppressWarnings("unchecked")
     public Map<String, Map<String, ?>> getIndexMapping(String index, String[] fields) {
-        // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-get-field-mappings.html
-        GetFieldMappingsRequest request = new GetFieldMappingsRequest();
-        request.indices(index);
-        if (fields != null && fields.length > 0) {
-            request.fields(fields);
-        } else {
-            throw new IllegalArgumentException("fields");
-        }
-        request.indicesOptions(IndicesOptions.lenientExpandOpen());
-        GetFieldMappingsResponse response;
-        try {
-            response = getClient().indices().getFieldMapping(request, RequestOptions.DEFAULT);
-        } catch (IOException ex) {
-            throw handleIOException(ex);
-        }
-
-        Map<String, Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata>> mappings = response.mappings();
-        Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata> fieldMappings = mappings.get(index);
         Map<String, Map<String, ?>> info = new TreeMap<>();
-        for (String field : fields) {
-            org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata metaData = fieldMappings.get(field);
-            if (metaData != null) {
-                info.put(metaData.fullName(), (Map<String, ?>) metaData.sourceAsMap().entrySet().iterator().next().getValue());
-            } else {
-                info.put(field, null);
+        if (fields == null || fields.length == 0) {
+            GetMappingsRequest request = new GetMappingsRequest();
+            request.indices(index);
+            request.indicesOptions(IndicesOptions.lenientExpandOpen());
+            GetMappingsResponse response;
+            try {
+                response = getClient().indices().getMapping(request, RequestOptions.DEFAULT);
+            } catch (IOException ex) {
+                throw handleIOException(ex);
+            }
+            org.elasticsearch.cluster.metadata.MappingMetadata mappings = response.mappings().get(index);
+            Map<String, Map<String, ?>> properties = (Map<String, Map<String, ?>>) mappings.getSourceAsMap().get("properties");
+            info.putAll(properties);
+        } else {
+            // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-get-field-mappings.html
+            GetFieldMappingsRequest request = new GetFieldMappingsRequest();
+            request.indices(index);
+            request.fields(fields);
+            request.indicesOptions(IndicesOptions.lenientExpandOpen());
+            GetFieldMappingsResponse response;
+            try {
+                response = getClient().indices().getFieldMapping(request, RequestOptions.DEFAULT);
+            } catch (IOException ex) {
+                throw handleIOException(ex);
+            }
+            Map<String, Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata>> mappings = response.mappings();
+            Map<String, org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata> fieldMappings = mappings.get(index);
+            for (String field : fields) {
+                org.elasticsearch.client.indices.GetFieldMappingsResponse.FieldMappingMetadata metaData = fieldMappings.get(field);
+                if (metaData != null) {
+                    info.put(metaData.fullName(), (Map<String, ?>) metaData.sourceAsMap().entrySet().iterator().next().getValue());
+                } else {
+                    info.put(field, null);
+                }
             }
         }
         return info;
@@ -2100,5 +2118,47 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         reindexRequest.setSourceIndices(index);
         reindexRequest.setDestIndex(destIndex);
         return reindexRequest;
+    }
+
+    public <T extends ElasticDocument> GetSettingsResponse getIndexSettings(Class<T> type, String... settings) {
+        return getIndexSettings(index(type), settings);
+    }
+
+    public GetSettingsResponse getIndexSettings(String index, String... settings) {
+        GetSettingsRequest request = new GetSettingsRequest().indices(index);
+        if (settings != null && settings.length > 0) request.names(settings);
+        request.includeDefaults(true);
+        request.indicesOptions(IndicesOptions.lenientExpandOpen());
+        GetSettingsResponse settingsResponse;
+        try {
+            settingsResponse = getClient().indices().getSettings(request, RequestOptions.DEFAULT);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+        return settingsResponse;
+    }
+
+    public <T extends ElasticDocument> boolean isIndexReadOnly(Class<T> type) {
+        return isIndexReadOnly(index(type));
+    }
+
+    public boolean isIndexReadOnly(String index) {
+        GetSettingsResponse indexSettings = getIndexSettings(index, ElasticCustomizer.INDEX_SETTINGS__BLOCKS_READ_ONLY);
+        boolean isReadOnly = Boolean.TRUE.equals(Boolean.class.cast(indexSettings.getSetting(index, ElasticCustomizer.INDEX_SETTINGS__BLOCKS_READ_ONLY)));
+        return isReadOnly;
+    }
+
+    public <T extends ElasticDocument> boolean setIndexReadOnly(Class<T> type, boolean readOnly) {
+        return setIndexReadOnly(index(type), readOnly);
+    }
+
+    public boolean setIndexReadOnly(String index, boolean readOnly) {
+        // Map<String, Object> settings = new LinkedHashMap<String, Object>();
+        // settings.put("blocks.read_only", readOnly);
+        // return updateIndexSetting(index, Collections.singletonMap(ElasticCustomizer.INDEX_SETTINGS__BLOCKS_READ_ONLY, readOnly));
+        boolean isReadOnly = isIndexReadOnly(index);
+        boolean wantsReadOnly = Boolean.TRUE.equals(readOnly);
+        if (isReadOnly == wantsReadOnly) return false;
+        return _setIndexReadOnly(index, wantsReadOnly);
     }
 }
