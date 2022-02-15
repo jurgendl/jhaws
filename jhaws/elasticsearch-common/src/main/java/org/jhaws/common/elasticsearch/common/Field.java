@@ -7,11 +7,16 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.springframework.core.annotation.AliasFor;
+
 @Documented
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Field {
+    @AliasFor("value")
     String name() default "";
+
+    String value() default "";
 
     FieldType type() default FieldType.uninitialized;
 

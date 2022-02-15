@@ -34,6 +34,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -49,14 +50,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ElasticLowLevelClient extends ElasticConfig {
     protected final Logger LOGGER;
 
-    // @Autowired(required = false)
+    @Autowired(required = false)
     protected ObjectMapper objectMapper;
 
-    // @Autowired(required = false)
+    @Autowired(required = false)
     protected ElasticCustomizer elasticCustomizer;
-
-    // @Autowired(required = false)
-    protected ElasticHelper elasticHelper;
 
     protected transient AtomicReference<CloseableHttpClient> httpClientReference;
 
@@ -305,16 +303,5 @@ public class ElasticLowLevelClient extends ElasticConfig {
 
     public void setElasticCustomizer(ElasticCustomizer elasticCustomizer) {
         this.elasticCustomizer = elasticCustomizer;
-    }
-
-    public ElasticHelper getElasticHelper() {
-        return elasticHelper;
-    }
-
-    public void setElasticHelper(ElasticHelper elasticHelper) {
-        if (elasticHelper == null) {
-            elasticHelper = new ElasticHelper();
-        }
-        this.elasticHelper = elasticHelper;
     }
 }
