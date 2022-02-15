@@ -150,6 +150,8 @@ import org.jhaws.common.elasticsearch.common.ElasticDocument;
 import org.jhaws.common.elasticsearch.common.FieldType;
 import org.jhaws.common.elasticsearch.common.Pagination;
 
+// TODO https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/migrate-hlrc.html
+//
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-query-builders.html
 //
