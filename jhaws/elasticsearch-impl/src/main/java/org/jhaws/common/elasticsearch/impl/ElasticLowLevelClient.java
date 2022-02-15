@@ -274,8 +274,10 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
     }
 
     protected boolean _setIndexReadOnly(String index, Boolean readOnly) {
+        Map<String, Object> indexSettings = new LinkedHashMap<>();
+        indexSettings.put(ElasticCustomizer.INDEX_SETTINGS_BLOCKS_READ_ONLY, Boolean.TRUE.equals(readOnly));
         Map<String, Object> settings = new LinkedHashMap<>();
-        settings.put(ElasticCustomizer.INDEX_SETTINGS__BLOCKS_READ_ONLY, Boolean.TRUE.equals(readOnly));
+        settings.put("index", indexSettings);
         return _setIndexSettings(index, settings);
     }
 

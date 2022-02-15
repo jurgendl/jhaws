@@ -49,7 +49,7 @@ public class ElasticCustomizer {
 
     public static final String INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET = "highlight.max_analyzed_offset";
 
-    public static final String INDEX_SETTINGS__BLOCKS_READ_ONLY = "blocks.read_only";
+    public static final String INDEX_SETTINGS_BLOCKS_READ_ONLY = "blocks.read_only";
 
     private static final String CUSTOM = "custom";
 

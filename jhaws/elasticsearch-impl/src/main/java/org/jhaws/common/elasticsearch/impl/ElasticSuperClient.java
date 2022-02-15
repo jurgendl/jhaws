@@ -2143,8 +2143,10 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public boolean isIndexReadOnly(String index) {
-        GetSettingsResponse indexSettings = getIndexSettings(index, ElasticCustomizer.INDEX_SETTINGS__BLOCKS_READ_ONLY);
-        boolean isReadOnly = Boolean.TRUE.equals(Boolean.class.cast(indexSettings.getSetting(index, ElasticCustomizer.INDEX_SETTINGS__BLOCKS_READ_ONLY)));
+        String name = "index." + ElasticCustomizer.INDEX_SETTINGS_BLOCKS_READ_ONLY;
+        GetSettingsResponse indexSettings = getIndexSettings(index, name);
+        String indexReadOnly = indexSettings.getSetting(index, name);
+        boolean isReadOnly = "true".equals(indexReadOnly);
         return isReadOnly;
     }
 
