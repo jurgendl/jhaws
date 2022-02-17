@@ -332,6 +332,7 @@ public class ElasticCustomizer {
     }
 
     protected void $mappings_field(Language language, Map<String, Object> mapping, String prefix, java.lang.reflect.Field reflectField, MappingListener listener) {
+        LOGGER.trace("\n" + reflectField);
         OnlySave onlySave = reflectField.getAnnotation(OnlySave.class);
         if (onlySave != null) {
             // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
@@ -344,7 +345,7 @@ public class ElasticCustomizer {
             Field field = reflectField.getAnnotation(Field.class);
             if (field != null) {
                 FieldType defaultFieldType = $defaultFieldType(reflectField);
-                FieldMapping fieldMapping = $mappings_field(language, defaultFieldType, field);
+                FieldMapping fieldMapping = $mappings_field(reflectField, language, defaultFieldType, field);
                 String fullName = prefix + (StringUtils.isBlank(field.name()) ? reflectField.getName() : field.name());
                 mapping.put(fullName, fieldMapping.fieldMapping);
                 if (listener != null) listener.map(fullName, field, fieldMapping);
@@ -354,7 +355,7 @@ public class ElasticCustomizer {
                         Map<String, Object> extraFields = new TreeMap<>();
                         fieldMapping.put(FIELDS, extraFields);
                         Arrays.stream(fef).forEach(nestedField -> {
-                            extraFields.put(nestedFieldName(nestedField), $mappings_field(fieldMapping.language, fieldMapping.fieldType, nestedField).fieldMapping);
+                            extraFields.put(nestedFieldName(nestedField), $mappings_field(reflectField, fieldMapping.language, fieldMapping.fieldType, nestedField).fieldMapping);
                             if (listener != null) listener.map(fullName + "." + nestedFieldName(nestedField), nestedField, fieldMapping);
                         });
                     }
@@ -396,14 +397,17 @@ public class ElasticCustomizer {
     }
 
     private Language nestedFieldLanguage(NestedField nestedField) {
-        return nestedField.value() == null ? nestedField.language() : nestedField.value();
+        if (nestedField.language() != Language.uninitialized) return nestedField.language();
+        if (nestedField.value() != Language.uninitialized) return nestedField.value();
+        return Language.uninitialized;
     }
 
     private String onlySaveName(OnlySave onlySave) {
         return StringUtils.isBlank(onlySave.value()) ? onlySave.name() : onlySave.value();
     }
 
-    protected FieldMapping $mappings_field(Language language, FieldType fieldType, Field field) {
+    protected FieldMapping $mappings_field(java.lang.reflect.Field reflectField, Language language, FieldType fieldType, Field field) {
+        LOGGER.trace("\t" + language + " / " + fieldType + " / " + field);
         FieldMapping fieldMapping = new FieldMapping();
         fieldMapping.language = field.language() == null || field.language() == Language.uninitialized ? language : field.language();
         fieldMapping.fieldType = field.type() == null || field.type() == FieldType.uninitialized ? fieldType : field.type();
@@ -425,6 +429,9 @@ public class ElasticCustomizer {
                 fieldMapping.put(ANALYZER, replaceAnalyze(field.customAnalyzer().replace(Analyzers.LANGUAGE_PARAMETER, fieldMapping.language.id())));
             }
         } else if (field.analyzer() != null && field.analyzer() != Analyzer.uninitialized) {
+            if (field.analyzer() == Analyzer.language && fieldMapping.language == null) {
+                throw new IllegalArgumentException("Analyzer.language requires specific language te be set on this field or parent object field" + "\n\t" + reflectField + "\n\t" + field);
+            }
             fieldMapping.put(ANALYZER, replaceAnalyze(field.analyzer().id(fieldMapping.language)));
             // } else {
             // fieldMapping.put(ANALYZER, Analyzer.standard.id(null));

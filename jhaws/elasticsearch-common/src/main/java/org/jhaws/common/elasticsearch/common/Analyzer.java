@@ -1489,6 +1489,7 @@ public enum Analyzer {
     }
 
     public static Optional<Analyzer> forLanguage(Language lang) {
+        if (lang == null) throw new NullPointerException();
         return Arrays.stream(Analyzer.values()).filter(analyzer -> analyzer.name().equals(Analyzer.language.name() + "_" + lang.name())).findAny();
     }
 
