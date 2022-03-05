@@ -3,7 +3,9 @@ package org.jhaws.common.parameters;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -45,7 +47,14 @@ public class Variables<T> {
 
     protected void init(Class<T> c) {
         type = c;
-        vars = Arrays.stream(c.getDeclaredFields()).filter(field -> field.getDeclaredAnnotation(Parameter.class) != null).map(field -> new Variable<>(field, field.getDeclaredAnnotation(Parameter.class))).collect(Collectors.toList());
+
+        List<Field> fields = new ArrayList<>();
+        Class<?> cc = c;
+        while (!Object.class.equals(cc)) {
+            Field[] declaredFields = cc.getDeclaredFields();
+            Arrays.stream(declaredFields).forEach(fields::add);
+            cc = cc.getSuperclass();
+        }
     }
 
     public Variables<T> parameters(String... args) {

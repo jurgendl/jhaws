@@ -7,6 +7,8 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.springframework.core.annotation.AliasFor;
+
 // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
 /**
  * veld wordt enkel bewaard en niet geindexeerd, heeft voorrang en maakt andere annotatie config nutteloos
@@ -15,5 +17,8 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface OnlySave {
+    @AliasFor("value")
     String name() default "";
+
+    String value() default "";
 }

@@ -26,11 +26,13 @@ import org.jhaws.common.elasticsearch.common.Stemmer;
 import org.jhaws.common.elasticsearch.common.Tokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-// @Component
+@Component
 public class ElasticCustomizer {
     protected final Logger LOGGER = LoggerFactory.getLogger(ElasticCustomizer.class);
 
@@ -46,6 +48,8 @@ public class ElasticCustomizer {
     public static final String INDEX_SETTINGS_MAX_RESULTS = "max_result_window";
 
     public static final String INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET = "highlight.max_analyzed_offset";
+
+    public static final String INDEX_SETTINGS_BLOCKS_READ_ONLY = "blocks.read_only";
 
     private static final String CUSTOM = "custom";
 
@@ -119,10 +123,8 @@ public class ElasticCustomizer {
         filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter());
         analysis.put(FILTER, filter);
         Map<String, Object> tokenizer = new LinkedHashMap<>();
-        // tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER,
-        // customPunctuationTokenizer());
-        // tokenizer.put(Tokenizers.CUSTOM_FILENAME_TOKENIZER,
-        // customFilenameTokenizer());
+        // tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER, customPunctuationTokenizer());
+        // tokenizer.put(Tokenizers.CUSTOM_FILENAME_TOKENIZER, customFilenameTokenizer());
         analysis.put(TOKENIZER, tokenizer);
         Map<String, Object> analyzer = new LinkedHashMap<>();
         analyzer.put(Analyzers.CUSTOM_CLEANUP_ANALYZER, customCleanupAnalyzer());
@@ -330,10 +332,11 @@ public class ElasticCustomizer {
     }
 
     protected void $mappings_field(Language language, Map<String, Object> mapping, String prefix, java.lang.reflect.Field reflectField, MappingListener listener) {
+        LOGGER.trace("\n" + reflectField);
         OnlySave onlySave = reflectField.getAnnotation(OnlySave.class);
         if (onlySave != null) {
             // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
-            String fullName = prefix + (StringUtils.isBlank(onlySave.name()) ? reflectField.getName() : onlySave.name());
+            String fullName = prefix + (StringUtils.isBlank(onlySaveName(onlySave)) ? reflectField.getName() : onlySaveName(onlySave));
             Map<String, Object> fieldMapping = new TreeMap<>();
             fieldMapping.put(TYPE, FieldType.OBJECT.id());
             fieldMapping.put(ENABLED, Boolean.FALSE);
@@ -342,7 +345,7 @@ public class ElasticCustomizer {
             Field field = reflectField.getAnnotation(Field.class);
             if (field != null) {
                 FieldType defaultFieldType = $defaultFieldType(reflectField);
-                FieldMapping fieldMapping = $mappings_field(language, defaultFieldType, field);
+                FieldMapping fieldMapping = $mappings_field(reflectField, language, defaultFieldType, field);
                 String fullName = prefix + (StringUtils.isBlank(field.name()) ? reflectField.getName() : field.name());
                 mapping.put(fullName, fieldMapping.fieldMapping);
                 if (listener != null) listener.map(fullName, field, fieldMapping);
@@ -352,8 +355,8 @@ public class ElasticCustomizer {
                         Map<String, Object> extraFields = new TreeMap<>();
                         fieldMapping.put(FIELDS, extraFields);
                         Arrays.stream(fef).forEach(nestedField -> {
-                            extraFields.put(nestedField.name(), $mappings_field(fieldMapping.language, fieldMapping.fieldType, nestedField).fieldMapping);
-                            if (listener != null) listener.map(fullName + "." + nestedField.name(), nestedField, fieldMapping);
+                            extraFields.put(nestedFieldName(nestedField), $mappings_field(reflectField, fieldMapping.language, fieldMapping.fieldType, nestedField).fieldMapping);
+                            if (listener != null) listener.map(fullName + "." + nestedFieldName(nestedField), nestedField, fieldMapping);
                         });
                     }
                 }
@@ -368,28 +371,43 @@ public class ElasticCustomizer {
                         throw new IllegalArgumentException("prefix verplicht");
                     }
                     NestedField nestedField = reflectField.getAnnotation(NestedField.class);
-                    if (nestedField != null && nestedField.language() != null && nestedField.language() != Language.uninitialized) {
-                        $mappings_fields(nestedField.language(), reflectField.getType(), mapping, prefix + nestedPrefix, listener);
+                    if (nestedField != null && nestedFieldLanguage(nestedField) != null && nestedFieldLanguage(nestedField) != Language.uninitialized) {
+                        $mappings_fields(nestedFieldLanguage(nestedField), reflectField.getType(), mapping, prefix + nestedPrefix, listener);
                     } else {
                         $mappings_fields(language, reflectField.getType(), mapping, prefix + nestedPrefix, listener);
                     }
                 } else {
-                    Map<String, Object> typeMapping = new TreeMap<>();
                     NestedField nestedField = reflectField.getAnnotation(NestedField.class);
-                    if (nestedField != null && nestedField.language() != null && nestedField.language() != Language.uninitialized) {
-                        $mappings_fields(nestedField.language(), reflectField.getType(), typeMapping, "", listener);
+                    if (nestedField != null && nestedFieldLanguage(nestedField) != null && nestedFieldLanguage(nestedField) != Language.uninitialized) {
+                        Map<String, Object> typeMapping = new TreeMap<>();
+                        $mappings_fields(nestedFieldLanguage(nestedField), reflectField.getType(), typeMapping, "", listener);
+                        Map<String, Object> mappings = new TreeMap<>();
+                        mappings.put(PROPERTIES, typeMapping);
+                        mapping.put(reflectField.getName(), mappings);
                     } else {
-                        $mappings_fields(language, reflectField.getType(), typeMapping, "", listener);
+                        // $mappings_fields(language, reflectField.getType(), typeMapping, "", listener);
                     }
-                    Map<String, Object> mappings = new TreeMap<>();
-                    mappings.put(PROPERTIES, typeMapping);
-                    mapping.put(reflectField.getName(), mappings);
                 }
             }
         }
     }
 
-    protected FieldMapping $mappings_field(Language language, FieldType fieldType, Field field) {
+    private String nestedFieldName(Field nestedField) {
+        return StringUtils.isBlank(nestedField.value()) ? nestedField.name() : nestedField.value();
+    }
+
+    private Language nestedFieldLanguage(NestedField nestedField) {
+        if (nestedField.language() != Language.uninitialized) return nestedField.language();
+        if (nestedField.value() != Language.uninitialized) return nestedField.value();
+        return Language.uninitialized;
+    }
+
+    private String onlySaveName(OnlySave onlySave) {
+        return StringUtils.isBlank(onlySave.value()) ? onlySave.name() : onlySave.value();
+    }
+
+    protected FieldMapping $mappings_field(java.lang.reflect.Field reflectField, Language language, FieldType fieldType, Field field) {
+        LOGGER.trace("\t" + language + " / " + fieldType + " / " + field);
         FieldMapping fieldMapping = new FieldMapping();
         fieldMapping.language = field.language() == null || field.language() == Language.uninitialized ? language : field.language();
         fieldMapping.fieldType = field.type() == null || field.type() == FieldType.uninitialized ? fieldType : field.type();
@@ -411,6 +429,9 @@ public class ElasticCustomizer {
                 fieldMapping.put(ANALYZER, replaceAnalyze(field.customAnalyzer().replace(Analyzers.LANGUAGE_PARAMETER, fieldMapping.language.id())));
             }
         } else if (field.analyzer() != null && field.analyzer() != Analyzer.uninitialized) {
+            if (field.analyzer() == Analyzer.language && fieldMapping.language == null) {
+                throw new IllegalArgumentException("Analyzer.language requires specific language te be set on this field or parent object field" + "\n\t" + reflectField + "\n\t" + field);
+            }
             fieldMapping.put(ANALYZER, replaceAnalyze(field.analyzer().id(fieldMapping.language)));
             // } else {
             // fieldMapping.put(ANALYZER, Analyzer.standard.id(null));
@@ -606,14 +627,13 @@ public class ElasticCustomizer {
         return analyzerConfig;
     }
 
-    // @Value("${elasticCustomizer.index.highlightMaxAnalyzedOffset:1000000}")
-    // // 10_000_000
+    @Value("${elasticCustomizer.index.highlightMaxAnalyzedOffset:1000000}") // 10_000_000
     private Integer highlightMaxAnalyzedOffset = 1_000_000;
 
-    // @Value("${elasticCustomizer.index.maxResultWindow:10000}") // 100_000
+    @Value("${elasticCustomizer.index.maxResultWindow:10000}") // 100_000
     private Integer maxResultWindow = 10_000;
 
-    // @Value("${elasticCustomizer.cluster.searchMaxBuckets:10000}") // 100_000
+    @Value("${elasticCustomizer.cluster.searchMaxBuckets:10000}") // 100_000
     private Integer searchMaxBuckets = 10_000;
 
     public Integer getHighlightMaxAnalyzedOffset() {
@@ -691,4 +711,5 @@ public class ElasticCustomizer {
         ));
         return analyzerConfig;
     }
+
 }

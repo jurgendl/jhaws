@@ -34,6 +34,8 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -46,17 +48,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 // curl -XGET --user elastic:??? "http://localhost:9200/INDEX/_mapping"
 // curl -XGET --user elastic:??? "http://localhost:9200/INDEX/_mapping/settings"
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-index.html
-public class ElasticLowLevelClient extends ElasticConfig {
+public class ElasticLowLevelClient extends ElasticConfig implements InitializingBean {
     protected final Logger LOGGER;
 
-    // @Autowired(required = false)
+    @Autowired(required = false)
     protected ObjectMapper objectMapper;
 
-    // @Autowired(required = false)
+    @Autowired(required = false)
     protected ElasticCustomizer elasticCustomizer;
-
-    // @Autowired(required = false)
-    protected ElasticHelper elasticHelper;
 
     protected transient AtomicReference<CloseableHttpClient> httpClientReference;
 
@@ -67,6 +66,7 @@ public class ElasticLowLevelClient extends ElasticConfig {
     }
 
     @PostConstruct
+    @Override
     public void afterPropertiesSet() {
         LOGGER.trace("startup->");
         httpClient();
@@ -212,51 +212,17 @@ public class ElasticLowLevelClient extends ElasticConfig {
     }
 
     public boolean _analysisConfig(String index, Map<String, Object> analysis) {
-        try {
-            Map<String, Object> settings = new LinkedHashMap<>();
-            settings.put("analysis", analysis);
-            String json = ElasticHelper.objectToJson(getObjectMapper(), settings);
-            String uri = getProtocol() + "://" + getUrl().split(",")[0] + ":" + getPort() + "/" + index + "/_settings";
-            LOGGER.debug("uri: {}", uri);
-            LOGGER.debug("json: {}", json);
-            HttpPut put = new HttpPut(uri);
-            put.setEntity(jsonEntity(json));
-            byte[] result = _execute(put);
-            @SuppressWarnings("unchecked")
-            Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class, new String(result, StandardCharsets.UTF_8.toString()));
-            LOGGER.debug("result: {}", map);
-            boolean success = map != null && ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
-            return success;
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        } finally {
-            waitABit();
-        }
+        Map<String, Object> settings = new LinkedHashMap<>();
+        settings.put("analysis", analysis);
+        return _setIndexSettings(index, settings);
     }
 
     public boolean _indexHighlightMaxAnalyzedOffset(String index) {
-        try {
-            Map<String, Object> indexSettings = new LinkedHashMap<>();
-            indexSettings.put(ElasticCustomizer.INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET, getElasticCustomizer().getHighlightMaxAnalyzedOffset());
-            Map<String, Object> settings = new LinkedHashMap<>();
-            settings.put("index", indexSettings);
-            String json = ElasticHelper.objectToJson(getObjectMapper(), settings);
-            String uri = getProtocol() + "://" + getUrl().split(",")[0] + ":" + getPort() + "/" + index + "/_settings";
-            LOGGER.debug("uri: {}", uri);
-            LOGGER.debug("json: {}", json);
-            HttpPut put = new HttpPut(uri);
-            put.setEntity(jsonEntity(json));
-            byte[] result = _execute(put);
-            @SuppressWarnings("unchecked")
-            Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class, new String(result, StandardCharsets.UTF_8.toString()));
-            LOGGER.debug("result: {}", map);
-            boolean success = map != null && ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
-            return success;
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        } finally {
-            waitABit();
-        }
+        Map<String, Object> indexSettings = new LinkedHashMap<>();
+        indexSettings.put(ElasticCustomizer.INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET, getElasticCustomizer().getHighlightMaxAnalyzedOffset());
+        Map<String, Object> settings = new LinkedHashMap<>();
+        settings.put("index", indexSettings);
+        return _setIndexSettings(index, settings);
     }
 
     @SuppressWarnings("serial")
@@ -307,14 +273,36 @@ public class ElasticLowLevelClient extends ElasticConfig {
         this.elasticCustomizer = elasticCustomizer;
     }
 
-    public ElasticHelper getElasticHelper() {
-        return elasticHelper;
+    protected boolean _setIndexReadOnly(String index, Boolean readOnly) {
+        Map<String, Object> indexSettings = new LinkedHashMap<>();
+        indexSettings.put(ElasticCustomizer.INDEX_SETTINGS_BLOCKS_READ_ONLY, Boolean.TRUE.equals(readOnly));
+        Map<String, Object> settings = new LinkedHashMap<>();
+        settings.put("index", indexSettings);
+        return _setIndexSettings(index, settings);
     }
 
-    public void setElasticHelper(ElasticHelper elasticHelper) {
-        if (elasticHelper == null) {
-            elasticHelper = new ElasticHelper();
+    private boolean _setIndexSettings(String index, Map<String, Object> settings) {
+        try {
+            String json = ElasticHelper.objectToJson(getObjectMapper(), settings);
+            String uri = getProtocol() + "://" + getUrl().split(",")[0] + ":" + getPort() + "/" + index + "/_settings";
+            LOGGER.debug("uri: {}", uri);
+            LOGGER.debug("json: {}", json);
+            HttpPut put = new HttpPut(uri);
+            put.setEntity(jsonEntity(json));
+            byte[] result = _execute(put);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> map = jsonToObject(getObjectMapper(), Map.class, new String(result, StandardCharsets.UTF_8.toString()));
+            LOGGER.debug("result: {}", map);
+            boolean success = map != null && ("true".equals(map.get("acknowledged")) || Boolean.TRUE.equals(map.get("acknowledged")));
+            return success;
+        } catch (IOException ex) {
+            ex.printStackTrace(System.out);
+            throw new UncheckedIOException(ex);
+        } catch (RuntimeException ex) {
+            ex.printStackTrace(System.out);
+            throw ex;
+        } finally {
+            waitABit();
         }
-        this.elasticHelper = elasticHelper;
     }
 }
