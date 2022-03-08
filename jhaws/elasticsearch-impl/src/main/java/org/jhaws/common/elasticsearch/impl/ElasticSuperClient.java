@@ -49,6 +49,9 @@ import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotReq
 import org.elasticsearch.action.admin.cluster.snapshots.create.CreateSnapshotResponse;
 import org.elasticsearch.action.admin.cluster.snapshots.get.GetSnapshotsRequest;
 import org.elasticsearch.action.admin.cluster.snapshots.get.GetSnapshotsResponse;
+import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
+import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
+import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
 import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequest;
@@ -81,6 +84,7 @@ import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.action.support.replication.ReplicationResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
@@ -425,11 +429,19 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> IndexRequest createIndexRequest(T o) {
-        return new IndexRequest(index(o)).id(id(o)).source(toMap(getObjectMapper(), initialize(o)));
+        return createIndexRequest(index(o), o);
     }
 
     public <T extends ElasticDocument> void indexDocument(T o) {
         performIndexRequest(createIndexRequest(o));
+    }
+
+    public <T extends ElasticDocument> void indexDocument(String index, T o) {
+        performIndexRequest(createIndexRequest(index, o));
+    }
+
+    public <T extends ElasticDocument> IndexRequest createIndexRequest(String index, T o) {
+        return new IndexRequest(index).id(id(o)).source(toMap(getObjectMapper(), initialize(o)));
     }
 
     public void performIndexRequest(IndexRequest request) {
@@ -2164,5 +2176,59 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         boolean wantsReadOnly = Boolean.TRUE.equals(readOnly);
         if (isReadOnly == wantsReadOnly) return false;
         return _setIndexReadOnly(index, wantsReadOnly);
+    }
+
+    public <T extends ElasticDocument> boolean createIndexAlias(Class<T> type, String alias) {
+        return createIndexAlias(index(type), alias);
+    }
+
+    public boolean createIndexAlias(String index, String alias) {
+        try {
+            IndicesAliasesRequest indicesAliasesRequest = new IndicesAliasesRequest();
+            AliasActions aliasAction = new AliasActions(AliasActions.Type.ADD).index(index).alias(alias);
+            indicesAliasesRequest.addAliasAction(aliasAction);
+            AcknowledgedResponse updateAliasesResponse = getClient().indices().updateAliases(indicesAliasesRequest, RequestOptions.DEFAULT);
+            return handleAcknowledgedResponse(updateAliasesResponse);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
+    public <T extends ElasticDocument> boolean removeIndexAlias(Class<T> type, String alias) {
+        return removeIndexAlias(index(type), alias);
+    }
+
+    public boolean removeIndexAlias(String index, String alias) {
+        try {
+            IndicesAliasesRequest indicesAliasesRequest = new IndicesAliasesRequest();
+            AliasActions aliasAction = new AliasActions(AliasActions.Type.REMOVE).index(index).alias(alias);
+            indicesAliasesRequest.addAliasAction(aliasAction);
+            AcknowledgedResponse updateAliasesResponse = getClient().indices().updateAliases(indicesAliasesRequest, RequestOptions.DEFAULT);
+            return handleAcknowledgedResponse(updateAliasesResponse);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
+    protected boolean handleAcknowledgedResponse(AcknowledgedResponse updateAliasesResponse) {
+        return updateAliasesResponse.isAcknowledged();
+    }
+
+    public boolean aliasExists(String alias) {
+        try {
+            GetAliasesRequest getAliasesRequest = new GetAliasesRequest(alias);
+            return getClient().indices().existsAlias(getAliasesRequest, RequestOptions.DEFAULT);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
+    public GetAliasesResponse getAlias(String alias) {
+        try {
+            GetAliasesRequest getAliasesRequest = new GetAliasesRequest(alias);
+            return getClient().indices().getAlias(getAliasesRequest, RequestOptions.DEFAULT);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
     }
 }
