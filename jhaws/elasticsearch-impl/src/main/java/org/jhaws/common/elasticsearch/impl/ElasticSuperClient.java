@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -110,6 +111,8 @@ import org.elasticsearch.client.xpack.XPackInfoResponse.FeatureSetsInfo;
 import org.elasticsearch.client.xpack.XPackInfoResponse.LicenseInfo;
 import org.elasticsearch.client.xpack.XPackUsageRequest;
 import org.elasticsearch.client.xpack.XPackUsageResponse;
+import org.elasticsearch.cluster.metadata.AliasMetadata;
+import org.elasticsearch.common.compress.CompressedXContent;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.xcontent.XContentBuilder;
@@ -119,6 +122,7 @@ import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.ExistsQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryRequest;
 import org.elasticsearch.index.reindex.ReindexRequest;
@@ -2179,13 +2183,22 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> boolean createIndexAlias(Class<T> type, String alias) {
-        return createIndexAlias(index(type), alias);
+        return createIndexAlias(index(type), alias, null);
     }
 
     public boolean createIndexAlias(String index, String alias) {
+        return createIndexAlias(index, alias, null);
+    }
+
+    public <T extends ElasticDocument> boolean createIndexAlias(Class<T> type, String alias, QueryBuilder filter) {
+        return createIndexAlias(index(type), alias, filter);
+    }
+
+    public boolean createIndexAlias(String index, String alias, QueryBuilder filter) {
         try {
             IndicesAliasesRequest indicesAliasesRequest = new IndicesAliasesRequest();
             AliasActions aliasAction = new AliasActions(AliasActions.Type.ADD).index(index).alias(alias);
+            if (filter != null) aliasAction = aliasAction.filter(filter);
             indicesAliasesRequest.addAliasAction(aliasAction);
             indicesAliasesRequest.timeout(getTimeout());
             AcknowledgedResponse updateAliasesResponse = getClient().indices().updateAliases(indicesAliasesRequest, getRequestOptions());
@@ -2226,17 +2239,53 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
     }
 
-    public GetAliasesResponse getAlias(String alias) {
+    public QueryBuilder stringToQuery(CompressedXContent query) {
+        if (query == null) return QueryBuilders.matchAllQuery();
+        return new QueryStringQueryBuilder(query.toString());
+    }
+
+    public QueryBuilder stringToQuery(String query) {
+        if (StringUtils.isBlank(query)) return QueryBuilders.matchAllQuery();
+        return new QueryStringQueryBuilder(query);
+    }
+
+    public Map<String, QueryBuilder> getAliasFor(String alias) {
         try {
             GetAliasesRequest getAliasesRequest = new GetAliasesRequest(alias);
             getAliasesRequest.indicesOptions(IndicesOptions.lenientExpandOpen());
-            return getClient().indices().getAlias(getAliasesRequest, getRequestOptions());
+            Map<String, Set<AliasMetadata>> r = handleGetAliasesResponse(getClient().indices().getAlias(getAliasesRequest, getRequestOptions()));
+            return r.entrySet()//
+                    .stream()//
+                    .map(e -> Map.entry(e.getKey(), stringToQuery(e.getValue().iterator().next().getFilter().toString())))//
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
     }
 
+    protected Map<String, Set<AliasMetadata>> handleGetAliasesResponse(GetAliasesResponse getAliasesResponse) {
+        ElasticsearchException exception = getAliasesResponse.getException();
+        if (exception != null) throw exception;
+        return getAliasesResponse.getAliases();
+    }
+
     protected RequestOptions getRequestOptions() {
         return RequestOptions.DEFAULT;
+    }
+
+    public <T extends ElasticDocument> boolean createIndex(String index, Class<T> annotatedType) {
+        return createIndex(index, getObjectMapping(annotatedType), settings());
+    }
+
+    public Map<String, QueryBuilder> getAliases(String index) {
+        try {
+            GetAliasesRequest getAliasesRequest = new GetAliasesRequest();
+            getAliasesRequest.indices(index);
+            getAliasesRequest.indicesOptions(IndicesOptions.lenientExpandOpen());
+            Map<String, Set<AliasMetadata>> r = handleGetAliasesResponse(getClient().indices().getAlias(getAliasesRequest, getRequestOptions()));
+            return r.entrySet().stream().map(e -> e.getValue().stream()).flatMap(Function.identity()).map(meta -> Map.entry(meta.getAlias(), stringToQuery(meta.getFilter()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
     }
 }
