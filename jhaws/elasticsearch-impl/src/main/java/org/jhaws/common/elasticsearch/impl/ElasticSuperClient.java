@@ -277,7 +277,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public boolean ping() {
         try {
-            return getClient().ping(RequestOptions.DEFAULT);
+            return getClient().ping(getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -296,7 +296,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // request.indicesOptions(indicesOptions);
         boolean exists;
         try {
-            exists = getClient().indices().exists(request, RequestOptions.DEFAULT);
+            exists = getClient().indices().exists(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -306,7 +306,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public boolean deleteIndex(String index) {
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-delete-index.html
         try {
-            return getClient().indices().delete(new DeleteIndexRequest(index).timeout(getTimeout()), RequestOptions.DEFAULT).isAcknowledged();
+            return getClient().indices().delete(new DeleteIndexRequest(index).timeout(getTimeout()), getRequestOptions()).isAcknowledged();
         } catch (ElasticsearchStatusException ex) {
             return false;
         } catch (IOException ex) {
@@ -336,7 +336,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
             request.setTimeout(getTimeout());
 
-            CreateIndexResponse response = getClient().indices().create(request, RequestOptions.DEFAULT);
+            CreateIndexResponse response = getClient().indices().create(request, getRequestOptions());
             return response.isAcknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);
@@ -360,7 +360,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             request.indicesOptions(IndicesOptions.lenientExpandOpen());
             GetMappingsResponse response;
             try {
-                response = getClient().indices().getMapping(request, RequestOptions.DEFAULT);
+                response = getClient().indices().getMapping(request, getRequestOptions());
             } catch (IOException ex) {
                 throw handleIOException(ex);
             }
@@ -375,7 +375,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             request.indicesOptions(IndicesOptions.lenientExpandOpen());
             GetFieldMappingsResponse response;
             try {
-                response = getClient().indices().getFieldMapping(request, RequestOptions.DEFAULT);
+                response = getClient().indices().getFieldMapping(request, getRequestOptions());
             } catch (IOException ex) {
                 throw handleIOException(ex);
             }
@@ -448,7 +448,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.timeout(getTimeout());
         IndexResponse response;
         try {
-            response = getClient().index(request, RequestOptions.DEFAULT);
+            response = getClient().index(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -518,7 +518,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public Map<String, Object> performGetRequest(GetRequest request) {
         GetResponse response = null;
         try {
-            response = getClient().get(request, RequestOptions.DEFAULT);
+            response = getClient().get(request, getRequestOptions());
         } catch (IOException ex) {
             // bij bv timeout
             throw handleIOException(ex);
@@ -578,7 +578,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.timeout(getTimeout());
         DeleteResponse response;
         try {
-            response = getClient().delete(request, RequestOptions.DEFAULT);
+            response = getClient().delete(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -623,7 +623,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
         UpdateResponse response;
         try {
-            response = getClient().update(request, RequestOptions.DEFAULT);
+            response = getClient().update(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -689,7 +689,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         GetRequest request = createGetRequest(o);
         GetResponse response = null;
         try {
-            response = getClient().get(request, RequestOptions.DEFAULT);
+            response = getClient().get(request, getRequestOptions());
         } catch (IOException ex) {
             // bij bv timeout
             throw handleIOException(ex);
@@ -715,7 +715,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.setRefreshPolicy(BulkRequest.RefreshPolicy.NONE);
         BulkResponse bulkResponse;
         try {
-            bulkResponse = getClient().bulk(request, RequestOptions.DEFAULT);
+            bulkResponse = getClient().bulk(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -759,7 +759,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public <T> List<T> performMultiGetRequest(MultiGetRequest request, Function<GetResponse, T> mapper) {
         MultiGetResponse response;
         try {
-            response = getClient().mget(request, RequestOptions.DEFAULT);
+            response = getClient().mget(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -851,7 +851,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.setIndicesOptions(IndicesOptions.LENIENT_EXPAND_OPEN);
         BulkByScrollResponse bulkResponse;
         try {
-            bulkResponse = getClient().updateByQuery(request, RequestOptions.DEFAULT);
+            bulkResponse = getClient().updateByQuery(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -874,7 +874,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // request.setIndicesOptions(IndicesOptions.LENIENT_EXPAND_OPEN);
         BulkByScrollResponse bulkResponse;
         try {
-            bulkResponse = getClient().deleteByQuery(request, RequestOptions.DEFAULT);
+            bulkResponse = getClient().deleteByQuery(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -887,7 +887,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         ClearScrollRequest request = new ClearScrollRequest();
         request.addScrollId(scrolling.getScrollId());
         try {
-            ClearScrollResponse response = getClient().clearScroll(request, RequestOptions.DEFAULT);
+            ClearScrollResponse response = getClient().clearScroll(request, getRequestOptions());
             boolean succeeded = response.isSucceeded();
             scrolling.setScrollId(null);
             return succeeded;
@@ -905,7 +905,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         countRequest.query(query == null ? QueryBuilders.matchAllQuery() : query);
         CountResponse countResponse;
         try {
-            countResponse = getClient().count(countRequest, RequestOptions.DEFAULT);
+            countResponse = getClient().count(countRequest, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -985,7 +985,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         System.out.println(searchSourceBuilder);
         SearchResponse searchResponse;
         try {
-            searchResponse = getClient().search(searchRequest, RequestOptions.DEFAULT);
+            searchResponse = getClient().search(searchRequest, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1074,7 +1074,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
         MultiSearchResponse multiResponse;
         try {
-            multiResponse = getClient().msearch(request, RequestOptions.DEFAULT);
+            multiResponse = getClient().msearch(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1281,7 +1281,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             context.scrollRequest = new SearchScrollRequest(context.scrolling.getScrollId());
             context.scrollRequest.scroll(getScrollTimeout());
             try {
-                context.searchResponse = getClient().scroll(context.scrollRequest, RequestOptions.DEFAULT);
+                context.searchResponse = getClient().scroll(context.scrollRequest, getRequestOptions());
             } catch (IOException ex) {
                 throw handleIOException(ex);
             }
@@ -1292,7 +1292,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 context.searchRequest.scroll(getScrollTimeout());
             }
             try {
-                context.searchResponse = getClient().search(context.searchRequest, RequestOptions.DEFAULT);
+                context.searchResponse = getClient().search(context.searchRequest, getRequestOptions());
             } catch (IOException ex) {
                 throw handleIOException(ex);
             }
@@ -1419,7 +1419,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public MainResponse getInfo() {
         MainResponse response;
         try {
-            response = getClient().info(RequestOptions.DEFAULT);
+            response = getClient().info(getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1462,7 +1462,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             request.setCategories(EnumSet.of(XPackInfoRequest.Category.BUILD, XPackInfoRequest.Category.LICENSE, XPackInfoRequest.Category.FEATURES));
             XPackInfoResponse response;
             try {
-                response = getClient().xpack().info(request, RequestOptions.DEFAULT);
+                response = getClient().xpack().info(request, getRequestOptions());
             } catch (IOException ex) {
                 throw handleIOException(ex);
             }
@@ -1477,7 +1477,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             XPackUsageRequest request = new XPackUsageRequest();
             XPackUsageResponse response;
             try {
-                response = getClient().xpack().usage(request, RequestOptions.DEFAULT);
+                response = getClient().xpack().usage(request, getRequestOptions());
             } catch (IOException ex) {
                 throw handleIOException(ex);
             }
@@ -1510,7 +1510,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.explain(explain);
         AnalyzeResponse response;
         try {
-            response = getClient().indices().analyze(request, RequestOptions.DEFAULT);
+            response = getClient().indices().analyze(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1618,7 +1618,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         CloseIndexRequest request = new CloseIndexRequest(index);
         request.setMasterTimeout(getTimeout());
         try {
-            return getClient().indices().close(request, RequestOptions.DEFAULT).isAcknowledged();
+            return getClient().indices().close(request, getRequestOptions()).isAcknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1632,7 +1632,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         OpenIndexRequest request = new OpenIndexRequest(index);
         request.timeout(getTimeout());
         try {
-            return getClient().indices().open(request, RequestOptions.DEFAULT).isAcknowledged();
+            return getClient().indices().open(request, getRequestOptions()).isAcknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1683,7 +1683,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         GetRequest request = createGetRequest(type, id);
         GetResponse response = null;
         try {
-            response = getClient().get(request, RequestOptions.DEFAULT);
+            response = getClient().get(request, getRequestOptions());
         } catch (IOException ex) {
             // bij bv timeout
             throw handleIOException(ex);
@@ -1709,7 +1709,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // countRequest.source(searchSourceBuilder);
         countRequest.query(QueryBuilders.matchAllQuery());
         try {
-            CountResponse countResponse = getClient().count(countRequest, RequestOptions.DEFAULT);
+            CountResponse countResponse = getClient().count(countRequest, getRequestOptions());
             return countResponse.getCount();
         } catch (IOException ex) {
             throw handleIOException(ex);
@@ -1723,7 +1723,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             config.accept(builder);
             Settings settings = builder.build();
             request.persistentSettings(settings);
-            ClusterUpdateSettingsResponse updateSettingsResponse = getClient().cluster().putSettings(request, RequestOptions.DEFAULT);
+            ClusterUpdateSettingsResponse updateSettingsResponse = getClient().cluster().putSettings(request, getRequestOptions());
             LOGGER.info("ack: {}", updateSettingsResponse.isAcknowledged());
             return updateSettingsResponse.isAcknowledged();
         } catch (IOException ex) {
@@ -1740,7 +1740,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             UpdateSettingsRequest request = new UpdateSettingsRequest(index);
             request.settings(config);
             request.indicesOptions(IndicesOptions.lenientExpandOpen());
-            AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request, RequestOptions.DEFAULT);
+            AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request, getRequestOptions());
             return updateSettingsResponse.isAcknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);
@@ -1759,7 +1759,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             Settings settings = builder.build();
             request.settings(settings);
             request.indicesOptions(IndicesOptions.lenientExpandOpen());
-            AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request, RequestOptions.DEFAULT);
+            AcknowledgedResponse updateSettingsResponse = getClient().indices().putSettings(request, getRequestOptions());
             return updateSettingsResponse.isAcknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);
@@ -1775,7 +1775,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             PutMappingRequest request = new PutMappingRequest(index);
             request.source(mapping);
             request.setTimeout(TimeValue.timeValueMinutes(2));
-            AcknowledgedResponse putMappingResponse = getClient().indices().putMapping(request, RequestOptions.DEFAULT);
+            AcknowledgedResponse putMappingResponse = getClient().indices().putMapping(request, getRequestOptions());
             boolean acknowledged = putMappingResponse.isAcknowledged();
             return acknowledged;
         } catch (IOException ex) {
@@ -1793,7 +1793,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.fetchSourceContext(fetch(true, includes, excludes));
         ExplainResponse response;
         try {
-            response = getClient().explain(request, RequestOptions.DEFAULT);
+            response = getClient().explain(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1847,7 +1847,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.masterNodeTimeout(TimeValue.timeValueMinutes(10));
         AcknowledgedResponse response;
         try {
-            response = getClient().snapshot().deleteRepository(request, RequestOptions.DEFAULT);
+            response = getClient().snapshot().deleteRepository(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1864,7 +1864,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.masterNodeTimeout(TimeValue.timeValueMinutes(1));
         GetRepositoriesResponse response;
         try {
-            response = getClient().snapshot().getRepository(request, RequestOptions.DEFAULT);
+            response = getClient().snapshot().getRepository(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1886,7 +1886,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.verify(true);
         AcknowledgedResponse response;
         try {
-            response = getClient().snapshot().createRepository(request, RequestOptions.DEFAULT);
+            response = getClient().snapshot().createRepository(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1902,7 +1902,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.ignoreUnavailable(true);
         GetSnapshotsResponse response;
         try {
-            response = getClient().snapshot().get(request, RequestOptions.DEFAULT);
+            response = getClient().snapshot().get(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1924,7 +1924,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.waitForCompletion(true);
         CreateSnapshotResponse response;
         try {
-            response = getClient().snapshot().create(request, RequestOptions.DEFAULT);
+            response = getClient().snapshot().create(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -2120,7 +2120,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public void performReindexRequest(ReindexRequest reindexRequest) {
         BulkByScrollResponse response;
         try {
-            response = getClient().reindex(reindexRequest, RequestOptions.DEFAULT);
+            response = getClient().reindex(reindexRequest, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -2145,7 +2145,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.indicesOptions(IndicesOptions.lenientExpandOpen());
         GetSettingsResponse settingsResponse;
         try {
-            settingsResponse = getClient().indices().getSettings(request, RequestOptions.DEFAULT);
+            settingsResponse = getClient().indices().getSettings(request, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -2187,7 +2187,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             IndicesAliasesRequest indicesAliasesRequest = new IndicesAliasesRequest();
             AliasActions aliasAction = new AliasActions(AliasActions.Type.ADD).index(index).alias(alias);
             indicesAliasesRequest.addAliasAction(aliasAction);
-            AcknowledgedResponse updateAliasesResponse = getClient().indices().updateAliases(indicesAliasesRequest, RequestOptions.DEFAULT);
+            indicesAliasesRequest.timeout(getTimeout());
+            AcknowledgedResponse updateAliasesResponse = getClient().indices().updateAliases(indicesAliasesRequest, getRequestOptions());
             return handleAcknowledgedResponse(updateAliasesResponse);
         } catch (IOException ex) {
             throw handleIOException(ex);
@@ -2203,7 +2204,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             IndicesAliasesRequest indicesAliasesRequest = new IndicesAliasesRequest();
             AliasActions aliasAction = new AliasActions(AliasActions.Type.REMOVE).index(index).alias(alias);
             indicesAliasesRequest.addAliasAction(aliasAction);
-            AcknowledgedResponse updateAliasesResponse = getClient().indices().updateAliases(indicesAliasesRequest, RequestOptions.DEFAULT);
+            indicesAliasesRequest.timeout(getTimeout());
+            AcknowledgedResponse updateAliasesResponse = getClient().indices().updateAliases(indicesAliasesRequest, getRequestOptions());
             return handleAcknowledgedResponse(updateAliasesResponse);
         } catch (IOException ex) {
             throw handleIOException(ex);
@@ -2217,7 +2219,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public boolean aliasExists(String alias) {
         try {
             GetAliasesRequest getAliasesRequest = new GetAliasesRequest(alias);
-            return getClient().indices().existsAlias(getAliasesRequest, RequestOptions.DEFAULT);
+            getAliasesRequest.indicesOptions(IndicesOptions.lenientExpandOpen());
+            return getClient().indices().existsAlias(getAliasesRequest, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -2226,9 +2229,14 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public GetAliasesResponse getAlias(String alias) {
         try {
             GetAliasesRequest getAliasesRequest = new GetAliasesRequest(alias);
-            return getClient().indices().getAlias(getAliasesRequest, RequestOptions.DEFAULT);
+            getAliasesRequest.indicesOptions(IndicesOptions.lenientExpandOpen());
+            return getClient().indices().getAlias(getAliasesRequest, getRequestOptions());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
+    }
+
+    protected RequestOptions getRequestOptions() {
+        return RequestOptions.DEFAULT;
     }
 }
