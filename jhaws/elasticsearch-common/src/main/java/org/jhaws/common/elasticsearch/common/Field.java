@@ -13,25 +13,27 @@ import org.springframework.core.annotation.AliasFor;
 @Retention(RUNTIME)
 @Target(FIELD)
 public @interface Field {
-    @AliasFor("value")
-    String name() default "";
+	@AliasFor("value")
+	String name() default "";
 
-    String value() default "";
+	String value() default "";
 
-    FieldType type() default FieldType.uninitialized;
+	FieldType type() default FieldType.uninitialized;
 
-    /**
-     * standard, english, dutch
-     * 
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html
-     */
-    Analyzer analyzer() default Analyzer.uninitialized;
+	DenseVectorFieldType denseVectorFieldType() default @DenseVectorFieldType;
 
-    String customAnalyzer() default "";
+	/**
+	 * standard, english, dutch
+	 * 
+	 * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-analyzers.html
+	 */
+	Analyzer analyzer() default Analyzer.uninitialized;
 
-    Bool store() default Bool.uninitialized;
+	String customAnalyzer() default "";
 
-    Bool fielddata() default Bool.uninitialized;
+	Bool store() default Bool.uninitialized;
 
-    Language language() default Language.uninitialized;
+	Bool fielddata() default Bool.uninitialized;
+
+	Language language() default Language.uninitialized;
 }

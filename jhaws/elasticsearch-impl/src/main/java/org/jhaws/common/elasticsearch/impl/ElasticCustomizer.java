@@ -412,7 +412,15 @@ public class ElasticCustomizer {
         fieldMapping.language = field.language() == null || field.language() == Language.uninitialized ? language : field.language();
         fieldMapping.fieldType = field.type() == null || field.type() == FieldType.uninitialized ? fieldType : field.type();
         fieldMapping.put(TYPE, fieldMapping.fieldType.id());
-        fieldMapping.fieldType.options().entrySet().forEach(option -> fieldMapping.fieldMapping.put(option.getKey(), option.getValue()));
+        Map<String, Object> options = new LinkedHashMap<>(fieldMapping.fieldType.options());
+        if (field.type() == FieldType.DENSE_VECTOR) {
+            if (field.denseVectorFieldType().dims() > 0) {
+                options.put("dims", field.denseVectorFieldType().dims());
+            } else if (field.denseVectorFieldType().value() > 0) {
+                options.put("dims", field.denseVectorFieldType().value());
+            }
+        }
+        options.entrySet().forEach(option -> fieldMapping.fieldMapping.put(option.getKey(), option.getValue()));
         if (StringUtils.isNotBlank(field.customAnalyzer())) {
             if (fieldMapping.fieldType != FieldType.TEXT//
                     && fieldMapping.fieldType != FieldType.TEXT_VECTOR//
