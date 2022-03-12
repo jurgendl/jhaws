@@ -301,9 +301,17 @@ public enum FieldType {
 	/**
 	 * vector of float values of size = dims, default 3, max 1024
 	 * 
-	 * @see https://www.elastic.co/guide/en/elasticsearch/reference/7.5/dense-vector.html
+	 * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/dense-vector.html
+	 * @see https://medium.com/gsi-technology/scalable-semantic-vector-search-with-elasticsearch-e79f9145ba8e
+	 * @see https://www.elastic.co/blog/text-similarity-search-with-vectors-in-elasticsearch
 	 */
-	DENSE_VECTOR("dense_vector", java.util.Collections.singletonMap("dims", 3)), //
+	DENSE_VECTOR("dense_vector"), //
+	/**
+	 * voor de volledigheid
+	 * 
+	 * @see http://man.hubwiz.com/docset/ElasticSearch.docset/Contents/Resources/Documents/www.elastic.co/guide/en/elasticsearch/reference/current/sparse-vector.html
+	 */
+	SPARSE_VECTOR("sparse_vector"), //
 	;
 
 	private String id;

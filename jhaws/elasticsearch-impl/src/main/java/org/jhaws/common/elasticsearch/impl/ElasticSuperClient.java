@@ -197,6 +197,8 @@ import org.jhaws.common.elasticsearch.common.Pagination;
 // https://www.elastic.co/guide/en/elasticsearch/reference/7.7/search-request-body.html#request-body-search-scroll
 //
 // https://stackoverflow.com/questions/9075098/start-windows-service-from-java
+//
+// TODO http://man.hubwiz.com/docset/ElasticSearch.docset/Contents/Resources/Documents/www.elastic.co/guide/en/elasticsearch/reference/current/parent-join.html
 // @Component
 public class ElasticSuperClient extends ElasticLowLevelClient {
     public static final String _NONE_ = "_none_";

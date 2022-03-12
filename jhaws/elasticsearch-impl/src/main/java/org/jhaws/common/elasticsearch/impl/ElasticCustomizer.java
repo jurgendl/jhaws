@@ -14,6 +14,8 @@ import org.jhaws.common.elasticsearch.common.Analyzer;
 import org.jhaws.common.elasticsearch.common.Analyzers;
 import org.jhaws.common.elasticsearch.common.Bool;
 import org.jhaws.common.elasticsearch.common.CharacterFilter;
+import org.jhaws.common.elasticsearch.common.DenseVectorType;
+import org.jhaws.common.elasticsearch.common.DenseVectorSimilarity;
 import org.jhaws.common.elasticsearch.common.Field;
 import org.jhaws.common.elasticsearch.common.FieldExtra;
 import org.jhaws.common.elasticsearch.common.FieldType;
@@ -414,10 +416,16 @@ public class ElasticCustomizer {
         fieldMapping.put(TYPE, fieldMapping.fieldType.id());
         Map<String, Object> options = new LinkedHashMap<>(fieldMapping.fieldType.options());
         if (field.type() == FieldType.DENSE_VECTOR) {
-            if (field.denseVectorFieldType().dims() > 0) {
-                options.put("dims", field.denseVectorFieldType().dims());
-            } else if (field.denseVectorFieldType().value() > 0) {
-                options.put("dims", field.denseVectorFieldType().value());
+            if (field.denseVector().dims() > 0) {
+                options.put("dims", field.denseVector().dims());
+                if (field.denseVector().similarity() != null && field.denseVector().similarity() != DenseVectorSimilarity.uninitialized) {
+                    options.put("similarity", field.denseVector().similarity().id());
+                }
+                if (field.denseVector().type() != null && field.denseVector().type() != DenseVectorType.uninitialized) {
+                    options.put("index_options.type", field.denseVector().type().id());
+                    options.put("index_options.m", field.denseVector().m());
+                    options.put("index_options.ef_construction", field.denseVector().ef_construction());
+                }
             }
         }
         options.entrySet().forEach(option -> fieldMapping.fieldMapping.put(option.getKey(), option.getValue()));

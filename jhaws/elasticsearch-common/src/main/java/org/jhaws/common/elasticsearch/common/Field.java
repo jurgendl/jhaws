@@ -20,7 +20,7 @@ public @interface Field {
 
 	FieldType type() default FieldType.uninitialized;
 
-	DenseVectorFieldType denseVectorFieldType() default @DenseVectorFieldType;
+	DenseVector denseVector() default @DenseVector(dims = -1);
 
 	/**
 	 * standard, english, dutch
