@@ -3654,7 +3654,7 @@ public class FilePath implements Path, Externalizable {
 	public static String validateFilename(String name, Character replacer) {
 		StringBuilder sb = new StringBuilder();
 		for (char c : name.toCharArray()) {
-			if (INVALID_WINDOWS_SPECIFIC_CHARS.contains(c) || INVALID_UNIX_SPECIFIC_CHARS.contains(c)) {
+			if (INVALID_WINDOWS_SPECIFIC_CHARS.contains(c) || INVALID_UNIX_SPECIFIC_CHARS.contains(c) || c < '\u0020') {
 				if (replacer != null) {
 					sb.append(replacer);
 				}
@@ -3667,7 +3667,7 @@ public class FilePath implements Path, Externalizable {
 
 	public static boolean isValidFilename(String name) {
 		for (char c : name.toCharArray()) {
-			if (INVALID_WINDOWS_SPECIFIC_CHARS.contains(c) || INVALID_UNIX_SPECIFIC_CHARS.contains(c)) {
+			if (INVALID_WINDOWS_SPECIFIC_CHARS.contains(c) || INVALID_UNIX_SPECIFIC_CHARS.contains(c) || c < '\u0020') {
 				return false;
 			}
 		}
