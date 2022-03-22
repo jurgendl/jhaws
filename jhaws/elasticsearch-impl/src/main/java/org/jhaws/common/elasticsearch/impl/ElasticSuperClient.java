@@ -54,6 +54,8 @@ import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.flush.FlushRequest;
+import org.elasticsearch.action.admin.indices.flush.FlushResponse;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
 import org.elasticsearch.action.admin.indices.settings.get.GetSettingsRequest;
 import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse;
@@ -337,7 +339,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             if (settings != null) config.put(SETTINGS, settings);
             if (mappings != null) config.put(MAPPINGS, mappings);
 
-            LOGGER.info("\n{}", getObjectMapper().writerFor(Map.class).writeValueAsString(config));
+            LOGGER.debug("\n{}", getObjectMapper().writerFor(Map.class).writeValueAsString(config));
             request.source(config);
 
             request.setTimeout(getTimeout());
@@ -850,6 +852,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-update-by-query.html
         UpdateByQueryRequest request = new UpdateByQueryRequest(index);
         request.setConflicts(PROCEED);
+        // request.setMaxRetries(11);
         request.setQuery(query == null ? QueryBuilders.matchAllQuery() : query);
         if (max != null) request.setMaxDocs(max);
         request.setBatchSize(1_000);
@@ -1224,8 +1227,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // the total number of hits, must be interpreted in the context of
         // totalHits.relation
         long numHits = totalHits.value;
-        // whether the number of hits is accurate (EQUAL_TO) or a lower bound of
-        // the
+        // whether the number of hits is accurate (EQUAL_TO) or a lower bound of the
         // total (GREATER_THAN_OR_EQUAL_TO)
         TotalHits.Relation relation = totalHits.relation;
         if (relation != Relation.EQUAL_TO) {
@@ -2118,7 +2120,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> void reindex(Class<T> type, String destIndex) {
-        performReindexRequest(createReindexRequest(index(type), destIndex));
+        reindex(index(type), destIndex);
     }
 
     public void reindex(String index, String destIndex) {
@@ -2184,6 +2186,20 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         boolean wantsReadOnly = Boolean.TRUE.equals(readOnly);
         if (isReadOnly == wantsReadOnly) return false;
         return _setIndexReadOnly(index, wantsReadOnly);
+    }
+
+    public <T extends ElasticDocument> void flushIndex(Class<T> type) {
+        flushIndex(index(type));
+    }
+
+    public void flushIndex(String index) {
+        try {
+            FlushRequest flushRequest = new FlushRequest(index);
+            FlushResponse flushResponse = getClient().indices().flush(flushRequest, getRequestOptions());
+            System.out.println(flushResponse);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
     }
 
     public <T extends ElasticDocument> boolean createIndexAlias(Class<T> type, String alias) {
