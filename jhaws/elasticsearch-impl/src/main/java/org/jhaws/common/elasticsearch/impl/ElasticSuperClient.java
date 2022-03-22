@@ -754,6 +754,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public List<Map<String, Object>> multiGetDocument(String index, List<String> ids, String[] includes, String[] excludes) {
+        if (ids == null || ids.isEmpty()) return Collections.emptyList();
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-multi-get.html
         return performMultiGetRequest(createMultiGetRequest(index, ids, includes, excludes));
     }
@@ -788,6 +789,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> List<T> multiGetDocument(Class<T> type, List<T> objects) {
+        if (objects == null || objects.isEmpty()) return Collections.emptyList();
         FetchSourceContext fetch = fetch(true, null, null);
         MultiGetRequest request = new MultiGetRequest();
         objects.forEach(o -> request.add(new MultiGetRequest.Item(index(o), id(o)).fetchSourceContext(fetch)));
