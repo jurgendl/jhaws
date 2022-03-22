@@ -56,4 +56,34 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
     public void setVisiblePredicateInvers(ListModel<?> listModel) {
         setVisiblePredicate(listModel, list -> list == null || list.isEmpty());
     }
+
+    public <P extends BooleanSupplier & Serializable> EnhancedWebMarkupContainer visiblePredicate(P _visiblePredicate) {
+        setVisiblePredicate(_visiblePredicate);
+        return this;
+    }
+
+    public <M, P extends Function<M, Boolean> & Serializable> EnhancedWebMarkupContainer visiblePredicate(IModel<M> model, P _visiblePredicate) {
+        setVisiblePredicate(model, _visiblePredicate);
+        return this;
+    }
+
+    public EnhancedWebMarkupContainer visiblePredicate(IModel<String> stringModel) {
+        setVisiblePredicate(stringModel);
+        return this;
+    }
+
+    public EnhancedWebMarkupContainer visiblePredicate(ListModel<?> listModel) {
+        setVisiblePredicate(listModel);
+        return this;
+    }
+
+    public EnhancedWebMarkupContainer visiblePredicateInvers(IModel<String> stringModel) {
+        setVisiblePredicate(stringModel);
+        return this;
+    }
+
+    public EnhancedWebMarkupContainer visiblePredicateInvers(ListModel<?> listModel) {
+        setVisiblePredicate(listModel);
+        return this;
+    }
 }

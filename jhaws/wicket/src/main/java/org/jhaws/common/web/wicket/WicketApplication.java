@@ -538,8 +538,8 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 
     protected boolean enableCSP = false;
 
-    public void csp(boolean enableCSP) {
-        if (enableCSP) {
+    public void csp(boolean _enableCSP) {
+        if (_enableCSP) {
             ContentSecurityPolicySettings cspSettings = getCspSettings();
             CSPHeaderConfiguration cfg = cspSettings.blocking().clear();
             csp(cfg);
@@ -602,26 +602,10 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
         ;
 
         cfg.add(CSPDirective.SCRIPT_SRC, CSP.CSPDirectiveSrcValue_UNSAFE_HASHES);
-        try {
-            cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256(TextFieldPanel.ONCLICK));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
-            cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256(TextFieldPanel.ONDROP));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
-            cfg.add(CSPDirective.SCRIPT_SRC, CSP.CSPDirectiveSrcValue_EMPTYJS);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
-            cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256("topFunction()"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        cfg.add(CSPDirective.SCRIPT_SRC, CSP.CSPDirectiveSrcValue_EMPTYJS);
+        cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256(TextFieldPanel.ONCLICK));
+        cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256(TextFieldPanel.ONDROP));
+        cfg.add(CSPDirective.SCRIPT_SRC, CSP.cspSha256("topFunction()"));
     }
 
     @SpringBean(name = "objectMapper", required = false)
