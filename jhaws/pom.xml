@@ -89,7 +89,6 @@
 		<version.tika>1.27</version.tika>
 		<version.opencsv>5.1</version.opencsv>
 		<version.jai>1.4.0</version.jai>
-		<version.janino>2.7.8</version.janino>
 		<version.glazedlists>1.9.1</version.glazedlists>
 		<version.miglayout>4.2</version.miglayout>
 		<version.ostermiller>1.07.00</version.ostermiller>
@@ -123,6 +122,7 @@
 	<modules>
 		<module>logging</module>
 		<module>spring-bom</module>
+		<module>spring-boot</module>
 		<module>lang</module>
 		<module>g11n</module>
 		<module>io</module>
