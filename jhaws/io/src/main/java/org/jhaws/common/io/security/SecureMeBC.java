@@ -14,23 +14,6 @@ public class SecureMeBC implements Security {
         BC.provide();
     }
 
-    public static void main(String[] args) {
-        try {
-            new SecureMeBC().test("originalPassword");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void test(String originalPassword) throws Exception {
-        System.out.println("Original password: " + originalPassword);
-        byte[] encryptedPassword = encrypt(originalPassword);
-        System.out.println("Encrypted password: " + new String(encryptedPassword));
-        String decryptedPassword = decrypt(encryptedPassword);
-        System.out.println("Decrypted password: " + decryptedPassword);
-
-    }
-
     public SecureMeBC(Seed key) {
         super();
         this.key = key;
