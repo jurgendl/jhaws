@@ -12,10 +12,10 @@
 	</parent>
 	<packaging>pom</packaging>
 	<groupId>org.jhaws.common</groupId>
-	<artifactId>spring-boot-24-parent</artifactId>
+	<artifactId>jhaws-spring-boot-24-parent</artifactId>
 	<version>5.0.3-SNAPSHOT</version>
-	<name>spring-boot-24-parent</name>
-	<description>spring-boot-24-parent</description>
+	<name>jhaws-spring-boot-24-parent</name>
+	<description>jhaws-spring-boot-24-parent</description>
 	<properties>
 		<!-- ______________________ -->
 		<!-- anders fail tijdens release-perform: https://stackoverflow.com/questions/25983852/maven-javadoc-plugin-breaks-mvn-releaseperform -->
