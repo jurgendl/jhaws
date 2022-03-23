@@ -2357,19 +2357,15 @@ public interface CollectionUtils8 {
 
     public static IntStream intStream(int min, int max) {
         if (min <= max) return IntStream.range(min, max + 1);
-        int tmp = min;
-        min = max;
-        max = tmp/* min */;
-        int mm = min + max;
-        return IntStream.range(min, max + 1).map(x -> mm - x);
+        int maxx = min;
+        int minn = max;
+        return IntStream.range(minn, maxx + 1).map(x -> minn - x + maxx);
     }
 
     public static LongStream longStream(long min, long max) {
         if (min <= max) return LongStream.range(min, max + 1);
-        long tmp = min;
-        min = max;
-        max = tmp/* min */;
-        long mm = min + max;
-        return LongStream.range(min, max + 1).map(x -> mm - x);
+        long maxx = min;
+        long minn = max;
+        return LongStream.range(minn, maxx + 1).map(x -> minn - x + maxx);
     }
 }
