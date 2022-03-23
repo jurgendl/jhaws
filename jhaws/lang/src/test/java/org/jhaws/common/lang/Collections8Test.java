@@ -264,4 +264,12 @@ public class Collections8Test {
         Assert.assertArrayEquals(new String[] { "a", "b", "c", "g" }, CollectionUtils8.array(a1, a3));
         Assert.assertArrayEquals(new String[] { "g", "a", "b", "c" }, CollectionUtils8.array(a3, a1));
     }
+
+    @Test
+    public void testIntStream() {
+        Assert.assertEquals(Arrays.asList(2, 3, 4, 5, 6), CollectionUtils8.intStream(2, 6).mapToObj(i -> i).collect(Collectors.toList()));
+        Assert.assertEquals(Arrays.asList(6, 5, 4, 3, 2), CollectionUtils8.intStream(6, 2).mapToObj(i -> i).collect(Collectors.toList()));
+        Assert.assertEquals(Arrays.asList(-2, -3, -4, -5, -6), CollectionUtils8.intStream(-2, -6).mapToObj(i -> i).collect(Collectors.toList()));
+        Assert.assertEquals(Arrays.asList(-6, -5, -4, -3, -2), CollectionUtils8.intStream(-6, -2).mapToObj(i -> i).collect(Collectors.toList()));
+    }
 }

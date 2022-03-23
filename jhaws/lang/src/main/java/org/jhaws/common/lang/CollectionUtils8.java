@@ -2354,4 +2354,22 @@ public interface CollectionUtils8 {
         int fullChunks = (size - 1) / length;
         return IntStream.range(0, fullChunks + 1).mapToObj(n -> source.subList(n * length, n == fullChunks ? size : (n + 1) * length));
     }
+
+    public static IntStream intStream(int min, int max) {
+        if (min <= max) return IntStream.range(min, max + 1);
+        int tmp = min;
+        min = max;
+        max = tmp/* min */;
+        int mm = min + max;
+        return IntStream.range(min, max + 1).map(x -> mm - x);
+    }
+
+    public static LongStream longStream(long min, long max) {
+        if (min <= max) return LongStream.range(min, max + 1);
+        long tmp = min;
+        min = max;
+        max = tmp/* min */;
+        long mm = min + max;
+        return LongStream.range(min, max + 1).map(x -> mm - x);
+    }
 }
