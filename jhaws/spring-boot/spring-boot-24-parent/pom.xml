@@ -89,8 +89,8 @@
 		<version.spring-data-rest>3.6.2</version.spring-data-rest><!-- spring-data-rest-core -->
 		<version.spring-session>2.6.2</version.spring-session><!-- spring-session-core -->
 		<!-- BEGIN DEPENDENCIES -->
-		<version.liquibase>4.7.1</version.liquibase>
-		<version.liquibase-hibernate5>4.7.1</version.liquibase-hibernate5>
+		<version.liquibase>4.9.0</version.liquibase>
+		<version.liquibase-hibernate5>4.9.0</version.liquibase-hibernate5>
 		<version.reactor-netty>1.0.17</version.reactor-netty>
 		<version.reactor-core>3.4.16</version.reactor-core>
 		<version.stax2-api>4.2</version.stax2-api>
