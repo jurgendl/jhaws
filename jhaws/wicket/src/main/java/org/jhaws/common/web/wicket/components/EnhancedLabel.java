@@ -117,12 +117,12 @@ public class EnhancedLabel extends Label {
     }
 
     public EnhancedLabel visiblePredicateInvers(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel);
+        setVisiblePredicateInvers(stringModel);
         return this;
     }
 
     public EnhancedLabel visiblePredicateInvers(ListModel<?> listModel) {
-        setVisiblePredicate(listModel);
+        setVisiblePredicateInvers(listModel);
         return this;
     }
 

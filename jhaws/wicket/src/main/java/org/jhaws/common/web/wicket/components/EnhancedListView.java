@@ -120,12 +120,12 @@ public class EnhancedListView<T> extends ListView<T> {
     }
 
     public EnhancedListView<T> visiblePredicateInvers(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel);
+        setVisiblePredicateInvers(stringModel);
         return this;
     }
 
     public EnhancedListView<T> visiblePredicateInvers(ListModel<?> listModel) {
-        setVisiblePredicate(listModel);
+        setVisiblePredicateInvers(listModel);
         return this;
     }
 }

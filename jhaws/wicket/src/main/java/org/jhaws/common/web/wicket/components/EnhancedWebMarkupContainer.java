@@ -78,12 +78,12 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
     }
 
     public EnhancedWebMarkupContainer visiblePredicateInvers(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel);
+        setVisiblePredicateInvers(stringModel);
         return this;
     }
 
     public EnhancedWebMarkupContainer visiblePredicateInvers(ListModel<?> listModel) {
-        setVisiblePredicate(listModel);
+        setVisiblePredicateInvers(listModel);
         return this;
     }
 }
