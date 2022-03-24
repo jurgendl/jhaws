@@ -245,62 +245,12 @@ public class YTDL extends Tool {
 			if (!(url.contains("youtube") || url.contains("youtu.be"))) {
 				throw new ExitValueException(0);
 			}
-			List<String> command = new ArrayList<>();
-			command.add(command(executable));
-			cookies(command, cookiesLoc);
-			// command.add("--verbose");
-			// command.add("--embed-thumbnail");
-			// command.add("--ignore-errors");
-			// command.add("--add-metadata");
-			if (StringUtils.isNotBlank(userAgent)) {
-				command.add("--user-agent");
-				command.add("\"" + userAgent + "\"");
-			}
-			command.add("--no-check-certificate");
-			command.add("--encoding");
-			command.add(UTF_8);
-			command.add("-f");
-			// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
-			command.add("bestvideo,bestaudio");
-			command.add("-o");
-			command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
-			command.add(url);
-			dl(tmpFolder, command, dl);
+			downloadYT(url, tmpFolder, cookiesLoc, dl);
 		} catch (ExitValueException ex) {
 			try {
-				List<String> command = new ArrayList<>();
-				command.add(command(executable));
-				cookies(command, cookiesLoc);
-				if (StringUtils.isNotBlank(userAgent)) {
-					command.add("--user-agent");
-					command.add("\"" + userAgent + "\"");
-				}
-				// command.add("--verbose");
-				// command.add("--embed-thumbnail");
-				// command.add("--ignore-errors");
-				// command.add("--add-metadata");
-				command.add("--no-check-certificate");
-				command.add("--encoding");
-				command.add(UTF_8);
-				command.add("-o");
-				command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
-				command.add(url);
-				dl(tmpFolder, command, dl);
+				downloadOther(url, tmpFolder, cookiesLoc, dl);
 			} catch (Exception ex2) {
-				List<String> command = new ArrayList<>();
-				command.add(command(executable));
-				cookies(command, cookiesLoc);
-				if (StringUtils.isNotBlank(userAgent)) {
-					command.add("--user-agent");
-					command.add("\"" + userAgent + "\"");
-				}
-				command.add("--no-check-certificate");
-				command.add("--encoding");
-				command.add(UTF_8);
-				command.add("-o");
-				command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
-				command.add(url);
-				dl(tmpFolder, command, dl);
+				//
 			}
 		}
 		if (dl.isEmpty()) {
@@ -318,6 +268,51 @@ public class YTDL extends Tool {
 		}).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
+	public void downloadOther(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl) {
+		List<String> command = new ArrayList<>();
+		command.add(command(executable));
+		cookies(command, cookiesLoc);
+		if (StringUtils.isNotBlank(userAgent)) {
+			command.add("--user-agent");
+			command.add("\"" + userAgent + "\"");
+		}
+		// command.add("--verbose");
+		// command.add("--embed-thumbnail");
+		// command.add("--ignore-errors");
+		// command.add("--add-metadata");
+		command.add("--no-check-certificate");
+		command.add("--encoding");
+		command.add(UTF_8);
+		command.add("-o");
+		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
+		command.add(url);
+		dl(tmpFolder, command, dl);
+	}
+
+	public void downloadYT(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl) {
+		List<String> command = new ArrayList<>();
+		command.add(command(executable));
+		cookies(command, cookiesLoc);
+		// command.add("--verbose");
+		// command.add("--embed-thumbnail");
+		// command.add("--ignore-errors");
+		// command.add("--add-metadata");
+		if (StringUtils.isNotBlank(userAgent)) {
+			command.add("--user-agent");
+			command.add("\"" + userAgent + "\"");
+		}
+		command.add("--no-check-certificate");
+		command.add("--encoding");
+		command.add(UTF_8);
+		command.add("-f");
+		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
+		command.add("bestvideo,bestaudio");
+		command.add("-o");
+		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
+		command.add(url);
+		dl(tmpFolder, command, dl);
+	}
+
 	protected void cookies(List<String> command, String cookiesLoc) {
 		FilePath cookies;
 		if (StringUtils.isNotBlank(cookiesLoc)) {
@@ -332,6 +327,7 @@ public class YTDL extends Tool {
 	}
 
 	private void dl(FilePath tmpFolder, List<String> command, List<String> dl) {
+		// logger.info("\n" + dl.stream().collect(Collectors.joining(" ")));
 		Set<String> u = new HashSet<>();
 		Lines lines = new Lines() {
 			@Override
