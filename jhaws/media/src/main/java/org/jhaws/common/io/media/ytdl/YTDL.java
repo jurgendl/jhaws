@@ -248,9 +248,9 @@ public class YTDL extends Tool {
 			downloadYT(url, tmpFolder, cookiesLoc, dl);
 		} catch (ExitValueException ex) {
 			try {
-				downloadOther(url, tmpFolder, cookiesLoc, dl);
+				downloadOther(url, tmpFolder, cookiesLoc, dl, false);
 			} catch (Exception ex2) {
-				//
+				downloadOther(url, tmpFolder, cookiesLoc, dl, true);
 			}
 		}
 		if (dl.isEmpty()) {
@@ -268,7 +268,7 @@ public class YTDL extends Tool {
 		}).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
-	public void downloadOther(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl) {
+	public void downloadOther(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl, boolean onlyId) {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
@@ -284,7 +284,8 @@ public class YTDL extends Tool {
 		command.add("--encoding");
 		command.add(UTF_8);
 		command.add("-o");
-		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
+		// https://github.com/ytdl-org/youtube-dl/blob/master/README.md#output-template
+		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + (onlyId ? "f%(id)s.%(ext)s" : "%(title)s.f%(format_id)s.%(ext)s") + "\"");
 		command.add(url);
 		dl(tmpFolder, command, dl);
 	}
@@ -369,7 +370,9 @@ public class YTDL extends Tool {
 		boolean throwExitValue = true;
 		List<FilePath> paths = Arrays.asList(executable.getParentPath());
 		call(processHolder, lines, tmpFolder, command, log, listener, throwExitValue, paths);
-		dl.addAll(u);
+		if (dl != null) {
+			dl.addAll(u);
+		}
 	}
 
 	public List<YTDLFormat> formats(String url, String cookiesLoc) {
