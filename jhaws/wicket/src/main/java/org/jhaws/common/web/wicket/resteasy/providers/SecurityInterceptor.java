@@ -17,7 +17,7 @@ import javax.ws.rs.ext.Provider;
 import org.jboss.resteasy.core.Headers;
 import org.jboss.resteasy.core.ResourceMethodInvoker;
 import org.jboss.resteasy.core.ServerResponse;
-import org.jhaws.common.lang.DeEnCoding;
+import org.jhaws.common.encoding.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +75,7 @@ public class SecurityInterceptor implements javax.ws.rs.container.ContainerReque
                 // Decode username and password
                 String usernameAndPassword = null;
                 try {
-                    usernameAndPassword = DeEnCoding.base64DecodeToString(encodedUserPassword);
+                    usernameAndPassword = Base64.base64DecodeToString(encodedUserPassword);
                 } catch (Exception e) {
                     requestContext.abortWith(SERVER_ERROR);
                     return;

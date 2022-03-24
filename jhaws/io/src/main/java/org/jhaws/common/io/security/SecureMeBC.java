@@ -4,7 +4,7 @@ import org.bouncycastle.crypto.CryptoException;
 import org.bouncycastle.crypto.engines.BlowfishEngine;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
-import org.jhaws.common.lang.DeEnCoding;
+import org.jhaws.common.encoding.Base64;
 
 /**
  * security using BouncyCastle
@@ -25,7 +25,7 @@ public class SecureMeBC implements Security {
         StringBuffer result = new StringBuffer();
         KeyParameter key = new KeyParameter(keyString);
         cipher.init(false, key);
-        byte out[] = DeEnCoding.base64Decode(name);
+        byte out[] = Base64.base64Decode(name);
         byte out2[] = new byte[cipher.getOutputSize(out.length)];
         int len2 = cipher.processBytes(out, 0, out.length, out2, 0);
         cipher.doFinal(out2, len2);
@@ -54,7 +54,7 @@ public class SecureMeBC implements Security {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }
-        return DeEnCoding.base64EncodeToString(out);
+        return Base64.base64EncodeToString(out);
     }
 
     private Seed key;
