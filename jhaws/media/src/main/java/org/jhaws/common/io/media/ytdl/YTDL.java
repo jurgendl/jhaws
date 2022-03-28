@@ -165,10 +165,7 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(Tool.command(executable));
 		cookies(command, cookiesLoc);
-		if (StringUtils.isNotBlank(userAgent)) {
-			command.add("--user-agent");
-			command.add("\"" + userAgent + "\"");
-		}
+		userAgent(command);
 		command.add("--get-filename");
 		command.add(url);
 		StringValue fn = new StringValue();
@@ -200,17 +197,14 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
-		if (StringUtils.isNotBlank(userAgent)) {
-			command.add("--user-agent");
-			command.add("\"" + userAgent + "\"");
-		}
+		userAgent(command);
+		common(command);
 		// command.add("--verbose");
 		command.add("-f");
 		command.add("bestaudio[ext=m4a]");
 		// command.add("--embed-thumbnail");
 		// command.add("--ignore-errors");
 		// command.add("--add-metadata");
-		command.add("--no-check-certificate");
 		command.add("-o");
 		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + "\"");
 		command.add(url);
@@ -230,6 +224,13 @@ public class YTDL extends Tool {
 			return to;
 		}
 		throw new UnsupportedOperationException();
+	}
+
+	protected void userAgent(List<String> command) {
+		if (StringUtils.isNotBlank(userAgent)) {
+			command.add("--user-agent");
+			command.add("\"" + userAgent + "\"");
+		}
 	}
 
 	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc) {
@@ -272,17 +273,12 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
-		if (StringUtils.isNotBlank(userAgent)) {
-			command.add("--user-agent");
-			command.add("\"" + userAgent + "\"");
-		}
+		userAgent(command);
+		common(command);
 		// command.add("--verbose");
 		// command.add("--embed-thumbnail");
 		// command.add("--ignore-errors");
 		// command.add("--add-metadata");
-		command.add("--no-check-certificate");
-		command.add("--encoding");
-		command.add(UTF_8);
 		command.add("-o");
 		// https://github.com/ytdl-org/youtube-dl/blob/master/README.md#output-template
 		command.add("\"" + tmpFolder.getAbsolutePath() + "/" + (onlyId ? "f%(id)s.%(ext)s" : "%(title)s.f%(format_id)s.%(ext)s") + "\"");
@@ -290,21 +286,19 @@ public class YTDL extends Tool {
 		dl(tmpFolder, command, dl);
 	}
 
+	protected void common(List<String> command) {
+		command.add("--no-check-certificate");
+		command.add("--restrict-filenames");
+		command.add("--encoding");
+		command.add(UTF_8);
+	}
+
 	public void downloadYT(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl) {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
-		// command.add("--verbose");
-		// command.add("--embed-thumbnail");
-		// command.add("--ignore-errors");
-		// command.add("--add-metadata");
-		if (StringUtils.isNotBlank(userAgent)) {
-			command.add("--user-agent");
-			command.add("\"" + userAgent + "\"");
-		}
-		command.add("--no-check-certificate");
-		command.add("--encoding");
-		command.add(UTF_8);
+		userAgent(command);
+		common(command);
 		command.add("-f");
 		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 		command.add("bestvideo,bestaudio");
@@ -381,13 +375,8 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
-		if (StringUtils.isNotBlank(userAgent)) {
-			command.add("--user-agent");
-			command.add("\"" + userAgent + "\"");
-		}
-		command.add("--no-check-certificate");
-		command.add("--encoding");
-		command.add(UTF_8);
+		userAgent(command);
+		common(command);
 		command.add("--list-formats");
 		command.add(url);
 		Value<Process> processHolder = null;
@@ -448,13 +437,8 @@ public class YTDL extends Tool {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
-		if (StringUtils.isNotBlank(userAgent)) {
-			command.add("--user-agent");
-			command.add("\"" + userAgent + "\"");
-		}
-		command.add("--no-check-certificate");
-		command.add("--encoding");
-		command.add(UTF_8);
+		userAgent(command);
+		common(command);
 		command.add("--format");
 		command.add(format.formatCode);
 		command.add(url);
