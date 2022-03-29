@@ -712,6 +712,10 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return createGetRequest(index(o), id(o), version(o), null, null);
     }
 
+    public <T extends ElasticDocument> void bulk(Class<T> type, @SuppressWarnings("rawtypes") List<DocWriteRequest> requests) {
+        bulk(index(type), requests);
+    }
+
     public void bulk(String index, @SuppressWarnings("rawtypes") List<DocWriteRequest> requests) {
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-bulk.html
         BulkRequest request = new BulkRequest(index);
@@ -720,7 +724,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         requests.stream().filter(req -> req instanceof UpdateRequest).map(UpdateRequest.class::cast).forEach(req -> req.setRefreshPolicy(UpdateRequest.RefreshPolicy.NONE));
         requests.stream().filter(req -> req instanceof DeleteRequest).map(DeleteRequest.class::cast).forEach(req -> req.setRefreshPolicy(DeleteRequest.RefreshPolicy.NONE));
         requests.stream().filter(req -> req instanceof IndexRequest).map(IndexRequest.class::cast).forEach(req -> req.setRefreshPolicy(IndexRequest.RefreshPolicy.NONE));
-        request.setRefreshPolicy(BulkRequest.RefreshPolicy.NONE);
+        request.setRefreshPolicy(BulkRequest.RefreshPolicy.WAIT_UNTIL);
         BulkResponse bulkResponse;
         try {
             bulkResponse = getClient().bulk(request, getRequestOptions());
