@@ -76,6 +76,7 @@
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
 		<version.groovy>3.0.8</version.groovy>
 		<version.jackson>2.13.2</version.jackson>
+		<version.jackson-databind>2.13.2.1</version.jackson-databind>
 		<version.stax2-api>4.2</version.stax2-api>
 		<version.resteasy>4.7.4.Final</version.resteasy>
 		<version.junit.jupiter>5.8.2</version.junit.jupiter>
@@ -730,7 +731,7 @@
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
 				<artifactId>jackson-databind</artifactId>
-				<version>${version.jackson}</version>
+				<version>${version.jackson-databind}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>
