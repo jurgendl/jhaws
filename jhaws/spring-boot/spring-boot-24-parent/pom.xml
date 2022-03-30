@@ -121,6 +121,7 @@
 		<spring-framework.version>${version.spring}</spring-framework.version><!-- naam property niet veranderen, belangrijk voor interface module -->
 		<spring-security.version>${version.spring-security}</spring-security.version><!-- naam property niet veranderen, belangrijk voor interface module -->
 		<spring-integration.version>${version.spring-integration}</spring-integration.version><!-- naam property niet veranderen, belangrijk voor interface module -->
+		<jackson-bom.version>${version.jackson}</jackson-bom.version>
 		<!-- ______________________ -->
 	</properties>
 	<dependencies>
