@@ -35,5 +35,8 @@ public class StringUtilsTest {
     @Test
     public void test_decodeUnicode() {
         Assert.assertEquals("bla‐bla", StringUtils.decodeUnicode("blaU+2010bla"));
+
+        String input = "ShortU+2010Duration";
+        Assert.assertEquals("Short‐Duration", StringUtils.decodeUnicode(input));
     }
 }

@@ -368,6 +368,6 @@ public interface StringUtils {
 
     // https://stackoverflow.com/questions/65985724/is-this-format-u043eu006f-u004d-some-sort-of-encoding-standard-and-does-j
     public static String decodeUnicode(String string) {
-        return Pattern.compile("U\\+[0-9A-F]{4,6}").matcher(string).replaceAll(mr -> Character.toString(Integer.parseInt(mr.group().substring(2), 16)));
+        return Pattern.compile("U\\+[0-9A-F]{4}").matcher(string).replaceAll(mr -> Character.toString(Integer.parseInt(mr.group().substring(2), 16)));
     }
 }
