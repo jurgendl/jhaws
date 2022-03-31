@@ -46,6 +46,7 @@
 		<version.spring-asm>3.1.4.RELEASE</version.spring-asm><!-- spring-asm -->
 		<version.spring-jca>2.0.8</version.spring-jca><!-- spring-jca -->
 		<version.spring-dao>2.0.8</version.spring-dao><!-- spring-dao -->
+		<version.spring-retry>1.3.2</version.spring-retry><!-- spring-retry -->
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -1318,6 +1319,11 @@
 						<groupId>commons-logging</groupId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.retry</groupId>
+				<artifactId>spring-retry</artifactId>
+				<version>${version.spring-retry}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
