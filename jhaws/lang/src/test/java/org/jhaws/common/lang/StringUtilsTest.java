@@ -1,5 +1,6 @@
 package org.jhaws.common.lang;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class StringUtilsTest {
@@ -22,12 +23,17 @@ public class StringUtilsTest {
     // }
 
     @Test
-    public void s6666666666666() {
+    public void test_replaceLeading() {
         String string = "       x    y  z     ";
         char D = 172;
         string = StringUtils.replaceLeading(string, ' ', D);
         string = string.replaceFirst(" ++$", "").replaceAll(" ++", " ");
         string = StringUtils.replaceLeading(string, D, ' ');
-        System.out.println(string + "---");
+        Assert.assertEquals("       x y z", string);
+    }
+
+    @Test
+    public void test_decodeUnicode() {
+        Assert.assertEquals("bla‐bla", StringUtils.decodeUnicode("blaU+2010bla"));
     }
 }
