@@ -1339,7 +1339,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         context.searchSourceBuilder = new SearchSourceBuilder();
 
         // correct number of results up to 100k instead of 10k, somewhat slower
-        context.searchSourceBuilder.trackTotalHitsUpTo(100_000);
+        if (!(context.pagination instanceof Scrolling)) {
+            context.searchSourceBuilder.trackTotalHitsUpTo(100_000);
+        }
 
         if (context.sort != null && !context.sort.isEmpty()) context.searchSourceBuilder.trackScores(true);// adds score when sorting
 
