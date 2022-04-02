@@ -1351,7 +1351,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
         if (!(context.pagination instanceof Scrolling)) {
             context.searchSourceBuilder.from(context.pagination.getStart());
-        } else if (context.pagination.getStart() != 0) {
+        } else if (context.pagination.getStart() != 0 && Scrolling.class.cast(context.pagination).getScrollId() == null) {
             LOGGER.error("no offset when using Scrolling, use Pagination instead");
         }
         context.searchSourceBuilder.size(context.pagination.getMax());
