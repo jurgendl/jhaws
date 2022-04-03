@@ -232,8 +232,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 // https://discuss.elastic.co/t/how-to-avoid-30-000ms-timeout-during-reindexing/231370/2
                 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/_timeouts.html
                 .setRequestConfigCallback(requestConfigBuilder -> requestConfigBuilder//
-                        .setConnectTimeout(10_000)// 10s (defo 1)
-                        .setSocketTimeout(120_000)// 120s (defo 30)
+                        .setConnectTimeout(elasticCustomizer.getConnectionTimeout())// (defo 1)
+                        .setSocketTimeout(elasticCustomizer.getSocketTimeout())// (defo 30)
                 )// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/_basic_authentication.html
                 .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder//
                         .setDefaultCredentialsProvider(credentialsProvider)//
@@ -1339,13 +1339,14 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         context.searchSourceBuilder = new SearchSourceBuilder();
 
         // correct number of results up to 100k instead of 10k, somewhat slower
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-your-data.html
         if (!(context.pagination instanceof Scrolling)) {
-            context.searchSourceBuilder.trackTotalHitsUpTo(100_000);
+            context.searchSourceBuilder.trackTotalHitsUpTo(elasticCustomizer.getTrackTotalHits());
         }
 
         if (context.sort != null && !context.sort.isEmpty()) context.searchSourceBuilder.trackScores(true);// adds score when sorting
 
-        // searchSourceBuilder.profile(true); // werkt niet met pagination
+        // searchSourceBuilder.profile(true); // doesn't work with pagination
 
         context.searchSourceBuilder.query(context.query == null ? QueryBuilders.matchAllQuery() : context.query);
 
@@ -1706,7 +1707,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         try {
             response = getClient().get(request, getRequestOptions());
         } catch (IOException ex) {
-            // bij bv timeout
+            // on timeout and such
             throw handleIOException(ex);
         } catch (ElasticsearchException e) {
             handleElasticSearchException(e);

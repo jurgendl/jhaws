@@ -14,8 +14,8 @@ import org.jhaws.common.elasticsearch.common.Analyzer;
 import org.jhaws.common.elasticsearch.common.Analyzers;
 import org.jhaws.common.elasticsearch.common.Bool;
 import org.jhaws.common.elasticsearch.common.CharacterFilter;
-import org.jhaws.common.elasticsearch.common.DenseVectorType;
 import org.jhaws.common.elasticsearch.common.DenseVectorSimilarity;
+import org.jhaws.common.elasticsearch.common.DenseVectorType;
 import org.jhaws.common.elasticsearch.common.Field;
 import org.jhaws.common.elasticsearch.common.FieldExtra;
 import org.jhaws.common.elasticsearch.common.FieldType;
@@ -652,6 +652,9 @@ public class ElasticCustomizer {
     @Value("${elasticCustomizer.cluster.searchMaxBuckets:10000}") // 100_000
     private Integer searchMaxBuckets = 10_000;
 
+    @Value("${elasticCustomizer.trackTotalHits:10000}") // 10_000
+    private Integer trackTotalHits = 10_000;
+
     public Integer getHighlightMaxAnalyzedOffset() {
         return highlightMaxAnalyzedOffset;
     }
@@ -728,4 +731,35 @@ public class ElasticCustomizer {
         return analyzerConfig;
     }
 
+    public Integer getTrackTotalHits() {
+        return this.trackTotalHits;
+    }
+
+    public void setTrackTotalHits(Integer trackTotalHits) {
+        this.trackTotalHits = trackTotalHits;
+    }
+
+    /** in milliseconds */
+    @Value("${elasticCustomizer.client.connection.timeout:1000}") // 1_000
+    private Integer connectionTimeout = 1_000;
+
+    /** in milliseconds */
+    @Value("${elasticCustomizer.client.connection.socketTimeout:30000}") // 30_000
+    private Integer socketTimeout = 30_000;
+
+    public Integer getConnectionTimeout() {
+        return this.connectionTimeout;
+    }
+
+    public void setConnectionTimeout(Integer connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public Integer getSocketTimeout() {
+        return this.socketTimeout;
+    }
+
+    public void setSocketTimeout(Integer socketTimeout) {
+        this.socketTimeout = socketTimeout;
+    }
 }
