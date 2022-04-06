@@ -58,6 +58,22 @@ import org.jhaws.common.lang.Value;
 //
 // cookies
 // https://github.com/ytdl-org/youtube-dl/issues/26152
+//
+//
+// Map<String, Object> extraConfig = new LinkedHashMap<>();
+// extraConfig.put("--sub-lang", "english");
+// extraConfig.put("--http-chunk-size", "1M");
+// extraConfig.put("--buffer-size", "16K");
+// extraConfig.put("--ffmpeg-location", ffmpegTool.getFfmpeg().getAbsolutePath());
+// extraConfig.put("--write-info-json", null);
+// extraConfig.put("--no-progress", null);
+// if(ytdlp) {
+// if (Utils.osgroup == OSGroup.Windows) {
+// extraConfig.put("--windows-filenames", null);
+// }
+// extraConfig.put("--concurrent-fragments", "3");
+// extraConfig.put("--cookies-from-browser", "firefox");
+// }
 public class YTDL extends Tool {
 	public static String UNSUPPORTED = "ERROR: Unsupported URL: ";
 
@@ -177,6 +193,7 @@ public class YTDL extends Tool {
 		command.add(Tool.command(executable));
 		cookies(command, cookiesLoc);
 		userAgent(command);
+		common(command);
 		extraConfig(command, extraConfig);
 		command.add("--get-filename");
 		command.add(url);
@@ -312,11 +329,7 @@ public class YTDL extends Tool {
 
 	protected void common(List<String> command) {
 		command.add("--no-check-certificate");
-		if (Utils.osgroup == OSGroup.Windows) {
-			command.add("--windows-filenames");
-		} else {
-			command.add("--restrict-filenames");
-		}
+		command.add("--restrict-filenames");
 		command.add("--encoding");
 		command.add(UTF_8);
 	}
@@ -392,7 +405,7 @@ public class YTDL extends Tool {
 		Consumer<String> listener = null;
 		boolean throwExitValue = true;
 		List<FilePath> paths = Arrays.asList(executable.getParentPath());
-		System.out.println(command.stream().collect(Collectors.joining(" ")));
+		System.out.println(tmpFolder.getAbsolutePath() + ">\n" + command.stream().collect(Collectors.joining(" ")));
 		try {
 			call(processHolder, lines, tmpFolder, command, log, listener, throwExitValue, paths);
 		} catch (RuntimeException ex) {
