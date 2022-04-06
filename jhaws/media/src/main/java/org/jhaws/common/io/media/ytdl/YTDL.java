@@ -84,6 +84,11 @@ public class YTDL extends Tool {
 	}
 
 	@Override
+	public String toString() {
+		return String.valueOf(executable);
+	}
+
+	@Override
 	protected void setPathImpl(String path) {
 		if (StringUtils.isBlank(path)) {
 			new NullPointerException().printStackTrace();
@@ -238,7 +243,9 @@ public class YTDL extends Tool {
 	protected void extraConfig(List<String> command, Map<String, Object> extraConfig) {
 		Optional.ofNullable(extraConfig).ifPresent(_extraConfig -> extraConfig.entrySet().forEach(entry -> {
 			command.add(entry.getKey());
-			command.add(getEscapeChar() + String.valueOf(entry.getValue()) + getEscapeChar());
+			if (entry.getValue() != null) {
+				command.add(getEscapeChar() + String.valueOf(entry.getValue()) + getEscapeChar());
+			}
 		}));
 	}
 
@@ -305,7 +312,11 @@ public class YTDL extends Tool {
 
 	protected void common(List<String> command) {
 		command.add("--no-check-certificate");
-		command.add("--restrict-filenames");
+		if (Utils.osgroup == OSGroup.Windows) {
+			command.add("--windows-filenames");
+		} else {
+			command.add("--restrict-filenames");
+		}
 		command.add("--encoding");
 		command.add(UTF_8);
 	}
@@ -481,6 +492,25 @@ public class YTDL extends Tool {
 		return s.moveTo(targetFolder);
 	}
 
+	public String getUserAgent() {
+		return this.userAgent;
+	}
+
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
+	}
+
+	public String getEscapeChar() {
+		if (escapeChar == null) {
+			escapeChar = Utils.osgroup == OSGroup.Windows ? "\"" : "'";
+		}
+		return this.escapeChar;
+	}
+
+	public void setEscapeChar(String escapeChar) {
+		this.escapeChar = escapeChar;
+	}
+
 	@SuppressWarnings("serial")
 	public static class YTDLFormat implements Serializable {
 		private Integer height;
@@ -521,12 +551,6 @@ public class YTDL extends Tool {
 
 		public void setNote(String note) {
 			this.note = note;
-		}
-
-		@Override
-		public String toString() {
-			return "YTDLFormat [height=" + this.height + ", width=" + this.width + ", formatCode=" + this.formatCode + ", extension=" + this.extension + ", resolution="
-					+ this.resolution + ", note=" + this.note + ", size=" + this.size + "]";
 		}
 
 		public Long getSize() {
@@ -577,24 +601,11 @@ public class YTDL extends Tool {
 				return false;
 			return true;
 		}
-	}
 
-	public String getUserAgent() {
-		return this.userAgent;
-	}
-
-	public void setUserAgent(String userAgent) {
-		this.userAgent = userAgent;
-	}
-
-	public String getEscapeChar() {
-		if (escapeChar == null) {
-			escapeChar = Utils.osgroup == OSGroup.Windows ? "\"" : "'";
+		@Override
+		public String toString() {
+			return "YTDLFormat [height=" + this.height + ", width=" + this.width + ", formatCode=" + this.formatCode + ", extension=" + this.extension + ", resolution="
+					+ this.resolution + ", note=" + this.note + ", size=" + this.size + "]";
 		}
-		return this.escapeChar;
-	}
-
-	public void setEscapeChar(String escapeChar) {
-		this.escapeChar = escapeChar;
 	}
 }
