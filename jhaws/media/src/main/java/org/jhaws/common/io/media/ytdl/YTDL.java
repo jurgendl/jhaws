@@ -59,6 +59,8 @@ import org.jhaws.common.lang.Value;
 // cookies
 // https://github.com/ytdl-org/youtube-dl/issues/26152
 public class YTDL extends Tool {
+	public static String UNSUPPORTED = "ERROR: Unsupported URL: ";
+
 	private static final String UTF_8 = "utf-8";
 
 	public static final String EXE = "youtube-dl";
@@ -176,13 +178,14 @@ public class YTDL extends Tool {
 		StringValue fn = new StringValue();
 		List<String> full = new ArrayList<>();
 		try {
-			call(null, new Lines() {
+			Lines lines = new Lines() {
 				@Override
 				public void accept(String t) {
 					fn.set(t);
 					full.add(t);
 				}
-			}, null, command);
+			};
+			call(null, lines, null, command);
 			return fn.get();
 		} catch (RuntimeException ex) {
 			full.forEach(System.out::println);
@@ -229,7 +232,7 @@ public class YTDL extends Tool {
 			from.renameTo(to);
 			return to;
 		}
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException(url);
 	}
 
 	protected void extraConfig(List<String> command, Map<String, Object> extraConfig) {
@@ -379,7 +382,17 @@ public class YTDL extends Tool {
 		boolean throwExitValue = true;
 		List<FilePath> paths = Arrays.asList(executable.getParentPath());
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		call(processHolder, lines, tmpFolder, command, log, listener, throwExitValue, paths);
+		try {
+			call(processHolder, lines, tmpFolder, command, log, listener, throwExitValue, paths);
+		} catch (RuntimeException ex) {
+			if (lines.lines() != null && !lines.lines().isEmpty()) {
+				String l = lines.lines().get(lines.lines().size() - 1);
+				if (l.startsWith(UNSUPPORTED)) {
+					throw new UnsupportedOperationException(l.substring(UNSUPPORTED.length()));
+				}
+			}
+			throw ex;
+		}
 		if (dl != null) {
 			dl.addAll(u);
 		}
