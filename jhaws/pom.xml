@@ -50,6 +50,7 @@
 		<deploy.skip.web>true</deploy.skip.web>
 		<!-- DEPENDENCIES -->
 		<version.bouncycastle>1.71</version.bouncycastle>
+		<version.bouncycastleOld>1.70</version.bouncycastleOld>
 		<version.commons.codec>1.15</version.commons.codec>
 		<version.commons.beanutils>1.9.4</version.commons.beanutils>
 		<version.commons.exec>1.3</version.commons.exec>
@@ -456,27 +457,27 @@
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-jdk15on</artifactId>
-				<version>${version.bouncycastle}</version>
+				<version>${version.bouncycastleOld}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-ext-jdk15on</artifactId>
-				<version>${version.bouncycastle}</version>
+				<version>${version.bouncycastleOld}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcmail-jdk15on</artifactId>
-				<version>${version.bouncycastle}</version>
+				<version>${version.bouncycastleOld}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcpg-jdk15on</artifactId>
-				<version>${version.bouncycastle}</version>
+				<version>${version.bouncycastleOld}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcpkix-jdk15on</artifactId>
-				<version>${version.bouncycastle}</version>
+				<version>${version.bouncycastleOld}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.guava</groupId>
