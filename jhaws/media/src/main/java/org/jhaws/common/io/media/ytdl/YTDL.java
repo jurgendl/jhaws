@@ -216,6 +216,41 @@ public class YTDL extends Tool {
 		}
 	}
 
+	public String metadata(String url, String cookiesLoc, Map<String, Object> extraConfig) {
+		if (executable == null || executable.notExists())
+			throw new NullPointerException();
+		List<String> command = new ArrayList<>();
+		command.add(Tool.command(executable));
+		cookies(command, cookiesLoc);
+		userAgent(command);
+		common(command);
+		extraConfig(command, extraConfig);
+		command.add("--write-info-json");
+		command.add("--skip-download");
+		command.add("--no-clean-info-json");
+		command.add(url);
+		StringValue fn = new StringValue();
+		List<String> full = new ArrayList<>();
+		try {
+			Lines l = new Lines() {
+				@Override
+				public void accept(String t) {
+					String pre = "[info] Writing video metadata as JSON to: ";
+					if (t.startsWith(pre)) {
+						lines.add(t.substring(pre.length()).trim());
+					}
+				}
+			};
+			FilePath fp = FilePath.getTempDirectory();
+			call(null, l, fp, command);
+			return fp.child(l.lines().get(0)).readAll();
+		} catch (RuntimeException ex) {
+			full.forEach(System.out::println);
+			ex.printStackTrace(System.out);
+			throw ex;
+		}
+	}
+
 	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc, Map<String, Object> extraConfig) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
