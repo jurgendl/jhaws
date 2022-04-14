@@ -52,8 +52,6 @@ public class ElasticCustomizer {
 
     public static final String INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET = "highlight.max_analyzed_offset";
 
-    public static final String INDEX_SETTINGS_QUERY_BOOL_MAX_CLAUSE_COUNT = "query.bool.max_clause_count";
-
     public static final String INDEX_SETTINGS_BLOCKS_READ_ONLY = "blocks.read_only";
 
     private static final String CUSTOM = "custom";
@@ -155,8 +153,6 @@ public class ElasticCustomizer {
         {
             Map<String, Object> indexSettings = new LinkedHashMap<>();
             indexSettings.put(INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET, highlightMaxAnalyzedOffset);
-            // index.query.bool.max_clause_count: 4096
-            indexSettings.put(INDEX_SETTINGS_QUERY_BOOL_MAX_CLAUSE_COUNT, maxClauses);
             settings.put(INDEX, indexSettings);
         }
         {
@@ -651,8 +647,8 @@ public class ElasticCustomizer {
     @Value("${elasticCustomizer.index.highlightMaxAnalyzedOffset:1000000}") // 10_000_000
     private Integer highlightMaxAnalyzedOffset = 1_000_000;
 
-    @Value("${elasticCustomizer.index.maxClauses:4096}") // 4096
-    private Integer maxClauses = 4096;
+    @Value("${elasticCustomizer.index.maxClauses:1024}") // 1024
+    private Integer maxClauses = 1024;
 
     @Value("${elasticCustomizer.index.maxResultWindow:10000}") // 100_000
     private Integer maxResultWindow = 10_000;
