@@ -72,4 +72,6 @@ public interface Analyzers {
     public static final String CUSTOM_ANY_LANGUAGE_ANALYZER = "custom_any_language_analyzer";
 
     public static final String CUSTOM_FRENCH_LANGUAGE_ANALYZER = "custom_french_language_analyzer";
+
+    public static final String CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER = "custom_folded_lowercase-tokens_analyzer";
 }

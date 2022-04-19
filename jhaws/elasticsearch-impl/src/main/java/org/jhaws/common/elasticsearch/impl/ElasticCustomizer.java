@@ -147,6 +147,7 @@ public class ElasticCustomizer {
         analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER, customSortableOnlyAlphaNumericAnalyzer());
         analyzer.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
         analyzer.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
+        analyzer.put(Analyzers.CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER, customFoldedLowercaseTokensAnalyzer());
         analysis.put(ANALYZER, analyzer);
         Map<String, Object> settings = new LinkedHashMap<>();
         settings.put(ANALYSIS, analysis);
@@ -688,6 +689,14 @@ public class ElasticCustomizer {
         analyzerConfig.put(TYPE, CUSTOM);
         analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
         analyzerConfig.put(FILTER, Arrays.asList(Filter.apostrophe.id(), Filter.asciifolding.id(), Filter.lowercase.id()));
+        return analyzerConfig;
+    }
+
+    public Map<String, Object> customFoldedLowercaseTokensAnalyzer() {
+        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
+        analyzerConfig.put(TYPE, CUSTOM);
+        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
+        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.lowercase.id()));
         return analyzerConfig;
     }
 
