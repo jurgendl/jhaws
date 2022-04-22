@@ -112,4 +112,12 @@ public class Tuple1<T1> implements Serializable {
 	public <X> Tuple1<X> projectT1(Predicate<T1> when, Function<T1, X> operation, Supplier<X> elseOperation) {
 		return new Tuple1<X>(when.test(t1) ? operation.apply(t1) : elseOperation.get());
 	}
+
+	public boolean isT1Null() {
+		return t1 == null;
+	}
+
+	public boolean isT1NotNull() {
+		return t1 != null;
+	}
 }

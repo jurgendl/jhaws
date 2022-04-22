@@ -116,4 +116,12 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 			Supplier<X> elseOperation) {
 		return new Tuple5<T1, T2, T3, T4, X>(t1, t2, t3, t4, when.test(t5) ? operation.apply(t5) : elseOperation.get());
 	}
+
+	public boolean isT5Null() {
+		return t5 == null;
+	}
+
+	public boolean isT5NotNull() {
+		return t5 != null;
+	}
 }

@@ -113,4 +113,12 @@ public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 	public <X> Tuple3<T1, T2, X> projectT3(Predicate<T3> when, Function<T3, X> operation, Supplier<X> elseOperation) {
 		return new Tuple3<T1, T2, X>(t1, t2, when.test(t3) ? operation.apply(t3) : elseOperation.get());
 	}
+
+	public boolean isT3Null() {
+		return t3 == null;
+	}
+
+	public boolean isT3NotNull() {
+		return t3 != null;
+	}
 }
