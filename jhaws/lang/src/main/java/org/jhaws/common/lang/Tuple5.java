@@ -2,6 +2,7 @@ package org.jhaws.common.lang;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -46,8 +47,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
         if (getClass() != obj.getClass()) return false;
         @SuppressWarnings("rawtypes")
         Tuple5 other = (Tuple5) obj;
-        return Objects.equals(this.t4, other.t4) && Objects.equals(this.t2, other.t2) && Objects.equals(this.t3, other.t3)
-                && Objects.equals(this.t5, other.t5) && Objects.equals(this.value, other.value);
+        return Objects.equals(this.t4, other.t4) && Objects.equals(this.t2, other.t2) && Objects.equals(this.t3, other.t3) && Objects.equals(this.t5, other.t5) && Objects.equals(this.value, other.value);
     }
 
     public T5 getT5() {
@@ -96,5 +96,17 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
             t5 = elseOperation.get();
         }
         return this;
+    }
+
+    public <X> Tuple5<T1, T2, T3, T4, X> projectT5(Function<T5, X> operation) {
+        return projectT5(t -> true, operation);
+    }
+
+    public <X> Tuple5<T1, T2, T3, T4, X> projectT5(Predicate<T5> when, Function<T5, X> operation) {
+        return projectT5(when, operation, () -> null);
+    }
+
+    public <X> Tuple5<T1, T2, T3, T4, X> projectT5(Predicate<T5> when, Function<T5, X> operation, Supplier<X> elseOperation) {
+        return new Tuple5<T1, T2, T3, T4, X>(value, t2, t3, t4, when.test(t5) ? operation.apply(t5) : elseOperation.get());
     }
 }

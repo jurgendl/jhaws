@@ -1,6 +1,7 @@
 package org.jhaws.common.lang;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -68,5 +69,17 @@ public class Tuple1<T1> extends Value<T1> {
             value = elseOperation.get();
         }
         return this;
+    }
+
+    public <X> Tuple1<X> projectT1(Function<T1, X> operation) {
+        return projectT1(t -> true, operation);
+    }
+
+    public <X> Tuple1<X> projectT1(Predicate<T1> when, Function<T1, X> operation) {
+        return projectT1(when, operation, () -> null);
+    }
+
+    public <X> Tuple1<X> projectT1(Predicate<T1> when, Function<T1, X> operation, Supplier<X> elseOperation) {
+        return new Tuple1<X>(when.test(value) ? operation.apply(value) : elseOperation.get());
     }
 }

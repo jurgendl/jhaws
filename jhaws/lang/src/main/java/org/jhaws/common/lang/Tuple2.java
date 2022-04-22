@@ -120,4 +120,16 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
         }
         return this;
     }
+
+    public <X> Tuple2<T1, X> projectT2(Function<T2, X> operation) {
+        return projectT2(t -> true, operation);
+    }
+
+    public <X> Tuple2<T1, X> projectT2(Predicate<T2> when, Function<T2, X> operation) {
+        return projectT2(when, operation, () -> null);
+    }
+
+    public <X> Tuple2<T1, X> projectT2(Predicate<T2> when, Function<T2, X> operation, Supplier<X> elseOperation) {
+        return new Tuple2<T1, X>(value, when.test(t2) ? operation.apply(t2) : elseOperation.get());
+    }
 }
