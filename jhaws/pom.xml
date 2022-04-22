@@ -454,6 +454,7 @@
 				<artifactId>httpcore5-ab</artifactId>
 				<version>${version.httpcore5-ab}</version>
 			</dependency>
+			<!-- bouncycastle -->
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-jdk15on</artifactId>
@@ -479,6 +480,84 @@
 				<artifactId>bcpkix-jdk15on</artifactId>
 				<version>${version.bouncycastleOld}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bctsp-jdk15on</artifactId>
+				<version>${version.bouncycastleOld}</version>
+			</dependency>
+			<!-- -->
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk15to18</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-ext-jdk15to18</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcmail-jdk15to18</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpg-jdk15to18</artifactId>
+				<version>${version.bouncycastle</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-jdk15to18</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcutil-jdk15to18</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bctsp-jdk15to18</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<!-- -->
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-jdk18on</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-ext-jdk18on</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcmail-jdk18on</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpg-jdk18on</artifactId>
+				<version>${version.bouncycastle</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-jdk18on</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcutil-jdk18on</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bctsp-jdk18on</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<!-- ====== -->
 			<dependency>
 				<groupId>com.google.guava</groupId>
 				<artifactId>guava</artifactId>
