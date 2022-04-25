@@ -81,7 +81,7 @@
 		<maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
 		<!-- SPRING DEPENDENCIES -->
 		<version.spring>5.3.19</version.spring><!-- spring-core -->
-		<!-- <version.spring-web>${version.spring}</version.spring-web> -->
+		<version.spring-web>${version.spring}</version.spring-web>
 		<version.spring-ws>3.1.3</version.spring-ws><!-- spring-ws-core -->
 		<version.spring-integration>5.5.11</version.spring-integration><!-- spring-integration-core -->
 		<version.spring-security>5.6.3</version.spring-security><!-- spring-security-core -->
