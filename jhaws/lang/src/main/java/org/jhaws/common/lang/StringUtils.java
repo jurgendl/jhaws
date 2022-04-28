@@ -406,7 +406,6 @@ public interface StringUtils {
         return highlight(termenPlainCharacters(query), string, Optional.ofNullable(prefix), Optional.ofNullable(suffix));
     }
 
-    // TODO optimalistatie
     public static String highlight(List<List<String>> queryTermenCharacters, String string, Optional<String> prefixO, Optional<String> suffixO) {
         boolean debug = false;
         if (debug) System.out.println("string=" + queryTermenCharacters);
