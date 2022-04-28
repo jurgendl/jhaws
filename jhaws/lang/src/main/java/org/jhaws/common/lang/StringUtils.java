@@ -2,6 +2,7 @@ package org.jhaws.common.lang;
 
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -375,5 +376,98 @@ public interface StringUtils {
 
     public static Optional<String> optional(String s) {
         return Optional.ofNullable(s).filter(Predicate.not(String::isEmpty));
+    }
+
+    public static List<String> plainCharacters(String s) {
+        List<String> queryTermCharacters = new ArrayList<>();
+        for (char queryTermCharacter : s.toCharArray()) {
+            String cc = Normalizer.normalize("" + queryTermCharacter, Normalizer.Form.NFKD).toLowerCase();
+            queryTermCharacters.add("" + cc.charAt(0));
+        }
+        return queryTermCharacters;
+    }
+
+    public static final Pattern PATTERN_SEARCHPARTS = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
+
+    public static List<String> termen(String s) {
+        Matcher m = PATTERN_SEARCHPARTS.matcher(s);
+        List<String> list = new ArrayList<String>();
+        while (m.find()) {
+            list.add(m.group(1).replace("\"", "").toLowerCase());
+        }
+        return list;
+    }
+
+    public static List<List<String>> termenPlainCharacters(String s) {
+        return termen(s).stream().map(StringUtils::plainCharacters).collect(Collectors.toList());
+    }
+
+    public static String highlight(String query, String string, String prefix, String suffix) {
+        return highlight(termenPlainCharacters(query), string, Optional.ofNullable(prefix), Optional.ofNullable(suffix));
+    }
+
+    // TODO optimalistatie
+    public static String highlight(List<List<String>> queryTermenCharacters, String string, Optional<String> prefixO, Optional<String> suffixO) {
+        boolean debug = false;
+        if (debug) System.out.println("string=" + queryTermenCharacters);
+        if (debug) System.out.println("string=" + string);
+        int strLen = string.length();
+        List<String> plainStringCharacters = new ArrayList<>();
+        List<String> originalStringCharacters = new ArrayList<>();
+        for (char character : string.toCharArray()) {
+            String cc = Normalizer.normalize(String.valueOf(character), Normalizer.Form.NFKD).toLowerCase();
+            plainStringCharacters.add("" + cc.charAt(0));
+            originalStringCharacters.add("" + character);
+        }
+
+        List<Integer> queryMatchIndices = new ArrayList<>();
+        for (int i = 0; i < plainStringCharacters.size(); i++) {
+            String stringCharacter = plainStringCharacters.get(i);
+            if (debug) System.out.println(i + ":" + stringCharacter);
+            final int fi = i;
+            queryTermenCharacters.forEach(queryTermCharacters -> {
+                if (stringCharacter.equals(queryTermCharacters.get(0))) {
+                    if (debug) System.out.println("  " + fi + "::0:" + queryTermCharacters.get(0));
+                    List<Integer> termMatchIndices = new ArrayList<>();
+                    boolean b = plainStringCharacters.size() >= (fi + queryTermCharacters.size());
+                    if (debug) System.out.println("plainStringCharacters.size() >= (i + queryTermCharacters.size()) = " + plainStringCharacters.size() + ">=" + (fi + queryTermCharacters.size()) + " = " + b);
+                    if (b && stringCharacter.equals(queryTermCharacters.get(0))) {
+                        termMatchIndices.add(fi);
+                        for (int j = 1; termMatchIndices != null && j < queryTermCharacters.size(); j++) {
+                            if (debug) System.out.println("  " + (fi + j) + "::" + j + ":" + queryTermCharacters.get(j));
+                            if (plainStringCharacters.get(fi + j).equals(queryTermCharacters.get(j))) {
+                                termMatchIndices.add(fi + j);
+                            } else {
+                                termMatchIndices = null;
+                            }
+                        }
+                        if (termMatchIndices != null && termMatchIndices.size() == queryTermCharacters.size()) {
+                            termMatchIndices.stream().filter(x -> !queryMatchIndices.contains(x)).forEach(queryMatchIndices::add);
+                        }
+                    }
+                }
+            });
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < strLen; i++) {
+            String stringCharacter = originalStringCharacters.get(i);
+            if (queryMatchIndices.contains(i)) {
+                if (prefixO.isPresent()) {
+                    sb.append(prefixO.get());
+                }
+                sb.append(stringCharacter);
+                if (suffixO.isPresent()) {
+                    sb.append(suffixO.get());
+                }
+            } else {
+                sb.append(stringCharacter);
+            }
+        }
+        String marked = sb.toString();
+        if (prefixO.isPresent() && suffixO.isPresent()) {
+            marked = marked.replace(suffixO.get() + prefixO.get(), "");
+        }
+        return marked;
     }
 }
