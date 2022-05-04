@@ -712,11 +712,11 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return createGetRequest(index(o), id(o), version(o), null, null);
     }
 
-    public <T extends ElasticDocument> void bulk(Class<T> type, @SuppressWarnings("rawtypes") List<DocWriteRequest> requests) {
+    public <T extends ElasticDocument> void bulk(Class<T> type, @SuppressWarnings("rawtypes") List<? extends DocWriteRequest> requests) {
         bulk(index(type), requests);
     }
 
-    public void bulk(String index, @SuppressWarnings("rawtypes") List<DocWriteRequest> requests) {
+    public void bulk(String index, @SuppressWarnings("rawtypes") List<? extends DocWriteRequest> requests) {
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-bulk.html
         BulkRequest request = new BulkRequest(index);
         requests.forEach(r -> request.add(r));
