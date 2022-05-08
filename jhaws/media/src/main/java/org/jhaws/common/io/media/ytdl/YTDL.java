@@ -131,37 +131,48 @@ public class YTDL extends Tool {
 		}
 
 		if (executable.exists()) {
-			List<String> command = new ArrayList<>();
-			command.add(Tool.command(executable));
-			command.add("-U");
+			FilePath update = executable.appendExtension("update");
+			long currentTimeMillis = System.currentTimeMillis();
+			long millis = update.getLastModifiedTime().toMillis();
+			long millisd = millis + (24 * 3_600_000);
+			if (update.exists() && millisd > currentTimeMillis) {
+				//
+			} else {
 
-			// ---------------->
-			// https://stackoverflow.com/questions/2275443/how-to-timeout-a-thread
-			ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-				Thread t = new Thread(r);
-				t.setDaemon(true);
-				return t;
-			});
-			Future<Lines> future = executor.submit(new Callable<Lines>() {
-				@Override
-				public Lines call() throws Exception {
-					return Tool.call(null, new Lines(), executable.getParentPath(), command);
+				List<String> command = new ArrayList<>();
+				command.add(Tool.command(executable));
+				command.add("-U");
+
+				// ---------------->
+				// https://stackoverflow.com/questions/2275443/how-to-timeout-a-thread
+				ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+					Thread t = new Thread(r);
+					t.setDaemon(true);
+					return t;
+				});
+				Future<Lines> future = executor.submit(new Callable<Lines>() {
+					@Override
+					public Lines call() throws Exception {
+						return Tool.call(null, new Lines(), executable.getParentPath(), command);
+					}
+				});
+				try {
+					logger.info("Started ...");
+					logger.info("{}", future.get(60, TimeUnit.SECONDS));
+					logger.info("Finished!");
+				} catch (TimeoutException ex) {
+					future.cancel(true);
+					logger.error("{}", ex);
+				} catch (InterruptedException ex) {
+					logger.error("{}", ex);
+				} catch (ExecutionException ex) {
+					logger.error("{}", ex);
 				}
-			});
-			try {
-				logger.info("Started ...");
-				logger.info("{}", future.get(60, TimeUnit.SECONDS));
-				logger.info("Finished!");
-			} catch (TimeoutException ex) {
-				future.cancel(true);
-				logger.error("{}", ex);
-			} catch (InterruptedException ex) {
-				logger.error("{}", ex);
-			} catch (ExecutionException ex) {
-				logger.error("{}", ex);
+				executor.shutdownNow();
+				// <----------------
+
+				update.write("");
 			}
-			executor.shutdownNow();
-			// <----------------
 		} else {
 			String tmp = EXE;
 			if (Utils.osgroup == OSGroup.Windows) {
