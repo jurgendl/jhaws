@@ -17,6 +17,10 @@ public class Tuple1<T1> implements Serializable {
 		return new Tuple1<>(t1);
 	}
 
+	public static <T1> Tuple1<T1> tuple1(T1 t1) {
+		return new Tuple1<>(t1);
+	}
+
 	protected T1 t1;
 
 	public Tuple1() {
