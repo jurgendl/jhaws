@@ -392,4 +392,20 @@ var bLazy = new Blazy();
 	closestCard.toggleClass('card-fullscreen');
 });*/
 
+
+function jsonNaarMap(_json0){
+	if(!_json0) return new Map();
+	return new Map(Object.entries(_json0));
+}
+
+function mergeMappen(_map1,_map2){
+	return new Map([..._map1, ..._map2]);
+}
+
+function mapNaarJson(_map0){
+	if(!_map0) return new Object();
+	return Object.fromEntries(_map0);
+}
+
+
 /* <<<============= base.js ============= */

@@ -38,7 +38,7 @@ import org.jhaws.common.web.wicket.forms.common.TagItTextFieldSettings;
 import org.jhaws.common.web.wicket.forms.common.TextAreaSettings;
 import org.jhaws.common.web.wicket.forms.common.TextFieldSettings;
 import org.jhaws.common.web.wicket.forms.common.TriStateCheckBoxSettings;
-import org.jhaws.common.web.wicket.forms.common.TypeAheadTextFieldAltSettings;
+import org.jhaws.common.web.wicket.forms.common.TypeAheadTextFieldSettings;
 
 @SuppressWarnings("serial")
 public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
@@ -215,9 +215,9 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 				new TinyMCEPanel(this.getFormModel(), propertyPath, this.getFormSettings(), componentSettings));
 	}
 
-	public TypeAheadTextFieldAltPanel addTypeAheadTextFieldAlt(String propertyPath,
-			TypeAheadTextFieldAltSettings componentSettings, IModel<? extends List<Map<String, String>>> choices) {
-		return this.addDefaultRow(new TypeAheadTextFieldAltPanel(this.getFormModel(), propertyPath,
+	public TypeAheadTextFieldPanel addTypeAheadTextFieldAlt(String propertyPath,
+			TypeAheadTextFieldSettings componentSettings, IModel<? extends List<Map<String, String>>> choices) {
+		return this.addDefaultRow(new TypeAheadTextFieldPanel(this.getFormModel(), propertyPath,
 				this.getFormSettings(), componentSettings, choices));
 	}
 
@@ -230,8 +230,8 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 	public static final JavaScriptResourceReference COUNTRY_EXTRA_JS = new JavaScriptResourceReference(FormPanel.class,
 			"country/countries-extra.js");
 
-	public TypeAheadTextFieldAltPanel addCountryTypeAhead(String propertyPath,
-			TypeAheadTextFieldAltSettings componentSettings) {
+	public TypeAheadTextFieldPanel addCountryTypeAhead(String propertyPath,
+			TypeAheadTextFieldSettings componentSettings) {
 		if (componentSettings.getProperties() == null || (componentSettings.getProperties().size() == 1
 				&& "value".equals(componentSettings.getProperties().get(0)))) {
 			componentSettings.setProperties(Arrays.asList("name", "adjectivals", "iso"));
@@ -243,7 +243,7 @@ public class FormPanel<T extends Serializable> extends FormPanelParent<T> {
 		if (componentSettings.getLocal() == null) {
 			componentSettings.setLocal("countrydata");
 		}
-		return this.addDefaultRow(new TypeAheadTextFieldAltPanel(this.getFormModel(), propertyPath,
+		return this.addDefaultRow(new TypeAheadTextFieldPanel(this.getFormModel(), propertyPath,
 				this.getFormSettings(), componentSettings, null) {
 			@Override
 			public void renderHead(IHeaderResponse response) {

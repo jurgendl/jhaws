@@ -1,5 +1,8 @@
 package org.jhaws.common.web.wicket.forms.common;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<TypeAheadTextFieldSettings> {
     private static final long serialVersionUID = 1098120531336315493L;
 
@@ -11,15 +14,21 @@ public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<Type
 
     protected long delay = 200;
 
-    protected boolean allowSpaces = true;
-
     protected String remote;
+
+    protected String queryParam;
 
     protected boolean remoteFilters = false;
 
     protected String local;
 
     protected boolean free = true;
+
+    protected List<String> properties = Arrays.asList("value");
+
+    protected String template = "value";
+
+    protected Boolean custom;
 
     public TypeAheadTextFieldSettings() {
         super();
@@ -37,17 +46,8 @@ public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<Type
         return this.minLength;
     }
 
-    public boolean isAllowSpaces() {
-        return this.allowSpaces;
-    }
-
     public boolean isCaseSensitive() {
         return this.caseSensitive;
-    }
-
-    public TypeAheadTextFieldSettings setAllowSpaces(boolean allowSpaces) {
-        this.allowSpaces = allowSpaces;
-        return this;
     }
 
     public TypeAheadTextFieldSettings setCaseSensitive(boolean caseSensitive) {
@@ -107,6 +107,42 @@ public class TypeAheadTextFieldSettings extends AbstractFormElementSettings<Type
 
     public TypeAheadTextFieldSettings setRemoteFilters(boolean remoteFilters) {
         this.remoteFilters = remoteFilters;
+        return this;
+    }
+
+    public List<String> getProperties() {
+        return this.properties;
+    }
+
+    public TypeAheadTextFieldSettings setProperties(List<String> properties) {
+        this.properties = properties;
+        return this;
+    }
+
+    public String getTemplate() {
+        return this.template;
+    }
+
+    public TypeAheadTextFieldSettings setTemplate(String template) {
+        this.template = template;
+        return this;
+    }
+
+    public String getQueryParam() {
+        return this.queryParam;
+    }
+
+    public TypeAheadTextFieldSettings setQueryParam(String queryParam) {
+        this.queryParam = queryParam;
+        return this;
+    }
+
+    public Boolean getCustom() {
+        return this.custom;
+    }
+
+    public TypeAheadTextFieldSettings setCustom(Boolean custom) {
+        this.custom = custom;
         return this;
     }
 }

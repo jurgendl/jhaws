@@ -1,3931 +1,1006 @@
+/* base */
 /*!
  * jQuery Typeahead
- * Copyright (C) 2019 RunningCoder.org
+ * Copyright (C) 2020 RunningCoder.org
  * Licensed under the MIT license
  *
  * @author Tom Bertrand
- * @version 2.11.0 (2019-10-31)
+ * @version 2.11.1 (2020-5-18)
  * @link http://www.runningcoder.org/jquerytypeahead/
  */
-(function (factory) {
-    if (typeof define === "function" && define.amd) {
-        define("jquery-typeahead", ["jquery"], function (jQuery) {
-            return factory(jQuery);
-        });
-    } else if (typeof module === "object" && module.exports) {
-        module.exports = (function (jQuery, root) {
-            if (jQuery === undefined) {
-                if (typeof window !== "undefined") {
-                    jQuery = require("jquery");
-                } else {
-                    jQuery = require("jquery")(root);
-                }
-            }
-            return factory(jQuery);
-        })();
-    } else {
-        factory(jQuery);
-    }
-})(function ($) {
+! function(e) {
+    var t;
+    "function" == typeof define && define.amd ? define("jquery-typeahead", ["jquery"], function(t) {
+        return e(t)
+    }) : "object" == typeof module && module.exports ? module.exports = (void 0 === t && (t = "undefined" != typeof window ? require("jquery") : require("jquery")(void 0)), e(t)) : e(jQuery)
+}(function(j) {
     "use strict";
 
-    window.Typeahead = {
-        version: '2.11.0'
-    };
-
-    /**
-     * @private
-     * Default options
-     * @link http://www.runningcoder.org/jquerytypeahead/documentation/
-     */
-    var _options = {
-        input: null,                // *RECOMMENDED*, jQuery selector to reach Typeahead's input for initialization
-        minLength: 2,               // Accepts 0 to search on focus, minimum character length to perform a search
-        maxLength: false,           // False as "Infinity" will not put character length restriction for searching results
-        maxItem: 8,                 // Accepts 0 / false as "Infinity" meaning all the results will be displayed
-        dynamic: false,             // When true, Typeahead will get a new dataset from the source option on every key press
-        delay: 300,                 // delay in ms when dynamic option is set to true
-        order: null,                // "asc" or "desc" to sort results
-        offset: false,              // Set to true to match items starting from their first character
-        hint: false,                // Added support for excessive "space" characters
-        accent: false,              // Will allow to type accent and give letter equivalent results, also can define a custom replacement object
-        highlight: true,            // Added "any" to highlight any word in the template, by default true will only highlight display keys
-        multiselect: null,          // Multiselect configuration object, see documentation for all options
-        group: false,               // Improved feature, Boolean,string,object(key, template (string, function))
-        groupOrder: null,           // New feature, order groups "asc", "desc", Array, Function
-        maxItemPerGroup: null,      // Maximum number of result per Group
-        dropdownFilter: false,      // Take group options string and create a dropdown filter
-        dynamicFilter: null,        // Filter the typeahead results based on dynamic value, Ex: Players based on TeamID
-        backdrop: false,            // Add a backdrop behind Typeahead results
-        backdropOnFocus: false,     // Display the backdrop option as the Typeahead input is :focused
-        cache: false,               // Improved option, true OR 'localStorage' OR 'sessionStorage'
-        ttl: 3600000,               // Cache time to live in ms
-        compression: false,         // Requires LZString library
-        searchOnFocus: false,       // Display search results on input focus
-        blurOnTab: true,            // Blur Typeahead when Tab key is pressed, if false Tab will go though search results
-        resultContainer: null,      // List the results inside any container string or jQuery object
-        generateOnLoad: null,       // Forces the source to be generated on page load even if the input is not focused!
-        mustSelectItem: false,      // The submit function only gets called if an item is selected
-        href: null,                 // String or Function to format the url for right-click & open in new tab on link results
-        display: ["display"],       // Allows search in multiple item keys ["display1", "display2"]
-        template: null,             // Display template of each of the result list
-        templateValue: null,        // Set the input value template when an item is clicked
-        groupTemplate: null,        // Set a custom template for the groups
-        correlativeTemplate: false, // Compile display keys, enables multiple key search from the template string
-        emptyTemplate: false,       // Display an empty template if no result
-        cancelButton: true,         // If text is detected in the input, a cancel button will be available to reset the input (pressing ESC also cancels)
-        loadingAnimation: true,     // Display a loading animation when typeahead is doing request / searching for results
-        asyncResult: false,         // If set to true, the search results will be displayed as they are beging received from the requests / async data function
-        filter: true,               // Set to false or function to bypass Typeahead filtering. WARNING: accent, correlativeTemplate, offset & matcher will not be interpreted
-        matcher: null,              // Add an extra filtering function after the typeahead functions
-        source: null,               // Source of data for Typeahead to filter
-        callback: {
-            onInit: null,               // When Typeahead is first initialized (happens only once)
-            onReady: null,              // When the Typeahead initial preparation is completed
-            onShowLayout: null,         // Called when the layout is shown
-            onHideLayout: null,         // Called when the layout is hidden
-            onSearch: null,             // When data is being fetched & analyzed to give search results
-            onResult: null,             // When the result container is displayed
-            onLayoutBuiltBefore: null,  // When the result HTML is build, modify it before it get showed
-            onLayoutBuiltAfter: null,   // Modify the dom right after the results gets inserted in the result container
-            onNavigateBefore: null,     // When a key is pressed to navigate the results, before the navigation happens
-            onNavigateAfter: null,      // When a key is pressed to navigate the results
-            onEnter: null,              // When an item in the result list is focused
-            onLeave: null,              // When an item in the result list is blurred
-            onClickBefore: null,        // Possibility to e.preventDefault() to prevent the Typeahead behaviors
-            onClickAfter: null,         // Happens after the default clicked behaviors has been executed
-            onDropdownFilter: null,     // When the dropdownFilter is changed, trigger this callback
-            onSendRequest: null,        // Gets called when the Ajax request(s) are sent
-            onReceiveRequest: null,     // Gets called when the Ajax request(s) are all received
-            onPopulateSource: null,     // Perform operation on the source data before it gets in Typeahead data
-            onCacheSave: null,          // Perform operation on the source data before it gets in Typeahead cache
-            onSubmit: null,             // When Typeahead form is submitted
-            onCancel: null              // Triggered if the typeahead had text inside and is cleared
-        },
-        selector: {
-            container: "typeahead__container",
-            result: "typeahead__result",
-            list: "typeahead__list",
-            group: "typeahead__group",
-            item: "typeahead__item",
-            empty: "typeahead__empty",
-            display: "typeahead__display",
-            query: "typeahead__query",
-            filter: "typeahead__filter",
-            filterButton: "typeahead__filter-button",
-            dropdown: "typeahead__dropdown",
-            dropdownItem: "typeahead__dropdown-item",
-            labelContainer: "typeahead__label-container",
-            label: "typeahead__label",
-            button: "typeahead__button",
-            backdrop: "typeahead__backdrop",
-            hint: "typeahead__hint",
-            cancelButton: "typeahead__cancel-button"
-        },
-        debug: false // Display debug information (RECOMMENDED for dev environment)
-    };
-
-    /**
-     * @private
-     * Event namespace
-     */
-    var _namespace = ".typeahead";
-
-    /**
-     * @private
-     * Accent equivalents
-     */
-    var _accent = {
-        from: "ãàáäâẽèéëêìíïîõòóöôùúüûñç",
-        to: "aaaaaeeeeeiiiiooooouuuunc"
-    };
-
-    /**
-     * #62 IE9 doesn't trigger "input" event when text gets removed (backspace, ctrl+x, etc)
-     * @private
-     */
-    var _isIE9 = ~window.navigator.appVersion.indexOf("MSIE 9.");
-
-    /**
-     * #193 Clicking on a suggested option does not select it on IE10/11
-     * @private
-     */
-    var _isIE10 = ~window.navigator.appVersion.indexOf("MSIE 10");
-    var _isIE11 = ~window.navigator.userAgent.indexOf("Trident")
-        ? ~window.navigator.userAgent.indexOf("rv:11")
-        : false;
-
-    // SOURCE GROUP RESERVED WORDS: ajax, data, url
-    // SOURCE ITEMS RESERVED KEYS: group, display, data, matchedKey, compiled, href
-
-    /**
-     * @constructor
-     * Typeahead Class
-     *
-     * @param {object} node jQuery input object
-     * @param {object} options User defined options
-     */
-    var Typeahead = function (node, options) {
-        this.rawQuery = node.val() || "";   // Unmodified input query
-        this.query = node.val() || "";      // Input query
-        this.selector = node[0].selector;   // Typeahead instance selector (to reach from window.Typeahead[SELECTOR])
-        this.deferred = null;               // Promise when "input" event in triggered, this.node.triggerHandler('input').then(() => {})
-        this.tmpSource = {};                // Temp var to preserve the source order for the searchResult function
-        this.source = {};                   // The generated source kept in memory
-        this.dynamicGroups = [];            // Store the source groups that are defined as dynamic
-        this.hasDynamicGroups = false;      // Boolean if at least one of the groups has a dynamic source
-        this.generatedGroupCount = 0;       // Number of groups generated, if limit reached the search can be done
-        this.groupBy = "group";             // This option will change according to filtering or custom grouping
-        this.groups = [];                   // Array of all the available groups, used to build the groupTemplate
-        this.searchGroups = [];             // Array of groups to generate when Typeahead searches data
-        this.generateGroups = [];           // Array of groups to generate when Typeahead requests data
-        this.requestGroups = [];            // Array of groups to request via Ajax
-        this.result = [];                   // Results based on Source-query match (only contains the displayed elements)
-        this.tmpResult = {};                // Temporary object of results, before they get passed to the buildLayout function
-        this.groupTemplate = "";            // Result template at the {{group}} level
-        this.resultHtml = null;             // HTML Results (displayed elements)
-        this.resultCount = 0;               // Total results based on Source-query match
-        this.resultCountPerGroup = {};      // Total results based on Source-query match per group
-        this.options = options;             // Typeahead options (Merged default & user defined)
-        this.node = node;                   // jQuery object of the Typeahead <input>
-        this.namespace =
-            "." +
-            this.helper.slugify.call(this, this.selector) +
-            _namespace;                     // Every Typeahead instance gets its own namespace for events
-        this.isContentEditable = typeof this.node.attr('contenteditable') !== "undefined"
-            && this.node.attr('contenteditable') !== "false";
-        this.container = null;              // Typeahead container, usually right after <form>
-        this.resultContainer = null;        // Typeahead result container (html)
-        this.item = null;                   // Selected item
-        this.items = null;                  // Multiselect selected items
-        this.comparedItems = null;          // Multiselect items stored for comparison
-        this.xhr = {};                      // Ajax request(s) stack
-        this.hintIndex = null;              // Numeric value of the hint index in the result list
-        this.filters = {                    // Filter list for searching, dropdown and dynamic(s)
-            dropdown: {},                   // Dropdown menu if options.dropdownFilter is set
-            dynamic: {}                     // Checkbox / Radio / Select to filter the source data
-        };
-        this.dropdownFilter = {
-            static: [],                     // Objects that has a value
+    function r(t, e) {
+        this.rawQuery = t.val() || "", this.query = t.val() || "", this.selector = t[0].selector, this.deferred = null, this.tmpSource = {}, this.source = {}, this.dynamicGroups = [], this.hasDynamicGroups = !1, this.generatedGroupCount = 0, this.groupBy = "group", this.groups = [], this.searchGroups = [], this.generateGroups = [], this.requestGroups = [], this.result = [], this.tmpResult = {}, this.groupTemplate = "", this.resultHtml = null, this.resultCount = 0, this.resultCountPerGroup = {}, this.options = e, this.node = t, this.namespace = "." + this.helper.slugify.call(this, this.selector) + ".typeahead", this.isContentEditable = void 0 !== this.node.attr("contenteditable") && "false" !== this.node.attr("contenteditable"), this.container = null, this.resultContainer = null, this.item = null, this.items = null, this.comparedItems = null, this.xhr = {}, this.hintIndex = null, this.filters = {
+            dropdown: {},
+            dynamic: {}
+        }, this.dropdownFilter = {
+            static: [],
             dynamic: []
-        };
-        this.dropdownFilterAll = null;      // The last "all" definition
-        this.isDropdownEvent = false;       // If a dropdownFilter is clicked, this will be true to trigger the callback
-
-        this.requests = {};                 // Store the group:request instead of generating them every time
-
-        this.backdrop = {};                 // The backdrop object
-        this.hint = {};                     // The hint object
-        this.label = {};                    // The label object
-        this.hasDragged = false;            // Will cancel mouseend events if true
-        this.focusOnly = false;             // Focus the input preventing any operations
-        this.displayEmptyTemplate;          // Display the empty template in the result list
-
-        this.__construct();
-    };
-
-    Typeahead.prototype = {
-        _validateCacheMethod: function (cache) {
-            var supportedCache = ["localStorage", "sessionStorage"],
-                supported;
-
-            if (cache === true) {
-                cache = "localStorage";
-            } else if (typeof cache === "string" && !~supportedCache.indexOf(cache)) {
-                // {debug}
-                if (this.options.debug) {
-                    _debug.log({
-                        node: this.selector,
-                        function: "extendOptions()",
-                        message: 'Invalid options.cache, possible options are "localStorage" or "sessionStorage"'
-                    });
-
-                    _debug.print();
-                }
-                // {/debug}
-                return false;
-            }
-
-            supported = typeof window[cache] !== "undefined";
-
+        }, this.dropdownFilterAll = null, this.isDropdownEvent = !1, this.requests = {}, this.backdrop = {}, this.hint = {}, this.label = {}, this.hasDragged = !1, this.focusOnly = !1, this.displayEmptyTemplate, this.__construct()
+    }
+    var i, s = {
+            input: null,
+            minLength: 2,
+            maxLength: !(window.Typeahead = {
+                version: "2.11.1"
+            }),
+            maxItem: 8,
+            dynamic: !1,
+            delay: 300,
+            order: null,
+            offset: !1,
+            hint: !1,
+            accent: !1,
+            highlight: !0,
+            multiselect: null,
+            group: !1,
+            groupOrder: null,
+            maxItemPerGroup: null,
+            dropdownFilter: !1,
+            dynamicFilter: null,
+            backdrop: !1,
+            backdropOnFocus: !1,
+            cache: !1,
+            ttl: 36e5,
+            compression: !1,
+            searchOnFocus: !1,
+            blurOnTab: !0,
+            resultContainer: null,
+            generateOnLoad: null,
+            mustSelectItem: !1,
+            href: null,
+            display: ["display"],
+            template: null,
+            templateValue: null,
+            groupTemplate: null,
+            correlativeTemplate: !1,
+            emptyTemplate: !1,
+            cancelButton: !0,
+            loadingAnimation: !0,
+            asyncResult: !1,
+            filter: !0,
+            matcher: null,
+            source: null,
+            callback: {
+                onInit: null,
+                onReady: null,
+                onShowLayout: null,
+                onHideLayout: null,
+                onSearch: null,
+                onResult: null,
+                onLayoutBuiltBefore: null,
+                onLayoutBuiltAfter: null,
+                onNavigateBefore: null,
+                onNavigateAfter: null,
+                onEnter: null,
+                onLeave: null,
+                onClickBefore: null,
+                onClickAfter: null,
+                onDropdownFilter: null,
+                onSendRequest: null,
+                onReceiveRequest: null,
+                onPopulateSource: null,
+                onCacheSave: null,
+                onSubmit: null,
+                onCancel: null
+            },
+            selector: {
+                container: "typeahead__container",
+                result: "typeahead__result",
+                list: "typeahead__list",
+                group: "typeahead__group",
+                item: "typeahead__item",
+                empty: "typeahead__empty",
+                display: "typeahead__display",
+                query: "typeahead__query",
+                filter: "typeahead__filter",
+                filterButton: "typeahead__filter-button",
+                dropdown: "typeahead__dropdown",
+                dropdownItem: "typeahead__dropdown-item",
+                labelContainer: "typeahead__label-container",
+                label: "typeahead__label",
+                button: "typeahead__button",
+                backdrop: "typeahead__backdrop",
+                hint: "typeahead__hint",
+                cancelButton: "typeahead__cancel-button"
+            },
+            debug: !1
+        },
+        o = {
+            from: "ãàáäâẽèéëêìíïîõòóöôùúüûñç",
+            to: "aaaaaeeeeeiiiiooooouuuunc"
+        },
+        n = ~window.navigator.appVersion.indexOf("MSIE 9."),
+        a = ~window.navigator.appVersion.indexOf("MSIE 10"),
+        l = !!~window.navigator.userAgent.indexOf("Trident") && ~window.navigator.userAgent.indexOf("rv:11");
+    r.prototype = {
+        _validateCacheMethod: function(t) {
+            var e;
+            if (!0 === t) t = "localStorage";
+            else if ("string" == typeof t && !~["localStorage", "sessionStorage"].indexOf(t)) return !1;
+            e = void 0 !== window[t];
             try {
-                window[cache].setItem("typeahead", "typeahead");
-                window[cache].removeItem("typeahead");
-            } catch (e) {
-                supported = false;
+                window[t].setItem("typeahead", "typeahead"), window[t].removeItem("typeahead")
+            } catch (t) {
+                e = !1
             }
-
-            return (supported && cache) || false;
+            return e && t || !1
         },
-
-        extendOptions: function () {
-            this.options.cache = this._validateCacheMethod(this.options.cache);
-
-            if (this.options.compression) {
-                if (typeof LZString !== "object" || !this.options.cache) {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "extendOptions()",
-                            message: "Missing LZString Library or options.cache, no compression will occur."
-                        });
-
-                        _debug.print();
-                    }
-                    // {/debug}
-                    this.options.compression = false;
-                }
+        extendOptions: function() {
+            if (this.options.cache = this._validateCacheMethod(this.options.cache), this.options.compression && ("object" == typeof LZString && this.options.cache || (this.options.compression = !1)), this.options.maxLength && !isNaN(this.options.maxLength) || (this.options.maxLength = 1 / 0), void 0 !== this.options.maxItem && ~[0, !1].indexOf(this.options.maxItem) && (this.options.maxItem = 1 / 0), this.options.maxItemPerGroup && !/^\d+$/.test(this.options.maxItemPerGroup) && (this.options.maxItemPerGroup = null), this.options.display && !Array.isArray(this.options.display) && (this.options.display = [this.options.display]), this.options.multiselect && (this.items = [], this.comparedItems = [], "string" == typeof this.options.multiselect.matchOn && (this.options.multiselect.matchOn = [this.options.multiselect.matchOn])), this.options.group && (Array.isArray(this.options.group) || ("string" == typeof this.options.group ? this.options.group = {
+                    key: this.options.group
+                } : "boolean" == typeof this.options.group && (this.options.group = {
+                    key: "group"
+                }), this.options.group.key = this.options.group.key || "group")), this.options.highlight && !~["any", !0].indexOf(this.options.highlight) && (this.options.highlight = !1), this.options.dropdownFilter && this.options.dropdownFilter instanceof Object) {
+                Array.isArray(this.options.dropdownFilter) || (this.options.dropdownFilter = [this.options.dropdownFilter]);
+                for (var t = 0, e = this.options.dropdownFilter.length; t < e; ++t) this.dropdownFilter[this.options.dropdownFilter[t].value ? "static" : "dynamic"].push(this.options.dropdownFilter[t])
             }
-
-            if (!this.options.maxLength || isNaN(this.options.maxLength)) {
-                this.options.maxLength = Infinity;
-            }
-
-            if (
-                typeof this.options.maxItem !== "undefined" && ~[0, false].indexOf(this.options.maxItem)
-            ) {
-                this.options.maxItem = Infinity;
-            }
-
-            if (
-                this.options.maxItemPerGroup && !/^\d+$/.test(this.options.maxItemPerGroup)
-            ) {
-                this.options.maxItemPerGroup = null;
-            }
-
-            if (this.options.display && !Array.isArray(this.options.display)) {
-                this.options.display = [this.options.display];
-            }
-
-            if (this.options.multiselect) {
-                this.items = [];
-                this.comparedItems = [];
-                if (typeof this.options.multiselect.matchOn === "string") {
-                    this.options.multiselect.matchOn = [this.options.multiselect.matchOn];
-                }
-            }
-
-            if (this.options.group) {
-                if (!Array.isArray(this.options.group)) {
-                    if (typeof this.options.group === "string") {
-                        this.options.group = {
-                            key: this.options.group
-                        };
-                    } else if (typeof this.options.group === "boolean") {
-                        this.options.group = {
-                            key: "group"
-                        };
-                    }
-
-                    this.options.group.key = this.options.group.key || "group";
-                } else {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "extendOptions()",
-                            message: "options.group must be a boolean|string|object as of 2.5.0"
-                        });
-
-                        _debug.print();
-                    }
-                    // {/debug}
-                }
-            }
-
-            if (this.options.highlight && !~["any", true].indexOf(this.options.highlight)) {
-                this.options.highlight = false;
-            }
-
-            if (
-                this.options.dropdownFilter &&
-                this.options.dropdownFilter instanceof Object
-            ) {
-                if (!Array.isArray(this.options.dropdownFilter)) {
-                    this.options.dropdownFilter = [this.options.dropdownFilter];
-                }
-                for (var i = 0, ii = this.options.dropdownFilter.length; i < ii; ++i) {
-                    this.dropdownFilter[
-                        this.options.dropdownFilter[i].value ? "static" : "dynamic"
-                        ].push(this.options.dropdownFilter[i]);
-                }
-            }
-
-            if (this.options.dynamicFilter && !Array.isArray(this.options.dynamicFilter)) {
-                this.options.dynamicFilter = [this.options.dynamicFilter];
-            }
-
-            if (this.options.accent) {
-                if (typeof this.options.accent === "object") {
-                    if (
-                        this.options.accent.from &&
-                        this.options.accent.to &&
-                        this.options.accent.from.length !== this.options.accent.to.length
-                    ) {
-                        // {debug}
-                        if (this.options.debug) {
-                            _debug.log({
-                                node: this.selector,
-                                function: "extendOptions()",
-                                message: 'Invalid "options.accent", from and to must be defined and same length.'
-                            });
-
-                            _debug.print();
-                        }
-                        // {/debug}
-                    }
-
-                } else {
-                    this.options.accent = _accent;
-                }
-            }
-
-            if (this.options.groupTemplate) {
-                this.groupTemplate = this.options.groupTemplate;
-            }
-
-            if (this.options.resultContainer) {
-                if (typeof this.options.resultContainer === "string") {
-                    this.options.resultContainer = $(this.options.resultContainer);
-                }
-
-                if (
-                    !(this.options.resultContainer instanceof $) || !this.options.resultContainer[0]
-                ) {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "extendOptions()",
-                            message: 'Invalid jQuery selector or jQuery Object for "options.resultContainer".'
-                        });
-
-                        _debug.print();
-                    }
-                    // {/debug}
-                } else {
-                    this.resultContainer = this.options.resultContainer;
-                }
-            }
-
-            if (
-                this.options.group &&
-                this.options.group.key
-            ) {
-                this.groupBy = this.options.group.key;
-            }
-
-            // Compatibility onClick callback
-            if (this.options.callback && this.options.callback.onClick) {
-                this.options.callback.onClickBefore = this.options.callback.onClick;
-                delete this.options.callback.onClick;
-            }
-
-            // Compatibility onNavigate callback
-            if (this.options.callback && this.options.callback.onNavigate) {
-                this.options.callback.onNavigateBefore = this.options.callback.onNavigate;
-                delete this.options.callback.onNavigate;
-            }
-
-            this.options = $.extend(true, {}, _options, this.options);
+            this.options.dynamicFilter && !Array.isArray(this.options.dynamicFilter) && (this.options.dynamicFilter = [this.options.dynamicFilter]), this.options.accent && ("object" == typeof this.options.accent ? this.options.accent.from && this.options.accent.to && (this.options.accent.from.length, this.options.accent.to.length) : this.options.accent = o), this.options.groupTemplate && (this.groupTemplate = this.options.groupTemplate), this.options.resultContainer && ("string" == typeof this.options.resultContainer && (this.options.resultContainer = j(this.options.resultContainer)), this.options.resultContainer instanceof j && this.options.resultContainer[0] && (this.resultContainer = this.options.resultContainer)), this.options.group && this.options.group.key && (this.groupBy = this.options.group.key), this.options.callback && this.options.callback.onClick && (this.options.callback.onClickBefore = this.options.callback.onClick, delete this.options.callback.onClick), this.options.callback && this.options.callback.onNavigate && (this.options.callback.onNavigateBefore = this.options.callback.onNavigate, delete this.options.callback.onNavigate), this.options = j.extend(!0, {}, s, this.options)
         },
-
-        unifySourceFormat: function () {
-            this.dynamicGroups = [];
-
-            // source: ['item1', 'item2', 'item3']
-            if (Array.isArray(this.options.source)) {
-                this.options.source = {
+        unifySourceFormat: function() {
+            var t, e, i;
+            for (t in this.dynamicGroups = [], Array.isArray(this.options.source) && (this.options.source = {
                     group: {
                         data: this.options.source
                     }
-                };
-            }
-
-            // source: "http://www.test.com/url.json"
-            if (typeof this.options.source === "string") {
-                this.options.source = {
+                }), "string" == typeof this.options.source && (this.options.source = {
                     group: {
                         ajax: {
                             url: this.options.source
                         }
                     }
-                };
-            }
-
-            if (this.options.source.ajax) {
-                this.options.source = {
+                }), this.options.source.ajax && (this.options.source = {
                     group: {
                         ajax: this.options.source.ajax
                     }
-                };
-            }
-
-            // source: {data: ['item1', 'item2'], url: "http://www.test.com/url.json"}
-            if (this.options.source.url || this.options.source.data) {
-                this.options.source = {
+                }), (this.options.source.url || this.options.source.data) && (this.options.source = {
                     group: this.options.source
-                };
-            }
-
-            var group, groupSource, tmpAjax;
-
-            for (group in this.options.source) {
-                if (!this.options.source.hasOwnProperty(group)) continue;
-
-                groupSource = this.options.source[group];
-
-                // source: {group: "http://www.test.com/url.json"}
-                if (typeof groupSource === "string") {
-                    groupSource = {
-                        ajax: {
-                            url: groupSource
-                        }
-                    };
-                }
-
-                // source: {group: {url: ["http://www.test.com/url.json", "json.path"]}}
-                tmpAjax = groupSource.url || groupSource.ajax;
-                if (Array.isArray(tmpAjax)) {
-                    groupSource.ajax =
-                        typeof tmpAjax[0] === "string"
-                            ? {
-                                url: tmpAjax[0]
+                }), this.options.source)
+                if (this.options.source.hasOwnProperty(t)) {
+                    if ("string" == typeof(e = this.options.source[t]) && (e = {
+                            ajax: {
+                                url: e
                             }
-                            : tmpAjax[0];
-                    groupSource.ajax.path = groupSource.ajax.path || tmpAjax[1] || null;
-                    delete groupSource.url;
-                } else {
-                    // source: {group: {url: {url: "http://www.test.com/url.json", method: "GET"}}}
-                    // source: {group: {url: "http://www.test.com/url.json", dataType: "jsonp"}}
-                    if (typeof groupSource.url === "object") {
-                        groupSource.ajax = groupSource.url;
-                    } else if (typeof groupSource.url === "string") {
-                        groupSource.ajax = {
-                            url: groupSource.url
-                        };
-                    }
-                    delete groupSource.url;
-                }
-
-                if (!groupSource.data && !groupSource.ajax) {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "unifySourceFormat()",
-                            arguments: JSON.stringify(this.options.source),
-                            message: 'Undefined "options.source.' +
-                            group +
-                            '.[data|ajax]" is Missing - Typeahead dropped'
-                        });
-
-                        _debug.print();
-                    }
-                    // {/debug}
-
-                    return false;
-                }
-
-                if (groupSource.display && !Array.isArray(groupSource.display)) {
-                    groupSource.display = [groupSource.display];
-                }
-
-                groupSource.minLength =
-                    typeof groupSource.minLength === "number"
-                        ? groupSource.minLength
-                        : this.options.minLength;
-                groupSource.maxLength =
-                    typeof groupSource.maxLength === "number"
-                        ? groupSource.maxLength
-                        : this.options.maxLength;
-                groupSource.dynamic =
-                    typeof groupSource.dynamic === "boolean" || this.options.dynamic;
-
-                if (groupSource.minLength > groupSource.maxLength) {
-                    groupSource.minLength = groupSource.maxLength;
-                }
-                this.options.source[group] = groupSource;
-
-                if (this.options.source[group].dynamic) {
-                    this.dynamicGroups.push(group);
-                }
-
-                groupSource.cache =
-                    typeof groupSource.cache !== "undefined"
-                        ? this._validateCacheMethod(groupSource.cache)
-                        : this.options.cache;
-
-                if (groupSource.compression) {
-                    if (typeof LZString !== "object" || !groupSource.cache) {
-                        // {debug}
-                        if (this.options.debug) {
-                            _debug.log({
-                                node: this.selector,
-                                function: "unifySourceFormat()",
-                                message: "Missing LZString Library or group.cache, no compression will occur on group: " +
-                                group
-                            });
-
-                            _debug.print();
-                        }
-                        // {/debug}
-                        groupSource.compression = false;
-                    }
-                }
-            }
-
-            this.hasDynamicGroups =
-                this.options.dynamic || !!this.dynamicGroups.length;
-
-            return true;
+                        }), i = e.url || e.ajax, Array.isArray(i) ? (e.ajax = "string" == typeof i[0] ? {
+                            url: i[0]
+                        } : i[0], e.ajax.path = e.ajax.path || i[1] || null) : "object" == typeof e.url ? e.ajax = e.url : "string" == typeof e.url && (e.ajax = {
+                            url: e.url
+                        }), delete e.url, !e.data && !e.ajax) return !1;
+                    e.display && !Array.isArray(e.display) && (e.display = [e.display]), e.minLength = "number" == typeof e.minLength ? e.minLength : this.options.minLength, e.maxLength = "number" == typeof e.maxLength ? e.maxLength : this.options.maxLength, e.dynamic = "boolean" == typeof e.dynamic || this.options.dynamic, e.minLength > e.maxLength && (e.minLength = e.maxLength), this.options.source[t] = e, this.options.source[t].dynamic && this.dynamicGroups.push(t), e.cache = void 0 !== e.cache ? this._validateCacheMethod(e.cache) : this.options.cache, e.compression && ("object" == typeof LZString && e.cache || (e.compression = !1))
+                } return this.hasDynamicGroups = this.options.dynamic || !!this.dynamicGroups.length, !0
         },
-
-        init: function () {
-            this.helper.executeCallback.call(this, this.options.callback.onInit, [
-                this.node
-            ]);
-
-            this.container = this.node.closest("." + this.options.selector.container);
-
-            // {debug}
-            if (this.options.debug) {
-                _debug.log({
-                    node: this.selector,
-                    function: "init()",
-                    //'arguments': JSON.stringify(this.options),
-                    message: "OK - Typeahead activated on " + this.selector
-                });
-
-                _debug.print();
-            }
-            // {/debug}
+        init: function() {
+            this.helper.executeCallback.call(this, this.options.callback.onInit, [this.node]), this.container = this.node.closest("." + this.options.selector.container)
         },
-
-        delegateEvents: function () {
-            var scope = this,
-                events = [
-                    "focus" + this.namespace,
-                    "input" + this.namespace,
-                    "propertychange" + this.namespace, // IE8 Fix
-                    "keydown" + this.namespace,
-                    "keyup" + this.namespace, // IE9 Fix
-                    "search" + this.namespace,
-                    "generate" + this.namespace
-                ];
-
-            // #149 - Adding support for Mobiles
-            $("html")
-                .on("touchmove", function () {
-                    scope.hasDragged = true;
+        delegateEvents: function() {
+            var i = this,
+                t = ["focus" + this.namespace, "input" + this.namespace, "propertychange" + this.namespace, "keydown" + this.namespace, "keyup" + this.namespace, "search" + this.namespace, "generate" + this.namespace];
+            j("html").on("touchmove", function() {
+                i.hasDragged = !0
+            }).on("touchstart", function() {
+                i.hasDragged = !1
+            }), this.node.closest("form").on("submit", function(t) {
+                if (!i.options.mustSelectItem || !i.helper.isEmpty(i.item)) return i.options.backdropOnFocus || i.hideLayout(), i.options.callback.onSubmit ? i.helper.executeCallback.call(i, i.options.callback.onSubmit, [i.node, this, i.item || i.items, t]) : void 0;
+                t.preventDefault()
+            }).on("reset", function() {
+                setTimeout(function() {
+                    i.node.trigger("input" + i.namespace), i.hideLayout()
                 })
-                .on("touchstart", function () {
-                    scope.hasDragged = false;
-                });
-
-            this.node
-                .closest("form")
-                .on("submit", function (e) {
-                    if (
-                        scope.options.mustSelectItem &&
-                        scope.helper.isEmpty(scope.item)
-                    ) {
-                        e.preventDefault();
-                        return;
-                    }
-
-                    if (!scope.options.backdropOnFocus) {
-                        scope.hideLayout();
-                    }
-
-                    if (scope.options.callback.onSubmit) {
-                        return scope.helper.executeCallback.call(
-                            scope,
-                            scope.options.callback.onSubmit,
-                            [scope.node, this, scope.item || scope.items, e]
-                        );
-                    }
-                })
-                .on("reset", function () {
-                    // #221 - Reset Typeahead on form reset.
-                    // setTimeout to re-queue the `input.typeahead` event at the end
-                    setTimeout(function () {
-                        scope.node.trigger("input" + scope.namespace);
-                        // #243 - minLength: 0 opens the Typeahead results
-                        scope.hideLayout();
-                    });
-                });
-
-            // IE8 fix
-            var preventNextEvent = false;
-
-            // IE10/11 fix
-            if (this.node.attr("placeholder") && (_isIE10 || _isIE11)) {
-                var preventInputEvent = true;
-
-                this.node.on("focusin focusout", function () {
-                    preventInputEvent = !!(!this.value && this.placeholder);
-                });
-
-                this.node.on("input", function (e) {
-                    if (preventInputEvent) {
-                        e.stopImmediatePropagation();
-                        preventInputEvent = false;
-                    }
-                });
-            }
-
-            this.node
-                .off(this.namespace)
-                .on(events.join(" "), function (e, data) {
-                    switch (e.type) {
-                        case "generate":
-                            scope.generateSource(Object.keys(scope.options.source));
-                            break;
-                        case "focus":
-                            if (scope.focusOnly) {
-                                scope.focusOnly = false;
-                                break;
-                            }
-                            if (scope.options.backdropOnFocus) {
-                                scope.buildBackdropLayout();
-                                scope.showLayout();
-                            }
-                            if (scope.options.searchOnFocus && !scope.item) {
-                                scope.deferred = $.Deferred();
-                                scope.assignQuery();
-                                scope.generateSource();
-                            }
-                            break;
-                        case "keydown":
-                            if (e.keyCode === 8
-                                && scope.options.multiselect
-                                && scope.options.multiselect.cancelOnBackspace
-                                && scope.query === ''
-                                && scope.items.length
-                            ) {
-                                scope.cancelMultiselectItem(scope.items.length - 1, null, e);
-                            } else if (e.keyCode && ~[9, 13, 27, 38, 39, 40].indexOf(e.keyCode)) {
-                                preventNextEvent = true;
-                                scope.navigate(e);
-                            }
-                            break;
-                        case "keyup":
-                            if (
-                                _isIE9 &&
-                                scope.node[0].value.replace(/^\s+/, "").toString().length <
-                                scope.query.length
-                            ) {
-                                scope.node.trigger("input" + scope.namespace);
-                            }
-                            break;
-                        case "propertychange":
-                            if (preventNextEvent) {
-                                preventNextEvent = false;
-                                break;
-                            }
-                        case "input":
-                            scope.deferred = $.Deferred();
-                            scope.assignQuery();
-
-                            // #195 Trigger an onCancel event if the Typeahead is cleared
-                            if (scope.rawQuery === "" && scope.query === "") {
-                                e.originalEvent = data || {};
-                                scope.helper.executeCallback.call(
-                                    scope,
-                                    scope.options.callback.onCancel,
-                                    [scope.node, scope.item, e]
-                                );
-                                scope.item = null;
-                            }
-
-                            scope.options.cancelButton &&
-                            scope.toggleCancelButtonVisibility();
-
-                            if (
-                                scope.options.hint &&
-                                scope.hint.container &&
-                                scope.hint.container.val() !== ""
-                            ) {
-                                if (scope.hint.container.val().indexOf(scope.rawQuery) !== 0) {
-                                    scope.hint.container.val("");
-                                    if (scope.isContentEditable) {
-                                        scope.hint.container.text("");
-                                    }
-                                }
-                            }
-
-                            if (scope.hasDynamicGroups) {
-                                scope.helper.typeWatch(function () {
-                                    scope.generateSource();
-                                }, scope.options.delay);
-                            } else {
-                                scope.generateSource();
-                            }
-                            break;
-                        case "search":
-                            scope.searchResult();
-                            scope.buildLayout();
-
-                            if (scope.result.length ||
-                                (scope.searchGroups.length &&
-                                scope.displayEmptyTemplate)
-                            ) {
-                                scope.showLayout();
-                            } else {
-                                scope.hideLayout();
-                            }
-
-                            scope.deferred && scope.deferred.resolve();
-                            break;
-                    }
-
-                    return scope.deferred && scope.deferred.promise();
-                });
-
-            if (this.options.generateOnLoad) {
-                this.node.trigger("generate" + this.namespace);
-            }
-        },
-
-        assignQuery: function () {
-            if (this.isContentEditable) {
-                this.rawQuery = this.node.text();
-            } else {
-                this.rawQuery = this.node.val().toString();
-            }
-            this.rawQuery = this.rawQuery.replace(/^\s+/, "");
-
-            if (this.rawQuery !== this.query) {
-                this.query = this.rawQuery;
-            }
-        },
-
-        filterGenerateSource: function () {
-            this.searchGroups = [];
-            this.generateGroups = [];
-
-            if (this.focusOnly && !this.options.multiselect) return;
-
-            for (var group in this.options.source) {
-                if (!this.options.source.hasOwnProperty(group)) continue;
-                if (
-                    this.query.length >= this.options.source[group].minLength &&
-                    this.query.length <= this.options.source[group].maxLength
-                ) {
-                    if (
-                        this.filters.dropdown &&
-                        this.filters.dropdown.key === 'group' &&
-                        this.filters.dropdown.value !== group
-                    ) {
-                        continue;
-                    }
-
-                    this.searchGroups.push(group);
-                    if (!this.options.source[group].dynamic && this.source[group]) {
-                        continue;
-                    }
-                    this.generateGroups.push(group);
-                }
-            }
-        },
-
-        generateSource: function (generateGroups) {
-            this.filterGenerateSource();
-
-            this.generatedGroupCount = 0;
-
-            if (Array.isArray(generateGroups) && generateGroups.length) {
-                this.generateGroups = generateGroups;
-            } else if (!this.generateGroups.length) {
-                this.node.trigger("search" + this.namespace);
-                return;
-            }
-
-            this.requestGroups = [];
-            this.options.loadingAnimation && this.container.addClass("loading");
-
-            if (!this.helper.isEmpty(this.xhr)) {
-                for (var i in this.xhr) {
-                    if (!this.xhr.hasOwnProperty(i)) continue;
-                    this.xhr[i].abort();
-                }
-                this.xhr = {};
-            }
-
-            var scope = this,
-                group,
-                groupData,
-                groupSource,
-                cache,
-                compression,
-                dataInStorage,
-                isValidStorage;
-
-            for (var i = 0, ii = this.generateGroups.length; i < ii; ++i) {
-                group = this.generateGroups[i];
-                groupSource = this.options.source[group];
-                cache = groupSource.cache;
-                compression = groupSource.compression;
-
-                if (this.options.asyncResult) {
-                    delete this.source[group];
-                }
-
-                if (cache) {
-                    dataInStorage = window[cache].getItem(
-                        "TYPEAHEAD_" + this.selector + ":" + group
-                    );
-                    if (dataInStorage) {
-                        if (compression) {
-                            dataInStorage = LZString.decompressFromUTF16(dataInStorage);
-                        }
-
-                        isValidStorage = false;
-                        try {
-                            dataInStorage = JSON.parse(dataInStorage + "");
-
-                            if (
-                                dataInStorage.data &&
-                                dataInStorage.ttl > new Date().getTime()
-                            ) {
-                                this.populateSource(dataInStorage.data, group);
-                                isValidStorage = true;
-
-                                // {debug}
-                                if (this.options.debug) {
-                                    _debug.log({
-                                        node: this.selector,
-                                        function: "generateSource()",
-                                        message: 'Source for group "' + group + '" found in ' + cache
-                                    });
-                                    _debug.print();
-                                }
-                                // {/debug}
-                            } else {
-                                window[cache].removeItem(
-                                    "TYPEAHEAD_" + this.selector + ":" + group
-                                );
-                            }
-                        } catch (error) {
-                        }
-
-                        if (isValidStorage) continue;
-                    }
-                }
-
-                if (groupSource.data && !groupSource.ajax) {
-                    // #198 Add support for async data source
-                    if (typeof groupSource.data === "function") {
-                        groupData = groupSource.data.call(this);
-                        if (Array.isArray(groupData)) {
-                            scope.populateSource(groupData, group);
-                        } else if (typeof groupData.promise === "function") {
-                            (function (group) {
-                                $.when(groupData).then(function (deferredData) {
-                                    if (deferredData && Array.isArray(deferredData)) {
-                                        scope.populateSource(deferredData, group);
-                                    }
-                                });
-                            })(group);
-                        }
-                    } else {
-                        this.populateSource($.extend(true, [], groupSource.data), group);
-                    }
-                    continue;
-                }
-
-                if (groupSource.ajax) {
-                    if (!this.requests[group]) {
-                        this.requests[group] = this.generateRequestObject(group);
-                    }
-                    this.requestGroups.push(group);
-                }
-            }
-
-            if (this.requestGroups.length) {
-                this.handleRequests();
-            }
-
-            if (this.options.asyncResult && this.searchGroups.length !== this.generateGroups) {
-                this.node.trigger("search" + this.namespace);
-            }
-
-            return !!this.generateGroups.length;
-        },
-
-        generateRequestObject: function (group) {
-            var scope = this,
-                groupSource = this.options.source[group];
-
-            var xhrObject = {
-                request: {
-                    url: groupSource.ajax.url || null,
-                    dataType: "json",
-                    beforeSend: function (jqXHR, options) {
-                        // Important to call .abort() in case of dynamic requests
-                        scope.xhr[group] = jqXHR;
-
-                        var beforeSend =
-                            scope.requests[group].callback.beforeSend ||
-                            groupSource.ajax.beforeSend;
-                        typeof beforeSend === "function" &&
-                        beforeSend.apply(null, arguments);
-                    }
-                },
-                callback: {
-                    beforeSend: null,
-                    done: null,
-                    fail: null,
-                    then: null,
-                    always: null
-                },
-                extra: {
-                    path: groupSource.ajax.path || null,
-                    group: group
-                },
-                validForGroup: [group]
-            };
-
-            if (typeof groupSource.ajax !== "function") {
-                if (groupSource.ajax instanceof Object) {
-                    xhrObject = this.extendXhrObject(xhrObject, groupSource.ajax);
-                }
-
-                if (Object.keys(this.options.source).length > 1) {
-                    for (var _group in this.requests) {
-                        if (!this.requests.hasOwnProperty(_group)) continue;
-                        if (this.requests[_group].isDuplicated) continue;
-
-                        if (
-                            xhrObject.request.url &&
-                            xhrObject.request.url === this.requests[_group].request.url
-                        ) {
-                            this.requests[_group].validForGroup.push(group);
-                            xhrObject.isDuplicated = true;
-                            delete xhrObject.validForGroup;
-                        }
-                    }
-                }
-            }
-
-            return xhrObject;
-        },
-
-        extendXhrObject: function (xhrObject, groupRequest) {
-            if (typeof groupRequest.callback === "object") {
-                xhrObject.callback = groupRequest.callback;
-                delete groupRequest.callback;
-            }
-
-            // #132 Fixed beforeSend when using a function as the request object
-            if (typeof groupRequest.beforeSend === "function") {
-                xhrObject.callback.beforeSend = groupRequest.beforeSend;
-                delete groupRequest.beforeSend;
-            }
-
-            // Fixes #105 Allow user to define their beforeSend function.
-            // Fixes #181 IE8 incompatibility
-            xhrObject.request = $.extend(true, xhrObject.request, groupRequest);
-
-            // JSONP needs a unique jsonpCallback to run concurrently
-            if (
-                xhrObject.request.dataType.toLowerCase() === "jsonp" && !xhrObject.request.jsonpCallback
-            ) {
-                xhrObject.request.jsonpCallback = "callback_" + xhrObject.extra.group;
-            }
-
-            return xhrObject;
-        },
-
-        handleRequests: function () {
-            var scope = this,
-                group,
-                requestsCount = this.requestGroups.length;
-
-            if (
-                this.helper.executeCallback.call(
-                    this,
-                    this.options.callback.onSendRequest,
-                    [this.node, this.query]
-                ) === false
-            ) {
-                return;
-            }
-
-            for (var i = 0, ii = this.requestGroups.length; i < ii; ++i) {
-                group = this.requestGroups[i];
-                if (this.requests[group].isDuplicated) continue;
-
-                (function (group, xhrObject) {
-                    if (typeof scope.options.source[group].ajax === "function") {
-                        var _groupRequest = scope.options.source[group].ajax.call(
-                            scope,
-                            scope.query
-                        );
-
-                        // Fixes #271 Data is cached inside the xhrObject
-                        xhrObject = scope.extendXhrObject(
-                            scope.generateRequestObject(group),
-                            typeof _groupRequest === "object" ? _groupRequest : {}
-                        );
-
-                        if (
-                            typeof xhrObject.request !== "object" || !xhrObject.request.url
-                        ) {
-                            // {debug}
-                            if (scope.options.debug) {
-                                _debug.log({
-                                    node: scope.selector,
-                                    function: "handleRequests",
-                                    message: 'Source function must return an object containing ".url" key for group "' +
-                                    group +
-                                    '"'
-                                });
-                                _debug.print();
-                            }
-                            // {/debug}
-                            scope.populateSource([], group);
-                            return;
-                        }
-                        scope.requests[group] = xhrObject;
-                    }
-
-                    var _request,
-                        _isExtended = false, // Prevent the main request from being changed
-                        _groupData = {};
-
-                    if (~xhrObject.request.url.indexOf("{{query}}")) {
-                        if (!_isExtended) {
-                            xhrObject = $.extend(true, {}, xhrObject);
-                            _isExtended = true;
-                        }
-                        // #184 Invalid encoded characters on dynamic requests for `{{query}}`
-                        xhrObject.request.url = xhrObject.request.url.replace(
-                            "{{query}}",
-                            encodeURIComponent(scope.query)
-                        );
-                    }
-
-                    if (xhrObject.request.data) {
-                        for (var i in xhrObject.request.data) {
-                            if (!xhrObject.request.data.hasOwnProperty(i)) continue;
-                            if (~String(xhrObject.request.data[i]).indexOf("{{query}}")) {
-                                if (!_isExtended) {
-                                    xhrObject = $.extend(true, {}, xhrObject);
-                                    _isExtended = true;
-                                }
-                                // jQuery handles encodeURIComponent when the query is inside the data object
-                                xhrObject.request.data[i] = xhrObject.request.data[i].replace(
-                                    "{{query}}",
-                                    scope.query
-                                );
-                                break;
-                            }
-                        }
-                    }
-
-                    $.ajax(xhrObject.request)
-                        .done(function (data, textStatus, jqXHR) {
-                            var _group;
-
-                            for (
-                                var i = 0, ii = xhrObject.validForGroup.length;
-                                i < ii;
-                                i++
-                            ) {
-                                _group = xhrObject.validForGroup[i];
-                                _request = scope.requests[_group];
-
-                                if (typeof _request.callback.done === 'function') {
-                                    _groupData[_group] = _request.callback.done.call(
-                                        scope,
-                                        data,
-                                        textStatus,
-                                        jqXHR
-                                    );
-
-                                    // {debug}
-                                    if (
-                                        !Array.isArray(_groupData[_group]) ||
-                                        typeof _groupData[_group] !== "object"
-                                    ) {
-                                        if (scope.options.debug) {
-                                            _debug.log({
-                                                node: scope.selector,
-                                                function: "Ajax.callback.done()",
-                                                message: "Invalid returned data has to be an Array"
-                                            });
-                                            _debug.print();
-                                        }
-                                    }
-                                    // {/debug}
-                                }
-                            }
-                        })
-                        .fail(function (jqXHR, textStatus, errorThrown) {
-                            for (
-                                var i = 0, ii = xhrObject.validForGroup.length;
-                                i < ii;
-                                i++
-                            ) {
-                                _request = scope.requests[xhrObject.validForGroup[i]];
-                                _request.callback.fail instanceof Function &&
-                                _request.callback.fail.call(
-                                    scope,
-                                    jqXHR,
-                                    textStatus,
-                                    errorThrown
-                                );
-                            }
-
-                            // {debug}
-                            if (scope.options.debug) {
-                                _debug.log({
-                                    node: scope.selector,
-                                    function: "Ajax.callback.fail()",
-                                    arguments: JSON.stringify(xhrObject.request),
-                                    message: textStatus
-                                });
-
-                                console.log(errorThrown);
-
-                                _debug.print();
-                            }
-                            // {/debug}
-                        })
-                        .always(function (data, textStatus, jqXHR) {
-                            var _group;
-                            for (
-                                var i = 0, ii = xhrObject.validForGroup.length;
-                                i < ii;
-                                i++
-                            ) {
-                                _group = xhrObject.validForGroup[i];
-                                _request = scope.requests[_group];
-                                _request.callback.always instanceof Function &&
-                                _request.callback.always.call(scope, data, textStatus, jqXHR);
-
-                                // #248, #303 Aborted requests would call populate with invalid data
-                                if (textStatus === 'abort') return;
-
-                                // #265 Modified data from ajax.callback.done is not being registered (use of _groupData[_group])
-                                scope.populateSource(
-                                    (data !== null && typeof data.promise === "function" && []) ||
-                                    _groupData[_group] ||
-                                    data,
-                                    _request.extra.group,
-                                    _request.extra.path || _request.request.path
-                                );
-
-                                requestsCount -= 1;
-                                if (requestsCount === 0) {
-                                    scope.helper.executeCallback.call(
-                                        scope,
-                                        scope.options.callback.onReceiveRequest,
-                                        [scope.node, scope.query]
-                                    );
-                                }
-                            }
-                        })
-                        .then(function (jqXHR, textStatus) {
-                            for (
-                                var i = 0, ii = xhrObject.validForGroup.length;
-                                i < ii;
-                                i++
-                            ) {
-                                _request = scope.requests[xhrObject.validForGroup[i]];
-                                _request.callback.then instanceof Function &&
-                                _request.callback.then.call(scope, jqXHR, textStatus);
-                            }
-                        });
-                })(group, this.requests[group]);
-            }
-        },
-
-        /**
-         * Build the source groups to be cycled for matched results
-         *
-         * @param {Array} data Array of Strings or Array of Objects
-         * @param {String} group
-         * @param {String} [path]
-         * @return {*}
-         */
-        populateSource: function (data, group, path) {
-            var scope = this,
-                groupSource = this.options.source[group],
-                extraData = groupSource.ajax && groupSource.data;
-
-            if (path && typeof path === "string") {
-                data = this.helper.namespace.call(this, path, data);
-            }
-
-            if (typeof data === "undefined") {
-                // {debug}
-                if (this.options.debug) {
-                    _debug.log({
-                        node: this.selector,
-                        function: "populateSource()",
-                        arguments: path,
-                        message: "Invalid data path."
-                    });
-
-                    _debug.print();
-                }
-                // {/debug}
-            }
-
-            if (!Array.isArray(data)) {
-                // {debug}
-                if (this.options.debug) {
-                    _debug.log({
-                        node: this.selector,
-                        function: "populateSource()",
-                        arguments: JSON.stringify({group: group}),
-                        message: "Invalid data type, must be Array type."
-                    });
-                    _debug.print();
-                }
-                // {/debug}
-                data = [];
-            }
-
-            if (extraData) {
-                if (typeof extraData === "function") {
-                    extraData = extraData();
-                }
-
-                if (Array.isArray(extraData)) {
-                    data = data.concat(extraData);
-                } else {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "populateSource()",
-                            arguments: JSON.stringify(extraData),
-                            message: "WARNING - this.options.source." +
-                            group +
-                            ".data Must be an Array or a function that returns an Array."
-                        });
-
-                        _debug.print();
-                    }
-                    // {/debug}
-                }
-            }
-
-            var tmpObj,
-                display = groupSource.display
-                    ? groupSource.display[0] === "compiled"
-                        ? groupSource.display[1]
-                        : groupSource.display[0]
-                    : this.options.display[0] === "compiled"
-                        ? this.options.display[1]
-                        : this.options.display[0];
-
-            for (var i = 0, ii = data.length; i < ii; i++) {
-                if (data[i] === null || typeof data[i] === "boolean") {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "populateSource()",
-                            message: "WARNING - NULL/BOOLEAN value inside " +
-                            group +
-                            "! The data was skipped."
-                        });
-
-                        _debug.print();
-                    }
-                    // {/debug}
-                    continue;
-                }
-                if (typeof data[i] === "string") {
-                    tmpObj = {};
-                    tmpObj[display] = data[i];
-                    data[i] = tmpObj;
-                }
-                data[i].group = group;
-            }
-
-            if (!this.hasDynamicGroups && this.dropdownFilter.dynamic.length) {
-                var key,
-                    value,
-                    tmpValues = {};
-
-                for (var i = 0, ii = data.length; i < ii; i++) {
-                    for (
-                        var k = 0, kk = this.dropdownFilter.dynamic.length;
-                        k < kk;
-                        k++
-                    ) {
-                        key = this.dropdownFilter.dynamic[k].key;
-
-                        value = data[i][key];
-                        if (!value) continue;
-                        if (!this.dropdownFilter.dynamic[k].value) {
-                            this.dropdownFilter.dynamic[k].value = [];
-                        }
-                        if (!tmpValues[key]) {
-                            tmpValues[key] = [];
-                        }
-                        if (!~tmpValues[key].indexOf(value.toLowerCase())) {
-                            tmpValues[key].push(value.toLowerCase());
-                            this.dropdownFilter.dynamic[k].value.push(value);
-                        }
-                    }
-                }
-            }
-
-            if (this.options.correlativeTemplate) {
-                var template = groupSource.template || this.options.template,
-                    compiledTemplate = "";
-
-                if (typeof template === "function") {
-                    template = template.call(this, "", {});
-                }
-
-                if (!template) {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "populateSource()",
-                            arguments: String(group),
-                            message: "WARNING - this.options.correlativeTemplate is enabled but no template was found."
-                        });
-
-                        _debug.print();
-                    }
-                    // {/debug}
-                } else {
-                    // #109 correlativeTemplate can be an array of display keys instead of the complete template
-                    if (Array.isArray(this.options.correlativeTemplate)) {
-                        for (
-                            var i = 0, ii = this.options.correlativeTemplate.length;
-                            i < ii;
-                            i++
-                        ) {
-                            compiledTemplate +=
-                                "{{" + this.options.correlativeTemplate[i] + "}} ";
-                        }
-                    } else {
-                        // Strip down the html tags, #351 if the template needs "<>" use html entities instead &#60;{{email}}&#62;
-                        compiledTemplate = template
-                            .replace(/<.+?>/g, " ")
-                            .replace(/\s{2,}/, " ")
-                            .trim();
-                    }
-
-                    for (var i = 0, ii = data.length; i < ii; i++) {
-                        // Fix #351, convert htmlEntities from the template string
-                        data[i].compiled = $("<textarea />")
-                            .html(
-                                compiledTemplate
-                                    .replace(/\{\{([\w\-\.]+)(?:\|(\w+))?}}/g, function (match,
-                                                                                         index) {
-                                        return scope.helper.namespace.call(
-                                            scope,
-                                            index,
-                                            data[i],
-                                            "get",
-                                            ""
-                                        );
-                                    })
-                                    .trim()
-                            )
-                            .text();
-                    }
-
-                    if (groupSource.display) {
-                        if (!~groupSource.display.indexOf("compiled")) {
-                            groupSource.display.unshift("compiled");
-                        }
-                    } else if (!~this.options.display.indexOf("compiled")) {
-                        this.options.display.unshift("compiled");
-                    }
-                }
-            }
-
-            if (this.options.callback.onPopulateSource) {
-                data = this.helper.executeCallback.call(
-                    this,
-                    this.options.callback.onPopulateSource,
-                    [this.node, data, group, path]
-                );
-
-                // {debug}
-                if (this.options.debug) {
-                    if (!data || !Array.isArray(data)) {
-                        _debug.log({
-                            node: this.selector,
-                            function: "callback.populateSource()",
-                            message: 'callback.onPopulateSource must return the "data" parameter'
-                        });
-
-                        _debug.print();
-                    }
-                }
-                // {/debug}
-            }
-
-            // Save the data inside tmpSource to re-order once every requests are completed
-            this.tmpSource[group] = (Array.isArray(data) && data) || [];
-
-            var cache = this.options.source[group].cache,
-                compression = this.options.source[group].compression,
-                ttl = this.options.source[group].ttl || this.options.ttl;
-
-            if (
-                cache && !window[cache].getItem("TYPEAHEAD_" + this.selector + ":" + group)
-            ) {
-                if (this.options.callback.onCacheSave) {
-                    data = this.helper.executeCallback.call(
-                        this,
-                        this.options.callback.onCacheSave,
-                        [this.node, data, group, path]
-                    );
-
-                    // {debug}
-                    if (this.options.debug) {
-                        if (!data || !Array.isArray(data)) {
-                            _debug.log({
-                                node: this.selector,
-                                function: "callback.populateSource()",
-                                message: 'callback.onCacheSave must return the "data" parameter'
-                            });
-
-                            _debug.print();
-                        }
-                    }
-                    // {/debug}
-                }
-
-                var storage = JSON.stringify({
-                    data: data,
-                    ttl: new Date().getTime() + ttl
-                });
-
-                if (compression) {
-                    storage = LZString.compressToUTF16(storage);
-                }
-
-                window[cache].setItem(
-                    "TYPEAHEAD_" + this.selector + ":" + group,
-                    storage
-                );
-            }
-
-            this.incrementGeneratedGroup(group);
-        },
-
-        incrementGeneratedGroup: function (group) {
-            this.generatedGroupCount++;
-            if (this.generatedGroupCount !== this.generateGroups.length && !this.options.asyncResult) {
-                return;
-            }
-
-            if (this.xhr && this.xhr[group]) {
-                delete this.xhr[group];
-            }
-
-            for (var i = 0, ii = this.generateGroups.length; i < ii; i++) {
-                this.source[this.generateGroups[i]] = this.tmpSource[
-                    this.generateGroups[i]
-                ];
-            }
-
-            if (!this.hasDynamicGroups) {
-                this.buildDropdownItemLayout("dynamic");
-            }
-
-            if (this.generatedGroupCount === this.generateGroups.length) {
-                this.xhr = {};
-                this.options.loadingAnimation && this.container.removeClass("loading");
-            }
-            this.node.trigger("search" + this.namespace);
-        },
-
-        /**
-         * Key Navigation
-         * tab 9: if option is enabled, blur Typeahead
-         * Up 38: select previous item, skip "group" item
-         * Down 40: select next item, skip "group" item
-         * Right 39: change charAt, if last char fill hint (if options is true)
-         * Esc 27: clears input (is not empty) / blur (if empty)
-         * Enter 13: Select item + submit search
-         *
-         * @param {Object} e Event object
-         * @returns {*}
-         */
-        navigate: function (e) {
-            this.helper.executeCallback.call(
-                this,
-                this.options.callback.onNavigateBefore,
-                [this.node, this.query, e]
-            );
-
-            if (e.keyCode === 27) {
-                // #166 Different browsers do not have the same behaviors by default, lets enforce what we want instead
-                e.preventDefault();
-                if (this.query.length) {
-                    this.resetInput();
-                    this.node.trigger("input" + this.namespace, [e]);
-                } else {
-                    this.node.blur();
-                    this.hideLayout();
-                }
-                return;
-            }
-
-            if (!this.result.length) return;
-
-            var itemList = this.resultContainer
-                    .find("." + this.options.selector.item)
-                    .not("[disabled]"),
-                activeItem = itemList.filter(".active"),
-                activeItemIndex = activeItem[0] ? itemList.index(activeItem) : null,
-                activeDataIndex = activeItem[0] ? activeItem.attr("data-index") : null,
-                newActiveItemIndex = null,
-                newActiveDataIndex = null;
-
-            this.clearActiveItem();
-
-            this.helper.executeCallback.call(this, this.options.callback.onLeave, [
-                this.node,
-                (activeItemIndex !== null && itemList.eq(activeItemIndex)) || undefined,
-                (activeDataIndex !== null && this.result[activeDataIndex]) || undefined,
-                e
-            ]);
-
-            if (e.keyCode === 13) {
-                // Chrome needs preventDefault else the input search event is triggered
-                e.preventDefault();
-                if (activeItem.length > 0) {
-                    // #311 When href is defined and "enter" is pressed, it needs to act as a "clicked" link
-                    if (activeItem.find("a:first")[0].href === "javascript:;") {
-                        activeItem.find("a:first").trigger("click", e);
-                    } else {
-                        activeItem.find("a:first")[0].click();
-                    }
-                } else {
-                    this.node
-                        .closest("form")
-                        .trigger("submit");
-                }
-                return;
-            }
-
-            if (e.keyCode === 39) {
-                if (activeItemIndex !== null) {
-                    itemList
-                        .eq(activeItemIndex)
-                        .find("a:first")[0]
-                        .click();
-                } else if (
-                    this.options.hint &&
-                    this.hint.container.val() !== "" &&
-                    this.helper.getCaret(this.node[0]) >= this.query.length
-                ) {
-                    itemList
-                        .filter('[data-index="' + this.hintIndex + '"]')
-                        .find("a:first")[0]
-                        .click();
-                }
-                return;
-            }
-
-            // #284 Blur Typeahead when "Tab" key is pressed
-            // #326 Improve Up / Down / Tab navigation to have only 1 "selected" item
-            if (e.keyCode === 9) {
-                if (this.options.blurOnTab) {
-                    this.hideLayout();
-                } else {
-                    if (activeItem.length > 0) {
-                        if (activeItemIndex + 1 < itemList.length) {
-                            e.preventDefault();
-                            newActiveItemIndex = activeItemIndex + 1;
-                            this.addActiveItem(itemList.eq(newActiveItemIndex));
-                        } else {
-                            this.hideLayout();
-                        }
-                    } else {
-                        if (itemList.length) {
-                            e.preventDefault();
-                            newActiveItemIndex = 0;
-                            this.addActiveItem(itemList.first());
-                        } else {
-                            this.hideLayout();
-                        }
-                    }
-                }
-            } else if (e.keyCode === 38) {
-                e.preventDefault();
-
-                if (activeItem.length > 0) {
-                    if (activeItemIndex - 1 >= 0) {
-                        newActiveItemIndex = activeItemIndex - 1;
-                        this.addActiveItem(itemList.eq(newActiveItemIndex));
-                    }
-                } else if (itemList.length) {
-                    newActiveItemIndex = itemList.length - 1;
-                    this.addActiveItem(itemList.last());
-                }
-            } else if (e.keyCode === 40) {
-                e.preventDefault();
-
-                if (activeItem.length > 0) {
-                    if (activeItemIndex + 1 < itemList.length) {
-                        newActiveItemIndex = activeItemIndex + 1;
-                        this.addActiveItem(itemList.eq(newActiveItemIndex));
-                    }
-                } else if (itemList.length) {
-                    newActiveItemIndex = 0;
-                    this.addActiveItem(itemList.first());
-                }
-            }
-
-            newActiveDataIndex =
-                newActiveItemIndex !== null
-                    ? itemList.eq(newActiveItemIndex).attr("data-index")
-                    : null;
-
-            this.helper.executeCallback.call(this, this.options.callback.onEnter, [
-                this.node,
-                (newActiveItemIndex !== null && itemList.eq(newActiveItemIndex)) ||
-                undefined,
-                (newActiveDataIndex !== null && this.result[newActiveDataIndex]) ||
-                undefined,
-                e
-            ]);
-
-            // #115 Prevent the input from changing when navigating (arrow up / down) the results
-            if (e.preventInputChange && ~[38, 40].indexOf(e.keyCode)) {
-                this.buildHintLayout(
-                    newActiveDataIndex !== null && newActiveDataIndex < this.result.length
-                        ? [this.result[newActiveDataIndex]]
-                        : null
-                );
-            }
-
-            if (this.options.hint && this.hint.container) {
-                this.hint.container.css(
-                    "color",
-                    e.preventInputChange
-                        ? this.hint.css.color
-                        : (newActiveDataIndex === null && this.hint.css.color) ||
-                        this.hint.container.css("background-color") ||
-                        "fff"
-                );
-            }
-
-            var nodeValue =
-                newActiveDataIndex === null || e.preventInputChange
-                    ? this.rawQuery
-                    : this.getTemplateValue.call(this, this.result[newActiveDataIndex]);
-
-            this.node.val(nodeValue);
-            if (this.isContentEditable) {
-                this.node.text(nodeValue);
-            }
-
-            this.helper.executeCallback.call(
-                this,
-                this.options.callback.onNavigateAfter,
-                [
-                    this.node,
-                    itemList,
-                    (newActiveItemIndex !== null &&
-                    itemList.eq(newActiveItemIndex).find("a:first")) ||
-                    undefined,
-                    (newActiveDataIndex !== null && this.result[newActiveDataIndex]) ||
-                    undefined,
-                    this.query,
-                    e
-                ]
-            );
-        },
-
-        getTemplateValue: function (item) {
-            if (!item) return;
-            var templateValue =
-                (item.group && this.options.source[item.group].templateValue) ||
-                this.options.templateValue;
-            if (typeof templateValue === "function") {
-                templateValue = templateValue.call(this);
-            }
-            if (!templateValue) {
-                return this.helper.namespace
-                    .call(this, item.matchedKey, item)
-                    .toString();
-            }
-            var scope = this;
-
-            return templateValue.replace(/\{\{([\w\-.]+)}}/gi, function (match, index) {
-                return scope.helper.namespace.call(scope, index, item, "get", "");
             });
-        },
-
-        clearActiveItem: function () {
-            this.resultContainer
-                .find("." + this.options.selector.item)
-                .removeClass("active");
-        },
-
-        addActiveItem: function (item) {
-            item.addClass("active");
-        },
-
-        searchResult: function () {
-            this.resetLayout();
-
-            if (
-                this.helper.executeCallback.call(this, this.options.callback.onSearch, [
-                    this.node,
-                    this.query
-                ]) === false
-            ) return;
-
-            if (
-                this.searchGroups.length && !(
-                    this.options.multiselect &&
-                    this.options.multiselect.limit &&
-                    this.items.length >= this.options.multiselect.limit
-                )
-            ) {
-                this.searchResultData();
+            var s = !1;
+            if (this.node.attr("placeholder") && (a || l)) {
+                var e = !0;
+                this.node.on("focusin focusout", function() {
+                    e = !(this.value || !this.placeholder)
+                }), this.node.on("input", function(t) {
+                    e && (t.stopImmediatePropagation(), e = !1)
+                })
             }
-
-            this.helper.executeCallback.call(this, this.options.callback.onResult, [
-                this.node,
-                this.query,
-                this.result,
-                this.resultCount,
-                this.resultCountPerGroup
-            ]);
-
-            if (this.isDropdownEvent) {
-                this.helper.executeCallback.call(
-                    this,
-                    this.options.callback.onDropdownFilter,
-                    [this.node, this.query, this.filters.dropdown, this.result]
-                );
-                this.isDropdownEvent = false;
-            }
-        },
-
-        searchResultData: function () {
-            var scope = this,
-                group,
-                groupBy = this.groupBy,
-                groupReference = null,
-                item,
-                match,
-                comparedDisplay,
-                comparedQuery = this.query.toLowerCase(),
-                maxItem = this.options.maxItem,
-                maxItemPerGroup = this.options.maxItemPerGroup,
-                hasDynamicFilters =
-                    this.filters.dynamic && !this.helper.isEmpty(this.filters.dynamic),
-                displayKeys,
-                displayValue,
-                missingDisplayKey = {},
-                groupFilter,
-                groupFilterResult,
-                groupMatcher,
-                groupMatcherResult,
-                matcher =
-                    typeof this.options.matcher === "function" && this.options.matcher,
-                correlativeMatch,
-                correlativeQuery,
-                correlativeDisplay;
-
-            if (this.options.accent) {
-                comparedQuery = this.helper.removeAccent.call(this, comparedQuery);
-            }
-
-            for (var i = 0, ii = this.searchGroups.length; i < ii; ++i) {
-                group = this.searchGroups[i];
-
-                if (
-                    this.filters.dropdown &&
-                    this.filters.dropdown.key === "group" &&
-                    this.filters.dropdown.value !== group
-                )
-                    continue;
-
-                groupFilter =
-                    typeof this.options.source[group].filter !== "undefined"
-                        ? this.options.source[group].filter
-                        : this.options.filter;
-                groupMatcher =
-                    (typeof this.options.source[group].matcher === "function" &&
-                    this.options.source[group].matcher) ||
-                    matcher;
-
-                if (!this.source[group]) continue;
-
-                for (var k = 0, kk = this.source[group].length; k < kk; k++) {
-                    if (this.resultItemCount >= maxItem && !this.options.callback.onResult) break;
-                    if (hasDynamicFilters && !this.dynamicFilter.validate.apply(this, [this.source[group][k]])) continue;
-
-                    item = this.source[group][k];
-                    // Validation over null item
-                    if (item === null || typeof item === "boolean") continue;
-                    if (this.options.multiselect && !this.isMultiselectUniqueData(item)) continue;
-
-                    // dropdownFilter by custom groups
-                    if (
-                        this.filters.dropdown &&
-                        (item[this.filters.dropdown.key] || "").toLowerCase() !==
-                        (this.filters.dropdown.value || "").toLowerCase()
-                    ) {
-                        continue;
-                    }
-
-                    groupReference =
-                        groupBy === "group"
-                            ? group
-                            : item[groupBy] ? item[groupBy] : item.group;
-
-                    if (groupReference && !this.tmpResult[groupReference]) {
-                        this.tmpResult[groupReference] = [];
-                        this.resultCountPerGroup[groupReference] = 0;
-                    }
-
-                    if (maxItemPerGroup) {
-                        if (
-                            groupBy === "group" &&
-                            this.tmpResult[groupReference].length >= maxItemPerGroup && !this.options.callback.onResult
-                        ) {
-                            break;
-                        }
-                    }
-
-                    displayKeys = this.options.source[group].display || this.options.display;
-                    for (var v = 0, vv = displayKeys.length; v < vv; ++v) {
-                        // #286 option.filter: false shouldn't bother about the option.display keys
-                        if (groupFilter !== false) {
-                            // #183 Allow searching for deep source object keys
-                            displayValue = /\./.test(displayKeys[v])
-                                ? this.helper.namespace.call(this, displayKeys[v], item)
-                                : item[displayKeys[v]];
-
-                            // #182 Continue looping if empty or undefined key
-                            if (typeof displayValue === "undefined" || displayValue === "") {
-                                // {debug}
-                                if (this.options.debug) {
-                                    missingDisplayKey[v] = {
-                                        display: displayKeys[v],
-                                        data: item
-                                    };
-                                }
-                                // {/debug}
-                                continue;
-                            }
-
-                            displayValue = this.helper.cleanStringFromScript(displayValue);
-                        }
-
-                        if (typeof groupFilter === "function") {
-                            groupFilterResult = groupFilter.call(this, item, displayValue);
-
-                            // return undefined to skip to next item
-                            // return false to attempt the matching function on the next displayKey
-                            // return true to add the item to the result list
-                            // return item object to modify the item and add it to the result list
-
-                            if (groupFilterResult === undefined) break;
-                            if (!groupFilterResult) continue;
-                            if (typeof groupFilterResult === "object") {
-                                item = groupFilterResult;
-                            }
-                        }
-
-                        if (~[undefined, true].indexOf(groupFilter)) {
-                            if (displayValue === null) continue;
-
-                            comparedDisplay = displayValue;
-                            comparedDisplay = comparedDisplay.toString().toLowerCase();
-
-                            if (this.options.accent) {
-                                comparedDisplay = this.helper.removeAccent.call(
-                                    this,
-                                    comparedDisplay
-                                );
-                            }
-
-                            match = comparedDisplay.indexOf(comparedQuery);
-
-                            if (
-                                this.options.correlativeTemplate &&
-                                displayKeys[v] === "compiled" &&
-                                match < 0 &&
-                                /\s/.test(comparedQuery)
-                            ) {
-                                correlativeMatch = true;
-                                correlativeQuery = comparedQuery.split(" ");
-                                correlativeDisplay = comparedDisplay;
-                                for (var x = 0, xx = correlativeQuery.length; x < xx; x++) {
-                                    if (correlativeQuery[x] === "") continue;
-                                    if (!~correlativeDisplay.indexOf(correlativeQuery[x])) {
-                                        correlativeMatch = false;
-                                        break;
-                                    }
-                                    correlativeDisplay = correlativeDisplay.replace(
-                                        correlativeQuery[x],
-                                        ""
-                                    );
-                                }
-                            }
-
-                            if (match < 0 && !correlativeMatch) continue;
-                            if (this.options.offset && match !== 0) continue;
-
-                            if (groupMatcher) {
-                                groupMatcherResult = groupMatcher.call(
-                                    this,
-                                    item,
-                                    displayValue
-                                );
-
-                                // return undefined to skip to next item
-                                // return false to attempt the matching function on the next displayKey
-                                // return true to add the item to the result list
-                                // return item object to modify the item and add it to the result list
-
-                                if (groupMatcherResult === undefined) break;
-                                if (!groupMatcherResult) continue;
-                                if (typeof groupMatcherResult === "object") {
-                                    item = groupMatcherResult;
-                                }
-                            }
-                        }
-
-                        this.resultCount++;
-                        this.resultCountPerGroup[groupReference]++;
-
-                        if (this.resultItemCount < maxItem) {
-                            if (
-                                maxItemPerGroup &&
-                                this.tmpResult[groupReference].length >= maxItemPerGroup
-                            ) {
-                                break;
-                            }
-
-                            this.tmpResult[groupReference].push(
-                                $.extend(true, {matchedKey: displayKeys[v]}, item)
-                            );
-                            this.resultItemCount++;
-                        }
+            this.node.off(this.namespace).on(t.join(" "), function(t, e) {
+                switch (t.type) {
+                    case "generate":
+                        i.generateSource(Object.keys(i.options.source));
                         break;
-                    }
-
-                    if (!this.options.callback.onResult) {
-                        if (this.resultItemCount >= maxItem) {
-                            break;
+                    case "focus":
+                        if (i.focusOnly) {
+                            i.focusOnly = !1;
+                            break
                         }
-                        if (
-                            maxItemPerGroup &&
-                            this.tmpResult[groupReference].length >= maxItemPerGroup
-                        ) {
-                            if (groupBy === "group") {
-                                break;
-                            }
+                        i.options.backdropOnFocus && (i.buildBackdropLayout(), i.showLayout()), i.options.searchOnFocus && !i.item && (i.deferred = j.Deferred(), i.assignQuery(), i.generateSource());
+                        break;
+                    case "keydown":
+                        8 === t.keyCode && i.options.multiselect && i.options.multiselect.cancelOnBackspace && "" === i.query && i.items.length ? i.cancelMultiselectItem(i.items.length - 1, null, t) : t.keyCode && ~[9, 13, 27, 38, 39, 40].indexOf(t.keyCode) && (s = !0, i.navigate(t));
+                        break;
+                    case "keyup":
+                        n && i.node[0].value.replace(/^\s+/, "").toString().length < i.query.length && i.node.trigger("input" + i.namespace);
+                        break;
+                    case "propertychange":
+                        if (s) {
+                            s = !1;
+                            break
                         }
+                    case "input":
+                        i.deferred = j.Deferred(), i.assignQuery(), "" === i.rawQuery && "" === i.query && (t.originalEvent = e || {}, i.helper.executeCallback.call(i, i.options.callback.onCancel, [i.node, i.item, t]), i.item = null), i.options.cancelButton && i.toggleCancelButtonVisibility(), i.options.hint && i.hint.container && "" !== i.hint.container.val() && 0 !== i.hint.container.val().indexOf(i.rawQuery) && (i.hint.container.val(""), i.isContentEditable && i.hint.container.text("")), i.hasDynamicGroups ? i.helper.typeWatch(function() {
+                            i.generateSource()
+                        }, i.options.delay) : i.generateSource();
+                        break;
+                    case "search":
+                        i.searchResult(), i.buildLayout(), i.result.length || i.searchGroups.length && i.displayEmptyTemplate ? i.showLayout() : i.hideLayout(), i.deferred && i.deferred.resolve()
+                }
+                return i.deferred && i.deferred.promise()
+            }), this.options.generateOnLoad && this.node.trigger("generate" + this.namespace)
+        },
+        assignQuery: function() {
+            this.isContentEditable ? this.rawQuery = this.node.text() : this.rawQuery = this.node.val().toString(), this.rawQuery = this.rawQuery.replace(/^\s+/, ""), this.rawQuery !== this.query && (this.query = this.rawQuery)
+        },
+        filterGenerateSource: function() {
+            if (this.searchGroups = [], this.generateGroups = [], !this.focusOnly || this.options.multiselect)
+                for (var t in this.options.source)
+                    if (this.options.source.hasOwnProperty(t) && this.query.length >= this.options.source[t].minLength && this.query.length <= this.options.source[t].maxLength) {
+                        if (this.filters.dropdown && "group" === this.filters.dropdown.key && this.filters.dropdown.value !== t) continue;
+                        if (this.searchGroups.push(t), !this.options.source[t].dynamic && this.source[t]) continue;
+                        this.generateGroups.push(t)
                     }
-                }
+        },
+        generateSource: function(t) {
+            if (this.filterGenerateSource(), this.generatedGroupCount = 0, Array.isArray(t) && t.length) this.generateGroups = t;
+            else if (!this.generateGroups.length) return void this.node.trigger("search" + this.namespace);
+            if (this.requestGroups = [], this.options.loadingAnimation && this.container.addClass("loading"), !this.helper.isEmpty(this.xhr)) {
+                for (var e in this.xhr) this.xhr.hasOwnProperty(e) && this.xhr[e].abort();
+                this.xhr = {}
             }
-
-            // {debug}
-            if (this.options.debug) {
-                if (!this.helper.isEmpty(missingDisplayKey)) {
-                    _debug.log({
-                        node: this.selector,
-                        function: "searchResult()",
-                        arguments: JSON.stringify(missingDisplayKey),
-                        message: "Missing keys for display, make sure options.display is set properly."
-                    });
-
-                    _debug.print();
-                }
-            }
-            // {/debug}
-
-            if (this.options.order) {
-                var displayKeys = [],
-                    displayKey;
-
-                for (var group in this.tmpResult) {
-                    if (!this.tmpResult.hasOwnProperty(group)) continue;
-                    for (var i = 0, ii = this.tmpResult[group].length; i < ii; i++) {
-                        displayKey =
-                            this.options.source[this.tmpResult[group][i].group].display ||
-                            this.options.display;
-                        if (!~displayKeys.indexOf(displayKey[0])) {
-                            displayKeys.push(displayKey[0]);
-                        }
-                    }
-                    this.tmpResult[group].sort(
-                        scope.helper.sort(
-                            displayKeys,
-                            scope.options.order === "asc",
-                            function (a) {
-                                if (a) {
-                                    return a.toString().toUpperCase();
-                                } else {
-                                    return "";
-                                }
-                            }
-                        )
-                    );
-                }
-            }
-
-            var concatResults = [],
-                groupOrder = [];
-
-            if (typeof this.options.groupOrder === "function") {
-                groupOrder = this.options.groupOrder.apply(this, [
-                    this.node,
-                    this.query,
-                    this.tmpResult,
-                    this.resultCount,
-                    this.resultCountPerGroup
-                ]);
-            } else if (Array.isArray(this.options.groupOrder)) {
-                groupOrder = this.options.groupOrder;
-            } else if (
-                typeof this.options.groupOrder === "string" && ~["asc", "desc"].indexOf(this.options.groupOrder)
-            ) {
-                groupOrder = Object.keys(this.tmpResult).sort(
-                    scope.helper.sort([], scope.options.groupOrder === "asc", function (a) {
-                        return a.toString().toUpperCase();
+            for (var i, s, o, n, r, a, l, h = this, c = (e = 0, this.generateGroups.length); e < c; ++e) {
+                if (i = this.generateGroups[e], n = (o = this.options.source[i]).cache, r = o.compression, this.options.asyncResult && delete this.source[i], n && (a = window[n].getItem("TYPEAHEAD_" + this.selector + ":" + i))) {
+                    r && (a = LZString.decompressFromUTF16(a)), l = !1;
+                    try {
+                        (a = JSON.parse(a + "")).data && a.ttl > (new Date).getTime() ? (this.populateSource(a.data, i), l = !0) : window[n].removeItem("TYPEAHEAD_" + this.selector + ":" + i)
+                    } catch (t) {}
+                    if (l) continue
+                }!o.data || o.ajax ? o.ajax && (this.requests[i] || (this.requests[i] = this.generateRequestObject(i)), this.requestGroups.push(i)) : "function" == typeof o.data ? (s = o.data.call(this), Array.isArray(s) ? h.populateSource(s, i) : "function" == typeof s.promise && function(e) {
+                    j.when(s).then(function(t) {
+                        t && Array.isArray(t) && h.populateSource(t, e)
                     })
-                );
-            } else {
-                groupOrder = Object.keys(this.tmpResult);
+                }(i)) : this.populateSource(j.extend(!0, [], o.data), i)
             }
-
-            for (var i = 0, ii = groupOrder.length; i < ii; i++) {
-                concatResults = concatResults.concat(this.tmpResult[groupOrder[i]] || []);
-            }
-
-            // #286 groupTemplate option was deleting group reference Array
-            this.groups = JSON.parse(JSON.stringify(groupOrder));
-
-            this.result = concatResults;
+            return this.requestGroups.length && this.handleRequests(), this.options.asyncResult && this.searchGroups.length !== this.generateGroups && this.node.trigger("search" + this.namespace), !!this.generateGroups.length
         },
-
-        buildLayout: function () {
-            this.buildHtmlLayout();
-
-            this.buildBackdropLayout();
-
-            this.buildHintLayout();
-
-            if (this.options.callback.onLayoutBuiltBefore) {
-                this.tmpResultHtml = this.helper.executeCallback.call(
-                    this,
-                    this.options.callback.onLayoutBuiltBefore,
-                    [this.node, this.query, this.result, this.resultHtml]
-                );
-            }
-
-            if (this.tmpResultHtml instanceof $) {
-                this.resultContainer.html(this.tmpResultHtml);
-            } else if (this.resultHtml instanceof $) {
-                this.resultContainer.html(this.resultHtml);
-            }
-
-            if (this.options.callback.onLayoutBuiltAfter) {
-                this.helper.executeCallback.call(
-                    this,
-                    this.options.callback.onLayoutBuiltAfter,
-                    [this.node, this.query, this.result]
-                );
-            }
-        },
-
-        buildHtmlLayout: function () {
-            // #150 Add the option to have no resultList but still perform the search and trigger the callbacks
-            if (this.options.resultContainer === false) return;
-
-            if (!this.resultContainer) {
-                this.resultContainer = $("<div/>", {
-                    class: this.options.selector.result
-                });
-
-                this.container.append(this.resultContainer);
-            }
-
-            var emptyTemplate;
-            if (!this.result.length && this.generatedGroupCount === this.generateGroups.length) {
-                if (
-                    this.options.multiselect &&
-                    this.options.multiselect.limit &&
-                    this.items.length >= this.options.multiselect.limit
-                ) {
-                    if (this.options.multiselect.limitTemplate) {
-                        emptyTemplate =
-                            typeof this.options.multiselect.limitTemplate === "function"
-                                ? this.options.multiselect.limitTemplate.call(this, this.query)
-                                : this.options.multiselect.limitTemplate.replace(
-                                    /\{\{query}}/gi,
-                                    $("<div>")
-                                        .text(this.helper.cleanStringFromScript(this.query))
-                                        .html()
-                                );
-                    } else {
-                        emptyTemplate =
-                            "Can't select more than " + this.items.length + " items.";
-                    }
-                } else if (this.options.emptyTemplate && this.query !== "") {
-                    emptyTemplate =
-                        typeof this.options.emptyTemplate === "function"
-                            ? this.options.emptyTemplate.call(this, this.query)
-                            : this.options.emptyTemplate.replace(
-                                /\{\{query}}/gi,
-                                $("<div>")
-                                    .text(this.helper.cleanStringFromScript(this.query))
-                                    .html()
-                            );
-                } else {
-                    return;
-                }
-            }
-            this.displayEmptyTemplate = !!emptyTemplate;
-
-            var _query = this.query.toLowerCase();
-            if (this.options.accent) {
-                _query = this.helper.removeAccent.call(this, _query);
-            }
-
-            var scope = this,
-                groupTemplate = this.groupTemplate || "<ul></ul>",
-                hasEmptyTemplate = false;
-
-            if (this.groupTemplate) {
-                groupTemplate = $(
-                    groupTemplate.replace(
-                        /<([^>]+)>\{\{(.+?)}}<\/[^>]+>/g,
-                        function (match, tag, group, offset, string) {
-                            var template = "",
-                                groups = group === "group" ? scope.groups : [group];
-
-                            if (!scope.result.length) {
-                                if (hasEmptyTemplate === true) return "";
-                                hasEmptyTemplate = true;
-
-                                return (
-                                    "<" + tag + ' class="' + scope.options.selector.empty + '">' + emptyTemplate + "</" + tag + ">"
-                                );
-                            }
-
-                            for (var i = 0, ii = groups.length; i < ii; ++i) {
-                                template += "<" + tag + ' data-group-template="' + groups[i] + '"><ul></ul></' + tag + ">";
-                            }
-
-                            return template;
+        generateRequestObject: function(s) {
+            var o = this,
+                n = this.options.source[s],
+                t = {
+                    request: {
+                        url: n.ajax.url || null,
+                        dataType: "json",
+                        beforeSend: function(t, e) {
+                            o.xhr[s] = t;
+                            var i = o.requests[s].callback.beforeSend || n.ajax.beforeSend;
+                            "function" == typeof i && i.apply(null, arguments)
                         }
-                    )
-                );
-            } else {
-                groupTemplate = $(groupTemplate);
-                if (!this.result.length) {
-                    groupTemplate.append(
-                        emptyTemplate instanceof $
-                            ? emptyTemplate
-                            : '<li class="' +
-                            scope.options.selector.empty +
-                            '">' +
-                            emptyTemplate +
-                            "</li>"
-                    );
-                }
-            }
-
-            groupTemplate.addClass(
-                this.options.selector.list +
-                (this.helper.isEmpty(this.result) ? " empty" : "")
-            );
-
-            var _group,
-                _groupTemplate,
-                _item,
-                _href,
-                _liHtml,
-                _template,
-                _aHtml,
-                _display,
-                _displayKeys,
-                _displayValue,
-                _unusedGroups =
-                    (this.groupTemplate && this.result.length && scope.groups) || [],
-                _tmpIndexOf;
-
-            for (var i = 0, ii = this.result.length; i < ii; ++i) {
-                _item = this.result[i];
-                _group = _item.group;
-                _href =
-                    (!this.options.multiselect &&
-                    this.options.source[_item.group].href) ||
-                    this.options.href;
-                _display = [];
-                _displayKeys =
-                    this.options.source[_item.group].display || this.options.display;
-
-                if (this.options.group) {
-                    _group = _item[this.options.group.key];
-                    if (this.options.group.template) {
-                        if (typeof this.options.group.template === "function") {
-                            _groupTemplate = this.options.group.template.call(this, _item);
-                        } else if (typeof this.options.group.template === "string") {
-                            _groupTemplate = this.options.group.template.replace(
-                                /\{\{([\w\-\.]+)}}/gi,
-                                function (match, index) {
-                                    return scope.helper.namespace.call(
-                                        scope,
-                                        index,
-                                        _item,
-                                        "get",
-                                        ""
-                                    );
-                                }
-                            );
-                        }
-                    }
-
-                    if (!groupTemplate.find('[data-search-group="' + _group + '"]')[0]) {
-                        (this.groupTemplate
-                            ? groupTemplate.find('[data-group-template="' + _group + '"] ul')
-                            : groupTemplate).append(
-                            $("<li/>", {
-                                class: scope.options.selector.group,
-                                html: $("<a/>", {
-                                    href: "javascript:;",
-                                    html: _groupTemplate || _group,
-                                    tabindex: -1
-                                }),
-                                "data-search-group": _group
-                            })
-                        );
-                    }
-                }
-
-                if (this.groupTemplate && _unusedGroups.length) {
-                    _tmpIndexOf = _unusedGroups.indexOf(_group || _item.group);
-                    if (~_tmpIndexOf) {
-                        _unusedGroups.splice(_tmpIndexOf, 1);
-                    }
-                }
-
-                _liHtml = $("<li/>", {
-                    class: scope.options.selector.item + " " + scope.options.selector.group + "-" + this.helper.slugify.call(this, _group),
-                    disabled: _item.disabled ? true : false,
-                    "data-group": _group,
-                    "data-index": i,
-                    html: $("<a/>", {
-                        href: _href && !_item.disabled
-                            ? (function (href, item) {
-                                return item.href = scope.generateHref.call(
-                                    scope,
-                                    href,
-                                    item
-                                );
-                            })(_href, _item)
-                            : "javascript:;",
-                        html: function () {
-                            _template =
-                                (_item.group && scope.options.source[_item.group].template) ||
-                                scope.options.template;
-
-                            if (_template) {
-                                if (typeof _template === "function") {
-                                    _template = _template.call(scope, scope.query, _item);
-                                }
-
-                                _aHtml = _template.replace(
-                                    /\{\{([^\|}]+)(?:\|([^}]+))*}}/gi,
-                                    function (match, index, options) {
-                                        var value = scope.helper.cleanStringFromScript(
-                                            String(
-                                                scope.helper.namespace.call(
-                                                    scope,
-                                                    index,
-                                                    _item,
-                                                    "get",
-                                                    ""
-                                                )
-                                            )
-                                        );
-
-                                        // #151 Slugify should be an option, not enforced
-                                        options = (options && options.split("|")) || [];
-                                        if (~options.indexOf("slugify")) {
-                                            value = scope.helper.slugify.call(scope, value);
-                                        }
-
-                                        if (!~options.indexOf("raw")) {
-                                            if (
-                                                scope.options.highlight === true &&
-                                                _query && ~_displayKeys.indexOf(index)
-                                            ) {
-                                                value = scope.helper.highlight.call(
-                                                    scope,
-                                                    value,
-                                                    _query.split(" "),
-                                                    scope.options.accent
-                                                );
-                                            }
-                                        }
-                                        return value;
-                                    }
-                                );
-                            } else {
-                                for (var i = 0, ii = _displayKeys.length; i < ii; i++) {
-                                    _displayValue = /\./.test(_displayKeys[i])
-                                        ? scope.helper.namespace.call(
-                                            scope,
-                                            _displayKeys[i],
-                                            _item,
-                                            "get",
-                                            ""
-                                        )
-                                        : _item[_displayKeys[i]];
-
-                                    if (
-                                        typeof _displayValue === "undefined" ||
-                                        _displayValue === ""
-                                    )
-                                        continue;
-
-                                    _display.push(_displayValue);
-                                }
-
-                                _aHtml =
-                                    '<span class="' +
-                                    scope.options.selector.display +
-                                    '">' +
-                                    scope.helper.cleanStringFromScript(
-                                        String(_display.join(" "))
-                                    ) +
-                                    "</span>";
-                            }
-
-                            if (
-                                (scope.options.highlight === true && _query && !_template) ||
-                                scope.options.highlight === "any"
-                            ) {
-                                _aHtml = scope.helper.highlight.call(
-                                    scope,
-                                    _aHtml,
-                                    _query.split(" "),
-                                    scope.options.accent
-                                );
-                            }
-
-                            $(this).append(_aHtml);
-                        }
-                    })
-                });
-
-                (function (i, item, liHtml) {
-                    liHtml.on("click", function (e, originalEvent) {
-                        if (item.disabled) {
-                            e.preventDefault();
-                            return;
-                        }
-
-                        // #208 - Attach "keyboard Enter" original event
-                        if (originalEvent && typeof originalEvent === "object") {
-                            e.originalEvent = originalEvent;
-                        }
-
-                        if (scope.options.mustSelectItem && scope.helper.isEmpty(item)) {
-                            e.preventDefault();
-                            return;
-                        }
-
-                        if (!scope.options.multiselect) {
-                            scope.item = item;
-                        }
-
-                        if (
-                            scope.helper.executeCallback.call(
-                                scope,
-                                scope.options.callback.onClickBefore,
-                                [scope.node, $(this), item, e]
-                            ) === false
-                        ) return;
-
-                        if (
-                            (e.originalEvent && e.originalEvent.defaultPrevented) ||
-                            e.isDefaultPrevented()
-                        ) return;
-
-                        if (scope.options.multiselect) {
-                            scope.query = scope.rawQuery = "";
-                            scope.addMultiselectItemLayout(item);
-                        } else {
-                            scope.focusOnly = true;
-                            scope.query = scope.rawQuery = scope.getTemplateValue.call(scope, item);;
-                            if (scope.isContentEditable) {
-                                scope.node.text(scope.query);
-                                scope.helper.setCaretAtEnd(scope.node[0]);
-                            }
-                        }
-
-                        scope.hideLayout();
-
-                        scope.node
-                            .val(scope.query)
-                            .focus();
-
-                        scope.options.cancelButton &&
-                            scope.toggleCancelButtonVisibility();
-
-                        scope.helper.executeCallback.call(
-                            scope,
-                            scope.options.callback.onClickAfter,
-                            [scope.node, $(this), item, e]
-                        );
-                    });
-                    liHtml.on("mouseenter", function (e) {
-                        if (!item.disabled) {
-                            scope.clearActiveItem();
-                            scope.addActiveItem($(this));
-                        }
-                        scope.helper.executeCallback.call(
-                            scope,
-                            scope.options.callback.onEnter,
-                            [scope.node, $(this), item, e]
-                        );
-                    });
-                    liHtml.on("mouseleave", function (e) {
-                        if (!item.disabled) {
-                            scope.clearActiveItem();
-                        }
-                        scope.helper.executeCallback.call(
-                            scope,
-                            scope.options.callback.onLeave,
-                            [scope.node, $(this), item, e]
-                        );
-                    });
-                })(i, _item, _liHtml);
-
-                (this.groupTemplate
-                    ? groupTemplate.find('[data-group-template="' + _group + '"] ul')
-                    : groupTemplate).append(_liHtml);
-            }
-
-            if (this.result.length && _unusedGroups.length) {
-                for (var i = 0, ii = _unusedGroups.length; i < ii; ++i) {
-                    groupTemplate
-                        .find('[data-group-template="' + _unusedGroups[i] + '"]')
-                        .remove();
-                }
-            }
-
-            this.resultHtml = groupTemplate;
-        },
-
-        generateHref: function (href, item) {
-            var scope = this;
-
-            if (typeof href === "string") {
-                href = href.replace(
-                    /\{\{([^\|}]+)(?:\|([^}]+))*}}/gi,
-                    function (match, index, options) {
-                        var value = scope.helper.namespace.call(
-                            scope,
-                            index,
-                            item,
-                            "get",
-                            ""
-                        );
-
-                        // #151 Slugify should be an option, not enforced
-                        options = (options && options.split("|")) || [];
-                        if (~options.indexOf("slugify")) {
-                            value = scope.helper.slugify.call(scope, value);
-                        }
-
-                        return value;
-                    }
-                );
-            } else if (typeof href === "function") {
-                href = href.call(this, item);
-            }
-
-            return href;
-        },
-
-        getMultiselectComparedData: function (item) {
-            var uniqueComparedItem = "";
-            if (Array.isArray(this.options.multiselect.matchOn)) {
-                for (
-                    var i = 0, ii = this.options.multiselect.matchOn.length;
-                    i < ii;
-                    ++i
-                ) {
-                    uniqueComparedItem +=
-                        typeof item[this.options.multiselect.matchOn[i]] !== "undefined"
-                            ? item[this.options.multiselect.matchOn[i]]
-                            : "";
-                }
-            } else {
-                var tmpItem = JSON.parse(JSON.stringify(item)),
-                    extraKeys = ["group", "matchedKey", "compiled", "href"];
-
-                for (var i = 0, ii = extraKeys.length; i < ii; ++i) {
-                    delete tmpItem[extraKeys[i]];
-                }
-                uniqueComparedItem = JSON.stringify(tmpItem);
-            }
-            return uniqueComparedItem;
-        },
-
-        buildBackdropLayout: function () {
-            if (!this.options.backdrop) return;
-
-            if (!this.backdrop.container) {
-                this.backdrop.css = $.extend(
-                    {
-                        opacity: 0.6,
-                        filter: "alpha(opacity=60)",
-                        position: "fixed",
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0,
-                        "z-index": 1040,
-                        "background-color": "#000"
                     },
-                    this.options.backdrop
-                );
-
-                this.backdrop.container = $("<div/>", {
-                    class: this.options.selector.backdrop,
-                    css: this.backdrop.css
-                }).insertAfter(this.container);
+                    callback: {
+                        beforeSend: null,
+                        done: null,
+                        fail: null,
+                        then: null,
+                        always: null
+                    },
+                    extra: {
+                        path: n.ajax.path || null,
+                        group: s
+                    },
+                    validForGroup: [s]
+                };
+            if ("function" != typeof n.ajax && (n.ajax instanceof Object && (t = this.extendXhrObject(t, n.ajax)), 1 < Object.keys(this.options.source).length))
+                for (var e in this.requests) this.requests.hasOwnProperty(e) && (this.requests[e].isDuplicated || t.request.url && t.request.url === this.requests[e].request.url && (this.requests[e].validForGroup.push(s), t.isDuplicated = !0, delete t.validForGroup));
+            return t
+        },
+        extendXhrObject: function(t, e) {
+            return "object" == typeof e.callback && (t.callback = e.callback, delete e.callback), "function" == typeof e.beforeSend && (t.callback.beforeSend = e.beforeSend, delete e.beforeSend), t.request = j.extend(!0, t.request, e), "jsonp" !== t.request.dataType.toLowerCase() || t.request.jsonpCallback || (t.request.jsonpCallback = "callback_" + t.extra.group), t
+        },
+        handleRequests: function() {
+            var t, h = this,
+                c = this.requestGroups.length;
+            if (!1 !== this.helper.executeCallback.call(this, this.options.callback.onSendRequest, [this.node, this.query]))
+                for (var e = 0, i = this.requestGroups.length; e < i; ++e) t = this.requestGroups[e], this.requests[t].isDuplicated || function(t, r) {
+                    if ("function" == typeof h.options.source[t].ajax) {
+                        var e = h.options.source[t].ajax.call(h, h.query);
+                        if ("object" != typeof(r = h.extendXhrObject(h.generateRequestObject(t), "object" == typeof e ? e : {})).request || !r.request.url) return h.populateSource([], t);
+                        h.requests[t] = r
+                    }
+                    var a, i = !1,
+                        l = {};
+                    if (~r.request.url.indexOf("{{query}}") && (i || (r = j.extend(!0, {}, r), i = !0), r.request.url = r.request.url.replace("{{query}}", encodeURIComponent(h.query))), r.request.data)
+                        for (var s in r.request.data)
+                            if (r.request.data.hasOwnProperty(s) && ~String(r.request.data[s]).indexOf("{{query}}")) {
+                                i || (r = j.extend(!0, {}, r), i = !0), r.request.data[s] = r.request.data[s].replace("{{query}}", h.query);
+                                break
+                            } j.ajax(r.request).done(function(t, e, i) {
+                        for (var s, o = 0, n = r.validForGroup.length; o < n; o++) s = r.validForGroup[o], "function" == typeof(a = h.requests[s]).callback.done && (l[s] = a.callback.done.call(h, t, e, i))
+                    }).fail(function(t, e, i) {
+                        for (var s = 0, o = r.validForGroup.length; s < o; s++)(a = h.requests[r.validForGroup[s]]).callback.fail instanceof Function && a.callback.fail.call(h, t, e, i)
+                    }).always(function(t, e, i) {
+                        for (var s, o = 0, n = r.validForGroup.length; o < n; o++) {
+                            if (s = r.validForGroup[o], (a = h.requests[s]).callback.always instanceof Function && a.callback.always.call(h, t, e, i), "abort" === e) return;
+                            h.populateSource(null !== t && "function" == typeof t.promise && [] || l[s] || t, a.extra.group, a.extra.path || a.request.path), 0 === (c -= 1) && h.helper.executeCallback.call(h, h.options.callback.onReceiveRequest, [h.node, h.query])
+                        }
+                    }).then(function(t, e) {
+                        for (var i = 0, s = r.validForGroup.length; i < s; i++)(a = h.requests[r.validForGroup[i]]).callback.then instanceof Function && a.callback.then.call(h, t, e)
+                    })
+                }(t, this.requests[t])
+        },
+        populateSource: function(i, t, e) {
+            var s = this,
+                o = this.options.source[t],
+                n = o.ajax && o.data;
+            e && "string" == typeof e && (i = this.helper.namespace.call(this, e, i)), Array.isArray(i) || (i = []), n && ("function" == typeof n && (n = n()), Array.isArray(n) && (i = i.concat(n)));
+            for (var r, a = o.display ? "compiled" === o.display[0] ? o.display[1] : o.display[0] : "compiled" === this.options.display[0] ? this.options.display[1] : this.options.display[0], l = 0, h = i.length; l < h; l++) null !== i[l] && "boolean" != typeof i[l] && ("string" == typeof i[l] && ((r = {})[a] = i[l], i[l] = r), i[l].group = t);
+            if (!this.hasDynamicGroups && this.dropdownFilter.dynamic.length) {
+                var c, p, u = {};
+                for (l = 0, h = i.length; l < h; l++)
+                    for (var d = 0, f = this.dropdownFilter.dynamic.length; d < f; d++) c = this.dropdownFilter.dynamic[d].key, (p = i[l][c]) && (this.dropdownFilter.dynamic[d].value || (this.dropdownFilter.dynamic[d].value = []), u[c] || (u[c] = []), ~u[c].indexOf(p.toLowerCase()) || (u[c].push(p.toLowerCase()), this.dropdownFilter.dynamic[d].value.push(p)))
             }
-            this.container.addClass("backdrop").css({
+            if (this.options.correlativeTemplate) {
+                var m = o.template || this.options.template,
+                    g = "";
+                if ("function" == typeof m && (m = m.call(this, "", {})), m) {
+                    if (Array.isArray(this.options.correlativeTemplate))
+                        for (l = 0, h = this.options.correlativeTemplate.length; l < h; l++) g += "{{" + this.options.correlativeTemplate[l] + "}} ";
+                    else g = m.replace(/<.+?>/g, " ").replace(/\s{2,}/, " ").trim();
+                    for (l = 0, h = i.length; l < h; l++) i[l].compiled = j("<textarea />").html(g.replace(/\{\{([\w\-\.]+)(?:\|(\w+))?}}/g, function(t, e) {
+                        return s.helper.namespace.call(s, e, i[l], "get", "")
+                    }).trim()).text();
+                    o.display ? ~o.display.indexOf("compiled") || o.display.unshift("compiled") : ~this.options.display.indexOf("compiled") || this.options.display.unshift("compiled")
+                } else;
+            }
+            this.options.callback.onPopulateSource && (i = this.helper.executeCallback.call(this, this.options.callback.onPopulateSource, [this.node, i, t, e])), this.tmpSource[t] = Array.isArray(i) && i || [];
+            var y = this.options.source[t].cache,
+                v = this.options.source[t].compression,
+                b = this.options.source[t].ttl || this.options.ttl;
+            if (y && !window[y].getItem("TYPEAHEAD_" + this.selector + ":" + t)) {
+                this.options.callback.onCacheSave && (i = this.helper.executeCallback.call(this, this.options.callback.onCacheSave, [this.node, i, t, e]));
+                var k = JSON.stringify({
+                    data: i,
+                    ttl: (new Date).getTime() + b
+                });
+                v && (k = LZString.compressToUTF16(k)), window[y].setItem("TYPEAHEAD_" + this.selector + ":" + t, k)
+            }
+            this.incrementGeneratedGroup(t)
+        },
+        incrementGeneratedGroup: function(t) {
+            if (this.generatedGroupCount++, this.generatedGroupCount === this.generateGroups.length || this.options.asyncResult) {
+                this.xhr && this.xhr[t] && delete this.xhr[t];
+                for (var e = 0, i = this.generateGroups.length; e < i; e++) this.source[this.generateGroups[e]] = this.tmpSource[this.generateGroups[e]];
+                this.hasDynamicGroups || this.buildDropdownItemLayout("dynamic"), this.generatedGroupCount === this.generateGroups.length && (this.xhr = {}, this.options.loadingAnimation && this.container.removeClass("loading")), this.node.trigger("search" + this.namespace)
+            }
+        },
+        navigate: function(t) {
+            if (this.helper.executeCallback.call(this, this.options.callback.onNavigateBefore, [this.node, this.query, t]), 27 === t.keyCode) return t.preventDefault(), void(this.query.length ? (this.resetInput(), this.node.trigger("input" + this.namespace, [t])) : (this.node.blur(), this.hideLayout()));
+            if (this.result.length) {
+                var e, i = this.resultContainer.find("." + this.options.selector.item).not("[disabled]"),
+                    s = i.filter(".active"),
+                    o = s[0] ? i.index(s) : null,
+                    n = s[0] ? s.attr("data-index") : null,
+                    r = null;
+                if (this.clearActiveItem(), this.helper.executeCallback.call(this, this.options.callback.onLeave, [this.node, null !== o && i.eq(o) || void 0, null !== n && this.result[n] || void 0, t]), 13 === t.keyCode) return t.preventDefault(), void(0 < s.length ? "javascript:;" === s.find("a:first")[0].href ? s.find("a:first").trigger("click", t) : s.find("a:first")[0].click() : this.node.closest("form").trigger("submit"));
+                if (39 !== t.keyCode) {
+                    9 === t.keyCode ? this.options.blurOnTab ? this.hideLayout() : 0 < s.length ? o + 1 < i.length ? (t.preventDefault(), r = o + 1, this.addActiveItem(i.eq(r))) : this.hideLayout() : i.length ? (t.preventDefault(), r = 0, this.addActiveItem(i.first())) : this.hideLayout() : 38 === t.keyCode ? (t.preventDefault(), 0 < s.length ? 0 <= o - 1 && (r = o - 1, this.addActiveItem(i.eq(r))) : i.length && (r = i.length - 1, this.addActiveItem(i.last()))) : 40 === t.keyCode && (t.preventDefault(), 0 < s.length ? o + 1 < i.length && (r = o + 1, this.addActiveItem(i.eq(r))) : i.length && (r = 0, this.addActiveItem(i.first()))), e = null !== r ? i.eq(r).attr("data-index") : null, this.helper.executeCallback.call(this, this.options.callback.onEnter, [this.node, null !== r && i.eq(r) || void 0, null !== e && this.result[e] || void 0, t]), t.preventInputChange && ~[38, 40].indexOf(t.keyCode) && this.buildHintLayout(null !== e && e < this.result.length ? [this.result[e]] : null), this.options.hint && this.hint.container && this.hint.container.css("color", t.preventInputChange ? this.hint.css.color : null === e && this.hint.css.color || this.hint.container.css("background-color") || "fff");
+                    var a = null === e || t.preventInputChange ? this.rawQuery : this.getTemplateValue.call(this, this.result[e]);
+                    this.node.val(a), this.isContentEditable && this.node.text(a), this.helper.executeCallback.call(this, this.options.callback.onNavigateAfter, [this.node, i, null !== r && i.eq(r).find("a:first") || void 0, null !== e && this.result[e] || void 0, this.query, t])
+                } else null !== o ? i.eq(o).find("a:first")[0].click() : this.options.hint && "" !== this.hint.container.val() && this.helper.getCaret(this.node[0]) >= this.query.length && i.filter('[data-index="' + this.hintIndex + '"]').find("a:first")[0].click()
+            }
+        },
+        getTemplateValue: function(i) {
+            if (i) {
+                var t = i.group && this.options.source[i.group].templateValue || this.options.templateValue;
+                if ("function" == typeof t && (t = t.call(this)), !t) return this.helper.namespace.call(this, i.matchedKey, i).toString();
+                var s = this;
+                return t.replace(/\{\{([\w\-.]+)}}/gi, function(t, e) {
+                    return s.helper.namespace.call(s, e, i, "get", "")
+                })
+            }
+        },
+        clearActiveItem: function() {
+            this.resultContainer.find("." + this.options.selector.item).removeClass("active")
+        },
+        addActiveItem: function(t) {
+            t.addClass("active")
+        },
+        searchResult: function() {
+            this.resetLayout(), !1 !== this.helper.executeCallback.call(this, this.options.callback.onSearch, [this.node, this.query]) && (!this.searchGroups.length || this.options.multiselect && this.options.multiselect.limit && this.items.length >= this.options.multiselect.limit || this.searchResultData(), this.helper.executeCallback.call(this, this.options.callback.onResult, [this.node, this.query, this.result, this.resultCount, this.resultCountPerGroup]), this.isDropdownEvent && (this.helper.executeCallback.call(this, this.options.callback.onDropdownFilter, [this.node, this.query, this.filters.dropdown, this.result]), this.isDropdownEvent = !1))
+        },
+        searchResultData: function() {
+            var t, e, i, s, o, n, r, a, l, h, c, p = this.groupBy,
+                u = null,
+                d = this.query.toLowerCase(),
+                f = this.options.maxItem,
+                m = this.options.maxItemPerGroup,
+                g = this.filters.dynamic && !this.helper.isEmpty(this.filters.dynamic),
+                y = "function" == typeof this.options.matcher && this.options.matcher;
+            this.options.accent && (d = this.helper.removeAccent.call(this, d));
+            for (var v = 0, b = this.searchGroups.length; v < b; ++v)
+                if (F = this.searchGroups[v], (!this.filters.dropdown || "group" !== this.filters.dropdown.key || this.filters.dropdown.value === F) && (o = void 0 !== this.options.source[F].filter ? this.options.source[F].filter : this.options.filter, r = "function" == typeof this.options.source[F].matcher && this.options.source[F].matcher || y, this.source[F]))
+                    for (var k = 0, w = this.source[F].length; k < w && (!(this.resultItemCount >= f) || this.options.callback.onResult); k++)
+                        if ((!g || this.dynamicFilter.validate.apply(this, [this.source[F][k]])) && null !== (t = this.source[F][k]) && "boolean" != typeof t && (!this.options.multiselect || this.isMultiselectUniqueData(t)) && (!this.filters.dropdown || (t[this.filters.dropdown.key] || "").toLowerCase() === (this.filters.dropdown.value || "").toLowerCase())) {
+                            if ((u = "group" === p ? F : t[p] ? t[p] : t.group) && !this.tmpResult[u] && (this.tmpResult[u] = [], this.resultCountPerGroup[u] = 0), m && "group" === p && this.tmpResult[u].length >= m && !this.options.callback.onResult) break;
+                            for (var x = 0, C = (S = this.options.source[F].display || this.options.display).length; x < C; ++x) {
+                                if (!1 !== o) {
+                                    if (void 0 === (s = /\./.test(S[x]) ? this.helper.namespace.call(this, S[x], t) : t[S[x]]) || "" === s) continue;
+                                    s = this.helper.cleanStringFromScript(s)
+                                }
+                                if ("function" == typeof o) {
+                                    if (void 0 === (n = o.call(this, t, s))) break;
+                                    if (!n) continue;
+                                    "object" == typeof n && (t = n)
+                                }
+                                if (~[void 0, !0].indexOf(o)) {
+                                    if (null === s) continue;
+                                    if (i = (i = s).toString().toLowerCase(), this.options.accent && (i = this.helper.removeAccent.call(this, i)), e = i.indexOf(d), this.options.correlativeTemplate && "compiled" === S[x] && e < 0 && /\s/.test(d)) {
+                                        l = !0, c = i;
+                                        for (var q = 0, A = (h = d.split(" ")).length; q < A; q++)
+                                            if ("" !== h[q]) {
+                                                if (!~c.indexOf(h[q])) {
+                                                    l = !1;
+                                                    break
+                                                }
+                                                c = c.replace(h[q], "")
+                                            }
+                                    }
+                                    if (e < 0 && !l) continue;
+                                    if (this.options.offset && 0 !== e) continue;
+                                    if (r) {
+                                        if (void 0 === (a = r.call(this, t, s))) break;
+                                        if (!a) continue;
+                                        "object" == typeof a && (t = a)
+                                    }
+                                }
+                                if (this.resultCount++, this.resultCountPerGroup[u]++, this.resultItemCount < f) {
+                                    if (m && this.tmpResult[u].length >= m) break;
+                                    this.tmpResult[u].push(j.extend(!0, {
+                                        matchedKey: S[x]
+                                    }, t)), this.resultItemCount++
+                                }
+                                break
+                            }
+                            if (!this.options.callback.onResult) {
+                                if (this.resultItemCount >= f) break;
+                                if (m && this.tmpResult[u].length >= m && "group" === p) break
+                            }
+                        } if (this.options.order) {
+                var O, S = [];
+                for (var F in this.tmpResult)
+                    if (this.tmpResult.hasOwnProperty(F)) {
+                        for (v = 0, b = this.tmpResult[F].length; v < b; v++) O = this.options.source[this.tmpResult[F][v].group].display || this.options.display, ~S.indexOf(O[0]) || S.push(O[0]);
+                        this.tmpResult[F].sort(this.helper.sort(S, "asc" === this.options.order, function(t) {
+                            return t ? t.toString().toUpperCase() : ""
+                        }))
+                    }
+            }
+            var L = [],
+                I = [];
+            for (v = 0, b = (I = "function" == typeof this.options.groupOrder ? this.options.groupOrder.apply(this, [this.node, this.query, this.tmpResult, this.resultCount, this.resultCountPerGroup]) : Array.isArray(this.options.groupOrder) ? this.options.groupOrder : "string" == typeof this.options.groupOrder && ~["asc", "desc"].indexOf(this.options.groupOrder) ? Object.keys(this.tmpResult).sort(this.helper.sort([], "asc" === this.options.groupOrder, function(t) {
+                    return t.toString().toUpperCase()
+                })) : Object.keys(this.tmpResult)).length; v < b; v++) L = L.concat(this.tmpResult[I[v]] || []);
+            this.groups = JSON.parse(JSON.stringify(I)), this.result = L
+        },
+        buildLayout: function() {
+            this.buildHtmlLayout(), this.buildBackdropLayout(), this.buildHintLayout(), this.options.callback.onLayoutBuiltBefore && (this.tmpResultHtml = this.helper.executeCallback.call(this, this.options.callback.onLayoutBuiltBefore, [this.node, this.query, this.result, this.resultHtml])), this.tmpResultHtml instanceof j ? this.resultContainer.html(this.tmpResultHtml) : this.resultHtml instanceof j && this.resultContainer.html(this.resultHtml), this.options.callback.onLayoutBuiltAfter && this.helper.executeCallback.call(this, this.options.callback.onLayoutBuiltAfter, [this.node, this.query, this.result])
+        },
+        buildHtmlLayout: function() {
+            if (!1 !== this.options.resultContainer) {
+                var h;
+                if (this.resultContainer || (this.resultContainer = j("<div/>", {
+                        class: this.options.selector.result
+                    }), this.container.append(this.resultContainer)), !this.result.length && this.generatedGroupCount === this.generateGroups.length)
+                    if (this.options.multiselect && this.options.multiselect.limit && this.items.length >= this.options.multiselect.limit) h = this.options.multiselect.limitTemplate ? "function" == typeof this.options.multiselect.limitTemplate ? this.options.multiselect.limitTemplate.call(this, this.query) : this.options.multiselect.limitTemplate.replace(/\{\{query}}/gi, j("<div>").text(this.helper.cleanStringFromScript(this.query)).html()) : "Can't select more than " + this.items.length + " items.";
+                    else {
+                        if (!this.options.emptyTemplate || "" === this.query) return;
+                        h = "function" == typeof this.options.emptyTemplate ? this.options.emptyTemplate.call(this, this.query) : this.options.emptyTemplate.replace(/\{\{query}}/gi, j("<div>").text(this.helper.cleanStringFromScript(this.query)).html())
+                    } this.displayEmptyTemplate = !!h;
+                var o = this.query.toLowerCase();
+                this.options.accent && (o = this.helper.removeAccent.call(this, o));
+                var c = this,
+                    t = this.groupTemplate || "<ul></ul>",
+                    p = !1;
+                this.groupTemplate ? t = j(t.replace(/<([^>]+)>\{\{(.+?)}}<\/[^>]+>/g, function(t, e, i, s, o) {
+                    var n = "",
+                        r = "group" === i ? c.groups : [i];
+                    if (!c.result.length) return !0 === p ? "" : (p = !0, "<" + e + ' class="' + c.options.selector.empty + '">' + h + "</" + e + ">");
+                    for (var a = 0, l = r.length; a < l; ++a) n += "<" + e + ' data-group-template="' + r[a] + '"><ul></ul></' + e + ">";
+                    return n
+                })) : (t = j(t), this.result.length || t.append(h instanceof j ? h : '<li class="' + c.options.selector.empty + '">' + h + "</li>")), t.addClass(this.options.selector.list + (this.helper.isEmpty(this.result) ? " empty" : ""));
+                for (var e, i, n, s, r, a, l, u, d, f, m, g, y, v = this.groupTemplate && this.result.length && c.groups || [], b = 0, k = this.result.length; b < k; ++b) e = (n = this.result[b]).group, s = !this.options.multiselect && this.options.source[n.group].href || this.options.href, u = [], d = this.options.source[n.group].display || this.options.display, this.options.group && (e = n[this.options.group.key], this.options.group.template && ("function" == typeof this.options.group.template ? i = this.options.group.template.call(this, n) : "string" == typeof this.options.group.template && (i = this.options.group.template.replace(/\{\{([\w\-\.]+)}}/gi, function(t, e) {
+                        return c.helper.namespace.call(c, e, n, "get", "")
+                    }))), t.find('[data-search-group="' + e + '"]')[0] || (this.groupTemplate ? t.find('[data-group-template="' + e + '"] ul') : t).append(j("<li/>", {
+                        class: c.options.selector.group,
+                        html: j("<a/>", {
+                            href: "javascript:;",
+                            html: i || e,
+                            tabindex: -1
+                        }),
+                        "data-search-group": e
+                    }))), this.groupTemplate && v.length && ~(m = v.indexOf(e || n.group)) && v.splice(m, 1), r = j("<li/>", {
+                        class: c.options.selector.item + " " + c.options.selector.group + "-" + this.helper.slugify.call(this, e),
+                        disabled: !!n.disabled,
+                        "data-group": e,
+                        "data-index": b,
+                        html: j("<a/>", {
+                            href: s && !n.disabled ? (g = s, y = n, y.href = c.generateHref.call(c, g, y)) : "javascript:;",
+                            html: function() {
+                                if (a = n.group && c.options.source[n.group].template || c.options.template) "function" == typeof a && (a = a.call(c, c.query, n)), l = a.replace(/\{\{([^\|}]+)(?:\|([^}]+))*}}/gi, function(t, e, i) {
+                                    var s = c.helper.cleanStringFromScript(String(c.helper.namespace.call(c, e, n, "get", "")));
+                                    return ~(i = i && i.split("|") || []).indexOf("slugify") && (s = c.helper.slugify.call(c, s)), ~i.indexOf("raw") || !0 === c.options.highlight && o && ~d.indexOf(e) && (s = c.helper.highlight.call(c, s, o.split(" "), c.options.accent)), s
+                                });
+                                else {
+                                    for (var t = 0, e = d.length; t < e; t++) void 0 !== (f = /\./.test(d[t]) ? c.helper.namespace.call(c, d[t], n, "get", "") : n[d[t]]) && "" !== f && u.push(f);
+                                    l = '<span class="' + c.options.selector.display + '">' + c.helper.cleanStringFromScript(String(u.join(" "))) + "</span>"
+                                }(!0 === c.options.highlight && o && !a || "any" === c.options.highlight) && (l = c.helper.highlight.call(c, l, o.split(" "), c.options.accent)), j(this).append(l)
+                            }
+                        })
+                    }),
+                    function(t, i, e) {
+                        e.on("click", function(t, e) {
+                            i.disabled ? t.preventDefault() : (e && "object" == typeof e && (t.originalEvent = e), c.options.mustSelectItem && c.helper.isEmpty(i) ? t.preventDefault() : (c.options.multiselect || (c.item = i), !1 !== c.helper.executeCallback.call(c, c.options.callback.onClickBefore, [c.node, j(this), i, t]) && (t.originalEvent && t.originalEvent.defaultPrevented || t.isDefaultPrevented() || (c.options.multiselect ? (c.query = c.rawQuery = "", c.addMultiselectItemLayout(i)) : (c.focusOnly = !0, c.query = c.rawQuery = c.getTemplateValue.call(c, i), c.isContentEditable && (c.node.text(c.query), c.helper.setCaretAtEnd(c.node[0]))), c.hideLayout(), c.node.val(c.query).focus(), c.options.cancelButton && c.toggleCancelButtonVisibility(), c.helper.executeCallback.call(c, c.options.callback.onClickAfter, [c.node, j(this), i, t])))))
+                        }), e.on("mouseenter", function(t) {
+                            i.disabled || (c.clearActiveItem(), c.addActiveItem(j(this))), c.helper.executeCallback.call(c, c.options.callback.onEnter, [c.node, j(this), i, t])
+                        }), e.on("mouseleave", function(t) {
+                            i.disabled || c.clearActiveItem(), c.helper.executeCallback.call(c, c.options.callback.onLeave, [c.node, j(this), i, t])
+                        })
+                    }(0, n, r), (this.groupTemplate ? t.find('[data-group-template="' + e + '"] ul') : t).append(r);
+                if (this.result.length && v.length)
+                    for (b = 0, k = v.length; b < k; ++b) t.find('[data-group-template="' + v[b] + '"]').remove();
+                this.resultHtml = t
+            }
+        },
+        generateHref: function(t, o) {
+            var n = this;
+            return "string" == typeof t ? t = t.replace(/\{\{([^\|}]+)(?:\|([^}]+))*}}/gi, function(t, e, i) {
+                var s = n.helper.namespace.call(n, e, o, "get", "");
+                return ~(i = i && i.split("|") || []).indexOf("slugify") && (s = n.helper.slugify.call(n, s)), s
+            }) : "function" == typeof t && (t = t.call(this, o)), t
+        },
+        getMultiselectComparedData: function(t) {
+            var e = "";
+            if (Array.isArray(this.options.multiselect.matchOn))
+                for (var i = 0, s = this.options.multiselect.matchOn.length; i < s; ++i) e += void 0 !== t[this.options.multiselect.matchOn[i]] ? t[this.options.multiselect.matchOn[i]] : "";
+            else {
+                var o = JSON.parse(JSON.stringify(t)),
+                    n = ["group", "matchedKey", "compiled", "href"];
+                for (i = 0, s = n.length; i < s; ++i) delete o[n[i]];
+                e = JSON.stringify(o)
+            }
+            return e
+        },
+        buildBackdropLayout: function() {
+            this.options.backdrop && (this.backdrop.container || (this.backdrop.css = j.extend({
+                opacity: .6,
+                filter: "alpha(opacity=60)",
+                position: "fixed",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                "z-index": 1040,
+                "background-color": "#000"
+            }, this.options.backdrop), this.backdrop.container = j("<div/>", {
+                class: this.options.selector.backdrop,
+                css: this.backdrop.css
+            }).insertAfter(this.container)), this.container.addClass("backdrop").css({
                 "z-index": this.backdrop.css["z-index"] + 1,
                 position: "relative"
-            });
+            }))
         },
-
-        buildHintLayout: function (result) {
-            if (!this.options.hint) return;
-            // #144 hint doesn't overlap with the input when the query is too long
-            if (this.node[0].scrollWidth > Math.ceil(this.node.innerWidth())) {
-                this.hint.container && this.hint.container.val("");
-                return;
-            }
-
-            var scope = this,
-                hint = "",
-                result = result || this.result,
-                query = this.query.toLowerCase();
-
-            if (this.options.accent) {
-                query = this.helper.removeAccent.call(this, query);
-            }
-
-            this.hintIndex = null;
-
-            if (this.searchGroups.length) {
-                if (!this.hint.container) {
-                    this.hint.css = $.extend(
-                        {
-                            "border-color": "transparent",
-                            position: "absolute",
-                            top: 0,
-                            display: "inline",
-                            "z-index": -1,
-                            float: "none",
-                            color: "silver",
-                            "box-shadow": "none",
-                            cursor: "default",
-                            "-webkit-user-select": "none",
-                            "-moz-user-select": "none",
-                            "-ms-user-select": "none",
-                            "user-select": "none"
-                        },
-                        this.options.hint
-                    );
-
-                    this.hint.container = $("<" + this.node[0].nodeName + "/>", {
-                        type: this.node.attr("type"),
-                        class: this.node.attr("class"),
-                        readonly: true,
-                        unselectable: "on",
-                        "aria-hidden": "true",
-                        tabindex: -1,
-                        click: function () {
-                            // IE8 Fix
-                            scope.node.focus();
-                        }
-                    })
-                        .addClass(this.options.selector.hint)
-                        .css(this.hint.css)
-                        .insertAfter(this.node);
-
-                    this.node.parent().css({
-                        position: "relative"
-                    });
-                }
-
-                this.hint.container.css("color", this.hint.css.color);
-
-                // Do not display hint for empty query
-                if (query) {
-                    var _displayKeys, _group, _comparedValue;
-
-                    for (var i = 0, ii = result.length; i < ii; i++) {
-                        if (result[i].disabled) continue;
-
-                        _group = result[i].group;
-                        _displayKeys =
-                            this.options.source[_group].display || this.options.display;
-
-                        for (var k = 0, kk = _displayKeys.length; k < kk; k++) {
-                            _comparedValue = String(result[i][_displayKeys[k]]).toLowerCase();
-                            if (this.options.accent) {
-                                _comparedValue = this.helper.removeAccent.call(
-                                    this,
-                                    _comparedValue
-                                );
-                            }
-
-                            if (_comparedValue.indexOf(query) === 0) {
-                                hint = String(result[i][_displayKeys[k]]);
-                                this.hintIndex = i;
-                                break;
-                            }
-                        }
-                        if (this.hintIndex !== null) {
-                            break;
-                        }
+        buildHintLayout: function(t) {
+            if (this.options.hint)
+                if (this.node[0].scrollWidth > Math.ceil(this.node.innerWidth())) this.hint.container && this.hint.container.val("");
+                else {
+                    var e = this,
+                        i = "",
+                        s = (t = t || this.result, this.query.toLowerCase());
+                    if (this.options.accent && (s = this.helper.removeAccent.call(this, s)), this.hintIndex = null, this.searchGroups.length) {
+                        if (this.hint.container || (this.hint.css = j.extend({
+                                "border-color": "transparent",
+                                position: "absolute",
+                                top: 0,
+                                display: "inline",
+                                "z-index": -1,
+                                float: "none",
+                                color: "silver",
+                                "box-shadow": "none",
+                                cursor: "default",
+                                "-webkit-user-select": "none",
+                                "-moz-user-select": "none",
+                                "-ms-user-select": "none",
+                                "user-select": "none"
+                            }, this.options.hint), this.hint.container = j("<" + this.node[0].nodeName + "/>", {
+                                type: this.node.attr("type"),
+                                class: this.node.attr("class"),
+                                readonly: !0,
+                                unselectable: "on",
+                                "aria-hidden": "true",
+                                tabindex: -1,
+                                click: function() {
+                                    e.node.focus()
+                                }
+                            }).addClass(this.options.selector.hint).css(this.hint.css).insertAfter(this.node), this.node.parent().css({
+                                position: "relative"
+                            })), this.hint.container.css("color", this.hint.css.color), s)
+                            for (var o, n, r, a = 0, l = t.length; a < l; a++)
+                                if (!t[a].disabled) {
+                                    n = t[a].group;
+                                    for (var h = 0, c = (o = this.options.source[n].display || this.options.display).length; h < c; h++)
+                                        if (r = String(t[a][o[h]]).toLowerCase(), this.options.accent && (r = this.helper.removeAccent.call(this, r)), 0 === r.indexOf(s)) {
+                                            i = String(t[a][o[h]]), this.hintIndex = a;
+                                            break
+                                        } if (null !== this.hintIndex) break
+                                } var p = 0 < i.length && this.rawQuery + i.substring(this.query.length) || "";
+                        this.hint.container.val(p), this.isContentEditable && this.hint.container.text(p)
                     }
                 }
-
-                var hintValue =
-                    (hint.length > 0 &&
-                    this.rawQuery + hint.substring(this.query.length)) ||
-                    "";
-                this.hint.container.val(hintValue);
-
-                if (this.isContentEditable) {
-                    this.hint.container.text(hintValue);
-                }
+        },
+        buildDropdownLayout: function() {
+            if (this.options.dropdownFilter) {
+                var i = this;
+                j("<span/>", {
+                    class: this.options.selector.filter,
+                    html: function() {
+                        j(this).append(j("<button/>", {
+                            type: "button",
+                            class: i.options.selector.filterButton,
+                            style: "display: none;",
+                            click: function() {
+                                i.container.toggleClass("filter");
+                                var e = i.namespace + "-dropdown-filter";
+                                j("html").off(e), i.container.hasClass("filter") && j("html").on("click" + e + " touchend" + e, function(t) {
+                                    j(t.target).closest("." + i.options.selector.filter)[0] && j(t.target).closest(i.container)[0] || i.hasDragged || (i.container.removeClass("filter"), j("html").off(e))
+                                })
+                            }
+                        })), j(this).append(j("<ul/>", {
+                            class: i.options.selector.dropdown
+                        }))
+                    }
+                }).insertAfter(i.container.find("." + i.options.selector.query))
             }
         },
-
-        buildDropdownLayout: function () {
-            if (!this.options.dropdownFilter) return;
-
-            var scope = this;
-
-            $("<span/>", {
-                class: this.options.selector.filter,
-                html: function () {
-                    $(this).append(
-                        $("<button/>", {
-                            type: "button",
-                            class: scope.options.selector.filterButton,
-                            style: "display: none;",
-                            click: function () {
-                                scope.container.toggleClass("filter");
-
-                                var _ns = scope.namespace + "-dropdown-filter";
-
-                                $("html").off(_ns);
-
-                                if (scope.container.hasClass("filter")) {
-                                    $("html").on("click" + _ns + " touchend" + _ns, function (e) {
-                                        if (
-                                            ($(e.target).closest(
-                                                "." + scope.options.selector.filter
-                                            )[0] &&
-                                            $(e.target).closest(scope.container)[0]) ||
-                                            scope.hasDragged
-                                        )
-                                            return;
-                                        scope.container.removeClass("filter");
-
-                                        $("html").off(_ns);
-                                    });
-                                }
-                            }
-                        })
-                    );
-
-                    $(this).append(
-                        $("<ul/>", {
-                            class: scope.options.selector.dropdown
-                        })
-                    );
-                }
-            }).insertAfter(scope.container.find("." + scope.options.selector.query));
-        },
-
-        buildDropdownItemLayout: function (type) {
-            if (!this.options.dropdownFilter) return;
-
-            var scope = this,
-                template,
-                all =
-                    (typeof this.options.dropdownFilter === "string" &&
-                    this.options.dropdownFilter) ||
-                    "All",
-                ulScope = this.container.find("." + this.options.selector.dropdown),
-                filter;
-
-            // Use regular groups defined in options.source
-            if (
-                type === "static" &&
-                (this.options.dropdownFilter === true ||
-                typeof this.options.dropdownFilter === "string")
-            ) {
-                this.dropdownFilter.static.push({
+        buildDropdownItemLayout: function(t) {
+            if (this.options.dropdownFilter) {
+                var e, i, o = this,
+                    n = "string" == typeof this.options.dropdownFilter && this.options.dropdownFilter || "All",
+                    r = this.container.find("." + this.options.selector.dropdown);
+                "static" !== t || !0 !== this.options.dropdownFilter && "string" != typeof this.options.dropdownFilter || this.dropdownFilter.static.push({
                     key: "group",
                     template: "{{group}}",
-                    all: all,
+                    all: n,
                     value: Object.keys(this.options.source)
                 });
-            }
-
-            for (var i = 0, ii = this.dropdownFilter[type].length; i < ii; i++) {
-                filter = this.dropdownFilter[type][i];
-
-                if (!Array.isArray(filter.value)) {
-                    filter.value = [filter.value];
-                }
-
-                if (filter.all) {
-                    this.dropdownFilterAll = filter.all;
-                }
-
-                for (var k = 0, kk = filter.value.length; k <= kk; k++) {
-                    // Only add "all" at the last filter iteration
-                    if (k === kk && i !== ii - 1) {
-                        continue;
-                    } else if (k === kk && i === ii - 1) {
-                        if (type === "static" && this.dropdownFilter.dynamic.length) {
-                            continue;
-                        }
-                    }
-
-                    template = this.dropdownFilterAll || all;
-                    if (filter.value[k]) {
-                        if (filter.template) {
-                            template = filter.template.replace(
-                                new RegExp("{{" + filter.key + "}}", "gi"),
-                                filter.value[k]
-                            );
-                        } else {
-                            template = filter.value[k];
-                        }
-                    } else {
-                        this.container
-                            .find("." + scope.options.selector.filterButton)
-                            .html(template);
-                    }
-
-                    (function (k, filter, template) {
-                        ulScope.append(
-                            $("<li/>", {
-                                class: scope.options.selector.dropdownItem +
-                                " " +
-                                scope.helper.slugify.call(
-                                    scope,
-                                    filter.key + "-" + (filter.value[k] || all)
-                                ),
-                                html: $("<a/>", {
-                                    href: "javascript:;",
-                                    html: template,
-                                    click: function (e) {
-                                        e.preventDefault();
-                                        _selectFilter.call(scope, {
-                                            key: filter.key,
-                                            value: filter.value[k] || "*",
-                                            template: template
-                                        });
-                                    }
-                                })
+                for (var s = 0, a = this.dropdownFilter[t].length; s < a; s++) {
+                    i = this.dropdownFilter[t][s], Array.isArray(i.value) || (i.value = [i.value]), i.all && (this.dropdownFilterAll = i.all);
+                    for (var l = 0, h = i.value.length; l <= h; l++) l === h && s !== a - 1 || l === h && s === a - 1 && "static" === t && this.dropdownFilter.dynamic.length || (e = this.dropdownFilterAll || n, i.value[l] ? e = i.template ? i.template.replace(new RegExp("{{" + i.key + "}}", "gi"), i.value[l]) : i.value[l] : this.container.find("." + o.options.selector.filterButton).html(e), function(e, i, s) {
+                        r.append(j("<li/>", {
+                            class: o.options.selector.dropdownItem + " " + o.helper.slugify.call(o, i.key + "-" + (i.value[e] || n)),
+                            html: j("<a/>", {
+                                href: "javascript:;",
+                                html: s,
+                                click: function(t) {
+                                    t.preventDefault(), c.call(o, {
+                                        key: i.key,
+                                        value: i.value[e] || "*",
+                                        template: s
+                                    })
+                                }
                             })
-                        );
-                    })(k, filter, template);
+                        }))
+                    }(l, i, e))
                 }
+                this.dropdownFilter[t].length && this.container.find("." + o.options.selector.filterButton).removeAttr("style")
             }
 
-            if (this.dropdownFilter[type].length) {
-                this.container
-                    .find("." + scope.options.selector.filterButton)
-                    .removeAttr("style");
-            }
-
-            /**
-             * @private
-             * Select the filter and rebuild the result group
-             *
-             * @param {object} item
-             */
-            function _selectFilter(item) {
-                if (item.value === "*") {
-                    delete this.filters.dropdown;
-                } else {
-                    this.filters.dropdown = item;
-                }
-
-                this.container
-                    .removeClass("filter")
-                    .find("." + this.options.selector.filterButton)
-                    .html(item.template);
-
-                this.isDropdownEvent = true;
-                this.node.trigger("input" + this.namespace);
-
-                if (this.options.multiselect) {
-                    this.adjustInputSize();
-                }
-
-                this.node.focus();
+            function c(t) {
+                "*" === t.value ? delete this.filters.dropdown : this.filters.dropdown = t, this.container.removeClass("filter").find("." + this.options.selector.filterButton).html(t.template), this.isDropdownEvent = !0, this.node.trigger("input" + this.namespace), this.options.multiselect && this.adjustInputSize(), this.node.focus()
             }
         },
-
         dynamicFilter: {
-            isEnabled: false,
-            init: function () {
-                if (!this.options.dynamicFilter) return;
-
-                this.dynamicFilter.bind.call(this);
-                this.dynamicFilter.isEnabled = true;
+            init: function() {
+                this.options.dynamicFilter && (this.dynamicFilter.bind.call(this), this.isDynamicFilterEnabled = !0)
             },
-
-            validate: function (item) {
-                var isValid,
-                    softValid = null,
-                    hardValid = null,
-                    itemValue;
-
-                for (var key in this.filters.dynamic) {
-                    if (!this.filters.dynamic.hasOwnProperty(key)) continue;
-                    if (!!~key.indexOf(".")) {
-                        itemValue = this.helper.namespace.call(this, key, item, "get");
-                    } else {
-                        itemValue = item[key];
-                    }
-
-                    if (this.filters.dynamic[key].modifier === "|" && !softValid) {
-                        softValid = itemValue == this.filters.dynamic[key].value || false;
-                    }
-
-                    if (this.filters.dynamic[key].modifier === "&") {
-                        // Leaving "==" in case of comparing number with string
-                        if (itemValue == this.filters.dynamic[key].value) {
-                            hardValid = true;
-                        } else {
-                            hardValid = false;
-                            break;
+            validate: function(t) {
+                var e, i, s = null,
+                    o = null;
+                for (var n in this.filters.dynamic)
+                    if (this.filters.dynamic.hasOwnProperty(n) && (i = ~n.indexOf(".") ? this.helper.namespace.call(this, n, t, "get") : t[n], "|" !== this.filters.dynamic[n].modifier || s || (s = i == this.filters.dynamic[n].value || !1), "&" === this.filters.dynamic[n].modifier)) {
+                        if (i != this.filters.dynamic[n].value) {
+                            o = !1;
+                            break
                         }
-                    }
-                }
-
-                isValid = softValid;
-                if (hardValid !== null) {
-                    isValid = hardValid;
-                    if (hardValid === true && softValid !== null) {
-                        isValid = softValid;
-                    }
-                }
-
-                return !!isValid;
+                        o = !0
+                    } return e = s, null !== o && !0 === (e = o) && null !== s && (e = s), !!e
             },
-
-            set: function (key, value) {
-                var matches = key.match(/^([|&])?(.+)/);
-
-                if (!value) {
-                    delete this.filters.dynamic[matches[2]];
-                } else {
-                    this.filters.dynamic[matches[2]] = {
-                        modifier: matches[1] || "|",
-                        value: value
-                    };
-                }
-
-                if (this.dynamicFilter.isEnabled) {
-                    this.generateSource();
-                }
+            set: function(t, e) {
+                var i = t.match(/^([|&])?(.+)/);
+                e ? this.filters.dynamic[i[2]] = {
+                    modifier: i[1] || "|",
+                    value: e
+                } : delete this.filters.dynamic[i[2]], this.isDynamicFilterEnabled && this.generateSource()
             },
-            bind: function () {
-                var scope = this,
-                    filter;
-
-                for (var i = 0, ii = this.options.dynamicFilter.length; i < ii; i++) {
-                    filter = this.options.dynamicFilter[i];
-
-                    if (typeof filter.selector === "string") {
-                        filter.selector = $(filter.selector);
-                    }
-
-                    if (
-                        !(filter.selector instanceof $) || !filter.selector[0] || !filter.key
-                    ) {
-                        // {debug}
-                        if (this.options.debug) {
-                            _debug.log({
-                                node: this.selector,
-                                function: "buildDynamicLayout()",
-                                message: 'Invalid jQuery selector or jQuery Object for "filter.selector" or missing filter.key'
-                            });
-
-                            _debug.print();
-                        }
-                        // {/debug}
-                        continue;
-                    }
-
-                    (function (filter) {
-                        filter.selector
-                            .off(scope.namespace)
-                            .on("change" + scope.namespace, function () {
-                                scope.dynamicFilter.set.apply(scope, [
-                                    filter.key,
-                                    scope.dynamicFilter.getValue(this)
-                                ]);
-                            })
-                            .trigger("change" + scope.namespace);
-                    })(filter);
-                }
+            bind: function() {
+                for (var t, e = this, i = 0, s = this.options.dynamicFilter.length; i < s; i++) "string" == typeof(t = this.options.dynamicFilter[i]).selector && (t.selector = j(t.selector)), t.selector instanceof j && t.selector[0] && t.key && function(t) {
+                    t.selector.off(e.namespace).on("change" + e.namespace, function() {
+                        e.dynamicFilter.set.apply(e, [t.key, e.dynamicFilter.getValue(this)])
+                    }).trigger("change" + e.namespace)
+                }(t)
             },
-
-            getValue: function (tag) {
-                var value;
-                if (tag.tagName === "SELECT") {
-                    value = tag.value;
-                } else if (tag.tagName === "INPUT") {
-                    if (tag.type === "checkbox") {
-                        value =
-                            (tag.checked && tag.getAttribute("value")) || tag.checked || null;
-                    } else if (tag.type === "radio" && tag.checked) {
-                        value = tag.value;
-                    }
-                }
-                return value;
+            getValue: function(t) {
+                var e;
+                return "SELECT" === t.tagName ? e = t.value : "INPUT" === t.tagName && ("checkbox" === t.type ? e = t.checked && t.getAttribute("value") || t.checked || null : "radio" === t.type && t.checked && (e = t.value)), e
             }
         },
-
-        buildMultiselectLayout: function () {
-            if (!this.options.multiselect) return;
-            var scope = this;
-            var multiselectData;
-
-            this.label.container = $("<span/>", {
-                class: this.options.selector.labelContainer,
-                "data-padding-left": parseFloat(this.node.css("padding-left")) || 0,
-                "data-padding-right": parseFloat(this.node.css("padding-right")) || 0,
-                "data-padding-top": parseFloat(this.node.css("padding-top")) || 0,
-                click: function (e) {
-                    if ($(e.target).hasClass(scope.options.selector.labelContainer)) {
-                        scope.node.focus();
+        buildMultiselectLayout: function() {
+            if (this.options.multiselect) {
+                var t, e = this;
+                this.label.container = j("<span/>", {
+                    class: this.options.selector.labelContainer,
+                    "data-padding-left": parseFloat(this.node.css("padding-left")) || 0,
+                    "data-padding-right": parseFloat(this.node.css("padding-right")) || 0,
+                    "data-padding-top": parseFloat(this.node.css("padding-top")) || 0,
+                    click: function(t) {
+                        j(t.target).hasClass(e.options.selector.labelContainer) && e.node.focus()
                     }
-                }
-            });
-
-            this.node
-                .closest("." + this.options.selector.query)
-                .prepend(this.label.container);
-
-            if (!this.options.multiselect.data) return;
-
-            if (Array.isArray(this.options.multiselect.data)) {
-                this.populateMultiselectData(this.options.multiselect.data);
-            } else if (typeof this.options.multiselect.data === 'function') {
-                multiselectData = this.options.multiselect.data.call(this);
-                if (Array.isArray(multiselectData)) {
-                    this.populateMultiselectData(multiselectData);
-                } else if (typeof multiselectData.promise === "function") {
-                    $.when(multiselectData).then(function (deferredData) {
-                        if (deferredData && Array.isArray(deferredData)) {
-                            scope.populateMultiselectData(deferredData);
-                        }
+                }), this.node.closest("." + this.options.selector.query).prepend(this.label.container), this.options.multiselect.data && (Array.isArray(this.options.multiselect.data) ? this.populateMultiselectData(this.options.multiselect.data) : "function" == typeof this.options.multiselect.data && (t = this.options.multiselect.data.call(this), Array.isArray(t) ? this.populateMultiselectData(t) : "function" == typeof t.promise && j.when(t).then(function(t) {
+                    t && Array.isArray(t) && e.populateMultiselectData(t)
+                })))
+            }
+        },
+        isMultiselectUniqueData: function(t) {
+            for (var e = !0, i = 0, s = this.comparedItems.length; i < s; ++i)
+                if (this.comparedItems[i] === this.getMultiselectComparedData(t)) {
+                    e = !1;
+                    break
+                } return e
+        },
+        populateMultiselectData: function(t) {
+            for (var e = 0, i = t.length; e < i; ++e) this.addMultiselectItemLayout(t[e]);
+            this.node.trigger("search" + this.namespace, {
+                origin: "populateMultiselectData"
+            })
+        },
+        addMultiselectItemLayout: function(t) {
+            if (this.isMultiselectUniqueData(t)) {
+                this.items.push(t), this.comparedItems.push(this.getMultiselectComparedData(t));
+                var e, i = this.getTemplateValue(t),
+                    s = this,
+                    o = this.options.multiselect.href ? "a" : "span",
+                    n = j("<span/>", {
+                        class: this.options.selector.label,
+                        html: j("<" + o + "/>", {
+                            text: i,
+                            click: function(t) {
+                                var e = j(this).closest("." + s.options.selector.label),
+                                    i = s.label.container.find("." + s.options.selector.label).index(e);
+                                s.options.multiselect.callback && s.helper.executeCallback.call(s, s.options.multiselect.callback.onClick, [s.node, s.items[i], t])
+                            },
+                            href: this.options.multiselect.href ? (e = s.items[s.items.length - 1], s.generateHref.call(s, s.options.multiselect.href, e)) : null
+                        })
                     });
-                }
-            }
-        },
-
-        isMultiselectUniqueData: function (data) {
-            var isUniqueData = true;
-            for (var x = 0, xx = this.comparedItems.length; x < xx; ++x) {
-                if (
-                    this.comparedItems[x] ===
-                    this.getMultiselectComparedData(data)
-                ) {
-                    isUniqueData = false;
-                    break;
-                }
-            }
-            return isUniqueData;
-        },
-
-        populateMultiselectData: function (data) {
-            for (var i = 0, ii = data.length; i < ii; ++i) {
-                this.addMultiselectItemLayout(data[i]);
-            }
-
-            this.node.trigger("search" + this.namespace, { origin: 'populateMultiselectData' });
-        },
-
-        addMultiselectItemLayout: function (item) {
-            if (!this.isMultiselectUniqueData(item)) return;
-
-            this.items.push(item);
-            this.comparedItems.push(
-                this.getMultiselectComparedData(item)
-            );
-
-            var templateValue = this.getTemplateValue(item);
-
-            var scope = this,
-                htmlTag = this.options.multiselect.href ? "a" : "span";
-
-            var label = $("<span/>", {
-                class: this.options.selector.label,
-                html: $("<" + htmlTag + "/>", {
-                    text: templateValue,
-                    click: function (e) {
-                        var currentLabel = $(this).closest(
-                                "." + scope.options.selector.label
-                            ),
-                            index = scope.label.container
-                                .find("." + scope.options.selector.label)
-                                .index(currentLabel);
-
-                        scope.options.multiselect.callback && scope.helper.executeCallback.call(
-                            scope,
-                            scope.options.multiselect.callback.onClick,
-                            [scope.node, scope.items[index], e]
-                        );
-                    },
-                    href: this.options.multiselect.href
-                        ? (function (item) {
-                            return scope.generateHref.call(
-                                scope,
-                                scope.options.multiselect.href,
-                                item
-                            );
-                        })(scope.items[scope.items.length - 1])
-                        : null
-                })
-            });
-
-            label.append(
-                $("<span/>", {
+                return n.append(j("<span/>", {
                     class: this.options.selector.cancelButton,
                     html: "×",
-                    click: function (e) {
-                        var label = $(this).closest(
-                                "." + scope.options.selector.label
-                            ),
-                            index = scope.label.container
-                                .find("." + scope.options.selector.label)
-                                .index(label);
-
-                        scope.cancelMultiselectItem(index, label, e);
+                    click: function(t) {
+                        var e = j(this).closest("." + s.options.selector.label),
+                            i = s.label.container.find("." + s.options.selector.label).index(e);
+                        s.cancelMultiselectItem(i, e, t)
                     }
+                })), this.label.container.append(n), this.adjustInputSize(), !0
+            }
+        },
+        cancelMultiselectItem: function(t, e, i) {
+            var s = this.items[t];
+            (e = e || this.label.container.find("." + this.options.selector.label).eq(t)).remove(), this.items.splice(t, 1), this.comparedItems.splice(t, 1), this.options.multiselect.callback && this.helper.executeCallback.call(this, this.options.multiselect.callback.onCancel, [this.node, s, i]), this.adjustInputSize(), this.focusOnly = !0, this.node.focus().trigger("input" + this.namespace, {
+                origin: "cancelMultiselectItem"
+            })
+        },
+        adjustInputSize: function() {
+            var i = this.node[0].getBoundingClientRect().width - (parseFloat(this.label.container.data("padding-right")) || 0) - (parseFloat(this.label.container.css("padding-left")) || 0),
+                s = 0,
+                o = 0,
+                n = 0,
+                r = !1,
+                a = 0;
+            this.label.container.find("." + this.options.selector.label).filter(function(t, e) {
+                0 === t && (a = j(e)[0].getBoundingClientRect().height + parseFloat(j(e).css("margin-bottom") || 0)), s = j(e)[0].getBoundingClientRect().width + parseFloat(j(e).css("margin-right") || 0), .7 * i < n + s && !r && (o++, r = !0), n + s < i ? n += s : (r = !1, n = s)
+            });
+            var t = parseFloat(this.label.container.data("padding-left") || 0) + (r ? 0 : n),
+                e = o * a + parseFloat(this.label.container.data("padding-top") || 0);
+            this.container.find("." + this.options.selector.query).find("input, textarea, [contenteditable], .typeahead__hint").css({
+                paddingLeft: t,
+                paddingTop: e
+            })
+        },
+        showLayout: function() {
+            !this.container.hasClass("result") && (this.result.length || this.displayEmptyTemplate || this.options.backdropOnFocus) && (function() {
+                var e = this;
+                j("html").off("keydown" + this.namespace).on("keydown" + this.namespace, function(t) {
+                    t.keyCode && 9 === t.keyCode && setTimeout(function() {
+                        j(":focus").closest(e.container).find(e.node)[0] || e.hideLayout()
+                    }, 0)
+                }), j("html").off("click" + this.namespace + " touchend" + this.namespace).on("click" + this.namespace + " touchend" + this.namespace, function(t) {
+                    j(t.target).closest(e.container)[0] || j(t.target).closest("." + e.options.selector.item)[0] || t.target.className === e.options.selector.cancelButton || e.hasDragged || e.hideLayout()
                 })
-            );
-
-            this.label.container.append(label);
-            this.adjustInputSize();
-
-            return true;
+            }.call(this), this.container.addClass([this.result.length || this.searchGroups.length && this.displayEmptyTemplate ? "result " : "", this.options.hint && this.searchGroups.length ? "hint" : "", this.options.backdrop || this.options.backdropOnFocus ? "backdrop" : ""].join(" ")), this.helper.executeCallback.call(this, this.options.callback.onShowLayout, [this.node, this.query]))
         },
-
-        cancelMultiselectItem: function (index, label, e) {
-            var item = this.items[index];
-
-            label = label
-                || this.label.container
-                    .find('.' + this.options.selector.label)
-                    .eq(index);
-
-            label.remove();
-
-            this.items.splice(index, 1);
-            this.comparedItems.splice(index, 1);
-
-            this.options.multiselect.callback && this.helper.executeCallback.call(
-                this,
-                this.options.multiselect.callback.onCancel,
-                [this.node, item, e]
-            );
-
-            this.adjustInputSize();
-
-            this.focusOnly = true;
-            this.node.focus().trigger('input' + this.namespace, { origin: 'cancelMultiselectItem' });
+        hideLayout: function() {
+            (this.container.hasClass("result") || this.container.hasClass("backdrop")) && (this.container.removeClass("result hint filter" + (this.options.backdropOnFocus && j(this.node).is(":focus") ? "" : " backdrop")), this.options.backdropOnFocus && this.container.hasClass("backdrop") || (j("html").off(this.namespace), this.helper.executeCallback.call(this, this.options.callback.onHideLayout, [this.node, this.query])))
         },
-
-        adjustInputSize: function () {
-            var nodeWidth =
-                this.node[0].getBoundingClientRect().width -
-                (parseFloat(this.label.container.data("padding-right")) || 0) -
-                (parseFloat(this.label.container.css("padding-left")) || 0);
-
-            var labelOuterWidth = 0,
-                numberOfRows = 0,
-                currentRowWidth = 0,
-                isRowAdded = false,
-                labelOuterHeight = 0;
-
-            this.label.container
-                .find("." + this.options.selector.label)
-                .filter(function (i, v) {
-                    if (i === 0) {
-                        labelOuterHeight =
-                            $(v)[0].getBoundingClientRect().height +
-                            parseFloat($(v).css("margin-bottom") || 0);
+        resetLayout: function() {
+            this.result = [], this.tmpResult = {}, this.groups = [], this.resultCount = 0, this.resultCountPerGroup = {}, this.resultItemCount = 0, this.resultHtml = null, this.options.hint && this.hint.container && (this.hint.container.val(""), this.isContentEditable && this.hint.container.text(""))
+        },
+        resetInput: function() {
+            this.node.val(""), this.isContentEditable && this.node.text(""), this.query = "", this.rawQuery = ""
+        },
+        buildCancelButtonLayout: function() {
+            if (this.options.cancelButton) {
+                var e = this;
+                j("<span/>", {
+                    class: this.options.selector.cancelButton,
+                    html: "×",
+                    mousedown: function(t) {
+                        t.stopImmediatePropagation(), t.preventDefault(), e.resetInput(), e.node.trigger("input" + e.namespace, [t])
                     }
-
-                    // labelOuterWidth = Math.round($(v)[0].getBoundingClientRect().width * 100) / 100 + parseFloat($(v).css('margin-right'));
-                    labelOuterWidth =
-                        $(v)[0].getBoundingClientRect().width +
-                        parseFloat($(v).css("margin-right") || 0);
-
-                    if (
-                        currentRowWidth + labelOuterWidth > nodeWidth * 0.7 && !isRowAdded
-                    ) {
-                        numberOfRows++;
-                        isRowAdded = true;
-                    }
-
-                    if (currentRowWidth + labelOuterWidth < nodeWidth) {
-                        currentRowWidth += labelOuterWidth;
-                    } else {
-                        isRowAdded = false;
-                        currentRowWidth = labelOuterWidth;
-                    }
-                });
-
-            var paddingLeft =
-                parseFloat(this.label.container.data("padding-left") || 0) +
-                (isRowAdded ? 0 : currentRowWidth);
-            var paddingTop =
-                numberOfRows * labelOuterHeight +
-                parseFloat(this.label.container.data("padding-top") || 0);
-
-            this.container
-                .find("." + this.options.selector.query)
-                .find("input, textarea, [contenteditable], .typeahead__hint")
-                .css({
-                    paddingLeft: paddingLeft,
-                    paddingTop: paddingTop
-                });
-        },
-
-        showLayout: function () {
-            if (this.container.hasClass("result") ||
-                (
-                    !this.result.length && !this.displayEmptyTemplate && !this.options.backdropOnFocus
-                )
-            ) return;
-
-            _addHtmlListeners.call(this);
-
-            this.container.addClass(
-                [
-                    this.result.length ||
-                    (this.searchGroups.length &&
-                    this.displayEmptyTemplate)
-                        ? "result "
-                        : "",
-                    this.options.hint && this.searchGroups.length ? "hint" : "",
-                    this.options.backdrop || this.options.backdropOnFocus
-                        ? "backdrop"
-                        : ""
-                ].join(" ")
-            );
-
-            this.helper.executeCallback.call(
-                this,
-                this.options.callback.onShowLayout,
-                [this.node, this.query]
-            );
-
-            function _addHtmlListeners() {
-                var scope = this;
-
-                // If Typeahead is blured by pressing the "Tab" Key, hide the results
-                $("html")
-                    .off("keydown" + this.namespace)
-                    .on("keydown" + this.namespace, function (e) {
-                        if (!e.keyCode || e.keyCode !== 9) return;
-                        setTimeout(function () {
-                            if (
-                                !$(":focus")
-                                    .closest(scope.container)
-                                    .find(scope.node)[0]
-                            ) {
-                                scope.hideLayout();
-                            }
-                        }, 0);
-                    });
-
-                // If Typeahead is blured by clicking outside, hide the results
-                $("html")
-                    .off("click" + this.namespace + " touchend" + this.namespace)
-                    .on("click" + this.namespace + " touchend" + this.namespace, function (e) {
-                        if ($(e.target).closest(scope.container)[0] ||
-                            $(e.target).closest('.' + scope.options.selector.item)[0] ||
-                            e.target.className === scope.options.selector.cancelButton ||
-                            scope.hasDragged
-                        ) return;
-
-                        scope.hideLayout();
-                    });
+                }).insertBefore(this.node)
             }
         },
-
-        hideLayout: function () {
-            // Means the container is already hidden
-            if (!this.container.hasClass("result") && !this.container.hasClass("backdrop")) return;
-
-            this.container.removeClass(
-                "result hint filter" +
-                (this.options.backdropOnFocus && $(this.node).is(":focus")
-                    ? ""
-                    : " backdrop")
-            );
-
-            if (this.options.backdropOnFocus && this.container.hasClass("backdrop"))
-                return;
-
-            // Make sure the event HTML gets cleared
-            $("html").off(this.namespace);
-
-            this.helper.executeCallback.call(
-                this,
-                this.options.callback.onHideLayout,
-                [this.node, this.query]
-            );
+        toggleCancelButtonVisibility: function() {
+            this.container.toggleClass("cancel", !!this.query.length)
         },
-
-        resetLayout: function () {
-            this.result = [];
-            this.tmpResult = {};
-            this.groups = [];
-            this.resultCount = 0;
-            this.resultCountPerGroup = {};
-            this.resultItemCount = 0;
-            this.resultHtml = null;
-
-            if (this.options.hint && this.hint.container) {
-                this.hint.container.val("");
-                if (this.isContentEditable) {
-                    this.hint.container.text("");
-                }
-            }
+        __construct: function() {
+            this.extendOptions(), this.unifySourceFormat() && (this.dynamicFilter.init.apply(this), this.init(), this.buildDropdownLayout(), this.buildDropdownItemLayout("static"), this.buildMultiselectLayout(), this.delegateEvents(), this.buildCancelButtonLayout(), this.helper.executeCallback.call(this, this.options.callback.onReady, [this.node]))
         },
-
-        resetInput: function () {
-            this.node.val("");
-            if (this.isContentEditable) {
-                this.node.text("");
-            }
-            this.query = "";
-            this.rawQuery = "";
-        },
-
-        buildCancelButtonLayout: function () {
-            if (!this.options.cancelButton) return;
-            var scope = this;
-
-            $("<span/>", {
-                class: this.options.selector.cancelButton,
-                html: "×",
-                mousedown: function (e) {
-                    // Don't blur the input
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-
-                    scope.resetInput();
-                    scope.node.trigger("input" + scope.namespace, [e]);
-                }
-            }).insertBefore(this.node);
-        },
-
-        toggleCancelButtonVisibility: function () {
-            this.container.toggleClass("cancel", !!this.query.length);
-        },
-
-        __construct: function () {
-            this.extendOptions();
-
-            if (!this.unifySourceFormat()) {
-                return;
-            }
-
-            this.dynamicFilter.init.apply(this);
-
-            this.init();
-            this.buildDropdownLayout();
-            this.buildDropdownItemLayout("static");
-
-            this.buildMultiselectLayout();
-
-            this.delegateEvents();
-            this.buildCancelButtonLayout();
-
-            this.helper.executeCallback.call(this, this.options.callback.onReady, [
-                this.node
-            ]);
-        },
-
         helper: {
-            isEmpty: function (obj) {
-                for (var prop in obj) {
-                    if (obj.hasOwnProperty(prop)) return false;
-                }
-
-                return true;
+            isEmpty: function(t) {
+                for (var e in t)
+                    if (t.hasOwnProperty(e)) return !1;
+                return !0
             },
-
-            /**
-             * Remove every accent(s) from a string
-             *
-             * @param {String} string
-             * @returns {*}
-             */
-            removeAccent: function (string) {
-                if (typeof string !== "string") {
-                    return;
+            removeAccent: function(t) {
+                if ("string" == typeof t) {
+                    var e = o;
+                    return "object" == typeof this.options.accent && (e = this.options.accent), t = t.toLowerCase().replace(new RegExp("[" + e.from + "]", "g"), function(t) {
+                        return e.to[e.from.indexOf(t)]
+                    })
                 }
-
-                var accent = _accent;
-
-                if (typeof this.options.accent === "object") {
-                    accent = this.options.accent;
-                }
-
-                string = string
-                    .toLowerCase()
-                    .replace(new RegExp("[" + accent.from + "]", "g"), function (match) {
-                        return accent.to[accent.from.indexOf(match)];
-                    });
-
-                return string;
             },
-
-            /**
-             * Creates a valid url from string
-             *
-             * @param {String} string
-             * @returns {string}
-             */
-            slugify: function (string) {
-                string = String(string);
-
-                if (string !== "") {
-                    string = this.helper.removeAccent.call(this, string);
-                    string = string
-                        .replace(/[^-a-z0-9]+/g, "-")
-                        .replace(/-+/g, "-")
-                        .replace(/^-|-$/g, "");
-                }
-
-                return string;
+            slugify: function(t) {
+                return "" !== (t = String(t)) && (t = (t = this.helper.removeAccent.call(this, t)).replace(/[^-a-z0-9]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "")), t
             },
-
-            /**
-             * Sort list of object by key
-             *
-             * @param {String|Array} field
-             * @param {Boolean} reverse
-             * @param {Function} primer
-             * @returns {Function}
-             */
-            sort: function (field, reverse, primer) {
-                var key = function (x) {
-                    for (var i = 0, ii = field.length; i < ii; i++) {
-                        if (typeof x[field[i]] !== "undefined") {
-                            return primer(x[field[i]]);
-                        }
+            sort: function(s, i, o) {
+                function n(t) {
+                    for (var e = 0, i = s.length; e < i; e++)
+                        if (void 0 !== t[s[e]]) return o(t[s[e]]);
+                    return t
+                }
+                return i = [-1, 1][+!!i],
+                    function(t, e) {
+                        return t = n(t), e = n(e), i * ((e < t) - (t < e))
                     }
-                    return x;
-                };
-
-                reverse = [-1, 1][+!!reverse];
-
-                return function (a, b) {
-                    return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
-                };
             },
-
-            /**
-             * Replace a string from-to index
-             *
-             * @param {String} string The complete string to replace into
-             * @param {Number} offset The cursor position to start replacing from
-             * @param {Number} length The length of the replacing string
-             * @param {String} replace The replacing string
-             * @returns {String}
-             */
-            replaceAt: function (string, offset, length, replace) {
-                return (
-                    string.substring(0, offset) +
-                    replace +
-                    string.substring(offset + length)
-                );
+            replaceAt: function(t, e, i, s) {
+                return t.substring(0, e) + s + t.substring(e + i)
             },
-
-            /**
-             * Adds <strong> html around a matched string
-             *
-             * @param {String} string The complete string to match from
-             * @param {String} key
-             * @param {Boolean} [accents]
-             * @returns {*}
-             */
-            highlight: function (string, keys, accents) {
-                string = String(string);
-
-                var searchString =
-                        (accents && this.helper.removeAccent.call(this, string)) || string,
-                    matches = [];
-
-                if (!Array.isArray(keys)) {
-                    keys = [keys];
-                }
-
-                keys.sort(function (a, b) {
-                    return b.length - a.length;
+            highlight: function(t, e, i) {
+                t = String(t);
+                var s = i && this.helper.removeAccent.call(this, t) || t,
+                    o = [];
+                Array.isArray(e) || (e = [e]), e.sort(function(t, e) {
+                    return e.length - t.length
                 });
-
-                // Make sure the '|' join will be safe!
-                for (var i = keys.length - 1; i >= 0; i--) {
-                    if (keys[i].trim() === "") {
-                        keys.splice(i, 1);
-                        continue;
-                    }
-                    keys[i] = keys[i].replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-                }
-
-                searchString.replace(
-                    new RegExp("(?:" + keys.join("|") + ")(?!([^<]+)?>)", "gi"),
-                    function (match, index, offset) {
-                        matches.push({
-                            offset: offset,
-                            length: match.length
-                        });
-                    }
-                );
-
-                for (var i = matches.length - 1; i >= 0; i--) {
-                    string = this.helper.replaceAt(
-                        string,
-                        matches[i].offset,
-                        matches[i].length,
-                        "<strong>" +
-                        string.substr(matches[i].offset, matches[i].length) +
-                        "</strong>"
-                    );
-                }
-
-                return string;
+                for (var n = e.length - 1; 0 <= n; n--) "" !== e[n].trim() ? e[n] = e[n].replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") : e.splice(n, 1);
+                s.replace(new RegExp("(?:" + e.join("|") + ")(?!([^<]+)?>)", "gi"), function(t, e, i) {
+                    o.push({
+                        offset: i,
+                        length: t.length
+                    })
+                });
+                for (n = o.length - 1; 0 <= n; n--) t = this.helper.replaceAt(t, o[n].offset, o[n].length, "<strong>" + t.substr(o[n].offset, o[n].length) + "</strong>");
+                return t
             },
-
-            /**
-             * Get caret position, used for right arrow navigation
-             * when hint option is enabled
-             * @param {Node} element
-             * @returns {Number} Caret position
-             */
-            getCaret: function (element) {
-                var caretPos = 0;
-
-                if (element.selectionStart) {
-                    // Input & Textarea
-                    return element.selectionStart;
-                } else if (document.selection) {
-                    var r = document.selection.createRange();
-                    if (r === null) {
-                        return caretPos;
-                    }
-
-                    var re = element.createTextRange(),
-                        rc = re.duplicate();
-                    re.moveToBookmark(r.getBookmark());
-                    rc.setEndPoint("EndToStart", re);
-
-                    caretPos = rc.text.length;
+            getCaret: function(t) {
+                var e = 0;
+                if (t.selectionStart) return t.selectionStart;
+                if (document.selection) {
+                    var i = document.selection.createRange();
+                    if (null === i) return e;
+                    var s = t.createTextRange(),
+                        o = s.duplicate();
+                    s.moveToBookmark(i.getBookmark()), o.setEndPoint("EndToStart", s), e = o.text.length
                 } else if (window.getSelection) {
-                    // Contenteditable
-                    var sel = window.getSelection();
-                    if (sel.rangeCount) {
-                        var range = sel.getRangeAt(0);
-                        if (range.commonAncestorContainer.parentNode == element) {
-                            caretPos = range.endOffset;
-                        }
+                    var n = window.getSelection();
+                    if (n.rangeCount) {
+                        var r = n.getRangeAt(0);
+                        r.commonAncestorContainer.parentNode == t && (e = r.endOffset)
                     }
                 }
-                return caretPos;
+                return e
             },
-
-            /**
-             * For [contenteditable] typeahead node only,
-             * when an item is clicked set the cursor at the end
-             * @param {Node} element
-             */
-            setCaretAtEnd: function (element) {
-                if (
-                    typeof window.getSelection !== "undefined" &&
-                    typeof document.createRange !== "undefined"
-                ) {
-                    var range = document.createRange();
-                    range.selectNodeContents(element);
-                    range.collapse(false);
-                    var sel = window.getSelection();
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                } else if (typeof document.body.createTextRange !== "undefined") {
-                    var textRange = document.body.createTextRange();
-                    textRange.moveToElementText(element);
-                    textRange.collapse(false);
-                    textRange.select();
+            setCaretAtEnd: function(t) {
+                if (void 0 !== window.getSelection && void 0 !== document.createRange) {
+                    var e = document.createRange();
+                    e.selectNodeContents(t), e.collapse(!1);
+                    var i = window.getSelection();
+                    i.removeAllRanges(), i.addRange(e)
+                } else if (void 0 !== document.body.createTextRange) {
+                    var s = document.body.createTextRange();
+                    s.moveToElementText(t), s.collapse(!1), s.select()
                 }
             },
-
-            /**
-             * Clean strings from possible XSS (script and iframe tags)
-             * @param string
-             * @returns {string}
-             */
-            cleanStringFromScript: function (string) {
-                return (
-                    (typeof string === "string" &&
-                    string.replace(/<\/?(?:script|iframe)\b[^>]*>/gm, "")) ||
-                    string
-                );
+            cleanStringFromScript: function(t) {
+                return "string" == typeof t && t.replace(/<\/?(?:script|iframe)\b[^>]*>/gm, "") || t
             },
-
-            /**
-             * Executes an anonymous function or a string reached from the window scope.
-             *
-             * @example
-             * Note: These examples works with every configuration callbacks
-             *
-             * // An anonymous function inside the "onInit" option
-             * onInit: function() { console.log(':D'); };
-             *
-             * // myFunction() located on window.coucou scope
-             * onInit: 'window.coucou.myFunction'
-             *
-             * // myFunction(a,b) located on window.coucou scope passing 2 parameters
-             * onInit: ['window.coucou.myFunction', [':D', ':)']];
-             *
-             * // Anonymous function to execute a local function
-             * onInit: function () { myFunction(':D'); }
-             *
-             * @param {String|Array} callback The function to be called
-             * @param {Array} [extraParams] In some cases the function can be called with Extra parameters (onError)
-             * @returns {*}
-             */
-            executeCallback: function (callback, extraParams) {
-                if (!callback) {
-                    return;
+            executeCallback: function(t, e) {
+                if (t) {
+                    var i;
+                    if ("function" == typeof t) i = t;
+                    else if (("string" == typeof t || Array.isArray(t)) && ("string" == typeof t && (t = [t, []]), "function" != typeof(i = this.helper.namespace.call(this, t[0], window)))) return;
+                    return i.apply(this, (t[1] || []).concat(e || []))
                 }
-
-                var _callback;
-
-                if (typeof callback === "function") {
-                    _callback = callback;
-                } else if (typeof callback === "string" || Array.isArray(callback)) {
-                    if (typeof callback === "string") {
-                        callback = [callback, []];
-                    }
-
-                    _callback = this.helper.namespace.call(this, callback[0], window);
-
-                    if (typeof _callback !== "function") {
-                        // {debug}
-                        if (this.options.debug) {
-                            _debug.log({
-                                node: this.selector,
-                                function: "executeCallback()",
-                                arguments: JSON.stringify(callback),
-                                message: 'WARNING - Invalid callback function"'
-                            });
-
-                            _debug.print();
-                        }
-                        // {/debug}
-                        return;
-                    }
-                }
-
-                return _callback.apply(
-                    this,
-                    (callback[1] || []).concat(extraParams ? extraParams : [])
-                );
             },
-
-            namespace: function (string, object, method, defaultValue) {
-                if (typeof string !== "string" || string === "") {
-                    // {debug}
-                    if (this.options.debug) {
-                        _debug.log({
-                            node: this.options.input || this.selector,
-                            function: "helper.namespace()",
-                            arguments: string,
-                            message: 'ERROR - Missing string"'
-                        });
-
-                        _debug.print();
+            namespace: function(t, e, i, s) {
+                if ("string" != typeof t || "" === t) return !1;
+                var o = void 0 !== s ? s : void 0;
+                if (!~t.indexOf(".")) return e[t] || o;
+                for (var n = t.split("."), r = e || window, a = (i = i || "get", ""), l = 0, h = n.length; l < h; l++) {
+                    if (void 0 === r[a = n[l]]) {
+                        if (~["get", "delete"].indexOf(i)) return void 0 !== s ? s : void 0;
+                        r[a] = {}
                     }
-                    // {/debug}
-                    return false;
-                }
-
-                var value = typeof defaultValue !== "undefined"
-                    ? defaultValue
-                    : undefined;
-
-                // Exit before looping if the string doesn't contain an object reference
-                if (!~string.indexOf(".")) {
-                    return object[string] || value;
-                }
-
-                var parts = string.split("."),
-                    parent = object || window,
-                    method = method || "get",
-                    currentPart = "";
-
-                for (var i = 0, length = parts.length; i < length; i++) {
-                    currentPart = parts[i];
-
-                    if (typeof parent[currentPart] === "undefined") {
-                        if (~["get", "delete"].indexOf(method)) {
-                            return typeof defaultValue !== "undefined"
-                                ? defaultValue
-                                : undefined;
-                        }
-                        parent[currentPart] = {};
+                    if (~["set", "create", "delete"].indexOf(i) && l === h - 1) {
+                        if ("set" !== i && "create" !== i) return delete r[a], !0;
+                        r[a] = o
                     }
-
-                    if (~["set", "create", "delete"].indexOf(method)) {
-                        if (i === length - 1) {
-                            if (method === "set" || method === "create") {
-                                parent[currentPart] = value;
-                            } else {
-                                delete parent[currentPart];
-                                return true;
-                            }
-                        }
-                    }
-
-                    parent = parent[currentPart];
+                    r = r[a]
                 }
-                return parent;
+                return r
             },
-
-            typeWatch: (function () {
-                var timer = 0;
-                return function (callback, ms) {
-                    clearTimeout(timer);
-                    timer = setTimeout(callback, ms);
-                };
-            })()
+            typeWatch: (i = 0, function(t, e) {
+                clearTimeout(i), i = setTimeout(t, e)
+            })
         }
+    }, j.fn.typeahead = j.typeahead = function(t) {
+        return e.typeahead(this, t)
     };
-
-    /**
-     * @public
-     * Implement Typeahead on the selected input node.
-     *
-     * @param {Object} options
-     * @return {Object} Modified DOM element
-     */
-    $.fn.typeahead = $.typeahead = function (options) {
-        return _api.typeahead(this, options);
-    };
-
-    /**
-     * @private
-     * API to handles Typeahead methods via jQuery.
-     */
-    var _api = {
-        /**
-         * Enable Typeahead
-         *
-         * @param {Object} node
-         * @param {Object} options
-         * @returns {*}
-         */
-        typeahead: function (node, options) {
-            if (!options || !options.source || typeof options.source !== "object") {
-                // {debug}
-                _debug.log({
-                    node: node.selector || (options && options.input),
-                    function: "$.typeahead()",
-                    arguments: JSON.stringify((options && options.source) || ""),
-                    message: 'Undefined "options" or "options.source" or invalid source type - Typeahead dropped'
-                });
-
-                _debug.print();
-                // {/debug}
-
-                return;
-            }
-
-            if (typeof node === "function") {
-                if (!options.input) {
-                    // {debug}
-                    _debug.log({
-                        node: node.selector,
-                        function: "$.typeahead()",
-                        //'arguments': JSON.stringify(options),
-                        message: 'Undefined "options.input" - Typeahead dropped'
-                    });
-
-                    _debug.print();
-                    // {/debug}
-
-                    return;
+    var e = {
+        typeahead: function(t, e) {
+            if (e && e.source && "object" == typeof e.source) {
+                if ("function" == typeof t) {
+                    if (!e.input) return;
+                    t = j(e.input)
                 }
-
-                node = $(options.input);
-            }
-            if (!node.length) {
-                // {debug}
-                _debug.log({
-                    node: node.selector,
-                    function: "$.typeahead()",
-                    arguments: JSON.stringify(options.input),
-                    message: "Unable to find jQuery input element - Typeahead dropped"
-                });
-
-                _debug.print();
-                // {/debug}
-
-                return;
-            }
-            if (typeof node[0].value === "undefined") {
-                node[0].value = node.text();
-            }
-
-            // #270 Forcing node.selector, the property was deleted from jQuery3
-            // In case of multiple init, each of the instances needs it's own selector!
-            if (node.length === 1) {
-                node[0].selector =
-                    node.selector || options.input || node[0].nodeName.toLowerCase();
-
-                /*jshint boss:true */
-                return (window.Typeahead[node[0].selector] = new Typeahead(node, options));
-            } else {
-                var instances = {},
-                    instanceName;
-
-                for (var i = 0, ii = node.length; i < ii; ++i) {
-                    instanceName = node[i].nodeName.toLowerCase();
-                    if (typeof instances[instanceName] !== "undefined") {
-                        instanceName += i;
-                    }
-                    node[i].selector = instanceName;
-
-                    window.Typeahead[instanceName] = instances[instanceName] = new Typeahead(node.eq(i), options);
+                if (t.length) {
+                    if (void 0 === t[0].value && (t[0].value = t.text()), 1 === t.length) return t[0].selector = t.selector || e.input || t[0].nodeName.toLowerCase(), window.Typeahead[t[0].selector] = new r(t, e);
+                    for (var i, s = {}, o = 0, n = t.length; o < n; ++o) void 0 !== s[i = t[o].nodeName.toLowerCase()] && (i += o), t[o].selector = i, window.Typeahead[i] = s[i] = new r(t.eq(o), e);
+                    return s
                 }
-
-                return instances;
             }
         }
     };
-
-    // {debug}
-    var _debug = {
-        table: {},
-        log: function (debugObject) {
-            if (!debugObject.message || typeof debugObject.message !== "string") {
-                return;
-            }
-
-            this.table[debugObject.message] = $.extend(
-                {
-                    node: "",
-                    function: "",
-                    arguments: ""
-                },
-                debugObject
-            );
-        },
-        print: function () {
-            if (
-                Typeahead.prototype.helper.isEmpty(this.table) || !console || !console.table
-            ) {
-                return;
-            }
-
-            if (console.group !== undefined || console.table !== undefined) {
-                console.groupCollapsed("--- jQuery Typeahead Debug ---");
-                console.table(this.table);
-                console.groupEnd();
-            }
-
-            this.table = {};
-        }
-    };
-    _debug.log({
-        message: "WARNING - You are using the DEBUG version. Use /dist/jquery.typeahead.min.js in production."
-    });
-
-    _debug.print();
-    // {/debug}
-
-    // IE8 Shims
-    window.console = window.console || {
-            log: function () {
-            }
-        };
-
-    if (!Array.isArray) {
-        Array.isArray = function (arg) {
-            return Object.prototype.toString.call(arg) === "[object Array]";
-        };
-    }
-
-    if (!("trim" in String.prototype)) {
-        String.prototype.trim = function () {
-            return this.replace(/^\s+/, "").replace(/\s+$/, "");
-        };
-    }
-    if (!("indexOf" in Array.prototype)) {
-        Array.prototype.indexOf = function (find, i /*opt*/) {
-            if (i === undefined) i = 0;
-            if (i < 0) i += this.length;
-            if (i < 0) i = 0;
-            for (var n = this.length; i < n; i++)
-                if (i in this && this[i] === find) return i;
-            return -1;
-        };
-    }
-    if (!Object.keys) {
-        Object.keys = function (obj) {
-            var keys = [],
-                k;
-            for (k in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, k)) {
-                    keys.push(k);
-                }
-            }
-            return keys;
-        };
-    }
-
-    return Typeahead;
+    return window.console = window.console || {
+        log: function() {}
+    }, Array.isArray || (Array.isArray = function(t) {
+        return "[object Array]" === Object.prototype.toString.call(t)
+    }), "trim" in String.prototype || (String.prototype.trim = function() {
+        return this.replace(/^\s+/, "").replace(/\s+$/, "")
+    }), "indexOf" in Array.prototype || (Array.prototype.indexOf = function(t, e) {
+        void 0 === e && (e = 0), e < 0 && (e += this.length), e < 0 && (e = 0);
+        for (var i = this.length; e < i; e++)
+            if (e in this && this[e] === t) return e;
+        return -1
+    }), Object.keys || (Object.keys = function(t) {
+        var e, i = [];
+        for (e in t) Object.prototype.hasOwnProperty.call(t, e) && i.push(e);
+        return i
+    }), r
 });
