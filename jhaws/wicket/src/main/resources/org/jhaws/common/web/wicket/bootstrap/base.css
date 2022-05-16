@@ -894,16 +894,16 @@ a.link-unstyled
 .typeahead__container .form-control.is-invalid {
 	background-image: none !important;
 }
-.typeahead__container.control-sm input.form-control {
+.typeahead__container.typeahead__container-sm input.form-control {
 	font-size: 0.875rem;
 	line-height: 1.5;
 	min-height: unset;
 	padding: 0.25rem 0.5rem;
 }
-.typeahead__container.control-sm .typeahead__cancel-button {
+.typeahead__container.typeahead__container-sm .typeahead__cancel-button {
 	padding: .35rem .75rem;
 }
-.typeahead__container.control-sm .typeahead__button button {
+.typeahead__container.typeahead__container-sm .typeahead__button button {
 	padding-top: 4.5px;
 	padding-bottom: 4.5px;
 }
@@ -912,8 +912,8 @@ a.link-unstyled
 	padding: 0 0 0 0;
 	margin-top: 2px;
 }
-.typeahead__container.control-sm .typeahead__dropdown .typeahead__dropdown-item>a ,
-.typeahead__container.control-sm .typeahead__list .typeahead__item>a {
+.typeahead__container.typeahead__container-sm .typeahead__dropdown .typeahead__dropdown-item>a ,
+.typeahead__container.typeahead__container-sm .typeahead__list .typeahead__item>a {
 	padding: .25rem .5rem;
 }
 .typeahead__container .typeahead__dropdown .typeahead__dropdown-item:not([disabled]).active>a ,
@@ -970,15 +970,15 @@ document.addEventListener('drop', event => event.preventDefault()); */
 
 .form-control::placeholder,
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #ccc !important;
-  opacity: 1; /* Firefox */
+	/*color: var(--secondary) !important;
+	opacity: 1; *//* Firefox */
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-  color: #ccc !important;
+	/*color: var(--secondary) !important;*/
 }
 .form-control::-ms-input-placeholder,
 ::-ms-input-placeholder { /* Microsoft Edge */
-  color: #ccc !important;
+	/*color: var(--secondary) !important;*/
 }
 
 
