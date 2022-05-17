@@ -2,14 +2,14 @@
 const typeaheadInstances = new Map();
 
 // als je op het vergrootglas klikt om oopnieuw te zoeken
-function typeaheadOpnieuwZoeken(_THIS) {
-	//console.log("typeaheadOpnieuwZoeken");
+function typeAheadReQuery(_THIS) {
+	//console.log("typeAheadReQuery");
 	let __THIS = $(_THIS); // jquer wrapper rond 'this'
 	let TA_GROUP = __THIS.parents('.typeahead-container'); // ga naar component waar alles in zit
 	let TA_INPUT = TA_GROUP.find('.typeahead__field').find('input'); // input veld waardat typeahead op geinit is
 	//let typeaheadInstance = typeaheadInstances.get('#'+TA_INPUT.attr('id')); // zoek typeahead instanceop
 	//typeaheadInstance.search();
-	//console.log("typeaheadOpnieuwZoeken","TA_INPUT",TA_INPUT);
+	//console.log("typeAheadReQuery","TA_INPUT",TA_INPUT);
 	TA_INPUT.focus();//zoek input focusen
 	TA_INPUT.trigger('input.typeahead');
 }

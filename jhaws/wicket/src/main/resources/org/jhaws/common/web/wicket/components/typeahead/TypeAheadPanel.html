@@ -2,8 +2,8 @@
 
 	<span class="typeahead_component" wicket:id="typeAhead">
 		<input wicket:id="hiddenFieldUid" class="hidden" type="text">
-		<a style="display: none;" wicket:id="typeAheadResultaatToevoegen" class="hidden">*</a>
-		<a style="display: none;" wicket:id="typeAheadNieuw" class="hidden">+</a>
+		<a style="display: none;" wicket:id="typeAheadAddResult" class="hidden">*</a>
+		<a style="display: none;" wicket:id="typeAheadNew" class="hidden">+</a>
 		<div class="typeahead__resultcontainer badge badge-dark"></div>
 		<div class="typeahead__container typeahead__container-sm">
 			<div class="typeahead__field">
@@ -11,7 +11,7 @@
 					<input wicket:id="typeAheadInput" class="form-control form-control-sm" autocomplete="off">
 				</div>
 				<div class="typeahead__button">
-					<button wicket:id="typeAheadZoeken" onclick="event.preventDefault();typeaheadOpnieuwZoeken(this);">
+					<button wicket:id="typeAheadSearch" onclick="event.preventDefault();typeAheadReQuery(this);">
 						<i class="fa-fw fas fa-search"></i>
 					</button>
 				</div>
