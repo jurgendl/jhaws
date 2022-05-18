@@ -970,15 +970,15 @@ document.addEventListener('drop', event => event.preventDefault()); */
 
 .form-control::placeholder,
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-	/*color: var(--secondary) !important;
-	opacity: 1; *//* Firefox */
+	color: #999 !important;
+	opacity: 1; /* Firefox */
 }
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
-	/*color: var(--secondary) !important;*/
+	color: #999 !important;
 }
 .form-control::-ms-input-placeholder,
 ::-ms-input-placeholder { /* Microsoft Edge */
-	/*color: var(--secondary) !important;*/
+	color: #999 !important;
 }
 
 
