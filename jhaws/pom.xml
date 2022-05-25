@@ -112,7 +112,7 @@
 		<version.cglib>3.3.0</version.cglib>
 		<version.ehcache>2.10.6</version.ehcache>
 		<version.sqlite>3.32.3.2</version.sqlite>
-		<version.gson>2.8.7</version.gson>
+		<version.gson>2.8.9</version.gson>
 		<version.inject>1</version.inject>
 		<version.ldapbp>1.0</version.ldapbp>
 		<version.asm>8.0.1</version.asm>
