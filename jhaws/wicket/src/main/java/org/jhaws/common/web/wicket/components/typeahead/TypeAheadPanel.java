@@ -135,7 +135,7 @@ public abstract class TypeAheadPanel extends Panel {
         typeAheadNew = new AjaxLink<>("typeAheadNew") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                typeAheadNeuw(target);
+                typeAheadNew(target);
             }
         };
         typeAheadNew.setOutputMarkupId(true);
@@ -152,7 +152,7 @@ public abstract class TypeAheadPanel extends Panel {
         typeAhead.add(typeAheadSearch);
     }
 
-    abstract protected void typeAheadNeuw(AjaxRequestTarget target);
+    abstract protected void typeAheadNew(AjaxRequestTarget target);
 
     abstract protected void typeAheadAddResult(AjaxRequestTarget target, String uniqueIdentifier);
 

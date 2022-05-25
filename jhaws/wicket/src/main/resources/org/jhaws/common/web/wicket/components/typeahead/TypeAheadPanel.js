@@ -221,8 +221,7 @@ function typeaheadFactory(_taVars) {
 			onResult: function(node, query, obj, objCount, resultCountPerGroup) {
 				if(taVars.debug) console.table({
 					'Typeahead.onResult':'-',
-					'query':query, 
-					'obj':obj, 
+					'query':query,
 					'objCount':objCount,
 					'resultCountPerGroup':resultCountPerGroup
 				});
