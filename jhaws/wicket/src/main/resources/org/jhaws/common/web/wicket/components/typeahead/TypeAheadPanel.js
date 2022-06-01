@@ -104,10 +104,14 @@ function typeaheadFactory(_taVars) {
 				'taVars.triggerOnNew':taVars.triggerOnNew,
 				'taVars.newAsButton':taVars.newAsButton
 			});
+			var emptyLi = $('<li>', {
+				"text": taVars.emptyText,
+				"class": "typeahead__item typeahead__group-group extra_items"
+			});
 			if(taVars.newText) {
 				if(taVars.triggerOnNew) {
 					if(taVars.newAsButton) {
-						return $('<li/>', {
+						var newElementButton = $('<li/>', {
 							"class": "typeahead__item typeahead__group-group"
 						}).append(
 							$('<a/>', {
@@ -118,27 +122,40 @@ function typeaheadFactory(_taVars) {
 								"onclick": "event.preventDefault();$($(this).attr('data-on-click')).click();"
 							})
 						);
+						var combi = $('<span/>');
+						combi.append(emptyLi);
+						combi.append(newElementButton);
+						console.log('Typeahead.emptyTemplate:newElementButton:',combi.html());
+						return combi;
 					} else {
-						return $('<li/>', {
+						var newElementTrigger = $('<li/>', {
 							"text": taVars.newText,
 							"class": "typeahead__item typeahead__group-group extra_items extra_items_add",
 							"style": "cursor: pointer;",
 							"data-on-click": taVars.triggerOnNew,
 							"onclick": "event.preventDefault();$($(this).attr('data-on-click')).click();"
 						});
+						var combi = $('<span/>');
+						combi.append(emptyLi);
+						combi.append(newElementTrigger);
+						console.log('Typeahead.emptyTemplate:newElementTrigger:',combi.html());
+						return combi;
 					}
 				} else {
-					return $('<li/>', {
+					var newElement = $('<li/>', {
 						"text": taVars.newText,
 						"class": "typeahead__item typeahead__group-group extra_items extra_items_add",
 						"style": "cursor: pointer;"
 					});
+					var combi = $('<span/>');
+					combi.append(emptyLi);
+					combi.append(newElement);
+					console.log('Typeahead.emptyTemplate:newElement:',combi.html());
+					return combi;
 				}
 			} else {
-				return $('<li>', {
-					"text": taVars.emptyText,
-					"class": ""
-				});
+				console.log('Typeahead.emptyTemplate:emptyLi:',emptyLi.html());
+				return emptyLi;
 			}
 		},
 		template: function(query, item) { return taVars.htmlProperty; },
