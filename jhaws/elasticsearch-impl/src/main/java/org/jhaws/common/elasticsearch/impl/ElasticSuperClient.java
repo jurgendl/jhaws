@@ -957,14 +957,18 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return $query(index, query, pagination, sort, includes, excludes, Mapper.toMap(), highlight);
     }
 
-    public <T extends ElasticDocument> List<AggregationResult> aggregate(Class<T> type, String aggregationField, Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
-        return aggregate(index(type), aggregationField, aggregations, minDocCount);
+    public <T extends ElasticDocument> List<AggregationResult> aggregate(Class<T> type, QueryBuilder query, String aggregationField, Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
+        return aggregate(index(type), query, aggregationField, aggregations, minDocCount);
     }
 
-    public List<AggregationResult> aggregate(String index, String aggregationField, Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
+    public List<AggregationResult> aggregate(String index, QueryBuilder query, String aggregationField, Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
         List<AggregationResult> aggregationResults = new ArrayList<>();
 
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        QueryContext<Object> context = new QueryContext<>();
+        context.index = index;
+        context.query = query;
+        $$query_prepare(context);
+        SearchSourceBuilder searchSourceBuilder = context.searchSourceBuilder;
 
         searchSourceBuilder.from(0);
         searchSourceBuilder.size(getElasticCustomizer().getMaxResultWindow());
@@ -1355,7 +1359,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         } else if (context.pagination.getStart() != 0 && Scrolling.class.cast(context.pagination).getScrollId() == null) {
             LOGGER.error("no offset when using Scrolling, use Pagination instead");
         }
-        context.searchSourceBuilder.size(context.pagination.getMax());
+        if (context.pagination != null) {
+            context.searchSourceBuilder.size(context.pagination.getMax());
+        }
 
         context.searchSourceBuilder.timeout(getTimeout());
 
@@ -1832,11 +1838,11 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return explanation;
     }
 
-    public <T extends ElasticDocument> List<String> uniqueTerms(Class<T> type, String field) {
-        return uniqueTerms(index(type), field);
+    public <T extends ElasticDocument> List<String> uniqueTerms(Class<T> type, QueryBuilder query, String field) {
+        return uniqueTerms(index(type), query, field);
     }
 
-    public List<String> uniqueTerms(String index, String field) {
+    public List<String> uniqueTerms(String index, QueryBuilder query, String field) {
         // {
         // "size": 0,
         // "aggs": {
@@ -1859,7 +1865,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // }
         List<MetricAggregation> aggregations = Arrays.asList(MetricAggregation.cardinality);
         Map<String, List<MetricAggregation>> agg = Collections.singletonMap("uniqueValueCount", aggregations);
-        List<AggregationResult> aggregationResults = aggregate(index, field, agg, null);
+        List<AggregationResult> aggregationResults = aggregate(index, query, field, agg, null);
         return aggregationResults.stream().map(AggregationResult::getKey).collect(Collectors.toList());
     }
 
