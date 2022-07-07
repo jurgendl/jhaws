@@ -13,6 +13,7 @@ import org.apache.wicket.IConverterLocator;
 import org.apache.wicket.ISessionListener;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.ajax.WicketAjaxJQueryResourceReference;
 import org.apache.wicket.core.request.mapper.MountedMapper;
 import org.apache.wicket.csp.CSPDirective;
 import org.apache.wicket.csp.CSPDirectiveSrcValue;
@@ -47,8 +48,10 @@ import org.jhaws.common.io.FilePath.Filters.ImageFilter;
 import org.jhaws.common.io.FilePath.Filters.VideoFilter;
 import org.jhaws.common.web.resteasy.CustomObjectMapper;
 import org.jhaws.common.web.wicket.css.WicketCSSRoot;
+import org.jhaws.common.web.wicket.fontawesome.FontAwesome;
 import org.jhaws.common.web.wicket.forms.bootstrap.TextFieldPanel;
 import org.jhaws.common.web.wicket.icons.WicketIconsRoot;
+import org.jhaws.common.web.wicket.jquery.JQuery;
 import org.jhaws.common.web.wicket.js.GoogleLogin;
 import org.jhaws.common.web.wicket.js.WicketJSRoot;
 import org.jhaws.common.web.wicket.moment.MomentJs;
@@ -245,6 +248,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 			new AudioFilter().getExt().forEach(ext -> guard.addPattern("+*." + ext));
 			guard.addPattern("+*.map");
 			guard.addPattern("+*.tag");
+			guard.addPattern("+*.woff");
 			guard.addPattern("+*.woff2");
 		}
 	}
@@ -289,42 +293,56 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 	}
 
 	protected void addBundles() {
-		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js",
-				new JavaScriptResourceReference[] { //
-						BootstrapTinyMCE.JS, //
-						BootstrapTinyMCE.JS_JQUERY, //
-						BootstrapTinyMCE.JS_PLUGIN_LINK, //
-						BootstrapTinyMCE.JS_PLUGIN_CODE, //
-						BootstrapTinyMCE.JS_PLUGIN_LISTS, //
-						BootstrapTinyMCE.JS_PLUGIN_ADVLIST, //
-						BootstrapTinyMCE.JS_PLUGIN_AUTOLINK, //
-						BootstrapTinyMCE.JS_PLUGIN_PRINT, //
-						BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE, //
-						BootstrapTinyMCE.JS_PLUGIN_TABLE, //
-						BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS, //
-						BootstrapTinyMCE.JS_PLUGIN_PASTE, //
-						BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT, //
-						BootstrapTinyMCE.JS_PLUGIN_CHARMAP, //
-						BootstrapTinyMCE.JS_PLUGIN_ANCHOR, //
-						BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR, //
-						BootstrapTinyMCE.JS_PLUGIN_COLORPICKER, //
-						BootstrapTinyMCE.JS_PLUGIN_MEDIA, //
-						BootstrapTinyMCE.JS_PLUGIN_HR, //
-						BootstrapTinyMCE.JS_PLUGIN_IMAGE, //
-						BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME, //
-						BootstrapTinyMCE.JS_PLUGIN_HELP, //
-						BootstrapTinyMCE.JS_PLUGIN_PREVIEW//
-				});
+		if (true/* !usesDevelopmentConfig() */) {
+			getResourceBundles().addCssBundle(WicketJSRoot.class, "bundle.css"//
+					, FontAwesome.CSS5SLIM//
+			);
 
-		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "waypoints-bundle.js",
-				new JavaScriptResourceReference[] { //
-						Waypoints.JS, Waypoints.JS_INFINITE, Waypoints.JS_INVIEW, Waypoints.JS_STICKY//
-				});
+			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
+					, JQuery.getJQueryReference()//
+					, WicketAjaxJQueryResourceReference.get()//
+			);
 
-		this.getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "momentjs-bundle.js",
-				new JavaScriptResourceReference[] { //
-						MomentJs.JS, MomentJs.JS_I18N, MomentJs.JS_PLUGIN_PRECISE_RANGE, MomentJs.JS_LOCALE//
-				});
+			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js", //
+					BootstrapTinyMCE.JS, //
+					BootstrapTinyMCE.JS_JQUERY, //
+					BootstrapTinyMCE.JS_PLUGIN_LINK, //
+					BootstrapTinyMCE.JS_PLUGIN_CODE, //
+					BootstrapTinyMCE.JS_PLUGIN_LISTS, //
+					BootstrapTinyMCE.JS_PLUGIN_ADVLIST, //
+					BootstrapTinyMCE.JS_PLUGIN_AUTOLINK, //
+					BootstrapTinyMCE.JS_PLUGIN_PRINT, //
+					BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE, //
+					BootstrapTinyMCE.JS_PLUGIN_TABLE, //
+					BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS, //
+					BootstrapTinyMCE.JS_PLUGIN_PASTE, //
+					BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT, //
+					BootstrapTinyMCE.JS_PLUGIN_CHARMAP, //
+					BootstrapTinyMCE.JS_PLUGIN_ANCHOR, //
+					BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR, //
+					BootstrapTinyMCE.JS_PLUGIN_COLORPICKER, //
+					BootstrapTinyMCE.JS_PLUGIN_MEDIA, //
+					BootstrapTinyMCE.JS_PLUGIN_HR, //
+					BootstrapTinyMCE.JS_PLUGIN_IMAGE, //
+					BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME, //
+					BootstrapTinyMCE.JS_PLUGIN_HELP, //
+					BootstrapTinyMCE.JS_PLUGIN_PREVIEW//
+			);
+
+			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "waypoints-bundle.js", //
+					Waypoints.JS, //
+					Waypoints.JS_INFINITE, //
+					Waypoints.JS_INVIEW, //
+					Waypoints.JS_STICKY//
+			);
+
+			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "momentjs-bundle.js", //
+					MomentJs.JS, //
+					MomentJs.JS_I18N, //
+					MomentJs.JS_PLUGIN_PRECISE_RANGE, //
+					MomentJs.JS_LOCALE//
+			);
+		}
 	}
 
 	protected void initStore() {
