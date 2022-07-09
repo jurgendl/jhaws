@@ -1,5 +1,6 @@
 package org.jhaws.common.web.wicket;
 
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.jhaws.common.web.wicket.jquery.JQuery;
 
 // TODO bootstrap-icons folder ; https://icons.getbootstrap.com/
@@ -31,21 +32,26 @@ import org.jhaws.common.web.wicket.jquery.JQuery;
 //
 // https://codexui.com/components/
 public class Bootstrap4 {
-    public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class, "js/bootstrap.bundle.js");
+	public static final JavaScriptResourceReference JS = new JavaScriptResourceReference(Bootstrap4.class,
+			"js/bootstrap.bundle.js");
 
-    // IE10 viewport hack for Surface/desktop Windows 8 bug
-    public static final JavaScriptResourceReference JS_IE10FIX = new JavaScriptResourceReference(Bootstrap4.class, "js/ie10-viewport-bug-workaround.js");
+	// IE10 viewport hack for Surface/desktop Windows 8 bug
+	public static final JavaScriptResourceReference JS_IE10FIX = new JavaScriptResourceReference(Bootstrap4.class,
+			"js/ie10-viewport-bug-workaround.js");
 
-    public static final CssResourceReference CSS = new CssResourceReference(Bootstrap4.class, "css/bootstrap.css");
+	public static final CssResourceReference CSS = new CssResourceReference(Bootstrap4.class, "css/bootstrap.css");
 
-    static {
-        JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
-        JS_IE10FIX.addJavaScriptResourceReferenceDependency(JS);
-    }
+	static {
+		JS.addJavaScriptResourceReferenceDependency(JQuery.getJQueryReference());
+		JS_IE10FIX.addJavaScriptResourceReferenceDependency(JS);
+	}
 
-    public static final CssResourceReference MENLO = new CssResourceReference(Bootstrap4.class, "theme/menlo.css");
+	public static final CssResourceReference MENLO = new CssResourceReference(Bootstrap4.class, "theme/menlo.css");
 
-    public static CssResourceReference theme(String name) {
-        return new CssResourceReference(Bootstrap4.class, "theme/" + name + "/bootstrap.css");
-    }
+	public static CssResourceReference theme(String name) {
+		return new CssResourceReference(Bootstrap4.class, "theme/" + name + "/bootstrap.css");
+	}
+
+	public static final CssResourceReference BRANDS = new CssResourceReference(Bootstrap4.class, "social/brand.css");
+
 }

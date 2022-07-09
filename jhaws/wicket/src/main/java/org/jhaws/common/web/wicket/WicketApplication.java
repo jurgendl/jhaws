@@ -47,16 +47,35 @@ import org.jhaws.common.io.FilePath.Filters.AudioFilter;
 import org.jhaws.common.io.FilePath.Filters.ImageFilter;
 import org.jhaws.common.io.FilePath.Filters.VideoFilter;
 import org.jhaws.common.web.resteasy.CustomObjectMapper;
+import org.jhaws.common.web.wicket.blazy.BLazy;
+import org.jhaws.common.web.wicket.bootbox.BootBox;
+import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
+import org.jhaws.common.web.wicket.bootstrapselect.BootstrapSelect;
+import org.jhaws.common.web.wicket.clipboardjs.ClipboardJs;
+import org.jhaws.common.web.wicket.colorpicker.BootstrapColorPicker;
+import org.jhaws.common.web.wicket.confirmation.Bootstrap4Confirmation;
 import org.jhaws.common.web.wicket.css.WicketCSSRoot;
+import org.jhaws.common.web.wicket.customfileinput.CustomFileInput;
+import org.jhaws.common.web.wicket.datetimepicker.tempusdominus.BootstrapTempusDominusDateTimePicker;
 import org.jhaws.common.web.wicket.fontawesome.FontAwesome;
 import org.jhaws.common.web.wicket.forms.bootstrap.TextFieldPanel;
 import org.jhaws.common.web.wicket.icons.WicketIconsRoot;
 import org.jhaws.common.web.wicket.jquery.JQuery;
+import org.jhaws.common.web.wicket.jquery_typeahead.JqueryTypeAhead;
 import org.jhaws.common.web.wicket.js.GoogleLogin;
 import org.jhaws.common.web.wicket.js.WicketJSRoot;
+import org.jhaws.common.web.wicket.magnify.Magnify;
 import org.jhaws.common.web.wicket.moment.MomentJs;
+import org.jhaws.common.web.wicket.multiselect.MultiSelect;
+import org.jhaws.common.web.wicket.picturefill.PictureFill;
+import org.jhaws.common.web.wicket.popoverx.PopoverX;
+import org.jhaws.common.web.wicket.qtip.QTip;
 import org.jhaws.common.web.wicket.settings.WicketAppSettings;
+import org.jhaws.common.web.wicket.slider.BootstrapSlider;
+import org.jhaws.common.web.wicket.spin.Spin;
+import org.jhaws.common.web.wicket.tags.BootstrapTags;
 import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
+import org.jhaws.common.web.wicket.toast.BootstrapToasts;
 import org.jhaws.common.web.wicket.waypoints.Waypoints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -293,14 +312,59 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 	}
 
 	protected void addBundles() {
-		if (true/* !usesDevelopmentConfig() */) {
+		if (!usesDevelopmentConfig()) {
 			getResourceBundles().addCssBundle(WicketJSRoot.class, "bundle.css"//
 					, FontAwesome.CSS5SLIM//
+					, Bootstrap4.BRANDS//
+					, BLazy.CSS//
+					, BootstrapTempusDominusDateTimePicker.CSS//
+					, BootstrapColorPicker.CSS//
+					, BootstrapSlider.CSS//
+					, BootstrapTags.CSS//
+					, MultiSelect.CSS//
+					, BootstrapToasts.CSS//
+					, org.jhaws.common.web.wicket.css.WicketCSSRoot.ANIMATE//
+					, Magnify.CSS//
+					, QTip.CSS//
+					, PopoverX.CSS//
+					, BootstrapSelect.CSS//
+					, DefaultWebPage.CSS//
+					, JqueryTypeAhead.CSS//
+					, Spin.css(getSettings().getSpinner())//
 			);
 
 			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
 					, JQuery.getJQueryReference()//
 					, WicketAjaxJQueryResourceReference.get()//
+					, Bootstrap4.JS//
+					, Bootstrap4.JS_IE10FIX//
+					, BLazy.JS//
+					, PictureFill.JS//
+					, MomentJs.JS//
+					, MomentJs.JS_I18N//
+					, MomentJs.JS_LOCALE//
+					, MomentJs.JS_PLUGIN_PRECISE_RANGE//
+					, BootstrapTempusDominusDateTimePicker.JS//
+					, BootstrapColorPicker.JS//
+					, BootBox.JS_LOCALE//
+					, BootBox.JS//
+					, BootstrapSlider.JS//
+					, BootstrapTags.JS//
+					, MultiSelect.JS//
+					, CustomFileInput.JS//
+					, ClipboardJs.JS//
+					, BootstrapToasts.JS//
+					, Magnify.JS//
+					, QTip.JS//
+					, PopoverX.JS//
+					, Waypoints.JS//
+					, Waypoints.JS_INFINITE //
+					, Waypoints.JS_INVIEW//
+					, Waypoints.JS_STICKY//
+					, BootstrapSelect.JS//
+					, Bootstrap4Confirmation.JS//
+					, DefaultWebPage.JS//
+					, JqueryTypeAhead.JS//
 			);
 
 			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js", //
@@ -327,20 +391,6 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 					BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME, //
 					BootstrapTinyMCE.JS_PLUGIN_HELP, //
 					BootstrapTinyMCE.JS_PLUGIN_PREVIEW//
-			);
-
-			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "waypoints-bundle.js", //
-					Waypoints.JS, //
-					Waypoints.JS_INFINITE, //
-					Waypoints.JS_INVIEW, //
-					Waypoints.JS_STICKY//
-			);
-
-			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "momentjs-bundle.js", //
-					MomentJs.JS, //
-					MomentJs.JS_I18N, //
-					MomentJs.JS_PLUGIN_PRECISE_RANGE, //
-					MomentJs.JS_LOCALE//
 			);
 		}
 	}
