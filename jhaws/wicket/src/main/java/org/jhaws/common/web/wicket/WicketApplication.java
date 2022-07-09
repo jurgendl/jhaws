@@ -49,7 +49,6 @@ import org.jhaws.common.io.FilePath.Filters.VideoFilter;
 import org.jhaws.common.web.resteasy.CustomObjectMapper;
 import org.jhaws.common.web.wicket.blazy.BLazy;
 import org.jhaws.common.web.wicket.bootbox.BootBox;
-import org.jhaws.common.web.wicket.bootstrap.DefaultWebPage;
 import org.jhaws.common.web.wicket.bootstrapselect.BootstrapSelect;
 import org.jhaws.common.web.wicket.clipboardjs.ClipboardJs;
 import org.jhaws.common.web.wicket.colorpicker.BootstrapColorPicker;
@@ -76,7 +75,6 @@ import org.jhaws.common.web.wicket.spin.Spin;
 import org.jhaws.common.web.wicket.tags.BootstrapTags;
 import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
 import org.jhaws.common.web.wicket.toast.BootstrapToasts;
-import org.jhaws.common.web.wicket.waypoints.Waypoints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -328,26 +326,28 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 					, QTip.CSS//
 					, PopoverX.CSS//
 					, BootstrapSelect.CSS//
-					, DefaultWebPage.CSS//
 					, JqueryTypeAhead.CSS//
 					, Spin.css(getSettings().getSpinner())//
+//					, DefaultWebPage.CSS//
 			);
 
 			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
 					, JQuery.getJQueryReference()//
 					, WicketAjaxJQueryResourceReference.get()//
+					, JqueryTypeAhead.JS//
 					, Bootstrap4.JS//
 					, Bootstrap4.JS_IE10FIX//
 					, BLazy.JS//
 					, PictureFill.JS//
 					, MomentJs.JS//
-					, MomentJs.JS_I18N//
 					, MomentJs.JS_LOCALE//
+					, MomentJs.JS_I18N//
 					, MomentJs.JS_PLUGIN_PRECISE_RANGE//
 					, BootstrapTempusDominusDateTimePicker.JS//
 					, BootstrapColorPicker.JS//
-					, BootBox.JS_LOCALE//
 					, BootBox.JS//
+					, BootBox.JS_LOCALE//
+					, Bootstrap4Confirmation.JS//
 					, BootstrapSlider.JS//
 					, BootstrapTags.JS//
 					, MultiSelect.JS//
@@ -357,41 +357,40 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 					, Magnify.JS//
 					, QTip.JS//
 					, PopoverX.JS//
-					, Waypoints.JS//
-					, Waypoints.JS_INFINITE //
-					, Waypoints.JS_INVIEW//
-					, Waypoints.JS_STICKY//
 					, BootstrapSelect.JS//
-					, Bootstrap4Confirmation.JS//
-					, DefaultWebPage.JS//
-					, JqueryTypeAhead.JS//
+//					, Waypoints.JS//
+//					, Waypoints.JS_INFINITE //
+//					, Waypoints.JS_INVIEW//
+//					, Waypoints.JS_STICKY//
+//					, DefaultWebPage.JS//
 			);
 
-			getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js", //
-					BootstrapTinyMCE.JS, //
-					BootstrapTinyMCE.JS_JQUERY, //
-					BootstrapTinyMCE.JS_PLUGIN_LINK, //
-					BootstrapTinyMCE.JS_PLUGIN_CODE, //
-					BootstrapTinyMCE.JS_PLUGIN_LISTS, //
-					BootstrapTinyMCE.JS_PLUGIN_ADVLIST, //
-					BootstrapTinyMCE.JS_PLUGIN_AUTOLINK, //
-					BootstrapTinyMCE.JS_PLUGIN_PRINT, //
-					BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE, //
-					BootstrapTinyMCE.JS_PLUGIN_TABLE, //
-					BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS, //
-					BootstrapTinyMCE.JS_PLUGIN_PASTE, //
-					BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT, //
-					BootstrapTinyMCE.JS_PLUGIN_CHARMAP, //
-					BootstrapTinyMCE.JS_PLUGIN_ANCHOR, //
-					BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR, //
-					BootstrapTinyMCE.JS_PLUGIN_COLORPICKER, //
-					BootstrapTinyMCE.JS_PLUGIN_MEDIA, //
-					BootstrapTinyMCE.JS_PLUGIN_HR, //
-					BootstrapTinyMCE.JS_PLUGIN_IMAGE, //
-					BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME, //
-					BootstrapTinyMCE.JS_PLUGIN_HELP, //
-					BootstrapTinyMCE.JS_PLUGIN_PREVIEW//
-			);
+			if (false)
+				getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js", //
+						BootstrapTinyMCE.JS, //
+						BootstrapTinyMCE.JS_JQUERY, //
+						BootstrapTinyMCE.JS_PLUGIN_LINK, //
+						BootstrapTinyMCE.JS_PLUGIN_CODE, //
+						BootstrapTinyMCE.JS_PLUGIN_LISTS, //
+						BootstrapTinyMCE.JS_PLUGIN_ADVLIST, //
+						BootstrapTinyMCE.JS_PLUGIN_AUTOLINK, //
+						BootstrapTinyMCE.JS_PLUGIN_PRINT, //
+						BootstrapTinyMCE.JS_PLUGIN_SEARCHREPLACE, //
+						BootstrapTinyMCE.JS_PLUGIN_TABLE, //
+						BootstrapTinyMCE.JS_PLUGIN_VISUALCHARS, //
+						BootstrapTinyMCE.JS_PLUGIN_PASTE, //
+						BootstrapTinyMCE.JS_PLUGIN_WORDCOUNT, //
+						BootstrapTinyMCE.JS_PLUGIN_CHARMAP, //
+						BootstrapTinyMCE.JS_PLUGIN_ANCHOR, //
+						BootstrapTinyMCE.JS_PLUGIN_TEXTCOLOR, //
+						BootstrapTinyMCE.JS_PLUGIN_COLORPICKER, //
+						BootstrapTinyMCE.JS_PLUGIN_MEDIA, //
+						BootstrapTinyMCE.JS_PLUGIN_HR, //
+						BootstrapTinyMCE.JS_PLUGIN_IMAGE, //
+						BootstrapTinyMCE.JS_PLUGIN_INSERTDATETIME, //
+						BootstrapTinyMCE.JS_PLUGIN_HELP, //
+						BootstrapTinyMCE.JS_PLUGIN_PREVIEW//
+				);
 		}
 	}
 

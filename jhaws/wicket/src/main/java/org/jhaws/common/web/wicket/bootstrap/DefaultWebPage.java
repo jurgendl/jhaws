@@ -53,7 +53,6 @@ import org.jhaws.common.web.wicket.moment.MomentJs;
 import org.jhaws.common.web.wicket.multiselect.MultiSelect;
 import org.jhaws.common.web.wicket.picturefill.PictureFill;
 import org.jhaws.common.web.wicket.popoverx.PopoverX;
-import org.jhaws.common.web.wicket.prismjs.PrismJs;
 import org.jhaws.common.web.wicket.qtip.QTip;
 import org.jhaws.common.web.wicket.slider.BootstrapSlider;
 import org.jhaws.common.web.wicket.spin.Spin;
@@ -1362,12 +1361,9 @@ public abstract class DefaultWebPage extends WebPage {
 
 	/** optional, call in renderhead */
 	protected void renderCodeStyling(IHeaderResponse response) {
-		// response.render(CssHeaderItem.forReference(new
-		// CssResourceReference(HighlightJs.class, "styles/a11y-dark.css")));
-		// response.render(JavaScriptHeaderItem.forReference(HighlightJs.JS));
-		response.render(
-				CssHeaderItem.forReference(new CssResourceReference(PrismJs.class, "themes/prism-okaidia.css")));
-		response.render(JavaScriptHeaderItem.forReference(PrismJs.JS_ALL_LANGUAGES_NO_PLUGINS));
+//		response.render(CssHeaderItem.forReference(PrismJs.CSS));
+//		response.render(CssHeaderItem.forReference(PrismJs.CSS_OKAIDA));
+//		response.render(JavaScriptHeaderItem.forReference(PrismJs.JS_ALL_LANGUAGES_ALL_PLUGINS));
 	}
 
 	protected void renderBootstrapTheme(IHeaderResponse response) {
