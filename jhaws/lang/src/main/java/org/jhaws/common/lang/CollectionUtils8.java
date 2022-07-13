@@ -1393,6 +1393,10 @@ public interface CollectionUtils8 {
         return stream.collect(Collectors.groupingBy(groupBy));
     }
 
+    public static <X, K, V> Map<K, List<V>> groupBy(Stream<X> stream, Function<X, K> groupBy, Function<X, V> valueMapper) {
+        return stream.collect(Collectors.groupingBy(groupBy, Collectors.collectingAndThen(collectList(), listPerGroup -> listPerGroup.stream().map(valueMapper).distinct().collect(collectList()))));
+    }
+
     /**
      * workaround om null values in key toe te laten
      *
