@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -45,6 +46,9 @@ public class PassGen {
         System.out.println("\n\nSimple:");
         for (int i = 0; i < 5; i++)
             System.out.println(simplepass());
+        System.out.println("\n\nUuid:");
+        for (int i = 0; i < 50; i++)
+            System.out.println(UUID.randomUUID().toString());
     }
 
     public static String specialpass(int length) {
