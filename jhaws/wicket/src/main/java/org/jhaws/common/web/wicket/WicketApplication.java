@@ -71,6 +71,7 @@ import org.jhaws.common.web.wicket.multiselect.MultiSelect;
 import org.jhaws.common.web.wicket.picturefill.PictureFill;
 import org.jhaws.common.web.wicket.popoverx.PopoverX;
 import org.jhaws.common.web.wicket.qtip.QTip;
+import org.jhaws.common.web.wicket.rating.Rating;
 import org.jhaws.common.web.wicket.settings.WicketAppSettings;
 import org.jhaws.common.web.wicket.slider.BootstrapSlider;
 import org.jhaws.common.web.wicket.spin.Spin;
@@ -153,20 +154,20 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
     protected void init() {
         super.init();
 
-        WicketAppSettings s = getSettings();
-        boolean deployed = this.usesDeploymentConfig();
+        WicketAppSettings appSettings = getSettings();
+        boolean deployed = usesDeploymentConfig();
         springInjection();
-        gatherBrowserInfo(s.isGatherBrowserInfo());
+        gatherBrowserInfo(appSettings.isGatherBrowserInfo());
         markupSettings(getMarkupSettings(), deployed);
         requestLoggerSettings(getRequestLoggerSettings(), deployed);
-        debugSettings(s, getDebugSettings(), deployed);
-        resourceSettings(s, getResourceSettings(), deployed);
-        javascriptAtBottom(WicketApplication.get().getSettings().isJavascriptAtBottom());
+        debugSettings(appSettings, getDebugSettings(), deployed);
+        resourceSettings(appSettings, getResourceSettings(), deployed);
+        javascriptAtBottom(appSettings.isJavascriptAtBottom());
         initStore();
         statelessChecker(deployed);
         csp(enableCSP);
         csrf(enableCsrf);
-        addBundles();
+        addBundles(deployed);
         mountImages();
         mountResources();
         mountPages();
@@ -315,8 +316,8 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
         }
     }
 
-    protected void addBundles() {
-        if (!usesDevelopmentConfig()) {
+    protected void addBundles(boolean deployed) {
+        if (deployed) {
             getResourceBundles().addCssBundle(WicketJSRoot.class, "bundle.css"//
                     , FontAwesome.CSS5SLIM//
                     , Bootstrap4.BRANDS//
@@ -333,16 +334,12 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
                     , PopoverX.CSS//
                     , BootstrapSelect.CSS//
                     , JqueryTypeAhead.CSS//
+                    , Rating.CSS//
                     , Spin.css(getSettings().getSpinner())//
             // , DefaultWebPage.CSS//
             );
 
-            // getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
-            // , JQuery.getJQueryReference()//
-            // , WicketAjaxJQueryResourceReference.get()//
-            // );
-
-            if (false) getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
+            getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
                     , JQuery.getJQueryReference()//
                     , WicketAjaxJQueryResourceReference.get()//
                     , JqueryTypeAhead.JS//
@@ -369,6 +366,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
                     , QTip.JS//
                     , PopoverX.JS//
                     , BootstrapSelect.JS//
+                    , Rating.JS//
             // , Waypoints.JS//
             // , Waypoints.JS_INFINITE //
             // , Waypoints.JS_INVIEW//
