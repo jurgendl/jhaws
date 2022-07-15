@@ -130,7 +130,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
     @SpringBean(name = "webSettingsFile", required = false)
     protected String webSettingsFile = "";
 
-    public WicketSession createSession(Request request, Response response) {
+    public WicketSession createSession(Request request, @SuppressWarnings("unused") Response response) {
         return new WicketSession(request);
     }
 
@@ -177,15 +177,23 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 
     protected void markupSettings(MarkupSettings markupSettings, boolean deployed) {
         // markup settings
-        markupSettings.setStripComments(deployed);
+        if (false) {
+            markupSettings.setStripComments(false);
+        }
 
-        markupSettings.setCompressWhitespace(deployed);
+        //
+        if (false) {
+            markupSettings.setCompressWhitespace(deployed);
+        }
 
         // breaks layout if not on
         markupSettings.setStripWicketTags(true);
 
-        if (deployed) {
-            markupSettings.setMarkupFactory(new HtmlCompressingMarkupFactory());
+        //
+        if (false) {
+            if (deployed) {
+                markupSettings.setMarkupFactory(new HtmlCompressingMarkupFactory());
+            }
         }
     }
 
@@ -215,7 +223,6 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
         // debug settings
         debugSettings.setAjaxDebugModeEnabled(s.isShowDebugbars() && !deployed);
         debugSettings.setComponentUseCheck(!deployed);
-        debugSettings.setDevelopmentUtilitiesEnabled(!deployed);
         debugSettings.setOutputMarkupContainerClassName(!deployed);
         debugSettings.setDevelopmentUtilitiesEnabled(!deployed);
         // getDebugSettings().setOutputComponentPath(!deployed);
@@ -240,8 +247,10 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
         // http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
         // to put javascript down on the page (DefaultWebPage.html must contain
         // wicket:id='footer-bucket'
-        if (false && javascriptAtBottom) {
-            this.setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
+        if (false) {
+            if (javascriptAtBottom) {
+                this.setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
+            }
         }
     }
 
@@ -292,8 +301,8 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 
     protected boolean enableCsrf = false;
 
-    protected void csrf(boolean enableCsrf) {
-        if (enableCsrf) {
+    protected void csrf(boolean _enableCsrf) {
+        if (_enableCsrf) {
             // https://ci.apache.org/projects/wicket/apidocs/9.x/org/apache/wicket/protocol/http/CsrfPreventionRequestCycleListener.html
             // CsrfPreventionRequestCycleListener
             // csrfPreventionRequestCycleListener = new
@@ -334,7 +343,12 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
             // , DefaultWebPage.CSS//
             );
 
-            getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
+            // getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
+            // , JQuery.getJQueryReference()//
+            // , WicketAjaxJQueryResourceReference.get()//
+            // );
+
+            if (false) getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
                     , JQuery.getJQueryReference()//
                     , WicketAjaxJQueryResourceReference.get()//
                     , JqueryTypeAhead.JS//
