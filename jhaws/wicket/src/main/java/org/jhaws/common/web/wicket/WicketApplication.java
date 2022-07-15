@@ -78,6 +78,7 @@ import org.jhaws.common.web.wicket.spin.Spin;
 import org.jhaws.common.web.wicket.tags.BootstrapTags;
 import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
 import org.jhaws.common.web.wicket.toast.BootstrapToasts;
+import org.jhaws.common.web.wicket.waypoints.Waypoints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -336,7 +337,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
                     , JqueryTypeAhead.CSS//
                     , Rating.CSS//
                     , Spin.css(getSettings().getSpinner())//
-            // , DefaultWebPage.CSS//
+            // , DefaultWebPage.CSS // bootstrap/base.css
             );
 
             getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "bundle.js"//
@@ -367,14 +368,17 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
                     , PopoverX.JS//
                     , BootstrapSelect.JS//
                     , Rating.JS//
-            // , Waypoints.JS//
-            // , Waypoints.JS_INFINITE //
-            // , Waypoints.JS_INVIEW//
-            // , Waypoints.JS_STICKY//
-            // , DefaultWebPage.JS//
+            // , DefaultWebPage.JS // bootstrap/base.js
             );
 
-            if (false) getResourceBundles().addJavaScriptBundle(WicketJSRoot.class, "tinymce-bundle.js", //
+            getResourceBundles().addJavaScriptBundle(Waypoints.class, "waypoints-bundle.js"//
+                    , Waypoints.JS//
+                    , Waypoints.JS_INFINITE //
+                    , Waypoints.JS_INVIEW//
+                    , Waypoints.JS_STICKY//
+            );
+
+            getResourceBundles().addJavaScriptBundle(BootstrapTinyMCE.class, "v5/tinymce-bundle.js", //
                     BootstrapTinyMCE.JS, //
                     BootstrapTinyMCE.JS_JQUERY, //
                     BootstrapTinyMCE.JS_PLUGIN_LINK, //
