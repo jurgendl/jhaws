@@ -87,5 +87,5 @@ public class BootstrapTinyMCE {
         JS_PLUGIN_PREVIEW.addJavaScriptResourceReferenceDependency(JS);
     }
 
-    public static final String FACTORY = new FilePath(BootstrapTinyMCE.class, "tinymce-facory.js").readAll();
+    public static final String FACTORY = new FilePath(BootstrapTinyMCE.class, "v5/tinymce-facory.js").readAll();
 }
