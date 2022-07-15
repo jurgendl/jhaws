@@ -177,23 +177,17 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
 
     protected void markupSettings(MarkupSettings markupSettings, boolean deployed) {
         // markup settings
-        if (false) {
-            markupSettings.setStripComments(false);
-        }
+        markupSettings.setStripComments(deployed);
 
         //
-        if (false) {
-            markupSettings.setCompressWhitespace(deployed);
-        }
+        markupSettings.setCompressWhitespace(deployed);
 
         // breaks layout if not on
         markupSettings.setStripWicketTags(true);
 
         //
-        if (false) {
-            if (deployed) {
-                markupSettings.setMarkupFactory(new HtmlCompressingMarkupFactory());
-            }
+        if (deployed) {
+            markupSettings.setMarkupFactory(new HtmlCompressingMarkupFactory());
         }
     }
 
