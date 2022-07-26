@@ -46,12 +46,9 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
 		@SuppressWarnings("rawtypes")
 		Tuple2 other = (Tuple2) obj;
 		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2);
@@ -123,5 +120,13 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 
 	public boolean isT2NotNull() {
 		return t2 != null;
+	}
+
+	public <T3> Tuple3<T1, T2, T3> pushT3(T3 t3) {
+		return Tuple3.of(getT1(), getT2(), t3);
+	}
+
+	public Tuple1<T1> popT1() {
+		return Tuple1.of(getT1());
 	}
 }

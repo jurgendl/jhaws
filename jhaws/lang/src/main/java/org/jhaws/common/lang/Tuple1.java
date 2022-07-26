@@ -46,12 +46,9 @@ public class Tuple1<T1> implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
 		@SuppressWarnings("rawtypes")
 		Tuple1 other = (Tuple1) obj;
 		return Objects.equals(this.t1, other.t1);
@@ -123,5 +120,9 @@ public class Tuple1<T1> implements Serializable {
 
 	public boolean isT1NotNull() {
 		return t1 != null;
+	}
+
+	public <T2> Tuple2<T1, T2> pushT2(T2 t2) {
+		return Tuple2.of(getT1(), t2);
 	}
 }

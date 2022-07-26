@@ -46,17 +46,12 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (!super.equals(obj)) return false;
+		if (getClass() != obj.getClass()) return false;
 		@SuppressWarnings("rawtypes")
 		Tuple5 other = (Tuple5) obj;
-		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2)
-				&& Objects.equals(this.t3, other.t3) && Objects.equals(this.t4, other.t4)
-				&& Objects.equals(this.t5, other.t5);
+		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2) && Objects.equals(this.t3, other.t3) && Objects.equals(this.t4, other.t4) && Objects.equals(this.t5, other.t5);
 	}
 
 	public T5 getT5() {
@@ -78,8 +73,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 		return this;
 	}
 
-	public Tuple5<T1, T2, T3, T4, T5> operateT5(Predicate<T5> when, UnaryOperator<T5> operation,
-			Supplier<T5> elseOperation) {
+	public Tuple5<T1, T2, T3, T4, T5> operateT5(Predicate<T5> when, UnaryOperator<T5> operation, Supplier<T5> elseOperation) {
 		if (when.test(t5)) {
 			t5 = operation.apply(t5);
 		} else {
@@ -116,8 +110,7 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 		return projectT5(when, operation, () -> null);
 	}
 
-	public <X> Tuple5<T1, T2, T3, T4, X> projectT5(Predicate<T5> when, Function<T5, X> operation,
-			Supplier<X> elseOperation) {
+	public <X> Tuple5<T1, T2, T3, T4, X> projectT5(Predicate<T5> when, Function<T5, X> operation, Supplier<X> elseOperation) {
 		return new Tuple5<T1, T2, T3, T4, X>(t1, t2, t3, t4, when.test(t5) ? operation.apply(t5) : elseOperation.get());
 	}
 
@@ -127,5 +120,9 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
 	public boolean isT5NotNull() {
 		return t5 != null;
+	}
+
+	public Tuple4<T1, T2, T3, T4> popT4() {
+		return Tuple4.of(getT1(), getT2(), getT3(), getT4());
 	}
 }
