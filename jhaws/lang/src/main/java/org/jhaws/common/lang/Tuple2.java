@@ -9,6 +9,8 @@ import java.util.function.UnaryOperator;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 @SuppressWarnings("serial")
 @XmlRootElement
 public class Tuple2<T1, T2> extends Tuple1<T1> {
@@ -52,6 +54,22 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 		@SuppressWarnings("rawtypes")
 		Tuple2 other = (Tuple2) obj;
 		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2);
+	}
+
+	public <I> boolean isEquals(Function<T1, I> kf, Function<T2, I> vf) {
+		return new EqualsBuilder().append(kf.apply(t1), vf.apply(t2)).isEquals();
+	}
+
+	public <I> boolean notEquals(Function<T1, I> kf, Function<T2, I> vf) {
+		return !isEquals(kf, vf);
+	}
+
+	public boolean isEquals() {
+		return new EqualsBuilder().append(t1, t2).isEquals();
+	}
+
+	public boolean notEquals() {
+		return !isEquals();
 	}
 
 	public T2 getT2() {

@@ -54,6 +54,16 @@ public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2) && Objects.equals(this.t3, other.t3);
 	}
 
+	@Override
+	public <I> boolean isEquals(Function<T1, I> kf, Function<T2, I> vf) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isEquals() {
+		throw new UnsupportedOperationException();
+	}
+
 	public T3 getT3() {
 		return this.t3;
 	}
