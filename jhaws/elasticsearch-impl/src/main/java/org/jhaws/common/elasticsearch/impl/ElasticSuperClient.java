@@ -2326,4 +2326,26 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             throw handleIOException(ex);
         }
     }
+
+    public <T extends ElasticDocument> List<String> check(Class<T> t, Class<?> fieldsInterface) {
+        List<String> errors = new ArrayList<>();
+        List<String> allFields = allFields(t);
+        Arrays.stream(fieldsInterface.getDeclaredFields()).forEach(ff -> {
+            try {
+                String prop = ff.get(t).toString();
+                // props die niet in de allFields zitten : probleem ; met uitzondering props die enkel dienen als
+                // suffix en niet onafhankelijk gebruikt worden
+                if (!allFields.contains(prop)//
+                        && !StringUtils.startsWith(ff.getName(), "PREFIX_")//
+                        && !StringUtils.startsWith(ff.getName(), "SUFFIX_")//
+                        && !StringUtils.startsWith(ff.getName(), "UNINDEXED_")//
+                ) {
+                    errors.add(t.getSimpleName() + "." + prop + " -- " + allFields);
+                }
+            } catch (Exception ex) {
+                //
+            }
+        });
+        return errors;
+    }
 }
