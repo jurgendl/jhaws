@@ -1,6 +1,7 @@
 package org.jhaws.common.elasticsearch.impl;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -16,6 +17,7 @@ import org.jhaws.common.elasticsearch.common.Bool;
 import org.jhaws.common.elasticsearch.common.CharacterFilter;
 import org.jhaws.common.elasticsearch.common.DenseVectorSimilarity;
 import org.jhaws.common.elasticsearch.common.DenseVectorType;
+import org.jhaws.common.elasticsearch.common.ElasticDocument;
 import org.jhaws.common.elasticsearch.common.Field;
 import org.jhaws.common.elasticsearch.common.FieldExtra;
 import org.jhaws.common.elasticsearch.common.FieldType;
@@ -36,7 +38,6 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 @Component
 public class ElasticCustomizer {
-
     protected final Logger LOGGER = LoggerFactory.getLogger(ElasticCustomizer.class);
 
     /**
@@ -320,80 +321,168 @@ public class ElasticCustomizer {
 
     public Map<String, Object> getObjectMapping(Class<?> annotatedType, MappingListener listener) {
         Map<String, Object> typeMapping = new TreeMap<>();
-        $mappings_fields(null, annotatedType, typeMapping, "", listener);
+        $mappings_fields(null, annotatedType, typeMapping, "", "", listener);
         Map<String, Object> mappings = new TreeMap<>();
         mappings.put(PROPERTIES, typeMapping);
         return mappings;
     }
 
-    protected void $mappings_fields(Language language, Class<?> annotatedType, Map<String, Object> typeMapping, String prefix, MappingListener listener) {
-        Arrays.stream(annotatedType.getDeclaredFields())//
-                .filter(f -> !Modifier.isTransient(f.getModifiers()))//
+    protected void $mappings_fields(Language language, Class<?> annotatedType, Map<String, Object> typeMapping, String prefix, String actualNesting, MappingListener listener) {
+        List<java.lang.reflect.Field> list = new ArrayList<>();
+        Class<?> _annotatedType = annotatedType;
+        while (!ElasticDocument.class.equals(_annotatedType) && !Object.class.equals(_annotatedType)) {
+            list.addAll(Arrays.asList(_annotatedType.getDeclaredFields()));
+            _annotatedType = _annotatedType.getSuperclass();
+        }
+        list//
+                .stream().filter(f -> !Modifier.isTransient(f.getModifiers()))//
                 .filter(f -> !Modifier.isStatic(f.getModifiers()))//
                 .filter(f -> f.getAnnotation(JsonIgnore.class) == null)//
                 .filter(f -> f.getAnnotation(Ignore.class) == null)//
-                .forEach(field -> $mappings_field(language, typeMapping, prefix, field, listener));
+                .forEach(field -> $mappings_field(language, typeMapping, prefix, actualNesting, field, listener));
     }
 
-    protected void $mappings_field(Language language, Map<String, Object> mapping, String prefix, java.lang.reflect.Field reflectField, MappingListener listener) {
-        LOGGER.trace("\n" + reflectField);
+    protected void $mappings_field(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, MappingListener listener) {
+        String msgPrefix = "field: " + ("".equals(prefix) ? "" : "[" + prefix + "] ") + ("".equals(actualNesting) ? "" : "<" + actualNesting + "> ") + reflectField;
+        LOGGER.trace(msgPrefix);
+
+        JsonIgnore jsonIgnore = reflectField.getAnnotation(JsonIgnore.class);
+        Ignore ignore = reflectField.getAnnotation(Ignore.class);
         OnlySave onlySave = reflectField.getAnnotation(OnlySave.class);
-        if (onlySave != null) {
-            // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
-            String fullName = prefix + (StringUtils.isBlank(onlySaveName(onlySave)) ? reflectField.getName() : onlySaveName(onlySave));
-            Map<String, Object> fieldMapping = new TreeMap<>();
-            fieldMapping.put(TYPE, FieldType.OBJECT.id());
-            fieldMapping.put(ENABLED, Boolean.FALSE);
-            mapping.put(fullName, fieldMapping);
-        } else {
-            Field field = reflectField.getAnnotation(Field.class);
-            if (field != null) {
-                FieldType defaultFieldType = $defaultFieldType(reflectField);
-                FieldMapping fieldMapping = $mappings_field(reflectField, language, defaultFieldType, field);
-                String fullName = prefix + (StringUtils.isBlank(field.name()) ? reflectField.getName() : field.name());
-                mapping.put(fullName, fieldMapping.fieldMapping);
-                if (listener != null) listener.map(fullName, field, fieldMapping);
-                if (reflectField.getAnnotation(FieldExtra.class) != null) {
-                    Field[] fef = reflectField.getAnnotation(FieldExtra.class).value();
-                    if (fef != null && fef.length > 0) {
-                        Map<String, Object> extraFields = new TreeMap<>();
-                        fieldMapping.put(FIELDS, extraFields);
-                        Arrays.stream(fef).forEach(nestedField -> {
-                            extraFields.put(nestedFieldName(nestedField), $mappings_field(reflectField, fieldMapping.language, fieldMapping.fieldType, nestedField).fieldMapping);
-                            if (listener != null) listener.map(fullName + "." + nestedFieldName(nestedField), nestedField, fieldMapping);
-                        });
-                    }
-                }
-            } else {
-                JsonUnwrapped nested = reflectField.getAnnotation(JsonUnwrapped.class);
-                if (nested != null) {
-                    if (StringUtils.isNotBlank(nested.suffix())) {
-                        throw new IllegalArgumentException("suffix nog niet ondersteund");
-                    }
-                    String nestedPrefix = nested.prefix();
-                    if (StringUtils.isBlank(nestedPrefix)) {
-                        throw new IllegalArgumentException("prefix verplicht");
-                    }
-                    NestedField nestedField = reflectField.getAnnotation(NestedField.class);
-                    if (nestedField != null && nestedFieldLanguage(nestedField) != null && nestedFieldLanguage(nestedField) != Language.uninitialized) {
-                        $mappings_fields(nestedFieldLanguage(nestedField), reflectField.getType(), mapping, prefix + nestedPrefix, listener);
-                    } else {
-                        $mappings_fields(language, reflectField.getType(), mapping, prefix + nestedPrefix, listener);
-                    }
-                } else {
-                    NestedField nestedField = reflectField.getAnnotation(NestedField.class);
-                    if (nestedField != null && nestedFieldLanguage(nestedField) != null && nestedFieldLanguage(nestedField) != Language.uninitialized) {
-                        Map<String, Object> typeMapping = new TreeMap<>();
-                        $mappings_fields(nestedFieldLanguage(nestedField), reflectField.getType(), typeMapping, "", listener);
-                        Map<String, Object> mappings = new TreeMap<>();
-                        mappings.put(PROPERTIES, typeMapping);
-                        mapping.put(reflectField.getName(), mappings);
-                    } else {
-                        // $mappings_fields(language, reflectField.getType(), typeMapping, "", listener);
-                    }
-                }
+        Field field = reflectField.getAnnotation(Field.class);
+        JsonUnwrapped jsonUnwrapped = reflectField.getAnnotation(JsonUnwrapped.class);
+        NestedField nestedField = reflectField.getAnnotation(NestedField.class);
+
+        if (false) {
+            if (jsonIgnore != null) System.out.println(jsonIgnore);
+            if (ignore != null) System.out.println(ignore);
+            if (onlySave != null) System.out.println(onlySave);
+            if (field != null) System.out.println(field);
+            if (jsonUnwrapped != null) System.out.println(jsonUnwrapped);
+            if (nestedField != null) System.out.println(nestedField);
+            System.out.println(msgPrefix);
+            System.out.println();
+        }
+
+        String exceptionErrorMsgPrefix = "\n\t" + msgPrefix + "\n\t\t" + "error: ";
+        {
+            if ((ignore != null || jsonIgnore != null) && (onlySave != null && field != null && jsonUnwrapped != null && nestedField != null)) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "(ignore != null || jsonIgnore != null) && (onlySave != null && field != null && jsonUnwrapped != null && nestedField != null)");
+            }
+            if ((ignore == null || jsonIgnore == null) && onlySave == null && field == null && jsonUnwrapped == null && nestedField == null) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "(ignore == null || jsonIgnore == null) && onlySave == null && field == null && jsonUnwrapped == null && nestedField == null");
+            }
+            if (onlySave != null && field != null) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "onlySave != null && field != null");
+            }
+            if (onlySave != null && jsonUnwrapped != null) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "onlySave != null && jsonUnwrapped != null");
+            }
+            if (onlySave != null && nestedField != null) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "onlySave != null && nestedField != null");
+            }
+            if (field != null && jsonUnwrapped != null) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "field != null && jsonUnwrapped != null");
+            }
+            if (field != null && nestedField != null) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "field != null && nestedField != null");
+            }
+            // @JsonUnwrapped op Collection werkt niet
+            if (jsonUnwrapped != null && Collection.class.isAssignableFrom(reflectField.getType())) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "jsonUnwrapped != null && reflectField instanceof Collection");
+            }
+            if (nestedField != null && Collection.class.isAssignableFrom(reflectField.getType()) && nestedField.type() == Class.class) {
+                throw new IllegalArgumentException(exceptionErrorMsgPrefix + "geef nestedField.type op");
             }
         }
+
+        if (jsonIgnore != null) {
+            //
+        } else if (ignore != null) {
+            //
+        } else if (onlySave != null) {
+            $mappings_field_onlySave(mapping, prefix, actualNesting, reflectField, onlySave, listener);
+        } else if (field != null) {
+            $mappings_field_field(language, mapping, prefix, actualNesting, reflectField, field, listener);
+        } else if (jsonUnwrapped != null) {
+            $mappings_field_jsonUnwrapped(language, mapping, prefix, actualNesting, reflectField, jsonUnwrapped, nestedField, listener);
+        } else if (nestedField != null) {
+            $mappings_field_nestedField(language, mapping, prefix, actualNesting, reflectField, nestedField, listener);
+        } else {
+            throw new IllegalArgumentException(exceptionErrorMsgPrefix + "incomplete switch, use OnlySave");
+        }
+    }
+
+    protected void $mappings_field_onlySave(Map<String, Object> mapping, String prefix, @SuppressWarnings("unused") String actualNesting, java.lang.reflect.Field reflectField, OnlySave onlySave, @SuppressWarnings("unused") MappingListener listener) {
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
+        String fullName = prefix + (StringUtils.isBlank(onlySaveName(onlySave)) ? reflectField.getName() : onlySaveName(onlySave));
+        Map<String, Object> fieldMapping = new TreeMap<>();
+        fieldMapping.put(TYPE, FieldType.OBJECT.id());
+        fieldMapping.put(ENABLED, Boolean.FALSE);
+        mapping.put(fullName, fieldMapping);
+    }
+
+    protected void $mappings_field_field(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, Field field, MappingListener listener) {
+        FieldType defaultFieldType = $defaultFieldType(reflectField);
+        FieldMapping fieldMapping = $mappings_field(reflectField, language, defaultFieldType, field);
+        String fieldname = StringUtils.isBlank(field.name()) ? reflectField.getName() : field.name();
+        String fullName = prefix + fieldname;
+        String fullNameForListener = actualNesting + fieldname;
+        mapping.put(fullName, fieldMapping.fieldMapping);
+        if (listener != null) {
+            listener.map(fullNameForListener, field, fieldMapping);
+        }
+        if (reflectField.getAnnotation(FieldExtra.class) != null) {
+            Field[] fieldExtraFields = reflectField.getAnnotation(FieldExtra.class).value();
+            if (fieldExtraFields != null && fieldExtraFields.length > 0) {
+                Map<String, Object> extraFields = new TreeMap<>();
+                fieldMapping.put(FIELDS, extraFields);
+                Arrays.stream(fieldExtraFields).forEach(fieldExtraField -> {
+                    extraFields.put(nestedFieldName(fieldExtraField), $mappings_field(reflectField, fieldMapping.language, fieldMapping.fieldType, fieldExtraField).fieldMapping);
+                    if (listener != null) {
+                        listener.map(fullNameForListener + "." + nestedFieldName(fieldExtraField), fieldExtraField, fieldMapping);
+                    }
+                });
+            }
+        }
+    }
+
+    protected void $mappings_field_jsonUnwrapped(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, JsonUnwrapped jsonUnwrapped, NestedField nestedField, MappingListener listener) {
+        String exceptionErrorMsgPrefix = "\n\t" + "field: " + (prefix + " " + reflectField).trim() + "\n\t\t" + "error: ";
+        if (StringUtils.isNotBlank(jsonUnwrapped.suffix())) {
+            throw new IllegalArgumentException(exceptionErrorMsgPrefix + "suffix nog niet ondersteund");
+        }
+        String nestedPrefix = jsonUnwrapped.prefix();
+        if (StringUtils.isBlank(nestedPrefix)) {
+            throw new IllegalArgumentException(exceptionErrorMsgPrefix + "prefix verplicht");
+        }
+
+        if (nestedField != null) {
+            Language nestedFieldLanguage = nestedFieldLanguage(nestedField);
+            if (nestedFieldLanguage != null && nestedFieldLanguage != Language.uninitialized) {
+                language = nestedFieldLanguage;
+            }
+        }
+
+        $mappings_fields(language, reflectField.getType(), mapping, prefix + nestedPrefix, actualNesting + nestedPrefix, listener);
+    }
+
+    protected void $mappings_field_nestedField(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, NestedField nestedField, MappingListener listener) {
+        Language nestedFieldLanguage = nestedFieldLanguage(nestedField);
+        if (nestedFieldLanguage != null && nestedFieldLanguage != Language.uninitialized) {
+            language = nestedFieldLanguage;
+        }
+
+        Map<String, Object> typeMapping = new TreeMap<>();
+        $mappings_fields(language, //
+                nestedField.type() != Class.class ? nestedField.type() : reflectField.getType(), //
+                typeMapping, //
+                prefix + "", //
+                actualNesting + reflectField.getName() + ".", //
+                listener);
+        Map<String, Object> mappings = new TreeMap<>();
+        mappings.put(PROPERTIES, typeMapping);
+        mapping.put(reflectField.getName(), mappings);
     }
 
     private String nestedFieldName(Field nestedField) {
@@ -411,7 +500,8 @@ public class ElasticCustomizer {
     }
 
     protected FieldMapping $mappings_field(java.lang.reflect.Field reflectField, Language language, FieldType fieldType, Field field) {
-        LOGGER.trace("\t" + language + " / " + fieldType + " / " + field);
+        String log = "\t" + language + " / " + fieldType + " / " + field;
+        LOGGER.trace(log);
         FieldMapping fieldMapping = new FieldMapping();
         fieldMapping.language = field.language() == null || field.language() == Language.uninitialized ? language : field.language();
         fieldMapping.fieldType = field.type() == null || field.type() == FieldType.uninitialized ? fieldType : field.type();

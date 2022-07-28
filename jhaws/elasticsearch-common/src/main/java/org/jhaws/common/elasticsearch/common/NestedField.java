@@ -17,4 +17,6 @@ public @interface NestedField {
     Language language() default Language.uninitialized;
 
     Language value() default Language.uninitialized;
+
+    Class<?> type() default Class.class;
 }
