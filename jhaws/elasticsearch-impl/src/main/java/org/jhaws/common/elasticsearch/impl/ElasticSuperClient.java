@@ -1533,6 +1533,14 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return performAnalyzeRequest(createAnalyzeRequestIndexField(index, field, string));
     }
 
+    public <T extends ElasticDocument> List<String> analyzeIndex(Class<T> index, String analyzer, String string) {
+        return analyzeIndex(index(index), analyzer, string);
+    }
+
+    public <T extends ElasticDocument> List<String> analyzeIndexField(Class<T> index, String field, String string) {
+        return analyzeIndexField(index(index), field, string);
+    }
+
     public List<String> performAnalyzeRequest(AnalyzeRequest request) {
         boolean explain = false;
         request.explain(explain);
