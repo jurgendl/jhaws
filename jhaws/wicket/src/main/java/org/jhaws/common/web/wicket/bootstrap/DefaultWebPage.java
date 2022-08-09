@@ -340,7 +340,6 @@ public abstract class DefaultWebPage extends WebPage {
 
     protected void addJavaScriptOnBottom(MarkupContainer html) {
         boolean javascriptAtBottom = WicketApplication.get().getSettings().isJavascriptAtBottom();
-        javascriptAtBottom = false;// FIXME
         if (javascriptAtBottom) {
             html.add(new HeaderResponseContainer("footer-container", "footer-bucket"));
         } else {

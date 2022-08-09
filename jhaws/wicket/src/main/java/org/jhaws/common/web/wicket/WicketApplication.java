@@ -22,6 +22,7 @@ import org.apache.wicket.csp.CSPHeaderConfiguration;
 import org.apache.wicket.csp.ContentSecurityPolicySettings;
 import org.apache.wicket.devutils.stateless.StatelessChecker;
 import org.apache.wicket.injection.Injector;
+import org.apache.wicket.markup.head.filter.JavaScriptFilteredIntoFooterHeaderResponse;
 import org.apache.wicket.markup.html.IPackageResourceGuard;
 import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
@@ -240,13 +241,11 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
     }
 
     protected void javascriptAtBottom(boolean javascriptAtBottom) {
-        // http://tomaszdziurko.com/2017/02/forcing-wicket-place-javascript-files-bottom/
-        // to put javascript down on the page (DefaultWebPage.html must contain
-        // wicket:id='footer-bucket'
-        if (false) {
-            if (javascriptAtBottom) {
-                this.setHeaderResponseDecorator(new RenderJavaScriptToFooterHeaderResponseDecorator("footer-bucket"));
-            }
+        // https://nightlies.apache.org/wicket/guide/9.x/single.html#_put_javascript_inside_page_body
+        // zie ook html <wicket:container wicket:id="footer"></wicket:container>
+        // https://stackoverflow.com/questions/63158243/wicket-9-usage-of-javascriptfilteredintofooterheaderresponse-seems-to-cause-tro
+        if (javascriptAtBottom) {
+            getHeaderResponseDecorators().add(response -> new JavaScriptFilteredIntoFooterHeaderResponse(response, "footer-bucket"));
         }
     }
 
