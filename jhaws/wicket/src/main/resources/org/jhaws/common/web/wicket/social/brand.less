@@ -142,7 +142,7 @@
 @fa-youtube-square: @fa-youtube;
 @fa-youtube: #e52d27;
 
-.fa {
+.fa, .fab {
   // Default color for undefined
   &.fa-500px {
     color: @fa-500px;
@@ -570,4 +570,27 @@
   &.fa-youtube-square {
     color: @fa-youtube-square;
   }
+}
+
+/* https://fossheim.io/writing/posts/css-text-gradient/ */
+.multicolor.fa.fa-instagram::before ,
+.multicolor.fa.fa-instagram-square::before ,
+.multicolor.fab.fa-instagram::before ,
+.multicolor.fab.fa-instagram-square::before {
+	/* Fallback: Set a background color. */
+	background-color: #fd5949;
+	
+	/* Create the gradient. */
+	background-image: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+	
+	/* Set the background size and repeat properties. */
+	background-size: 100%;
+	background-repeat: repeat;
+	
+	/* Use the text as a mask for the background. */
+	/* This will show the gradient as a text color rather than element bg. */
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent; 
+	-moz-background-clip: text;
+	-moz-text-fill-color: transparent;
 }

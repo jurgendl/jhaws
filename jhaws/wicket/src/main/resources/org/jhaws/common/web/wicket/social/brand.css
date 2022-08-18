@@ -1,426 +1,586 @@
-.fa-500px {
+.fa.fa-500px,
+.fab.fa-500px {
   color: #0099e5;
 }
-.fa-adn {
+.fa.fa-adn,
+.fab.fa-adn {
   color: #4A484C;
 }
-.fa-amazon {
+.fa.fa-amazon,
+.fab.fa-amazon {
   color: #ff9900;
 }
-.fa-android {
+.fa.fa-android,
+.fab.fa-android {
   color: #a4c639;
 }
-.fa-angellist {
+.fa.fa-angellist,
+.fab.fa-angellist {
   color: #000;
 }
-.fa-apple {
+.fa.fa-apple,
+.fab.fa-apple {
   color: #979797;
 }
-.fa-behance {
+.fa.fa-behance,
+.fab.fa-behance {
   color: #1769ff;
 }
-.fa-behance-square {
+.fa.fa-behance-square,
+.fab.fa-behance-square {
   color: #1769ff;
 }
-.fa-bitbucket {
+.fa.fa-bitbucket,
+.fab.fa-bitbucket {
   color: #205081;
 }
-.fa-bitbucket-square {
+.fa.fa-bitbucket-square,
+.fab.fa-bitbucket-square {
   color: #205081;
 }
-.fa-bitcoin {
+.fa.fa-bitcoin,
+.fab.fa-bitcoin {
   color: #ee9209;
 }
-.fa-black-tie {
+.fa.fa-black-tie,
+.fab.fa-black-tie {
   color: #222;
 }
-.fa-btc {
+.fa.fa-btc,
+.fab.fa-btc {
   color: #ee9209;
 }
-.fa-buysellads {
+.fa.fa-buysellads,
+.fab.fa-buysellads {
   color: #c90100;
 }
-.fa-cc-amex {
+.fa.fa-cc-amex,
+.fab.fa-cc-amex {
   color: #007bc1;
 }
-.fa-cc-diners-club {
+.fa.fa-cc-diners-club,
+.fab.fa-cc-diners-club {
   color: #004A97;
 }
-.fa-cc-discover {
+.fa.fa-cc-discover,
+.fab.fa-cc-discover {
   color: #f68121;
 }
-.fa-cc-jcb {
+.fa.fa-cc-jcb,
+.fab.fa-cc-jcb {
   color: #003A8F;
 }
-.fa-cc-mastercard {
+.fa.fa-cc-mastercard,
+.fab.fa-cc-mastercard {
   color: #0a3a82;
 }
-.fa-cc-paypal {
+.fa.fa-cc-paypal,
+.fab.fa-cc-paypal {
   color: #253b80;
 }
-.fa-cc-stripe {
+.fa.fa-cc-stripe,
+.fab.fa-cc-stripe {
   color: #00afe1;
 }
-.fa-cc-visa {
+.fa.fa-cc-visa,
+.fab.fa-cc-visa {
   color: #0157a2;
 }
-.fa-chrome {
+.fa.fa-chrome,
+.fab.fa-chrome {
   color: #4587F3;
 }
-.fa-codepen {
+.fa.fa-codepen,
+.fab.fa-codepen {
   color: #000;
 }
-.fa-connectdevelop {
+.fa.fa-connectdevelop,
+.fab.fa-connectdevelop {
   color: #391448;
 }
-.fa-contao {
+.fa.fa-contao,
+.fab.fa-contao {
   color: #eb8623;
 }
-.fa-creative-commons {
+.fa.fa-creative-commons,
+.fab.fa-creative-commons {
   color: #231f20;
 }
-.fa-css3 {
+.fa.fa-css3,
+.fab.fa-css3 {
   color: #1680C0;
 }
-.fa-dashcube {
+.fa.fa-dashcube,
+.fab.fa-dashcube {
   color: #7f7f7f;
 }
-.fa-delicious {
+.fa.fa-delicious,
+.fab.fa-delicious {
   color: #3399ff;
 }
-.fa-deviantart {
+.fa.fa-deviantart,
+.fab.fa-deviantart {
   color: #4e6252;
 }
-.fa-digg {
+.fa.fa-digg,
+.fab.fa-digg {
   color: #000;
 }
-.fa-dribbble {
+.fa.fa-dribbble,
+.fab.fa-dribbble {
   color: #444444;
 }
-.fa-dropbox {
+.fa.fa-dropbox,
+.fab.fa-dropbox {
   color: #007ee5;
 }
-.fa-drupal {
+.fa.fa-drupal,
+.fab.fa-drupal {
   color: #0077c0;
 }
-.fa-empire {
+.fa.fa-empire,
+.fab.fa-empire {
   color: #000;
 }
-.fa-expeditedssl {
+.fa.fa-expeditedssl,
+.fab.fa-expeditedssl {
   color: #343433;
 }
-.fa-facebook {
+.fa.fa-facebook,
+.fab.fa-facebook {
   color: #3b5998;
 }
-.fa-facebook-official {
+.fa.fa-facebook-official,
+.fab.fa-facebook-official {
   color: #3b5998;
 }
-.fa-facebook-square {
+.fa.fa-facebook-square,
+.fab.fa-facebook-square {
   color: #3b5998;
 }
-.fa-firefox {
+.fa.fa-firefox,
+.fab.fa-firefox {
   color: #e66000;
 }
-.fa-flickr {
+.fa.fa-flickr,
+.fab.fa-flickr {
   color: #ff0084;
 }
-.fa-fonticons {
+.fa.fa-fonticons,
+.fab.fa-fonticons {
   color: #1C1E29;
 }
-.fa-forumbee {
+.fa.fa-forumbee,
+.fab.fa-forumbee {
   color: #83ad13;
 }
-.fa-foursquare {
+.fa.fa-foursquare,
+.fab.fa-foursquare {
   color: #0072b1;
 }
-.fa-ge {
+.fa.fa-ge,
+.fab.fa-ge {
   color: #000;
 }
-.fa-get-pocket {
+.fa.fa-get-pocket,
+.fab.fa-get-pocket {
   color: #d3505a;
 }
-.fa-gg {
+.fa.fa-gg,
+.fab.fa-gg {
   color: #000;
 }
-.fa-gg-circle {
+.fa.fa-gg-circle,
+.fab.fa-gg-circle {
   color: #000;
 }
-.fa-git {
+.fa.fa-git,
+.fab.fa-git {
   color: #333;
 }
-.fa-git-square {
+.fa.fa-git-square,
+.fab.fa-git-square {
   color: #333;
 }
-.fa-github {
+.fa.fa-github,
+.fab.fa-github {
   color: #333;
 }
-.fa-github-alt {
+.fa.fa-github-alt,
+.fab.fa-github-alt {
   color: #333;
 }
-.fa-github-square {
+.fa.fa-github-square,
+.fab.fa-github-square {
   color: #333;
 }
-.fa-gittip {
+.fa.fa-gittip,
+.fab.fa-gittip {
   color: #663300;
 }
-.fa-google {
+.fa.fa-google,
+.fab.fa-google {
   color: #4285f4;
 }
-.fa-google-plus {
+.fa.fa-google-plus,
+.fab.fa-google-plus {
   color: #dd4b39;
 }
-.fa-google-plus-square {
+.fa.fa-google-plus-square,
+.fab.fa-google-plus-square {
   color: #dd4b39;
 }
-.fa-google-wallet {
+.fa.fa-google-wallet,
+.fab.fa-google-wallet {
   color: #4285f4;
 }
-.fa-hacker-news {
+.fa.fa-hacker-news,
+.fab.fa-hacker-news {
   color: #ff6600;
 }
-.fa-houzz {
+.fa.fa-houzz,
+.fab.fa-houzz {
   color: #7ac142;
 }
-.fa-html5 {
+.fa.fa-html5,
+.fab.fa-html5 {
   color: #e34f26;
 }
-.fa-instagram {
+.fa.fa-instagram,
+.fab.fa-instagram {
   color: #3f729b;
 }
-.fa-internet-explorer {
+.fa.fa-internet-explorer,
+.fab.fa-internet-explorer {
   color: #1EBBEE;
 }
-.fa-ioxhost {
+.fa.fa-ioxhost,
+.fab.fa-ioxhost {
   color: #faa729;
 }
-.fa-joomla {
+.fa.fa-joomla,
+.fab.fa-joomla {
   color: #142849;
 }
-.fa-jsfiddle {
+.fa.fa-jsfiddle,
+.fab.fa-jsfiddle {
   color: #4679BD;
 }
-.fa-lastfm {
+.fa.fa-lastfm,
+.fab.fa-lastfm {
   color: #c3000d;
 }
-.fa-lastfm-square {
+.fa.fa-lastfm-square,
+.fab.fa-lastfm-square {
   color: #c3000d;
 }
-.fa-leanpub {
+.fa.fa-leanpub,
+.fab.fa-leanpub {
   color: #0c0c0c;
 }
-.fa-linkedin {
+.fa.fa-linkedin,
+.fab.fa-linkedin {
   color: #0976b4;
 }
-.fa-linkedin-square {
+.fa.fa-linkedin-square,
+.fab.fa-linkedin-square {
   color: #0976b4;
 }
-.fa-linux {
+.fa.fa-linux,
+.fab.fa-linux {
   color: #333333;
 }
-.fa-maxcdn {
+.fa.fa-maxcdn,
+.fab.fa-maxcdn {
   color: #FF6600;
 }
-.fa-meanpath {
+.fa.fa-meanpath,
+.fab.fa-meanpath {
   color: #538ed7;
 }
-.fa-medium {
+.fa.fa-medium,
+.fab.fa-medium {
   color: #000;
 }
-.fa-odnoklassniki {
+.fa.fa-odnoklassniki,
+.fab.fa-odnoklassniki {
   color: #ed812b;
 }
-.fa-odnoklassniki-square {
+.fa.fa-odnoklassniki-square,
+.fab.fa-odnoklassniki-square {
   color: #ed812b;
 }
-.fa-opencart {
+.fa.fa-opencart,
+.fab.fa-opencart {
   color: #2AC2EF;
 }
-.fa-openid {
+.fa.fa-openid,
+.fab.fa-openid {
   color: #F78C40;
 }
-.fa-opera {
+.fa.fa-opera,
+.fab.fa-opera {
   color: #cc0f16;
 }
-.fa-optin-monster {
+.fa.fa-optin-monster,
+.fab.fa-optin-monster {
   color: #83c11f;
 }
-.fa-pagelines {
+.fa.fa-pagelines,
+.fab.fa-pagelines {
   color: #000;
 }
-.fa-paypal {
+.fa.fa-paypal,
+.fab.fa-paypal {
   color: #253b80;
 }
-.fa-pied-piper {
+.fa.fa-pied-piper,
+.fab.fa-pied-piper {
   color: #2f9f46;
 }
-.fa-pied-piper-alt {
+.fa.fa-pied-piper-alt,
+.fab.fa-pied-piper-alt {
   color: #2f9f46;
 }
-.fa-pied-piper-square {
+.fa.fa-pied-piper-square,
+.fab.fa-pied-piper-square {
   color: #2f9f46;
 }
-.fa-pinterest {
+.fa.fa-pinterest,
+.fab.fa-pinterest {
   color: #cc2127;
 }
-.fa-pinterest-p {
+.fa.fa-pinterest-p,
+.fab.fa-pinterest-p {
   color: #cc2127;
 }
-.fa-pinterest-square {
+.fa.fa-pinterest-square,
+.fab.fa-pinterest-square {
   color: #cc2127;
 }
-.fa-qq {
+.fa.fa-qq,
+.fab.fa-qq {
   color: #000;
 }
-.fa-ra {
+.fa.fa-ra,
+.fab.fa-ra {
   color: #000;
 }
-.fa-rebel {
+.fa.fa-rebel,
+.fab.fa-rebel {
   color: #000;
 }
-.fa-reddit {
+.fa.fa-reddit,
+.fab.fa-reddit {
   color: #ff4500;
 }
-.fa-reddit-square {
+.fa.fa-reddit-square,
+.fab.fa-reddit-square {
   color: #ff4500;
 }
-.fa-renren {
+.fa.fa-renren,
+.fab.fa-renren {
   color: #005EAC;
 }
-.fa-safari {
+.fa.fa-safari,
+.fab.fa-safari {
   color: #1B88CA;
 }
-.fa-sellsy {
+.fa.fa-sellsy,
+.fab.fa-sellsy {
   color: #1f78b9;
 }
-.fa-share-alt {
+.fa.fa-share-alt,
+.fab.fa-share-alt {
   color: #01bf01;
 }
-.fa-share-alt-square {
+.fa.fa-share-alt-square,
+.fab.fa-share-alt-square {
   color: #01bf01;
 }
-.fa-shirtsinbulk {
+.fa.fa-shirtsinbulk,
+.fab.fa-shirtsinbulk {
   color: #dd3a26;
 }
-.fa-simplybuilt {
+.fa.fa-simplybuilt,
+.fab.fa-simplybuilt {
   color: #000;
 }
-.fa-skyatlas {
+.fa.fa-skyatlas,
+.fab.fa-skyatlas {
   color: #00adbb;
 }
-.fa-skype {
+.fa.fa-skype,
+.fab.fa-skype {
   color: #00aff0;
 }
-.fa-slack {
+.fa.fa-slack,
+.fab.fa-slack {
   color: #0f7965;
 }
-.fa-slideshare {
+.fa.fa-slideshare,
+.fab.fa-slideshare {
   color: #e98325;
 }
-.fa-soundcloud {
+.fa.fa-soundcloud,
+.fab.fa-soundcloud {
   color: #f80;
 }
-.fa-spotify {
+.fa.fa-spotify,
+.fab.fa-spotify {
   color: #7ab800;
 }
-.fa-stack-exchange {
+.fa.fa-stack-exchange,
+.fab.fa-stack-exchange {
   color: #000;
 }
-.fa-stack-overflow {
+.fa.fa-stack-overflow,
+.fab.fa-stack-overflow {
   color: #fe7a15;
 }
-.fa-steam {
+.fa.fa-steam,
+.fab.fa-steam {
   color: #0B0B0B;
 }
-.fa-steam-square {
+.fa.fa-steam-square,
+.fab.fa-steam-square {
   color: #0B0B0B;
 }
-.fa-stumbleupon {
+.fa.fa-stumbleupon,
+.fab.fa-stumbleupon {
   color: #eb4924;
 }
-.fa-stumbleupon-circle {
+.fa.fa-stumbleupon-circle,
+.fab.fa-stumbleupon-circle {
   color: #eb4924;
 }
-.fa-tencent-weibo {
+.fa.fa-tencent-weibo,
+.fab.fa-tencent-weibo {
   color: #74AF2C;
 }
-.fa-trello {
+.fa.fa-trello,
+.fab.fa-trello {
   color: #256a92;
 }
-.fa-tripadvisor {
+.fa.fa-tripadvisor,
+.fab.fa-tripadvisor {
   color: #589442;
 }
-.fa-tumblr {
+.fa.fa-tumblr,
+.fab.fa-tumblr {
   color: #35465c;
 }
-.fa-tumblr-square {
+.fa.fa-tumblr-square,
+.fab.fa-tumblr-square {
   color: #35465c;
 }
-.fa-twitch {
+.fa.fa-twitch,
+.fab.fa-twitch {
   color: #6441a5;
 }
-.fa-twitter {
+.fa.fa-twitter,
+.fab.fa-twitter {
   color: #55acee;
 }
-.fa-twitter-square {
+.fa.fa-twitter-square,
+.fab.fa-twitter-square {
   color: #55acee;
 }
-.fa-viacoin {
+.fa.fa-viacoin,
+.fab.fa-viacoin {
   color: #333;
 }
-.fa-vimeo {
+.fa.fa-vimeo,
+.fab.fa-vimeo {
   color: #1ab7ea;
 }
-.fa-vimeo-square {
+.fa.fa-vimeo-square,
+.fab.fa-vimeo-square {
   color: #1ab7ea;
 }
-.fa-vine {
+.fa.fa-vine,
+.fab.fa-vine {
   color: #00b488;
 }
-.fa-vk {
+.fa.fa-vk,
+.fab.fa-vk {
   color: #45668e;
 }
-.fa-wechat {
+.fa.fa-wechat,
+.fab.fa-wechat {
   color: #93d034;
 }
-.fa-weibo {
+.fa.fa-weibo,
+.fab.fa-weibo {
   color: #E71D34;
 }
-.fa-weixin {
+.fa.fa-weixin,
+.fab.fa-weixin {
   color: #93d034;
 }
-.fa-wikipedia-w {
+.fa.fa-wikipedia-w,
+.fab.fa-wikipedia-w {
   color: #000;
 }
-.fa-windows {
+.fa.fa-windows,
+.fab.fa-windows {
   color: #00bcf2;
 }
-.fa-wordpress {
+.fa.fa-wordpress,
+.fab.fa-wordpress {
   color: #21759b;
 }
-.fa-xing {
+.fa.fa-xing,
+.fab.fa-xing {
   color: #026466;
 }
-.fa-xing-square {
+.fa.fa-xing-square,
+.fab.fa-xing-square {
   color: #026466;
 }
-.fa-y-combinator {
+.fa.fa-y-combinator,
+.fab.fa-y-combinator {
   color: #F0652F;
 }
-.fa-yc {
+.fa.fa-yc,
+.fab.fa-yc {
   color: #F0652F;
 }
-.fa-yahoo {
+.fa.fa-yahoo,
+.fab.fa-yahoo {
   color: #400191;
 }
-.fa-yelp {
+.fa.fa-yelp,
+.fab.fa-yelp {
   color: #af0606;
 }
-.fa-youtube {
+.fa.fa-youtube,
+.fab.fa-youtube {
   color: #e52d27;
 }
-.fa-youtube-play {
+.fa.fa-youtube-play,
+.fab.fa-youtube-play {
   color: #e52d27;
 }
-.fa-youtube-square {
+.fa.fa-youtube-square,
+.fab.fa-youtube-square {
   color: #e52d27;
+}
+.multicolor.fa.fa-instagram::before,
+.multicolor.fa.fa-instagram-square::before,
+.multicolor.fab.fa-instagram::before,
+.multicolor.fab.fa-instagram-square::before {
+  /* Fallback: Set a background color. */
+  background-color: #fd5949;
+  /* Create the gradient. */
+  background-image: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  /* Set the background size and repeat properties. */
+  background-size: 100%;
+  background-repeat: repeat;
+  /* Use the text as a mask for the background. */
+  /* This will show the gradient as a text color rather than element bg. */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
 }
