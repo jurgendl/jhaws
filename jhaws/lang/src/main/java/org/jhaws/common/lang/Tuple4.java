@@ -1,5 +1,6 @@
 package org.jhaws.common.lang;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -18,6 +19,14 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 
 	public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> tuple4(T1 t1, T2 t2, T3 t3, T4 t4) {
 		return new Tuple4<>(t1, t2, t3, t4);
+	}
+
+	public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> of(Map.Entry<T1, T2> entry1, Map.Entry<T3, T4> entry2) {
+		return new Tuple4<>(entry1.getKey(), entry1.getValue(), entry2.getKey(), entry2.getValue());
+	}
+
+	public static <T1, T2, T3, T4> Tuple4<T1, T2, T3, T4> tuple4(Map.Entry<T1, T2> entry1, Map.Entry<T3, T4> entry2) {
+		return new Tuple4<>(entry1.getKey(), entry1.getValue(), entry2.getKey(), entry2.getValue());
 	}
 
 	protected T4 t4;
