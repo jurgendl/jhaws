@@ -118,7 +118,7 @@
 		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>--><!-- log4j 2 bridge naar slf4j zit in log4j -->
 		<!-- INHERITED -->
 		<thymeleaf.version>3.0.14.RELEASE</thymeleaf.version>
-		<netty.version>4.1.72.Final</netty.version>
+		<netty.version>4.1.79.Final</netty.version>
 		<liquibase.version>${version.liquibase}</liquibase.version><!-- naam property niet veranderen, belangrijk voor interface module -->
 		<jackson.version>${version.jackson}</jackson.version><!-- naam property niet veranderen, belangrijk voor interface module -->
 		<spring-framework.version>${version.spring}</spring-framework.version><!-- naam property niet veranderen, belangrijk voor interface module -->
