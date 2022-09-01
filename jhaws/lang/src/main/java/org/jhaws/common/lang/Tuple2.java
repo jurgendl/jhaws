@@ -42,6 +42,11 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 		this.t2 = t2;
 	}
 
+	public Tuple2(Map.Entry<T1, T2> entry) {
+		super(entry.getKey());
+		this.t2 = entry.getValue();
+	}
+
 	@Override
 	public String toString() {
 		return "( " + t1 + " , " + t2 + " )";

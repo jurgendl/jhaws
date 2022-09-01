@@ -40,6 +40,11 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 		this.t4 = t4;
 	}
 
+	public Tuple4(Map.Entry<T1, T2> entry1, Map.Entry<T3, T4> entry2) {
+		super(entry1, entry2.getKey());
+		this.t4 = entry2.getValue();
+	}
+
 	@Override
 	public String toString() {
 		return "( " + t1 + " , " + t2 + ", " + t3 + ", " + t4 + " )";

@@ -1,5 +1,6 @@
 package org.jhaws.common.lang;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -20,6 +21,10 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 		return new Tuple5<>(t1, t2, t3, t4, t5);
 	}
 
+	public static <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> tuple5(Map.Entry<T1, T2> entry1, Map.Entry<T3, T4> entry2, T5 t5) {
+		return new Tuple5<>(entry1.getKey(), entry1.getValue(), entry2.getKey(), entry2.getValue(), t5);
+	}
+
 	protected T5 t5;
 
 	public Tuple5() {
@@ -28,6 +33,11 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
 	public Tuple5(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5) {
 		super(t1, t2, t3, t4);
+		this.t5 = t5;
+	}
+
+	public Tuple5(Map.Entry<T1, T2> entry1, Map.Entry<T3, T4> entry2, T5 t5) {
+		super(entry1, entry2);
 		this.t5 = t5;
 	}
 
