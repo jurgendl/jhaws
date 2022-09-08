@@ -7,6 +7,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -164,5 +166,15 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 
 	public Map.Entry<T1, T2> toMapEntry() {
 		return Map.entry(getT1(), getT2());
+	}
+
+	public Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> collectMap() {
+		Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> map = Collectors.toMap(Tuple2::getT1, Tuple2::getT2);
+		return map;
+	}
+
+	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> collectTupleToMap() {
+		Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> map = Collectors.toMap(Tuple2::getT1, Tuple2::getT2);
+		return map;
 	}
 }
