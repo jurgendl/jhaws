@@ -33,8 +33,12 @@ public class RestExceptionInfo {
     }
 
     public RestException toRestException() {
-        return Optional.ofNullable(getKey()).map(keyNotNull -> new RestException(keyNotNull, getArguments() == null || getArguments().length == 0 ? null : Arrays.stream(getArguments()).map(Object.class::cast).toArray(l -> new Object[l])))
-                .orElseGet(() -> new RestException(getStacktrace()[0]));
+        return Optional.ofNullable(getKey()).map(keyNotNull -> new RestException(keyNotNull, getArguments() == null || getArguments().length == 0 ? null : Arrays.stream(getArguments()).map(Object.class::cast).toArray(l -> new Object[l]))).orElseGet(() -> {
+            if (getStacktrace() == null || getStacktrace().length == 0) {
+                return new RestException("unknown error");
+            }
+            return new RestException(getStacktrace()[0]);
+        });
     }
 
     public boolean getException() {
