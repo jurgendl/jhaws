@@ -17,7 +17,7 @@
 		<version.spring-integration>5.5.14</version.spring-integration><!-- spring-integration-core -->
 		<version.spring-security>5.7.3</version.spring-security><!-- spring-security-core -->
 		<version.spring-data>2.7.2</version.spring-data><!-- spring-data-commons -->
-		<version.spring-data-rest>3.7.2</version.spring-data-rest><!-- spring-data-rest-core -->
+		<version.spring-data-rest>3.7.3</version.spring-data-rest><!-- spring-data-rest-core -->
 		<version.spring-session>2.7.0</version.spring-session><!-- spring-session-core -->
 		<!-- .............................................. -->
 		<!-- .............................................. -->
