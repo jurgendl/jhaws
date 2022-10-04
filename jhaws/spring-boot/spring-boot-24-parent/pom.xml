@@ -346,9 +346,9 @@
 		</dependency>
 		<!-- _________________________ -->
 		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>1.33</version>
+		    <groupId>org.yaml</groupId>
+		    <artifactId>snakeyaml</artifactId>
+		    <version>1.33</version>
 		</dependency>
 		<!-- _________________________ -->
 		<dependency>
