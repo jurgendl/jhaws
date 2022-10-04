@@ -83,13 +83,13 @@
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
 		<!-- SPRING DEPENDENCIES -->
-		<version.spring>5.3.22</version.spring><!-- spring-core -->
+		<version.spring>5.3.23</version.spring><!-- spring-core -->
 		<version.spring-web>${version.spring}</version.spring-web>
 		<version.spring-ws>3.1.3</version.spring-ws><!-- spring-ws-core -->
-		<version.spring-integration>5.5.14</version.spring-integration><!-- spring-integration-core -->
+		<version.spring-integration>5.5.15</version.spring-integration><!-- spring-integration-core -->
 		<version.spring-security>5.7.3</version.spring-security><!-- spring-security-core -->
-		<version.spring-data>2.7.2</version.spring-data><!-- spring-data-commons -->
-		<version.spring-data-rest>3.7.2</version.spring-data-rest><!-- spring-data-rest-core -->
+		<version.spring-data>2.7.3</version.spring-data><!-- spring-data-commons -->
+		<version.spring-data-rest>3.7.3</version.spring-data-rest><!-- spring-data-rest-core -->
 		<version.spring-session>2.7.0</version.spring-session><!-- spring-session-core -->
 		<!-- BEGIN DEPENDENCIES -->
 		<version.liquibase>4.9.0</version.liquibase>
