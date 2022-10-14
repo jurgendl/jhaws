@@ -63,7 +63,7 @@
 		<version.commons.lang>2.6</version.commons.lang>
 		<version.commons.math>2.2</version.commons.math>
 		<version.commons.math3>3.6.1</version.commons.math3>
-		<version.commons.text>1.9</version.commons.text>
+		<version.commons.text>1.10.0</version.commons.text>
 		<version.httpcomponents.cache>4.5.13</version.httpcomponents.cache>
 		<version.httpcomponents.win>4.5.13</version.httpcomponents.win>
 		<version.httpcomponents.mime>4.5.13</version.httpcomponents.mime>
