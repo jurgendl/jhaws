@@ -78,8 +78,8 @@
 		<version.javax.activation>1.1.1</version.javax.activation>
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
 		<version.groovy>3.0.8</version.groovy>
-		<version.jackson>2.13.2</version.jackson>
-		<version.jackson-databind>2.13.2.1</version.jackson-databind>
+		<version.jackson>2.13.4</version.jackson>
+		<version.jackson-databind>2.13.4.2</version.jackson-databind>
 		<version.stax2-api>4.2</version.stax2-api>
 		<version.resteasy>4.7.6.Final</version.resteasy>
 		<version.junit.jupiter>5.8.2</version.junit.jupiter>
