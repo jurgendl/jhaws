@@ -68,57 +68,44 @@ public abstract class HTTPClientBase<X extends HTTPClientBase<? super X>> implem
 		return n;
 	}
 
-	/**
-	 * Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101
-	 * Firefox/98.0
-	 */
-	public static String FIREFOX = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0";
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/firefox
+	public static String FIREFOX_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0";
+
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/firefox
+	public static String FIREFOX_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12.6; rv:105.0) Gecko/20100101 Firefox/105.0";
+
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/firefox
+	public static String FIREFOX_LINUX = "Mozilla/5.0 (X11; Linux i686; rv:105.0) Gecko/20100101 Firefox/105.0";
 
 	// https://www.whatismybrowser.com/guides/the-latest-user-agent/chrome
-	/**
-	 * Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
-	 * Gecko) Chrome/99.0.4844.74 Safari/537.36
-	 */
-	public static String CHROME_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36";
+	public static String CHROME_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36";
 
 	// https://www.whatismybrowser.com/guides/the-latest-user-agent/chrome
-	/**
-	 * Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15
-	 * (KHTML, like Gecko) CriOS/99.0.4844.59 Mobile/15E148 Safari/604.1
-	 */
-	public static String CHROME_MAC = "Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/99.0.4844.59 Mobile/15E148 Safari/604.1";
+	public static String CHROME_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36";
 
 	// https://www.whatismybrowser.com/guides/the-latest-user-agent/chrome
-	/**
-	 * Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)
-	 * Chrome/99.0.4844.74 Safari/537.36
-	 */
-	public static String CHROME_LINUX = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36";
+	public static String CHROME_LINUX = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36";
 
-	/**
-	 * Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko
-	 */
-	public static String IEXPLORER = "Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko";
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/internet-explorer
+	public static String IEXPLORER_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Trident/7.0; rv:11.0) like Gecko";
 
-	/**
-	 * Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
-	 * Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39
-	 */
-	public static String EDGE = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 Edg/99.0.1150.39";
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/edge
+	public static String EDGE_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34";
 
-	/**
-	 * Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D)
-	 * AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30
-	 */
-	public static String ANDROID_S3 = "Mozilla/5.0 (Linux; U; Android 4.0.4; en-gb; GT-I9300 Build/IMM76D) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30";
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/edge
+	public static String EDGE_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34";
 
-	// https://deviceatlas.com/blog/samsung-phones-user-agent-strings-list
-	/**
-	 * Mozilla/5.0 (Linux; Android 6.0.1; SM-G935S Build/MMB29K; wv)
-	 * AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/55.0.2883.91 Mobile
-	 * Safari/537.36
-	 */
-	public static String ANDROID_S7E = "Mozilla/5.0 (Linux; Android 6.0.1; SM-G935S Build/MMB29K; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/55.0.2883.91 Mobile Safari/537.36";
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/opera
+	public static String OPERA_WINDOWS = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 OPR/91.0.4516.20";
+
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/opera
+	public static String OPERA_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 OPR/91.0.4516.20";
+
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/opera
+	public static String OPERA_LINUX = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 OPR/91.0.4516.20";
+
+	// https://www.whatismybrowser.com/guides/the-latest-user-agent/safari
+	public static String SAFARI_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 12_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.6 Safari/605.1.15";
 
 	protected String charSet = StringUtils.UTF8;
 
