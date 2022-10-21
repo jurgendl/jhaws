@@ -75,7 +75,6 @@ import org.jhaws.common.web.wicket.qtip.QTip;
 import org.jhaws.common.web.wicket.rating.Rating;
 import org.jhaws.common.web.wicket.settings.WicketAppSettings;
 import org.jhaws.common.web.wicket.slider.BootstrapSlider;
-import org.jhaws.common.web.wicket.spin.Spin;
 import org.jhaws.common.web.wicket.tags.BootstrapTags;
 import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
 import org.jhaws.common.web.wicket.toast.BootstrapToasts;
@@ -335,7 +334,7 @@ public class WicketApplication extends /* AuthenticatedWebApplication */ WebAppl
                     , BootstrapSelect.CSS//
                     , JqueryTypeAhead.CSS//
                     , Rating.CSS//
-                    , Spin.css(getSettings().getSpinner())//
+            // , Spin.css(getSettings().getSpinner())//
             // , DefaultWebPage.CSS // bootstrap/base.css
             );
 

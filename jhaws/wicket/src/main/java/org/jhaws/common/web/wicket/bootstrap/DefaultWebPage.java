@@ -3,6 +3,7 @@ package org.jhaws.common.web.wicket.bootstrap;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.devutils.debugbar.DebugBar;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -56,6 +59,7 @@ import org.jhaws.common.web.wicket.popoverx.PopoverX;
 import org.jhaws.common.web.wicket.qtip.QTip;
 import org.jhaws.common.web.wicket.slider.BootstrapSlider;
 import org.jhaws.common.web.wicket.spin.Spin;
+import org.jhaws.common.web.wicket.spin.Spin.SpinType;
 import org.jhaws.common.web.wicket.tags.BootstrapTags;
 import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
 import org.jhaws.common.web.wicket.toast.BootstrapToasts;
@@ -236,7 +240,7 @@ public abstract class DefaultWebPage extends WebPage {
         addTitle(parameters, html, "page.title");
 
         // spinner
-        addSpinner(html, "spinnercontainer", "spinner");
+        addSpinner(html, "spinnercontainer", "spinner", WicketApplication.get().getSettings().getSpinner());
 
         // shortcut icon
         addShortcutIcon(html, "shortcutIcon");
@@ -371,8 +375,35 @@ public abstract class DefaultWebPage extends WebPage {
         html.add(new WebMarkupContainer(id).add(new AttributeModifier("href", Model.of(WicketApplication.get().getSettings().getShortcutIcon()))).setVisible(StringUtils.isNotBlank(WicketApplication.get().getSettings().getShortcutIcon())));
     }
 
-    protected void addSpinner(MarkupContainer html, String spinnercontainer, String spinner) {
-        html.add(new WebMarkupContainer(spinnercontainer).add(new WebMarkupContainer(spinner).add(AttributeModifier.replace("class", "loader loader-" + WicketApplication.get().getSettings().getSpinner() + " is-active"))));
+    protected WebMarkupContainer addSpinner(MarkupContainer html, String spinnercontainer, String spinner, String spinnerId) {
+        boolean spindebug = false;
+        if (spindebug) System.out.println(spinnerId);
+        SpinType _spinType;
+        try {
+            _spinType = StringUtils.isBlank(spinnerId) ? SpinType._default : Arrays.stream(SpinType.values()).filter(st -> spinnerId.equals(st.id())).findAny().orElseGet(() -> SpinType.valueOf(spinnerId));
+        } catch (Exception ex) {
+            _spinType = SpinType._default;
+        }
+        SpinType spinType = _spinType;
+        if (spindebug) System.out.println(spinType);
+        Component spinnerTag = new WebMarkupContainer(spinner) {
+            @Override
+            public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
+                String body = Spin.body(spinType);
+                if (spindebug) System.out.println(body);
+                replaceComponentTagBody(markupStream, openTag, body);
+            }
+        };
+        if (spinType.name().startsWith("sk_")) {
+            spinnerTag.add(AttributeModifier.replace("class", spinType.id()));
+        } else {
+            spinnerTag.add(AttributeModifier.replace("class", "loader loader-" + spinType.id() + " is-active"));
+        }
+        WebMarkupContainer spinnercontainerTag = new WebMarkupContainer(spinnercontainer);
+        if (spindebug) spinnercontainerTag.add(AttributeModifier.replace("class", ""));
+        spinnercontainerTag.add(spinnerTag);
+        html.add(spinnercontainerTag);
+        return spinnercontainerTag;
     }
 
     public FeedbackPanel getFeedbackPanel() {
