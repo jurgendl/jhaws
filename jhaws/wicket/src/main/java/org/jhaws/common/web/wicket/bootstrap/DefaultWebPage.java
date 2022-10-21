@@ -394,11 +394,16 @@ public abstract class DefaultWebPage extends WebPage {
                 replaceComponentTagBody(markupStream, openTag, body);
             }
         };
+        String spinClass = spinType.id();
         if (spinType.name().startsWith("sk_")) {
-            spinnerTag.add(AttributeModifier.replace("class", spinType.id()));
+            //
+        } else if (spinType.name().startsWith("load")) {
+            spinClass = spinType.name();
         } else {
-            spinnerTag.add(AttributeModifier.replace("class", "loader loader-" + spinType.id() + " is-active"));
+            spinClass = "loader loader-" + spinClass + " is-active";
         }
+        if (spindebug) System.out.println(spinClass);
+        spinnerTag.add(AttributeModifier.replace("class", spinClass));
         WebMarkupContainer spinnercontainerTag = new WebMarkupContainer(spinnercontainer);
         if (spindebug) spinnercontainerTag.add(AttributeModifier.replace("class", ""));
         spinnercontainerTag.add(spinnerTag);

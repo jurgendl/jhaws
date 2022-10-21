@@ -10,6 +10,9 @@ import org.jhaws.common.web.wicket.CssResourceReference;
 // http://www.raphaelfabeni.com.br/css-loader/
 // https://github.com/raphaelfabeni/css-loader
 // https://tobiasahlin.com/spinkit/
+// https://projects.lukehaas.me/css-loaders/
+// TODO https://loading.io/css/
+// TODO https://cssloaders.github.io/
 //
 // response.render(CssHeaderItem.forReference(Spin.css(WicketApplication.get().getSettings().getSpinner())));
 //
@@ -47,7 +50,15 @@ public class Spin {
         sk_circle("sk-circle"), //
         sk_cube_grid("sk-cube-grid"), //
         sk_fading_circle("sk-fading-circle"), //
-        sk_folding_cube("sk-folding-cube"),//
+        sk_folding_cube("sk-folding-cube"), //
+        load1("load1"), //
+        load2("load2"), //
+        load3("load3"), //
+        load4("load4"), //
+        load5("load5"), //
+        load6("load6"), //
+        load7("load7"), //
+        load8("load8"),//
         //
         ;
 
@@ -70,46 +81,36 @@ public class Spin {
     public static List<String> types = Arrays.stream(SpinType.values()).map(SpinType::get).collect(Collectors.toList());
 
     public static CssResourceReference SPIN_CSS_BALL = new CssResourceReference(Spin.class, "loader-ball.css");
-
     public static CssResourceReference SPIN_CSS_BAR = new CssResourceReference(Spin.class, "loader-bar.css");
-
     public static CssResourceReference SPIN_CSS_PING_PONG = new CssResourceReference(Spin.class, "loader-bar-ping-pong.css");
-
     public static CssResourceReference SPIN_CSS_BORDER = new CssResourceReference(Spin.class, "loader-border.css");
-
     public static CssResourceReference SPIN_CSS_BOUNCING = new CssResourceReference(Spin.class, "loader-bouncing.css");
-
     public static CssResourceReference SPIN_CSS_CLOCK = new CssResourceReference(Spin.class, "loader-clock.css");
-
     public static CssResourceReference SPIN_CSS_CURTAIN = new CssResourceReference(Spin.class, "loader-curtain.css");
-
     public static CssResourceReference SPIN_CSS_DEFAULT = new CssResourceReference(Spin.class, "loader-default.css");
-
     public static CssResourceReference SPIN_CSS_DOULE = new CssResourceReference(Spin.class, "loader-double.css");
-
     public static CssResourceReference SPIN_CSS_MUSIC = new CssResourceReference(Spin.class, "loader-music.css");
-
     public static CssResourceReference SPIN_CSS_POKEBALL = new CssResourceReference(Spin.class, "loader-pokeball.css");
-
     public static CssResourceReference SPIN_CSS_CELL = new CssResourceReference(Spin.class, "loader-smartphone.css");
 
     public static CssResourceReference SPINKIT_SQUARE = new CssResourceReference(Spin.class, "sk-square.css");
-
     public static CssResourceReference SPINKIT_CHASE = new CssResourceReference(Spin.class, "sk-chase.css");
-
     public static CssResourceReference SPINKIT_SPINNER = new CssResourceReference(Spin.class, "sk-spinner.css");
-
     public static CssResourceReference SPINKIT_RECT = new CssResourceReference(Spin.class, "sk-rect.css");
-
     public static CssResourceReference SPINKIT_BOUNCE = new CssResourceReference(Spin.class, "sk-bounce.css");
-
     public static CssResourceReference SPINKIT_CIRCLE = new CssResourceReference(Spin.class, "sk-circle.css");
-
     public static CssResourceReference SPINKIT_CUBE_GRID = new CssResourceReference(Spin.class, "sk-cube-grid.css");
-
     public static CssResourceReference SPINKIT_FADING_CIRCLE = new CssResourceReference(Spin.class, "sk-fading-circle.css");
-
     public static CssResourceReference SPINKIT_FOLDING_CUBE = new CssResourceReference(Spin.class, "sk-folding-cube.css");
+
+    public static CssResourceReference LOAD1 = new CssResourceReference(Spin.class, "load1.css");
+    public static CssResourceReference LOAD2 = new CssResourceReference(Spin.class, "load2.css");
+    public static CssResourceReference LOAD3 = new CssResourceReference(Spin.class, "load3.css");
+    public static CssResourceReference LOAD4 = new CssResourceReference(Spin.class, "load4.css");
+    public static CssResourceReference LOAD5 = new CssResourceReference(Spin.class, "load5.css");
+    public static CssResourceReference LOAD6 = new CssResourceReference(Spin.class, "load6.css");
+    public static CssResourceReference LOAD7 = new CssResourceReference(Spin.class, "load7.css");
+    public static CssResourceReference LOAD8 = new CssResourceReference(Spin.class, "load8.css");
 
     public static List<CssResourceReference> css = Arrays.asList(//
             SPIN_CSS_DEFAULT, //
@@ -132,7 +133,15 @@ public class Spin {
             SPINKIT_CIRCLE, //
             SPINKIT_CUBE_GRID, //
             SPINKIT_FADING_CIRCLE, //
-            SPINKIT_FOLDING_CUBE//
+            SPINKIT_FOLDING_CUBE, //
+            LOAD1, //
+            LOAD2, //
+            LOAD3, //
+            LOAD4, //
+            LOAD5, //
+            LOAD6, //
+            LOAD7, //
+            LOAD8//
     );
 
     public static String show() {
@@ -145,7 +154,7 @@ public class Spin {
 
     public static int type(String type) {
         int i = types.indexOf(type);
-        if (i == -1) throw new IllegalArgumentException(types + " - " + types);
+        if (i == -1) i = 0;
         return i;
     }
 
@@ -154,7 +163,9 @@ public class Spin {
     }
 
     public static String body(SpinType valueOf) {
-        if (valueOf == SpinType.sk_chase) {
+        if (valueOf.name().startsWith("load")) {
+            return "<div class=\"loader\">Loading...</div>";
+        } else if (valueOf == SpinType.sk_chase) {
             return "<div class=\"sk-chase-dot\"></div><div class=\"sk-chase-dot\"></div><div class=\"sk-chase-dot\"></div><div class=\"sk-chase-dot\"></div><div class=\"sk-chase-dot\"></div><div class=\"sk-chase-dot\"></div>";
         } else if (valueOf == SpinType.sk_spinner) {
             return "<div class=\"double-bounce1\"></div><div class=\"double-bounce2\"></div>";
