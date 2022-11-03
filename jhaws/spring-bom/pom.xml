@@ -13,11 +13,11 @@
 	<properties>
 		<version.spring>5.3.23</version.spring><!-- spring-core -->
 		<version.spring-web>${version.spring}</version.spring-web>
-		<version.spring-ws>3.1.3</version.spring-ws><!-- spring-ws-core -->
+		<version.spring-ws>3.1.4</version.spring-ws><!-- spring-ws-core -->
 		<version.spring-integration>5.5.15</version.spring-integration><!-- spring-integration-core -->
-		<version.spring-security>5.7.3</version.spring-security><!-- spring-security-core -->
-		<version.spring-data>2.7.3</version.spring-data><!-- spring-data-commons -->
-		<version.spring-data-rest>3.7.3</version.spring-data-rest><!-- spring-data-rest-core -->
+		<version.spring-security>5.7.5</version.spring-security><!-- spring-security-core -->
+		<version.spring-data>2.7.5</version.spring-data><!-- spring-data-commons -->
+		<version.spring-data-rest>3.7.5</version.spring-data-rest><!-- spring-data-rest-core -->
 		<version.spring-session>2.7.0</version.spring-session><!-- spring-session-core -->
 		<!-- .............................................. -->
 		<!-- .............................................. -->
@@ -46,7 +46,7 @@
 		<version.spring-asm>3.1.4.RELEASE</version.spring-asm><!-- spring-asm -->
 		<version.spring-jca>2.0.8</version.spring-jca><!-- spring-jca -->
 		<version.spring-dao>2.0.8</version.spring-dao><!-- spring-dao -->
-		<version.spring-retry>1.3.3</version.spring-retry><!-- spring-retry -->
+		<version.spring-retry>1.3.4</version.spring-retry><!-- spring-retry -->
 	</properties>
 	<dependencyManagement>
 		<dependencies>
