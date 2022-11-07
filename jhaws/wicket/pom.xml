@@ -154,4 +154,37 @@
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>minify</id>
+		    <build>
+		        <plugins>
+		        	<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.4.0</version>
+						<executions>
+							<execution>
+								<phase>process-sources</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<includePluginDependencies>true</includePluginDependencies>
+									<includeProjectDependencies>true</includeProjectDependencies>
+									<mainClass>Minify</mainClass>
+									<arguments>
+										<argument>${project.basedir}</argument>
+										<argument>${project.build.directory}</argument>
+										<argument>${project.build.sourceDirectory}</argument>
+										<argument>${project.build.resources[0].directory}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+		        </plugins>
+		    </build>
+		</profile>
+	</profiles>
 </project>
