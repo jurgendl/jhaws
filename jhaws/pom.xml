@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>jhaws-modules</artifactId>
@@ -120,7 +121,7 @@
 		<version.logback>1.2.10</version.logback>
 		<version.janino>3.1.2</version.janino>
 		<version.logback.spring>0.1.5</version.logback.spring>
-		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j><!-- log4j 2 bridge naar slf4j zit in log4j -->
+		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>		<!-- log4j 2 bridge naar slf4j zit in log4j -->
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -328,22 +329,22 @@
 			<dependency>
 				<groupId>javax.xml.bind</groupId>
 				<artifactId>jaxb-api</artifactId>
-				<version>${version.jaxb-api}</version><!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-api}</version>				<!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-core</artifactId>
-				<version>${version.jaxb-core}</version><!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-core}</version>				<!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-impl</artifactId>
-				<version>${version.jaxb-impl}</version><!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-impl}</version>				<!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish.jaxb</groupId>
 				<artifactId>jaxb-runtime</artifactId>
-				<version>${version.jaxb-runtime}</version><!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-runtime}</version>				<!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
@@ -1212,7 +1213,7 @@
 			<dependency>
 				<groupId>org.apache.tika</groupId>
 				<artifactId>tika-parsers</artifactId>
-				<version>${version.tika}</version><!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
+				<version>${version.tika}</version>				<!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
 				<optional>true</optional>
 				<exclusions>
 					<exclusion>
@@ -1294,7 +1295,7 @@
 			<dependency>
 				<groupId>org.apache.tika</groupId>
 				<artifactId>tika-core</artifactId>
-				<version>${version.tika}</version><!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
+				<version>${version.tika}</version>				<!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
 				<optional>true</optional>
 				<exclusions>
 					<exclusion>
@@ -1391,7 +1392,7 @@
 				<artifactId>cxf-xjc-runtime</artifactId>
 				<version>3.0.3</version>
 			</dependency>
-			<dependency><!-- ntlm -->
+			<dependency>				<!-- ntlm -->
 				<groupId>jcifs</groupId>
 				<artifactId>jcifs</artifactId>
 				<version>${version.jcifs}</version>
@@ -1664,7 +1665,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
+				<version>2.5.3</version>				<!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>src</releaseProfiles>
@@ -1712,7 +1713,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M5</version><!--$NO-MVN-MAN-VER$ -->
+				<version>3.0.0-M5</version>				<!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<testFailureIgnore>false</testFailureIgnore>
 					<forkMode>pertest</forkMode>
