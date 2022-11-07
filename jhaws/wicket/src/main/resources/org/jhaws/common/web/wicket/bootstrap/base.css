@@ -8,6 +8,10 @@
 /* https://stackoverflow.com/questions/2392366/print-background-colours-in-chrome */
 @media print { body { -webkit-print-color-adjust: exact; } }
 
+html {
+	scroll-behavior: smooth;
+}
+
 /*
 .form-control:focus, .custom-control-input:focus {
 	box-shadow: 0 0 0 0.1rem var(--primary) !important;
