@@ -397,6 +397,21 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+	      <dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-rest-webmvc</artifactId>
+	        <version>${version.spring-data-rest}</version>
+	      </dependency>
+	      <dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-rest-core</artifactId>
+	        <version>${version.spring-data-rest}</version>
+	      </dependency>
+	      <dependency>
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-rest-hal-explorer</artifactId>
+	        <version>${version.spring-data-rest}</version>
+	      </dependency>
 		<!-- _________________________ -->
 	</dependencies>
 </project>
