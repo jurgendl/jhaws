@@ -388,6 +388,7 @@ public class YTDL extends Tool {
 		userAgent(command);
 		common(command);
 		extraConfig(command, extraConfig);
+		// --compat-options format-sort
 		command.add("-f");
 		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 		command.add("bestvideo,bestaudio");
@@ -479,6 +480,7 @@ public class YTDL extends Tool {
 		common(command);
 		extraConfig(command, extraConfig);
 		command.add("--list-formats");
+		// --compat-options list-formats
 		command.add(url);
 		Value<Process> processHolder = null;
 		boolean log = true;
