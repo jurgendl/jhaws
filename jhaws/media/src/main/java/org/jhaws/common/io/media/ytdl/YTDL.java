@@ -172,7 +172,7 @@ public class YTDL extends Tool {
 				executor.shutdownNow();
 				// <----------------
 
-				update.write("");
+				update.write("" + currentTimeMillis);
 			}
 		} else {
 			String tmp = EXE;
