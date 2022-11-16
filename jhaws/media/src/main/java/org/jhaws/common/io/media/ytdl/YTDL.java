@@ -77,15 +77,17 @@ import org.jhaws.common.lang.Value;
 public class YTDL extends Tool {
 	public static String UNSUPPORTED = "ERROR: Unsupported URL: ";
 
-	private static final String UTF_8 = "utf-8";
+	protected static final String UTF_8 = "utf-8";
 
 	public static final String EXE = "youtube-dl";
 
 	public static final String URL = "https://yt-dl.org/downloads/latest/";
 
-	private String userAgent;
+	protected String userAgent;
 
 	protected String escapeChar;
+
+	protected boolean autoUpdate = true;
 
 	public YTDL() {
 		super(System.getenv("YOUTUBEDL"));
@@ -135,10 +137,9 @@ public class YTDL extends Tool {
 			long currentTimeMillis = System.currentTimeMillis();
 			long millis = update.notExists() ? 0 : update.getLastModifiedTime().toMillis();
 			long millisd = millis + (24 * 3_600_000);
-			if (update.exists() && millisd > currentTimeMillis) {
+			if (!autoUpdate || (update.exists() && millisd > currentTimeMillis)) {
 				//
 			} else {
-
 				List<String> command = new ArrayList<>();
 				command.add(Tool.command(executable));
 				command.add("-U");
@@ -571,6 +572,14 @@ public class YTDL extends Tool {
 
 	public void setEscapeChar(String escapeChar) {
 		this.escapeChar = escapeChar;
+	}
+
+	public boolean isAutoUpdate() {
+		return this.autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 
 	@SuppressWarnings("serial")
