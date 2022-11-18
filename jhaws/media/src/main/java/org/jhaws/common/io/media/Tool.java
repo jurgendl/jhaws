@@ -2,9 +2,17 @@ package org.jhaws.common.io.media;
 
 import static org.jhaws.common.lang.CollectionUtils8.join;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -17,97 +25,141 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Tool {
-    protected static final Logger logger = LoggerFactory.getLogger("tool");
+	protected static final Logger logger = LoggerFactory.getLogger("tool");
 
-    protected FilePath executable;
+	protected FilePath executable;
 
-    protected String path;
+	protected String path;
 
-    protected String version;
+	protected String version;
 
-    public Tool(String path) {
-        setPath(path);
-    }
+	public Tool(String path) {
+		setPath(path);
+	}
 
-    public Tool(boolean disableAuto) {
-        //
-    }
+	public Tool(boolean disableAuto) {
+		//
+	}
 
-    public final FilePath getExecutable() {
-        return this.executable;
-    }
+	public final FilePath getExecutable() {
+		return this.executable;
+	}
 
-    public final void setExecutable(FilePath executable) {
-        this.executable = executable;
-    }
+	public final void setExecutable(FilePath executable) {
+		this.executable = executable;
+	}
 
-    public final void setPath(String path) {
-        if (new EqualsBuilder().append(path, this.path).isEquals()) return;
-        try {
-            setPathImpl(path);
-            this.path = path;
-            this.version = null;
-        } catch (RuntimeException ex) {
-            ex.printStackTrace();
-        }
-    }
+	public final void setPath(String path) {
+		if (new EqualsBuilder().append(path, this.path).isEquals())
+			return;
+		try {
+			setPathImpl(path);
+			this.path = path;
+			this.version = null;
+		} catch (RuntimeException ex) {
+			ex.printStackTrace();
+		}
+	}
 
-    protected abstract void setPathImpl(String path);
+	protected abstract void setPathImpl(String path);
 
-    public final String getVersion() {
-        if (version == null) {
-            try {
-                version = getVersionImpl();
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            }
+	public final String getVersion() {
+		if (version == null) {
+			try {
+				version = getVersionImpl();
+			} catch (RuntimeException ex) {
+				ex.printStackTrace();
+			}
 
-        }
-        return version;
-    }
+		}
+		return version;
+	}
 
-    protected abstract String getVersionImpl();
+	protected abstract String getVersionImpl();
 
-    public static final String and(String... strings) {
-        return Arrays.stream(strings).collect(Collectors.joining(","));
-    }
+	public static final String and(String... strings) {
+		return Arrays.stream(strings).collect(Collectors.joining(","));
+	}
 
-    public static final String command(FilePath f) {
-        return "\"" + f.getAbsolutePath() + "\"";
-    }
+	public static final String command(FilePath f) {
+		return "\"" + f.getAbsolutePath() + "\"";
+	}
 
-    public static final String escape(String string) {
-        return "\"" + string + "\"";
-    }
+	public static final String escape(String string) {
+		return "\"" + string + "\"";
+	}
 
-    public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
-        return call(processHolder, lines, dir, command, true, null);
-    }
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
+		return call(processHolder, lines, dir, command, true, null);
+	}
 
-    public static <C extends Consumer<String>> C silentcall(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
-        return call(processHolder, lines, dir, command, false, null);
-    }
+	public static <C extends Consumer<String>> C silentcall(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
+		return call(processHolder, lines, dir, command, false, null);
+	}
 
-    public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
-        return call(processHolder, lines, dir, command, log, listener, true, null);
-    }
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
+		return call(processHolder, lines, dir, command, log, listener, true, null);
+	}
 
-    public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener, boolean throwExitValue, List<FilePath> paths) {
-        if (lines == null) lines = (C) new Lines();
-        Consumer<String> consumers = log ? lines.andThen(new Lines()) : lines;
-        if (listener != null) {
-            consumers = consumers.andThen(listener);
-        }
-        if (log) {
-            logger.info("start - {}", join(command));
-        }
-        long start = System.currentTimeMillis();
-        HashMap<String, String> env = new HashMap<>();
-        if (paths != null) env.put("Path", paths.stream().map(FilePath::getAbsolutePath).collect(Collectors.joining(";")));
-        Processes.callProcess(processHolder, throwExitValue, null, env, command, dir, null, null, consumers, consumers);
-        if (log) {
-            logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
-        }
-        return lines;
-    }
+	@SuppressWarnings("unchecked")
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener,
+			boolean throwExitValue, List<FilePath> paths) {
+		if (lines == null)
+			lines = (C) new Lines();
+		Consumer<String> consumers = log ? lines.andThen(new Lines()) : lines;
+		if (listener != null) {
+			consumers = consumers.andThen(listener);
+		}
+		if (log) {
+			logger.info("start - {}", join(command));
+		}
+		long start = System.currentTimeMillis();
+		HashMap<String, String> env = new HashMap<>();
+		if (paths != null)
+			env.put("Path", paths.stream().map(FilePath::getAbsolutePath).collect(Collectors.joining(";")));
+		Processes.callProcess(processHolder, throwExitValue, null, env, command, dir, null, null, consumers, consumers);
+		if (log) {
+			logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
+		}
+		return lines;
+	}
+
+	public static <C extends Consumer<String>> C call(Duration timeout, Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log,
+			Consumer<String> listener, boolean throwExitValue, List<FilePath> paths) {
+		// https://stackoverflow.com/questions/2275443/how-to-timeout-a-thread
+		ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
+			Thread t = new Thread(r);
+			t.setDaemon(true);
+			return t;
+		});
+		Future<C> future = executor.submit(new Callable<>() {
+			@Override
+			public C call() throws Exception {
+				return Tool.call(processHolder, lines, dir, command, log, listener, throwExitValue, paths);
+			}
+		});
+		try {
+			logger.info("Started ...");
+			C get = future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+			logger.info("{}", get);
+			logger.info("Finished!");
+			return get;
+		} catch (TimeoutException ex) {
+			future.cancel(true);
+			logger.error("{}", ex);
+			throw new RuntimeException(ex);
+		} catch (InterruptedException ex) {
+			logger.error("{}", ex);
+			throw new RuntimeException(ex);
+		} catch (ExecutionException ex) {
+			logger.error("{}", ex);
+			throw new RuntimeException(ex);
+		} finally {
+			try {
+				executor.shutdownNow();
+			} catch (RuntimeException ex) {
+				//
+			}
+		}
+	}
 }

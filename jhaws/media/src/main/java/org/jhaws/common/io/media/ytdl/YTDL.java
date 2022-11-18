@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,13 +14,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -134,45 +128,9 @@ public class YTDL extends Tool {
 
 		if (executable.exists()) {
 			FilePath update = executable.appendExtension("update");
-			long currentTimeMillis = System.currentTimeMillis();
-			long millis = update.notExists() ? 0 : update.getLastModifiedTime().toMillis();
-			long millisd = millis + (24 * 3_600_000);
-			if (!autoUpdate || (update.exists() && millisd > currentTimeMillis)) {
-				//
-			} else {
-				List<String> command = new ArrayList<>();
-				command.add(Tool.command(executable));
-				command.add("-U");
-
-				// ---------------->
-				// https://stackoverflow.com/questions/2275443/how-to-timeout-a-thread
-				ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
-					Thread t = new Thread(r);
-					t.setDaemon(true);
-					return t;
-				});
-				Future<Lines> future = executor.submit(new Callable<Lines>() {
-					@Override
-					public Lines call() throws Exception {
-						return Tool.call(null, new Lines(), executable.getParentPath(), command);
-					}
-				});
-				try {
-					logger.info("Started ...");
-					logger.info("{}", future.get(60, TimeUnit.SECONDS));
-					logger.info("Finished!");
-				} catch (TimeoutException ex) {
-					future.cancel(true);
-					logger.error("{}", ex);
-				} catch (InterruptedException ex) {
-					logger.error("{}", ex);
-				} catch (ExecutionException ex) {
-					logger.error("{}", ex);
-				}
-				executor.shutdownNow();
-				// <----------------
-
-				update.write("" + currentTimeMillis);
+			if (autoUpdate || update.notExists() || (update.getLastModifiedTime().toMillis() + 24 * 3_600_000) < System.currentTimeMillis()) {
+				Tool.call(Duration.ofSeconds(60), null, new Lines(), executable.getParentPath(), Arrays.asList(Tool.command(executable), "-U"), true, null, true, null);
+				update.write("" + System.currentTimeMillis());
 			}
 		} else {
 			String tmp = EXE;
