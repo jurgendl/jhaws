@@ -1,43 +1,28 @@
 package org.jhaws.common.web.wicket.components;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.apache.wicket.model.IModel;
+import org.danekja.java.util.function.serializable.SerializableFunction;
+import org.danekja.java.util.function.serializable.SerializableSupplier;
 
-/**
- * {@link IModel} van {@link List}, opgevuld met een {@link Serializable}
- * {@link Supplier} (ps {@link Supplier} is niet {@link Serializable} by default
- * en geeft normaal problemen in Wicket maar deze class dus niet), je hoeft dus
- * ook niet telkens een subclass te maken<br>
- * <br>
- * bv. IModel<List<String>> listModel = new ListModel<>(() -> new
- * ArrayList<>());
- */
 @SuppressWarnings("serial")
 public class SupplyingListModel<T> extends org.apache.wicket.model.util.ListModel<T> {
-	private Supplier<List<T>> supplier;
+	private SerializableSupplier<List<T>> supplier;
 
-	public SupplyingListModel(List<T> list) {
-		setSupplier(() -> list);
+	public SupplyingListModel(SerializableSupplier<List<T>> supplier) {
+		setSupplier(supplier);
 	}
 
 	public SupplyingListModel(IModel<List<T>> listModel) {
 		setSupplier(() -> listModel.getObject());
 	}
 
-	public <S extends Supplier<List<T>> & Serializable> SupplyingListModel(S supplier) {
-		setSupplier(supplier);
-	}
-
-	public <M, S extends Function<M, List<T>> & Serializable> SupplyingListModel(IModel<? extends M> parentModel,
-			S supplier) {
+	public <M> SupplyingListModel(IModel<M> parentModel, SerializableFunction<M, List<T>> supplier) {
 		setSupplier(() -> supplier.apply(parentModel.getObject()));
 	}
 
-	protected <S extends Supplier<List<T>> & Serializable> void setSupplier(S supplier) {
+	protected void setSupplier(SerializableSupplier<List<T>> supplier) {
 		this.supplier = supplier;
 	}
 
