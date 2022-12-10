@@ -12,7 +12,7 @@
 	<name>spring-bom</name>
 	<description>spring-bom</description>
 	<properties>
-		<version.spring>5.3.23</version.spring>		<!-- spring-core -->
+		<version.spring>6.0.0</version.spring>		<!-- spring-core -->
 		<version.spring-web>${version.spring}</version.spring-web>
 		<version.spring-ws>3.1.4</version.spring-ws>		<!-- spring-ws-core -->
 		<version.spring-integration>5.5.15</version.spring-integration>		<!-- spring-integration-core -->
