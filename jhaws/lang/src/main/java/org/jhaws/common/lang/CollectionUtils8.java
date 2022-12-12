@@ -1556,6 +1556,31 @@ public interface CollectionUtils8 {
 		return collectSortedMap(keyMapper, rejectDuplicateKeys());
 	}
 
+	public static <T, K, U> Collector<T, ?, Map<K, U>> collectMapNoNpe(Function<? super T, ? extends K> keyMapper,
+			Function<? super T, ? extends U> valueMapper) {
+		return collectMapNoNpe(keyMapper, valueMapper, newMap());
+	}
+
+	/**
+	 * fixt npe in java.util.stream.Collectors.toMap(Function<? super T, ? extends
+	 * K>, Function<? super T, ? extends U>)
+	 */
+	// https://stackoverflow.com/questions/24630963/nullpointerexception-in-collectors-tomap-with-null-entry-values
+	// https://bugs.openjdk.org/browse/JDK-8148463
+	public static <T, K, U> Collector<T, ?, Map<K, U>> collectMapNoNpe(Function<? super T, ? extends K> keyMapper,
+			Function<? super T, ? extends U> valueMapper, Supplier<? extends Map<K, U>> supplier) {
+		return Collectors.collectingAndThen(Collectors.toList(), list -> {
+			Map<K, U> result = supplier.get();
+			for (T item : list) {
+				K key = keyMapper.apply(item);
+				if (result.putIfAbsent(key, valueMapper.apply(item)) != null) {
+					throw new IllegalStateException(String.format("Duplicate key %s", key));
+				}
+			}
+			return result;
+		});
+	}
+
 	public static <T extends Comparable<? super T>> Comparator<T> natural() {
 		return Comparator.<T>naturalOrder();
 	}
