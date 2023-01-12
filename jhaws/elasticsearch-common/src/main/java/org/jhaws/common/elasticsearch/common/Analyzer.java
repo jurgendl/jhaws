@@ -13,7 +13,17 @@ public enum Analyzer {
     //
     //
     /**
+     * "rebuilt_standard": {<br>
+     * "tokenizer": "standard",<br>
+     * "filter": [<br>
+     * "lowercase" <br>
+     * EXTRA<br>
+     * ]<br>
+     * }<br>
+     * <br>
+     * <br>
      * lowercase, verwijdert leestekens, laat cijfers staan, laat accenten staan<br>
+     * <br>
      * <br>
      * "The 2 QUICK Brown-Foxes jumped over the lazy dog's bone."<br>
      * [ the, 2, quick, brown, foxes, jumped, over, the, lazy, dog's, bone ] <br>

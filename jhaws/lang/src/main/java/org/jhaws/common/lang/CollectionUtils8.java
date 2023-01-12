@@ -1556,9 +1556,10 @@ public interface CollectionUtils8 {
 		return collectSortedMap(keyMapper, rejectDuplicateKeys());
 	}
 
-	public static <T, K, U> Collector<T, ?, Map<K, U>> collectMapNoNpe(Function<? super T, ? extends K> keyMapper,
-			Function<? super T, ? extends U> valueMapper) {
-		return collectMapNoNpe(keyMapper, valueMapper, newMap());
+	public static <T, K, U> Collector<T, ?, Map<K, U>> collectMapNoNpe(Function<T, K> keyMapper,
+			Function<T, U> valueMapper) {
+		Supplier<? extends Map<K, U>> newMap = CollectionUtils8.<K, U>newMap();
+		return collectMapNoNpe(keyMapper, valueMapper, newMap);
 	}
 
 	/**
@@ -1567,8 +1568,8 @@ public interface CollectionUtils8 {
 	 */
 	// https://stackoverflow.com/questions/24630963/nullpointerexception-in-collectors-tomap-with-null-entry-values
 	// https://bugs.openjdk.org/browse/JDK-8148463
-	public static <T, K, U> Collector<T, ?, Map<K, U>> collectMapNoNpe(Function<? super T, ? extends K> keyMapper,
-			Function<? super T, ? extends U> valueMapper, Supplier<? extends Map<K, U>> supplier) {
+	public static <T, K, U> Collector<T, ?, Map<K, U>> collectMapNoNpe(Function<T, K> keyMapper,
+			Function<T, U> valueMapper, Supplier<? extends Map<K, U>> supplier) {
 		return Collectors.collectingAndThen(Collectors.toList(), list -> {
 			Map<K, U> result = supplier.get();
 			for (T item : list) {
