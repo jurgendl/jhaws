@@ -813,6 +813,9 @@ div.rating-input {
 .custom-file-label::after {
 	border-radius: 0px var(--border-radius) var(--border-radius) 0px !important;
 }
+.nav-pills .nav-link {
+	border-radius: var(--border-radius) !important;
+}
 
 /* https://stackoverflow.com/questions/26028922/limit-the-width-size-in-pre */
 pre {
