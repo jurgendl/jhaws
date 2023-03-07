@@ -56,8 +56,8 @@ public class JaxBTest {
 		System.out.println(pom.getVersion() == null ? null : pom.getVersion().getVersion());
 		System.out.println(pom.getParent() == null ? null : pom.getParent().getVersion().getVersion());
 
-		pom = j.unmarshall(new FilePath("pom.xml"));
-		System.out.println(pom.getVersion() == null ? null : pom.getVersion().getVersion());
-		System.out.println(pom.getParent() == null ? null : pom.getParent().getVersion().getVersion());
+//		pom = j.unmarshall(new FilePath("pom.xml"));
+//		System.out.println(pom.getVersion() == null ? null : pom.getVersion().getVersion());
+//		System.out.println(pom.getParent() == null ? null : pom.getParent().getVersion().getVersion());
 	}
 }
