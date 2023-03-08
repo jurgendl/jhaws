@@ -105,6 +105,7 @@ import org.jhaws.common.net.client.TraceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// https://hc.apache.org/httpcomponents-client-5.2.x/migration-guide/migration-to-async-http2.html
 @SuppressWarnings("serial")
 public class HTTPClient extends HTTPClientBase<HTTPClient> {
 	protected static Logger logger = LoggerFactory.getLogger(HTTPClient.class);
