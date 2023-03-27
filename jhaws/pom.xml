@@ -104,7 +104,7 @@
 		<version.jaxb-impl>2.4.0-b180830.0438</version.jaxb-impl>
 		<version.jaxb-runtime>2.4.0-b180830.0438</version.jaxb-runtime>
 		<version.guava>30.1-jre</version.guava>
-		<version.itextpdf5>5.5.13.2</version.itextpdf5>
+		<version.itextpdf5>5.5.13.3</version.itextpdf5>
 		<version.flyingsaucer-itext5>9.1.20</version.flyingsaucer-itext5>
 		<version.itextpdf7>7.2.4</version.itextpdf7>
 		<version.javassist>3.28.0-GA</version.javassist>
