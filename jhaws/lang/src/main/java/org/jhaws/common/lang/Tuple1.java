@@ -46,9 +46,12 @@ public class Tuple1<T1> implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		@SuppressWarnings("rawtypes")
 		Tuple1 other = (Tuple1) obj;
 		return Objects.equals(this.t1, other.t1);
@@ -60,6 +63,15 @@ public class Tuple1<T1> implements Serializable {
 
 	public void setT1(T1 t1) {
 		this.t1 = t1;
+	}
+
+	public T1 t1() {
+		return this.t1;
+	}
+
+	public Tuple1<T1> t1(T1 t1) {
+		this.t1 = t1;
+		return this;
 	}
 
 	public Tuple1<T1> operateT1(UnaryOperator<T1> operation) {
@@ -124,5 +136,23 @@ public class Tuple1<T1> implements Serializable {
 
 	public <T2> Tuple2<T1, T2> pushT2(T2 t2) {
 		return Tuple2.of(getT1(), t2);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T get(int i) throws IndexOutOfBoundsException {
+		if (i == 0)
+			return (T) getT1();
+		throw new IndexOutOfBoundsException(i);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> void set(int i, T t) throws IndexOutOfBoundsException {
+		if (i == 0)
+			setT1((T1) t);
+		throw new IndexOutOfBoundsException(i);
+	}
+
+	public Tuple1<T1> asT1() {
+		return this;
 	}
 }

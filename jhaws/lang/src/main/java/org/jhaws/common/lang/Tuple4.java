@@ -60,12 +60,16 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		@SuppressWarnings("rawtypes")
 		Tuple4 other = (Tuple4) obj;
-		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2) && Objects.equals(this.t3, other.t3) && Objects.equals(this.t4, other.t4);
+		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2)
+				&& Objects.equals(this.t3, other.t3) && Objects.equals(this.t4, other.t4);
 	}
 
 	public T4 getT4() {
@@ -74,6 +78,15 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 
 	public void setT4(T4 t4) {
 		this.t4 = t4;
+	}
+
+	public T4 t4() {
+		return this.t4;
+	}
+
+	public Tuple4<T1, T2, T3, T4> t4(T4 t4) {
+		this.t4 = t4;
+		return this;
 	}
 
 	public Tuple4<T1, T2, T3, T4> operateT4(UnaryOperator<T4> operation) {
@@ -87,7 +100,8 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 		return this;
 	}
 
-	public Tuple4<T1, T2, T3, T4> operateT4(Predicate<T4> when, UnaryOperator<T4> operation, Supplier<T4> elseOperation) {
+	public Tuple4<T1, T2, T3, T4> operateT4(Predicate<T4> when, UnaryOperator<T4> operation,
+			Supplier<T4> elseOperation) {
 		if (when.test(t4)) {
 			t4 = operation.apply(t4);
 		} else {
@@ -124,7 +138,8 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 		return projectT4(when, operation, () -> null);
 	}
 
-	public <X> Tuple4<T1, T2, T3, X> projectT4(Predicate<T4> when, Function<T4, X> operation, Supplier<X> elseOperation) {
+	public <X> Tuple4<T1, T2, T3, X> projectT4(Predicate<T4> when, Function<T4, X> operation,
+			Supplier<X> elseOperation) {
 		return new Tuple4<T1, T2, T3, X>(t1, t2, t3, when.test(t4) ? operation.apply(t4) : elseOperation.get());
 	}
 
@@ -142,5 +157,26 @@ public class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
 
 	public Tuple3<T1, T2, T3> popT3() {
 		return Tuple3.of(getT1(), getT2(), getT3());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T get(int i) throws IndexOutOfBoundsException {
+		if (i == 3)
+			return (T) getT4();
+		return super.get(i);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> void set(int i, T t) throws IndexOutOfBoundsException {
+		if (i == 3)
+			setT4((T4) t);
+		else
+			super.set(i, t);
+	}
+
+	public Tuple4<T1, T2, T3, T4> asT4() {
+		return this;
 	}
 }

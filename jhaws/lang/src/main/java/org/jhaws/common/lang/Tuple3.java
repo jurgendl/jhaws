@@ -60,12 +60,16 @@ public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		@SuppressWarnings("rawtypes")
 		Tuple3 other = (Tuple3) obj;
-		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2) && Objects.equals(this.t3, other.t3);
+		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2)
+				&& Objects.equals(this.t3, other.t3);
 	}
 
 	@Override
@@ -84,6 +88,15 @@ public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 
 	public void setT3(T3 t3) {
 		this.t3 = t3;
+	}
+
+	public T3 t3() {
+		return this.t3;
+	}
+
+	public Tuple3<T1, T2, T3> t3(T3 t3) {
+		this.t3 = t3;
+		return this;
 	}
 
 	public Tuple3<T1, T2, T3> operateT3(UnaryOperator<T3> operation) {
@@ -152,5 +165,26 @@ public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 
 	public Tuple2<T1, T2> popT2() {
 		return Tuple2.of(getT1(), getT2());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T get(int i) throws IndexOutOfBoundsException {
+		if (i == 2)
+			return (T) getT3();
+		return super.get(i);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> void set(int i, T t) throws IndexOutOfBoundsException {
+		if (i == 2)
+			setT3((T3) t);
+		else
+			super.set(i, t);
+	}
+
+	public Tuple3<T1, T2, T3> asT3() {
+		return this;
 	}
 }

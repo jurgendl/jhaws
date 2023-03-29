@@ -21,7 +21,8 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 		return new Tuple5<>(t1, t2, t3, t4, t5);
 	}
 
-	public static <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> tuple5(Map.Entry<T1, T2> entry1, Map.Entry<T3, T4> entry2, T5 t5) {
+	public static <T1, T2, T3, T4, T5> Tuple5<T1, T2, T3, T4, T5> tuple5(Map.Entry<T1, T2> entry1,
+			Map.Entry<T3, T4> entry2, T5 t5) {
 		return new Tuple5<>(entry1.getKey(), entry1.getValue(), entry2.getKey(), entry2.getValue(), t5);
 	}
 
@@ -56,12 +57,17 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		@SuppressWarnings("rawtypes")
 		Tuple5 other = (Tuple5) obj;
-		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2) && Objects.equals(this.t3, other.t3) && Objects.equals(this.t4, other.t4) && Objects.equals(this.t5, other.t5);
+		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2)
+				&& Objects.equals(this.t3, other.t3) && Objects.equals(this.t4, other.t4)
+				&& Objects.equals(this.t5, other.t5);
 	}
 
 	public T5 getT5() {
@@ -70,6 +76,15 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
 	public void setT5(T5 t5) {
 		this.t5 = t5;
+	}
+
+	public T5 t5() {
+		return this.t5;
+	}
+
+	public Tuple5<T1, T2, T3, T4, T5> t5(T5 t5) {
+		this.t5 = t5;
+		return this;
 	}
 
 	public Tuple5<T1, T2, T3, T4, T5> operateT5(UnaryOperator<T5> operation) {
@@ -83,7 +98,8 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 		return this;
 	}
 
-	public Tuple5<T1, T2, T3, T4, T5> operateT5(Predicate<T5> when, UnaryOperator<T5> operation, Supplier<T5> elseOperation) {
+	public Tuple5<T1, T2, T3, T4, T5> operateT5(Predicate<T5> when, UnaryOperator<T5> operation,
+			Supplier<T5> elseOperation) {
 		if (when.test(t5)) {
 			t5 = operation.apply(t5);
 		} else {
@@ -120,7 +136,8 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 		return projectT5(when, operation, () -> null);
 	}
 
-	public <X> Tuple5<T1, T2, T3, T4, X> projectT5(Predicate<T5> when, Function<T5, X> operation, Supplier<X> elseOperation) {
+	public <X> Tuple5<T1, T2, T3, T4, X> projectT5(Predicate<T5> when, Function<T5, X> operation,
+			Supplier<X> elseOperation) {
 		return new Tuple5<T1, T2, T3, T4, X>(t1, t2, t3, t4, when.test(t5) ? operation.apply(t5) : elseOperation.get());
 	}
 
@@ -134,5 +151,26 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 
 	public Tuple4<T1, T2, T3, T4> popT4() {
 		return Tuple4.of(getT1(), getT2(), getT3(), getT4());
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T get(int i) throws IndexOutOfBoundsException {
+		if (i == 4)
+			return (T) getT5();
+		return super.get(i);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> void set(int i, T t) throws IndexOutOfBoundsException {
+		if (i == 4)
+			setT5((T5) t);
+		else
+			super.set(i, t);
+	}
+
+	public Tuple5<T1, T2, T3, T4, T5> asT5() {
+		return this;
 	}
 }

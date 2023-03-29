@@ -64,9 +64,12 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!super.equals(obj)) return false;
-		if (getClass() != obj.getClass()) return false;
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
 		@SuppressWarnings("rawtypes")
 		Tuple2 other = (Tuple2) obj;
 		return Objects.equals(this.t1, other.t1) && Objects.equals(this.t2, other.t2);
@@ -94,6 +97,15 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 
 	public void setT2(T2 t2) {
 		this.t2 = t2;
+	}
+
+	public T2 t2() {
+		return this.t2;
+	}
+
+	public Tuple2<T1, T2> t2(T2 t2) {
+		this.t2 = t2;
+		return this;
 	}
 
 	public Tuple2<T1, T2> operateT2(UnaryOperator<T2> operation) {
@@ -176,5 +188,26 @@ public class Tuple2<T1, T2> extends Tuple1<T1> {
 	public static <T1, T2> Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> collectTupleToMap() {
 		Collector<Tuple2<T1, T2>, ?, Map<T1, T2>> map = Collectors.toMap(Tuple2::getT1, Tuple2::getT2);
 		return map;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> T get(int i) throws IndexOutOfBoundsException {
+		if (i == 1)
+			return (T) getT2();
+		return super.get(i);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> void set(int i, T t) throws IndexOutOfBoundsException {
+		if (i == 1)
+			setT2((T2) t);
+		else
+			super.set(i, t);
+	}
+
+	public Tuple2<T1, T2> asT2() {
+		return this;
 	}
 }
