@@ -18,8 +18,8 @@ public class Tuples extends Tuple5 {
 		return Tuple5.of(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4(), t5);
 	}
 
-	static public <T1, T2, T3, T4, T5, T6> Tuple6<T1, T2, T3, T4, T5, T6> append(Tuple5<T1, T2, T3, T4, T5> tuple,
-			T6 t6) {
-		return Tuple6.of(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4(), tuple.getT5(), t6);
-	}
+//	static public <T1, T2, T3, T4, T5, T6> Tuple6<T1, T2, T3, T4, T5, T6> append(Tuple5<T1, T2, T3, T4, T5> tuple,
+//			T6 t6) {
+//		return Tuple6.of(tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4(), tuple.getT5(), t6);
+//	}
 }

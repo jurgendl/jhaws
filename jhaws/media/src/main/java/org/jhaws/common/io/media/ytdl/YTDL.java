@@ -448,37 +448,42 @@ public class YTDL extends Tool {
 		List<FilePath> paths = Arrays.asList(executable.getParentPath());
 		FilePath tmpFolder = getExecutable().getParentPath();
 		List<YTDLFormat> rv = new ArrayList<>();
+		StringValue head = new StringValue();
 		Lines lines = new Lines() {
 			@Override
 			public void accept(String t) {
 				System.out.println(t);
-				if (!(t.startsWith("[youtube]") || t.startsWith("[info]") || t.startsWith("format code"))) {
+				if (t.startsWith("ID")) {
+					head.set(t);
+				} else if (!(t.startsWith("[youtube]") || t.startsWith("[info]") || t.startsWith("format code") || t.startsWith("ID") || t.startsWith("--"))) {
 					YTDLFormat f = new YTDLFormat();
-					f.formatCode = t.substring(0, 13).trim();
-					f.extension = t.substring(13, 24).trim();
-					f.resolution = t.substring(24, 35).trim();
-					f.note = t.substring(35).trim();
-					String tmp = t.substring(t.lastIndexOf(",") + 1).trim();
-					int p = tmp.indexOf("KiB");
-					if (p != -1) {
-						f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0);
-					} else {
-						p = tmp.indexOf("MiB");
+					f.extension = t.substring(head.get().indexOf("EXT"), head.get().indexOf("RESOLUTION")).trim();
+					if (!"mhtml".equals(f.extension)) {
+						f.formatCode = t.substring(0, head.get().indexOf("EXT")).trim();
+						f.resolution = t.substring(head.get().indexOf("RESOLUTION"), head.get().indexOf("FPS")).trim();
+						f.note = t;
+						String tmp = t.substring(t.indexOf("|") + 1, head.get().indexOf("FILESIZE") + "FILESIZE".length()).replace("~", "").trim();
+						int p = tmp.indexOf("KiB");
 						if (p != -1) {
-							f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0);
+							f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0);
 						} else {
-							p = tmp.indexOf("GiB");
+							p = tmp.indexOf("MiB");
 							if (p != -1) {
-								f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0 * 1024.0);
+								f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0);
+							} else {
+								p = tmp.indexOf("GiB");
+								if (p != -1) {
+									f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0 * 1024.0);
+								}
 							}
 						}
+						if (f.resolution.contains("x")) {
+							String[] pa = f.resolution.split("x");
+							f.width = Integer.parseInt(pa[0]);
+							f.height = Integer.parseInt(pa[1]);
+						}
+						rv.add(f);
 					}
-					if (f.resolution.contains("x")) {
-						String[] pa = f.resolution.split("x");
-						f.width = Integer.parseInt(pa[0]);
-						f.height = Integer.parseInt(pa[1]);
-					}
-					rv.add(f);
 				}
 				super.accept(t);
 			}
