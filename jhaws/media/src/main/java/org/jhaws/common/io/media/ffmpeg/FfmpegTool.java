@@ -562,6 +562,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		RemuxCfg cfg = config(defaults, input, output, cfgEdit);
 		RuntimeException exception = null;
 		List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
+		// command.stream().collect(Collectors.joining(" "))
 		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		try {
 			call(act(context, input, "remux"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));

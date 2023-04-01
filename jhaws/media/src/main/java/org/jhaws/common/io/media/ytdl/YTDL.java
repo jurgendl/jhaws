@@ -455,7 +455,7 @@ public class YTDL extends Tool {
 				System.out.println(t);
 				if (t.startsWith("ID")) {
 					head.set(t);
-				} else if (!(t.startsWith("[youtube]") || t.startsWith("[info]") || t.startsWith("format code") || t.startsWith("ID") || t.startsWith("--"))) {
+				} else if (!(t.startsWith("[") || t.startsWith("format code") || t.startsWith("ID") || t.startsWith("--"))) {
 					YTDLFormat f = new YTDLFormat();
 					f.extension = t.substring(head.get().indexOf("EXT"), head.get().indexOf("RESOLUTION")).trim();
 					if (!"mhtml".equals(f.extension)) {
