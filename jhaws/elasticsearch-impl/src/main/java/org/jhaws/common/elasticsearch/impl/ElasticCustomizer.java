@@ -4,11 +4,13 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.elasticsearch.common.Analyzer;
@@ -39,6 +41,8 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 @Component
 public class ElasticCustomizer {
     protected final Logger LOGGER = LoggerFactory.getLogger(ElasticCustomizer.class);
+
+    protected final Logger LOGGER_DETAILS = LoggerFactory.getLogger(ElasticCustomizer.class.getName() + ".details");
 
     /**
      * needs cluster restart!<br>
@@ -321,13 +325,13 @@ public class ElasticCustomizer {
 
     public Map<String, Object> getObjectMapping(Class<?> annotatedType, MappingListener listener) {
         Map<String, Object> typeMapping = new TreeMap<>();
-        $mappings_fields(null, annotatedType, typeMapping, "", "", listener);
+        $mappings_fields(null, annotatedType, typeMapping, Collections.emptyList(), Collections.emptyList(), listener);
         Map<String, Object> mappings = new TreeMap<>();
         mappings.put(PROPERTIES, typeMapping);
         return mappings;
     }
 
-    protected void $mappings_fields(Language language, Class<?> annotatedType, Map<String, Object> typeMapping, String prefix, String actualNesting, MappingListener listener) {
+    protected void $mappings_fields(Language language, Class<?> annotatedType, Map<String, Object> typeMapping, List<String> prefixList, List<String> actualNestingList, MappingListener listener) {
         List<java.lang.reflect.Field> list = new ArrayList<>();
         Class<?> _annotatedType = annotatedType;
         while (!ElasticDocument.class.equals(_annotatedType) && !Object.class.equals(_annotatedType)) {
@@ -339,12 +343,13 @@ public class ElasticCustomizer {
                 .filter(f -> !Modifier.isStatic(f.getModifiers()))//
                 .filter(f -> f.getAnnotation(JsonIgnore.class) == null)//
                 .filter(f -> f.getAnnotation(Ignore.class) == null)//
-                .forEach(field -> $mappings_field(language, typeMapping, prefix, actualNesting, field, listener));
+                .forEach(field -> $mappings_field(language, typeMapping, prefixList, actualNestingList, field, listener));
     }
 
-    protected void $mappings_field(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, MappingListener listener) {
-        String msgPrefix = "field: " + ("".equals(prefix) ? "" : "[" + prefix + "] ") + ("".equals(actualNesting) ? "" : "<" + actualNesting + "> ") + reflectField;
+    protected void $mappings_field(Language language, Map<String, Object> mapping, List<String> prefixList, List<String> actualNestingList, java.lang.reflect.Field reflectField, MappingListener listener) {
+        String msgPrefix = "field: " + (prefixList.isEmpty() ? "" : "[" + prefixList + "] ") + (actualNestingList.isEmpty() ? "" : "<" + actualNestingList + "> ") + reflectField;
         LOGGER.trace(msgPrefix);
+        LOGGER_DETAILS.debug(msgPrefix);
 
         JsonIgnore jsonIgnore = reflectField.getAnnotation(JsonIgnore.class);
         Ignore ignore = reflectField.getAnnotation(Ignore.class);
@@ -353,15 +358,13 @@ public class ElasticCustomizer {
         JsonUnwrapped jsonUnwrapped = reflectField.getAnnotation(JsonUnwrapped.class);
         NestedField nestedField = reflectField.getAnnotation(NestedField.class);
 
-        if (false) {
-            if (jsonIgnore != null) System.out.println(jsonIgnore);
-            if (ignore != null) System.out.println(ignore);
-            if (onlySave != null) System.out.println(onlySave);
-            if (field != null) System.out.println(field);
-            if (jsonUnwrapped != null) System.out.println(jsonUnwrapped);
-            if (nestedField != null) System.out.println(nestedField);
-            System.out.println(msgPrefix);
-            System.out.println();
+        {
+            if (jsonIgnore != null) LOGGER_DETAILS.debug("   jsonIgnore=", jsonIgnore);
+            if (ignore != null) LOGGER_DETAILS.debug("   ignore=", ignore);
+            if (onlySave != null) LOGGER_DETAILS.debug("   onlySave=", onlySave);
+            if (field != null) LOGGER_DETAILS.debug("   field=", field);
+            if (jsonUnwrapped != null) LOGGER_DETAILS.debug("   jsonUnwrapped=", jsonUnwrapped);
+            if (nestedField != null) LOGGER_DETAILS.debug("   nestedField=", nestedField);
         }
 
         String exceptionErrorMsgPrefix = "\n\t" + msgPrefix + "\n\t\t" + "error: ";
@@ -401,33 +404,34 @@ public class ElasticCustomizer {
         } else if (ignore != null) {
             //
         } else if (onlySave != null) {
-            $mappings_field_onlySave(mapping, prefix, actualNesting, reflectField, onlySave, listener);
+            $mappings_field_onlySave(mapping, prefixList, actualNestingList, reflectField, onlySave, listener);
         } else if (field != null) {
-            $mappings_field_field(language, mapping, prefix, actualNesting, reflectField, field, listener);
+            $mappings_field_field(language, mapping, prefixList, actualNestingList, reflectField, field, listener);
         } else if (jsonUnwrapped != null) {
-            $mappings_field_jsonUnwrapped(language, mapping, prefix, actualNesting, reflectField, jsonUnwrapped, nestedField, listener);
+            $mappings_field_jsonUnwrapped(language, mapping, prefixList, actualNestingList, reflectField, jsonUnwrapped, nestedField, listener);
         } else if (nestedField != null) {
-            $mappings_field_nestedField(language, mapping, prefix, actualNesting, reflectField, nestedField, listener);
+            $mappings_field_nestedField(language, mapping, prefixList, actualNestingList, reflectField, nestedField, listener);
         } else {
             throw new IllegalArgumentException(exceptionErrorMsgPrefix + "incomplete switch, use OnlySave");
         }
     }
 
-    protected void $mappings_field_onlySave(Map<String, Object> mapping, String prefix, @SuppressWarnings("unused") String actualNesting, java.lang.reflect.Field reflectField, OnlySave onlySave, @SuppressWarnings("unused") MappingListener listener) {
+    protected void $mappings_field_onlySave(Map<String, Object> mapping, List<String> prefixList, @SuppressWarnings("unused") List<String> actualNestingList, java.lang.reflect.Field reflectField, OnlySave onlySave,
+            @SuppressWarnings("unused") MappingListener listener) {
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
-        String fullName = prefix + (StringUtils.isBlank(onlySaveName(onlySave)) ? reflectField.getName() : onlySaveName(onlySave));
+        String fullName = prefixList.stream().collect(Collectors.joining()) + (StringUtils.isBlank(onlySaveName(onlySave)) ? reflectField.getName() : onlySaveName(onlySave));
         Map<String, Object> fieldMapping = new TreeMap<>();
         fieldMapping.put(TYPE, FieldType.OBJECT.id());
         fieldMapping.put(ENABLED, Boolean.FALSE);
         mapping.put(fullName, fieldMapping);
     }
 
-    protected void $mappings_field_field(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, Field field, MappingListener listener) {
+    protected void $mappings_field_field(Language language, Map<String, Object> mapping, List<String> prefixList, List<String> actualNestingList, java.lang.reflect.Field reflectField, Field field, MappingListener listener) {
         FieldType defaultFieldType = $defaultFieldType(reflectField);
         FieldMapping fieldMapping = $mappings_field(reflectField, language, defaultFieldType, field);
         String fieldname = StringUtils.isBlank(field.name()) ? reflectField.getName() : field.name();
-        String fullName = prefix + fieldname;
-        String fullNameForListener = actualNesting + fieldname;
+        String fullName = prefixList.stream().collect(Collectors.joining()) + fieldname;
+        String fullNameForListener = actualNestingList.stream().collect(Collectors.joining()) + fieldname;
         mapping.put(fullName, fieldMapping.fieldMapping);
         if (listener != null) {
             listener.map(fullNameForListener, field, fieldMapping);
@@ -447,8 +451,12 @@ public class ElasticCustomizer {
         }
     }
 
-    protected void $mappings_field_jsonUnwrapped(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, JsonUnwrapped jsonUnwrapped, NestedField nestedField, MappingListener listener) {
-        String exceptionErrorMsgPrefix = "\n\t" + "field: " + (prefix + " " + reflectField).trim() + "\n\t\t" + "error: ";
+    protected void $mappings_field_jsonUnwrapped(Language language, Map<String, Object> mapping, List<String> prefixList, List<String> actualNestingList, java.lang.reflect.Field reflectField, JsonUnwrapped jsonUnwrapped, NestedField nestedField,
+            MappingListener listener) {
+        String exceptionErrorMsgPrefix = "\n\t" + "field: " + (prefixList.stream().collect(Collectors.joining()) + " " + reflectField).trim() + "\n\t\t" + "error: ";
+        if (actualNestingList.size() > 25) {
+            throw new IllegalArgumentException(exceptionErrorMsgPrefix + "depth > 25: " + actualNestingList);
+        }
         if (StringUtils.isNotBlank(jsonUnwrapped.suffix())) {
             throw new IllegalArgumentException(exceptionErrorMsgPrefix + "suffix nog niet ondersteund");
         }
@@ -464,10 +472,16 @@ public class ElasticCustomizer {
             }
         }
 
-        $mappings_fields(language, reflectField.getType(), mapping, prefix + nestedPrefix, actualNesting + nestedPrefix, listener);
+        $mappings_fields(language, reflectField.getType(), mapping, join(prefixList, nestedPrefix), join(actualNestingList, nestedPrefix), listener);
     }
 
-    protected void $mappings_field_nestedField(Language language, Map<String, Object> mapping, String prefix, String actualNesting, java.lang.reflect.Field reflectField, NestedField nestedField, MappingListener listener) {
+    private List<String> join(List<String> list, String element) {
+        List<String> merged = new ArrayList<>(list);
+        merged.add(element);
+        return Collections.unmodifiableList(merged);
+    }
+
+    protected void $mappings_field_nestedField(Language language, Map<String, Object> mapping, List<String> prefixList, List<String> actualNestingList, java.lang.reflect.Field reflectField, NestedField nestedField, MappingListener listener) {
         Language nestedFieldLanguage = nestedFieldLanguage(nestedField);
         if (nestedFieldLanguage != null && nestedFieldLanguage != Language.uninitialized) {
             language = nestedFieldLanguage;
@@ -477,8 +491,8 @@ public class ElasticCustomizer {
         $mappings_fields(language, //
                 nestedField.type() != Class.class ? nestedField.type() : reflectField.getType(), //
                 typeMapping, //
-                prefix + "", //
-                actualNesting + reflectField.getName() + ".", //
+                prefixList, //
+                join(actualNestingList, reflectField.getName() + "."), //
                 listener);
         Map<String, Object> mappings = new TreeMap<>();
         mappings.put(PROPERTIES, typeMapping);
