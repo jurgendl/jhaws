@@ -352,6 +352,7 @@ public class I18NS implements Serializable {
     }
 
     private void value(Language language, String value) {
+        if (language == null) language = Language.uninitialized;
         switch (language) {
             case arabic:
                 if (arabic == null) arabic = new ArrayList<>();

@@ -1,7 +1,9 @@
 package org.jhaws.common.elasticsearch.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
@@ -28,11 +30,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
+import javax.json.Json;
+import javax.json.JsonObject;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.lucene.search.Explanation;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.jhaws.common.elasticsearch.common.ElasticDocument;
 import org.jhaws.common.elasticsearch.common.Id;
 import org.jhaws.common.elasticsearch.common.Index;
 import org.jhaws.common.elasticsearch.common.Version;
@@ -364,18 +370,99 @@ public class ElasticHelper {
                 , (x, y) -> x);
     }
 
-    // https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-sort-context.html
     // https://www.elastic.co/guide/en/elasticsearch/painless/7.10/painless-walkthrough.html
+    // https://www.elastic.co/guide/en/elasticsearch/painless/current/painless-sort-context.html
 
+    // document source to use in script
     public static final String SCRIPT_SOURCE = "ctx._source.";
 
+    // to use in script, see #var(string)
     public static final String SCRIPT_PARAMS = "params.";
 
+    // score to use in script
+    public static final String SCRIPT_SCORE = "_score";
+
+    // variable to use in script
     public static String var(String varName) {
         return SCRIPT_PARAMS + varName;
     }
 
+    // document property to use in script
     public static String property(String propertyName) {
         return "doc['" + propertyName + "'].value";
+    }
+
+    static public <T> String debug(T object, ObjectMapper objectMapper) {
+        return ElasticHelper.objectToJson(objectMapper, object);
+    }
+
+    static public <T extends ElasticDocument> String explanation(T object, ObjectMapper objectMapper, Explanation explanation) {
+        return explanation0(_jsonObject(ElasticHelper.objectToJson(objectMapper, object)), explanation.getDetails()[0], 0);
+    }
+
+    static public String explanation(String json, Explanation explanation) {
+        return explanation0(_jsonObject(json), explanation.getDetails()[0], 0);
+    }
+
+    public static JsonObject _jsonObject(String json) {
+        return Json.createReader(new InputStreamReader(new ByteArrayInputStream(json.getBytes()))).read().asJsonObject();
+    }
+
+    static private String value(JsonObject jso, String description) {
+        String field;
+        if (description.contains("weight(")) {
+            field = description.substring(description.indexOf("weight(") + "weight(".length()).split(":")[0];
+        } else {
+            field = description.split(":")[0];
+        }
+        String[] parts = field.split("\\.");
+        int i = 0;
+        String val = "?";
+        try {
+            for (; i < parts.length - 1; i++) {
+                jso = jso.getJsonObject(parts[i]);
+            }
+        } catch (Exception ex) {
+            //
+        }
+        try {
+            val = jso.get(parts[i]).toString();
+        } catch (Exception ex) {
+            //
+        }
+        if (val.length() > 500) val = "...";
+        return val.replace("\r\n", " ").replace("\r", " ").replace("\n", " ");
+    }
+
+    static private String explanation0(JsonObject jso, Explanation explanation, int d) {
+        StringBuilder buffer = new StringBuilder();
+
+        for (int i = 0; i < d; i++) {
+            buffer.append("  ");
+        }
+
+        if (explanation.getDescription().equals("max of:")) {
+            buffer.append("max[" + explanation.getValue() + "](\n");
+        } else if (explanation.getDescription().equals("sum of:")) {
+            buffer.append("Σ[" + explanation.getValue() + "](\n");
+        } else {
+            buffer.append(explanation.getValue() + " = " + explanation.getDescription() + " :: " + value(jso, explanation.getDescription())).append("\n");
+        }
+
+        Explanation[] details = explanation.getDetails();
+        for (int i = 0; i < details.length; i++) {
+            if (details[i].getValue().doubleValue() > 0.0d) {
+                buffer.append(explanation0(jso, details[i], d + 1));
+            }
+        }
+
+        if (explanation.getDescription().equals("max of:") || explanation.getDescription().equals("sum of:")) {
+            for (int i = 0; i < d; i++) {
+                buffer.append("  ");
+            }
+            buffer.append(")\n");
+        }
+
+        return buffer.toString();
     }
 }

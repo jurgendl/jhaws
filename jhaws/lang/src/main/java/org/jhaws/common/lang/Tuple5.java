@@ -149,6 +149,10 @@ public class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
 		return t5 != null;
 	}
 
+	public <T6> Tuple6<T1, T2, T3, T4, T5, T6> pushT6(T6 t6) {
+		return Tuple6.of(getT1(), getT2(), getT3(), getT4(), getT5(), t6);
+	}
+
 	public Tuple4<T1, T2, T3, T4> popT4() {
 		return Tuple4.of(getT1(), getT2(), getT3(), getT4());
 	}
