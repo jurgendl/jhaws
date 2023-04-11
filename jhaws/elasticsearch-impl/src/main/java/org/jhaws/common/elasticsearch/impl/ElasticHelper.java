@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonString;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.search.Explanation;
@@ -418,17 +419,22 @@ public class ElasticHelper {
         String[] parts = field.split("\\.");
         int i = 0;
         String val = "?";
+        Object current = jso;
         try {
-            for (; i < parts.length - 1; i++) {
-                jso = jso.getJsonObject(parts[i]);
+            for (; i < parts.length && current instanceof JsonObject; i++) {
+                current = JsonObject.class.cast(current).get(parts[i]);
             }
         } catch (Exception ex) {
-            //
+            System.out.println(ex);
         }
+        if (current == null) return null;
         try {
-            val = jso.get(parts[i]).toString();
+            if (current instanceof JsonString)
+                val = JsonString.class.cast(current).getString();
+            else
+                val = current.toString();
         } catch (Exception ex) {
-            //
+            System.out.println(ex);
         }
         if (val.length() > 500) val = "...";
         return val.replace("\r\n", " ").replace("\r", " ").replace("\n", " ");
@@ -437,17 +443,28 @@ public class ElasticHelper {
     static private String explanation0(JsonObject jso, Explanation explanation, int d) {
         StringBuilder buffer = new StringBuilder();
 
-        for (int i = 0; i < d; i++) {
-            buffer.append("  ");
-        }
-
         if (explanation.getDescription().equals("max of:")) {
-            buffer.append("max[" + explanation.getValue() + "](\n");
+            buffer.append("A ");
+            for (int i = 0; i < d; i++) {
+                buffer.append("  ");
+            }
+            buffer.append("max[" + explanation.getValue() + "](");
         } else if (explanation.getDescription().equals("sum of:")) {
-            buffer.append("Σ[" + explanation.getValue() + "](\n");
-        } else {
-            buffer.append(explanation.getValue() + " = " + explanation.getDescription() + " :: " + value(jso, explanation.getDescription())).append("\n");
+            buffer.append("B ");
+            for (int i = 0; i < d; i++) {
+                buffer.append("  ");
+            }
+            buffer.append("Σ[" + explanation.getValue() + "](");
+        } else /* if (explanation.getValue().floatValue() != Float.MAX_VALUE && !"?".equals(value(jso, explanation.getDescription()))) */ {
+            buffer.append("C ");
+            for (int i = 0; i < d; i++) {
+                buffer.append("  ");
+            }
+            String desc = value(jso, explanation.getDescription());
+            String str = explanation.getValue().floatValue() + " = " + explanation.getDescription() + (desc == null || "?".equals(desc) ? "" : (" :: " + desc));
+            buffer.append(str);
         }
+        buffer.append("\n");
 
         Explanation[] details = explanation.getDetails();
         for (int i = 0; i < details.length; i++) {
@@ -457,6 +474,7 @@ public class ElasticHelper {
         }
 
         if (explanation.getDescription().equals("max of:") || explanation.getDescription().equals("sum of:")) {
+            buffer.append("D ");
             for (int i = 0; i < d; i++) {
                 buffer.append("  ");
             }
