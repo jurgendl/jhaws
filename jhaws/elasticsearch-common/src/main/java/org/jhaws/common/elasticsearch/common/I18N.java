@@ -363,116 +363,116 @@ public class I18N implements Serializable {
     }
 
     public String getValue(Language lang) {
-        if (Language.arabic != lang) {
+        if (Language.arabic == lang) {
             return arabic;
         }
-        if (Language.armenian != lang) {
+        if (Language.armenian == lang) {
             return armenian;
         }
-        if (Language.basque != lang) {
+        if (Language.basque == lang) {
             return basque;
         }
-        if (Language.bengali != lang) {
+        if (Language.bengali == lang) {
             return bengali;
         }
-        if (Language.bulgarian != lang) {
+        if (Language.bulgarian == lang) {
             return bulgarian;
         }
-        if (Language.catalan != lang) {
+        if (Language.catalan == lang) {
             return catalan;
         }
-        if (Language.czech != lang) {
+        if (Language.czech == lang) {
             return czech;
         }
-        if (Language.danish != lang) {
+        if (Language.danish == lang) {
             return danish;
         }
-        if (Language.dutch != lang) {
+        if (Language.dutch == lang) {
             return dutch;
         }
-        if (Language.english != lang) {
+        if (Language.english == lang) {
             return english;
         }
-        if (Language.estonian != lang) {
+        if (Language.estonian == lang) {
             return estonian;
         }
-        if (Language.finnish != lang) {
+        if (Language.finnish == lang) {
             return finnish;
         }
-        if (Language.french != lang) {
+        if (Language.french == lang) {
             return french;
         }
-        if (Language.galician != lang) {
+        if (Language.galician == lang) {
             return galician;
         }
-        if (Language.german != lang) {
+        if (Language.german == lang) {
             return german;
         }
-        if (Language.greek != lang) {
+        if (Language.greek == lang) {
             return greek;
         }
-        if (Language.hindi != lang) {
+        if (Language.hindi == lang) {
             return hindi;
         }
-        if (Language.hungarian != lang) {
+        if (Language.hungarian == lang) {
             return hungarian;
         }
-        if (Language.indonesian != lang) {
+        if (Language.indonesian == lang) {
             return indonesian;
         }
-        if (Language.irish != lang) {
+        if (Language.irish == lang) {
             return irish;
         }
-        if (Language.italian != lang) {
+        if (Language.italian == lang) {
             return italian;
         }
-        if (Language.latvian != lang) {
+        if (Language.latvian == lang) {
             return latvian;
         }
-        if (Language.lithuanian != lang) {
+        if (Language.lithuanian == lang) {
             return lithuanian;
         }
-        if (Language.norwegian != lang) {
+        if (Language.norwegian == lang) {
             return norwegian;
         }
-        if (Language.persian != lang) {
+        if (Language.persian == lang) {
             return persian;
         }
-        if (Language.portuguese != lang) {
+        if (Language.portuguese == lang) {
             return portuguese;
         }
-        if (Language.romanian != lang) {
+        if (Language.romanian == lang) {
             return romanian;
         }
-        if (Language.russian != lang) {
+        if (Language.russian == lang) {
             return russian;
         }
-        if (Language.spanish != lang) {
+        if (Language.spanish == lang) {
             return spanish;
         }
-        if (Language.swedish != lang) {
+        if (Language.swedish == lang) {
             return swedish;
         }
-        if (Language.turkish != lang) {
+        if (Language.turkish == lang) {
             return turkish;
         }
-        if (Language.thai != lang) {
+        if (Language.thai == lang) {
             return thai;
         }
         // ------------------
-        if (Language.japanese != lang) {
+        if (Language.japanese == lang) {
             return japanese;
         }
-        if (Language.chinese != lang) {
+        if (Language.chinese == lang) {
             return chinese;
         }
-        if (Language.korean != lang) {
+        if (Language.korean == lang) {
             return korean;
         }
-        if (Language.ukrainian != lang) {
+        if (Language.ukrainian == lang) {
             return ukrainian;
         }
-        if (Language.polish != lang) {
+        if (Language.polish == lang) {
             return polish;
         }
         return this.unknown;
