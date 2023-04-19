@@ -60,159 +60,124 @@ public class I18NS implements Serializable {
         }
     }
 
+    @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER)
+    private List<String> values = new ArrayList<>();
+
     @Field(type = FieldType.TEXT, customAnalyzer = Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> unknown;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.arabic)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> arabic;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.armenian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> armenian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.basque)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> basque;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.bengali)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> bengali;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.bulgarian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> bulgarian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.catalan)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> catalan;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.czech)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> czech;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.danish)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> danish;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.dutch)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> dutch;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.english)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> english;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.estonian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> estonian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.finnish)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> finnish;
 
     @Field(type = FieldType.TEXT, customAnalyzer = Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER)
     // @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.french)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> french;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.galician)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> galician;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.german)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> german;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.greek)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> greek;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.hindi)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> hindi;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.hungarian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> hungarian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.indonesian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> indonesian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.irish)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> irish;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.italian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> italian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.latvian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> latvian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.lithuanian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> lithuanian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.norwegian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> norwegian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.persian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> persian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.portuguese)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> portuguese;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.romanian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> romanian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.russian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> russian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.spanish)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> spanish;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.swedish)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> swedish;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.turkish)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> turkish;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.thai)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> thai;
 
     //
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.japanese)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> japanese;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.chinese)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> chinese;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.korean)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> korean;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.ukrainian)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> ukrainian;
 
     @Field(type = FieldType.TEXT, analyzer = Analyzer.language, language = Language.polish)
-    @FieldExtra(value = @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER))
     private List<String> polish;
 
     public I18NS() {
@@ -390,6 +355,8 @@ public class I18NS implements Serializable {
     }
 
     private void value(Language language, String value) {
+        if (StringUtils.isBlank(value)) return;
+        if (!this.values.contains(value)) this.values.add(value);
         if (language == null) language = Language.uninitialized;
         switch (language) {
             case arabic:
@@ -1088,5 +1055,13 @@ public class I18NS implements Serializable {
 
     public void setPolish(List<String> polish) {
         this.polish = polish;
+    }
+
+    public List<String> getValues() {
+        return this.values;
+    }
+
+    public void setValues(List<String> values) {
+        this.values = values;
     }
 }
