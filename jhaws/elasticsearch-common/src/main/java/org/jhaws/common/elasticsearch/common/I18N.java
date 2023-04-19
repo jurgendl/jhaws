@@ -11,7 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 // @NestedField
 @SuppressWarnings("serial")
 public class I18N implements Serializable {
-    @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, name = "sortable", customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER)
+    public static final String UNKNOWN = "unknown";
+
+    public static final String VALUES = "values";
+
+    @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER)
     private List<String> values = new ArrayList<>();
 
     @Field(type = FieldType.TEXT, customAnalyzer = Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER)
