@@ -261,19 +261,25 @@ public class I18NSBase implements Serializable {
     }
 
     public void addValues(String languageIso, Collection<String> values0) {
-        addValues(Language.forIso(languageIso).orElse(null), values0);
+        if (values0 != null && !values0.isEmpty()) values0.stream().forEach(value -> {
+            Language lang = Language.forIso(languageIso).orElse(null);
+            value(lang, value);
+        });
     }
 
     public void addValues(Language language, Collection<String> values0) {
-        addValues(language, values0);
+        if (values0 != null && !values0.isEmpty()) values0.stream().forEach(value -> value(language, value));
     }
 
     public void addValues(String languageIso, String... values0) {
-        addValues(Language.forIso(languageIso).orElse(null), values0);
+        if (values0 != null && values0.length > 0) Arrays.stream(values0).forEach(value -> {
+            Language lang = Language.forIso(languageIso).orElse(null);
+            value(lang, value);
+        });
     }
 
     public void addValues(Language language, String... values0) {
-        addValues(language, Arrays.asList(values0));
+        if (values0 != null && values0.length > 0) Arrays.stream(values0).forEach(value -> value(language, value));
     }
 
     public void addValue(String languageIso, String value) {
