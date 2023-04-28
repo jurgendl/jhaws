@@ -1,7 +1,9 @@
 package org.jhaws.common.elasticsearch.common;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // https://www.elastic.co/guide/en/machine-learning/7.6/ml-lang-ident.html
 public enum Language {
@@ -75,5 +77,17 @@ public enum Language {
 
     public static Optional<Language> forIso(String iso) {
         return iso == null ? Optional.empty() : Arrays.stream(Language.values()).filter(l -> l.iso() != null).filter(l -> iso.equalsIgnoreCase(l.iso())).findAny();
+    }
+
+    public static Optional<Language> forBaseIso(String iso) {
+        return iso == null ? Optional.empty() : Arrays.stream(Language.values()).filter(a -> a != japanese && a != chinese && a != korean && a != ukrainian && a != polish).filter(l -> l.iso() != null).filter(l -> iso.equalsIgnoreCase(l.iso())).findAny();
+    }
+
+    public static List<Language> options() {
+        return Arrays.asList(Language.values());
+    }
+
+    public static List<Language> baseOptions() {
+        return Arrays.stream(Language.values()).filter(a -> a != japanese && a != chinese && a != korean && a != ukrainian && a != polish).collect(Collectors.toList());
     }
 }

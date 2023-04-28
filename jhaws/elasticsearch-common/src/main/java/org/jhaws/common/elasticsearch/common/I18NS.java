@@ -3,6 +3,7 @@ package org.jhaws.common.elasticsearch.common;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -336,9 +337,9 @@ public class I18NS implements Serializable {
         return this;
     }
 
-    public I18NS addValues(String iso, String... values) {
+    public I18NS addValues(String iso, String... values0) {
         Language lan = StringUtils.isBlank(iso) ? null : Arrays.stream(Language.values()).filter(l -> l.iso() != null).filter(l -> l.iso().equalsIgnoreCase(iso)).findAny().orElse(null);
-        return addValues(lan, values);
+        return addValues(lan, values0);
     }
 
     public I18NS addValue(String iso, String value) {
@@ -347,14 +348,25 @@ public class I18NS implements Serializable {
         return this;
     }
 
-    public I18NS addValues(Language language, String... values) {
-        Arrays.stream(values).forEach(value -> addValue(language, value));
+    public I18NS addValues(Language language, String... values0) {
+        Arrays.stream(values0).forEach(value -> addValue(language, value));
         return this;
     }
 
     public I18NS addValue(Language language, String value) {
         if (StringUtils.isBlank(value)) throw new NullPointerException();
         value(language, value);
+        return this;
+    }
+
+    public I18NS addValues(Language language, Collection<String> values0) {
+        values0.stream().forEach(value -> addValue(language, value));
+        return this;
+    }
+
+    public I18NS addValues(String iso, Collection<String> values0) {
+        Language language = StringUtils.isBlank(iso) ? null : Arrays.stream(Language.values()).filter(l -> l.iso() != null).filter(l -> l.iso().equalsIgnoreCase(iso)).findAny().orElse(null);
+        values0.stream().forEach(value -> addValue(language, value));
         return this;
     }
 
