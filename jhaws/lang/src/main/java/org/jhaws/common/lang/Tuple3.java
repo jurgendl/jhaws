@@ -62,8 +62,6 @@ public class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("rawtypes")

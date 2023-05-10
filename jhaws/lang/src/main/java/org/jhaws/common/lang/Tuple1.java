@@ -48,8 +48,6 @@ public class Tuple1<T1> implements Serializable {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("rawtypes")
