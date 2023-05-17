@@ -200,7 +200,10 @@ import org.jhaws.common.elasticsearch.common.Pagination;
 //
 // https://stackoverflow.com/questions/9075098/start-windows-service-from-java
 //
-// TODO http://man.hubwiz.com/docset/ElasticSearch.docset/Contents/Resources/Documents/www.elastic.co/guide/en/elasticsearch/reference/current/parent-join.html
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/nested.html#nested-fields-array-objects
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html#nested-sorting
+// https://opster.com/guides/elasticsearch/data-architecture/elasticsearch-nested-field-object-field/
+//
 // @Component
 public class ElasticSuperClient extends ElasticLowLevelClient {
     public static final String _NONE_ = "_none_";

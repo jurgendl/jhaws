@@ -19,4 +19,8 @@ public @interface NestedField {
     Language value() default Language.uninitialized;
 
     Class<?> type() default Class.class;
+
+    /** https://www.elastic.co/guide/en/elasticsearch/reference/current/nested.html#nested-fields-array-objects */
+    /** https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html#nested-sorting */
+    boolean nested() default false;
 }

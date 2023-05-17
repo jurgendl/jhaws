@@ -239,7 +239,7 @@ public enum FieldType {
     /**
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/nested.html
      */
-    NESTED("nested"),
+    // NESTED("nested"),
     /**
      * voor de volledigheid
      * 

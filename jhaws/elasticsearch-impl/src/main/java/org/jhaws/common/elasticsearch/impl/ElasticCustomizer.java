@@ -458,11 +458,13 @@ public class ElasticCustomizer {
             throw new IllegalArgumentException(exceptionErrorMsgPrefix + "depth > 25: " + actualNestingList);
         }
         if (StringUtils.isNotBlank(jsonUnwrapped.suffix())) {
-            throw new IllegalArgumentException(exceptionErrorMsgPrefix + "suffix nog niet ondersteund");
+            throw new IllegalArgumentException(exceptionErrorMsgPrefix + "suffix unsupported");
         }
         String nestedPrefix = jsonUnwrapped.prefix();
         if (StringUtils.isBlank(nestedPrefix)) {
-            throw new IllegalArgumentException(exceptionErrorMsgPrefix + "prefix verplicht");
+            nestedPrefix = "";
+            LOGGER_DETAILS.warn("field: " + (prefixList.stream().collect(Collectors.joining()) + " " + reflectField).trim() + ": JsonUnwrapped.nestedPrefix=\"\" is supported but dangerous");
+            // throw new IllegalArgumentException(exceptionErrorMsgPrefix + "prefix verplicht");
         }
 
         if (nestedField != null) {
@@ -486,7 +488,11 @@ public class ElasticCustomizer {
         if (nestedFieldLanguage != null && nestedFieldLanguage != Language.uninitialized) {
             language = nestedFieldLanguage;
         }
-
+        // if (nestedField.nested()) {
+        // Map<String, Object> mappings = new TreeMap<>();
+        // mappings.put(TYPE, "nested"/* FieldType.NESTED.id() */);
+        // mapping.put(reflectField.getName(), mappings);
+        // } else {
         Map<String, Object> typeMapping = new TreeMap<>();
         $mappings_fields(language, //
                 nestedField.type() != Class.class ? nestedField.type() : reflectField.getType(), //
@@ -496,7 +502,11 @@ public class ElasticCustomizer {
                 listener);
         Map<String, Object> mappings = new TreeMap<>();
         mappings.put(PROPERTIES, typeMapping);
+        if (nestedField.nested()) {
+            mappings.put(TYPE, "nested"/* FieldType.NESTED.id() */);
+        }
         mapping.put(reflectField.getName(), mappings);
+        // }
     }
 
     private String nestedFieldName(Field nestedField) {
