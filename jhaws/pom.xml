@@ -111,7 +111,7 @@
 		<version.joda-time>2.12.1</version.joda-time>
 		<version.cglib>3.3.0</version.cglib>
 		<version.ehcache>2.10.6</version.ehcache>
-		<version.sqlite>3.32.3.2</version.sqlite>
+		<version.sqlite>3.41.2.2</version.sqlite>
 		<version.gson>2.9.1</version.gson>
 		<version.inject>1</version.inject>
 		<version.ldapbp>1.0</version.ldapbp>
