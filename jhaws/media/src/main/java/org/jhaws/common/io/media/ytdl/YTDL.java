@@ -140,7 +140,7 @@ public class YTDL extends Tool {
 			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream(); OutputStream out = executable.newBufferedOutputStream()) {
 				IOUtils.copy(in, out);
 			} catch (IOException ex) {
-				logger.error("{}", ex);
+				loggeri.error("{}", ex);
 				return;
 			}
 		}
@@ -371,7 +371,7 @@ public class YTDL extends Tool {
 	}
 
 	protected void dl(FilePath tmpFolder, List<String> command, List<String> dl) {
-		// logger.info("\n" + dl.stream().collect(Collectors.joining(" ")));
+		// loggeri.info("\n" + dl.stream().collect(Collectors.joining(" ")));
 		Set<String> u = new HashSet<>();
 		Lines lines = new Lines() {
 			@Override
@@ -404,7 +404,7 @@ public class YTDL extends Tool {
 				}
 
 				super.accept(t);
-				logger.info("> " + t);
+				loggeri.info("> " + t);
 			}
 		};
 		Value<Process> processHolder = null;

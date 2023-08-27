@@ -40,8 +40,6 @@ import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @see http://www.sno.phy.queensu.ca/~phil/exiftool/
@@ -109,7 +107,9 @@ public class ExifTool extends Tool implements MediaCte {
 
 	private static final Pattern IW = Pattern.compile("^Image[ ]?Width$", Pattern.CASE_INSENSITIVE);
 
-	private static final Logger logger = LoggerFactory.getLogger("exif");
+	protected boolean usePerl = false;
+
+	protected String perl = "perl";
 
 	public ExifTool() {
 		super(System.getenv("EXIF"));
@@ -406,57 +406,61 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 	}
 
-	public void comment(FilePath path, String comment) {
-		if (path.notExists() || executable.notExists()) {
+	public void comment(FilePath p, String comment) {
+		if (p.notExists() || executable.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(command(executable), "-Comment=\"" + comment + "\"", path.getAbsolutePath());
+		List<String> command = Arrays.asList(perl(), command(executable), "-Comment=\"" + comment + "\"", p.getAbsolutePath());
 		String jc = join(command);
-		logger.trace("{}", jc);
-		callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
-		path.getParentPath().child(path.getFileNameString() + "_original").delete();
+		loggeri.trace("{}", jc);
+		callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		p.getParentPath().child(p.getFileNameString() + "_original").delete();
 	}
 
-	public String comment(FilePath path) {
-		if (path.notExists() || executable.notExists()) {
+	protected String perl() {
+		return usePerl ? perl : null;
+	}
+
+	public String comment(FilePath p) {
+		if (p.notExists() || executable.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(command(executable), "-Comment", path.getAbsolutePath());
+		List<String> command = Arrays.asList(perl(), command(executable), "-Comment", p.getAbsolutePath());
 		String jc = join(command);
-		logger.trace("{}", jc);
-		return callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().filter(l -> l.toLowerCase().startsWith("comment"))
+		loggeri.trace("{}", jc);
+		return callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().filter(l -> l.toLowerCase().startsWith("comment"))
 				.map(l -> l.split(":")[1].trim()).findFirst().orElse(null);
 	}
 
-	public void program(FilePath path, String program) {
-		if (path.notExists() || executable.notExists()) {
+	public void program(FilePath p, String program) {
+		if (p.notExists() || executable.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(command(executable), "-Software=\"" + program + "\"", path.getAbsolutePath());
+		List<String> command = Arrays.asList(perl(), command(executable), "-Software=\"" + program + "\"", p.getAbsolutePath());
 		String jc = join(command);
-		logger.trace("{}", jc);
-		callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().collect(collectList());
-		path.getParentPath().child(path.getFileNameString() + "_original").delete();
+		loggeri.trace("{}", jc);
+		callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		p.getParentPath().child(p.getFileNameString() + "_original").delete();
 	}
 
-	public String program(FilePath path) {
-		if (path.notExists() || executable.notExists()) {
+	public String program(FilePath p) {
+		if (p.notExists() || executable.notExists()) {
 			return null;
 		}
-		List<String> command = Arrays.asList(command(executable), "-Software", path.getAbsolutePath());
+		List<String> command = Arrays.asList(perl(), command(executable), "-Software", p.getAbsolutePath());
 		String jc = join(command);
-		logger.trace("{}", jc);
-		return callProcess(null, false, command, path.getParentPath(), new Lines()).lines().stream().filter(l -> l.toLowerCase().contains("software"))
-				.map(l -> l.split(":")[1].trim()).findFirst().orElse(null);
+		loggeri.trace("{}", jc);
+		return callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().filter(l -> l.toLowerCase().contains("software")).map(l -> l.split(":")[1].trim())
+				.findFirst().orElse(null);
 	}
 
-	public ExifInfo exifInfo(FilePath path) {
-		return exifInfo(path, new ExifInfoImpl());
+	public ExifInfo exifInfo(FilePath p) {
+		return exifInfo(p, new ExifInfoImpl());
 	}
 
 	// -X = xml, -json
-	public ExifInfo exifInfo(FilePath path, ExifInfo exifinfo) {
-		if (path.notExists()) {
+	public ExifInfo exifInfo(FilePath p, ExifInfo exifinfo) {
+		if (p.notExists()) {
 			throw new IllegalArgumentException();
 		}
 		if (executable.notExists()) {
@@ -466,13 +470,13 @@ public class ExifTool extends Tool implements MediaCte {
 			exifinfo = new ExifInfoImpl();
 		}
 
-		logger.debug("exif {}", path);
+		loggeri.debug("exif {}", p);
 
 		try {
-			if (webImageFilter.accept(path) || videoFilter.accept(path) || html5Videofilter.accept(path) || qtFilter.accept(path)) {
-				List<String> command = exifCommand(path);
+			if (webImageFilter.accept(p) || videoFilter.accept(p) || html5Videofilter.accept(p) || qtFilter.accept(p)) {
+				List<String> command = exifCommand(p);
 
-				List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command, path.getParentPath(), null, null, new Lines()).lines().stream()
+				List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command, p.getParentPath(), null, null, new Lines()).lines().stream()
 						.collect(collectList());
 				// lines.forEach(System.out::println);
 
@@ -481,9 +485,9 @@ public class ExifTool extends Tool implements MediaCte {
 						|| x.startsWith("No matching files")//
 						|| x.startsWith("Error: File not found")//
 				)) {
-					FilePath tmp = path.getParentPath().child("" + System.currentTimeMillis());
+					FilePath tmp = p.getParentPath().child("" + System.currentTimeMillis());
 					try {
-						Files.createLink(tmp.toPath(), path.toPath());
+						Files.createLink(tmp.toPath(), p.toPath());
 						command = Arrays.asList(//
 								command(executable) //
 								// , "-charset" //
@@ -494,11 +498,11 @@ public class ExifTool extends Tool implements MediaCte {
 								, "-json"//
 								, "\"" + tmp.getFileNameString() + "\""//
 						);
-						lines = Processes.callProcess(null, false, null, System.getenv(), command, path.getParentPath(), null, null, new Lines()).lines().stream()
+						lines = Processes.callProcess(null, false, null, System.getenv(), command, p.getParentPath(), null, null, new Lines()).lines().stream()
 								.collect(collectList());
 						// lines.forEach(System.out::println);
 					} catch (Exception x) {
-						System.out.println("could not create " + tmp.getAbsolutePath() + " from " + path.getAbsolutePath());
+						System.out.println("could not create " + tmp.getAbsolutePath() + " from " + p.getAbsolutePath());
 						x.printStackTrace(System.out);
 					} finally {
 						if (tmp.exists()) {
@@ -525,9 +529,9 @@ public class ExifTool extends Tool implements MediaCte {
 
 				exifinfo.setMimetype(exifinfo.value(MIME1));
 
-				if (videoFilter.accept(path) || html5Videofilter.accept(path) || qtFilter.accept(path)) {
+				if (videoFilter.accept(p) || html5Videofilter.accept(p) || qtFilter.accept(p)) {
 					if (isBlank(exifinfo.getMimetype())) {
-						exifinfo.setMimetype("video/" + path.getExtension().toLowerCase()//
+						exifinfo.setMimetype("video/" + p.getExtension().toLowerCase()//
 								.replace(FLV, "flash")//
 								.replace("ogv", "ogg")//
 								.replace(M4V, MP4)//
@@ -560,13 +564,13 @@ public class ExifTool extends Tool implements MediaCte {
 				}
 			}
 		} catch (Exception ex) {
-			logger.error("{}", path, ex);
+			loggeri.error("{}", p, ex);
 		}
 
 		return exifinfo;
 	}
 
-	public List<String> exifCommand(FilePath path) {
+	public List<String> exifCommand(FilePath p) {
 		List<String> command = Arrays.asList(//
 				command(executable) //
 				// , "-charset" //
@@ -575,10 +579,10 @@ public class ExifTool extends Tool implements MediaCte {
 				// , "FileName=utf-8"//
 				, "-q"//
 				, "-json"//
-				, "\"./" + path.getFileNameString() + "\""//
+				, "\"./" + p.getFileNameString() + "\""//
 		);
 		String jc = join(command);
-		logger.trace(jc);
+		loggeri.trace(jc);
 		return command;
 	}
 
@@ -634,7 +638,7 @@ public class ExifTool extends Tool implements MediaCte {
 
 	@Override
 	protected String getVersionImpl() {
-		List<String> command = Arrays.asList(command(executable), "-ver");
+		List<String> command = Arrays.asList(perl(), command(executable), "-ver");
 		Lines lines = new Lines();
 		Tool.call(null, lines, executable.getParentPath(), command);
 		return lines.lines().get(0);
@@ -682,7 +686,7 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 	}
 
-	public void keywords(FilePath path, boolean overwrite, String... keywords) {
+	public void keywords(FilePath p, boolean overwrite, String... keywords) {
 		List<String> command = new ArrayList<>();
 		command.add(command(getExecutable()));
 		// command.add("-v3");
@@ -694,10 +698,26 @@ public class ExifTool extends Tool implements MediaCte {
 		}
 		command.add("-overwrite_original");
 		Arrays.stream(keywords).map(s -> "-IPTC:Keywords=" + s).forEach(command::add);
-		command.add(command(path));
+		command.add(command(p));
 		List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command, getExecutable().getParentPath(), null, null, new Lines()).lines().stream()
 				.collect(collectList());
 		lines.forEach(System.out::println);
 		return;
+	}
+
+	public boolean isUsePerl() {
+		return this.usePerl;
+	}
+
+	public void setUsePerl(boolean usePerl) {
+		this.usePerl = usePerl;
+	}
+
+	public String getPerl() {
+		return this.perl;
+	}
+
+	public void setPerl(String perl) {
+		this.perl = perl;
 	}
 }

@@ -225,7 +225,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add("-preset");
 				command.add("default");
 				command.add(command(output));
-				logger.info("{}", join(command));// FIXME JOIN FALSE
+				loggeri.info("{}", join(command));// FIXME JOIN FALSE
 				try {
 					silentcall(null, lines, FilePath.getTempDirectory(), command);
 					if (!hwAccel.contains("nvenc")) {
@@ -265,7 +265,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add("-preset");
 				command.add("default");
 				command.add(command(output));
-				logger.info("{}", join(command));// FIXME JOIN FALSE
+				loggeri.info("{}", join(command));// FIXME JOIN FALSE
 				try {
 					lines = new org.jhaws.common.io.console.Processes.Lines();
 					silentcall(null, lines, FilePath.getTempDirectory(), command);
@@ -311,11 +311,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 			System.out.println(command.stream().collect(Collectors.joining(" ")));
 			silentcall(null, lines, input.getParentPath(), command);
 			String xml = lines.lines().stream().map(String::trim).collect(Collectors.joining());
-			logger.info("{}", xml);
+			loggeri.info("{}", xml);
 			return unmarshall(xml);
 		} catch (RuntimeException ex) {
-			logger.error("{}", ex);
-			lines.lines().forEach(l -> logger.error("{}", l));
+			loggeri.error("{}", ex);
+			lines.lines().forEach(l -> loggeri.error("{}", l));
 			return null;
 		}
 	}
@@ -414,7 +414,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			context.put("success", success);
 			return success;
 		} catch (Exception ex) {
-			logger.error("{}", ex);
+			loggeri.error("{}", ex);
 			context.put("end", System.currentTimeMillis());
 			context.put("success", false);
 			context.put("exception", "" + ex);
@@ -473,7 +473,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 		// call(command, true);
 		// return splashFile.exists();
 		// } catch (Exception ex) {
-		// logger.error("{}", ex);
+		// loggeri.error("{}", ex);
 		// return false;
 		// }
 	}
@@ -528,14 +528,14 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add(command(output));
 			call(null, null, input.getParentPath(), command);
 			if (output.exists() && output.getFileSize() > 500) {
-				logger.info("done {}", output);
+				loggeri.info("done {}", output);
 			} else {
-				logger.error("error {}", output);
+				loggeri.error("error {}", output);
 				output.delete();
 				output = null;
 			}
 		} catch (Exception ex) {
-			logger.error("error {}", input, ex);
+			loggeri.error("error {}", input, ex);
 			if (output != null) {
 				output.delete();
 			}
@@ -1021,7 +1021,7 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add(command(cfg.input.input));
 		}
 		if (!cfg.vcopy && cfg.fixes.fixTooManyPackets) {
-			logger.warn("fix: Too many packets buffered for output stream");
+			loggeri.warn("fix: Too many packets buffered for output stream");
 			// command.add("-max_muxing_queue_size");
 			// command.add("9999");
 		}
@@ -1060,24 +1060,24 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add("-c:v");
 				// ...HWAccelIntro...
 				if (accel.contains("nvenc")) {
-					logger.debug("choosing HW accell h264_nvenc: " + accel);
+					loggeri.debug("choosing HW accell h264_nvenc: " + accel);
 					// h264_nvenc (nvidia HW accel)
 					command.add("h264_nvenc");
 					// No NVENC capable devices found
 					// -profile high444p -pixel_format yuv444p
 					// -pix_fmt nv12
 				} else if (accel.contains("cuvid")) {
-					logger.debug("choosing HW accell h264_cuvid: " + accel);
+					loggeri.debug("choosing HW accell h264_cuvid: " + accel);
 					command.add("h264_cuvid");
 				} else if (accel.contains("qsv")) {
 					// h264_qsv (intel onboard vid HW accel)
-					logger.debug("choosing HW accell h264_qsv: " + accel);
+					loggeri.debug("choosing HW accell h264_qsv: " + accel);
 					command.add("h264_qsv");
 				} else if (accel.contains("dxva2")) {
-					logger.debug("choosing HW accell h264_dxva2: " + accel);
+					loggeri.debug("choosing HW accell h264_dxva2: " + accel);
 					command.add("h264_dxva2");
 					// } else if (accel.contains("vulkan")) {
-					// logger.debug("choosing HW accell h264_vulkan: " + accel);
+					// loggeri.debug("choosing HW accell h264_vulkan: " + accel);
 					// command.add("h264_vulkan");
 				} else {
 					command.add("libx264");
@@ -1174,12 +1174,12 @@ public class FfmpegTool extends Tool implements MediaCte {
 						command.add(MP3C);
 						if (cfg.fixes.fixAudioRate) {
 							// muxing mp3 at 11025hz is not supported
-							logger.warn("fix: muxing ... at ...hz is not supported");
+							loggeri.warn("fix: muxing ... at ...hz is not supported");
 							command.add("-ar");
 							command.add("44100");
 						}
 						if (cfg.fixes.fixAudioStrict) {
-							logger.warn("fix: muxing ... at ...hz is not standard, to mux anyway set strict to -1'");
+							loggeri.warn("fix: muxing ... at ...hz is not standard, to mux anyway set strict to -1'");
 							command.add("-strict");
 							command.add("-1");
 						}
@@ -1197,13 +1197,13 @@ public class FfmpegTool extends Tool implements MediaCte {
 			}
 			command.add("-vf");
 			if (cfg.fixes.fixDiv2) {
-				logger.warn("fix: not divisible by 2");
+				loggeri.warn("fix: not divisible by 2");
 				command.add(escape(and("fps=" + cfg.slideshowCfg.framesPerSecondOut, FORMAT_YUV420P)));
 			} else {
 				command.add(escape(and("fps=" + cfg.slideshowCfg.framesPerSecondOut, FORMAT_YUV420P, FIX_DIV2)));
 			}
 		} else if (cfg.fixes.fixDiv2) {
-			logger.warn("fix: not divisible by 2");
+			loggeri.warn("fix: not divisible by 2");
 			command.add("-vf");
 			command.add(escape(and(FORMAT_YUV420P, FIX_DIV2)));
 		}
@@ -1303,9 +1303,9 @@ public class FfmpegTool extends Tool implements MediaCte {
 			call(null, lines, output.getParentPath(), command);
 			return true;
 		} catch (RuntimeException ex) {
-			logger.error("", ex);
+			loggeri.error("", ex);
 			if (lines != null && lines instanceof org.jhaws.common.io.console.Processes.Lines) {
-				org.jhaws.common.io.console.Processes.Lines.class.cast(lines).lines().forEach(l -> logger.error("{}", l));
+				org.jhaws.common.io.console.Processes.Lines.class.cast(lines).lines().forEach(l -> loggeri.error("{}", l));
 			}
 			output.delete();
 			throw ex;

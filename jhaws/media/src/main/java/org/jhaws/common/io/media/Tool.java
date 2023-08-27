@@ -25,7 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Tool {
-	protected static final Logger logger = LoggerFactory.getLogger("tool");
+	protected static final Logger LOGGER = LoggerFactory.getLogger("tool");
+
+	protected Logger loggeri;
 
 	protected FilePath executable;
 
@@ -35,10 +37,11 @@ public abstract class Tool {
 
 	public Tool(String path) {
 		setPath(path);
+		loggeri = LoggerFactory.getLogger(getClass());
 	}
 
 	public Tool(boolean disableAuto) {
-		//
+		loggeri = LoggerFactory.getLogger(getClass());
 	}
 
 	public final FilePath getExecutable() {
@@ -111,7 +114,7 @@ public abstract class Tool {
 			consumers = consumers.andThen(listener);
 		}
 		if (log) {
-			logger.info("start - {}", join(command));
+			LOGGER.info("start - {}", join(command));
 		}
 		long start = System.currentTimeMillis();
 		HashMap<String, String> env = new HashMap<>();
@@ -119,7 +122,7 @@ public abstract class Tool {
 			env.put("Path", paths.stream().map(FilePath::getAbsolutePath).collect(Collectors.joining(";")));
 		Processes.callProcess(processHolder, throwExitValue, null, env, command, dir, null, null, consumers, consumers);
 		if (log) {
-			logger.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
+			LOGGER.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
 		}
 		return lines;
 	}
@@ -139,20 +142,20 @@ public abstract class Tool {
 			}
 		});
 		try {
-			logger.info("Started ...");
+			LOGGER.info("Started ...");
 			C get = future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
-			logger.info("{}", get);
-			logger.info("Finished!");
+			LOGGER.info("{}", get);
+			LOGGER.info("Finished!");
 			return get;
 		} catch (TimeoutException ex) {
 			future.cancel(true);
-			logger.error("{}", ex);
+			LOGGER.error("{}", ex);
 			throw new RuntimeException(ex);
 		} catch (InterruptedException ex) {
-			logger.error("{}", ex);
+			LOGGER.error("{}", ex);
 			throw new RuntimeException(ex);
 		} catch (ExecutionException ex) {
-			logger.error("{}", ex);
+			LOGGER.error("{}", ex);
 			throw new RuntimeException(ex);
 		} finally {
 			try {

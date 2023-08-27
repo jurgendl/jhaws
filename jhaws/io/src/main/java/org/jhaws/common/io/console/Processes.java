@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Spliterators;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -87,10 +88,12 @@ public class Processes {
 			FilePath input, Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog,
 			FilePath errorLog, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
 		if (dir == null)
-			logger.debug("> {}", command.stream().collect(Collectors.joining(" ")));
+			logger.debug("> {}", command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
 		else
-			logger.debug("{}> {}", dir.getAbsolutePath(), command.stream().collect(Collectors.joining(" ")));
-		ProcessBuilder builder = new ProcessBuilder(command);
+			logger.debug("{}> {}", dir.getAbsolutePath(),
+					command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
+		ProcessBuilder builder = new ProcessBuilder(
+				command.stream().filter(Objects::nonNull).collect(Collectors.toList()));
 		builder.redirectErrorStream(true);
 		if (env != null && env.size() > 0) {
 			builder.environment().putAll(env);
