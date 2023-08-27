@@ -173,10 +173,6 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.apache.pdfbox</groupId>
-					<artifactId>jempbox</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.apache.pdfbox</groupId>
 					<artifactId>xmpbox</artifactId>
 				</exclusion>
 				<exclusion>
