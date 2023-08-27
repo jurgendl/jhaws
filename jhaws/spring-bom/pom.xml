@@ -12,13 +12,13 @@
 	<name>spring-bom</name>
 	<description>spring-bom</description>
 	<properties>
-		<version.spring>5.3.27</version.spring>		<!-- spring-core -->
+		<version.spring>5.3.29</version.spring>		<!-- spring-core -->
 		<version.spring-web>${version.spring}</version.spring-web>
-		<version.spring-ws>3.1.5</version.spring-ws>		<!-- spring-ws-core -->
-		<version.spring-integration>5.5.16</version.spring-integration>		<!-- spring-integration-core -->
-		<version.spring-security>5.8.5</version.spring-security>		<!-- spring-security-core -->
-		<version.spring-data>2.7.9</version.spring-data>		<!-- spring-data-commons -->
-		<version.spring-data-rest>3.7.5</version.spring-data-rest>		<!-- spring-data-rest-core -->
+		<version.spring-ws>3.1.6</version.spring-ws>		<!-- spring-ws-core -->
+		<version.spring-integration>5.5.18</version.spring-integration>		<!-- spring-integration-core -->
+		<version.spring-security>5.8.6</version.spring-security>		<!-- spring-security-core -->
+		<version.spring-data>2.7.15</version.spring-data>		<!-- spring-data-commons -->
+		<version.spring-data-rest>3.7.15</version.spring-data-rest>		<!-- spring-data-rest-core -->
 		<version.spring-session>2.7.9</version.spring-session>		<!-- spring-session-core -->
 		<!-- .............................................. -->
 		<!-- .............................................. -->
