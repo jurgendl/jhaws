@@ -398,11 +398,13 @@ public class ElasticHelper {
     }
 
     static public <T extends ElasticDocument> String explanation(T object, ObjectMapper objectMapper, Explanation explanation) {
-        return explanation0(_jsonObject(ElasticHelper.objectToJson(objectMapper, object)), explanation.getDetails()[0], 0);
+        return explanation(ElasticHelper.objectToJson(objectMapper, object), explanation);
     }
 
     static public String explanation(String json, Explanation explanation) {
-        return explanation0(_jsonObject(json), explanation.getDetails()[0], 0);
+        JsonObject _jsonObject = _jsonObject(json);
+        Explanation details = explanation/* .getDetails()[0] */;
+        return explanation0(_jsonObject, details, 0);
     }
 
     public static JsonObject _jsonObject(String json) {
