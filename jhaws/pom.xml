@@ -577,6 +577,17 @@
 				<groupId>com.itextpdf</groupId>
 				<artifactId>itext-xtra</artifactId>
 				<version>${version.itextpdf5}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>commons-imaging</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-imaging</artifactId>
+				<version>1.0-alpha3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.itextpdf</groupId>
