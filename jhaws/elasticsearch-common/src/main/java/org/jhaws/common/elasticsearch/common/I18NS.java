@@ -368,4 +368,10 @@ public class I18NS extends I18NSBase {
     public void setPolish(List<String> polish) {
         this.polish = polish;
     }
+	
+	
+    @Override
+    public String toString() {
+        return collect().toString();
+    }
 }
