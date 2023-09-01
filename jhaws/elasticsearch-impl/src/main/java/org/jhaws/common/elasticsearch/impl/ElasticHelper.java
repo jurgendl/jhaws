@@ -442,25 +442,61 @@ public class ElasticHelper {
         return val.replace("\r\n", " ").replace("\r", " ").replace("\n", " ");
     }
 
+    private static final String START = " ┌ ";
+
+    private static final String MID = " │ ";
+
+    private static final String END = " └ ";
+
     static private String explanation0(JsonObject jso, Explanation explanation, int d) {
+        boolean codes = false;
+
+        boolean hasSub = false;
+        for (int i = 0; i < explanation.getDetails().length; i++) {
+            if (explanation.getDetails()[i].getValue().doubleValue() > 0.0d) {
+                hasSub = true;
+            }
+        }
+
         StringBuilder buffer = new StringBuilder();
 
         if (explanation.getDescription().equals("max of:")) {
-            buffer.append("A ");
+            if (codes) buffer.append(d + "A ");
+            buffer.append(MID);
             for (int i = 0; i < d; i++) {
-                buffer.append("  ");
+                if (i + 1 == d) {
+                    buffer.append(START);
+                } else {
+                    buffer.append(MID);
+                }
             }
             buffer.append("max[" + explanation.getValue() + "](");
         } else if (explanation.getDescription().equals("sum of:")) {
-            buffer.append("B ");
+            if (codes) buffer.append(d + "B ");
+            if (d == 0)
+                buffer.append(START);
+            else
+                buffer.append(MID);
             for (int i = 0; i < d; i++) {
-                buffer.append("  ");
+                buffer.append(START);
             }
             buffer.append("Σ[" + explanation.getValue() + "](");
         } else /* if (explanation.getValue().floatValue() != Float.MAX_VALUE && !"?".equals(value(jso, explanation.getDescription()))) */ {
-            buffer.append("C ");
-            for (int i = 0; i < d; i++) {
-                buffer.append("  ");
+            if (codes) buffer.append(d + "C ");
+            if (hasSub) {
+                buffer.append(MID);
+                for (int i = 0; i < d; i++) {
+                    buffer.append(MID);
+                }
+            } else {
+                buffer.append(MID);
+                for (int i = 0; i < d; i++) {
+                    if (i + 1 == d) {
+                        buffer.append(END);
+                    } else {
+                        buffer.append(MID);
+                    }
+                }
             }
             String desc = value(jso, explanation.getDescription());
             String str = explanation.getValue().floatValue() + " = " + explanation.getDescription() + (desc == null || "?".equals(desc) ? "" : (" :: " + desc));
@@ -475,10 +511,20 @@ public class ElasticHelper {
             }
         }
 
-        if (explanation.getDescription().equals("max of:") || explanation.getDescription().equals("sum of:")) {
-            buffer.append("D ");
+        boolean $d = explanation.getDescription().equals("max of:") || explanation.getDescription().equals("sum of:");
+
+        if ($d) {
+            if (codes) buffer.append(d + "D ");
+            if (d == 0)
+                buffer.append(END);
+            else
+                buffer.append(MID);
             for (int i = 0; i < d; i++) {
-                buffer.append("  ");
+                if (i + 1 == d) {
+                    buffer.append(END);
+                } else {
+                    buffer.append(MID);
+                }
             }
             buffer.append(")\n");
         }
