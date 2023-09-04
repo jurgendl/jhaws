@@ -481,7 +481,7 @@ public class ElasticHelper {
                 buffer.append(START);
             }
             buffer.append("Σ[" + explanation.getValue() + "](");
-        } else /* if (explanation.getValue().floatValue() != Float.MAX_VALUE && !"?".equals(value(jso, explanation.getDescription()))) */ {
+        } else {
             if (codes) buffer.append(d + "C ");
             if (hasSub) {
                 buffer.append(MID);
@@ -498,9 +498,16 @@ public class ElasticHelper {
                     }
                 }
             }
-            String desc = value(jso, explanation.getDescription());
-            String str = explanation.getValue().floatValue() + " = " + explanation.getDescription() + (desc == null || "?".equals(desc) ? "" : (" :: " + desc));
-            buffer.append(str);
+            String value = value(jso, explanation.getDescription());
+            boolean skipFloat = explanation.getValue().floatValue() == Float.MAX_VALUE;
+            boolean skipValue = value == null || "?".equals(value);
+            if (skipFloat && skipValue && "maxBoost".equals(explanation.getDescription())) {
+                // skip line
+            } else {
+                String str = (skipFloat ? "" : explanation.getValue().floatValue() + " = ") + explanation.getDescription() + (skipFloat ? "" : (" :: " + value));
+                buffer.append(str);
+            }
+
         }
         buffer.append("\n");
 
