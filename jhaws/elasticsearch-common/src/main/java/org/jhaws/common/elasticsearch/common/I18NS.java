@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -308,27 +309,6 @@ public class I18NS extends I18NSBase {
         return super.getValue(lang);
     }
 
-    @Override
-    public List<String> getValue() {
-        if (japanese != null) {
-            return japanese;
-        }
-        if (chinese != null) {
-            return chinese;
-        }
-        if (korean != null) {
-            return korean;
-        }
-        if (ukrainian != null) {
-            return ukrainian;
-        }
-        if (polish != null) {
-            return polish;
-        }
-        //
-        return super.getValue();
-    }
-
     public List<String> getJapanese() {
         return japanese;
     }
@@ -368,10 +348,20 @@ public class I18NS extends I18NSBase {
     public void setPolish(List<String> polish) {
         this.polish = polish;
     }
-	
-	
+
     @Override
     public String toString() {
         return collect().toString();
+    }
+
+    @Override
+    public void operate(UnaryOperator<List<String>> i) {
+        if (japanese != null) japanese = i.apply(japanese);
+        if (chinese != null) chinese = i.apply(chinese);
+        if (korean != null) korean = i.apply(korean);
+        if (ukrainian != null) ukrainian = i.apply(ukrainian);
+        if (polish != null) polish = i.apply(polish);
+        //
+        super.operate(i);
     }
 }

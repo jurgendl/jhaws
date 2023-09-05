@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -141,7 +142,7 @@ public class I18NSBase implements Serializable {
 
     @Override
     public String toString() {
-        return String.valueOf(getValue());
+        return String.valueOf(getValues());
     }
 
     public SortedSet<String> collect() {
@@ -532,107 +533,6 @@ public class I18NSBase implements Serializable {
         return this.unknown;
     }
 
-    public List<String> getValue() {
-        if (arabic != null) {
-            return arabic;
-        }
-        if (armenian != null) {
-            return armenian;
-        }
-        if (basque != null) {
-            return basque;
-        }
-        if (bengali != null) {
-            return bengali;
-        }
-        if (bulgarian != null) {
-            return bulgarian;
-        }
-        if (catalan != null) {
-            return catalan;
-        }
-        if (czech != null) {
-            return czech;
-        }
-        if (danish != null) {
-            return danish;
-        }
-        if (dutch != null) {
-            return dutch;
-        }
-        if (english != null) {
-            return english;
-        }
-        if (estonian != null) {
-            return estonian;
-        }
-        if (finnish != null) {
-            return finnish;
-        }
-        if (french != null) {
-            return french;
-        }
-        if (galician != null) {
-            return galician;
-        }
-        if (german != null) {
-            return german;
-        }
-        if (greek != null) {
-            return greek;
-        }
-        if (hindi != null) {
-            return hindi;
-        }
-        if (hungarian != null) {
-            return hungarian;
-        }
-        if (indonesian != null) {
-            return indonesian;
-        }
-        if (irish != null) {
-            return irish;
-        }
-        if (italian != null) {
-            return italian;
-        }
-        if (latvian != null) {
-            return latvian;
-        }
-        if (lithuanian != null) {
-            return lithuanian;
-        }
-        if (norwegian != null) {
-            return norwegian;
-        }
-        if (persian != null) {
-            return persian;
-        }
-        if (portuguese != null) {
-            return portuguese;
-        }
-        if (romanian != null) {
-            return romanian;
-        }
-        if (russian != null) {
-            return russian;
-        }
-        if (spanish != null) {
-            return spanish;
-        }
-        if (swedish != null) {
-            return swedish;
-        }
-        if (turkish != null) {
-            return turkish;
-        }
-        if (thai != null) {
-            return thai;
-        }
-        //
-        return this.unknown;
-    }
-
     public List<String> getUnknown() {
         return this.unknown;
     }
@@ -903,5 +803,44 @@ public class I18NSBase implements Serializable {
 
     public void setValues(List<String> values) {
         this.values = values;
+    }
+
+    public void operate(UnaryOperator<List<String>> i) {
+        if (values != null) values = i.apply(values);
+
+        if (unknown != null) unknown = i.apply(unknown);
+
+        if (arabic != null) arabic = i.apply(arabic);
+        if (armenian != null) armenian = i.apply(armenian);
+        if (basque != null) basque = i.apply(basque);
+        if (bengali != null) bengali = i.apply(bengali);
+        if (bulgarian != null) bulgarian = i.apply(bulgarian);
+        if (catalan != null) catalan = i.apply(catalan);
+        if (czech != null) czech = i.apply(czech);
+        if (danish != null) danish = i.apply(danish);
+        if (dutch != null) dutch = i.apply(dutch);
+        if (english != null) english = i.apply(english);
+        if (estonian != null) estonian = i.apply(estonian);
+        if (finnish != null) finnish = i.apply(finnish);
+        if (french != null) french = i.apply(french);
+        if (galician != null) galician = i.apply(galician);
+        if (german != null) german = i.apply(german);
+        if (greek != null) greek = i.apply(greek);
+        if (hindi != null) hindi = i.apply(hindi);
+        if (hungarian != null) hungarian = i.apply(hungarian);
+        if (indonesian != null) indonesian = i.apply(indonesian);
+        if (irish != null) irish = i.apply(irish);
+        if (italian != null) italian = i.apply(italian);
+        if (latvian != null) latvian = i.apply(latvian);
+        if (lithuanian != null) lithuanian = i.apply(lithuanian);
+        if (norwegian != null) norwegian = i.apply(norwegian);
+        if (persian != null) persian = i.apply(persian);
+        if (portuguese != null) portuguese = i.apply(portuguese);
+        if (romanian != null) romanian = i.apply(romanian);
+        if (russian != null) russian = i.apply(russian);
+        if (spanish != null) spanish = i.apply(spanish);
+        if (swedish != null) swedish = i.apply(swedish);
+        if (turkish != null) turkish = i.apply(turkish);
+        if (thai != null) thai = i.apply(thai);
     }
 }

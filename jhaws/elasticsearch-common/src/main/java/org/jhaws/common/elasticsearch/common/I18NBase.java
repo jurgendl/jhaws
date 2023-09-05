@@ -3,6 +3,9 @@ package org.jhaws.common.elasticsearch.common;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -760,5 +763,44 @@ public class I18NBase implements Serializable {
 
     public void setValues(List<String> values) {
         this.values = values;
+    }
+
+    public void operate(UnaryOperator<String> i) {
+        if (values != null) values = values.stream().map(i).filter(Objects::nonNull).collect(Collectors.toList());
+
+        if (unknown != null) unknown = i.apply(unknown);
+
+        if (arabic != null) arabic = i.apply(arabic);
+        if (armenian != null) armenian = i.apply(armenian);
+        if (basque != null) basque = i.apply(basque);
+        if (bengali != null) bengali = i.apply(bengali);
+        if (bulgarian != null) bulgarian = i.apply(bulgarian);
+        if (catalan != null) catalan = i.apply(catalan);
+        if (czech != null) czech = i.apply(czech);
+        if (danish != null) danish = i.apply(danish);
+        if (dutch != null) dutch = i.apply(dutch);
+        if (english != null) english = i.apply(english);
+        if (estonian != null) estonian = i.apply(estonian);
+        if (finnish != null) finnish = i.apply(finnish);
+        if (french != null) french = i.apply(french);
+        if (galician != null) galician = i.apply(galician);
+        if (german != null) german = i.apply(german);
+        if (greek != null) greek = i.apply(greek);
+        if (hindi != null) hindi = i.apply(hindi);
+        if (hungarian != null) hungarian = i.apply(hungarian);
+        if (indonesian != null) indonesian = i.apply(indonesian);
+        if (irish != null) irish = i.apply(irish);
+        if (italian != null) italian = i.apply(italian);
+        if (latvian != null) latvian = i.apply(latvian);
+        if (lithuanian != null) lithuanian = i.apply(lithuanian);
+        if (norwegian != null) norwegian = i.apply(norwegian);
+        if (persian != null) persian = i.apply(persian);
+        if (portuguese != null) portuguese = i.apply(portuguese);
+        if (romanian != null) romanian = i.apply(romanian);
+        if (russian != null) russian = i.apply(russian);
+        if (spanish != null) spanish = i.apply(spanish);
+        if (swedish != null) swedish = i.apply(swedish);
+        if (turkish != null) turkish = i.apply(turkish);
+        if (thai != null) thai = i.apply(thai);
     }
 }

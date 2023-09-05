@@ -1,5 +1,7 @@
 package org.jhaws.common.elasticsearch.common;
 
+import java.util.function.UnaryOperator;
+
 import org.apache.commons.lang3.StringUtils;
 
 // @JsonUnwrapped(prefix = "${FIELDNAME}_")
@@ -248,5 +250,16 @@ public class I18N extends I18NBase {
 
     public void setPolish(String polish) {
         this.polish = polish;
+    }
+
+    @Override
+    public void operate(UnaryOperator<String> i) {
+        if (japanese != null) japanese = i.apply(japanese);
+        if (chinese != null) chinese = i.apply(chinese);
+        if (korean != null) korean = i.apply(korean);
+        if (ukrainian != null) ukrainian = i.apply(ukrainian);
+        if (polish != null) polish = i.apply(polish);
+        //
+        super.operate(i);
     }
 }
