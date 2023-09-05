@@ -23,6 +23,8 @@ public interface Filters {
 
     public static final String CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER = "custom_only_keep_alphanumeric_filter";
 
+    public static final String CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER = "custom_only_keep_extended_alphanumeric_filter";
+
     public static final String CUSTOM_ONLY_KEEP_ALPHA_FILTER = "custom_only_keep_alpha_filter";
 
     public static final String CUSTOM_FRENCH_ELISION_FILTER = "custom_french_elision_filter";

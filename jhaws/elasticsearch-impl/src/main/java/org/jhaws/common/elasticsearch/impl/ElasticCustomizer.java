@@ -126,6 +126,7 @@ public class ElasticCustomizer {
         filter.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter());
         filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter());
         filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter());
+        filter.put(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER, customOnlyKeepExtendedAlphaNumericFilter());
         filter.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter());
         filter.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter());
         filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter());
@@ -150,6 +151,7 @@ public class ElasticCustomizer {
         analyzer.put(Analyzers.CUSTOM_SORTABLE_ANALYZER, customSortableAnalyzer());
         analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER, customSortableOnlyAlphaAnalyzer());
         analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER, customSortableOnlyAlphaNumericAnalyzer());
+        analyzer.put(Analyzers.CUSTOM_SORTABLE_EXTENDED_ALPHANUMERIC_ANALYZER, customSortableExtendedAlphaNumericAnalyzer());
         analyzer.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
         analyzer.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
         analyzer.put(Analyzers.CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER, customFoldedLowercaseTokensAnalyzer());
@@ -751,11 +753,28 @@ public class ElasticCustomizer {
         return filterConfig;
     }
 
+    public Map<String, Object> customOnlyKeepExtendedAlphaNumericFilter() {
+        Map<String, Object> filterConfig = new LinkedHashMap<>();
+        filterConfig.put(TYPE, Filter.pattern_replace.id());
+        String pattern = "[^\\p{L}\\p{Nd}]";
+        filterConfig.put(PATTERN, pattern);
+        filterConfig.put(REPLACEMENT, "");
+        return filterConfig;
+    }
+
     public Map<String, Object> customSortableOnlyAlphaNumericAnalyzer() {
         Map<String, Object> analyzerConfig = new LinkedHashMap<>();
         analyzerConfig.put(TYPE, CUSTOM);
         analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
         analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER));
+        return analyzerConfig;
+    }
+
+    public Map<String, Object> customSortableExtendedAlphaNumericAnalyzer() {
+        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
+        analyzerConfig.put(TYPE, CUSTOM);
+        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
+        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER));
         return analyzerConfig;
     }
 
