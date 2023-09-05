@@ -17,6 +17,8 @@ public class I18NBase implements Serializable {
 
     public static final String VALUES = "values";
 
+    public static final String SUFFIX_SORTABLE_EXTENDED = ".sortableExtended";
+
     @Field(type = FieldType.TEXT, fielddata = Bool.TRUE, customAnalyzer = Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER)
     @FieldExtra(value = { @Field(name = "sortableExtended", type = FieldType.TEXT, fielddata = Bool.TRUE, customAnalyzer = Analyzers.CUSTOM_SORTABLE_EXTENDED_ALPHANUMERIC_ANALYZER) })
     protected List<String> values = new ArrayList<>();
