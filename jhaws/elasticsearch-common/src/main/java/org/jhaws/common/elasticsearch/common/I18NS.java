@@ -557,11 +557,11 @@ public class I18NS extends I18NSBase {
     public Map<Language, List<String>> toMap() {
         Map<Language, List<String>> all = super.toMap();
         //
-        if (japanese != null) all.put(Language.japanese, japanese);
-        if (chinese != null) all.put(Language.chinese, chinese);
-        if (korean != null) all.put(Language.korean, korean);
-        if (ukrainian != null) all.put(Language.ukrainian, ukrainian);
-        if (polish != null) all.put(Language.polish, polish);
+        if (japanese != null && !japanese.isEmpty()) all.put(Language.japanese, japanese);
+        if (chinese != null && !chinese.isEmpty()) all.put(Language.chinese, chinese);
+        if (korean != null && !korean.isEmpty()) all.put(Language.korean, korean);
+        if (ukrainian != null && !ukrainian.isEmpty()) all.put(Language.ukrainian, ukrainian);
+        if (polish != null && !polish.isEmpty()) all.put(Language.polish, polish);
         //
         return all;
     }
