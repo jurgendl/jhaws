@@ -132,158 +132,345 @@ public class I18NS extends I18NSBase {
         if (language == null) language = Language.uninitialized;
         switch (language) {
             case arabic:
-                if (arabic == null) arabic = new ArrayList<>();
-                arabic.add(value);
+                if (arabic == null)
+                    arabic = new ArrayList<>();
+                else if (arabic.contains(value))
+                    break;
+                else
+                    arabic.add(value);
                 break;
+
             case armenian:
-                if (armenian == null) armenian = new ArrayList<>();
-                armenian.add(value);
+                if (armenian == null)
+                    armenian = new ArrayList<>();
+                else if (armenian.contains(value))
+                    break;
+                else
+                    armenian.add(value);
                 break;
+
             case basque:
-                if (basque == null) basque = new ArrayList<>();
-                basque.add(value);
+                if (basque == null)
+                    basque = new ArrayList<>();
+                else if (basque.contains(value))
+                    break;
+                else
+                    basque.add(value);
                 break;
+
             case bengali:
-                if (bengali == null) bengali = new ArrayList<>();
-                bengali.add(value);
+                if (bengali == null)
+                    bengali = new ArrayList<>();
+                else if (bengali.contains(value))
+                    break;
+                else
+                    bengali.add(value);
                 break;
+
             case bulgarian:
-                if (bulgarian == null) bulgarian = new ArrayList<>();
-                bulgarian.add(value);
+                if (bulgarian == null)
+                    bulgarian = new ArrayList<>();
+                else if (bulgarian.contains(value))
+                    break;
+                else
+                    bulgarian.add(value);
                 break;
+
             case catalan:
-                if (catalan == null) catalan = new ArrayList<>();
-                catalan.add(value);
+                if (catalan == null)
+                    catalan = new ArrayList<>();
+                else if (catalan.contains(value))
+                    break;
+                else
+                    catalan.add(value);
                 break;
+
             case czech:
-                if (czech == null) czech = new ArrayList<>();
-                czech.add(value);
+                if (czech == null)
+                    czech = new ArrayList<>();
+                else if (czech.contains(value))
+                    break;
+                else
+                    czech.add(value);
                 break;
+
             case danish:
-                if (danish == null) danish = new ArrayList<>();
-                danish.add(value);
+                if (danish == null)
+                    danish = new ArrayList<>();
+                else if (danish.contains(value))
+                    break;
+                else
+                    danish.add(value);
                 break;
+
             case dutch:
-                if (dutch == null) dutch = new ArrayList<>();
-                dutch.add(value);
+                if (dutch == null)
+                    dutch = new ArrayList<>();
+                else if (dutch.contains(value))
+                    break;
+                else
+                    dutch.add(value);
                 break;
+
             case english:
-                if (english == null) english = new ArrayList<>();
-                english.add(value);
+                if (english == null)
+                    english = new ArrayList<>();
+                else if (english.contains(value))
+                    break;
+                else
+                    english.add(value);
                 break;
+
             case estonian:
-                if (estonian == null) estonian = new ArrayList<>();
-                estonian.add(value);
+                if (estonian == null)
+                    estonian = new ArrayList<>();
+                else if (estonian.contains(value))
+                    break;
+                else
+                    estonian.add(value);
                 break;
+
             case finnish:
-                if (finnish == null) finnish = new ArrayList<>();
-                finnish.add(value);
+                if (finnish == null)
+                    finnish = new ArrayList<>();
+                else if (finnish.contains(value))
+                    break;
+                else
+                    finnish.add(value);
                 break;
+
             case french:
-                if (french == null) french = new ArrayList<>();
-                french.add(value);
+                if (french == null)
+                    french = new ArrayList<>();
+                else if (french.contains(value))
+                    break;
+                else
+                    french.add(value);
                 break;
+
             case galician:
-                if (galician == null) galician = new ArrayList<>();
-                galician.add(value);
+                if (galician == null)
+                    galician = new ArrayList<>();
+                else if (galician.contains(value))
+                    break;
+                else
+                    galician.add(value);
                 break;
+
             case german:
-                if (german == null) german = new ArrayList<>();
-                german.add(value);
+                if (german == null)
+                    german = new ArrayList<>();
+                else if (german.contains(value))
+                    break;
+                else
+                    german.add(value);
                 break;
+
             case greek:
-                if (greek == null) greek = new ArrayList<>();
-                greek.add(value);
+                if (greek == null)
+                    greek = new ArrayList<>();
+                else if (greek.contains(value))
+                    break;
+                else
+                    greek.add(value);
                 break;
+
             case hindi:
-                if (hindi == null) hindi = new ArrayList<>();
-                hindi.add(value);
+                if (hindi == null)
+                    hindi = new ArrayList<>();
+                else if (hindi.contains(value))
+                    break;
+                else
+                    hindi.add(value);
                 break;
+
             case hungarian:
-                if (hungarian == null) hungarian = new ArrayList<>();
-                hungarian.add(value);
+                if (hungarian == null)
+                    hungarian = new ArrayList<>();
+                else if (hungarian.contains(value))
+                    break;
+                else
+                    hungarian.add(value);
                 break;
+
             case indonesian:
-                if (indonesian == null) indonesian = new ArrayList<>();
-                indonesian.add(value);
+                if (indonesian == null)
+                    indonesian = new ArrayList<>();
+                else if (indonesian.contains(value))
+                    break;
+                else
+                    indonesian.add(value);
                 break;
+
             case irish:
-                if (irish == null) irish = new ArrayList<>();
-                irish.add(value);
+                if (irish == null)
+                    irish = new ArrayList<>();
+                else if (irish.contains(value))
+                    break;
+                else
+                    irish.add(value);
                 break;
+
             case italian:
-                if (italian == null) italian = new ArrayList<>();
-                italian.add(value);
+                if (italian == null)
+                    italian = new ArrayList<>();
+                else if (italian.contains(value))
+                    break;
+                else
+                    italian.add(value);
                 break;
+
             case latvian:
-                if (latvian == null) latvian = new ArrayList<>();
-                latvian.add(value);
+                if (latvian == null)
+                    latvian = new ArrayList<>();
+                else if (latvian.contains(value))
+                    break;
+                else
+                    latvian.add(value);
                 break;
+
             case lithuanian:
-                if (lithuanian == null) lithuanian = new ArrayList<>();
-                lithuanian.add(value);
+                if (lithuanian == null)
+                    lithuanian = new ArrayList<>();
+                else if (lithuanian.contains(value))
+                    break;
+                else
+                    lithuanian.add(value);
                 break;
+
             case norwegian:
-                if (norwegian == null) norwegian = new ArrayList<>();
-                norwegian.add(value);
+                if (norwegian == null)
+                    norwegian = new ArrayList<>();
+                else if (norwegian.contains(value))
+                    break;
+                else
+                    norwegian.add(value);
                 break;
+
             case persian:
-                if (persian == null) persian = new ArrayList<>();
-                persian.add(value);
+                if (persian == null)
+                    persian = new ArrayList<>();
+                else if (persian.contains(value))
+                    break;
+                else
+                    persian.add(value);
                 break;
+
             case portuguese:
-                if (portuguese == null) portuguese = new ArrayList<>();
-                portuguese.add(value);
+                if (portuguese == null)
+                    portuguese = new ArrayList<>();
+                else if (portuguese.contains(value))
+                    break;
+                else
+                    portuguese.add(value);
                 break;
+
             case romanian:
-                if (romanian == null) romanian = new ArrayList<>();
-                romanian.add(value);
+                if (romanian == null)
+                    romanian = new ArrayList<>();
+                else if (romanian.contains(value))
+                    break;
+                else
+                    romanian.add(value);
                 break;
+
             case russian:
-                if (russian == null) russian = new ArrayList<>();
-                russian.add(value);
+                if (russian == null)
+                    russian = new ArrayList<>();
+                else if (russian.contains(value))
+                    break;
+                else
+                    russian.add(value);
                 break;
+
             case spanish:
-                if (spanish == null) spanish = new ArrayList<>();
-                spanish.add(value);
+                if (spanish == null)
+                    spanish = new ArrayList<>();
+                else if (spanish.contains(value))
+                    break;
+                else
+                    spanish.add(value);
                 break;
+
             case swedish:
-                if (swedish == null) swedish = new ArrayList<>();
-                swedish.add(value);
+                if (swedish == null)
+                    swedish = new ArrayList<>();
+                else if (swedish.contains(value))
+                    break;
+                else
+                    swedish.add(value);
                 break;
+
             case turkish:
-                if (turkish == null) turkish = new ArrayList<>();
-                turkish.add(value);
+                if (turkish == null)
+                    turkish = new ArrayList<>();
+                else if (turkish.contains(value))
+                    break;
+                else
+                    turkish.add(value);
                 break;
+
             case thai:
-                if (thai == null) thai = new ArrayList<>();
-                thai.add(value);
+                if (thai == null)
+                    thai = new ArrayList<>();
+                else if (thai.contains(value))
+                    break;
+                else
+                    thai.add(value);
                 break;
-            //
+
             case japanese:
-                if (japanese == null) japanese = new ArrayList<>();
-                japanese.add(value);
+                if (japanese == null)
+                    japanese = new ArrayList<>();
+                else if (japanese.contains(value))
+                    break;
+                else
+                    japanese.add(value);
                 break;
+
             case chinese:
-                if (chinese == null) chinese = new ArrayList<>();
-                chinese.add(value);
+                if (chinese == null)
+                    chinese = new ArrayList<>();
+                else if (chinese.contains(value))
+                    break;
+                else
+                    chinese.add(value);
                 break;
+
             case korean:
-                if (korean == null) korean = new ArrayList<>();
-                korean.add(value);
+                if (korean == null)
+                    korean = new ArrayList<>();
+                else if (korean.contains(value))
+                    break;
+                else
+                    korean.add(value);
                 break;
+
             case ukrainian:
-                if (ukrainian == null) ukrainian = new ArrayList<>();
-                ukrainian.add(value);
+                if (ukrainian == null)
+                    ukrainian = new ArrayList<>();
+                else if (ukrainian.contains(value))
+                    break;
+                else
+                    ukrainian.add(value);
                 break;
+
             case polish:
-                if (polish == null) polish = new ArrayList<>();
-                polish.add(value);
+                if (polish == null)
+                    polish = new ArrayList<>();
+                else if (polish.contains(value))
+                    break;
+                else
+                    polish.add(value);
                 break;
             //
             default:
-                if (unknown == null) unknown = new ArrayList<>();
-                unknown.add(value);
+                if (unknown == null)
+                    unknown = new ArrayList<>();
+                else if (unknown.contains(value))
+                    break;
+                else
+                    unknown.add(value);
                 break;
         }
     }
