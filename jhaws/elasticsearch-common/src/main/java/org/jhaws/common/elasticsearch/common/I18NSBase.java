@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.UnaryOperator;
@@ -1008,5 +1010,45 @@ public class I18NSBase implements Serializable {
         if (swedish != null) swedish = i.apply(swedish);
         if (turkish != null) turkish = i.apply(turkish);
         if (thai != null) thai = i.apply(thai);
+    }
+
+    public Map<Language, List<String>> toMap() {
+        Map<Language, List<String>> all = new HashMap<>();
+        all.put(Language.uninitialized, unknown);
+        //
+        if (arabic != null) all.put(Language.arabic, arabic);
+        if (armenian != null) all.put(Language.armenian, armenian);
+        if (basque != null) all.put(Language.basque, basque);
+        if (bengali != null) all.put(Language.bengali, bengali);
+        if (bulgarian != null) all.put(Language.bulgarian, bulgarian);
+        if (catalan != null) all.put(Language.catalan, catalan);
+        if (czech != null) all.put(Language.czech, czech);
+        if (danish != null) all.put(Language.danish, danish);
+        if (dutch != null) all.put(Language.dutch, dutch);
+        if (english != null) all.put(Language.english, english);
+        if (estonian != null) all.put(Language.estonian, estonian);
+        if (finnish != null) all.put(Language.finnish, finnish);
+        if (french != null) all.put(Language.french, french);
+        if (galician != null) all.put(Language.galician, galician);
+        if (german != null) all.put(Language.german, german);
+        if (greek != null) all.put(Language.greek, greek);
+        if (hindi != null) all.put(Language.hindi, hindi);
+        if (hungarian != null) all.put(Language.hungarian, hungarian);
+        if (indonesian != null) all.put(Language.indonesian, indonesian);
+        if (irish != null) all.put(Language.irish, irish);
+        if (italian != null) all.put(Language.italian, italian);
+        if (latvian != null) all.put(Language.latvian, latvian);
+        if (lithuanian != null) all.put(Language.lithuanian, lithuanian);
+        if (norwegian != null) all.put(Language.norwegian, norwegian);
+        if (persian != null) all.put(Language.persian, persian);
+        if (portuguese != null) all.put(Language.portuguese, portuguese);
+        if (romanian != null) all.put(Language.romanian, romanian);
+        if (russian != null) all.put(Language.russian, russian);
+        if (spanish != null) all.put(Language.spanish, spanish);
+        if (swedish != null) all.put(Language.swedish, swedish);
+        if (turkish != null) all.put(Language.turkish, turkish);
+        if (thai != null) all.put(Language.thai, thai);
+        //
+        return all;
     }
 }

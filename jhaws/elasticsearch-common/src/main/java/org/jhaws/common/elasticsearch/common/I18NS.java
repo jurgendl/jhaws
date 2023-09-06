@@ -3,6 +3,7 @@ package org.jhaws.common.elasticsearch.common;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -550,5 +551,18 @@ public class I18NS extends I18NSBase {
         if (polish != null) polish = i.apply(polish);
         //
         super.operate(i);
+    }
+
+    @Override
+    public Map<Language, List<String>> toMap() {
+        Map<Language, List<String>> all = super.toMap();
+        //
+        if (japanese != null) all.put(Language.japanese, japanese);
+        if (chinese != null) all.put(Language.chinese, chinese);
+        if (korean != null) all.put(Language.korean, korean);
+        if (ukrainian != null) all.put(Language.ukrainian, ukrainian);
+        if (polish != null) all.put(Language.polish, polish);
+        //
+        return all;
     }
 }
