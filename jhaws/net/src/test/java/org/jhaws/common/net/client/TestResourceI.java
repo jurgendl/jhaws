@@ -28,183 +28,183 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
-@Path(TestResource.PATH)
+@Path(TestResourceI.PATH)
 @Consumes(MediaType.APPLICATION_OCTET_STREAM)
 @Produces(MediaType.TEXT_PLAIN)
 public interface TestResourceI /* extends RestResource */ {
-    String IS = "=";
+	String IS = "=";
 
-    String GET_MATRIXBEAN = "getmatrixbean";
+	String GET_MATRIXBEAN = "getmatrixbean";
 
-    String GET_MATRIXBEANI = "getmatrixbeani";
+	String GET_MATRIXBEANI = "getmatrixbeani";
 
-    String GET_HEADERINFO = "headerinfo";
+	String GET_HEADERINFO = "headerinfo";
 
-    String GET_COOKIEINFO = "cookieinfo";
+	String GET_COOKIEINFO = "cookieinfo";
 
-    String PATH_PARAM = "pathParam";
+	String PATH_PARAM = "pathParam";
 
-    String QUERY_PARAM = "queryParam";
+	String QUERY_PARAM = "queryParam";
 
-    String FORM_PARAM = "formParam";
+	String FORM_PARAM = "formParam";
 
-    String PATH = "testresource";
+	String PATH = "testresource";
 
-    String GET = "get";
+	String GET = "get";
 
-    // String HEAD = "head";
+	// String HEAD = "head";
 
-    String GET_DOUBLE = "getdouble";
+	String GET_DOUBLE = "getdouble";
 
-    String MATRIX_PARAMS = "matrixparams";
+	String MATRIX_PARAMS = "matrixparams";
 
-    String MATRIX_PATH = "matrix/";
+	String MATRIX_PATH = "matrix/";
 
-    String MATRIX = MATRIX_PATH + "{" + MATRIX_PARAMS + "}";
+	String MATRIX = MATRIX_PATH + "{" + MATRIX_PARAMS + "}";
 
-    String GET_BODY = "getbody";
+	String GET_BODY = "getbody";
 
-    String PUT = "put/{" + PATH_PARAM + "}";
+	String PUT = "put/{" + PATH_PARAM + "}";
 
-    String POST = "post";
+	String POST = "post";
 
-    String POST_MULTI = "postmulti";
+	String POST_MULTI = "postmulti";
 
-    String DELETE = "delete/{" + PATH_PARAM + "}";
+	String DELETE = "delete/{" + PATH_PARAM + "}";
 
-    String GET_WITH_PARAMS = "getwithparams/{" + PATH_PARAM + "}";
+	String GET_WITH_PARAMS = "getwithparams/{" + PATH_PARAM + "}";
 
-    String GET_WITH_QUERY = "getwithquery";
+	String GET_WITH_QUERY = "getwithquery";
 
-    String STREAM_IN = "streamin";
+	String STREAM_IN = "streamin";
 
-    String STREAM_OUT = "streamout";
+	String STREAM_OUT = "streamout";
 
-    @GET
-    // @HEAD
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path("ping")
-    String ping();
+	@GET
+	// @HEAD
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path("ping")
+	String ping();
 
-    @GET
-    @Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
-    @Path(GET_BODY)
-    TestBody getBody();
+	@GET
+	@Produces({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+	@Path(GET_BODY)
+	TestBody getBody();
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path(GET)
-    String get();
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path(GET)
+	String get();
 
-    // @HEAD
-    // @Path(HEAD)
-    // void head();
+	// @HEAD
+	// @Path(HEAD)
+	// void head();
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path(GET_WITH_PARAMS)
-    String getWithParams(@PathParam(PATH_PARAM) String pathParam);
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path(GET_WITH_PARAMS)
+	String getWithParams(@PathParam(PATH_PARAM) String pathParam);
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @Path(GET_WITH_QUERY)
-    String getWithQuery(@QueryParam(QUERY_PARAM) String queryParam);
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	@Path(GET_WITH_QUERY)
+	String getWithQuery(@QueryParam(QUERY_PARAM) String queryParam);
 
-    @PUT
-    @Path(PUT)
-    @Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
-    void put(@PathParam(PATH_PARAM) String pathParam, TestBody testBody);
+	@PUT
+	@Path(PUT)
+	@Consumes({ MediaType.TEXT_XML, MediaType.APPLICATION_XML })
+	void put(@PathParam(PATH_PARAM) String pathParam, TestBody testBody);
 
-    @DELETE
-    @Path(DELETE)
-    void delete(@PathParam(PATH_PARAM) String pathParam);
+	@DELETE
+	@Path(DELETE)
+	void delete(@PathParam(PATH_PARAM) String pathParam);
 
-    @POST
-    @Path(POST)
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    String post(@FormParam(FORM_PARAM) String formParam);
+	@POST
+	@Path(POST)
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	String post(@FormParam(FORM_PARAM) String formParam);
 
-    @POST
-    @Path(POST_MULTI)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    String uploadFile(MultipartFormDataInput input);
+	@POST
+	@Path(POST_MULTI)
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	String uploadFile(MultipartFormDataInput input);
 
-    @POST
-    @Path(STREAM_IN)
-    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    void stream(@HeaderParam("filename") String filename, InputStream fileinput);
+	@POST
+	@Path(STREAM_IN)
+	@Consumes(MediaType.APPLICATION_OCTET_STREAM)
+	void stream(@HeaderParam("filename") String filename, InputStream fileinput);
 
-    @GET
-    @Path(STREAM_OUT)
-    @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    StreamingOutput stream();
+	@GET
+	@Path(STREAM_OUT)
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	StreamingOutput stream();
 
-    @Path(GET_DOUBLE)
-    @Produces(MediaType.TEXT_XML)
-    String getDoubleXml();
+	@Path(GET_DOUBLE)
+	@Produces(MediaType.TEXT_XML)
+	String getDoubleXml();
 
-    @Path(GET_DOUBLE)
-    @Produces(MediaType.TEXT_XML)
-    String getDoublePlain();
+	@Path(GET_DOUBLE)
+	@Produces(MediaType.TEXT_XML)
+	String getDoublePlain();
 
-    @GET
-    @Path(GET_HEADERINFO)
-    @Produces(MediaType.TEXT_PLAIN)
-    String headers(//
-            String Accept, //
-            String Accept_Charset, //
-            String Accept_Encoding, //
-            String Accept_Language, //
-            String Accept_Datetime, //
-            // Authorization
-            String Cache_Control, //
-            String Connection, //
-            Long Content_Length, //
-            String Content_Type, //
-            Date Date, //
-            String Expect, //
-            String From_email, //
-            Date If_Modified_Since, //
-            String Origin, //
-            String Range, //
-            String Referer, //
-            String User_Agent//
-    );
+	@GET
+	@Path(GET_HEADERINFO)
+	@Produces(MediaType.TEXT_PLAIN)
+	String headers(//
+			String Accept, //
+			String Accept_Charset, //
+			String Accept_Encoding, //
+			String Accept_Language, //
+			String Accept_Datetime, //
+			// Authorization
+			String Cache_Control, //
+			String Connection, //
+			Long Content_Length, //
+			String Content_Type, //
+			Date Date, //
+			String Expect, //
+			String From_email, //
+			Date If_Modified_Since, //
+			String Origin, //
+			String Range, //
+			String Referer, //
+			String User_Agent//
+	);
 
-    @GET
-    @Path(GET_COOKIEINFO)
-    @Produces(MediaType.TEXT_PLAIN)
-    String cookies(@HeaderParam("JSESSIONID") String JSESSIONID);
+	@GET
+	@Path(GET_COOKIEINFO)
+	@Produces(MediaType.TEXT_PLAIN)
+	String cookies(@HeaderParam("JSESSIONID") String JSESSIONID);
 
-    @GET
-    @Path("a")
-    String get(@Context HttpHeaders hh);
+	@GET
+	@Path("a")
+	String get(@Context HttpHeaders hh);
 
-    @GET
-    @Path("b")
-    String get(@Context UriInfo ui);
+	@GET
+	@Path("b")
+	String get(@Context UriInfo ui);
 
-    @GET
-    @Path("c")
-    String get(@Context Request req);
+	@GET
+	@Path("c")
+	String get(@Context Request req);
 
-    @GET
-    @Path("d")
-    String get(@Context HttpServletRequest req);
+	@GET
+	@Path("d")
+	String get(@Context HttpServletRequest req);
 
-    @GET
-    @Path("e")
-    String get(@Context ServletConfig req);
+	@GET
+	@Path("e")
+	String get(@Context ServletConfig req);
 
-    @GET
-    @Path("f")
-    String get(@Context ServletContext req);
+	@GET
+	@Path("f")
+	String get(@Context ServletContext req);
 
-    @GET
-    @Path("g")
-    String get(@Context SecurityContext req);
+	@GET
+	@Path("g")
+	String get(@Context SecurityContext req);
 
-    @GET
-    @Path(MATRIX)
-    String matrixParams(@PathParam(MATRIX_PARAMS) PathSegment matrix);
+	@GET
+	@Path(MATRIX)
+	String matrixParams(@PathParam(MATRIX_PARAMS) PathSegment matrix);
 }
