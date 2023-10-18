@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<!-- https://repo1.maven.org/maven2/org/springframework/boot/spring-boot-dependencies/2.2.6.RELEASE/spring-boot-dependencies-2.2.6.RELEASE.pom -->
@@ -18,7 +17,7 @@
 	<packaging>pom</packaging>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>jhaws-spring-boot-24-parent</artifactId>
-	<version>5.0.3-SNAPSHOT</version>
+	<version>5.0.3</version>
 	<name>jhaws-spring-boot-24-parent</name>
 	<description>jhaws-spring-boot-24-parent</description>
 	<properties>
@@ -428,4 +427,8 @@
 		</dependency>
 		<!-- _________________________ -->
 	</dependencies>
+
+  <scm>
+    <tag>jhaws-modules-5.0.3</tag>
+  </scm>
 </project>
