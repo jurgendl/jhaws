@@ -1442,6 +1442,7 @@
 				<groupId>org.apache.pdfbox</groupId>
 				<artifactId>pdfbox</artifactId>
 				<version>${version.pdfbox}</version>
+				<type>jar</type>
 				<exclusions>
 					<exclusion>
 						<groupId>commons-logging</groupId>
