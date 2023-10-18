@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>jhaws-modules</artifactId>
-	<version>5.0.4-SNAPSHOT</version>
+	<version>5.0.4</version>
 	<packaging>pom</packaging>
 	<name>jhaws-modules</name>
 	<description>jhaws-modules</description>
@@ -1622,7 +1621,7 @@
 		<connection>scm:git:git@github.com:jurgendl/jhaws.git</connection>
 		<url>scm:git:git@github.com:jurgendl/jhaws.git</url>
 		<developerConnection>scm:git:git@github.com:jurgendl/jhaws.git</developerConnection>
-		<tag>modules-2.0.1</tag>
+		<tag>jhaws-modules-5.0.4</tag>
 	</scm>
 	<repositories>
 		<repository>
