@@ -21,11 +21,11 @@
 	<!--(push/stash changes) -->
 	<!--set JAVA_HOME=C:\Program Files\AdoptOpenJDK\jdk-11.0.4.11-hotspot -->
 	<!--mvn release:prepare -->
-	<!--git checkout -b branch_jhaws-modules-5.0.3 jhaws-modules-5.0.3 -->
+	<!--git checkout -b branch_jhaws-modules-5.0.4 jhaws-modules-5.0.4 -->
 	<!--mvn -DaltDeploymentRepository=repo::default::file:../../mvn-repo/releases clean deploy -->
 	<!--git checkout master -->
 	<!--mvn release:clean -->
-	<!--((mvn versions:set -DgenerateBackupPoms=false -DnewVersion=5.0.4-SNAPSHOT)) -->
+	<!--((mvn versions:set -DgenerateBackupPoms=false -DnewVersion=5.0.5-SNAPSHOT)) -->
 	<!--delete pom.xml.releaseBackup & release.properties & pom.xml.releaseBackup & pom.xml.versionsBackup -->
 	<!--((commit/commit/push)) -->
 
