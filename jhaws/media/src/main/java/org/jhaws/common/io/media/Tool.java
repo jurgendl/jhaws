@@ -92,6 +92,18 @@ public abstract class Tool {
 		return "\"" + string + "\"";
 	}
 
+	public static void call(FilePath command) {
+		call(null, new org.jhaws.common.io.console.Processes.Log(), command.getParentPath(), Arrays.asList(command.getAbsolutePath()), true, null);
+	}
+
+	public static void call(FilePath dir, String command) {
+		call(null, new org.jhaws.common.io.console.Processes.Log(), dir, Arrays.asList(command), true, null);
+	}
+
+	public static void call(FilePath dir, List<String> command) {
+		call(null, new org.jhaws.common.io.console.Processes.Log(), dir, command, true, null);
+	}
+
 	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
 		return call(processHolder, lines, dir, command, true, null);
 	}
