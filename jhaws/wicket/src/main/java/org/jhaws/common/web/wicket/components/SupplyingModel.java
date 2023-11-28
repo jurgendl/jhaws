@@ -7,7 +7,7 @@ import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 @SuppressWarnings("serial")
 public class SupplyingModel<T> extends LoadableDetachableModel<T> {
-	private SerializableSupplier<T> supplier;
+	protected SerializableSupplier<T> supplier;
 
 	public SupplyingModel(SerializableSupplier<T> supplier) {
 		setSupplier(supplier);

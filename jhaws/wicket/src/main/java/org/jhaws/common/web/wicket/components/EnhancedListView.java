@@ -14,127 +14,142 @@ import org.apache.wicket.model.util.ListModel;
 
 @SuppressWarnings("serial")
 public class EnhancedListView<T> extends ListView<T> {
-    protected BooleanSupplier visiblePredicate;
+	protected BooleanSupplier visiblePredicate;
 
-    protected Consumer<ListItem<T>> itemizer;
+	protected Consumer<ListItem<T>> itemizer;
 
-    public EnhancedListView(String id, ListModel<T> model) {
-        super(id, model);
-    }
+	public EnhancedListView(String id, IModel<? extends List<T>> model) {
+		super(id, model);
+	}
 
-    public EnhancedListView(String id, List<T> list) {
-        super(id, list);
-    }
+	public EnhancedListView(String id, ListModel<T> model) {
+		super(id, model);
+	}
 
-    public EnhancedListView(String id) {
-        super(id);
-    }
+	public EnhancedListView(String id, List<T> list) {
+		super(id, list);
+	}
 
-    public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView(String id, ListModel<T> model, I itemizer) {
-        super(id, model);
-        setItemizer(itemizer);
-    }
+	public EnhancedListView(String id) {
+		super(id);
+	}
 
-    public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView(String id, List<T> list, I itemizer) {
-        super(id, list);
-        setItemizer(itemizer);
-    }
+	public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView(String id, IModel<? extends List<T>> model,
+			I itemizer) {
+		super(id, model);
+		setItemizer(itemizer);
+	}
 
-    public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView(String id, I itemizer) {
-        super(id);
-        setItemizer(itemizer);
-    }
+	public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView(String id, ListModel<T> model,
+			I itemizer) {
+		super(id, model);
+		setItemizer(itemizer);
+	}
 
-    @Override
-    protected void populateItem(ListItem<T> item) {
-        itemizer.accept(item);
-    }
+	public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView(String id, List<T> list, I itemizer) {
+		super(id, list);
+		setItemizer(itemizer);
+	}
 
-    public Consumer<ListItem<T>> getItemizer() {
-        return this.itemizer;
-    }
+	public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView(String id, I itemizer) {
+		super(id);
+		setItemizer(itemizer);
+	}
 
-    public <I extends Consumer<ListItem<T>> & Serializable> void setItemizer(I itemizer) {
-        this.itemizer = itemizer;
-    }
+	@Override
+	protected void populateItem(ListItem<T> item) {
+		itemizer.accept(item);
+	}
 
-    public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView<T> itemizer(I itemizer0) {
-        setItemizer(itemizer0);
-        return this;
-    }
+	public Consumer<ListItem<T>> getItemizer() {
+		return this.itemizer;
+	}
 
-    @Override
-    protected void onConfigure() {
-        super.onConfigure();
-        if (visiblePredicate != null) {
-            setVisible(visiblePredicate.getAsBoolean());
-        }
-    }
+	public <I extends Consumer<ListItem<T>> & Serializable> void setItemizer(I itemizer) {
+		this.itemizer = itemizer;
+	}
 
-    public BooleanSupplier getVisiblePredicate() {
-        return this.visiblePredicate;
-    }
+	public <I extends Consumer<ListItem<T>> & Serializable> EnhancedListView<T> itemizer(I itemizer0) {
+		setItemizer(itemizer0);
+		return this;
+	}
 
-    public <P extends BooleanSupplier & Serializable> void setVisiblePredicate(P visiblePredicate) {
-        this.visiblePredicate = visiblePredicate;
-    }
+	@Override
+	protected void onConfigure() {
+		super.onConfigure();
+		if (visiblePredicate != null) {
+			setVisible(visiblePredicate.getAsBoolean());
+		}
+	}
 
-    public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model, P visiblePredicate) {
-        setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
-    }
+	public BooleanSupplier getVisiblePredicate() {
+		return this.visiblePredicate;
+	}
 
-    public void setVisiblePredicate(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel, StringUtils::isNotBlank);
-    }
+	public <P extends BooleanSupplier & Serializable> void setVisiblePredicate(P visiblePredicate) {
+		this.visiblePredicate = visiblePredicate;
+	}
 
-    public void setVisiblePredicate(ListModel<?> listModel) {
-        setVisiblePredicate(listModel, list -> list != null && !list.isEmpty());
-    }
+	public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model,
+			P visiblePredicate) {
+		setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
+	}
 
-    public void setVisiblePredicateInvers(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel, StringUtils::isBlank);
-    }
+	public void setVisiblePredicate(IModel<String> stringModel) {
+		setVisiblePredicate(stringModel, StringUtils::isNotBlank);
+	}
 
-    public void setVisiblePredicateInvers(ListModel<?> listModel) {
-        setVisiblePredicate(listModel, list -> list == null || list.isEmpty());
-    }
+	public void setVisiblePredicate(ListModel<?> listModel) {
+		setVisiblePredicate(listModel, list -> list != null && !list.isEmpty());
+	}
 
-    public <P extends BooleanSupplier & Serializable> EnhancedListView<T> visiblePredicate(P _visiblePredicate) {
-        setVisiblePredicate(_visiblePredicate);
-        return this;
-    }
+	public void setVisiblePredicateInvers(IModel<String> stringModel) {
+		setVisiblePredicate(stringModel, StringUtils::isBlank);
+	}
 
-    public <M, P extends Function<M, Boolean> & Serializable> EnhancedListView<T> visiblePredicate(IModel<M> model, P _visiblePredicate) {
-        setVisiblePredicate(model, _visiblePredicate);
-        return this;
-    }
+	public void setVisiblePredicateInvers(ListModel<?> listModel) {
+		setVisiblePredicate(listModel, list -> list == null || list.isEmpty());
+	}
 
-    public EnhancedListView<T> visiblePredicate(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel);
-        return this;
-    }
+	public <P extends BooleanSupplier & Serializable> EnhancedListView<T> visiblePredicate(P _visiblePredicate) {
+		setVisiblePredicate(_visiblePredicate);
+		return this;
+	}
 
-    public EnhancedListView<T> visiblePredicate(ListModel<?> listModel) {
-        setVisiblePredicate(listModel);
-        return this;
-    }
+	public <M, P extends Function<M, Boolean> & Serializable> EnhancedListView<T> visiblePredicate(IModel<M> model,
+			P _visiblePredicate) {
+		setVisiblePredicate(model, _visiblePredicate);
+		return this;
+	}
 
-    public EnhancedListView<T> visiblePredicateInvers(IModel<String> stringModel) {
-        setVisiblePredicateInvers(stringModel);
-        return this;
-    }
+	public EnhancedListView<T> visiblePredicate(IModel<String> stringModel) {
+		setVisiblePredicate(stringModel);
+		return this;
+	}
 
-    public EnhancedListView<T> visiblePredicateInvers(ListModel<?> listModel) {
-        setVisiblePredicateInvers(listModel);
-        return this;
-    }
+	public EnhancedListView<T> visiblePredicate(ListModel<?> listModel) {
+		setVisiblePredicate(listModel);
+		return this;
+	}
 
-    public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicateInvers(IModel<M> model, P visiblePredicate) {
-        setVisiblePredicate(() -> !visiblePredicate.apply(model.getObject()));
-    }
+	public EnhancedListView<T> visiblePredicateInvers(IModel<String> stringModel) {
+		setVisiblePredicateInvers(stringModel);
+		return this;
+	}
 
-    public <M, P extends Function<M, Boolean> & Serializable> EnhancedListView<T> visiblePredicateInvers(IModel<M> model, P visiblePredicate0) {
-        setVisiblePredicateInvers(model, visiblePredicate0);
-        return this;
-    }
+	public EnhancedListView<T> visiblePredicateInvers(ListModel<?> listModel) {
+		setVisiblePredicateInvers(listModel);
+		return this;
+	}
+
+	public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicateInvers(IModel<M> model,
+			P visiblePredicate) {
+		setVisiblePredicate(() -> !visiblePredicate.apply(model.getObject()));
+	}
+
+	public <M, P extends Function<M, Boolean> & Serializable> EnhancedListView<T> visiblePredicateInvers(
+			IModel<M> model, P visiblePredicate0) {
+		setVisiblePredicateInvers(model, visiblePredicate0);
+		return this;
+	}
 }

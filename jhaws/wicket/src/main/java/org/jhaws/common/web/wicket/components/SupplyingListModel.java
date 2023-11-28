@@ -8,7 +8,7 @@ import org.danekja.java.util.function.serializable.SerializableSupplier;
 
 @SuppressWarnings("serial")
 public class SupplyingListModel<T> extends org.apache.wicket.model.util.ListModel<T> {
-	private SerializableSupplier<List<T>> supplier;
+	protected SerializableSupplier<List<T>> supplier;
 
 	public SupplyingListModel(SerializableSupplier<List<T>> supplier) {
 		setSupplier(supplier);
