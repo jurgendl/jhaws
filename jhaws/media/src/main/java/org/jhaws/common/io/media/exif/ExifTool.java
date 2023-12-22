@@ -11,8 +11,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -454,6 +458,105 @@ public class ExifTool extends Tool implements MediaCte {
 				.findFirst().orElse(null);
 	}
 
+	public List<ExifInfo> exifInfoMulti(FilePath sameDriveTmp, List<FilePath> p) {
+		List<ExifInfo> exifinfo = new ArrayList<>(p.size());
+		for (int i = 0; i < p.size(); i++) {
+			exifinfo.add(new ExifInfoImpl());
+		}
+		return exifInfoMulti(sameDriveTmp, p, exifinfo);
+	}
+
+	public static boolean containsNonUTF8Characters(String input) {
+		try {
+			String clean = input.replace(" ", "_").replace("%", "_").replace("/", "_").replace("\\", "_").replace(":", "_");
+			String encoded = URLEncoder.encode(clean, "utf-8");
+			return !clean.equals(encoded);
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public List<ExifInfo> exifInfoMulti(FilePath sameDriveTmp, List<FilePath> p, List<ExifInfo> exifinfos) {
+		if (p.size() != exifinfos.size())
+			throw new IllegalArgumentException();
+		for (FilePath pp : p)
+			if (pp.notExists())
+				throw new IllegalArgumentException();
+		if (executable.notExists())
+			throw new IllegalArgumentException();
+		if (p.size() == 1)
+			return Arrays.asList(exifInfo(p.get(0), exifinfos.get(0)));
+		FilePath tmpFolder = FilePath.createTempDirectory();
+		tmpFolder.createDirectory();
+
+		FilePath jsonFile = tmpFolder.child(System.currentTimeMillis() + ".json");
+		List<String> command = new ArrayList<String>(Arrays.asList(//
+				command(executable) //
+				, "-q"//
+				, "-json"//
+				, "-W+!"//
+				, "\"" + jsonFile.getAbsolutePath() + "\""//
+		));
+		Map<String, FilePath> nameMapping = new HashMap<>();
+		List<Path> links = new ArrayList<>();
+		p.stream().forEach(a -> {
+			String absolutePath = a.getAbsolutePath();
+			if (containsNonUTF8Characters(absolutePath)) {
+				FilePath tmp = sameDriveTmp.child("" + System.currentTimeMillis());
+				try {
+					links.add(Files.createLink(tmp.toPath(), a.toPath()));
+				} catch (IOException ex) {
+					throw new UncheckedIOException(ex);
+				}
+				absolutePath = tmp.getAbsolutePath();
+			}
+			absolutePath = absolutePath.replace("\\", "/");
+			nameMapping.put(absolutePath, a);
+			command.add("\"" + absolutePath + "\"");
+		});
+		String jc = join(command);
+		try {
+			loggeri.trace(jc);
+
+			List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command, executable.getParentPath(), null, null, new Lines()).lines().stream()
+					.collect(collectList());
+
+			lines.forEach(System.out::println);
+
+			String jsonString = jsonFile.readAll();
+
+			JsonStructure jso = Json.createReader(new InputStreamReader(new ByteArrayInputStream(jsonString.getBytes()))).read();
+			JsonArray arr = jso.asJsonArray();
+			for (int i = 0; i < arr.size(); i++) {
+				JsonValue it = arr.get(i);
+				@SuppressWarnings("unchecked")
+				Map<String, Object> all = (Map<String, Object>) it;
+				String sourceFile = ((JsonString) all.get("SourceFile")).getString().replace("\\", "/");
+				FilePath corr = nameMapping.get(sourceFile);
+				int indexOf = p.indexOf(corr);
+				ExifInfo exifinfo = exifinfos.get(indexOf);
+				Map<String, String> all2 = exifinfo.getAll();
+				extracted(p.get(indexOf), exifinfo, all, all2);
+			}
+		} catch (Exception ex) {
+			loggeri.error("{}", p, ex);
+		}
+
+		links.forEach(x -> {
+			try {
+				Files.delete(x);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		});
+
+		for (FilePath pp : p)
+			if (pp.notExists())
+				throw new IllegalArgumentException();
+
+		return exifinfos;
+	}
+
 	public ExifInfo exifInfo(FilePath p) {
 		return exifInfo(p, new ExifInfoImpl());
 	}
@@ -521,53 +624,57 @@ public class ExifTool extends Tool implements MediaCte {
 				@SuppressWarnings("unchecked")
 				Map<String, Object> all = (Map<String, Object>) jso.asJsonArray().get(0);
 				Map<String, String> all2 = exifinfo.getAll();
-				all.entrySet().forEach(e -> all2.put(e.getKey(), toString(e.getValue())));
-
-				exifinfo.setW(Integer.parseInt(exifinfo.values("0", IW, W)));
-				exifinfo.setH(Integer.parseInt(exifinfo.values("0", IH, H)));
-				exifinfo.setOrientation(exifinfo.value(Pattern.compile("^Orientation$", Pattern.CASE_INSENSITIVE)));
-
-				exifinfo.setMimetype(exifinfo.value(MIME1));
-
-				if (videoFilter.accept(p) || html5Videofilter.accept(p) || qtFilter.accept(p)) {
-					if (isBlank(exifinfo.getMimetype())) {
-						exifinfo.setMimetype("video/" + p.getExtension().toLowerCase()//
-								.replace(FLV, "flash")//
-								.replace("ogv", "ogg")//
-								.replace(M4V, MP4)//
-								.replace(MOV, "quicktime")//
-								.replace("3gp", "3gpp")//
-								.replace("3g2", "3gpp2")//
-								.replace("m2v", "mpeg"));//
-					}
-
-					exifinfo.setDuration(exifinfo.values(UNKNOWN, DURATION1, DURATION2, DURATION3, DURATION4, DURATION5));
-					exifinfo.setVideo(exifinfo.values(UNKNOWN, VIDEO1, VIDEO3, VIDEO2, VIDEO4, VIDEO5, VIDEO6));
-					exifinfo.setAudio(exifinfo.values(UNKNOWN, AUDIO1, AUDIO3, AUDIO2, AUDIO4, AUDIO5));
-					String vfr = exifinfo.value(VFR1);
-					if (StringUtils.isBlank(vfr) || "0".equals(vfr)) {
-						vfr = exifinfo.value(VFR2);
-					}
-					if (StringUtils.isBlank(vfr) || "0".equals(vfr)) {
-						vfr = exifinfo.value(AVGBITRATE1);
-					}
-					if (StringUtils.isBlank(vfr) || "0".equals(vfr)) {
-						vfr = exifinfo.value(AVGBITRATE2);
-					}
-					if (StringUtils.isNotBlank(vfr)) {
-						exifinfo.setVfr(Double.parseDouble(vfr.replace("Mbps", "").replace("kbps", "").replace("fps", "").trim()));
-					}
-				}
-
-				if (exifinfo.isWHKnown()) {
-					exifinfo.setWh((double) exifinfo.getW().intValue() / exifinfo.getH().intValue());
-				}
+				extracted(p, exifinfo, all, all2);
 			}
 		} catch (Exception ex) {
 			loggeri.error("{}", p, ex);
 		}
 
 		return exifinfo;
+	}
+
+	private void extracted(FilePath p, ExifInfo exifinfo, Map<String, Object> all, Map<String, String> all2) {
+		all.entrySet().forEach(e -> all2.put(e.getKey(), toString(e.getValue())));
+
+		exifinfo.setW(Integer.parseInt(exifinfo.values("0", IW, W)));
+		exifinfo.setH(Integer.parseInt(exifinfo.values("0", IH, H)));
+		exifinfo.setOrientation(exifinfo.value(Pattern.compile("^Orientation$", Pattern.CASE_INSENSITIVE)));
+
+		exifinfo.setMimetype(exifinfo.value(MIME1));
+
+		if (videoFilter.accept(p) || html5Videofilter.accept(p) || qtFilter.accept(p)) {
+			if (isBlank(exifinfo.getMimetype())) {
+				exifinfo.setMimetype("video/" + p.getExtension().toLowerCase()//
+						.replace(FLV, "flash")//
+						.replace("ogv", "ogg")//
+						.replace(M4V, MP4)//
+						.replace(MOV, "quicktime")//
+						.replace("3gp", "3gpp")//
+						.replace("3g2", "3gpp2")//
+						.replace("m2v", "mpeg"));//
+			}
+
+			exifinfo.setDuration(exifinfo.values(UNKNOWN, DURATION1, DURATION2, DURATION3, DURATION4, DURATION5));
+			exifinfo.setVideo(exifinfo.values(UNKNOWN, VIDEO1, VIDEO3, VIDEO2, VIDEO4, VIDEO5, VIDEO6));
+			exifinfo.setAudio(exifinfo.values(UNKNOWN, AUDIO1, AUDIO3, AUDIO2, AUDIO4, AUDIO5));
+			String vfr = exifinfo.value(VFR1);
+			if (StringUtils.isBlank(vfr) || "0".equals(vfr)) {
+				vfr = exifinfo.value(VFR2);
+			}
+			if (StringUtils.isBlank(vfr) || "0".equals(vfr)) {
+				vfr = exifinfo.value(AVGBITRATE1);
+			}
+			if (StringUtils.isBlank(vfr) || "0".equals(vfr)) {
+				vfr = exifinfo.value(AVGBITRATE2);
+			}
+			if (StringUtils.isNotBlank(vfr)) {
+				exifinfo.setVfr(Double.parseDouble(vfr.replace("Mbps", "").replace("kbps", "").replace("fps", "").trim()));
+			}
+		}
+
+		if (exifinfo.isWHKnown()) {
+			exifinfo.setWh((double) exifinfo.getW().intValue() / exifinfo.getH().intValue());
+		}
 	}
 
 	public List<String> exifCommand(FilePath p) {
