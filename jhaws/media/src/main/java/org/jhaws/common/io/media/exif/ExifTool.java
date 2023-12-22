@@ -44,6 +44,7 @@ import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
+import org.jhaws.common.lang.IntegerValue;
 
 /**
  * @see http://www.sno.phy.queensu.ca/~phil/exiftool/
@@ -499,10 +500,11 @@ public class ExifTool extends Tool implements MediaCte {
 		));
 		Map<String, FilePath> nameMapping = new HashMap<>();
 		List<Path> links = new ArrayList<>();
+		IntegerValue ii = new IntegerValue();
 		p.stream().forEach(a -> {
 			String absolutePath = a.getAbsolutePath();
 			if (containsNonUTF8Characters(absolutePath)) {
-				FilePath tmp = sameDriveTmp.child("" + System.currentTimeMillis());
+				FilePath tmp = sameDriveTmp.child(ii.add() + "-" + System.currentTimeMillis());
 				try {
 					links.add(Files.createLink(tmp.toPath(), a.toPath()));
 				} catch (IOException ex) {
