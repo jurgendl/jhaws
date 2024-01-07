@@ -14,16 +14,17 @@ import com.itextpdf.text.pdf.PdfWriter;
 public class Img2Pdf {
 	public static void main(String[] args) {
 		try {
-			createPDF(new FilePath(args[0]), new FilePath(args[1]));
+			createPDF(new FilePath(args[0]), new FilePath(args[1]), true);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	static public void createPDF(FilePath trg, FilePath dir) throws Exception {
+	static public void createPDF(FilePath trg, FilePath dir, boolean autosort) throws Exception {
 		FilePath pdffile = new FilePath(dir, trg.getShortFileName() + ".pdf");
 		List<FilePath> images = trg.listFiles();
-		images = sort(true, images, new LastModifiedTimeComparator());
+		if (autosort)
+			images = sort(true, images, new LastModifiedTimeComparator());
 		com.itextpdf.text.Document document = new com.itextpdf.text.Document();
 		/* PdfWriter writer = */PdfWriter.getInstance(document, pdffile.newBufferedOutputStream());
 		document.open();

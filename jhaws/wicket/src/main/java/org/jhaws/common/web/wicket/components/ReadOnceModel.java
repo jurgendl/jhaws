@@ -12,6 +12,8 @@ public class ReadOnceModel<T extends Serializable> implements IModel<T> {
 
 	private T object;
 
+	private boolean isDetachable = false;
+
 	public ReadOnceModel(SerializableSupplier<T> supplier) {
 		setSupplier(supplier);
 	}
@@ -36,4 +38,22 @@ public class ReadOnceModel<T extends Serializable> implements IModel<T> {
 		return object;
 	}
 
+	@Override
+	public void setObject(T object) {
+		this.object = object;
+	}
+
+	public boolean isDetachable() {
+		return this.isDetachable;
+	}
+
+	public void setDetachable(boolean isDetachable) {
+		this.isDetachable = isDetachable;
+	}
+
+	@Override
+	public void detach() {
+		if (isDetachable && object != null)
+			this.object = null;
+	}
 }
