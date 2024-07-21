@@ -231,13 +231,14 @@ public class FfmpegTool extends Tool implements MediaCte {
 						{
 							Matcher M = FPS.matcher(t);
 							M.find();
-							video.put("avg_frame_rate", M.group(1) + "/1");
+							video.put("fps", M.group(1));
+							video.put("avg_frame_rate", video.getProperty("fps") + "/1");
 						}
 						{
 							Matcher M = VIDEO.matcher(t);
 							M.find();
-							audio.put("codec_long_name", M.group(1));
-							audio.put("codec_name", audio.getProperty("codec_long_name"));
+							video.put("codec_long_name", M.group(1));
+							video.put("codec_name", audio.getProperty("codec_long_name"));
 						}
 					} else {
 						audioFound.setTrue();

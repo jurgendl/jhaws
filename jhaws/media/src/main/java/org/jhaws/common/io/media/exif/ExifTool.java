@@ -721,9 +721,13 @@ public class ExifTool extends Tool implements MediaCte {
 	}
 
 	public static Duration parseDuration(ExifInfo exif) {
+		return parseDuration(exif.getDuration());
+	}
+
+	public static Duration parseDuration(String duration) {
 		Duration duration = Duration.ofMillis(0);
 		{
-			Matcher m = Pattern.compile("(\\d++)\\.(\\d++) s").matcher(exif.getDuration());
+			Matcher m = Pattern.compile("(\\d++)\\.(\\d++) s").matcher(duration);
 			if (m.find()) {
 				int ss = Integer.parseInt(m.group(1));
 				int ms = Integer.parseInt(m.group(2));
@@ -732,7 +736,20 @@ public class ExifTool extends Tool implements MediaCte {
 			}
 		}
 		{
-			Matcher m = Pattern.compile("(\\d++):(\\d++):(\\d++)").matcher(exif.getDuration());
+			Matcher m = Pattern.compile("(\\d++):(\\d++):(\\d++).(\\d++)").matcher(duration);
+			if (m.find()) {
+				int hh = Integer.parseInt(m.group(1));
+				int mm = Integer.parseInt(m.group(2));
+				int ss = Integer.parseInt(m.group(3));
+				String s100 = m.group(4);
+				duration = duration.plusHours(hh);
+				duration = duration.plusMinutes(mm);
+				duration = duration.plusSeconds(ss);
+				duration = duration.plusMillis(Integer.parseInt(s100) * (s100.length() == 2 ? 10 : 1));
+			}
+		}
+		{
+			Matcher m = Pattern.compile("(\\d++):(\\d++):(\\d++)").matcher(duration);
 			if (m.find()) {
 				int hh = Integer.parseInt(m.group(1));
 				int mm = Integer.parseInt(m.group(2));
