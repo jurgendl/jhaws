@@ -161,6 +161,121 @@ public class FfmpegTool extends Tool implements MediaCte {
 		super(disableAuto);
 	}
 
+	public List<Properties> infoAlt(FilePath input) {
+		List<String> command = new ArrayList<>();
+		command.add(command(getFfmpeg()));
+		command.add("-y");
+		command.add("-hide_banner");
+		command.add("-loglevel");
+		command.add("info");
+		command.add("-i");
+		command.add(command(input));
+		command.add("-f");
+		command.add("ffmetadata");
+		command.add(command(FilePath.getTempDirectory().child("" + System.currentTimeMillis())));
+
+		System.out.println(command.stream().collect(Collectors.joining(" ")));
+
+		Pattern DURATION = Pattern.compile("Duration: (\\d\\d):(\\d\\d):(\\d\\d)\\.(\\d\\d)");
+		Pattern BITRATE = Pattern.compile("bitrate: (\\d\\d\\d\\d) kb/s");
+		Pattern FPS = Pattern.compile(" (\\d\\d) fps");
+		Pattern DIM = Pattern.compile(" (\\d++)x(\\d++) ");
+		Pattern VIDEO = Pattern.compile(" Video: ([^,]++), ");
+		Pattern AUDIO = Pattern.compile(" Audio: ([^,]++), ");
+		Pattern HZ = Pattern.compile(" (\\d++) Hz ");
+
+		List<Properties> propslist = new ArrayList<>();
+		Value<Properties> props = new Value<>();
+		Properties audio = new Properties();
+		audio.put("codec_type", "audio");
+		BooleanValue audioFound = new BooleanValue();
+		Properties video = new Properties();
+		video.put("codec_type", "video");
+		BooleanValue videoFound = new BooleanValue();
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines() {
+			@Override
+			public void accept(String t) {
+				super.accept(t);
+
+				{
+					Matcher M = DURATION.matcher(t);
+					if (M.find()) {
+						int h = Integer.parseInt(M.group(1));
+						int m = Integer.parseInt(M.group(2));
+						int s = Integer.parseInt(M.group(3));
+						int s100 = Integer.parseInt(M.group(4));
+						double seconds = (h * 3600) + (m * 60) + s + s100 / 100;
+						video.put("duration", "" + seconds);
+						audio.put("duration", "" + seconds);
+					}
+				}
+
+				{
+					Matcher M = BITRATE.matcher(t);
+					if (M.find()) {
+						M.group(1);
+					}
+				}
+
+				if (t.trim().startsWith("Stream #")) {
+					if (t.contains("Video")) {
+						videoFound.setTrue();
+						{
+							Matcher M = DIM.matcher(t);
+							M.find();
+							video.put("coded_height", M.group(1));
+							video.put("height", M.group(1));
+							video.put("coded_width", M.group(2));
+							video.put("width", M.group(2));
+						}
+						{
+							Matcher M = FPS.matcher(t);
+							M.find();
+							video.put("avg_frame_rate", M.group(1) + "/1");
+						}
+						{
+							Matcher M = VIDEO.matcher(t);
+							M.find();
+							audio.put("codec_long_name", M.group(1));
+							audio.put("codec_name", audio.getProperty("codec_long_name"));
+						}
+					} else {
+						audioFound.setTrue();
+						{
+							Matcher M = AUDIO.matcher(t);
+							M.find();
+							audio.put("codec_long_name", M.group(1));
+							audio.put("codec_name", audio.getProperty("codec_long_name"));
+						}
+						{
+							Matcher M = HZ.matcher(t);
+							M.find();
+							audio.put("sample_rate", M.group(1));
+							audio.put("time_base", "1/" + audio.get("sample_rate"));
+						}
+						if (t.contains(" stereo,")) {
+							audio.put("channel_layout", "stereo");
+							audio.put("channels", "2");
+						}
+					}
+				}
+			}
+		};
+		try {
+			silentcall(null, lines, input.getParentPath(), command);
+		} catch (ExitValueException ex) {
+			ex.printStackTrace();
+			lines.lines().forEach(System.err::println);
+		}
+
+		if (audioFound.is())
+			propslist.add(audio);
+		if (videoFound.is())
+			propslist.add(video);
+
+		return propslist;
+	}
+
 	public List<Properties> info(FilePath input) {
 		List<String> command = new ArrayList<>();
 		command.add(command(getFfprobe()));
