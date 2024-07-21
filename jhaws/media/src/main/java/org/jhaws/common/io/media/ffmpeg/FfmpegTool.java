@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.io.console.Processes.ExitValueException;
 import org.jhaws.common.io.jaxb.JAXBMarshalling;
 import org.jhaws.common.io.media.MediaCte;
 import org.jhaws.common.io.media.Tool;
@@ -174,9 +175,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 		List<Properties> propslist = new ArrayList<>();
 		Value<Properties> props = new Value<>();
-		silentcall(null, new org.jhaws.common.io.console.Processes.Lines() {
+		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines() {
 			@Override
 			public void accept(String t) {
+				super.accept(t);
+
 				if (t.contains("[STREAM]")) {
 					Properties tmp = new Properties();
 					propslist.add(tmp);
@@ -191,7 +194,13 @@ public class FfmpegTool extends Tool implements MediaCte {
 					props.get().put(p, v);
 				}
 			}
-		}, input.getParentPath(), command);
+		};
+		try {
+			silentcall(null, lines, input.getParentPath(), command);
+		} catch (ExitValueException ex) {
+			ex.printStackTrace();
+			lines.lines().forEach(System.err::println);
+		}
 		return propslist;
 	}
 
@@ -564,9 +573,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 		List<String> command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 		// command.stream().collect(Collectors.joining(" "))
 		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
+		System.out.println(command.stream().collect(Collectors.joining(" ")));
 		try {
 			call(act(context, input, "remux"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
+			ex.printStackTrace();
 			exception = ex;
 		}
 		BooleanValue resetException = new BooleanValue();

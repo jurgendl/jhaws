@@ -87,11 +87,12 @@ public class Processes {
 	public static <C extends Consumer<String>> C callProcess(Value<Process> processHolder, boolean throwExitValue,
 			FilePath input, Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog,
 			FilePath errorLog, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
-		if (dir == null)
+		if (dir == null) {
 			logger.debug("> {}", command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
-		else
+		} else {
 			logger.debug("{}> {}", dir.getAbsolutePath(),
 					command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
+		}
 		ProcessBuilder builder = new ProcessBuilder(
 				command.stream().filter(Objects::nonNull).collect(Collectors.toList()));
 		builder.redirectErrorStream(true);
@@ -145,7 +146,17 @@ public class Processes {
 				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false)
 						.filter(StringUtils::isNotBlank).forEach(allConsumers);
 			} catch (IOException e1) {
+				e1.printStackTrace();
 				throw new UncheckedIOException(e1);
+			} catch (RuntimeException e1) {
+				e1.printStackTrace();
+				throw e1;
+			} finally {
+				try {
+					process.destroy();
+				} catch (Exception ex) {
+					//
+				}
 			}
 		}
 		try {
