@@ -724,10 +724,10 @@ public class ExifTool extends Tool implements MediaCte {
 		return parseDuration(exif.getDuration());
 	}
 
-	public static Duration parseDuration(String duration) {
+	public static Duration parseDuration(String d) {
 		Duration duration = Duration.ofMillis(0);
 		{
-			Matcher m = Pattern.compile("(\\d++)\\.(\\d++) s").matcher(duration);
+			Matcher m = Pattern.compile("(\\d++)\\.(\\d++) s").matcher(d);
 			if (m.find()) {
 				int ss = Integer.parseInt(m.group(1));
 				int ms = Integer.parseInt(m.group(2));
@@ -736,7 +736,7 @@ public class ExifTool extends Tool implements MediaCte {
 			}
 		}
 		{
-			Matcher m = Pattern.compile("(\\d++):(\\d++):(\\d++).(\\d++)").matcher(duration);
+			Matcher m = Pattern.compile("(\\d++):(\\d++):(\\d++).(\\d++)").matcher(d);
 			if (m.find()) {
 				int hh = Integer.parseInt(m.group(1));
 				int mm = Integer.parseInt(m.group(2));
@@ -749,7 +749,7 @@ public class ExifTool extends Tool implements MediaCte {
 			}
 		}
 		{
-			Matcher m = Pattern.compile("(\\d++):(\\d++):(\\d++)").matcher(duration);
+			Matcher m = Pattern.compile("(\\d++):(\\d++):(\\d++)").matcher(d);
 			if (m.find()) {
 				int hh = Integer.parseInt(m.group(1));
 				int mm = Integer.parseInt(m.group(2));
