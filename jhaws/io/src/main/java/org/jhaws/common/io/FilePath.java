@@ -1493,8 +1493,8 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
-	public Collection<FilePath>[] deleteDuplicates() {
-		return deleteDuplicates(true);
+	public Collection<List<FilePath>> deleteDuplicates() {
+		return duplicates(FilePath::delete, 1);
 	}
 
 	public static class FindDuplicateMeta {
@@ -1587,22 +1587,23 @@ public class FilePath implements Path, Externalizable {
 			return duplicate != null;
 		}
 
-		@SuppressWarnings("unchecked")
-		public Collection<FilePath>[] getDuplicates() {
-			return duplicates.values().toArray(new Collection[duplicates.size()]);
+		public Collection<List<FilePath>> getDuplicates() {
+			return duplicates.values();
 		}
 	}
 
-	public Collection<FilePath>[] deleteDuplicates(boolean doDelete) {
+	public Collection<List<FilePath>> duplicates(Consumer<FilePath> onDupeAction, int depth) {
 		FindDuplicateData data = new FindDuplicateData();
 		try {
-			Files.walkFileTree(this.getPath(), new HashSet<FileVisitOption>(), 1, new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(this.getPath(), new HashSet<FileVisitOption>(), depth, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if (attrs.isRegularFile()) {
 						FilePath fp = new FilePath(file);
-						if (data.add(fp) && doDelete) {
-							fp.delete();
+						if (data.add(fp)) {
+							if (onDupeAction != null) {
+								onDupeAction.accept(fp);
+							}
 						}
 					}
 					return super.visitFile(file, attrs);
