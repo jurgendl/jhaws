@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.IntSupplier;
 
 @FunctionalInterface
-public interface EIntSupplier extends SIntSupplier {
+public interface EIntSupplier extends SerializableIntSupplier {
     public static IntSupplier enhance(EIntSupplier supplier) {
         return supplier::getAsInt;
     }

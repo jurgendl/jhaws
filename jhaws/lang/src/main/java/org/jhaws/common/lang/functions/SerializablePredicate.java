@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.function.Predicate;
 
 @FunctionalInterface
-public interface SPredicate<T> extends Predicate<T>, Serializable {
-    public static <T> Predicate<T> enhance(SPredicate<T> predicate) {
+public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
+    public static <T> Predicate<T> enhance(SerializablePredicate<T> predicate) {
         return predicate::test;
     }
 }

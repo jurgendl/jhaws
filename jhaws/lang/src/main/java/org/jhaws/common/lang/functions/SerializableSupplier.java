@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface SSupplier<T> extends Supplier<T>, Serializable {
-    public static <T> Supplier<T> enhance(SSupplier<T> predicate) {
+public interface SerializableSupplier<T> extends Supplier<T>, Serializable {
+    public static <T> Supplier<T> enhance(SerializableSupplier<T> predicate) {
         return predicate::get;
     }
 }

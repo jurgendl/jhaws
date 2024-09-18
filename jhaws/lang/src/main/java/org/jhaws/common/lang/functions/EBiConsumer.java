@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.BiConsumer;
 
 @FunctionalInterface
-public interface EBiConsumer<T, U> extends SBiConsumer<T, U> {
+public interface EBiConsumer<T, U> extends SerializableBiConsumer<T, U> {
     public static <T, U> BiConsumer<T, U> enhance(EBiConsumer<T, U> consumer) {
         return consumer::accept;
     }

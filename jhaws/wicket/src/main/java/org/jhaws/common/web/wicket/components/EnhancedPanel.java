@@ -5,13 +5,16 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+import org.jhaws.common.lang.functions.SerializableBooleanSupplier;
+import org.jhaws.common.lang.functions.SerializableFunction;
 
 @SuppressWarnings("serial")
-public class EnhancedPanel extends Panel {
-    protected BooleanSupplier visiblePredicate;
+public class EnhancedPanel extends WebMarkupContainer {
+    protected SerializableBooleanSupplier visiblePredicate;
 
     public EnhancedPanel(String id, IModel<?> model) {
         super(id, model);
@@ -25,20 +28,21 @@ public class EnhancedPanel extends Panel {
     protected void onConfigure() {
         super.onConfigure();
         if (visiblePredicate != null) {
-            setVisible(visiblePredicate.getAsBoolean());
+            boolean visible = visiblePredicate.getAsBoolean();
+            setVisible(visible);
         }
     }
 
-    public BooleanSupplier getVisiblePredicate() {
+    public SerializableBooleanSupplier getVisiblePredicate() {
         return this.visiblePredicate;
     }
 
-    public <P extends BooleanSupplier & Serializable> void setVisiblePredicate(P visiblePredicate) {
+    public void setVisiblePredicate(SerializableBooleanSupplier visiblePredicate) {
         this.visiblePredicate = visiblePredicate;
     }
 
-    public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model, P visiblePredicate) {
-        setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
+    public <T> void setVisiblePredicate(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
+        setVisiblePredicate(() -> visiblePredicate0.apply(model.getObject()));
     }
 
     public void setVisiblePredicate(IModel<String> stringModel) {
@@ -57,13 +61,13 @@ public class EnhancedPanel extends Panel {
         setVisiblePredicate(listModel, list -> list == null || list.isEmpty());
     }
 
-    public <P extends BooleanSupplier & Serializable> EnhancedPanel visiblePredicate(P _visiblePredicate) {
-        setVisiblePredicate(_visiblePredicate);
+    public EnhancedPanel visiblePredicate(SerializableBooleanSupplier visiblePredicate0) {
+        setVisiblePredicate(visiblePredicate0);
         return this;
     }
 
-    public <M, P extends Function<M, Boolean> & Serializable> EnhancedPanel visiblePredicate(IModel<M> model, P _visiblePredicate) {
-        setVisiblePredicate(model, _visiblePredicate);
+    public <T> EnhancedPanel visiblePredicate(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
+        setVisiblePredicate(model, visiblePredicate0);
         return this;
     }
 
@@ -87,12 +91,31 @@ public class EnhancedPanel extends Panel {
         return this;
     }
 
-    public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicateInvers(IModel<M> model, P visiblePredicate) {
-        setVisiblePredicate(() -> !visiblePredicate.apply(model.getObject()));
+    public <T> void setVisiblePredicateInvers(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
+        setVisiblePredicate(() -> !visiblePredicate0.apply(model.getObject()));
     }
 
-    public <M, P extends Function<M, Boolean> & Serializable> EnhancedPanel visiblePredicateInvers(IModel<M> model, P visiblePredicate0) {
+    public <T> EnhancedPanel visiblePredicateInvers(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
         setVisiblePredicateInvers(model, visiblePredicate0);
         return this;
     }
+
+    public void setVisibility(IModel<Boolean> booleanModel) {
+        setVisiblePredicate(booleanModel, visible -> visible);
+    }
+
+    public EnhancedPanel visibility(IModel<Boolean> booleanModel) {
+        setVisibility(booleanModel);
+        return this;
+    }
+
+    public void setVisibilityInvers(IModel<Boolean> booleanModel) {
+        setVisiblePredicate(booleanModel, visible -> !visible);
+    }
+
+    public EnhancedPanel visibilityInvers(IModel<Boolean> booleanModel) {
+        setVisibilityInvers(booleanModel);
+        return this;
+    }
 }
+

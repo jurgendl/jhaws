@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.function.BooleanSupplier;
 
 @FunctionalInterface
-public interface SBooleanSupplier extends BooleanSupplier, Serializable {
-    public static BooleanSupplier enhance(SBooleanSupplier supplier) {
+public interface SerializableBooleanSupplier extends BooleanSupplier, Serializable {
+    public static BooleanSupplier enhance(SerializableBooleanSupplier supplier) {
         return supplier::getAsBoolean;
     }
 }

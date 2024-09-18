@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface EConsumer<T> extends SConsumer<T> {
+public interface EConsumer<T> extends SerializableConsumer<T> {
     public static <T> Consumer<T> enhance(EConsumer<T> consumer) {
         return consumer::accept;
     }

@@ -8,38 +8,44 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+import org.jhaws.common.lang.functions.SerializableBooleanSupplier;
+import org.jhaws.common.lang.functions.SerializableFunction;
 
 @SuppressWarnings("serial")
 public class EnhancedLabel extends Label {
-    protected BooleanSupplier visiblePredicate;
-
-    protected BooleanSupplier enabledPredicate;
+    protected SerializableBooleanSupplier visiblePredicate;
 
     public EnhancedLabel(String id, IModel<?> model) {
         super(id, model);
+        setEscapeModelStrings(false);
     }
 
     public EnhancedLabel(String id, Serializable label) {
         super(id, label);
+        setEscapeModelStrings(false);
     }
 
     public EnhancedLabel(String id) {
         super(id);
+        setEscapeModelStrings(false);
     }
 
-    public <P extends BooleanSupplier & Serializable> EnhancedLabel(String id, IModel<?> model, P visiblePredicate) {
+    public EnhancedLabel(String id, IModel<?> model, SerializableBooleanSupplier visiblePredicate) {
         super(id, model);
         setVisiblePredicate(visiblePredicate);
+        setEscapeModelStrings(false);
     }
 
-    public <P extends BooleanSupplier & Serializable> EnhancedLabel(String id, Serializable label, P visiblePredicate) {
+    public EnhancedLabel(String id, Serializable label, SerializableBooleanSupplier visiblePredicate) {
         super(id, label);
         setVisiblePredicate(visiblePredicate);
+        setEscapeModelStrings(false);
     }
 
-    public <P extends BooleanSupplier & Serializable> EnhancedLabel(String id, P visiblePredicate) {
+    public EnhancedLabel(String id, SerializableBooleanSupplier visiblePredicate) {
         super(id);
         setVisiblePredicate(visiblePredicate);
+        setEscapeModelStrings(false);
     }
 
     @Override
@@ -51,37 +57,35 @@ public class EnhancedLabel extends Label {
     }
 
     /**
-     * Visibility gedrag zo instellen dat ie onzichtbaar is bij lege string
+     * Visibility gedrag zo instellen dat element onzichtbaar is bij lege string
      */
     public void setHideOnEmpty() {
-        setVisiblePredicate((BooleanSupplier & Serializable) () -> StringUtils.isNotBlank(getDefaultModelObjectAsString()));
+        setVisiblePredicate(() -> StringUtils.isNotBlank(getDefaultModelObjectAsString()));
     }
 
     /**
-     * Hulpje bij contructor voor builder style instantiatie <br/>
-     * KomodoLabel titelLabel = new KomodoLabel("titel", titelModel).hideOnEmpty();
-     *
-     * @return
+     * Hulpje bij constructor voor builder style instantiate <br/>
+     * EnhancedLabel titelLabel = new EnhancedLabel("titel", titelModel).hideOnEmpty();
      */
     public EnhancedLabel hideOnEmpty() {
         setHideOnEmpty();
         return this;
     }
 
-    public BooleanSupplier getVisiblePredicate() {
+    public SerializableBooleanSupplier getVisiblePredicate() {
         return this.visiblePredicate;
     }
 
-    public <P extends BooleanSupplier & Serializable> void setVisiblePredicate(P visiblePredicate) {
+    public void setVisiblePredicate(SerializableBooleanSupplier visiblePredicate) {
         this.visiblePredicate = visiblePredicate;
     }
 
-    public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model, P visiblePredicate) {
-        setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
+    public <T> void setVisiblePredicate(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
+        setVisiblePredicate(() -> visiblePredicate0.apply(model.getObject()));
     }
 
     public void setVisiblePredicate(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel, StringUtils::isNotBlank);
+        setVisiblePredicate(stringModel, org.apache.commons.lang3.StringUtils::isNotBlank);
     }
 
     public void setVisiblePredicate(ListModel<?> listModel) {
@@ -89,20 +93,20 @@ public class EnhancedLabel extends Label {
     }
 
     public void setVisiblePredicateInvers(IModel<String> stringModel) {
-        setVisiblePredicate(stringModel, StringUtils::isBlank);
+        setVisiblePredicate(stringModel, org.apache.commons.lang3.StringUtils::isBlank);
     }
 
     public void setVisiblePredicateInvers(ListModel<?> listModel) {
         setVisiblePredicate(listModel, list -> list == null || list.isEmpty());
     }
 
-    public <P extends BooleanSupplier & Serializable> EnhancedLabel visiblePredicate(P _visiblePredicate) {
-        setVisiblePredicate(_visiblePredicate);
+    public EnhancedLabel visiblePredicate(SerializableBooleanSupplier visiblePredicate0) {
+        setVisiblePredicate(visiblePredicate0);
         return this;
     }
 
-    public <M, P extends Function<M, Boolean> & Serializable> EnhancedLabel visiblePredicate(IModel<M> model, P _visiblePredicate) {
-        setVisiblePredicate(model, _visiblePredicate);
+    public <T> EnhancedLabel visiblePredicate(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
+        setVisiblePredicate(model, visiblePredicate0);
         return this;
     }
 
@@ -126,70 +130,30 @@ public class EnhancedLabel extends Label {
         return this;
     }
 
-    public BooleanSupplier getEnabledPredicate() {
-        return this.enabledPredicate;
+    public <T> void setVisiblePredicateInvers(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
+        setVisiblePredicate(() -> !visiblePredicate0.apply(model.getObject()));
     }
 
-    public <P extends BooleanSupplier & Serializable> void setEnabledPredicate(P _enabledPredicate) {
-        this.enabledPredicate = _enabledPredicate;
-    }
-
-    public <M, P extends Function<M, Boolean> & Serializable> void setEnabledPredicate(IModel<M> model, P enabledPredicate) {
-        setEnabledPredicate(() -> enabledPredicate.apply(model.getObject()));
-    }
-
-    public void setEnabledPredicate(IModel<String> stringModel) {
-        setEnabledPredicate(stringModel, StringUtils::isNotBlank);
-    }
-
-    public void setEnabledPredicate(ListModel<?> listModel) {
-        setEnabledPredicate(listModel, list -> list != null && !list.isEmpty());
-    }
-
-    public void setEnabledPredicateInvers(IModel<String> stringModel) {
-        setEnabledPredicate(stringModel, StringUtils::isBlank);
-    }
-
-    public void setEnabledPredicateInvers(ListModel<?> listModel) {
-        setEnabledPredicate(listModel, list -> list == null || list.isEmpty());
-    }
-
-    public <P extends BooleanSupplier & Serializable> EnhancedLabel enabledPredicate(P _enabledPredicate) {
-        setEnabledPredicate(_enabledPredicate);
-        return this;
-    }
-
-    public <M, P extends Function<M, Boolean> & Serializable> EnhancedLabel enabledPredicate(IModel<M> model, P _enabledPredicate) {
-        setEnabledPredicate(model, _enabledPredicate);
-        return this;
-    }
-
-    public EnhancedLabel enabledPredicate(IModel<String> stringModel) {
-        setEnabledPredicate(stringModel);
-        return this;
-    }
-
-    public EnhancedLabel enabledPredicate(ListModel<?> listModel) {
-        setEnabledPredicate(listModel);
-        return this;
-    }
-
-    public EnhancedLabel enabledPredicateInvers(IModel<String> stringModel) {
-        setEnabledPredicate(stringModel);
-        return this;
-    }
-
-    public EnhancedLabel enabledPredicateInvers(ListModel<?> listModel) {
-        setEnabledPredicate(listModel);
-        return this;
-    }
-
-    public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicateInvers(IModel<M> model, P visiblePredicate) {
-        setVisiblePredicate(() -> !visiblePredicate.apply(model.getObject()));
-    }
-
-    public <M, P extends Function<M, Boolean> & Serializable> EnhancedLabel visiblePredicateInvers(IModel<M> model, P visiblePredicate0) {
+    public <T> EnhancedLabel visiblePredicateInvers(IModel<T> model, SerializableFunction<T, Boolean> visiblePredicate0) {
         setVisiblePredicateInvers(model, visiblePredicate0);
+        return this;
+    }
+
+    public void setVisibility(IModel<Boolean> booleanModel) {
+        setVisiblePredicate(booleanModel, visible -> visible);
+    }
+
+    public EnhancedLabel visibility(IModel<Boolean> booleanModel) {
+        setVisibility(booleanModel);
+        return this;
+    }
+
+    public void setVisibilityInvers(IModel<Boolean> booleanModel) {
+        setVisiblePredicate(booleanModel, visible -> !visible);
+    }
+
+    public EnhancedLabel visibilityInvers(IModel<Boolean> booleanModel) {
+        setVisibilityInvers(booleanModel);
         return this;
     }
 }

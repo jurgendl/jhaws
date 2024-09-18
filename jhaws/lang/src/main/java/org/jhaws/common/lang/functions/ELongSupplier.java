@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.LongSupplier;
 
 @FunctionalInterface
-public interface ELongSupplier extends SLongSupplier {
+public interface ELongSupplier extends SerializableLongSupplier {
     public static LongSupplier enhance(ELongSupplier supplier) {
         return supplier::getAsLong;
     }

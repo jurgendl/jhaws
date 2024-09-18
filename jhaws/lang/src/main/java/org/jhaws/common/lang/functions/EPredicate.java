@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.Predicate;
 
 @FunctionalInterface
-public interface EPredicate<T> extends SPredicate<T> {
+public interface EPredicate<T> extends SerializablePredicate<T> {
     public static <T> Predicate<T> enhance(EPredicate<T> predicate) {
         return predicate::test;
     }

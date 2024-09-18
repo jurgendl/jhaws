@@ -4,7 +4,7 @@ import org.jhaws.common.lang.InterruptedRuntimeException;
 import org.jhaws.common.lang.RuntimeWrappedException;
 
 @FunctionalInterface
-public interface ERunnable extends SRunnable {
+public interface ERunnable extends SerializableRunnable {
     public static Runnable enhance(ERunnable runnable) {
         return runnable::run;
     }

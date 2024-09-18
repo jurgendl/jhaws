@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.BooleanSupplier;
 
 @FunctionalInterface
-public interface EBooleanSupplier extends SBooleanSupplier {
+public interface EBooleanSupplier extends SerializableBooleanSupplier {
     public static BooleanSupplier enhance(EBooleanSupplier supplier) {
         return supplier::getAsBoolean;
     }

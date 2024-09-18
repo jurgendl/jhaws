@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 @FunctionalInterface
-public interface SConsumer<T> extends Consumer<T>, Serializable {
-    public static <T> Consumer<T> enhance(SConsumer<T> consumer) {
+public interface SerializableConsumer<T> extends Consumer<T>, Serializable {
+    public static <T> Consumer<T> enhance(SerializableConsumer<T> consumer) {
         return consumer::accept;
     }
 }

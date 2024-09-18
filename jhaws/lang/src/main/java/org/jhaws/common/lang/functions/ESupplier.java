@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface ESupplier<T> extends SSupplier<T> {
+public interface ESupplier<T> extends SerializableSupplier<T> {
     public static <T> Supplier<T> enhance(ESupplier<T> predicate) {
         return predicate::get;
     }

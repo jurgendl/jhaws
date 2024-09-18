@@ -1,17 +1,18 @@
 package org.jhaws.common.web.wicket.components;
 
-import java.io.Serializable;
-import java.util.function.BooleanSupplier;
-import java.util.function.Function;
+
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+import org.jhaws.common.lang.functions.SerializableBooleanSupplier;
+import org.jhaws.common.lang.functions.SerializableFunction;
+import org.jhaws.common.web.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 
 @SuppressWarnings("serial")
 public class EnhancedWebMarkupContainer extends WebMarkupContainer {
-	protected BooleanSupplier visiblePredicate;
+	protected SerializableBooleanSupplier visiblePredicate;
 
 	public EnhancedWebMarkupContainer(String id, IModel<?> model) {
 		super(id, model);
@@ -31,16 +32,27 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
 		}
 	}
 
-	public BooleanSupplier getVisiblePredicate() {
+	BootstrapFencedFeedbackPanel feedbackPanel = null;
+
+	public BootstrapFencedFeedbackPanel getFeedbackPanel() {
+		return feedbackPanel;
+	}
+
+	public BootstrapFencedFeedbackPanel addFeedbackPanel(String id) {
+		feedbackPanel = new BootstrapFencedFeedbackPanel(id, this);
+		add(feedbackPanel);
+		return feedbackPanel;
+	}
+
+	public SerializableBooleanSupplier getVisiblePredicate() {
 		return this.visiblePredicate;
 	}
 
-	public <P extends BooleanSupplier & Serializable> void setVisiblePredicate(P visiblePredicate) {
+	public void setVisiblePredicate(SerializableBooleanSupplier visiblePredicate) {
 		this.visiblePredicate = visiblePredicate;
 	}
 
-	public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicate(IModel<M> model,
-			P visiblePredicate) {
+	public <M> void setVisiblePredicate(IModel<M> model, SerializableFunction<M, Boolean> visiblePredicate) {
 		setVisiblePredicate(() -> visiblePredicate.apply(model.getObject()));
 	}
 
@@ -60,13 +72,12 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
 		setVisiblePredicate(listModel, list -> list == null || list.isEmpty());
 	}
 
-	public <P extends BooleanSupplier & Serializable> EnhancedWebMarkupContainer visiblePredicate(P _visiblePredicate) {
+	public EnhancedWebMarkupContainer visiblePredicate(SerializableBooleanSupplier _visiblePredicate) {
 		setVisiblePredicate(_visiblePredicate);
 		return this;
 	}
 
-	public <M, P extends Function<M, Boolean> & Serializable> EnhancedWebMarkupContainer visiblePredicate(
-			IModel<M> model, P _visiblePredicate) {
+	public <M> EnhancedWebMarkupContainer visiblePredicate(IModel<M> model, SerializableFunction<M, Boolean> _visiblePredicate) {
 		setVisiblePredicate(model, _visiblePredicate);
 		return this;
 	}
@@ -91,14 +102,30 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
 		return this;
 	}
 
-	public <M, P extends Function<M, Boolean> & Serializable> void setVisiblePredicateInvers(IModel<M> model,
-			P visiblePredicate) {
+	public <M> void setVisiblePredicateInvers(IModel<M> model, SerializableFunction<M, Boolean> visiblePredicate) {
 		setVisiblePredicate(() -> !visiblePredicate.apply(model.getObject()));
 	}
 
-	public <M, P extends Function<M, Boolean> & Serializable> EnhancedWebMarkupContainer visiblePredicateInvers(
-			IModel<M> model, P visiblePredicate0) {
+	public <M> EnhancedWebMarkupContainer visiblePredicateInvers(IModel<M> model, SerializableFunction<M, Boolean> visiblePredicate0) {
 		setVisiblePredicateInvers(model, visiblePredicate0);
+		return this;
+	}
+
+	public void setVisibility(IModel<Boolean> booleanModel) {
+		setVisiblePredicate(booleanModel, visible -> visible);
+	}
+
+	public EnhancedWebMarkupContainer visibility(IModel<Boolean> booleanModel) {
+		setVisibility(booleanModel);
+		return this;
+	}
+
+	public void setVisibilityInvers(IModel<Boolean> booleanModel) {
+		setVisiblePredicate(booleanModel, visible -> !visible);
+	}
+
+	public EnhancedWebMarkupContainer visibilityInvers(IModel<Boolean> booleanModel) {
+		setVisibilityInvers(booleanModel);
 		return this;
 	}
 }

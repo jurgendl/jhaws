@@ -3,7 +3,7 @@ package org.jhaws.common.lang.functions;
 import java.util.function.Function;
 
 @FunctionalInterface
-public interface EFunction<T, R> extends SFunction<T, R> {
+public interface EFunction<T, R> extends SerializableFunction<T, R> {
     public static <T, R> Function<T, R> enhance(EFunction<T, R> function) {
         return function::apply;
     }
