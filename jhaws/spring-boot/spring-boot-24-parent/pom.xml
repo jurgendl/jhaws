@@ -15,7 +15,7 @@
 	<packaging>pom</packaging>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>jhaws-spring-boot-24-parent</artifactId>
-	<version>5.0.5</version>
+	<version>5.0.6-SNAPSHOT</version>
 	<name>jhaws-spring-boot-24-parent</name>
 	<description>jhaws-spring-boot-24-parent</description>
 	<properties>
@@ -425,8 +425,4 @@
 		</dependency>
 		<!-- _________________________ -->
 	</dependencies>
-
-  <scm>
-    <tag>jhaws-modules-5.0.5</tag>
-  </scm>
 </project>
