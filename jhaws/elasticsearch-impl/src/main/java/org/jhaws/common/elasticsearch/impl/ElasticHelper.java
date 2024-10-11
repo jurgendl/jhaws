@@ -299,11 +299,7 @@ public class ElasticHelper {
     }
 
     public static List<String> readLines(String resourceName) {
-        try {
-            return IOUtils.readLines(readInputStream(resourceName), StandardCharsets.UTF_8.toString());
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        return IOUtils.readLines(readInputStream(resourceName), StandardCharsets.UTF_8.toString());
     }
 
     public static InputStream readInputStream(String resourceName) {
