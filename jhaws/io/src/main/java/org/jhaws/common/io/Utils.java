@@ -852,6 +852,7 @@ public class Utils {
 			case Windows_8:
 			case Windows_8_1:
 			case Windows_10:
+			case Windows_11:
 			case Windows_2003:
 				_osgroup = OSGroup.Windows;
 
