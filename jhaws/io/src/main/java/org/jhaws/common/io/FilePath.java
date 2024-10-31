@@ -1116,11 +1116,11 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public static FilePath getTempDirectory() {
-		return new FilePath(TEMPDIR);
+		return new FilePath(new File(TEMPDIR));
 	}
 
 	public static FilePath getUserHomeDirectory() {
-		return new FilePath(USERDIR);
+		return new FilePath(new File(USERDIR));
 	}
 
 	public static String legalize(String filename) {

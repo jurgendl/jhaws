@@ -128,8 +128,10 @@ public class YTDL extends Tool {
 
 		if (executable.exists()) {
 			FilePath update = executable.appendExtension("update");
-			if (autoUpdate || update.notExists() || (update.getLastModifiedTime().toMillis() + 24 * 3_600_000) < System.currentTimeMillis()) {
-				Tool.call(Duration.ofSeconds(60), null, new Lines(), executable.getParentPath(), Arrays.asList(Tool.command(executable), "-U"), true, null, true, null);
+			if (autoUpdate || update.notExists()
+					|| (update.getLastModifiedTime().toMillis() + 24 * 3_600_000) < System.currentTimeMillis()) {
+				Tool.call(Duration.ofSeconds(60), null, new Lines(), executable.getParentPath(),
+						Arrays.asList(Tool.command(executable), "-U"), true, null, true, null);
 				update.write("" + System.currentTimeMillis());
 			}
 		} else {
@@ -137,7 +139,8 @@ public class YTDL extends Tool {
 			if (Utils.osgroup == OSGroup.Windows) {
 				tmp = tmp + ".exe";
 			}
-			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream(); OutputStream out = executable.newBufferedOutputStream()) {
+			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream();
+					OutputStream out = executable.newBufferedOutputStream()) {
 				IOUtils.copy(in, out);
 			} catch (IOException ex) {
 				loggeri.error("{}", ex);
@@ -221,7 +224,8 @@ public class YTDL extends Tool {
 		}
 	}
 
-	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc, Map<String, Object> extraConfig) {
+	public FilePath downloadAudio(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc,
+			Map<String, Object> extraConfig) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
 		if (tmpFolder == null)
@@ -242,7 +246,8 @@ public class YTDL extends Tool {
 		// command.add("--add-metadata");
 		extraConfig(command, extraConfig);
 		command.add("-o");
-		command.add(getEscapeChar() + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + getEscapeChar());
+		command.add(getEscapeChar() + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s"
+				+ getEscapeChar());
 		command.add(url);
 		List<String> dl = new ArrayList<>();
 		try {
@@ -266,9 +271,28 @@ public class YTDL extends Tool {
 		Optional.ofNullable(extraConfig).ifPresent(_extraConfig -> extraConfig.entrySet().forEach(entry -> {
 			command.add(entry.getKey());
 			if (entry.getValue() != null) {
-				command.add(getEscapeChar() + String.valueOf(entry.getValue()) + getEscapeChar());
+				boolean isNumber = entry.getValue() instanceof Number;
+				boolean isDouble = false;
+				try {
+					Double.parseDouble("" + entry.getValue());
+					isDouble = true;
+				} catch (Exception ex) {
+					//
+				}
+				boolean isLong = false;
+				try {
+					Long.parseLong("" + entry.getValue());
+					isLong = true;
+				} catch (Exception ex) {
+					//
+				}
+				if (isNumber || isDouble || isLong)
+					command.add(String.valueOf(entry.getValue()));
+				else
+					command.add(getEscapeChar() + String.valueOf(entry.getValue()) + getEscapeChar());
 			}
 		}));
+
 	}
 
 	protected void userAgent(List<String> command) {
@@ -278,7 +302,8 @@ public class YTDL extends Tool {
 		}
 	}
 
-	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc, Map<String, Object> extraConfig) {
+	public List<FilePath> download(String url, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc,
+			Map<String, Object> extraConfig) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
 		if (tmpFolder == null)
@@ -314,7 +339,8 @@ public class YTDL extends Tool {
 		}).filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
-	public void downloadOther(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl, boolean onlyId, Map<String, Object> extraConfig) {
+	public void downloadOther(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl, boolean onlyId,
+			Map<String, Object> extraConfig) {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
@@ -327,7 +353,8 @@ public class YTDL extends Tool {
 		extraConfig(command, extraConfig);
 		command.add("-o");
 		// https://github.com/ytdl-org/youtube-dl/blob/master/README.md#output-template
-		command.add(getEscapeChar() + tmpFolder.getAbsolutePath() + "/" + (onlyId ? "f%(id)s.%(ext)s" : "%(title)s.f%(format_id)s.%(ext)s") + getEscapeChar());
+		command.add(getEscapeChar() + tmpFolder.getAbsolutePath() + "/"
+				+ (onlyId ? "f%(id)s.%(ext)s" : "%(title)s.f%(format_id)s.%(ext)s") + getEscapeChar());
 		command.add(url);
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
 		dl(tmpFolder, command, dl);
@@ -340,7 +367,8 @@ public class YTDL extends Tool {
 		command.add(UTF_8);
 	}
 
-	public void downloadYT(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl, Map<String, Object> extraConfig) {
+	public void downloadYT(String url, FilePath tmpFolder, String cookiesLoc, List<String> dl,
+			Map<String, Object> extraConfig) {
 		List<String> command = new ArrayList<>();
 		command.add(command(executable));
 		cookies(command, cookiesLoc);
@@ -352,7 +380,8 @@ public class YTDL extends Tool {
 		// command.add("bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best");
 		command.add("bestvideo,bestaudio");
 		command.add("-o");
-		command.add(getEscapeChar() + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s" + getEscapeChar());
+		command.add(getEscapeChar() + tmpFolder.getAbsolutePath() + "/" + "%(title)s.f%(format_id)s.%(ext)s"
+				+ getEscapeChar());
 		command.add(url);
 		dl(tmpFolder, command, dl);
 	}
@@ -455,14 +484,17 @@ public class YTDL extends Tool {
 				System.out.println(t);
 				if (t.startsWith("ID")) {
 					head.set(t);
-				} else if (!(t.startsWith("[") || t.startsWith("format code") || t.startsWith("ID") || t.startsWith("--"))) {
+				} else if (!(t.startsWith("[") || t.startsWith("format code") || t.startsWith("ID")
+						|| t.startsWith("--"))) {
 					YTDLFormat f = new YTDLFormat();
 					f.extension = t.substring(head.get().indexOf("EXT"), head.get().indexOf("RESOLUTION")).trim();
 					if (!"mhtml".equals(f.extension)) {
 						f.formatCode = t.substring(0, head.get().indexOf("EXT")).trim();
 						f.resolution = t.substring(head.get().indexOf("RESOLUTION"), head.get().indexOf("FPS")).trim();
 						f.note = t;
-						String tmp = t.substring(t.indexOf("|") + 1, head.get().indexOf("FILESIZE") + "FILESIZE".length()).replace("~", "").trim();
+						String tmp = t
+								.substring(t.indexOf("|") + 1, head.get().indexOf("FILESIZE") + "FILESIZE".length())
+								.replace("~", "").trim();
 						int p = tmp.indexOf("KiB");
 						if (p != -1) {
 							f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0);
@@ -473,7 +505,8 @@ public class YTDL extends Tool {
 							} else {
 								p = tmp.indexOf("GiB");
 								if (p != -1) {
-									f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0 * 1024.0);
+									f.size = (long) (Double.parseDouble(tmp.substring(0, p)) * 1024.0 * 1024.0
+											* 1024.0);
 								}
 							}
 						}
@@ -492,7 +525,8 @@ public class YTDL extends Tool {
 		return rv;
 	}
 
-	public FilePath downloadFormat(String url, YTDLFormat format, FilePath tmpFolder, FilePath targetFolder, String cookiesLoc, Map<String, Object> extraConfig) {
+	public FilePath downloadFormat(String url, YTDLFormat format, FilePath tmpFolder, FilePath targetFolder,
+			String cookiesLoc, Map<String, Object> extraConfig) {
 		if (executable == null || executable.notExists())
 			throw new NullPointerException();
 		if (tmpFolder == null)
@@ -638,8 +672,9 @@ public class YTDL extends Tool {
 
 		@Override
 		public String toString() {
-			return "YTDLFormat [height=" + this.height + ", width=" + this.width + ", formatCode=" + this.formatCode + ", extension=" + this.extension + ", resolution="
-					+ this.resolution + ", note=" + this.note + ", size=" + this.size + "]";
+			return "YTDLFormat [height=" + this.height + ", width=" + this.width + ", formatCode=" + this.formatCode
+					+ ", extension=" + this.extension + ", resolution=" + this.resolution + ", note=" + this.note
+					+ ", size=" + this.size + "]";
 		}
 	}
 }
