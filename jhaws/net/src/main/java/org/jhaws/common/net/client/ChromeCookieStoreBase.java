@@ -1,8 +1,10 @@
 package org.jhaws.common.net.client;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -33,9 +35,17 @@ public class ChromeCookieStoreBase {
 
     public ChromeCookieStoreBase(FilePath... cookieStores) {
         for (FilePath cookieStore : cookieStores) {
-            if (cookieStore.exists()) {
+            if (cookieStore.fileExists()) {
                 SQLiteDataSource dataSource = new SQLiteDataSource();
-                cookieStore = cookieStore.copyTo(cookieStore.appendExtension("backup"));
+                FilePath backup = cookieStore.appendExtension("backup");
+                try {
+                    cookieStore = cookieStore.copyTo(backup);
+                } catch( UncheckedIOException ex){
+                    if(ex.getCause() instanceof java.nio.file.FileSystemException){
+                        cookieStore = cookieStore.copyFileTo(backup);
+                    }
+                    throw ex;
+                }
                 String url = "jdbc:sqlite:" + cookieStore.getAbsolutePath();
                 System.out.println(url);
                 dataSource.setUrl(url);
@@ -43,6 +53,7 @@ public class ChromeCookieStoreBase {
                 break;
             }
         }
+        if(jdbc==null) throw new NullPointerException("jdbc");
     }
 
     public ChromeCookieStoreBase() {
@@ -192,6 +203,6 @@ public class ChromeCookieStoreBase {
     }
 
     public static void main(String[] args) {
-        new ChromeCookieStoreBase().getSerializableCookies().forEach(System.out::println);
+       new ChromeCookieStoreBase().getSerializableCookies().forEach(System.out::println);
     }
 }

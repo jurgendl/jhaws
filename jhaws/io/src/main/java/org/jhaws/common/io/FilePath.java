@@ -10,7 +10,9 @@ import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.Externalizable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -123,7 +125,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @since 1.8
- * @see http://andreinc.net/
+ * see http://andreinc.net/
  */
 @SuppressWarnings("serial")
 public class FilePath implements Path, Externalizable {
@@ -270,7 +272,7 @@ public class FilePath implements Path, Externalizable {
 	/**
 	 * path (then class or classloader is required) or url or uri required
 	 *
-	 * @see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
+	 * see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
 	 */
 	public static Path path(String _path, URL _url, URI _uri, Class<?> _root, ClassLoader _classLoader) {
 		Value<ClassLoader> __classLoader = new Value<>(_classLoader);
@@ -1425,6 +1427,16 @@ public class FilePath implements Path, Externalizable {
 		}
 	}
 
+	public FilePath copyFileFrom(Path source) {
+		try(FileInputStream fis = new FileInputStream(source.toString());
+		    FileOutputStream fos = new FileOutputStream(toString())) {
+			Utils.copy(fis,fos);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		return this;
+	}
+
 	public long copyTo(OutputStream out) {
 		try {
 			return Files.copy(this.getPath(), out);
@@ -1435,6 +1447,16 @@ public class FilePath implements Path, Externalizable {
 
 	public FilePath copyTo(Path target) {
 		return this.copyTo(getPath(target), StandardCopyOption.REPLACE_EXISTING);
+	}
+
+	public FilePath copyFileTo(Path target){
+		try(FileInputStream fis = new FileInputStream(toString());
+		    FileOutputStream fos = new FileOutputStream(target.toString())) {
+			Utils.copy(fis,fos);
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+		return new FilePath(target);
 	}
 
 	public FilePath copyTo(Path target, CopyOption... options) {
@@ -1689,6 +1711,10 @@ public class FilePath implements Path, Externalizable {
 
 	public boolean exists(LinkOption... options) {
 		return Files.exists(this.getPath(), options);
+	}
+
+	public boolean fileExists() {
+		return new File(this.getPath().toString()).exists();
 	}
 
 	public FilePath flatten() {
@@ -2279,7 +2305,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * {@link #newFileIndex(String, String, String, String, String)} but with
+	 * {@link #newFileIndex()} but with
 	 * separator set to '_' and format to '0000' and the other parameters derived
 	 * from given File
 	 */
@@ -3118,7 +3144,7 @@ public class FilePath implements Path, Externalizable {
 	 * downloads a file from the web to a local file when it does not exists or is
 	 * older, binary copy
 	 *
-	 * @param urlSourceFile : URL : file on the web
+	 * @param url : URL : file on the web
 	 */
 	public FilePath write(URL url) {
 		if (this.exists()) {
@@ -3337,9 +3363,9 @@ public class FilePath implements Path, Externalizable {
 	/**
 	 * windows only
 	 *
-	 * @see http://stackoverflow.com/questions/1646425/cmd-command-to-delete-files-and-put-them-into-recycle-bin
-	 * @see https://github.com/npocmaka/batch.scripts/blob/master/hybrids/jscript/deleteJS.bat
-	 * @see http://stackoverflow.com/questions/615948/how-do-i-run-a-batch-file-from-my-java-application
+	 * see http://stackoverflow.com/questions/1646425/cmd-command-to-delete-files-and-put-them-into-recycle-bin
+	 * see https://github.com/npocmaka/batch.scripts/blob/master/hybrids/jscript/deleteJS.bat
+	 * see http://stackoverflow.com/questions/615948/how-do-i-run-a-batch-file-from-my-java-application
 	 */
 	public boolean recycle() {
 		if (notExists()) {

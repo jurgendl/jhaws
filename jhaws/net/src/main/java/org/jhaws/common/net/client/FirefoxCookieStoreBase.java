@@ -16,12 +16,16 @@ public class FirefoxCookieStoreBase {
     protected NamedParameterJdbcTemplate jdbc;
 
     public FirefoxCookieStoreBase(FilePath cookieStore) {
-        SQLiteDataSource dataSource = new SQLiteDataSource();
-        cookieStore = cookieStore.copyTo(cookieStore.appendExtension("backup"));
-        String url = "jdbc:sqlite:" + cookieStore.getAbsolutePath();
-        System.out.println(url);
-        dataSource.setUrl(url);
-        jdbc = new NamedParameterJdbcTemplate(dataSource);
+        if (cookieStore.exists()) {
+            SQLiteDataSource dataSource = new SQLiteDataSource();
+            cookieStore = cookieStore.copyTo(cookieStore.appendExtension("backup"));
+            String url = "jdbc:sqlite:" + cookieStore.getAbsolutePath();
+            System.out.println(url);
+            dataSource.setUrl(url);
+            jdbc = new NamedParameterJdbcTemplate(dataSource);
+        } else {
+            throw new NullPointerException("jdbc");
+        }
     }
 
     public FirefoxCookieStoreBase() {
