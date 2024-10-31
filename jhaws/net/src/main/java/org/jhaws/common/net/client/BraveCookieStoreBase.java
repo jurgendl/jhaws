@@ -1,7 +1,19 @@
 package org.jhaws.common.net.client;
 
+import com.sun.jna.platform.win32.Crypt32Util;
+import org.jhaws.common.io.FilePath;
+import org.jhaws.common.io.Utils;
+import org.jhaws.common.io.Utils.OSGroup;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.sqlite.SQLiteDataSource;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
@@ -13,34 +25,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
-import org.jhaws.common.io.FilePath;
-import org.jhaws.common.io.Utils;
-import org.jhaws.common.io.Utils.OSGroup;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.sqlite.SQLiteDataSource;
-
-import com.sun.jna.platform.win32.Crypt32Util;
-
-// https://stackoverflow.com/questions/33629474/reading-and-inserting-chrome-cookies-java
-// https://github.com/benjholla/CookieMonster
-public class ChromeCookieStoreBase {
+public class BraveCookieStoreBase {
     protected NamedParameterJdbcTemplate jdbc;
 
-    public ChromeCookieStoreBase(FilePath... cookieStores) {
+    public BraveCookieStoreBase(FilePath... cookieStores) {
         for (FilePath cookieStore : cookieStores) {
             if (cookieStore.fileExists()) {
                 SQLiteDataSource dataSource = new SQLiteDataSource();
                 FilePath backup = cookieStore.appendExtension("backup");
                 try {
                     cookieStore = cookieStore.copyTo(backup);
-                } catch( UncheckedIOException ex){
+                } catch(UncheckedIOException ex){
                     cookieStore = cookieStore.copyFileTo(backup);
                 }
                 String url = "jdbc:sqlite:" + cookieStore.getAbsolutePath();
@@ -53,12 +49,12 @@ public class ChromeCookieStoreBase {
         if(jdbc==null) throw new NullPointerException("jdbc");
     }
 
-    public ChromeCookieStoreBase() {
+    public BraveCookieStoreBase() {
         this(FilePath.getUserHomeDirectory()//
                 .child("AppData")//
                 .child("Local")//
-                .child("Google")//
-                .child("Chrome")//
+                .child("BraveSoftware")//
+                .child("Brave-Browser")//
                 .child("User Data")//
                 .child("Default")//
                 .child("Network")//
@@ -66,12 +62,11 @@ public class ChromeCookieStoreBase {
                 , FilePath.getUserHomeDirectory()//
                         .child("AppData")//
                         .child("Local")//
-                        .child("Google")//
-                        .child("Chrome")//
+                        .child("BraveSoftware")//
+                        .child("Brave-Browser")//
                         .child("User Data")//
                         .child("Default")//
                         .child("Cookies")//
-
         );
     }
 
@@ -86,7 +81,7 @@ public class ChromeCookieStoreBase {
                     String name = rs.getString(i++);
                     String path = rs.getString(i++);
                     byte[] decrypted_value = decrypt(rs.getBytes(i++));
-                    Date expires = chromeUtcToDate(rs.getString(i++));
+                    Date expires = braveUtcToDate(rs.getString(i++));
                     boolean is_secure = rs.getBoolean(i++);
                     CookieBase cookie = new CookieBase();
                     cookie.setName(name);
@@ -101,11 +96,11 @@ public class ChromeCookieStoreBase {
                 }
             }
         };
-        System.out.println("loading chrome cookies");
+        System.out.println("loading Brave cookies");
         return jdbc.query("select host_key, name, path, encrypted_value, expires_utc, is_secure from cookies", params, cookieRowMapper);
     }
 
-    private String chromeKeyringPassword = null;
+    private String braveKeyringPassword = null;
 
     private static String getMacKeyringPassword(String application) throws IOException {
         Runtime rt = Runtime.getRuntime();
@@ -154,11 +149,11 @@ public class ChromeCookieStoreBase {
         if (Utils.osgroup == OSGroup.Mac) {
             try {
                 // access the decryption password from the keyring manager
-                if (chromeKeyringPassword == null) {
-                    chromeKeyringPassword = getMacKeyringPassword("Chrome Safe Storage");
+                if (braveKeyringPassword == null) {
+                    braveKeyringPassword = getMacKeyringPassword("Brave Safe Storage");
                 }
                 byte[] salt = "saltysalt".getBytes();
-                char[] password = chromeKeyringPassword.toCharArray();
+                char[] password = braveKeyringPassword.toCharArray();
                 char[] iv = new char[16];
                 Arrays.fill(iv, ' ');
                 int keyLength = 16;
@@ -184,9 +179,9 @@ public class ChromeCookieStoreBase {
         throw new UnsupportedOperationException("" + Utils.osgroup);
     }
 
-    private static Date chromeUtcToDate(String timeString) {
+    private static Date braveUtcToDate(String timeString) {
         if ("0".equals(timeString)) return null;
-        // chrome: ldap time (if 17 digits add 1 random digit(use 0 out of
+        // brave: ldap time (if 17 digits add 1 random digit(use 0 out of
         // convenience))
         timeString = timeString.concat("0");
         long timeNoC = Long.parseLong(timeString);
@@ -200,6 +195,6 @@ public class ChromeCookieStoreBase {
     }
 
     public static void main(String[] args) {
-       new ChromeCookieStoreBase().getSerializableCookies().forEach(System.out::println);
+       new BraveCookieStoreBase().getSerializableCookies().forEach(System.out::println);
     }
 }
