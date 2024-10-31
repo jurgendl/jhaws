@@ -90,7 +90,7 @@ public class ChromeCookieStoreBase {
                     boolean is_secure = rs.getBoolean(i++);
                     CookieBase cookie = new CookieBase();
                     cookie.setName(name);
-                    cookie.setValue(new String(decrypted_value));
+                    cookie.setValue(decrypted_value==null?null:new String(decrypted_value));
                     cookie.setDomain(host_key);
                     cookie.setPath(path);
                     cookie.setExpiryDate(expires);
@@ -122,6 +122,12 @@ public class ChromeCookieStoreBase {
 
     private byte[] decrypt(byte[] encrypted_value) {
         if (Utils.osgroup == OSGroup.Windows) {
+            if(new String(encrypted_value).startsWith("v20")) return null;
+            /*{
+                byte[] trimmedData = new byte[encrypted_value.length - 4];
+                System.arraycopy(encrypted_value, 4, trimmedData, 0, trimmedData.length);
+                encrypted_value=trimmedData;
+            }*/
             return Crypt32Util.cryptUnprotectData(encrypted_value);
         }
 
