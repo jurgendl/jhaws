@@ -15,8 +15,7 @@ public class JsonCookieStoreBase {
     static CustomObjectMapper om = new CustomObjectMapper();
 
     FilePath[] cookieStores;
-
-
+    
     public JsonCookieStoreBase(FilePath... cookieStores) {
         this.cookieStores = cookieStores;
     }
