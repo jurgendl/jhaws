@@ -82,14 +82,14 @@
 		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
 		<!-- SPRING DEPENDENCIES -->
-		<version.spring>5.3.30</version.spring>		<!-- spring-core -->
+		<version.spring>5.3.39</version.spring>        <!-- spring-core -->
 		<version.spring-web>${version.spring}</version.spring-web>
-		<version.spring-ws>3.1.7</version.spring-ws>		<!-- spring-ws-core -->
-		<version.spring-integration>5.5.19</version.spring-integration>		<!-- spring-integration-core -->
-		<version.spring-security>5.8.8</version.spring-security>		<!-- spring-security-core -->
-		<version.spring-data>2.7.17</version.spring-data>		<!-- spring-data-commons -->
-		<version.spring-data-rest>3.7.17</version.spring-data-rest>		<!-- spring-data-rest-core -->
-		<version.spring-session>2.7.9</version.spring-session>		<!-- spring-session-core -->
+		<version.spring-ws>3.1.8</version.spring-ws>        <!-- spring-ws-core -->
+		<version.spring-integration>5.5.20</version.spring-integration>        <!-- spring-integration-core -->
+		<version.spring-security>5.8.14</version.spring-security>        <!-- spring-security-core -->
+		<version.spring-data>2.7.18</version.spring-data>        <!-- spring-data-commons -->
+		<version.spring-data-rest>3.7.18</version.spring-data-rest>        <!-- spring-data-rest-core -->
+		<version.spring-session>2.7.9</version.spring-session>        <!-- spring-session-core -->
 		<!-- BEGIN DEPENDENCIES -->
 		<version.liquibase>4.9.0</version.liquibase>
 		<version.liquibase-hibernate5>4.9.0</version.liquibase-hibernate5>
@@ -115,15 +115,15 @@
 		<!--version.slf4j>1.7.32</version.slf4j>
 		<version.logback>1.2.10</version.logback>
 		<version.logback.spring>0.1.5</version.logback.spring>
-		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>-->		<!-- log4j 2 bridge naar slf4j zit in log4j -->
+		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>-->        <!-- log4j 2 bridge naar slf4j zit in log4j -->
 		<!-- INHERITED -->
 		<thymeleaf.version>3.0.14.RELEASE</thymeleaf.version>
 		<netty.version>4.1.79.Final</netty.version>
-		<liquibase.version>${version.liquibase}</liquibase.version>		<!-- naam property niet veranderen, belangrijk voor interface module -->
-		<jackson.version>${version.jackson}</jackson.version>		<!-- naam property niet veranderen, belangrijk voor interface module -->
-		<spring-framework.version>${version.spring}</spring-framework.version>		<!-- naam property niet veranderen, belangrijk voor interface module -->
-		<spring-security.version>${version.spring-security}</spring-security.version>		<!-- naam property niet veranderen, belangrijk voor interface module -->
-		<spring-integration.version>${version.spring-integration}</spring-integration.version>		<!-- naam property niet veranderen, belangrijk voor interface module -->
+		<liquibase.version>${version.liquibase}</liquibase.version>        <!-- naam property niet veranderen, belangrijk voor interface module -->
+		<jackson.version>${version.jackson}</jackson.version>        <!-- naam property niet veranderen, belangrijk voor interface module -->
+		<spring-framework.version>${version.spring}</spring-framework.version>        <!-- naam property niet veranderen, belangrijk voor interface module -->
+		<spring-security.version>${version.spring-security}</spring-security.version>        <!-- naam property niet veranderen, belangrijk voor interface module -->
+		<spring-integration.version>${version.spring-integration}</spring-integration.version>        <!-- naam property niet veranderen, belangrijk voor interface module -->
 		<jackson-bom.version>${version.jackson}</jackson-bom.version>
 		<!-- ______________________ -->
 	</properties>
