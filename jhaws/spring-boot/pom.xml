@@ -11,6 +11,6 @@
 	<name>spring-boot</name>
 	<description>spring-boot</description>
 	<modules>
-		<module>spring-boot-24-parent</module>
+		<module>spring-boot-25-parent</module>
 	</modules>
 </project>
