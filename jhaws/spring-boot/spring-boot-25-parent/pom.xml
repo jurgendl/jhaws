@@ -24,12 +24,12 @@
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<!-- ______________________ -->
-		<java.version>11</java.version>
-		<targetJdk.short>11</targetJdk.short>
-		<targetJdk>11</targetJdk>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
-		<maven.compiler.release>11</maven.compiler.release>
+		<java.version>17</java.version>
+		<targetJdk.short>17</targetJdk.short>
+		<targetJdk>17</targetJdk>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.release>17</maven.compiler.release>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<forceRecheck>false</forceRecheck>
