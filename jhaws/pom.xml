@@ -29,10 +29,10 @@
 	<!--((commit/commit/push)) -->
 
 	<properties>
-		<targetJdk.short>21</targetJdk.short>
-		<targetJdk>21</targetJdk>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
+		<targetJdk.short>17</targetJdk.short>
+		<targetJdk>17</targetJdk>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 		<forceRecheck>false</forceRecheck>
