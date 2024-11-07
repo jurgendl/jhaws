@@ -12,7 +12,7 @@
 	<properties>
 		<version.elasticsearch>7.14.2</version.elasticsearch>
 		<!-- logging -->
-		<version.slf4j>1.7.32</version.slf4j>
+		<version.slf4j>1.7.36</version.slf4j>
 		<version.logback>1.2.13</version.logback>
 		<version.janino>3.1.2</version.janino>
 		<version.logback.spring>0.1.5</version.logback.spring>
