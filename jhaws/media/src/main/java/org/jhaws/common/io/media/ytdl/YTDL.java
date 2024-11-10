@@ -299,6 +299,8 @@ public class YTDL extends Tool {
 		if (StringUtils.isNotBlank(userAgent)) {
 			command.add("--user-agent");
 			command.add(getEscapeChar() + userAgent + getEscapeChar());
+			command.add("--add-header");
+			command.add(getEscapeChar() + "User-Agent:" + userAgent + getEscapeChar());
 		}
 	}
 
