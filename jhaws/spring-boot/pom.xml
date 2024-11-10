@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.jhaws.common</groupId>
 		<artifactId>jhaws-modules</artifactId>
-		<version>5.0.6-SNAPSHOT</version>
+		<version>6.0.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<packaging>pom</packaging>
@@ -11,6 +11,6 @@
 	<name>spring-boot</name>
 	<description>spring-boot</description>
 	<modules>
-		<module>spring-boot-24-parent</module>
+		<module>spring-boot-25-parent</module>
 	</modules>
 </project>

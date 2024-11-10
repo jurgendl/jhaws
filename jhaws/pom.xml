@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jhaws.common</groupId>
 	<artifactId>jhaws-modules</artifactId>
-	<version>5.0.6-SNAPSHOT</version>
+	<version>6.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>jhaws-modules</name>
 	<description>jhaws-modules</description>
@@ -29,10 +29,10 @@
 	<!--((commit/commit/push)) -->
 
 	<properties>
-		<targetJdk.short>11</targetJdk.short>
-		<targetJdk>11</targetJdk>
-		<maven.compiler.source>11</maven.compiler.source>
-		<maven.compiler.target>11</maven.compiler.target>
+		<targetJdk.short>17</targetJdk.short>
+		<targetJdk>17</targetJdk>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 		<forceRecheck>false</forceRecheck>
@@ -49,7 +49,8 @@
 		<deploy.skip.demo>true</deploy.skip.demo>
 		<deploy.skip.web>true</deploy.skip.web>
 		<!-- DEPENDENCIES -->
-		<version.bouncycastle>1.78</version.bouncycastle>
+		<version.bouncycastle>1.79</version.bouncycastle>
+		<version.bouncycastle.bcprov-ext>1.78.1</version.bouncycastle.bcprov-ext>
 		<version.commons.codec>1.15</version.commons.codec>
 		<version.commons.beanutils>1.9.4</version.commons.beanutils>
 		<version.commons.exec>1.3</version.commons.exec>
@@ -116,11 +117,11 @@
 		<version.ldapbp>1.0</version.ldapbp>
 		<version.asm>9.2</version.asm>
 		<!-- logging -->
-		<version.slf4j>1.7.32</version.slf4j>
-		<version.logback>1.2.10</version.logback>
+		<version.slf4j>1.7.36</version.slf4j>
+		<version.logback>1.2.13</version.logback>
 		<version.janino>3.1.2</version.janino>
 		<version.logback.spring>0.1.5</version.logback.spring>
-		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>		<!-- log4j 2 bridge naar slf4j zit in log4j -->
+		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>        <!-- log4j 2 bridge naar slf4j zit in log4j -->
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -328,22 +329,22 @@
 			<dependency>
 				<groupId>javax.xml.bind</groupId>
 				<artifactId>jaxb-api</artifactId>
-				<version>${version.jaxb-api}</version>				<!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-api}</version>                <!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-core</artifactId>
-				<version>${version.jaxb-core}</version>				<!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-core}</version>                <!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>com.sun.xml.bind</groupId>
 				<artifactId>jaxb-impl</artifactId>
-				<version>${version.jaxb-impl}</version>				<!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-impl}</version>                <!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>org.glassfish.jaxb</groupId>
 				<artifactId>jaxb-runtime</artifactId>
-				<version>${version.jaxb-runtime}</version>				<!--$NO-MVN-MAN-VER$ -->
+				<version>${version.jaxb-runtime}</version>                <!--$NO-MVN-MAN-VER$ -->
 			</dependency>
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
@@ -462,7 +463,7 @@
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcprov-ext-jdk15to18</artifactId>
-				<version>${version.bouncycastle}</version>
+				<version>${version.bouncycastle.bcprov-ext}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
@@ -1223,7 +1224,7 @@
 			<dependency>
 				<groupId>org.apache.tika</groupId>
 				<artifactId>tika-parsers</artifactId>
-				<version>${version.tika}</version>				<!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
+				<version>${version.tika}</version>                <!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
 				<optional>true</optional>
 				<exclusions>
 					<exclusion>
@@ -1305,7 +1306,7 @@
 			<dependency>
 				<groupId>org.apache.tika</groupId>
 				<artifactId>tika-core</artifactId>
-				<version>${version.tika}</version>				<!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
+				<version>${version.tika}</version>                <!-- breaks javax.ws.rs:javax.ws.rs-api:2.1.1/resteasy? but v1.17 has security issue -->
 				<optional>true</optional>
 				<exclusions>
 					<exclusion>
@@ -1402,7 +1403,7 @@
 				<artifactId>cxf-xjc-runtime</artifactId>
 				<version>3.0.3</version>
 			</dependency>
-			<dependency>				<!-- ntlm -->
+			<dependency>                <!-- ntlm -->
 				<groupId>jcifs</groupId>
 				<artifactId>jcifs</artifactId>
 				<version>${version.jcifs}</version>
@@ -1676,7 +1677,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>				<!--$NO-MVN-MAN-VER$ -->
+				<version>2.5.3</version>                <!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>src</releaseProfiles>
@@ -1724,7 +1725,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M5</version>				<!--$NO-MVN-MAN-VER$ -->
+				<version>3.0.0-M5</version>                <!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<testFailureIgnore>false</testFailureIgnore>
 					<forkMode>pertest</forkMode>
