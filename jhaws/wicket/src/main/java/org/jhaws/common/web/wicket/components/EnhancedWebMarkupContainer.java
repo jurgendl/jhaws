@@ -1,7 +1,5 @@
 package org.jhaws.common.web.wicket.components;
 
-
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -22,6 +20,14 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
 	public EnhancedWebMarkupContainer(String id) {
 		super(id);
 		setOutputMarkupId(true);
+	}
+
+	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		if (getOutputMarkupId() && getRenderBodyOnly()) {
+			setOutputMarkupId(false);
+		}
 	}
 
 	@Override
@@ -77,7 +83,8 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
 		return this;
 	}
 
-	public <M> EnhancedWebMarkupContainer visiblePredicate(IModel<M> model, SerializableFunction<M, Boolean> _visiblePredicate) {
+	public <M> EnhancedWebMarkupContainer visiblePredicate(IModel<M> model,
+			SerializableFunction<M, Boolean> _visiblePredicate) {
 		setVisiblePredicate(model, _visiblePredicate);
 		return this;
 	}
@@ -106,7 +113,8 @@ public class EnhancedWebMarkupContainer extends WebMarkupContainer {
 		setVisiblePredicate(() -> !visiblePredicate.apply(model.getObject()));
 	}
 
-	public <M> EnhancedWebMarkupContainer visiblePredicateInvers(IModel<M> model, SerializableFunction<M, Boolean> visiblePredicate0) {
+	public <M> EnhancedWebMarkupContainer visiblePredicateInvers(IModel<M> model,
+			SerializableFunction<M, Boolean> visiblePredicate0) {
 		setVisiblePredicateInvers(model, visiblePredicate0);
 		return this;
 	}

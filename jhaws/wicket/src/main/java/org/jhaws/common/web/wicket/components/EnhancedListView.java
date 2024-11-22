@@ -1,10 +1,6 @@
 package org.jhaws.common.web.wicket.components;
 
-import java.io.Serializable;
 import java.util.List;
-import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -60,8 +56,17 @@ public class EnhancedListView<T> extends ListView<T> {
 	}
 
 	@Override
+	protected void onBeforeRender() {
+		super.onBeforeRender();
+		if (getOutputMarkupId() && getRenderBodyOnly()) {
+			setOutputMarkupId(false);
+		}
+	}
+
+	@Override
 	protected void populateItem(ListItem<T> item) {
-		if (itemizer == null) throw new IllegalArgumentException("itemizer not set");
+		if (itemizer == null)
+			throw new IllegalArgumentException("itemizer not set");
 		item.setOutputMarkupId(true);
 		itemizer.accept(item);
 	}
@@ -120,7 +125,8 @@ public class EnhancedListView<T> extends ListView<T> {
 		return this;
 	}
 
-	public <M> EnhancedListView<T> visiblePredicate(IModel<M> model, SerializableFunction<M, Boolean> visiblePredicate0) {
+	public <M> EnhancedListView<T> visiblePredicate(IModel<M> model,
+			SerializableFunction<M, Boolean> visiblePredicate0) {
 		setVisiblePredicate(model, visiblePredicate0);
 		return this;
 	}
@@ -149,7 +155,8 @@ public class EnhancedListView<T> extends ListView<T> {
 		setVisiblePredicate(() -> !visiblePredicate0.apply(model.getObject()));
 	}
 
-	public <M> EnhancedListView<T> visiblePredicateInvers(IModel<M> model, SerializableFunction<M, Boolean> visiblePredicate0) {
+	public <M> EnhancedListView<T> visiblePredicateInvers(IModel<M> model,
+			SerializableFunction<M, Boolean> visiblePredicate0) {
 		setVisiblePredicateInvers(model, visiblePredicate0);
 		return this;
 	}
