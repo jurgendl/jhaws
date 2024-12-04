@@ -258,6 +258,34 @@ public class ElasticLowLevelClient extends ElasticConfig implements Initializing
         return objectMapper;
     }
 
+    @SuppressWarnings({ "serial" })
+    public ObjectMapper createSlimSingleLineObjectMapper() {
+        return new ObjectMapper(new JsonFactory()) {
+            {
+                registerModule(new com.fasterxml.jackson.datatype.jsr353.JSR353Module());
+                registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+                registerModule(new com.fasterxml.jackson.datatype.joda.JodaModule());
+                registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
+
+                configure(com.fasterxml.jackson.databind.SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+
+                configure(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+                configure(com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT, false);
+
+                configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+                configure(com.fasterxml.jackson.core.JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
+
+                setVisibility(getSerializationConfig().getDefaultVisibilityChecker()//
+                        .withFieldVisibility(JsonAutoDetect.Visibility.ANY)//
+                        .withGetterVisibility(JsonAutoDetect.Visibility.NONE)//
+                        .withSetterVisibility(JsonAutoDetect.Visibility.NONE)//
+                        .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));//
+            }
+        };
+    }
+
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
