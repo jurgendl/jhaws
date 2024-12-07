@@ -268,6 +268,13 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         super.shutdown();
     }
 
+    protected RuntimeException handleIOException(IOException ex) {
+        if (ex instanceof java.net.ConnectException) {
+            return new ConnectionException(java.net.ConnectException.class.cast(ex));
+        }
+        return new UncheckedIOException(ex);
+    }
+
     public RestHighLevelClient getClient() {
         synchronized (clientReference) {
             RestHighLevelClient instance = clientReference.get();
@@ -325,6 +332,10 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
     }
 
+    public <T extends ElasticDocument> boolean deleteIndex(Class<T> type) {
+        return deleteIndex(index(type));
+    }
+
     public <T extends ElasticDocument> boolean createIndex(Class<T> annotatedType) {
         return createIndex(index(annotatedType), getObjectMapping(annotatedType), settings());
     }
@@ -360,6 +371,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public Map<String, Map<String, ?>> getIndexMapping(String index) {
         return getIndexMapping(index, null);
+    }
+
+    public <T extends ElasticDocument> List<String> allFields(Class<T> annotatedType) {
+        List<String> fields = new ArrayList<>();
+        getElasticCustomizer().getObjectMapping(annotatedType, (fullName, field, fieldMapping) -> fields.add(fullName));
+        return fields;
     }
 
     @SuppressWarnings("unchecked")
@@ -1520,10 +1537,6 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
     }
 
-    public <T extends ElasticDocument> boolean deleteIndex(Class<T> type) {
-        return deleteIndex(index(type));
-    }
-
     public List<String> analyzeGlobal(Analyzer analyzer, String string) {
         return performAnalyzeRequest(createAnalyzeRequestGlobal(analyzer, string));
     }
@@ -1695,12 +1708,6 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public <T extends ElasticDocument> Map<String, Object> getObjectMapping(Class<T> annotatedType, MappingListener listener) {
         return getElasticCustomizer().getObjectMapping(annotatedType, listener);
-    }
-
-    public <T extends ElasticDocument> List<String> allFields(Class<T> annotatedType) {
-        List<String> fields = new ArrayList<>();
-        getElasticCustomizer().getObjectMapping(annotatedType, (fullName, field, fieldMapping) -> fields.add(fullName));
-        return fields;
     }
 
     // Can only use wildcard queries on keyword and text fields
@@ -2018,13 +2025,6 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         Map<String, Object> jsonToObject = (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class,
                 objectToJson(getObjectMapper(), getIndexMapping(indexClass).entrySet().stream().filter(entry -> !entry.getKey().contains(".")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
         return jsonToObject;
-    }
-
-    protected RuntimeException handleIOException(IOException ex) {
-        if (ex instanceof java.net.ConnectException) {
-            return new ConnectionException(java.net.ConnectException.class.cast(ex));
-        }
-        return new UncheckedIOException(ex);
     }
 
     private boolean skip(Object o) {
