@@ -28,6 +28,8 @@ import co.elastic.clients.elasticsearch._types.ErrorCause;
 import co.elastic.clients.elasticsearch._types.OpType;
 import co.elastic.clients.elasticsearch._types.Result;
 import co.elastic.clients.elasticsearch._types.Time;
+import co.elastic.clients.elasticsearch._types.analysis.Analyzer;
+import co.elastic.clients.elasticsearch._types.analysis.TokenFilter;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
@@ -41,6 +43,7 @@ import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexRequest;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import co.elastic.clients.elasticsearch.indices.IndexSettings;
+import co.elastic.clients.elasticsearch.indices.IndexSettingsAnalysis;
 import co.elastic.clients.elasticsearch.indices.SettingsHighlight;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
@@ -50,14 +53,15 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/searching.html
 // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/reading.html
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-indices-put-settings.html
+// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-create-index.html
 // @Component
 public class ElasticSuperClient extends ElasticLowLevelClient {
     protected transient AtomicReference<ElasticsearchClient> clientReference = new AtomicReference<>();
 
-    protected <T> List<T> toList(T id, T... ids) {
+    protected <T> List<T> toList(T item, @SuppressWarnings("unchecked") T... items) {
         List<T> list = new ArrayList<>();
-        list.add(id);
-        if (ids != null) Arrays.stream(ids).forEach(list::add);
+        list.add(item);
+        if (items != null) Arrays.stream(items).forEach(list::add);
         return list;
     }
 
@@ -152,11 +156,11 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> boolean deleteIndex(Class<T> type) {
-        return deleteIndex(index(type));
-    }
-
-    public Map<String, Object> settings() {
-        return getElasticCustomizer().settings();
+        try {
+            return deleteIndex(index(type));
+        } catch (co.elastic.clients.elasticsearch._types.ElasticsearchException ex) {
+            return false;
+        }
     }
 
     public <T extends ElasticDocument> Map<String, Object> getObjectMapping(Class<T> annotatedType) {
@@ -168,30 +172,18 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> boolean createIndex(Class<T> annotatedType) {
-        return createIndex(index(annotatedType), getObjectMapping(annotatedType), settings());
+        return createIndex(index(annotatedType), getObjectMapping(annotatedType), getElasticCustomizer().filters(), getElasticCustomizer().analyzers());
     }
 
     public boolean createIndex(String indexName) {
-        return createIndex(indexName, Collections.emptyMap(), settings());
+        return createIndex(indexName, Collections.emptyMap(), getElasticCustomizer().filters(), getElasticCustomizer().analyzers());
     }
 
-    public boolean createIndex(String indexName, Map<String, Object> mappings, Map<String, Object> settings) {
-        // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-create-index.html
+    public boolean createIndex(String indexName, Map<String, Object> objectMapping, Map<String, TokenFilter> filters, Map<String, Analyzer> analyzers) {
         try {
-            // FIXME
-            // Map<String, Object> config = new LinkedHashMap<>();
-            //// if (settings != null) config.put(SETTINGS, settings);
-            // if (mappings != null) config.put(MAPPINGS, mappings);
-
-            // LOGGER.debug("\n{}", getObjectMapper().writerFor(Map.class).writeValueAsString(config));
-            // request.source(config);
-
-            settings();
-            IndexSettings indexSettings = new IndexSettings.Builder()//
-                    .maxResultWindow(getElasticCustomizer().getMaxResultWindow())//
-                    .highlight(new SettingsHighlight.Builder().maxAnalyzedOffset(getElasticCustomizer().getHighlightMaxAnalyzedOffset()).build())//
-                    .build();
-
+            IndexSettingsAnalysis indexSettingsAnalysis = new IndexSettingsAnalysis.Builder().filter(filters).analyzer(analyzers).build();
+            SettingsHighlight settingsHighlight = new SettingsHighlight.Builder().maxAnalyzedOffset(getElasticCustomizer().getHighlightMaxAnalyzedOffset()).build();
+            IndexSettings indexSettings = new IndexSettings.Builder().maxResultWindow(getElasticCustomizer().getMaxResultWindow()).analysis(indexSettingsAnalysis).highlight(settingsHighlight).build();
             return getClient().indices().create(new CreateIndexRequest.Builder().index(indexName).settings(indexSettings).timeout(getTimeout()).build()).acknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);

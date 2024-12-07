@@ -24,14 +24,19 @@ public class ElasticDemo {
     }
 
     public static void main(String[] args) {
+        ElasticSuperClient es = null;
         try {
             Properties p = new Properties();
             p.load(new FileInputStream(System.getProperty("user.home") + "/tests/docker-es/.env"));
-            ElasticSuperClient es = new ElasticSuperClient();
+            es = new ElasticSuperClient();
             es.setPassword(p.getProperty("ELASTIC_PASSWORD"));
             es.setPort(Integer.parseInt(p.getProperty("ES_PORT")));
             es.setProtocol("https");
             es.setUrl("localhost");
+            if (true) {
+                System.out.println("a- " + es.deleteIndex(T1.class));
+                System.out.println("b- " + es.createIndex(T1.class));
+            }
             if (false) {
                 T1 t1 = new T1();
                 t1.setSize(System.currentTimeMillis());
@@ -73,9 +78,15 @@ public class ElasticDemo {
                 System.out.println("q: " + es.multiGetDocument(T1.class, null, Arrays.asList(t1.getId(), t2.getId())));
                 System.out.println("p: " + es.multiDeleteDocument(T1.class, Arrays.asList(t1.getId(), t2.getId())));
             }
-            es.shutdown();
+
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
+        } finally {
+            try {
+                es.shutdown();
+            } catch (Exception ex2) {
+                //
+            }
         }
     }
 }

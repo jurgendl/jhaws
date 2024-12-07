@@ -38,6 +38,16 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
+import co.elastic.clients.elasticsearch._types.analysis.CustomAnalyzer;
+import co.elastic.clients.elasticsearch._types.analysis.ElisionTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.LengthTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.PatternCaptureTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.PatternReplaceTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.StemmerTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.StopTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.TokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.TokenFilterDefinition;
+
 @Component
 public class ElasticCustomizer {
     protected final Logger LOGGER = LoggerFactory.getLogger(ElasticCustomizer.class);
@@ -59,83 +69,75 @@ public class ElasticCustomizer {
 
     public static final String INDEX_SETTINGS_BLOCKS_READ_ONLY = "blocks.read_only";
 
-    private static final String CUSTOM = "custom";
+    public static final String CUSTOM = "custom";
 
-    private static final String REPLACEMENT = "replacement";
+    public static final String REPLACEMENT = "replacement";
 
-    private static final String PATTERN = "pattern";
+    public static final String PATTERN = "pattern";
 
-    private static final String ENABLED = "enabled";
+    public static final String ENABLED = "enabled";
 
-    private static final String INDEX = "index";
+    public static final String INDEX = "index";
 
-    private static final String LANGUAGE = "language";
+    public static final String LANGUAGE = "language";
 
-    private static final String STOPWORDS = "stopwords";
+    public static final String STOPWORDS = "stopwords";
 
-    private static final String FIELDDATA = "fielddata";
+    public static final String FIELDDATA = "fielddata";
 
-    private static final String STORE = "store";
+    public static final String STORE = "store";
 
-    private static final String FIELDS = "fields";
+    public static final String FIELDS = "fields";
 
-    private static final String PROPERTIES = "properties";
+    public static final String PROPERTIES = "properties";
 
-    private static final String MAX = "max";
+    public static final String MAX = "max";
 
-    private static final String MIN = "min";
+    public static final String MIN = "min";
 
-    private static final String PATTERNS = "patterns";
+    public static final String PATTERNS = "patterns";
 
-    private static final String PRESERVE_ORIGINAL = "preserve_original";
+    public static final String PRESERVE_ORIGINAL = "preserve_original";
 
-    private static final String TYPE = "type";
+    public static final String TYPE = "type";
 
-    private static final String FILTER = "filter";
+    public static final String FILTER = "filter";
 
-    private static final String ANALYZER = "analyzer";
+    public static final String ANALYZER = "analyzer";
 
-    private static final String ANALYSIS = "analysis";
+    public static final String ANALYSIS = "analysis";
 
-    private static final String CHAR_FILTER = "char_filter";
+    public static final String CHAR_FILTER = "char_filter";
 
-    private static final String TOKENIZER = "tokenizer";
+    public static final String TOKENIZER = "tokenizer";
 
-    private static final String ARTICLES = "articles";
+    public static final String ARTICLES = "articles";
 
-    private static final String ARTICLES_CASE = "articles_case";
+    public static final String ARTICLES_CASE = "articles_case";
 
-    public Map<String, Object> settings() {
-        // "mappings": {
-        // "_source": {
-        // "enabled": false
-        // }
-        // }
+    public Map<String, TokenFilter> filters() {
+        Map<String, TokenFilter> filter = new LinkedHashMap<>();
+        filter.put(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER, customCleanupFilter(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER));
+        filter.put(Filters.CUSTOM_EMAIL_NAME_FILTER, customEmailNameFilter(Filters.CUSTOM_EMAIL_NAME_FILTER));
+        filter.put(Filters.CUSTOM_EMAIL_DOMAIN_FILTER, customEmailDomainFilter(Filters.CUSTOM_EMAIL_DOMAIN_FILTER));
+        filter.put(Filters.ENGLISH_STOP, customEnglishStopFilter(Filters.ENGLISH_STOP));
+        filter.put(Filters.ENGLISH_STEMMER, customEnglishStemmerFilter(Filters.ENGLISH_STEMMER));
+        filter.put(Filters.ENGLISH_POSSESSIVE_STEMMER, customEnglishPossessiveStemmerFilter(Filters.ENGLISH_POSSESSIVE_STEMMER));
+        filter.put(Filters.DUTCH_STOP, customDutchStopFilter(Filters.DUTCH_STOP));
+        filter.put(Filters.DUTCH_STEMMER, customDutchStemmerFilter(Filters.DUTCH_STEMMER));
+        filter.put(Filters.CUSTOM_TO_SPACE_FILTER, customToSpaceFilter(Filters.CUSTOM_TO_SPACE_FILTER));
+        filter.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter(Filters.CUSTOM_REMOVE_SPACE_FILTER));
+        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER));
+        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER));
+        filter.put(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER, customOnlyKeepExtendedAlphaNumericFilter(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER));
+        filter.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter(Filters.CUSTOM_FRENCH_ELISION_FILTER));
+        filter.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter(Filters.CUSTOM_FRENCH_STOP_FILTER));
+        filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter(Filters.CUSTOM_FRENCH_STEMMER_FILTER));
+        return filter;
+    }
 
-        Map<String, Object> analysis = new LinkedHashMap<>();
-        Map<String, Object> filter = new LinkedHashMap<>();
-        filter.put(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER, customCleanupFilter());
-        filter.put(Filters.CUSTOM_EMAIL_NAME_FILTER, customEmailNameFilter());
-        filter.put(Filters.CUSTOM_EMAIL_DOMAIN_FILTER, customEmailDomainFilter());
-        filter.put(Filters.ENGLISH_STOP, customEnglishStopFilter());
-        filter.put(Filters.ENGLISH_STEMMER, customEnglishStemmerFilter());
-        filter.put(Filters.ENGLISH_POSSESSIVE_STEMMER, customEnglishPossessiveStemmerFilter());
-        filter.put(Filters.DUTCH_STOP, customDutchStopFilter());
-        filter.put(Filters.DUTCH_STEMMER, customDutchStemmerFilter());
-        filter.put(Filters.CUSTOM_TO_SPACE_FILTER, customToSpaceFilter());
-        filter.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter());
-        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter());
-        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter());
-        filter.put(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER, customOnlyKeepExtendedAlphaNumericFilter());
-        filter.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter());
-        filter.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter());
-        filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter());
-        analysis.put(FILTER, filter);
-        Map<String, Object> tokenizer = new LinkedHashMap<>();
-        // tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER, customPunctuationTokenizer());
-        // tokenizer.put(Tokenizers.CUSTOM_FILENAME_TOKENIZER, customFilenameTokenizer());
-        analysis.put(TOKENIZER, tokenizer);
-        Map<String, Object> analyzer = new LinkedHashMap<>();
+    public Map<String, co.elastic.clients.elasticsearch._types.analysis.Analyzer> analyzers() {
+        Map<String, co.elastic.clients.elasticsearch._types.analysis.Analyzer> analyzer = new LinkedHashMap<>();
         analyzer.put(Analyzers.CUSTOM_CLEANUP_ANALYZER, customCleanupAnalyzer());
         analyzer.put(Analyzers.CUSTOM_DUTCH_HTML_ANALYZER, customDutchHtmlAnalyzer());
         analyzer.put(Analyzers.CUSTOM_ENGLISH_HTML_ANALYZER, customEnglishHtmlAnalyzer());
@@ -155,174 +157,153 @@ public class ElasticCustomizer {
         analyzer.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
         analyzer.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
         analyzer.put(Analyzers.CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER, customFoldedLowercaseTokensAnalyzer());
-        analysis.put(ANALYZER, analyzer);
-        Map<String, Object> settings = new LinkedHashMap<>();
-        settings.put(ANALYSIS, analysis);
-        {
-            Map<String, Object> indexSettings = new LinkedHashMap<>();
-            indexSettings.put(INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET, highlightMaxAnalyzedOffset);
-            settings.put(INDEX, indexSettings);
-        }
-        {
-            settings.put(INDEX_SETTINGS_MAX_RESULTS, maxResultWindow);
-        }
-        return settings;
+        return analyzer;
     }
 
-    public Map<String, Object> customEnglishHtmlAnalyzer() {
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-htmlstrip-charfilter.html
-        // standardTokenizer:
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-tokenizers.html
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-        analyzerConfig.put(CHAR_FILTER, Arrays.asList(CharacterFilter.html_strip.id()));
-        analyzerConfig.put(FILTER, Arrays.asList(Filters.ENGLISH_POSSESSIVE_STEMMER, Filter.lowercase.id(), Filters.ENGLISH_STOP, Filters.ENGLISH_STEMMER));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customEnglishHtmlAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.standard.id()//
+        ).charFilter(Arrays.asList(//
+                CharacterFilter.html_strip.id()//
+        )).filter(Arrays.asList(//
+                Filters.ENGLISH_POSSESSIVE_STEMMER//
+                , Filter.lowercase.id()//
+                , Filters.ENGLISH_STOP//
+                , Filters.ENGLISH_STEMMER//
+        )).build()).build();
     }
 
-    public Map<String, Object> customDutchHtmlAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-        analyzerConfig.put(CHAR_FILTER, Arrays.asList(CharacterFilter.html_strip.id()));
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.lowercase.id(), Filters.DUTCH_STOP, Filters.DUTCH_STEMMER));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customDutchHtmlAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.standard.id()//
+        ).charFilter(Arrays.asList(//
+                CharacterFilter.html_strip.id()//
+        )).filter(Arrays.asList(//
+                Filter.lowercase.id()//
+                , Filters.DUTCH_STOP//
+                , Filters.DUTCH_STEMMER//
+        )).build()).build();
     }
 
-    public Map<String, Object> customAsciiFoldingAnalyzer() {
-        // https: //
-        // www.elastic.co/guide/en/elasticsearch/reference/current/analysis-asciifolding-tokenfilter.html
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id()));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customAsciiFoldingAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.standard.id()//
+        ).filter(Arrays.asList(//
+                Filter.asciifolding.id()//
+        )).build()).build();
     }
 
-    public Map<String, Object> customCleanupFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.length.id());
-        filterConfig.put(MIN, 3);
-        filterConfig.put(MAX, 20);
-        return filterConfig;
+    public TokenFilter customCleanupFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().length(new LengthTokenFilter.Builder().min(3).max(20).build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customCleanupAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-        analyzerConfig.put(FILTER, Arrays.asList(//
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customCleanupAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.standard.id()//
+        ).filter(Arrays.asList(//
                 Filter.trim.id()//
                 , Filter.asciifolding.id()//
                 , Filter.lowercase.id()//
                 , Filter.word_delimiter.id()//
                 , Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER//
-        ));
-        return analyzerConfig;
+        )).build()).build();
     }
 
-    public Map<String, Object> customEnglishPossessiveStemmerFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.stemmer.id());
-        filterConfig.put(LANGUAGE, "possessive_" + Language.english.id());
-        return filterConfig;
+    public TokenFilter customEnglishPossessiveStemmerFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().stemmer(new StemmerTokenFilter.Builder().language("possessive_" + Language.english.id()).build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customDutchStemmerFilter() {
-        return customStemmerFilter(Stemmer.dutch);
+    public TokenFilter customDutchStemmerFilter(String name) {
+        return customStemmerFilter(name, Stemmer.dutch);
     }
 
-    public Map<String, Object> customEnglishStemmerFilter() {
-        return customStemmerFilter(Stemmer.english);
+    public TokenFilter customEnglishStemmerFilter(String name) {
+        return customStemmerFilter(name, Stemmer.english);
     }
 
-    public Map<String, Object> customFrenchStemmerFilter() {
-        return customStemmerFilter(Stemmer.french);
+    public TokenFilter customFrenchStemmerFilter(String name) {
+        return customStemmerFilter(name, Stemmer.french);
     }
 
-    public Map<String, Object> customDutchStopFilter() {
-        return customStopFilter(Language.dutch);
+    public TokenFilter customDutchStopFilter(String name) {
+        return customStopFilter(name, Language.dutch);
     }
 
-    public Map<String, Object> customEnglishStopFilter() {
-        return customStopFilter(Language.english);
+    public TokenFilter customEnglishStopFilter(String name) {
+        return customStopFilter(name, Language.english);
     }
 
-    public Map<String, Object> customFrenchStopFilter() {
-        return customStopFilter(Language.french);
+    public TokenFilter customFrenchStopFilter(String name) {
+        return customStopFilter(name, Language.french);
     }
 
-    public Map<String, Object> customEmailAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.uax_url_email.id());
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customEmailAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.uax_url_email.id()//
+        ).build()).build();
     }
 
-    public Map<String, Object> customEmailDomainAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.uax_url_email.id());
-        analyzerConfig.put(FILTER, Arrays.asList(//
-                Filters.CUSTOM_EMAIL_DOMAIN_FILTER//
-                , Filter.lowercase.id()//
-        ));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customEmailDomainAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.uax_url_email.id()//
+        ).filter(Arrays.asList(//
+                Filters.CUSTOM_EMAIL_DOMAIN_FILTER, //
+                Filter.lowercase.id()//
+        )).build()).build();
     }
 
-    public Map<String, Object> customEmailNameAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.uax_url_email.id());
-        analyzerConfig.put(FILTER, Arrays.asList(//
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customEmailNameAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.uax_url_email.id()//
+        ).filter(Arrays.asList(//
                 Filters.CUSTOM_EMAIL_NAME_FILTER//
                 , Filter.lowercase.id()//
                 , Filter.word_delimiter.id()//
                 , Filter.unique.id()//
-        ));
-        return analyzerConfig;
+        )).build()).build();
     }
 
-    public Map<String, Object> customEmailNameKeepTogetherAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.uax_url_email.id());
-        analyzerConfig.put(FILTER, Arrays.asList(//
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customEmailNameKeepTogetherAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.uax_url_email.id()//
+        ).filter(Arrays.asList(//
                 Filters.CUSTOM_EMAIL_NAME_FILTER//
                 , Filter.lowercase.id()//
-        ));
-        return analyzerConfig;
+        )).build()).build();
     }
 
-    public Map<String, Object> customEmailDomainFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.pattern_capture.id());
-        filterConfig.put(PRESERVE_ORIGINAL, false);
-        filterConfig.put(PATTERNS, Arrays.asList("@(.+)"));
-        return filterConfig;
+    public TokenFilter customEmailDomainFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().patternCapture(new PatternCaptureTokenFilter.Builder().preserveOriginal(false).patterns(Arrays.asList("@(.+)")).build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customEmailNameFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.pattern_capture.id());
-        filterConfig.put(PRESERVE_ORIGINAL, false);
-        filterConfig.put(PATTERNS, Arrays.asList("(.+)@"));
-        return filterConfig;
+    public TokenFilter customEmailNameFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().patternCapture(new PatternCaptureTokenFilter.Builder().preserveOriginal(false).patterns(Arrays.asList("(.+)@")).build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customStemmerFilter(Stemmer language) {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.stemmer.id());
-        filterConfig.put(LANGUAGE, language.id());
-        return filterConfig;
+    public TokenFilter customStemmerFilter(String name, Stemmer language) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().stemmer(new StemmerTokenFilter.Builder().language(language.id()).build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customStopFilter(Language language) {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.stop.id());
-        filterConfig.put(STOPWORDS, "_" + language.id() + "_");
-        return filterConfig;
+    public TokenFilter customStopFilter(String name, Language language) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().stop(new StopTokenFilter.Builder().stopwords("_" + language.id() + "_").build()).build());
+        return builder.build();
     }
 
     public Map<String, Object> getObjectMapping(Class<?> annotatedType, MappingListener listener) {
@@ -479,7 +460,7 @@ public class ElasticCustomizer {
         $mappings_fields(language, reflectField.getType(), mapping, join(prefixList, nestedPrefix), join(actualNestingList, nestedPrefix), listener);
     }
 
-    private List<String> join(List<String> list, String element) {
+    public List<String> join(List<String> list, String element) {
         List<String> merged = new ArrayList<>(list);
         merged.add(element);
         return Collections.unmodifiableList(merged);
@@ -491,7 +472,7 @@ public class ElasticCustomizer {
             language = nestedFieldLanguage;
         }
         // if (nestedField.nested()) {
-        // Map<String, Object> mappings = new TreeMap<>();
+        // co.elastic.clients.elasticsearch._types.analysis.Analyzer mappings = new TreeMap<>();
         // mappings.put(TYPE, "nested"/* FieldType.NESTED.id() */);
         // mapping.put(reflectField.getName(), mappings);
         // } else {
@@ -511,17 +492,17 @@ public class ElasticCustomizer {
         // }
     }
 
-    private String nestedFieldName(Field nestedField) {
+    public String nestedFieldName(Field nestedField) {
         return StringUtils.isBlank(nestedField.value()) ? nestedField.name() : nestedField.value();
     }
 
-    private Language nestedFieldLanguage(NestedField nestedField) {
+    public Language nestedFieldLanguage(NestedField nestedField) {
         if (nestedField.language() != Language.uninitialized) return nestedField.language();
         if (nestedField.value() != Language.uninitialized) return nestedField.value();
         return Language.uninitialized;
     }
 
-    private String onlySaveName(OnlySave onlySave) {
+    public String onlySaveName(OnlySave onlySave) {
         return StringUtils.isBlank(onlySave.value()) ? onlySave.name() : onlySave.value();
     }
 
@@ -641,157 +622,131 @@ public class ElasticCustomizer {
         return FieldType.TEXT;
     }
 
-    public Map<String, Object> customToSpaceFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.pattern_replace.id());
-        String pattern = "["//
-                + ".,!?"//
-                + "]";
-        filterConfig.put(PATTERN, pattern);
-        filterConfig.put(REPLACEMENT, " ");
-        return filterConfig;
+    public TokenFilter customToSpaceFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().patternReplace(new PatternReplaceTokenFilter.Builder().pattern("[" + ".,!?" + "]").replacement(" ").build()).build());
+        return builder.build();
     }
 
-    // public Map<String, Object> customFilenameTokenizer() {
-    // Map<String, Object> cfg = new LinkedHashMap<>();
-    // cfg.put(TYPE, PATTERN);
-    // String pattern = "["//
-    // + " "//
-    // + ".,!?"//
-    // + "_-"//
-    // + "]";
-    // System.out.println(pattern);
-    // cfg.put(PATTERN, pattern);
-    // return cfg;
-    // }
-    //
-    // public Map<String, Object> customPunctuationTokenizer() {
-    // Map<String, Object> cfg = new LinkedHashMap<>();
-    // cfg.put(TYPE, PATTERN);
-    // cfg.put(PATTERN, "["//
-    // + " "//
-    // + ".,!?"//
-    // + "]");
-    // return cfg;
-    // }
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customWordDelimiterGraphAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.keyword.id()//
+        ).filter(Arrays.asList(//
+                Filter.word_delimiter_graph.id()//
+        )).build()).build();
 
-    public Map<String, Object> customWordDelimiterGraphAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.word_delimiter_graph.id()));
-        return analyzerConfig;
     }
 
-    public Map<String, Object> customFilenameAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.word_delimiter_graph.id(), Filter.asciifolding.id(), Filter.lowercase.id()));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customFilenameAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.keyword.id()//
+        ).filter(Arrays.asList(//
+                Filter.word_delimiter_graph.id()//
+                , Filter.asciifolding.id()//
+                , Filter.lowercase.id()//
+        )).build()).build();
     }
 
-    public Map<String, Object> customWhitespaceAnalyzer() {
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-lowercase-tokenfilter.html
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.whitespace.id());
-        analyzerConfig.put(FILTER, Filter.lowercase.id());
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customWhitespaceAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.whitespace.id()//
+        ).filter(Arrays.asList(//
+                Filter.lowercase.id()//
+        )).build()).build();
     }
 
-    public Map<String, Object> customNameKeepTogetherAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.lowercase.id()));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customNameKeepTogetherAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.keyword.id()//
+        ).filter(Arrays.asList(//
+                Filter.asciifolding.id()//
+                , Filter.lowercase.id()//
+        )).build()).build();
     }
 
-    public Map<String, Object> customRemoveSpaceFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.pattern_replace.id());
-        String pattern = "["//
-                + " "//
-                + "]";
-        filterConfig.put(PATTERN, pattern);
-        filterConfig.put(REPLACEMENT, "");
-        return filterConfig;
+    public TokenFilter customRemoveSpaceFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().patternReplace(new PatternReplaceTokenFilter.Builder().pattern("[" + " " + "]").replacement("").build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customSortableAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filters.CUSTOM_REMOVE_SPACE_FILTER, Filter.uppercase.id()));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customSortableAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.keyword.id()//
+        ).filter(Arrays.asList(//
+                Filter.asciifolding.id()//
+                , Filters.CUSTOM_REMOVE_SPACE_FILTER//
+                , Filter.uppercase.id()//
+        )).build()).build();
     }
 
-    public Map<String, Object> customOnlyKeepAlphaFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.pattern_replace.id());
-        String pattern = "[^A-Za-z]";
-        filterConfig.put(PATTERN, pattern);
-        filterConfig.put(REPLACEMENT, "");
-        return filterConfig;
+    public TokenFilter customOnlyKeepAlphaFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().patternReplace(new PatternReplaceTokenFilter.Builder().pattern("[^A-Za-z]").replacement("").build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customSortableOnlyAlphaAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customSortableOnlyAlphaAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.keyword.id()//
+        ).filter(Arrays.asList(//
+                Filter.asciifolding.id()//
+                , Filter.uppercase.id()//
+                , Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER//
+        )).build()).build();
     }
 
-    public Map<String, Object> customOnlyKeepAlphaNumericFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.pattern_replace.id());
-        String pattern = "[^A-Za-z0-9]";
-        filterConfig.put(PATTERN, pattern);
-        filterConfig.put(REPLACEMENT, "");
-        return filterConfig;
+    public TokenFilter customOnlyKeepAlphaNumericFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().patternReplace(new PatternReplaceTokenFilter.Builder().pattern("[^A-Za-z0-9]").replacement("").build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customOnlyKeepExtendedAlphaNumericFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.pattern_replace.id());
-        String pattern = "[^\\p{L}\\p{Nd}]";
-        filterConfig.put(PATTERN, pattern);
-        filterConfig.put(REPLACEMENT, "");
-        return filterConfig;
+    public TokenFilter customOnlyKeepExtendedAlphaNumericFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().patternReplace(new PatternReplaceTokenFilter.Builder().pattern("[^\\p{L}\\p{Nd}]").replacement("").build()).build());
+        return builder.build();
     }
 
-    public Map<String, Object> customSortableOnlyAlphaNumericAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customSortableOnlyAlphaNumericAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.keyword.id()//
+        ).filter(Arrays.asList(//
+                Filter.asciifolding.id()//
+                , Filter.uppercase.id()//
+                , Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER//
+        )).build()).build();
     }
 
-    public Map<String, Object> customSortableExtendedAlphaNumericAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.keyword.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.uppercase.id(), Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customSortableExtendedAlphaNumericAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.keyword.id()//
+        ).filter(Arrays.asList(//
+                Filter.asciifolding.id()//
+                , Filter.uppercase.id()//
+                , Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER//
+        )).build()).build();
     }
 
     @Value("${elasticCustomizer.index.highlightMaxAnalyzedOffset:1000000}") // 10_000_000
-    private Integer highlightMaxAnalyzedOffset = 1_000_000;
+    public Integer highlightMaxAnalyzedOffset = 1_000_000;
 
     @Value("${elasticCustomizer.index.maxClauses:1024}") // 1024
-    private Integer maxClauses = 1024;
+    public Integer maxClauses = 1024;
 
     @Value("${elasticCustomizer.index.maxResultWindow:10000}") // 100_000
-    private Integer maxResultWindow = 10_000;
+    public Integer maxResultWindow = 10_000;
 
     @Value("${elasticCustomizer.cluster.searchMaxBuckets:10000}") // 100_000
-    private Integer searchMaxBuckets = 10_000;
+    public Integer searchMaxBuckets = 10_000;
 
     @Value("${elasticCustomizer.trackTotalHits:10000}") // 10_000
-    private Integer trackTotalHits = 10_000;
+    public Integer trackTotalHits = 10_000;
 
     public Integer getHighlightMaxAnalyzedOffset() {
         return highlightMaxAnalyzedOffset;
@@ -817,20 +772,23 @@ public class ElasticCustomizer {
         this.searchMaxBuckets = searchMaxBuckets;
     }
 
-    public Map<String, Object> customAnyLanguageAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.apostrophe.id(), Filter.asciifolding.id(), Filter.lowercase.id()));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customAnyLanguageAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.standard.id()//
+        ).filter(Arrays.asList(//
+                Filter.apostrophe.id()//
+                , Filter.asciifolding.id()//
+                , Filter.lowercase.id()//
+        )).build()).build();
     }
 
-    public Map<String, Object> customFoldedLowercaseTokensAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-        analyzerConfig.put(FILTER, Arrays.asList(Filter.asciifolding.id(), Filter.lowercase.id()));
-        return analyzerConfig;
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customFoldedLowercaseTokensAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.standard.id()//
+        ).filter(Arrays.asList(//
+                Filter.asciifolding.id()//
+                , Filter.lowercase.id()//
+        )).build()).build();
     }
 
     public static final List<Analyzer> ANALYZER_EXCLUDE_TRYOUTS = Arrays.asList(//
@@ -841,40 +799,23 @@ public class ElasticCustomizer {
             Analyzer.language_polish//
     );
 
-    private Map<String, String> replaceAnalyzers = new LinkedHashMap<>();
-
-    public Map<String, String> getReplaceAnalyzers() {
-        return this.replaceAnalyzers;
+    public TokenFilter customFrenchElisionFilter(String name) {
+        TokenFilter.Builder builder = new TokenFilter.Builder();
+        builder.name(name);
+        builder.definition(new TokenFilterDefinition.Builder().elision(new ElisionTokenFilter.Builder().articlesCase(true).articles("l", "m", "t", "qu", "n", "s", "j", "d", "c", "jusqu", "quoiqu", "lorsqu", "puisqu").build()).build());
+        return builder.build();
     }
 
-    public void setReplaceAnalyzers(Map<String, String> replaceAnalyzers) {
-        this.replaceAnalyzers = replaceAnalyzers;
-    }
-
-    public String replaceAnalyze(String analyzer) {
-        return Optional.ofNullable(replaceAnalyzers.get(analyzer)).orElse(analyzer);
-    }
-
-    public Map<String, Object> customFrenchElisionFilter() {
-        Map<String, Object> filterConfig = new LinkedHashMap<>();
-        filterConfig.put(TYPE, Filter.elision.id());
-        filterConfig.put(ARTICLES_CASE, true);
-        filterConfig.put(ARTICLES, Arrays.asList("l", "m", "t", "qu", "n", "s", "j", "d", "c", "jusqu", "quoiqu", "lorsqu", "puisqu"));
-        return filterConfig;
-    }
-
-    public Map<String, Object> customFrenchLanguageAnalyzer() {
-        Map<String, Object> analyzerConfig = new LinkedHashMap<>();
-        analyzerConfig.put(TYPE, CUSTOM);
-        analyzerConfig.put(TOKENIZER, Tokenizer.standard.id());
-        analyzerConfig.put(FILTER, Arrays.asList(//
+    public co.elastic.clients.elasticsearch._types.analysis.Analyzer customFrenchLanguageAnalyzer() {
+        return new co.elastic.clients.elasticsearch._types.analysis.Analyzer.Builder().custom(new CustomAnalyzer.Builder().tokenizer(//
+                Tokenizer.standard.id()//
+        ).filter(Arrays.asList(//
                 Filters.CUSTOM_FRENCH_ELISION_FILTER, //
                 Filter.lowercase.id(), //
                 Filter.asciifolding.id(), //
                 Filters.CUSTOM_FRENCH_STOP_FILTER, //
                 Filters.CUSTOM_FRENCH_STEMMER_FILTER//
-        ));
-        return analyzerConfig;
+        )).build()).build();
     }
 
     public Integer getTrackTotalHits() {
@@ -887,11 +828,11 @@ public class ElasticCustomizer {
 
     /** in milliseconds */
     @Value("${elasticCustomizer.client.connection.timeout:1000}") // 1_000
-    private Integer connectionTimeout = 1_000;
+    public Integer connectionTimeout = 1_000;
 
     /** in milliseconds */
     @Value("${elasticCustomizer.client.connection.socketTimeout:30000}") // 30_000
-    private Integer socketTimeout = 30_000;
+    public Integer socketTimeout = 30_000;
 
     public Integer getConnectionTimeout() {
         return this.connectionTimeout;
@@ -915,5 +856,19 @@ public class ElasticCustomizer {
 
     public void setMaxClauses(Integer maxClauses) {
         this.maxClauses = maxClauses;
+    }
+
+    private Map<String, String> replaceAnalyzers = new LinkedHashMap<>();
+
+    public Map<String, String> getReplaceAnalyzers() {
+        return this.replaceAnalyzers;
+    }
+
+    public void setReplaceAnalyzers(Map<String, String> replaceAnalyzers) {
+        this.replaceAnalyzers = replaceAnalyzers;
+    }
+
+    public String replaceAnalyze(String analyzer) {
+        return Optional.ofNullable(replaceAnalyzers.get(analyzer)).orElse(analyzer);
     }
 }
