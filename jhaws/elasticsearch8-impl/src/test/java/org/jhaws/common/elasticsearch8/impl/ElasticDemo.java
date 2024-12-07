@@ -126,7 +126,7 @@ public class ElasticDemo {
 
                 System.out.println(es.getIndexMapping(T1.class));
                 Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields("string").query("A").build()).build();
-                es.query(T1.class, q).stream().forEach(System.out::println);
+                es.query(T1.class, q, null, null, null, null).stream().forEach(System.out::println);
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.out);

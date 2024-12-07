@@ -30,6 +30,7 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.ErrorCause;
 import co.elastic.clients.elasticsearch._types.OpType;
 import co.elastic.clients.elasticsearch._types.Result;
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.Time;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
@@ -134,8 +135,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return new Time.Builder().time("1m").build();
     }
 
-    public Time getScrollTimeout() {
+    public Time getMediumTimeout() {
         return new Time.Builder().time("5m").build();
+    }
+
+    public Time getLongTimeout() {
+        return new Time.Builder().time("1h").build();
     }
 
     public boolean ping() {
@@ -388,7 +393,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             return getClient().bulk(ids.stream()
                     .reduce(new BulkRequest.Builder(), (BulkRequest.Builder bulkRequestBuilder, String id) -> bulkRequestBuilder.operations(new BulkOperation.Builder().delete(new DeleteOperation.Builder().index(index(type)).id(id).build()).build()),
                             (BulkRequest.Builder bulkRequestBuilder, BulkRequest.Builder ignore) -> bulkRequestBuilder)
-                    .timeout(getScrollTimeout()).build()).items().stream().map(item -> item.error()).filter(Objects::nonNull).toList();
+                    .timeout(getMediumTimeout()).build()).items().stream().map(item -> item.error()).filter(Objects::nonNull).toList();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -405,7 +410,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                             (BulkRequest.Builder bulkRequestBuilder, T document) -> bulkRequestBuilder
                                     .operations(new BulkOperation.Builder().index(new IndexOperation.Builder<T>().index(index(document)).id(id(document)).version(version(document)).document(document).build()).build()),
                             (BulkRequest.Builder bulkRequestBuilder, BulkRequest.Builder ignore) -> bulkRequestBuilder)
-                    .timeout(getScrollTimeout()).build()).items().stream().map(item -> item.error()).filter(Objects::nonNull).toList();
+                    .timeout(getMediumTimeout()).build()).items().stream().map(item -> item.error()).filter(Objects::nonNull).toList();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -420,7 +425,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
         Pagination pagination;
 
-        // FIXME List<SortBuilder<?>> sort;
+        List<SortOptions> sort;
 
         List<String> includes;
 
@@ -520,14 +525,6 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         if (context.pagination != null) {
             // context.searchSourceBuilder.size(context.pagination.getMax());
         }
-
-        // FIXME context.searchSourceBuilder.timeout(getTimeout());
-
-        // FIXME if (context.sort != null) {
-        // FIXME context.sort.forEach(context.searchSourceBuilder::sort);
-        // FIXME }
-
-        // FIXME context.searchSourceBuilder.fetchSource(fetch(true, context.includes, context.excludes));
     }
 
     protected <T extends ElasticDocument> void $$query_highlight_prepare(QueryContext<T> context) {
@@ -543,10 +540,13 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
     }
 
-    public <T extends ElasticDocument> List<QueryResult<T>> query(Class<T> type, Query query) {
+    public <T extends ElasticDocument> List<QueryResult<T>> query(Class<T> type, Query query, Pagination pagination, List<SortOptions> sort, List<String> includes, List<String> excludes) {
         try {
-            // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/searching.html
             QueryContext<T> context = new QueryContext<T>();
+            context.pagination = pagination;
+            context.sort = sort;
+            context.includes = includes;
+            context.excludes = excludes;
             context.type = type;
             context.index = index(type);
             context.query = query;
@@ -564,18 +564,19 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             if (context.scrolling != null) {
                 context.scrolling.setStart(context.scrolling.getStart() + context.scrolling.getMax());
                 ScrollRequest.Builder scrollRequestBuilder = new ScrollRequest.Builder();
-                scrollRequestBuilder.scroll(getScrollTimeout());
+                scrollRequestBuilder.scroll(getLongTimeout());
                 if (context.scrolling.getScrollId() != null) scrollRequestBuilder.scrollId(context.scrolling.getScrollId());
                 context.scrollRequest = scrollRequestBuilder.build();
                 context.scrollResponse = getClient().scroll(context.scrollRequest, context.type);
-                context.scrolling.setScrollId(context.searchResponse.scrollId());
             } else {
                 SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder();
+                if (context.sort != null) searchRequestBuilder.sort(context.sort);
                 searchRequestBuilder.index(context.index);
                 searchRequestBuilder.source(context.searchSourceBuilder.build());
                 searchRequestBuilder.query(context.query != null ? context.query : QueryBuilders.matchAll().build()._toQuery());
                 context.searchRequest = searchRequestBuilder.build();
                 context.searchResponse = getClient().search(context.searchRequest, context.type);
+                if (context.scrolling != null) context.scrolling.setScrollId(context.searchResponse.scrollId());
             }
         } catch (IOException ex) {
             throw handleIOException(ex);
