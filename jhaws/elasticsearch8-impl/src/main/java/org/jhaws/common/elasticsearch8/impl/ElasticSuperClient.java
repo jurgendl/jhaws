@@ -210,6 +210,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             SettingsHighlight settingsHighlight = new SettingsHighlight.Builder().maxAnalyzedOffset(getElasticCustomizer().getHighlightMaxAnalyzedOffset()).build();
             IndexSettings indexSettings = new IndexSettings.Builder().maxResultWindow(getElasticCustomizer().getMaxResultWindow()).analysis(indexSettingsAnalysis).highlight(settingsHighlight).build();
             return getClient().indices().create(new CreateIndexRequest.Builder().index(indexName).settings(indexSettings).timeout(getTimeout()).build()).acknowledged();
+        } catch (co.elastic.clients.elasticsearch._types.ElasticsearchException ex) {
+            return false;
         } catch (IOException ex) {
             throw handleIOException(ex);
         }

@@ -36,6 +36,9 @@ public class ElasticDemo {
             if (true) {
                 System.out.println("a- " + es.deleteIndex(T1.class));
                 System.out.println("b- " + es.createIndex(T1.class));
+                System.out.println("b- " + es.createIndex(T1.class));
+                System.out.println("a- " + es.deleteIndex(T1.class));
+                System.out.println("a- " + es.deleteIndex(T1.class));
             }
             if (false) {
                 T1 t1 = new T1();
