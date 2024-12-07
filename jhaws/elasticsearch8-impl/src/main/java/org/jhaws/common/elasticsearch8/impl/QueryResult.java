@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryResult<T> {
-    private Float score;
+    private Double score;
 
-    private Float maxScore;
+    private Double maxScore;
 
     private T result;
 
@@ -19,14 +19,14 @@ public class QueryResult<T> {
         super();
     }
 
-    public QueryResult(Float score, Float maxScore, String id, T result) {
+    public QueryResult(Double score, Double maxScore, String id, T result) {
         this.id = id;
         this.score = score;
         this.maxScore = maxScore;
         this.result = result;
     }
 
-    public QueryResult(Float score, Float maxScore, String id, T result, Map<String, List<String>> highlights) {
+    public QueryResult(Double score, Double maxScore, String id, T result, Map<String, List<String>> highlights) {
         this.id = id;
         this.score = score;
         this.maxScore = maxScore;
@@ -50,19 +50,19 @@ public class QueryResult<T> {
         this.highlights = highlights;
     }
 
-    public Float getScore() {
+    public Double getScore() {
         return this.score;
     }
 
-    public void setScore(Float score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 
-    public Float getMaxScore() {
+    public Double getMaxScore() {
         return this.maxScore;
     }
 
-    public void setMaxScore(Float maxScore) {
+    public void setMaxScore(Double maxScore) {
         this.maxScore = maxScore;
     }
 

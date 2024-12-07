@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -22,19 +23,23 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.jhaws.common.elasticsearch.common.ElasticDocument;
+import org.jhaws.common.elasticsearch.common.Pagination;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.ErrorCause;
 import co.elastic.clients.elasticsearch._types.OpType;
 import co.elastic.clients.elasticsearch._types.Result;
 import co.elastic.clients.elasticsearch._types.Time;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.MgetRequest;
+import co.elastic.clients.elasticsearch.core.ScrollRequest;
+import co.elastic.clients.elasticsearch.core.ScrollResponse;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
@@ -42,6 +47,9 @@ import co.elastic.clients.elasticsearch.core.bulk.DeleteOperation;
 import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
 import co.elastic.clients.elasticsearch.core.mget.MultiGetOperation;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.HitsMetadata;
+import co.elastic.clients.elasticsearch.core.search.SourceConfig;
+import co.elastic.clients.elasticsearch.core.search.SourceFilter;
 import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import co.elastic.clients.elasticsearch.core.search.TotalHitsRelation;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
@@ -403,28 +411,171 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
     }
 
-    public <T extends ElasticDocument> void query(Class<T> type, String field, String searchText) {
+    static class QueryContext<T extends ElasticDocument> {
+        Class<T> type;
+
+        String index;
+
+        Query query;
+
+        Pagination pagination;
+
+        // FIXME List<SortBuilder<?>> sort;
+
+        List<String> includes;
+
+        List<String> excludes;
+
+        Mapper<T> mapper;
+
+        List<String> highlight;
+
+        Scrolling scrolling;
+
+        SourceConfig.Builder searchSourceBuilder;
+
+        SearchRequest searchRequest;
+
+        ScrollRequest scrollRequest;
+
+        ScrollResponse<T> scrollResponse;
+
+        SearchResponse<T> searchResponse;
+
+        double maxScore;
+    }
+
+    protected <T extends ElasticDocument> List<QueryResult<T>> $$query_resolve_results(QueryContext<T> context) {
+        HitsMetadata<T> hits = context.searchResponse.hits();
+        context.maxScore = hits.maxScore();
+        TotalHits totalHits = hits.total();
+        // the total number of hits, must be interpreted in the context of
+        // totalHits.relation
+        long numHits = totalHits.value();
+        // whether the number of hits is accurate (EQUAL_TO) or a lower bound of the
+        // total (GREATER_THAN_OR_EQUAL_TO)
+        TotalHitsRelation relation = totalHits.relation();
+        if (relation != TotalHitsRelation.Eq) {
+            LOGGER.warn("{} {}", relation, numHits);
+        }
+        List<Hit<T>> searchHits = hits.hits();
+        context.pagination.setTotal(numHits);
+        context.pagination.setResults(searchHits == null ? 0 : searchHits.size());
+        if (context.scrolling != null && context.pagination.getResults() < context.pagination.getMax()) { // FIXME misschien == 0
+            // FIXME stopScrolling(context.scrolling);
+        }
+
+        List<QueryResult<T>> qr = new ArrayList<>();
+        if (searchHits != null && searchHits.size() > 0) {
+            for (Hit<T> hit : searchHits) {
+                T result = hit.source();
+                Map<String, List<String>> highlightC = new LinkedHashMap<String, List<String>>();
+                if (context.highlight != null && !context.highlight.isEmpty()) {
+                    Map<String, List<String>> highlightFields = hit.highlight();
+                    context.highlight.forEach(veld -> {
+                        List<String> highlightField = highlightFields.get(veld);
+                        if (highlightField != null) {
+                            highlightC.put(veld, highlightField);
+                        }
+                    });
+                }
+                qr.add(new QueryResult<>(hit.score(), hits.maxScore(), result.getId(), result, highlightC));
+            }
+        }
+        return qr;
+    }
+
+    protected <T extends ElasticDocument> void $$query_prepare(QueryContext<T> context) {
+        if (context.pagination == null) {
+            context.pagination = new Pagination();
+        }
+        if (context.pagination instanceof Scrolling) {
+            context.scrolling = Scrolling.class.cast(context.pagination);
+        }
+
+        context.searchSourceBuilder = new SourceConfig.Builder();
+        context.searchSourceBuilder.fetch(true);
+        SourceFilter.Builder sourceFilterBuilder = new SourceFilter.Builder();
+        if (context.includes != null) sourceFilterBuilder.includes(context.includes);
+        if (context.excludes != null) sourceFilterBuilder.excludes(context.excludes);
+        context.searchSourceBuilder.filter(sourceFilterBuilder.build());
+
+        // correct number of results up to 100k instead of 10k, somewhat slower
+        // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-your-data.html
+        if (!(context.pagination instanceof Scrolling)) {
+            // context.searchSourceBuilder.trackTotalHitsUpTo(elasticCustomizer.getTrackTotalHits());
+        }
+
+        // FIXME if (context.sort != null && !context.sort.isEmpty()) context.searchSourceBuilder.trackScores(true);// adds score when sorting
+
+        // // searchSourceBuilder.profile(true); // doesn't work with pagination
+
+        // FIXME context.searchSourceBuilder.query(context.query == null ? QueryBuilders.matchAllQuery() : context.query);
+
+        if (!(context.pagination instanceof Scrolling)) {
+            // FIXME context.searchSourceBuilder.from(context.pagination.getStart());
+        } else if (context.pagination.getStart() != 0 && Scrolling.class.cast(context.pagination).getScrollId() == null) {
+            LOGGER.error("no offset when using Scrolling, use Pagination instead");
+        }
+        if (context.pagination != null) {
+            // context.searchSourceBuilder.size(context.pagination.getMax());
+        }
+
+        // FIXME context.searchSourceBuilder.timeout(getTimeout());
+
+        // FIXME if (context.sort != null) {
+        // FIXME context.sort.forEach(context.searchSourceBuilder::sort);
+        // FIXME }
+
+        // FIXME context.searchSourceBuilder.fetchSource(fetch(true, context.includes, context.excludes));
+    }
+
+    protected <T extends ElasticDocument> void $$query_highlight_prepare(QueryContext<T> context) {
+        if (context.highlight != null && !context.highlight.isEmpty()) {
+            // FIXME
+            // HighlightBuilder highlightBuilder = new HighlightBuilder();
+            // context.highlight.forEach(h -> {
+            // HighlightBuilder.Field highlightTitle = new HighlightBuilder.Field(h);
+            // highlightTitle.highlighterType(HighlighterType.unified.id());
+            // highlightBuilder.field(highlightTitle);
+            // });
+            // context.searchSourceBuilder.highlighter(highlightBuilder);
+        }
+    }
+
+    public <T extends ElasticDocument> List<QueryResult<T>> query(Class<T> type, Query query) {
         try {
             // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/searching.html
+            QueryContext<T> context = new QueryContext<T>();
+            context.type = type;
+            context.index = index(type);
+            context.query = query;
+            $$query_prepare(context);
+            $$query_highlight_prepare(context);
+            $$query_execute_search(context);
+            return $$query_resolve_results(context);
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
 
-            Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields(field).query(searchText).build()).build();
-            SearchRequest sq = new SearchRequest.Builder().index(index(type)).query(q).build();
-            System.out.println("q=" + q);
-            SearchResponse<T> response = getClient().search(sq, type);
-            // getClient().search(s -> s.index(index(type))//
-            // .query(q -> q.match(t -> t.field(field).query(searchText))), type);
-            TotalHits total = response.hits().total();
-            System.out.println(total);
-            boolean isExactResult = total.relation() == TotalHitsRelation.Eq;
-            if (isExactResult) {
-                System.out.println("There are " + total.value() + " results");
+    protected <T extends ElasticDocument> void $$query_execute_search(QueryContext<T> context) throws ElasticsearchException, IOException {
+        try {
+            if (context.scrolling != null) {
+                context.scrolling.setStart(context.scrolling.getStart() + context.scrolling.getMax());
+                ScrollRequest.Builder scrollRequestBuilder = new ScrollRequest.Builder();
+                scrollRequestBuilder.scroll(getScrollTimeout());
+                if (context.scrolling.getScrollId() != null) scrollRequestBuilder.scrollId(context.scrolling.getScrollId());
+                context.scrollRequest = scrollRequestBuilder.build();
+                context.scrollResponse = getClient().scroll(context.scrollRequest, context.type);
+                context.scrolling.setScrollId(context.searchResponse.scrollId());
             } else {
-                System.out.println("There are more than " + total.value() + " results");
-            }
-            List<Hit<T>> hits = response.hits().hits();
-            for (Hit<T> hit : hits) {
-                T item = hit.source();
-                System.out.println(item);
+                SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder();
+                searchRequestBuilder.index(context.index);
+                searchRequestBuilder.source(context.searchSourceBuilder.build());
+                searchRequestBuilder.query(context.query != null ? context.query : QueryBuilders.matchAll().build()._toQuery());
+                context.searchRequest = searchRequestBuilder.build();
+                context.searchResponse = getClient().search(context.searchRequest, context.type);
             }
         } catch (IOException ex) {
             throw handleIOException(ex);

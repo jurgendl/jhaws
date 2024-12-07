@@ -8,6 +8,9 @@ import org.jhaws.common.elasticsearch.common.ElasticDocument;
 import org.jhaws.common.elasticsearch.common.Field;
 import org.jhaws.common.elasticsearch.common.Index;
 
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
+
 public class ElasticDemo {
     @Index("testum")
     public static class T1 extends ElasticDocument {
@@ -122,7 +125,8 @@ public class ElasticDemo {
                 es.multiIndexDocument(t1, t2);
 
                 System.out.println(es.getIndexMapping(T1.class));
-                es.query(T1.class, "string", "*");
+                Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields("string").query("A").build()).build();
+                es.query(T1.class, q).stream().forEach(System.out::println);
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
