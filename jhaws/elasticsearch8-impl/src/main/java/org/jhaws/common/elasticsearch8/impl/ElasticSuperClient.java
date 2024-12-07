@@ -451,7 +451,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     protected <T extends ElasticDocument> List<QueryResult<T>> $$query_resolve_results(QueryContext<T> context) {
-        HitsMetadata<T> hits = context.searchResponse.hits();
+        HitsMetadata<T> hits = context.scrollResponse != null ? context.scrollResponse.hits() : context.searchResponse.hits();
         context.maxScore = hits.maxScore();
         TotalHits totalHits = hits.total();
         // the total number of hits, must be interpreted in the context of
@@ -561,11 +561,11 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     protected <T extends ElasticDocument> void $$query_execute_search(QueryContext<T> context) throws ElasticsearchException, IOException {
         try {
-            if (context.scrolling != null) {
+            if (context.scrolling != null && context.scrolling.getScrollId() != null) {
                 context.scrolling.setStart(context.scrolling.getStart() + context.scrolling.getMax());
                 ScrollRequest.Builder scrollRequestBuilder = new ScrollRequest.Builder();
                 scrollRequestBuilder.scroll(getLongTimeout());
-                if (context.scrolling.getScrollId() != null) scrollRequestBuilder.scrollId(context.scrolling.getScrollId());
+                scrollRequestBuilder.scrollId(context.scrolling.getScrollId());
                 context.scrollRequest = scrollRequestBuilder.build();
                 context.scrollResponse = getClient().scroll(context.scrollRequest, context.type);
             } else {
@@ -574,6 +574,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 searchRequestBuilder.index(context.index);
                 searchRequestBuilder.source(context.searchSourceBuilder.build());
                 searchRequestBuilder.query(context.query != null ? context.query : QueryBuilders.matchAll().build()._toQuery());
+                searchRequestBuilder.from(context.pagination.getStart());
+                searchRequestBuilder.terminateAfter((long) context.pagination.getMax());
+                if (context.scrolling != null) searchRequestBuilder.scroll(getLongTimeout());
                 context.searchRequest = searchRequestBuilder.build();
                 context.searchResponse = getClient().search(context.searchRequest, context.type);
                 if (context.scrolling != null) context.scrolling.setScrollId(context.searchResponse.scrollId());

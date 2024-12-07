@@ -2,6 +2,7 @@ package org.jhaws.common.elasticsearch8.impl;
 
 import java.io.FileInputStream;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.jhaws.common.elasticsearch.common.ElasticDocument;
@@ -126,7 +127,15 @@ public class ElasticDemo {
 
                 System.out.println(es.getIndexMapping(T1.class));
                 Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields("string").query("A").build()).build();
-                es.query(T1.class, q, null, null, null, null).stream().forEach(System.out::println);
+                Scrolling pag = new Scrolling(2);
+
+                Scrolling pagination = new Scrolling(2);
+                do {
+                    List<QueryResult<T1>> r = es.query(T1.class, q, pag, null, null, null);
+                    r.forEach(rr -> System.out.println(rr));
+                    System.out.println("----");
+                } while (pagination.canContinue());
+
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
