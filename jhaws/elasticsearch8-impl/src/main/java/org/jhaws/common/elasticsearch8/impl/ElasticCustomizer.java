@@ -54,34 +54,7 @@ public class ElasticCustomizer {
 
     protected final Logger LOGGER_DETAILS = LoggerFactory.getLogger(ElasticCustomizer.class.getName() + ".details");
 
-    /**
-     * needs cluster restart!<br>
-     * client.updateClusterSetting(config -> config.put(ElasticCustomizer.CLUSER_SETTING_SEARCH_MAX_BUCKETS, ElasticCustomizer.CLUSER_SETTING_SEARCH_MAX_BUCKETS_VALUE));
-     */
-    public static final String CLUSER_SETTING_SEARCH_MAX_BUCKETS = "search.max_buckets";
-
-    /**
-     * client.updateIndexSetting(${index}, config -> config.put(ElasticCustomizer.INDEX_SETTINGS_MAX_RESULTS, ElasticCustomizer.INDEX_SETTINGS_MAX_RESULTS_VALUE));
-     */
-    public static final String INDEX_SETTINGS_MAX_RESULTS = "max_result_window";
-
-    public static final String INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET = "highlight.max_analyzed_offset";
-
-    public static final String INDEX_SETTINGS_BLOCKS_READ_ONLY = "blocks.read_only";
-
-    public static final String CUSTOM = "custom";
-
-    public static final String REPLACEMENT = "replacement";
-
-    public static final String PATTERN = "pattern";
-
     public static final String ENABLED = "enabled";
-
-    public static final String INDEX = "index";
-
-    public static final String LANGUAGE = "language";
-
-    public static final String STOPWORDS = "stopwords";
 
     public static final String FIELDDATA = "fielddata";
 
@@ -91,73 +64,68 @@ public class ElasticCustomizer {
 
     public static final String PROPERTIES = "properties";
 
-    public static final String MAX = "max";
-
-    public static final String MIN = "min";
-
-    public static final String PATTERNS = "patterns";
-
-    public static final String PRESERVE_ORIGINAL = "preserve_original";
-
     public static final String TYPE = "type";
-
-    public static final String FILTER = "filter";
 
     public static final String ANALYZER = "analyzer";
 
-    public static final String ANALYSIS = "analysis";
+    public Map<String, co.elastic.clients.elasticsearch._types.analysis.Normalizer> normalizers() {
+        Map<String, co.elastic.clients.elasticsearch._types.analysis.Normalizer> normalizers = new LinkedHashMap<>();
+        return normalizers;
+    }
 
-    public static final String CHAR_FILTER = "char_filter";
+    public Map<String, co.elastic.clients.elasticsearch._types.analysis.CharFilter> charFilters() {
+        Map<String, co.elastic.clients.elasticsearch._types.analysis.CharFilter> charFilters = new LinkedHashMap<>();
+        return charFilters;
+    }
 
-    public static final String TOKENIZER = "tokenizer";
+    public Map<String, co.elastic.clients.elasticsearch._types.analysis.Tokenizer> tokenizers() {
+        Map<String, co.elastic.clients.elasticsearch._types.analysis.Tokenizer> tokenizers = new LinkedHashMap<>();
+        return tokenizers;
+    }
 
-    public static final String ARTICLES = "articles";
-
-    public static final String ARTICLES_CASE = "articles_case";
-
-    public Map<String, TokenFilter> filters() {
-        Map<String, TokenFilter> filter = new LinkedHashMap<>();
-        filter.put(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER, customCleanupFilter(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER));
-        filter.put(Filters.CUSTOM_EMAIL_NAME_FILTER, customEmailNameFilter(Filters.CUSTOM_EMAIL_NAME_FILTER));
-        filter.put(Filters.CUSTOM_EMAIL_DOMAIN_FILTER, customEmailDomainFilter(Filters.CUSTOM_EMAIL_DOMAIN_FILTER));
-        filter.put(Filters.ENGLISH_STOP, customEnglishStopFilter(Filters.ENGLISH_STOP));
-        filter.put(Filters.ENGLISH_STEMMER, customEnglishStemmerFilter(Filters.ENGLISH_STEMMER));
-        filter.put(Filters.ENGLISH_POSSESSIVE_STEMMER, customEnglishPossessiveStemmerFilter(Filters.ENGLISH_POSSESSIVE_STEMMER));
-        filter.put(Filters.DUTCH_STOP, customDutchStopFilter(Filters.DUTCH_STOP));
-        filter.put(Filters.DUTCH_STEMMER, customDutchStemmerFilter(Filters.DUTCH_STEMMER));
-        filter.put(Filters.CUSTOM_TO_SPACE_FILTER, customToSpaceFilter(Filters.CUSTOM_TO_SPACE_FILTER));
-        filter.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter(Filters.CUSTOM_REMOVE_SPACE_FILTER));
-        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER));
-        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER));
-        filter.put(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER, customOnlyKeepExtendedAlphaNumericFilter(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER));
-        filter.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter(Filters.CUSTOM_FRENCH_ELISION_FILTER));
-        filter.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter(Filters.CUSTOM_FRENCH_STOP_FILTER));
-        filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter(Filters.CUSTOM_FRENCH_STEMMER_FILTER));
-        return filter;
+    public Map<String, co.elastic.clients.elasticsearch._types.analysis.TokenFilter> tokenFilters() {
+        Map<String, co.elastic.clients.elasticsearch._types.analysis.TokenFilter> tokenFilters = new LinkedHashMap<>();
+        tokenFilters.put(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER, customCleanupFilter(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER));
+        tokenFilters.put(Filters.CUSTOM_EMAIL_NAME_FILTER, customEmailNameFilter(Filters.CUSTOM_EMAIL_NAME_FILTER));
+        tokenFilters.put(Filters.CUSTOM_EMAIL_DOMAIN_FILTER, customEmailDomainFilter(Filters.CUSTOM_EMAIL_DOMAIN_FILTER));
+        tokenFilters.put(Filters.ENGLISH_STOP, customEnglishStopFilter(Filters.ENGLISH_STOP));
+        tokenFilters.put(Filters.ENGLISH_STEMMER, customEnglishStemmerFilter(Filters.ENGLISH_STEMMER));
+        tokenFilters.put(Filters.ENGLISH_POSSESSIVE_STEMMER, customEnglishPossessiveStemmerFilter(Filters.ENGLISH_POSSESSIVE_STEMMER));
+        tokenFilters.put(Filters.DUTCH_STOP, customDutchStopFilter(Filters.DUTCH_STOP));
+        tokenFilters.put(Filters.DUTCH_STEMMER, customDutchStemmerFilter(Filters.DUTCH_STEMMER));
+        tokenFilters.put(Filters.CUSTOM_TO_SPACE_FILTER, customToSpaceFilter(Filters.CUSTOM_TO_SPACE_FILTER));
+        tokenFilters.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter(Filters.CUSTOM_REMOVE_SPACE_FILTER));
+        tokenFilters.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER));
+        tokenFilters.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER));
+        tokenFilters.put(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER, customOnlyKeepExtendedAlphaNumericFilter(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER));
+        tokenFilters.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter(Filters.CUSTOM_FRENCH_ELISION_FILTER));
+        tokenFilters.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter(Filters.CUSTOM_FRENCH_STOP_FILTER));
+        tokenFilters.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter(Filters.CUSTOM_FRENCH_STEMMER_FILTER));
+        return tokenFilters;
     }
 
     public Map<String, co.elastic.clients.elasticsearch._types.analysis.Analyzer> analyzers() {
-        Map<String, co.elastic.clients.elasticsearch._types.analysis.Analyzer> analyzer = new LinkedHashMap<>();
-        analyzer.put(Analyzers.CUSTOM_CLEANUP_ANALYZER, customCleanupAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_DUTCH_HTML_ANALYZER, customDutchHtmlAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_ENGLISH_HTML_ANALYZER, customEnglishHtmlAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_ASCIIFOLDING_ANALYZER, customAsciiFoldingAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_NAME_ANALYZER, customEmailNameAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_NAME_KEEP_TOGETHER_ANALYZER, customEmailNameKeepTogetherAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_DOMAIN_ANALYZER, customEmailDomainAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_ANALYZER, customEmailAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_FILENAME_ANALYZER, customFilenameAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_WORD_DELIMITER_GRAPH_ANALYZER, customWordDelimiterGraphAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_WHITESPACE_LOWERCASE_ANALYZER, customWhitespaceAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_NAME_KEEP_TOGETHER_ANALYZER, customNameKeepTogetherAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_ANALYZER, customSortableAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER, customSortableOnlyAlphaAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER, customSortableOnlyAlphaNumericAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_EXTENDED_ALPHANUMERIC_ANALYZER, customSortableExtendedAlphaNumericAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER, customFoldedLowercaseTokensAnalyzer());
-        return analyzer;
+        Map<String, co.elastic.clients.elasticsearch._types.analysis.Analyzer> analyzers = new LinkedHashMap<>();
+        analyzers.put(Analyzers.CUSTOM_CLEANUP_ANALYZER, customCleanupAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_DUTCH_HTML_ANALYZER, customDutchHtmlAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_ENGLISH_HTML_ANALYZER, customEnglishHtmlAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_ASCIIFOLDING_ANALYZER, customAsciiFoldingAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_EMAIL_NAME_ANALYZER, customEmailNameAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_EMAIL_NAME_KEEP_TOGETHER_ANALYZER, customEmailNameKeepTogetherAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_EMAIL_DOMAIN_ANALYZER, customEmailDomainAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_EMAIL_ANALYZER, customEmailAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_FILENAME_ANALYZER, customFilenameAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_WORD_DELIMITER_GRAPH_ANALYZER, customWordDelimiterGraphAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_WHITESPACE_LOWERCASE_ANALYZER, customWhitespaceAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_NAME_KEEP_TOGETHER_ANALYZER, customNameKeepTogetherAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_SORTABLE_ANALYZER, customSortableAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER, customSortableOnlyAlphaAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER, customSortableOnlyAlphaNumericAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_SORTABLE_EXTENDED_ALPHANUMERIC_ANALYZER, customSortableExtendedAlphaNumericAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
+        analyzers.put(Analyzers.CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER, customFoldedLowercaseTokensAnalyzer());
+        return analyzers;
     }
 
     public co.elastic.clients.elasticsearch._types.analysis.Analyzer customEnglishHtmlAnalyzer() {

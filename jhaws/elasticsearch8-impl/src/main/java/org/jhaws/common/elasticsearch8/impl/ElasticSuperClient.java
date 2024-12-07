@@ -28,8 +28,6 @@ import co.elastic.clients.elasticsearch._types.ErrorCause;
 import co.elastic.clients.elasticsearch._types.OpType;
 import co.elastic.clients.elasticsearch._types.Result;
 import co.elastic.clients.elasticsearch._types.Time;
-import co.elastic.clients.elasticsearch._types.analysis.Analyzer;
-import co.elastic.clients.elasticsearch._types.analysis.TokenFilter;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
@@ -172,16 +170,43 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> boolean createIndex(Class<T> annotatedType) {
-        return createIndex(index(annotatedType), getObjectMapping(annotatedType), getElasticCustomizer().filters(), getElasticCustomizer().analyzers());
+        return createIndex(index(annotatedType), //
+                getObjectMapping(annotatedType), //
+                getElasticCustomizer().charFilters(), //
+                getElasticCustomizer().tokenFilters(), //
+                getElasticCustomizer().tokenizers(), //
+                getElasticCustomizer().normalizers(), //
+                getElasticCustomizer().analyzers()//
+        );
     }
 
     public boolean createIndex(String indexName) {
-        return createIndex(indexName, Collections.emptyMap(), getElasticCustomizer().filters(), getElasticCustomizer().analyzers());
+        return createIndex(indexName, //
+                Collections.emptyMap(), //
+                getElasticCustomizer().charFilters(), //
+                getElasticCustomizer().tokenFilters(), //
+                getElasticCustomizer().tokenizers(), //
+                getElasticCustomizer().normalizers(), //
+                getElasticCustomizer().analyzers()//
+        );
     }
 
-    public boolean createIndex(String indexName, Map<String, Object> objectMapping, Map<String, TokenFilter> filters, Map<String, Analyzer> analyzers) {
+    public boolean createIndex(String indexName, //
+            Map<String, Object> objectMapping, //
+            Map<String, co.elastic.clients.elasticsearch._types.analysis.CharFilter> charFilters, //
+            Map<String, co.elastic.clients.elasticsearch._types.analysis.TokenFilter> tokenFilters, //
+            Map<String, co.elastic.clients.elasticsearch._types.analysis.Tokenizer> tokenizers, //
+            Map<String, co.elastic.clients.elasticsearch._types.analysis.Normalizer> normalizers, //
+            Map<String, co.elastic.clients.elasticsearch._types.analysis.Analyzer> analyzers) {
         try {
-            IndexSettingsAnalysis indexSettingsAnalysis = new IndexSettingsAnalysis.Builder().filter(filters).analyzer(analyzers).build();
+            System.out.println(objectMapping);// FIXME
+            IndexSettingsAnalysis indexSettingsAnalysis = new IndexSettingsAnalysis.Builder()//
+                    .charFilter(charFilters)//
+                    .tokenizer(tokenizers)//
+                    .filter(tokenFilters)//
+                    .analyzer(analyzers)//
+                    .normalizer(normalizers)//
+                    .build();
             SettingsHighlight settingsHighlight = new SettingsHighlight.Builder().maxAnalyzedOffset(getElasticCustomizer().getHighlightMaxAnalyzedOffset()).build();
             IndexSettings indexSettings = new IndexSettings.Builder().maxResultWindow(getElasticCustomizer().getMaxResultWindow()).analysis(indexSettingsAnalysis).highlight(settingsHighlight).build();
             return getClient().indices().create(new CreateIndexRequest.Builder().index(indexName).settings(indexSettings).timeout(getTimeout()).build()).acknowledged();
