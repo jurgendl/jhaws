@@ -40,6 +40,8 @@ import co.elastic.clients.elasticsearch.core.mget.MultiGetOperation;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexRequest;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
+import co.elastic.clients.elasticsearch.indices.IndexSettings;
+import co.elastic.clients.elasticsearch.indices.SettingsHighlight;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
@@ -47,6 +49,7 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/getting-started-java.html
 // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/searching.html
 // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/reading.html
+// https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-indices-put-settings.html
 // @Component
 public class ElasticSuperClient extends ElasticLowLevelClient {
     protected transient AtomicReference<ElasticsearchClient> clientReference = new AtomicReference<>();
@@ -183,7 +186,13 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             // LOGGER.debug("\n{}", getObjectMapper().writerFor(Map.class).writeValueAsString(config));
             // request.source(config);
 
-            return getClient().indices().create(new CreateIndexRequest.Builder().index(indexName).timeout(getTimeout()).build()).acknowledged();
+            settings();
+            IndexSettings indexSettings = new IndexSettings.Builder()//
+                    .maxResultWindow(getElasticCustomizer().getMaxResultWindow())//
+                    .highlight(new SettingsHighlight.Builder().maxAnalyzedOffset(getElasticCustomizer().getHighlightMaxAnalyzedOffset()).build())//
+                    .build();
+
+            return getClient().indices().create(new CreateIndexRequest.Builder().index(indexName).settings(indexSettings).timeout(getTimeout()).build()).acknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -266,7 +275,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public <T extends ElasticDocument> boolean documentExists(Class<T> type, String id, Long version) {
         try {
-            return getClient().get(g -> g.index(index(type)).version(version).id(id), type).found();
+            return getClient().get(getRequestBuilder -> getRequestBuilder.index(index(type)).version(version).id(id), type).found();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
