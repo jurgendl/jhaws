@@ -51,6 +51,13 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 public class ElasticSuperClient extends ElasticLowLevelClient {
     protected transient AtomicReference<ElasticsearchClient> clientReference = new AtomicReference<>();
 
+    protected <T> List<T> toList(T id, T... ids) {
+        List<T> list = new ArrayList<>();
+        list.add(id);
+        if (ids != null) Arrays.stream(ids).forEach(list::add);
+        return list;
+    }
+
     @PostConstruct
     @Override
     public void afterPropertiesSet() {
@@ -145,14 +152,24 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return deleteIndex(index(type));
     }
 
+    public Map<String, Object> settings() {
+        return getElasticCustomizer().settings();
+    }
+
+    public <T extends ElasticDocument> Map<String, Object> getObjectMapping(Class<T> annotatedType) {
+        return getObjectMapping(annotatedType, MappingListener.DUMMY);
+    }
+
+    public <T extends ElasticDocument> Map<String, Object> getObjectMapping(Class<T> annotatedType, MappingListener listener) {
+        return getElasticCustomizer().getObjectMapping(annotatedType, listener);
+    }
+
     public <T extends ElasticDocument> boolean createIndex(Class<T> annotatedType) {
-        // FIXME
-        return createIndex(index(annotatedType), null/* getObjectMapping(annotatedType) */, null/* settings() */);
+        return createIndex(index(annotatedType), getObjectMapping(annotatedType), settings());
     }
 
     public boolean createIndex(String indexName) {
-        // FIXME
-        return createIndex(indexName, Collections.emptyMap(), null/* settings() */);
+        return createIndex(indexName, Collections.emptyMap(), settings());
     }
 
     public boolean createIndex(String indexName, Map<String, Object> mappings, Map<String, Object> settings) {
@@ -237,8 +254,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public <T extends ElasticDocument> boolean indexDocument(T document) {
         try {
-            Result result = getClient().index(new IndexRequest.Builder<T>().index(index(document)).version(version(document)).id(id(document)).document(document).timeout(getTimeout()).build()).result();
-            return result == Result.Created || result == Result.Updated;
+            return Arrays.asList(Result.Created, Result.Updated).contains(getClient().index(new IndexRequest.Builder<T>().index(index(document)).version(version(document)).id(id(document)).document(document).timeout(getTimeout()).build()).result());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -303,10 +319,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> List<T> multiGetDocument(Class<T> type, List<String> includeFields, String id, String... ids) {
-        List<String> list = new ArrayList<>();
-        list.add(id);
-        if (ids != null) Arrays.stream(ids).forEach(list::add);
-        return multiGetDocument(type, includeFields, list);
+        return multiGetDocument(type, includeFields, toList(id, ids));
     }
 
     public <T extends ElasticDocument> List<T> multiGetDocument(Class<T> type, List<String> includeFields, List<String> ids) {
@@ -324,10 +337,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> List<ErrorCause> multiDeleteDocument(Class<T> type, String id, String... ids) {
-        List<String> list = new ArrayList<>();
-        list.add(id);
-        if (ids != null) Arrays.stream(ids).forEach(list::add);
-        return multiDeleteDocument(type, list);
+        return multiDeleteDocument(type, toList(id, ids));
     }
 
     public <T extends ElasticDocument> List<ErrorCause> multiDeleteDocument(Class<T> type, List<String> ids) {
@@ -342,10 +352,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> List<ErrorCause> multiIndexDocument(T document, @SuppressWarnings("unchecked") T... documents) {
-        List<T> list = new ArrayList<>();
-        list.add(document);
-        if (documents != null) Arrays.stream(documents).forEach(list::add);
-        return multiIndexDocument(list);
+        return multiIndexDocument(toList(document, documents));
     }
 
     public <T extends ElasticDocument> List<ErrorCause> multiIndexDocument(Collection<T> documents) {
