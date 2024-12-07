@@ -29,14 +29,21 @@ import co.elastic.clients.elasticsearch._types.OpType;
 import co.elastic.clients.elasticsearch._types.Result;
 import co.elastic.clients.elasticsearch._types.Time;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.MgetRequest;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import co.elastic.clients.elasticsearch.core.bulk.DeleteOperation;
 import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
 import co.elastic.clients.elasticsearch.core.mget.MultiGetOperation;
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.TotalHits;
+import co.elastic.clients.elasticsearch.core.search.TotalHitsRelation;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexRequest;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
@@ -391,6 +398,34 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                                     .operations(new BulkOperation.Builder().index(new IndexOperation.Builder<T>().index(index(document)).id(id(document)).version(version(document)).document(document).build()).build()),
                             (BulkRequest.Builder bulkRequestBuilder, BulkRequest.Builder ignore) -> bulkRequestBuilder)
                     .timeout(getScrollTimeout()).build()).items().stream().map(item -> item.error()).filter(Objects::nonNull).toList();
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
+    public <T extends ElasticDocument> void query(Class<T> type, String field, String searchText) {
+        try {
+            // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/searching.html
+
+            Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields(field).query(searchText).build()).build();
+            SearchRequest sq = new SearchRequest.Builder().index(index(type)).query(q).build();
+            System.out.println("q=" + q);
+            SearchResponse<T> response = getClient().search(sq, type);
+            // getClient().search(s -> s.index(index(type))//
+            // .query(q -> q.match(t -> t.field(field).query(searchText))), type);
+            TotalHits total = response.hits().total();
+            System.out.println(total);
+            boolean isExactResult = total.relation() == TotalHitsRelation.Eq;
+            if (isExactResult) {
+                System.out.println("There are " + total.value() + " results");
+            } else {
+                System.out.println("There are more than " + total.value() + " results");
+            }
+            List<Hit<T>> hits = response.hits().hits();
+            for (Hit<T> hit : hits) {
+                T item = hit.source();
+                System.out.println(item);
+            }
         } catch (IOException ex) {
             throw handleIOException(ex);
         }

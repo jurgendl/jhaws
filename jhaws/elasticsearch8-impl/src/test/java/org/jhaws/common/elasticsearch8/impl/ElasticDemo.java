@@ -14,12 +14,36 @@ public class ElasticDemo {
         @Field
         Long size;
 
+        @Field
+        String string;
+
         public Long getSize() {
             return size;
         }
 
         public void setSize(Long size) {
             this.size = size;
+        }
+
+        public String getString() {
+            return this.string;
+        }
+
+        public void setString(String string) {
+            this.string = string;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append("T1 [size=");
+            builder.append(this.size);
+            builder.append(", string=");
+            builder.append(this.string);
+            builder.append(", toString()=");
+            builder.append(super.toString());
+            builder.append("]");
+            return builder.toString();
         }
     }
 
@@ -33,12 +57,15 @@ public class ElasticDemo {
             es.setPort(Integer.parseInt(p.getProperty("ES_PORT")));
             es.setProtocol("https");
             es.setUrl("localhost");
-            if (true) {
+            if (false) {
                 System.out.println("a- " + es.deleteIndex(T1.class));
                 System.out.println("b- " + es.createIndex(T1.class));
-                System.out.println("b- " + es.createIndex(T1.class));
-                System.out.println("a- " + es.deleteIndex(T1.class));
-                System.out.println("a- " + es.deleteIndex(T1.class));
+            }
+            if (false) {
+                System.out.println("c- " + es.createIndex(T1.class));
+                System.out.println("d- " + es.deleteIndex(T1.class));
+                System.out.println("e- " + es.deleteIndex(T1.class));
+                System.out.println("f- " + es.createIndex(T1.class));
             }
             if (false) {
                 T1 t1 = new T1();
@@ -70,22 +97,38 @@ public class ElasticDemo {
             }
             if (false) {
                 T1 t1 = new T1();
-                t1.setSize(System.currentTimeMillis());
+                t1.setSize(6_546_540l);
                 t1.setId("n" + System.currentTimeMillis());
+                t1.setString("mille");
                 T1 t2 = new T1();
-                t2.setSize(System.currentTimeMillis());
+                t2.setSize(789_000l);
                 t2.setId("o" + System.currentTimeMillis());
+                t2.setString("term");
                 System.out.println("n: " + es.multiIndexDocument(t1, t2));
                 System.out.println("o: " + es.multiGetDocument(T1.class, null, Arrays.asList(t1.getId(), t2.getId())));
                 System.out.println("p: " + es.multiDeleteDocument(T1.class, Arrays.asList(t1.getId(), t2.getId())));
                 System.out.println("q: " + es.multiGetDocument(T1.class, null, Arrays.asList(t1.getId(), t2.getId())));
                 System.out.println("p: " + es.multiDeleteDocument(T1.class, Arrays.asList(t1.getId(), t2.getId())));
             }
+            if (true) {
+                T1 t1 = new T1();
+                t1.setSize(6_540l);
+                t1.setId("n" + System.currentTimeMillis());
+                t1.setString("a");
+                T1 t2 = new T1();
+                t2.setSize(789_000l);
+                t2.setId("o" + System.currentTimeMillis());
+                t2.setString("b");
+                es.multiIndexDocument(t1, t2);
 
+                System.out.println(es.getIndexMapping(T1.class));
+                es.query(T1.class, "string", "*");
+            }
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
         } finally {
             try {
+                es.getClient().indices().flush();
                 es.shutdown();
             } catch (Exception ex2) {
                 //
