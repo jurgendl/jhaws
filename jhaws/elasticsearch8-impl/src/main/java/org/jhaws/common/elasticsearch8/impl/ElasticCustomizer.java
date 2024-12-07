@@ -50,6 +50,10 @@ import co.elastic.clients.elasticsearch._types.analysis.TokenFilterDefinition;
 
 @Component
 public class ElasticCustomizer {
+    public static final String INDEX_SETTINGS_BLOCKS_READ_ONLY = "blocks.read_only";
+
+    public static final String INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET = "highlight.max_analyzed_offset";
+
     protected final Logger LOGGER = LoggerFactory.getLogger(ElasticCustomizer.class);
 
     protected final Logger LOGGER_DETAILS = LoggerFactory.getLogger(ElasticCustomizer.class.getName() + ".details");
