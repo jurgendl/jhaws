@@ -3,9 +3,12 @@ package org.jhaws.common.elasticsearch8.impl;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.PostConstruct;
@@ -21,12 +24,19 @@ import org.elasticsearch.client.RestClientBuilder;
 import org.jhaws.common.elasticsearch.common.ElasticDocument;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ErrorCause;
 import co.elastic.clients.elasticsearch._types.OpType;
 import co.elastic.clients.elasticsearch._types.Result;
 import co.elastic.clients.elasticsearch._types.Time;
 import co.elastic.clients.elasticsearch._types.mapping.Property;
+import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
+import co.elastic.clients.elasticsearch.core.MgetRequest;
+import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import co.elastic.clients.elasticsearch.core.bulk.DeleteOperation;
+import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
+import co.elastic.clients.elasticsearch.core.mget.MultiGetOperation;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexRequest;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
@@ -39,7 +49,6 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 // https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/reading.html
 // @Component
 public class ElasticSuperClient extends ElasticLowLevelClient {
-
     protected transient AtomicReference<ElasticsearchClient> clientReference = new AtomicReference<>();
 
     @PostConstruct
@@ -66,7 +75,6 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     @PreDestroy
     public void shutdown() {
         LOGGER.trace("shutdown->");
-        // Close the client
         if (clientReference.get() != null) {
             try {
                 clientReference.get().close();
@@ -128,8 +136,6 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public boolean deleteIndex(String index) {
         try {
             return getClient().indices().delete(new DeleteIndexRequest.Builder().index(index).timeout(getTimeout()).build()).acknowledged();
-            // } catch (ElasticsearchStatusException ex) {
-            // return false;
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -167,7 +173,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> Map<String, Map<String, ?>> getIndexMapping(Class<T> type) {
-        return getIndexMapping(index(type), allFields(type).toArray(l -> new String[l]));
+        return getIndexMapping(index(type), allFields(type));
     }
 
     public Map<String, Map<String, ?>> getIndexMapping(String index) {
@@ -180,7 +186,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return fields;
     }
 
-    public Map<String, Map<String, ?>> getIndexMapping(String index, String[] fields) {
+    public Map<String, Map<String, ?>> getIndexMapping(String index, List<String> includeFields) {
         // FIXME
         // Map<String, Map<String, ?>> info = new TreeMap<>();
         // if (fields == null || fields.length == 0) {
@@ -239,12 +245,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> boolean documentExists(T document) {
-        return documentExists(document.getClass(), index(document), id(document), version(document));
+        return documentExists(document.getClass(), id(document), version(document));
     }
 
-    public <T extends ElasticDocument> boolean documentExists(Class<T> type, String index, String id, Long version) {
+    public <T extends ElasticDocument> boolean documentExists(Class<T> type, String id, Long version) {
         try {
-            return getClient().get(g -> g.index(index).version(version).id(id), type).found();
+            return getClient().get(g -> g.index(index(type)).version(version).id(id), type).found();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -252,12 +258,16 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     @SuppressWarnings("unchecked")
     public <T extends ElasticDocument> T getDocument(T document) {
-        return (T) getDocument(document.getClass(), index(document), id(document), version(document));
+        return (T) getDocument(document.getClass(), null, id(document), version(document));
     }
 
-    public <T extends ElasticDocument> T getDocument(Class<T> type, String index, String id, Long version) {
+    public <T extends ElasticDocument> T getDocument(Class<T> type, List<String> includeFields, String id, Long version) {
         try {
-            return getClient().get(g -> g.index(index).version(version).id(id), type).source();
+            return getClient().get(getRequestBuilder -> {
+                getRequestBuilder.index(index(type)).version(version).id(id);
+                if (includeFields != null) getRequestBuilder.storedFields(includeFields);
+                return getRequestBuilder;
+            }, type).source();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -292,5 +302,62 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
     }
 
-    // TODO bulk ...
+    public <T extends ElasticDocument> List<T> multiGetDocument(Class<T> type, List<String> includeFields, String id, String... ids) {
+        List<String> list = new ArrayList<>();
+        list.add(id);
+        if (ids != null) Arrays.stream(ids).forEach(list::add);
+        return multiGetDocument(type, includeFields, list);
+    }
+
+    public <T extends ElasticDocument> List<T> multiGetDocument(Class<T> type, List<String> includeFields, List<String> ids) {
+        try {
+            MgetRequest.Builder requestBuilder = new MgetRequest.Builder().index(index(type));
+            ids.forEach(id -> {
+                MultiGetOperation.Builder multiGetOperationBuilder = new MultiGetOperation.Builder().id(id);
+                if (includeFields != null) multiGetOperationBuilder.storedFields(includeFields);
+                requestBuilder.docs(multiGetOperationBuilder.build());
+            });
+            return getClient().mget(requestBuilder.build(), type).docs().stream().map(item -> item.result().source()).filter(Objects::nonNull).toList();
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
+    public <T extends ElasticDocument> List<ErrorCause> multiDeleteDocument(Class<T> type, String id, String... ids) {
+        List<String> list = new ArrayList<>();
+        list.add(id);
+        if (ids != null) Arrays.stream(ids).forEach(list::add);
+        return multiDeleteDocument(type, list);
+    }
+
+    public <T extends ElasticDocument> List<ErrorCause> multiDeleteDocument(Class<T> type, List<String> ids) {
+        try {
+            return getClient().bulk(ids.stream()
+                    .reduce(new BulkRequest.Builder(), (BulkRequest.Builder bulkRequestBuilder, String id) -> bulkRequestBuilder.operations(new BulkOperation.Builder().delete(new DeleteOperation.Builder().index(index(type)).id(id).build()).build()),
+                            (BulkRequest.Builder bulkRequestBuilder, BulkRequest.Builder ignore) -> bulkRequestBuilder)
+                    .timeout(getScrollTimeout()).build()).items().stream().map(item -> item.error()).filter(Objects::nonNull).toList();
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
+    public <T extends ElasticDocument> List<ErrorCause> multiIndexDocument(T document, @SuppressWarnings("unchecked") T... documents) {
+        List<T> list = new ArrayList<>();
+        list.add(document);
+        if (documents != null) Arrays.stream(documents).forEach(list::add);
+        return multiIndexDocument(list);
+    }
+
+    public <T extends ElasticDocument> List<ErrorCause> multiIndexDocument(Collection<T> documents) {
+        try {
+            return getClient().bulk(documents.stream()
+                    .reduce(new BulkRequest.Builder(),
+                            (BulkRequest.Builder bulkRequestBuilder, T document) -> bulkRequestBuilder
+                                    .operations(new BulkOperation.Builder().index(new IndexOperation.Builder<T>().index(index(document)).id(id(document)).version(version(document)).document(document).build()).build()),
+                            (BulkRequest.Builder bulkRequestBuilder, BulkRequest.Builder ignore) -> bulkRequestBuilder)
+                    .timeout(getScrollTimeout()).build()).items().stream().map(item -> item.error()).filter(Objects::nonNull).toList();
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
 }

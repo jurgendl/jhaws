@@ -1,6 +1,7 @@
 package org.jhaws.common.elasticsearch8.impl;
 
 import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.jhaws.common.elasticsearch.common.ElasticDocument;
@@ -58,6 +59,19 @@ public class ElasticDemo {
                 System.out.println("k: " + es.documentExists(t1));
                 System.out.println("l: " + es.createDocument(t1));
                 System.out.println("m: " + es.documentExists(t1));
+            }
+            if (false) {
+                T1 t1 = new T1();
+                t1.setSize(System.currentTimeMillis());
+                t1.setId("n" + System.currentTimeMillis());
+                T1 t2 = new T1();
+                t2.setSize(System.currentTimeMillis());
+                t2.setId("o" + System.currentTimeMillis());
+                System.out.println("n: " + es.multiIndexDocument(t1, t2));
+                System.out.println("o: " + es.multiGetDocument(T1.class, null, Arrays.asList(t1.getId(), t2.getId())));
+                System.out.println("p: " + es.multiDeleteDocument(T1.class, Arrays.asList(t1.getId(), t2.getId())));
+                System.out.println("q: " + es.multiGetDocument(T1.class, null, Arrays.asList(t1.getId(), t2.getId())));
+                System.out.println("p: " + es.multiDeleteDocument(T1.class, Arrays.asList(t1.getId(), t2.getId())));
             }
             es.shutdown();
         } catch (Exception ex) {
