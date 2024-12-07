@@ -562,9 +562,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     protected <T extends ElasticDocument> void $$query_execute_search(QueryContext<T> context) throws ElasticsearchException, IOException {
         try {
             if (context.scrolling != null && context.scrolling.getScrollId() != null) {
+                // https://www.elastic.co/guide/en/elasticsearch/reference/current/scroll-api.html
                 context.scrolling.setStart(context.scrolling.getStart() + context.scrolling.getMax());
                 ScrollRequest.Builder scrollRequestBuilder = new ScrollRequest.Builder();
-                scrollRequestBuilder.scroll(getLongTimeout());
                 scrollRequestBuilder.scrollId(context.scrolling.getScrollId());
                 context.scrollRequest = scrollRequestBuilder.build();
                 context.scrollResponse = getClient().scroll(context.scrollRequest, context.type);
@@ -575,7 +575,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 searchRequestBuilder.source(context.searchSourceBuilder.build());
                 searchRequestBuilder.query(context.query != null ? context.query : QueryBuilders.matchAll().build()._toQuery());
                 searchRequestBuilder.from(context.pagination.getStart());
-                searchRequestBuilder.terminateAfter((long) context.pagination.getMax());
+                searchRequestBuilder.size(context.pagination.getMax());
                 if (context.scrolling != null) searchRequestBuilder.scroll(getLongTimeout());
                 context.searchRequest = searchRequestBuilder.build();
                 context.searchResponse = getClient().search(context.searchRequest, context.type);

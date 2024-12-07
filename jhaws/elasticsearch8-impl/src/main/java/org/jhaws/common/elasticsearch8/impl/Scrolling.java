@@ -41,7 +41,7 @@ public class Scrolling extends Pagination {
 
     @Override
     public String toString() {
-        return "Scrolling [scrollId=" + this.scrollId + ", max=" + this.max + ", " + (this.results != null ? "results=" + this.results + ", " : "") + (this.total != null ? "total=" + this.total : "") + "]";
+        return "Scrolling [scrollId=" + this.scrollId + ", start=" + this.start + ", max=" + this.max + ", " + (this.results != null ? "results=" + this.results + ", " : "") + (this.total != null ? "total=" + this.total : "") + "]";
     }
 
     @Override

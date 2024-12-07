@@ -128,14 +128,12 @@ public class ElasticDemo {
                 System.out.println(es.getIndexMapping(T1.class));
                 Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields("string").query("A").build()).build();
                 Scrolling pag = new Scrolling(2);
-
-                Scrolling pagination = new Scrolling(2);
                 do {
                     List<QueryResult<T1>> r = es.query(T1.class, q, pag, null, null, null);
                     r.forEach(rr -> System.out.println(rr));
+                    System.out.println(pag);
                     System.out.println("----");
-                } while (pagination.canContinue());
-
+                } while (pag.canContinue());
             }
         } catch (Exception ex) {
             ex.printStackTrace(System.out);
