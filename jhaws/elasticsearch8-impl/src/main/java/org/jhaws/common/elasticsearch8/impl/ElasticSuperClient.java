@@ -60,6 +60,7 @@ import co.elastic.clients.elasticsearch.core.search.TrackHits;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexRequest;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
+import co.elastic.clients.elasticsearch.indices.FlushRequest;
 import co.elastic.clients.elasticsearch.indices.IndexSettings;
 import co.elastic.clients.elasticsearch.indices.IndexSettingsAnalysis;
 import co.elastic.clients.elasticsearch.indices.SettingsHighlight;
@@ -612,6 +613,18 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 context.searchResponse = getClient().search(context.searchRequest, context.type);
                 if (context.scrolling != null) context.scrolling.setScrollId(context.searchResponse.scrollId());
             }
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
+    public <T extends ElasticDocument> void flushIndex(Class<T> type) {
+        flushIndex(index(type));
+    }
+
+    public void flushIndex(String index) {
+        try {
+            getClient().indices().flush(new FlushRequest.Builder().index(index).build());
         } catch (IOException ex) {
             throw handleIOException(ex);
         }

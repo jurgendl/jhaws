@@ -129,7 +129,6 @@ public class ElasticDemo {
                 }
                 System.out.println("#" + es.count(T1.class));
 
-                // System.out.println(es.getIndexMapping(T1.class));
                 Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields("string.keyword").query("a").build()).build();
                 Scrolling pag = new Scrolling(1);
                 do {
@@ -143,7 +142,6 @@ public class ElasticDemo {
             ex.printStackTrace(System.out);
         } finally {
             try {
-                es.getClient().indices().flush();
                 es.shutdown();
             } catch (Exception ex2) {
                 //
