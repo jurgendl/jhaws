@@ -115,19 +115,23 @@ public class ElasticDemo {
                 System.out.println("p: " + es.multiDeleteDocument(T1.class, Arrays.asList(t1.getId(), t2.getId())));
             }
             if (true) {
-                T1 t1 = new T1();
-                t1.setSize(6_540l);
-                t1.setId("n" + System.currentTimeMillis());
-                t1.setString("a");
-                T1 t2 = new T1();
-                t2.setSize(789_000l);
-                t2.setId("o" + System.currentTimeMillis());
-                t2.setString("b");
-                es.multiIndexDocument(t1, t2);
+                if (false) {
+                    T1 t1 = new T1();
+                    t1.setSize(6_540l);
+                    t1.setId("n" + System.currentTimeMillis());
+                    t1.setString("a");
+                    T1 t2 = new T1();
+                    t2.setSize(789_000l);
+                    t2.setId("o" + System.currentTimeMillis());
+                    t2.setString("b");
+                    es.indexDocument(t1);
+                    es.indexDocument(t2);
+                }
+                System.out.println("#" + es.count(T1.class));
 
-                System.out.println(es.getIndexMapping(T1.class));
-                Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields("string").query("A").build()).build();
-                Scrolling pag = new Scrolling(2);
+                // System.out.println(es.getIndexMapping(T1.class));
+                Query q = new Query.Builder().queryString(new QueryStringQuery.Builder().fields("string.keyword").query("a").build()).build();
+                Scrolling pag = new Scrolling(1);
                 do {
                     List<QueryResult<T1>> r = es.query(T1.class, q, pag, null, null, null);
                     r.forEach(rr -> System.out.println(rr));

@@ -37,6 +37,8 @@ import co.elastic.clients.elasticsearch._types.mapping.Property;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
+import co.elastic.clients.elasticsearch.core.ClearScrollRequest;
+import co.elastic.clients.elasticsearch.core.CountRequest;
 import co.elastic.clients.elasticsearch.core.DeleteRequest;
 import co.elastic.clients.elasticsearch.core.IndexRequest;
 import co.elastic.clients.elasticsearch.core.MgetRequest;
@@ -420,6 +422,18 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
     }
 
+    public <T extends ElasticDocument> long count(Class<T> type) {
+        return count(index(type));
+    }
+
+    public long count(String index) {
+        try {
+            return getClient().count(new CountRequest.Builder().index(index).build()).count();
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
     static class QueryContext<T extends ElasticDocument> {
         Class<T> type;
 
@@ -547,6 +561,14 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return context;
     }
 
+    public boolean clearScrollling(String scrollId) {
+        try {
+            return getClient().clearScroll(new ClearScrollRequest.Builder().scrollId(scrollId).build()).succeeded();
+        } catch (IOException ex) {
+            throw handleIOException(ex);
+        }
+    }
+
     protected <T extends ElasticDocument> void $$query_execute_search(QueryContext<T> context) throws ElasticsearchException, IOException {
         try {
             if (context.scrolling != null && context.scrolling.getScrollId() != null) {
@@ -556,7 +578,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 scrollRequestBuilder.scroll(getLongTimeout());
                 context.scrollRequest = scrollRequestBuilder.build();
                 context.scrollResponse = getClient().scroll(context.scrollRequest, context.type);
-                context.scrolling.setScrollId(context.scrollResponse.scrollId());
+                if (!context.scrolling.canContinue()) {
+                    clearScrollling(context.scrolling.getScrollId());
+                    context.scrolling.setScrollId(null);
+                } else {
+                    context.scrolling.setScrollId(context.scrollResponse.scrollId());
+                }
             } else {
                 SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder();
                 if (context.sort != null && !context.sort.isEmpty()) {
@@ -577,7 +604,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                     // correct number of results up to 100k instead of 10k, somewhat slower
                     // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-your-data.html
                     TrackHits.Builder trackHitsBuilder = new TrackHits.Builder();
-                    trackHitsBuilder.count(elasticCustomizer.getTrackTotalHits());
+                    trackHitsBuilder.count(getElasticCustomizer().getTrackTotalHits());
                     trackHitsBuilder.enabled(true);
                     searchRequestBuilder.trackTotalHits(trackHitsBuilder.build());
                 }
