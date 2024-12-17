@@ -72,8 +72,8 @@
 		<version.httpcomponents.nio>4.4.13</version.httpcomponents.nio>
 		<version.httpcomponents.async>4.1.4</version.httpcomponents.async>
 		<version.httpclient5>5.2.1</version.httpclient5>
-		<version.reactor-netty>1.0.39</version.reactor-netty>
-		<version.reactor-core>3.5.12</version.reactor-core>
+		<version.reactor-netty>1.1.25</version.reactor-netty>
+		<version.reactor-core>3.6.13</version.reactor-core>
 		<version.javax.servlet-api>3.1.0</version.javax.servlet-api>
 		<version.javax.activation>1.1.1</version.javax.activation>
 		<version.javax.validation.api>2.0.1.Final</version.javax.validation.api>
