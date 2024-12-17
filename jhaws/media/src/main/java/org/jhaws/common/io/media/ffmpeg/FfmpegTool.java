@@ -64,7 +64,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 	public static final String AUDIO = "audio";
 
-	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
+	public static final JAXBMarshalling jaxbMarshalling = new JAXBMarshalling(
+			org.jhaws.common.io.media.ffmpeg.xml.ObjectFactory.class.getPackage().getName());
 
 	protected FilePath ffmpeg;
 
@@ -520,17 +521,21 @@ public class FfmpegTool extends Tool implements MediaCte {
 				command.add("1");
 				command.add("-qscale:v");
 				command.add("15");// good=1-35=bad, preferred range 2-5
-				FilePath seperate = splashFile.appendExtension(String.valueOf(i)).appendExtension(splashFile.getExtension());
+				FilePath seperate = splashFile.appendExtension(String.valueOf(i))
+						.appendExtension(splashFile.getExtension());
 				seperates.add(seperate);
 				command.add(command(seperate));
-				System.out.println(video.getParentPath().getAbsolutePath() + ">\n" + command.stream().collect(Collectors.joining(" ")));
+				System.out.println(video.getParentPath().getAbsolutePath() + ">\n"
+						+ command.stream().collect(Collectors.joining(" ")));
 				silentcall(act, null, video.getParentPath(), command);
 			}
 			if (seperates.size() == 1) {
 				seperates.get(0).renameTo(splashFile);
 			} else {
 				BufferedImage bio = ImageTools.tile(
-						seperates.stream().filter(FilePath::exists).map(ImageTools::read).map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()), wh);
+						seperates.stream().filter(FilePath::exists).map(ImageTools::read)
+								.map(bi -> ImageTools.getScaledInstance(bi, 1.0 / wh)).collect(Collectors.toList()),
+						wh);
 				ImageTools.write(bio, splashFile);
 			}
 			seperates.stream().forEach(FilePath::delete);
@@ -625,7 +630,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			output = output.appendExtension(suffix);
 		}
 		if (StringUtils.countMatches(from, ":") == 2) {
-			output = output.appendExtension(from.replaceFirst(":", "h").replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
+			output = output.appendExtension(
+					from.replaceFirst(":", "h").replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
 		} else {
 			output = output.appendExtension(from.replaceFirst(":", "m") + "-" + length.replaceFirst(":", "m") + "s");
 		}
@@ -675,7 +681,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	@Pooled
-	public RemuxCfg remux(Object context, RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener, FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
+	public RemuxCfg remux(Object context, RemuxDefaultsCfg defaults, Function<RemuxCfg, Consumer<String>> listener,
+			FilePath input, FilePath output, Consumer<RemuxCfg> cfgEdit) {
 		if (input == null) {
 			throw new NullPointerException();
 		}
@@ -691,7 +698,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		org.jhaws.common.io.console.Processes.Lines lines = new org.jhaws.common.io.console.Processes.Lines();
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
 		try {
-			call(act(context, input, "remux"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			call(act(context, input, "remux"), lines, input.getParentPath(), command, true,
+					listener == null ? null : listener.apply(cfg));
 		} catch (RuntimeException ex) {
 			ex.printStackTrace();
 			exception = ex;
@@ -708,7 +716,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (needsFixing.is()) {
 			command = cfg.defaults.twopass ? command(1, cfg) : command(Integer.MAX_VALUE, cfg);
 			lines = new org.jhaws.common.io.console.Processes.Lines();
-			call(act(context, input, "remux-fix"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			call(act(context, input, "remux-fix"), lines, input.getParentPath(), command, true,
+					listener == null ? null : listener.apply(cfg));
 		}
 		if (lines.lines().stream().anyMatch(s -> s.contains("Conversion failed"))) {
 			throw new UncheckedIOException(new IOException("Conversion failed"));
@@ -716,7 +725,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (cfg.defaults.twopass) {
 			command = command(2, cfg);
 			lines = new org.jhaws.common.io.console.Processes.Lines();
-			call(act(context, input, "remux-two-pass"), lines, input.getParentPath(), command, true, listener == null ? null : listener.apply(cfg));
+			call(act(context, input, "remux-two-pass"), lines, input.getParentPath(), command, true,
+					listener == null ? null : listener.apply(cfg));
 			input.getParentPath().child("ffmpeg2pass-0.log").delete();
 			input.getParentPath().child("ffmpeg2pass-0.log.mbtree").delete();
 			output.getParentPath().child("ffmpeg2pass-0.log").delete();
@@ -739,9 +749,11 @@ public class FfmpegTool extends Tool implements MediaCte {
 			cfg.input.hq = input.getFileSize() >= defaults.hqTreshold;
 			StreamType videostreaminfo = video(cfg.input.info);
 			StreamType audiostreaminfo = audio(cfg.input.info);
-			cfg.input.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.input.info.getFormat().getBitRate() / 1000) : videostreaminfo.getBitRate() / 1000;
+			cfg.input.vr = videostreaminfo.getBitRate() == null ? (int) (cfg.input.info.getFormat().getBitRate() / 1000)
+					: videostreaminfo.getBitRate() / 1000;
 			cfg.input.vt = videostreaminfo.getCodecName();
-			cfg.input.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1 : audiostreaminfo.getBitRate() / 1000;
+			cfg.input.ar = audiostreaminfo == null || audiostreaminfo.getBitRate() == null ? -1
+					: audiostreaminfo.getBitRate() / 1000;
 			cfg.input.at = audiostreaminfo == null ? null : audiostreaminfo.getCodecName();
 			cfg.input.wh = new int[] { videostreaminfo.getWidth(), videostreaminfo.getHeight() };
 			try {
@@ -751,7 +763,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 				//
 			}
 			cfg.input.vcopy = cfg.input.vt.contains(AVC) || cfg.input.vt.contains(H264);
-			cfg.input.acopy = cfg.input.at != null && (cfg.input.at.contains(MP3) || cfg.input.at.contains(AAC)) && !cfg.input.at.contains(MONO);
+			cfg.input.acopy = cfg.input.at != null && (cfg.input.at.contains(MP3) || cfg.input.at.contains(AAC))
+					&& !cfg.input.at.contains(MONO);
 		}
 		{
 			cfg.fixes.fixNotHighProfile = true;
@@ -768,7 +781,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		return cfg;
 	}
 
-	protected void handle(RemuxCfg cfg, org.jhaws.common.io.console.Processes.Lines lines, BooleanValue needsFixing, BooleanValue resetException) {
+	protected void handle(RemuxCfg cfg, org.jhaws.common.io.console.Processes.Lines lines, BooleanValue needsFixing,
+			BooleanValue resetException) {
 		if (lines.lines().stream().anyMatch(s -> s.startsWith("x264 [error]: high profile doesn't support"))) {
 			needsFixing.set(true);
 			cfg.fixes.fixNotHighProfile = false;
@@ -796,7 +810,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			cfg.fixes.fixTooManyPackets = true;
 		}
 		//
-		if (lines.lines().stream().anyMatch(s -> s.contains("No device available for encoder (device type qsv for codec h264_qsv)"))) {
+		if (lines.lines().stream()
+				.anyMatch(s -> s.contains("No device available for encoder (device type qsv for codec h264_qsv)"))) {
 			hwAccel.remove("qsv");
 			needsFixing.set(true);
 		}
@@ -862,10 +877,9 @@ public class FfmpegTool extends Tool implements MediaCte {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	public static class RemuxDefaultsCfg implements Serializable {
-		private static final long serialVersionUID = -5591850342277728402L;
-
-		final public List<String> tune = new ArrayList<>(/* Arrays.asList( "film", "zerolatency") */);
+		public List<String> tune = new ArrayList<>(/* Arrays.asList( "film", "zerolatency") */);
 
 		// HQ 18-23-28 LQ
 		public int cfrHQ = 18;
@@ -942,6 +956,122 @@ public class FfmpegTool extends Tool implements MediaCte {
 			builder.append(this.twopass);
 			builder.append("]");
 			return builder.toString();
+		}
+
+		public int getCfrHQ() {
+			return this.cfrHQ;
+		}
+
+		public void setCfrHQ(int cfrHQ) {
+			this.cfrHQ = cfrHQ;
+		}
+
+		public int getCfrLQ() {
+			return this.cfrLQ;
+		}
+
+		public void setCfrLQ(int cfrLQ) {
+			this.cfrLQ = cfrLQ;
+		}
+
+		public int getVidRateHQ() {
+			return this.vidRateHQ;
+		}
+
+		public void setVidRateHQ(int vidRateHQ) {
+			this.vidRateHQ = vidRateHQ;
+		}
+
+		public int getVidRateLQ() {
+			return this.vidRateLQ;
+		}
+
+		public void setVidRateLQ(int vidRateLQ) {
+			this.vidRateLQ = vidRateLQ;
+		}
+
+		public String getPresetHQ() {
+			return this.presetHQ;
+		}
+
+		public void setPresetHQ(String presetHQ) {
+			this.presetHQ = presetHQ;
+		}
+
+		public String getPresetLQ() {
+			return this.presetLQ;
+		}
+
+		public void setPresetLQ(String presetLQ) {
+			this.presetLQ = presetLQ;
+		}
+
+		public int getQmin() {
+			return this.qmin;
+		}
+
+		public void setQmin(int qmin) {
+			this.qmin = qmin;
+		}
+
+		public int getQmax() {
+			return this.qmax;
+		}
+
+		public void setQmax(int qmax) {
+			this.qmax = qmax;
+		}
+
+		public int getQdiff() {
+			return this.qdiff;
+		}
+
+		public void setQdiff(int qdiff) {
+			this.qdiff = qdiff;
+		}
+
+		public float getVidRateQHQ() {
+			return this.vidRateQHQ;
+		}
+
+		public void setVidRateQHQ(float vidRateQHQ) {
+			this.vidRateQHQ = vidRateQHQ;
+		}
+
+		public float getVidRateQLQ() {
+			return this.vidRateQLQ;
+		}
+
+		public void setVidRateQLQ(float vidRateQLQ) {
+			this.vidRateQLQ = vidRateQLQ;
+		}
+
+		public float getVidRateQ() {
+			return this.vidRateQ;
+		}
+
+		public void setVidRateQ(float vidRateQ) {
+			this.vidRateQ = vidRateQ;
+		}
+
+		public boolean isTwopass() {
+			return this.twopass;
+		}
+
+		public void setTwopass(boolean twopass) {
+			this.twopass = twopass;
+		}
+
+		public int getHqTreshold() {
+			return this.hqTreshold;
+		}
+
+		public void setHqTreshold(int hqTreshold) {
+			this.hqTreshold = hqTreshold;
+		}
+
+		public List<String> getTune() {
+			return this.tune;
 		}
 	}
 
@@ -1107,7 +1237,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		if (cfg.vcopy == null) {
 			cfg.vcopy = cfg.input != null ? cfg.input.vcopy : false;
 		}
-		if (cfg.forceRemux && cfg.acopy && cfg.vcopy && cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension())) {
+		if (cfg.forceRemux && cfg.acopy && cfg.vcopy
+				&& cfg.input.input.getExtension().equalsIgnoreCase(cfg.output.getExtension())) {
 			cfg.vcopy = false;
 		}
 		if (cfg.hq == null) {
@@ -1357,7 +1488,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 					+ cfg.input.wh[1] * (cfg.input.fps == null ? 24 : cfg.input.fps) * cfg.defaults.vidRateQ / 1000);
 			if (cfg.input.vr != -1) {
 				if (cfg.vidrate > cfg.input.vr) {
-					if (cfg.hq && cfg.input.vr < 2500 && !Boolean.TRUE.equals(cfg.hi10p) && !Boolean.TRUE.equals(cfg.hevc)) {
+					if (cfg.hq && cfg.input.vr < 2500 && !Boolean.TRUE.equals(cfg.hi10p)
+							&& !Boolean.TRUE.equals(cfg.hevc)) {
 						cfg.vidrate = (int) (cfg.input.vr * 1.25);
 					} else {
 						cfg.vidrate = cfg.input.vr;
@@ -1432,15 +1564,16 @@ public class FfmpegTool extends Tool implements MediaCte {
 		} catch (RuntimeException ex) {
 			loggeri.error("", ex);
 			if (lines != null && lines instanceof org.jhaws.common.io.console.Processes.Lines) {
-				org.jhaws.common.io.console.Processes.Lines.class.cast(lines).lines().forEach(l -> loggeri.error("{}", l));
+				org.jhaws.common.io.console.Processes.Lines.class.cast(lines).lines()
+						.forEach(l -> loggeri.error("{}", l));
 			}
 			output.delete();
 			throw ex;
 		}
 	}
 
-	public void slideshow(Integer secondsPerFrame, Integer framesPerSecondIn, Integer framesPerSecondOut, FilePath input, String images, FilePath output,
-			Consumer<String> listener) {
+	public void slideshow(Integer secondsPerFrame, Integer framesPerSecondIn, Integer framesPerSecondOut,
+			FilePath input, String images, FilePath output, Consumer<String> listener) {
 		// In this example each image will have a duration of 5 seconds (the
 		// inverse of 1/5 frames per second). The video stream will have a frame
 		// rate of 30 fps by duplicating the
@@ -1507,20 +1640,26 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	public List<StreamType> videos(FfprobeType finfo) {
-		return finfo == null ? null : finfo.getStreams().getStream().stream().filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+		return finfo == null ? null
+				: finfo.getStreams().getStream().stream()
+						.filter(stream -> VIDEO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	public List<StreamType> audios(FfprobeType finfo) {
-		return finfo == null ? null : finfo.getStreams().getStream().stream().filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
+		return finfo == null ? null
+				: finfo.getStreams().getStream().stream()
+						.filter(stream -> AUDIO.equalsIgnoreCase(stream.getCodecType())).collect(Collectors.toList());
 	}
 
 	public long frames(StreamType videostreaminfo) {
-		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0 : videostreaminfo.getNbFrames().longValue();
+		return videostreaminfo == null || videostreaminfo.getNbFrames() == null ? 0
+				: videostreaminfo.getNbFrames().longValue();
 	}
 
 	public int[] frameRateSpec(StreamType videostreaminfo) {
 		return videostreaminfo == null || videostreaminfo.getRFrameRate() == null ? null
-				: new int[] { Integer.parseInt(videostreaminfo.getRFrameRate().split("/")[0]), Integer.parseInt(videostreaminfo.getRFrameRate().split("/")[1]) };
+				: new int[] { Integer.parseInt(videostreaminfo.getRFrameRate().split("/")[0]),
+						Integer.parseInt(videostreaminfo.getRFrameRate().split("/")[1]) };
 	}
 
 	public double frameRate(StreamType videostreaminfo) {
@@ -1716,7 +1855,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 	}
 
 	// https://www.binpress.com/generate-video-previews-ffmpeg/
-	public <C extends Consumer<String>> FilePath strip(FilePath input, Integer count, Integer height, FilePath out, C lines) {
+	public <C extends Consumer<String>> FilePath strip(FilePath input, Integer count, Integer height, FilePath out,
+			C lines) {
 		if (input == null || input.notExists())
 			throw new IllegalArgumentException();
 		if (count == null)
@@ -1749,7 +1889,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 
 	// https://www.webtvsolutions.com/support.php?s=ws_webtv_docs&d=clips_video_thumbnails&lang=en
 	// https://stackoverflow.com/questions/20022006/generate-all-the-files-vtt-sprite-for-the-tooltip-thumbnails-options-of-jwp
-	public <C extends Consumer<String>> void thumbs(FilePath input, FilePath outDir, Integer maxw, Integer perSeconds, C lines) {
+	public <C extends Consumer<String>> void thumbs(FilePath input, FilePath outDir, Integer maxw, Integer perSeconds,
+			C lines) {
 		if (input == null || input.notExists())
 			throw new IllegalArgumentException();
 		if (maxw == null)
@@ -1775,7 +1916,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 		call(null, lines, getFfmpeg().getParentPath(), command);
 		int maxw0 = maxw.intValue();
 		double scale = (double) maxw0 / w;
-		List<BufferedImage> list = outDir.list().stream().sorted().map(f -> ImageTools.getScaledInstance(ImageTools.read(f), scale)).collect(Collectors.toList());
+		List<BufferedImage> list = outDir.list().stream().sorted()
+				.map(f -> ImageTools.getScaledInstance(ImageTools.read(f), scale)).collect(Collectors.toList());
 		int cols = (int) Math.ceil(Math.sqrt(list.size()));
 		BufferedImage tile = ImageTools.tile(list, cols);
 		outDir.list().forEach(FilePath::delete);
@@ -1939,7 +2081,8 @@ public class FfmpegTool extends Tool implements MediaCte {
 			command.add("-q:v");
 			command.add("1");
 			command.add("-vf");
-			command.add("\"select=not(mod(n\\," + $NTH_FRAME + ")),scale=-1:" + $HEIGHT + ",tile=" + $COLS + "x" + $ROWS + "\"");
+			command.add("\"select=not(mod(n\\," + $NTH_FRAME + ")),scale=-1:" + $HEIGHT + ",tile=" + $COLS + "x" + $ROWS
+					+ "\"");
 			command.add(command(output));
 			System.out.println(command.stream().collect(Collectors.joining(" ")));
 			silentcall(null, null, input.getParentPath(), command);
