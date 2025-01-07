@@ -124,8 +124,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @since 1.8
- * see http://andreinc.net/
+ * @since 1.8 see http://andreinc.net/
  */
 @SuppressWarnings("serial")
 public class FilePath implements Path, Externalizable {
@@ -272,7 +271,8 @@ public class FilePath implements Path, Externalizable {
 	/**
 	 * path (then class or classloader is required) or url or uri required
 	 *
-	 * see http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
+	 * see
+	 * http://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
 	 */
 	public static Path path(String _path, URL _url, URI _uri, Class<?> _root, ClassLoader _classLoader) {
 		Value<ClassLoader> __classLoader = new Value<>(_classLoader);
@@ -1428,9 +1428,9 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public FilePath copyFileFrom(Path source) {
-		try(FileInputStream fis = new FileInputStream(source.toString());
-		    FileOutputStream fos = new FileOutputStream(toString())) {
-			Utils.copy(fis,fos);
+		try (FileInputStream fis = new FileInputStream(source.toString());
+				FileOutputStream fos = new FileOutputStream(toString())) {
+			Utils.copy(fis, fos);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -1449,10 +1449,10 @@ public class FilePath implements Path, Externalizable {
 		return this.copyTo(getPath(target), StandardCopyOption.REPLACE_EXISTING);
 	}
 
-	public FilePath copyFileTo(Path target){
-		try(FileInputStream fis = new FileInputStream(toString());
-		    FileOutputStream fos = new FileOutputStream(target.toString())) {
-			Utils.copy(fis,fos);
+	public FilePath copyFileTo(Path target) {
+		try (FileInputStream fis = new FileInputStream(toString());
+				FileOutputStream fos = new FileOutputStream(target.toString())) {
+			Utils.copy(fis, fos);
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -2305,9 +2305,8 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	/**
-	 * {@link #newFileIndex()} but with
-	 * separator set to '_' and format to '0000' and the other parameters derived
-	 * from given File
+	 * {@link #newFileIndex()} but with separator set to '_' and format to '0000'
+	 * and the other parameters derived from given File
 	 */
 	public FilePath newFileIndex() {
 		if (this.notExists()) {
@@ -2913,6 +2912,38 @@ public class FilePath implements Path, Externalizable {
 		return writeAppend(text, getCharSet());
 	}
 
+	public FilePath writeNewOrAppend(byte... bytes) {
+		return write(bytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+	}
+
+	public FilePath writeNewOrAppend(ByteBuffer bytes) {
+		return write(bytes, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+	}
+
+	public FilePath writeNewOrAppend(Iterable<? extends CharSequence> lines, Charset charset) {
+		return write(lines, charset, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+	}
+
+	public FilePath writeNewOrAppend(Iterable<? extends CharSequence> lines) {
+		return writeAppend(lines, getCharSet());
+	}
+
+	public FilePath writeNewOrAppend(String text, Charset charset) {
+		return write(text, charset, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+	}
+
+	public FilePath writeNewOrAppend(CharSequence text) {
+		return writeNewOrAppend(text, getCharSet());
+	}
+
+	public FilePath writeNewOrAppend(CharSequence text, Charset charset) {
+		return writeNewOrAppend(text.toString(), charset);
+	}
+
+	public FilePath writeNewOrAppend(String text) {
+		return writeNewOrAppend(text, getCharSet());
+	}
+
 	public FilePath write(byte[] bytes, OpenOption... options) {
 		try {
 			return new FilePath(Files.write(this.getPath(), bytes, options));
@@ -3363,9 +3394,12 @@ public class FilePath implements Path, Externalizable {
 	/**
 	 * windows only
 	 *
-	 * see http://stackoverflow.com/questions/1646425/cmd-command-to-delete-files-and-put-them-into-recycle-bin
-	 * see https://github.com/npocmaka/batch.scripts/blob/master/hybrids/jscript/deleteJS.bat
-	 * see http://stackoverflow.com/questions/615948/how-do-i-run-a-batch-file-from-my-java-application
+	 * see
+	 * http://stackoverflow.com/questions/1646425/cmd-command-to-delete-files-and-put-them-into-recycle-bin
+	 * see
+	 * https://github.com/npocmaka/batch.scripts/blob/master/hybrids/jscript/deleteJS.bat
+	 * see
+	 * http://stackoverflow.com/questions/615948/how-do-i-run-a-batch-file-from-my-java-application
 	 */
 	public boolean recycle() {
 		if (notExists()) {
