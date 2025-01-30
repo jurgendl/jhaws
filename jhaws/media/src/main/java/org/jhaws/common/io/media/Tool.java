@@ -145,8 +145,8 @@ public abstract class Tool {
 		Map<String, String> env0 = env == null ? new HashMap<>() : env;
 		if (paths != null)
 			env0.put("Path", paths.stream().map(FilePath::getAbsolutePath).collect(Collectors.joining(";")));
-		Processes.process(Processes.config(command).processHolder(processHolder).throwExitValue(throwExitValue)
-				.env(env0).dir(dir).consumer(consumers));
+		Processes.process(Processes.config(command, consumers).processHolder(processHolder)
+				.throwExitValue(throwExitValue).env(env0).dir(dir));
 		if (log) {
 			LOGGER.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
 		}

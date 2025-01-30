@@ -5,6 +5,7 @@ import java.io.UncheckedIOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -59,6 +60,14 @@ public class Processes {
 		public String toString() {
 			return this.getText();
 		}
+	}
+
+	public static class NoOp implements Consumer<String> {
+		@Override
+		public void accept(String t) {
+			//
+		}
+
 	}
 
 	public static class Out implements Consumer<String> {
@@ -262,12 +271,16 @@ public class Processes {
 			logger.debug("{}> {}", processConfigBuilder.dir.getAbsolutePath(),
 					processConfigBuilder.command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
 		}
+
 		ProcessBuilder builder = new ProcessBuilder(
 				processConfigBuilder.command.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+
 		builder.redirectErrorStream(true);
+
 		if (processConfigBuilder.env != null && processConfigBuilder.env.size() > 0) {
 			builder.environment().putAll(processConfigBuilder.env);
 		}
+
 		if (processConfigBuilder.dir != null) {
 			if (processConfigBuilder.dir.notExists()) {
 				processConfigBuilder.dir.createDirectory();
@@ -278,11 +291,13 @@ public class Processes {
 			}
 			builder.directory(processConfigBuilder.dir.toFile());
 		}
+
 		if (processConfigBuilder.input != null)
 			builder.redirectInput(Redirect.from(processConfigBuilder.input.toFile()));
 		else {
 			// builder.redirectInput(Redirect.INHERIT);
 		}
+
 		if (processConfigBuilder.outputLog != null)
 			if (processConfigBuilder.outputLog.exists())
 				builder.redirectOutput(Redirect.appendTo(processConfigBuilder.outputLog.toFile()));
@@ -291,6 +306,7 @@ public class Processes {
 		else {
 			// builder.redirectOutput(Redirect.INHERIT);
 		}
+
 		if (processConfigBuilder.errorLog != null)
 			if (processConfigBuilder.errorLog.exists())
 				builder.redirectError(Redirect.appendTo(processConfigBuilder.errorLog.toFile()));
@@ -299,6 +315,7 @@ public class Processes {
 		else {
 			builder.redirectError(Redirect.PIPE);
 		}
+
 		Process process;
 		try {
 			process = builder.start();
@@ -307,31 +324,39 @@ public class Processes {
 		} catch (IOException e1) {
 			throw new UncheckedIOException(e1);
 		}
+
 		Consumer<String> allConsumers = null;
-		if (processConfigBuilder.consumer != null) {
+		if (processConfigBuilder.consumer != null)
 			allConsumers = processConfigBuilder.consumer;
-			processConfigBuilder.consumers.forEach(allConsumers::andThen);
-			try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
-				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false)
-						.filter(StringUtils::isNotBlank).forEach(allConsumers);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				throw new UncheckedIOException(e1);
-			} catch (RuntimeException e1) {
-				e1.printStackTrace();
-				throw e1;
-			} finally {
-				try {
-					process.destroy();
-				} catch (Exception ex) {
-					//
-				}
+		if (processConfigBuilder.consumers != null && !processConfigBuilder.consumers.isEmpty()) {
+			Iterator<Consumer<String>> iterator = processConfigBuilder.consumers.iterator();
+			if (allConsumers == null)
+				allConsumers = iterator.next();
+			while (iterator.hasNext())
+				allConsumers.andThen(iterator.next());
+		}
+		if (allConsumers == null)
+			allConsumers = new NoOp();
+
+		try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
+			StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false)
+					.filter(StringUtils::isNotBlank).forEach(allConsumers);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			throw new UncheckedIOException(e1);
+		} catch (RuntimeException e1) {
+			e1.printStackTrace();
+			throw e1;
+		} finally {
+			try {
+				process.destroy();
+			} catch (Exception ex) {
+				//
 			}
 		}
+
 		try {
 			int exitValue = process.waitFor();
-			// if (allConsumers != null)
-			// allConsumers.accept("exit value=" + exitValue);
 			if (exitValue != 0 && processConfigBuilder.throwExitValue) {
 				logger.debug("> {}", processConfigBuilder.command.stream().collect(Collectors.joining(" ")));
 				throw new ExitValueException(exitValue);
@@ -339,8 +364,13 @@ public class Processes {
 		} catch (InterruptedException e) {
 			//
 		} finally {
-			process.destroy();
+			try {
+				process.destroy();
+			} catch (Exception ex) {
+				//
+			}
 		}
+
 		return processConfigBuilder;
 	}
 
