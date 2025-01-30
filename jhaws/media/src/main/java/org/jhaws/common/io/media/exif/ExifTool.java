@@ -1,7 +1,6 @@
 package org.jhaws.common.io.media.exif;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.jhaws.common.io.console.Processes.callProcess;
 import static org.jhaws.common.lang.CollectionUtils8.collectList;
 import static org.jhaws.common.lang.CollectionUtils8.join;
 
@@ -393,10 +392,14 @@ public class ExifTool extends Tool implements MediaCte {
 
 		@Override
 		public String toString() {
-			return "ExifInfoImpl [" + (this.w != null ? "w=" + this.w + ", " : "") + (this.h != null ? "h=" + this.h + ", " : "")
-					+ (this.video != null ? "video=" + this.video + ", " : "") + (this.audio != null ? "audio=" + this.audio + ", " : "")
-					+ (this.vfr != null ? "vfr=" + this.vfr + ", " : "") + (this.bitrate != null ? "bitrate=" + this.bitrate + ", " : "")
-					+ (this.mimetype != null ? "mimetype=" + this.mimetype + ", " : "") + (this.duration != null ? "duration=" + this.duration + ", " : "")
+			return "ExifInfoImpl [" + (this.w != null ? "w=" + this.w + ", " : "")
+					+ (this.h != null ? "h=" + this.h + ", " : "")
+					+ (this.video != null ? "video=" + this.video + ", " : "")
+					+ (this.audio != null ? "audio=" + this.audio + ", " : "")
+					+ (this.vfr != null ? "vfr=" + this.vfr + ", " : "")
+					+ (this.bitrate != null ? "bitrate=" + this.bitrate + ", " : "")
+					+ (this.mimetype != null ? "mimetype=" + this.mimetype + ", " : "")
+					+ (this.duration != null ? "duration=" + this.duration + ", " : "")
 					+ (this.wh != null ? "wh=" + this.wh : "") + "]";
 		}
 
@@ -415,10 +418,12 @@ public class ExifTool extends Tool implements MediaCte {
 		if (p.notExists() || executable.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(perl(), command(executable), "-Comment=\"" + comment + "\"", p.getAbsolutePath());
+		List<String> command = Arrays.asList(perl(), command(executable), "-Comment=\"" + comment + "\"",
+				p.getAbsolutePath());
 		String jc = join(command);
 		loggeri.trace("{}", jc);
-		callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		Processes.process(Processes.lines(command).dir(p.getParentPath())).getConsumer().lines().stream()
+				.collect(collectList());
 		p.getParentPath().child(p.getFileNameString() + "_original").delete();
 	}
 
@@ -433,18 +438,20 @@ public class ExifTool extends Tool implements MediaCte {
 		List<String> command = Arrays.asList(perl(), command(executable), "-Comment", p.getAbsolutePath());
 		String jc = join(command);
 		loggeri.trace("{}", jc);
-		return callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().filter(l -> l.toLowerCase().startsWith("comment"))
-				.map(l -> l.split(":")[1].trim()).findFirst().orElse(null);
+		return Processes.process(Processes.lines(command).dir(p.getParentPath())).getConsumer().lines().stream()
+				.filter(l -> l.toLowerCase().startsWith("comment")).map(l -> l.split(":")[1].trim()).findFirst()
+				.orElse(null);
 	}
 
 	public void program(FilePath p, String program) {
 		if (p.notExists() || executable.notExists()) {
 			throw new IllegalArgumentException();
 		}
-		List<String> command = Arrays.asList(perl(), command(executable), "-Software=\"" + program + "\"", p.getAbsolutePath());
+		List<String> command = Arrays.asList(perl(), command(executable), "-Software=\"" + program + "\"",
+				p.getAbsolutePath());
 		String jc = join(command);
 		loggeri.trace("{}", jc);
-		callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().collect(collectList());
+		Processes.process(Processes.lines(command).dir(p.getParentPath()));
 		p.getParentPath().child(p.getFileNameString() + "_original").delete();
 	}
 
@@ -455,8 +462,9 @@ public class ExifTool extends Tool implements MediaCte {
 		List<String> command = Arrays.asList(perl(), command(executable), "-Software", p.getAbsolutePath());
 		String jc = join(command);
 		loggeri.trace("{}", jc);
-		return callProcess(null, false, command, p.getParentPath(), new Lines()).lines().stream().filter(l -> l.toLowerCase().contains("software")).map(l -> l.split(":")[1].trim())
-				.findFirst().orElse(null);
+		return Processes.process(Processes.lines(command).dir(p.getParentPath())).getConsumer().lines().stream()
+				.filter(l -> l.toLowerCase().contains("software")).map(l -> l.split(":")[1].trim()).findFirst()
+				.orElse(null);
 	}
 
 	public List<ExifInfo> exifInfoMulti(FilePath sameDriveTmp, List<FilePath> p) {
@@ -469,7 +477,8 @@ public class ExifTool extends Tool implements MediaCte {
 
 	public static boolean containsNonUTF8Characters(String input) {
 		try {
-			String clean = input.replace(" ", "_").replace("%", "_").replace("/", "_").replace("\\", "_").replace(":", "_");
+			String clean = input.replace(" ", "_").replace("%", "_").replace("/", "_").replace("\\", "_").replace(":",
+					"_");
 			String encoded = URLEncoder.encode(clean, "utf-8");
 			return !clean.equals(encoded);
 		} catch (UnsupportedEncodingException ex) {
@@ -520,14 +529,16 @@ public class ExifTool extends Tool implements MediaCte {
 		try {
 			loggeri.trace(jc);
 
-			List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command, executable.getParentPath(), null, null, new Lines()).lines().stream()
-					.collect(collectList());
+			List<String> lines = Processes
+					.process(Processes.lines(command).env(System.getenv()).dir(executable.getParentPath()))
+					.getConsumer().lines().stream().collect(collectList());
 
 			lines.forEach(System.out::println);
 
 			String jsonString = jsonFile.readAll();
 
-			JsonStructure jso = Json.createReader(new InputStreamReader(new ByteArrayInputStream(jsonString.getBytes()))).read();
+			JsonStructure jso = Json
+					.createReader(new InputStreamReader(new ByteArrayInputStream(jsonString.getBytes()))).read();
 			JsonArray arr = jso.asJsonArray();
 			for (int i = 0; i < arr.size(); i++) {
 				JsonValue it = arr.get(i);
@@ -581,8 +592,9 @@ public class ExifTool extends Tool implements MediaCte {
 			if (webImageFilter.accept(p) || videoFilter.accept(p) || html5Videofilter.accept(p) || qtFilter.accept(p)) {
 				List<String> command = exifCommand(p);
 
-				List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command, p.getParentPath(), null, null, new Lines()).lines().stream()
-						.collect(collectList());
+				List<String> lines = Processes
+						.process(Processes.lines(command).env(System.getenv()).dir(p.getParentPath())).getConsumer()
+						.lines().stream().collect(collectList());
 				// lines.forEach(System.out::println);
 
 				if (lines.stream().anyMatch(x -> //
@@ -603,11 +615,14 @@ public class ExifTool extends Tool implements MediaCte {
 								, "-json"//
 								, "\"" + tmp.getFileNameString() + "\""//
 						);
-						lines = Processes.callProcess(null, false, null, System.getenv(), command, p.getParentPath(), null, null, new Lines()).lines().stream()
-								.collect(collectList());
+
+						lines = Processes
+								.process(Processes.lines(command).env(System.getenv()).dir(p.getParentPath()))
+								.getConsumer().lines().stream().collect(collectList());
 						// lines.forEach(System.out::println);
 					} catch (Exception x) {
-						System.out.println("could not create " + tmp.getAbsolutePath() + " from " + p.getAbsolutePath());
+						System.out
+								.println("could not create " + tmp.getAbsolutePath() + " from " + p.getAbsolutePath());
 						x.printStackTrace(System.out);
 					} finally {
 						if (tmp.exists()) {
@@ -622,7 +637,8 @@ public class ExifTool extends Tool implements MediaCte {
 				}
 
 				String jsonString = lines.stream().collect(Collectors.joining(" "));
-				JsonStructure jso = Json.createReader(new InputStreamReader(new ByteArrayInputStream(jsonString.getBytes()))).read();
+				JsonStructure jso = Json
+						.createReader(new InputStreamReader(new ByteArrayInputStream(jsonString.getBytes()))).read();
 				@SuppressWarnings("unchecked")
 				Map<String, Object> all = (Map<String, Object>) jso.asJsonArray().get(0);
 				Map<String, String> all2 = exifinfo.getAll();
@@ -670,7 +686,8 @@ public class ExifTool extends Tool implements MediaCte {
 				vfr = exifinfo.value(AVGBITRATE2);
 			}
 			if (StringUtils.isNotBlank(vfr)) {
-				exifinfo.setVfr(Double.parseDouble(vfr.replace("Mbps", "").replace("kbps", "").replace("fps", "").trim()));
+				exifinfo.setVfr(
+						Double.parseDouble(vfr.replace("Mbps", "").replace("kbps", "").replace("fps", "").trim()));
 			}
 		}
 
@@ -704,17 +721,18 @@ public class ExifTool extends Tool implements MediaCte {
 			return JsonString.class.cast(value).getString();
 		}
 		if (value instanceof JsonArray) {
-			return Arrays.stream(JsonArray.class.cast(value).toArray()).map(this::toString).collect(Collectors.joining(";"));
+			return Arrays.stream(JsonArray.class.cast(value).toArray()).map(this::toString)
+					.collect(Collectors.joining(";"));
 		}
 		if (value instanceof JsonObject) {
 			return toString(JsonObject.class.cast(value).asJsonArray());
 		}
 		if (value instanceof JsonValue) {
 			switch (JsonValue.class.cast(value).getValueType()) {
-				case FALSE:
-					return "false";
-				case TRUE:
-					return "true";
+			case FALSE:
+				return "false";
+			case TRUE:
+				return "true";
 			}
 		}
 		throw new IllegalArgumentException(value.getClass().getName());
@@ -803,7 +821,8 @@ public class ExifTool extends Tool implements MediaCte {
 			if (Utils.osgroup == OSGroup.Windows) {
 				tmp = tmp + ".exe";
 			}
-			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream(); OutputStream out = executable.newBufferedOutputStream()) {
+			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream();
+					OutputStream out = executable.newBufferedOutputStream()) {
 				IOUtils.copy(in, out);
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -825,10 +844,9 @@ public class ExifTool extends Tool implements MediaCte {
 		command.add("-overwrite_original");
 		Arrays.stream(keywords).map(s -> "-IPTC:Keywords=" + s).forEach(command::add);
 		command.add(command(p));
-		List<String> lines = Processes.callProcess(null, false, null, System.getenv(), command, getExecutable().getParentPath(), null, null, new Lines()).lines().stream()
-				.collect(collectList());
-		lines.forEach(System.out::println);
-		return;
+
+		Processes.process(Processes.lines(command).env(System.getenv()).dir(getExecutable().getParentPath()))
+				.getConsumer().lines().stream().forEach(System.out::println);
 	}
 
 	public boolean isUsePerl() {

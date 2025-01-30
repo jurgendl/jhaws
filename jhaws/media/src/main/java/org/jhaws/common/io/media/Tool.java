@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -93,7 +94,8 @@ public abstract class Tool {
 	}
 
 	public static void call(FilePath command) {
-		call(null, new org.jhaws.common.io.console.Processes.Log(), command.getParentPath(), Arrays.asList(command.getAbsolutePath()), true, null);
+		call(null, new org.jhaws.common.io.console.Processes.Log(), command.getParentPath(),
+				Arrays.asList(command.getAbsolutePath()), true, null);
 	}
 
 	public static void call(FilePath dir, String command) {
@@ -104,21 +106,32 @@ public abstract class Tool {
 		call(null, new org.jhaws.common.io.console.Processes.Log(), dir, command, true, null);
 	}
 
-	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir,
+			List<String> command) {
 		return call(processHolder, lines, dir, command, true, null);
 	}
 
-	public static <C extends Consumer<String>> C silentcall(Value<Process> processHolder, C lines, FilePath dir, List<String> command) {
+	public static <C extends Consumer<String>> C silentcall(Value<Process> processHolder, C lines, FilePath dir,
+			List<String> command) {
 		return call(processHolder, lines, dir, command, false, null);
 	}
 
-	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener) {
-		return call(processHolder, lines, dir, command, log, listener, true, null);
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir,
+			List<String> command, boolean log, Consumer<String> listener) {
+		return call(processHolder, lines, dir, command, log, listener, true, null, null);
+	}
+
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir,
+			List<String> command, boolean log, Consumer<String> listener, boolean throwExitValue,
+			List<FilePath> paths) {
+		return call(processHolder, lines, dir, command, log, listener, throwExitValue, paths,
+				(Map<String, String>) null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log, Consumer<String> listener,
-			boolean throwExitValue, List<FilePath> paths) {
+	public static <C extends Consumer<String>> C call(Value<Process> processHolder, C lines, FilePath dir,
+			List<String> command, boolean log, Consumer<String> listener, boolean throwExitValue, List<FilePath> paths,
+			Map<String, String> env) {
 		if (lines == null)
 			lines = (C) new Lines();
 		Consumer<String> consumers = log ? lines.andThen(new Lines()) : lines;
@@ -129,18 +142,27 @@ public abstract class Tool {
 			LOGGER.info("start - {}", join(command));
 		}
 		long start = System.currentTimeMillis();
-		HashMap<String, String> env = new HashMap<>();
+		Map<String, String> env0 = env == null ? new HashMap<>() : env;
 		if (paths != null)
-			env.put("Path", paths.stream().map(FilePath::getAbsolutePath).collect(Collectors.joining(";")));
-		Processes.callProcess(processHolder, throwExitValue, null, env, command, dir, null, null, consumers, consumers);
+			env0.put("Path", paths.stream().map(FilePath::getAbsolutePath).collect(Collectors.joining(";")));
+		Processes.process(Processes.config(command).processHolder(processHolder).throwExitValue(throwExitValue)
+				.env(env0).dir(dir).consumer(consumers));
 		if (log) {
 			LOGGER.info("end - {}s :: {}", (System.currentTimeMillis() - start) / 1000, join(command));
 		}
 		return lines;
 	}
 
-	public static <C extends Consumer<String>> C call(Duration timeout, Value<Process> processHolder, C lines, FilePath dir, List<String> command, boolean log,
-			Consumer<String> listener, boolean throwExitValue, List<FilePath> paths) {
+	public static <C extends Consumer<String>> C call(Duration timeout, Value<Process> processHolder, C lines,
+			FilePath dir, List<String> command, boolean log, Consumer<String> listener, boolean throwExitValue,
+			List<FilePath> paths) {
+		return call(timeout, processHolder, lines, dir, command, log, listener, throwExitValue, paths,
+				(Map<String, String>) null);
+	}
+
+	public static <C extends Consumer<String>> C call(Duration timeout, Value<Process> processHolder, C lines,
+			FilePath dir, List<String> command, boolean log, Consumer<String> listener, boolean throwExitValue,
+			List<FilePath> paths, Map<String, String> env) {
 		// https://stackoverflow.com/questions/2275443/how-to-timeout-a-thread
 		ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
 			Thread t = new Thread(r);
@@ -150,7 +172,7 @@ public abstract class Tool {
 		Future<C> future = executor.submit(new Callable<>() {
 			@Override
 			public C call() throws Exception {
-				return Tool.call(processHolder, lines, dir, command, log, listener, throwExitValue, paths);
+				return Tool.call(processHolder, lines, dir, command, log, listener, throwExitValue, paths, env);
 			}
 		});
 		try {

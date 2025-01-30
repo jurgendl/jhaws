@@ -1,7 +1,5 @@
 package org.jhaws.common.io.media.jhead;
 
-import static org.jhaws.common.io.console.Processes.callProcess;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.io.FilePath;
 import org.jhaws.common.io.Utils;
 import org.jhaws.common.io.Utils.OSGroup;
+import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.io.console.Processes.Lines;
 import org.jhaws.common.io.media.Tool;
 
@@ -50,27 +49,33 @@ public class JpegTran extends Tool {
 
 	public void rotate(FilePath image, int nr) {
 		FilePath tmp = FilePath.getTempDirectory().child(image.getFileNameString());
-		List<String> command = Arrays.asList(command(executable), "-debug", "-rotate", "" + nr, command(image), command(tmp));
+		List<String> command = Arrays.asList(command(executable), "-debug", "-rotate", "" + nr, command(image),
+				command(tmp));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		callProcess(null, false, command, executable.getParentPath(), new Lines()).lines().forEach(System.out::println);
+		Processes.process(Processes.lines(command).dir(executable.getParentPath())).getConsumer().lines()
+				.forEach(System.out::println);
 		image.delete();
 		tmp.moveTo(image);
 	}
 
 	public void flipLeftRight(FilePath image) {
 		FilePath tmp = FilePath.getTempDirectory().child(image.getFileNameString());
-		List<String> command = Arrays.asList(command(executable), "-debug", "-flip", "horizontal", command(image), command(tmp));
+		List<String> command = Arrays.asList(command(executable), "-debug", "-flip", "horizontal", command(image),
+				command(tmp));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		callProcess(null, false, command, executable.getParentPath(), new Lines()).lines().forEach(System.out::println);
+		Processes.process(Processes.lines(command).dir(executable.getParentPath())).getConsumer().lines()
+				.forEach(System.out::println);
 		image.delete();
 		tmp.moveTo(image);
 	}
 
 	public void flipTopBottom(FilePath image) {
 		FilePath tmp = FilePath.getTempDirectory().child(image.getFileNameString());
-		List<String> command = Arrays.asList(command(executable), "-debug", "-flip", "vertical", command(image), command(tmp));
+		List<String> command = Arrays.asList(command(executable), "-debug", "-flip", "vertical", command(image),
+				command(tmp));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		callProcess(null, false, command, executable.getParentPath(), new Lines()).lines().forEach(System.out::println);
+		Processes.process(Processes.lines(command).dir(executable.getParentPath())).getConsumer().lines()
+				.forEach(System.out::println);
 		image.delete();
 		tmp.moveTo(image);
 	}
@@ -79,16 +84,19 @@ public class JpegTran extends Tool {
 		FilePath tmp = FilePath.getTempDirectory().child(image.getFileNameString());
 		List<String> command = Arrays.asList(command(executable), "-debug", "-transpose", command(image), command(tmp));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		callProcess(null, false, command, executable.getParentPath(), new Lines()).lines().forEach(System.out::println);
+		Processes.process(Processes.lines(command).dir(executable.getParentPath())).getConsumer().lines()
+				.forEach(System.out::println);
 		image.delete();
 		tmp.moveTo(image);
 	}
 
 	public void transverse(FilePath image) {
 		FilePath tmp = FilePath.getTempDirectory().child(image.getFileNameString());
-		List<String> command = Arrays.asList(command(executable), "-debug", "-transverse", command(image), command(tmp));
+		List<String> command = Arrays.asList(command(executable), "-debug", "-transverse", command(image),
+				command(tmp));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		callProcess(null, false, command, executable.getParentPath(), new Lines()).lines().forEach(System.out::println);
+		Processes.process(Processes.lines(command).dir(executable.getParentPath())).getConsumer().lines()
+				.forEach(System.out::println);
 		image.delete();
 		tmp.moveTo(image);
 	}
@@ -97,7 +105,8 @@ public class JpegTran extends Tool {
 		FilePath tmp = FilePath.getTempDirectory().child(image.getFileNameString());
 		List<String> command = Arrays.asList(command(executable), "-debug", "-grayscale", command(image), command(tmp));
 		System.out.println(command.stream().collect(Collectors.joining(" ")));
-		callProcess(null, false, command, executable.getParentPath(), new Lines()).lines().forEach(System.out::println);
+		Processes.process(Processes.lines(command).dir(executable.getParentPath())).getConsumer().lines()
+				.forEach(System.out::println);
 		image.delete();
 		tmp.moveTo(image);
 	}
@@ -107,7 +116,8 @@ public class JpegTran extends Tool {
 		List<String> command = Arrays.asList(command(executable), "-verbose");
 		Lines lines = new Lines();
 		call(null, lines, executable.getParentPath(), command, true, null, false, null);
-		return lines.lines().stream().filter(l -> l.contains("version")).map(l -> l.substring(l.indexOf("version"))).findAny().get();
+		return lines.lines().stream().filter(l -> l.contains("version")).map(l -> l.substring(l.indexOf("version")))
+				.findAny().get();
 	}
 
 	@Override
@@ -143,7 +153,8 @@ public class JpegTran extends Tool {
 			if (Utils.osgroup == OSGroup.Windows) {
 				tmp = tmp + ".exe";
 			}
-			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream(); OutputStream out = executable.newBufferedOutputStream()) {
+			try (InputStream in = new URL(URL + tmp).openConnection().getInputStream();
+					OutputStream out = executable.newBufferedOutputStream()) {
 				IOUtils.copy(in, out);
 			} catch (IOException ex) {
 				ex.printStackTrace();

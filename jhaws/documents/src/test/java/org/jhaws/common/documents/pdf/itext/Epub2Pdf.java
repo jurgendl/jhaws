@@ -36,7 +36,8 @@ public class Epub2Pdf {
 				List<String> asList = Arrays.asList("\"" + sevenzip.getAbsolutePath() + "\"", "x", "-y",
 						"-o" + "\"" + outdir + "\"", "\"" + epub.getAbsolutePath() + "\"");
 				System.out.println(asList.stream().collect(Collectors.joining(" ")));
-				Processes.callProcess(processHolder, true, null, env, asList, fp, null, null, c);
+				Processes.process(
+						Processes.config(asList, c).processHolder(processHolder).throwExitValue(true).env(env).dir(fp));
 				FilePath op = new FilePath(outdir);
 				FilePath images = op.child("OEBPS").child("images");
 				if (!images.exists()) {

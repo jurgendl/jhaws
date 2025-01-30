@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -76,72 +75,242 @@ public class Processes {
 		}
 	}
 
-	@SafeVarargs
-	public static <C extends Consumer<String>> C callProcess(Value<Process> processHolder, boolean throwExitValue,
-			List<String> command, FilePath dir, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
-		return callProcess(processHolder, throwExitValue, null, new HashMap<>(), command, dir, null, null, consumer,
-				consumers);
+	public static <C extends Consumer<String>> ProcessConfigBuilder<C> config(List<String> command, C consumer) {
+		return new ProcessConfigBuilder<>(command, consumer);
 	}
 
-	@SafeVarargs
-	public static <C extends Consumer<String>> C callProcess(Value<Process> processHolder, boolean throwExitValue,
-			FilePath input, Map<String, String> env, List<String> command, FilePath dir, FilePath outputLog,
-			FilePath errorLog, C consumer, Consumer<String>... consumers) throws UncheckedIOException {
-		if (dir == null) {
-			logger.debug("> {}", command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
+	public static DefaultProcessConfigBuilder config(List<String> command) {
+		return new DefaultProcessConfigBuilder(command);
+	}
+
+	public static ProcessConfigBuilder<Lines> lines(List<String> command) {
+		return config(command, new Lines());
+	}
+
+	public static ProcessConfigBuilder<Log> log(List<String> command) {
+		return config(command, new Log());
+	}
+
+	public static ProcessConfigBuilder<Out> out(List<String> command) {
+		return config(command, new Out());
+	}
+
+	public static ProcessConfigBuilder<Text> text(List<String> command) {
+		return config(command, new Text());
+	}
+
+	public static class DefaultProcessConfigBuilder extends ProcessConfigBuilder<Consumer<String>> {
+		public DefaultProcessConfigBuilder(List<String> command) {
+			super(command, null);
+		}
+	}
+
+	public static class ProcessConfigBuilder<C extends Consumer<String>> {
+		Value<Process> processHolder;
+		boolean throwExitValue;
+		FilePath input;
+		Map<String, String> env;
+		List<String> command;
+		FilePath dir;
+		FilePath outputLog;
+		FilePath errorLog;
+		C consumer;
+		Collection<Consumer<String>> consumers;
+
+		public ProcessConfigBuilder(List<String> command, C consumer) {
+			this.command = command;
+			this.consumer = consumer;
+		}
+
+		public ProcessConfigBuilder<C> processHolder(Value<Process> processHolder) {
+			this.processHolder = processHolder;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> throwExitValue(boolean throwExitValue) {
+			this.throwExitValue = throwExitValue;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> input(FilePath input) {
+			this.input = input;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> env(Map<String, String> env) {
+			this.env = env;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> command(List<String> command) {
+			this.command = command;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> dir(FilePath dir) {
+			this.dir = dir;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> outputLog(FilePath outputLog) {
+			this.outputLog = outputLog;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> errorLog(FilePath errorLog) {
+			this.errorLog = errorLog;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> consumer(C consumer) {
+			this.consumer = consumer;
+			return this;
+		}
+
+		public ProcessConfigBuilder<C> consumers(Collection<Consumer<String>> consumers) {
+			this.consumers = consumers;
+			return this;
+		}
+
+		public Value<Process> getProcessHolder() {
+			return this.processHolder;
+		}
+
+		public void setProcessHolder(Value<Process> processHolder) {
+			this.processHolder = processHolder;
+		}
+
+		public boolean isThrowExitValue() {
+			return this.throwExitValue;
+		}
+
+		public void setThrowExitValue(boolean throwExitValue) {
+			this.throwExitValue = throwExitValue;
+		}
+
+		public FilePath getInput() {
+			return this.input;
+		}
+
+		public void setInput(FilePath input) {
+			this.input = input;
+		}
+
+		public Map<String, String> getEnv() {
+			return this.env;
+		}
+
+		public void setEnv(Map<String, String> env) {
+			this.env = env;
+		}
+
+		public List<String> getCommand() {
+			return this.command;
+		}
+
+		public void setCommand(List<String> command) {
+			this.command = command;
+		}
+
+		public FilePath getDir() {
+			return this.dir;
+		}
+
+		public void setDir(FilePath dir) {
+			this.dir = dir;
+		}
+
+		public FilePath getOutputLog() {
+			return this.outputLog;
+		}
+
+		public void setOutputLog(FilePath outputLog) {
+			this.outputLog = outputLog;
+		}
+
+		public FilePath getErrorLog() {
+			return this.errorLog;
+		}
+
+		public void setErrorLog(FilePath errorLog) {
+			this.errorLog = errorLog;
+		}
+
+		public C getConsumer() {
+			return this.consumer;
+		}
+
+		public void setConsumer(C consumer) {
+			this.consumer = consumer;
+		}
+
+		public Collection<Consumer<String>> getConsumers() {
+			return this.consumers;
+		}
+
+		public void setConsumers(Collection<Consumer<String>> consumers) {
+			this.consumers = consumers;
+		}
+	}
+
+	public static <C extends Consumer<String>> ProcessConfigBuilder<C> process(
+			ProcessConfigBuilder<C> processConfigBuilder) throws UncheckedIOException {
+		if (processConfigBuilder.dir == null) {
+			logger.debug("> {}",
+					processConfigBuilder.command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
 		} else {
-			logger.debug("{}> {}", dir.getAbsolutePath(),
-					command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
+			logger.debug("{}> {}", processConfigBuilder.dir.getAbsolutePath(),
+					processConfigBuilder.command.stream().filter(Objects::nonNull).collect(Collectors.joining(" ")));
 		}
 		ProcessBuilder builder = new ProcessBuilder(
-				command.stream().filter(Objects::nonNull).collect(Collectors.toList()));
+				processConfigBuilder.command.stream().filter(Objects::nonNull).collect(Collectors.toList()));
 		builder.redirectErrorStream(true);
-		if (env != null && env.size() > 0) {
-			builder.environment().putAll(env);
+		if (processConfigBuilder.env != null && processConfigBuilder.env.size() > 0) {
+			builder.environment().putAll(processConfigBuilder.env);
 		}
-		if (dir != null) {
-			if (dir.notExists()) {
-				dir.createDirectory();
+		if (processConfigBuilder.dir != null) {
+			if (processConfigBuilder.dir.notExists()) {
+				processConfigBuilder.dir.createDirectory();
 			} else {
-				if (!dir.isDirectory()) {
-					throw new UncheckedIOException(new IOException(dir + " is not a directory"));
+				if (!processConfigBuilder.dir.isDirectory()) {
+					throw new UncheckedIOException(new IOException(processConfigBuilder.dir + " is not a directory"));
 				}
 			}
-			builder.directory(dir.toFile());
+			builder.directory(processConfigBuilder.dir.toFile());
 		}
-		if (input != null)
-			builder.redirectInput(Redirect.from(input.toFile()));
+		if (processConfigBuilder.input != null)
+			builder.redirectInput(Redirect.from(processConfigBuilder.input.toFile()));
 		else {
 			// builder.redirectInput(Redirect.INHERIT);
 		}
-		if (outputLog != null)
-			if (outputLog.exists())
-				builder.redirectOutput(Redirect.appendTo(outputLog.toFile()));
+		if (processConfigBuilder.outputLog != null)
+			if (processConfigBuilder.outputLog.exists())
+				builder.redirectOutput(Redirect.appendTo(processConfigBuilder.outputLog.toFile()));
 			else
-				builder.redirectOutput(Redirect.to(outputLog.toFile()));
+				builder.redirectOutput(Redirect.to(processConfigBuilder.outputLog.toFile()));
 		else {
 			// builder.redirectOutput(Redirect.INHERIT);
 		}
-		if (errorLog != null)
-			if (errorLog.exists())
-				builder.redirectError(Redirect.appendTo(errorLog.toFile()));
+		if (processConfigBuilder.errorLog != null)
+			if (processConfigBuilder.errorLog.exists())
+				builder.redirectError(Redirect.appendTo(processConfigBuilder.errorLog.toFile()));
 			else
-				builder.redirectError(Redirect.to(errorLog.toFile()));
+				builder.redirectError(Redirect.to(processConfigBuilder.errorLog.toFile()));
 		else {
 			builder.redirectError(Redirect.PIPE);
 		}
 		Process process;
 		try {
 			process = builder.start();
-			if (processHolder != null)
-				processHolder.set(process);
+			if (processConfigBuilder.processHolder != null)
+				processConfigBuilder.processHolder.set(process);
 		} catch (IOException e1) {
 			throw new UncheckedIOException(e1);
 		}
 		Consumer<String> allConsumers = null;
-		if (consumer != null) {
-			allConsumers = consumer;
-			Arrays.stream(consumers).forEach(allConsumers::andThen);
+		if (processConfigBuilder.consumer != null) {
+			allConsumers = processConfigBuilder.consumer;
+			processConfigBuilder.consumers.forEach(allConsumers::andThen);
 			try (LineIterator lineIterator = new LineIterator(process.getInputStream())) {
 				StreamSupport.stream(Spliterators.spliteratorUnknownSize(lineIterator, 0), false)
 						.filter(StringUtils::isNotBlank).forEach(allConsumers);
@@ -163,8 +332,8 @@ public class Processes {
 			int exitValue = process.waitFor();
 			// if (allConsumers != null)
 			// allConsumers.accept("exit value=" + exitValue);
-			if (exitValue != 0 && throwExitValue) {
-				logger.debug("> {}", command.stream().collect(Collectors.joining(" ")));
+			if (exitValue != 0 && processConfigBuilder.throwExitValue) {
+				logger.debug("> {}", processConfigBuilder.command.stream().collect(Collectors.joining(" ")));
 				throw new ExitValueException(exitValue);
 			}
 		} catch (InterruptedException e) {
@@ -172,12 +341,11 @@ public class Processes {
 		} finally {
 			process.destroy();
 		}
-		return consumer;
+		return processConfigBuilder;
 	}
 
+	@SuppressWarnings("serial")
 	public static class ExitValueException extends RuntimeException {
-		private static final long serialVersionUID = 1501172862513358486L;
-
 		private int exitValue;
 
 		public ExitValueException(int exitValue) {

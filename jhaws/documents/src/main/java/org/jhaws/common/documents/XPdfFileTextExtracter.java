@@ -18,155 +18,161 @@ import org.jhaws.common.io.console.Processes;
 import org.jhaws.common.system.SystemSettings;
 
 public class XPdfFileTextExtracter implements FileTextExtracter {
-    public static final String VERSION = "4.03";
+	public static final String VERSION = "4.03";
 
-    protected FilePath xpdfExecutable;
+	protected FilePath xpdfExecutable;
 
-    protected String version = VERSION;
+	protected String version = VERSION;
 
-    public XPdfFileTextExtracter() {
-        super();
-    }
+	public XPdfFileTextExtracter() {
+		super();
+	}
 
-    @Override
-    public List<String> accepts() {
-        return Arrays.asList("pdf");
-    }
+	@Override
+	public List<String> accepts() {
+		return Arrays.asList("pdf");
+	}
 
-    @Override
-    public void extract(InputStream stream, FilePath target) throws IOException {
-        FilePath tmp = FilePath.createTempFile(target.getFileNameString(), "pdf");
-        tmp.write(stream);
-        extract(tmp, target);
-    }
+	@Override
+	public void extract(InputStream stream, FilePath target) throws IOException {
+		FilePath tmp = FilePath.createTempFile(target.getFileNameString(), "pdf");
+		tmp.write(stream);
+		extract(tmp, target);
+	}
 
-    @Override
-    public void extract(FilePath pdf, FilePath txt) {
-        if (txt.notExists() || pdf.getLastModifiedDateTime().isAfter(txt.getLastModifiedDateTime())) {
-            System.out.println(pdf);
-            extractpdftext(getXpdfExecutable(), pdf, txt);
-            System.out.println(txt);
-        }
-    }
+	@Override
+	public void extract(FilePath pdf, FilePath txt) {
+		if (txt.notExists() || pdf.getLastModifiedDateTime().isAfter(txt.getLastModifiedDateTime())) {
+			System.out.println(pdf);
+			extractpdftext(getXpdfExecutable(), pdf, txt);
+			System.out.println(txt);
+		}
+	}
 
-    public static void extractpdftext(FilePath xpdfexe, FilePath pdf, FilePath txt) {
-        if (txt == null) {
-            txt = pdf.appendExtension("txt");
-        } else {
-            txt.getParentPath().createDirectory();
-        }
-        Processes.callProcess(null, true, Arrays.asList("\"" + xpdfexe.getAbsolutePath() + "\"", "-enc", "Latin1", "-eol", "dos",
-                // "-nopgbrk", // "\u000C" // FORM FEED (FF)
-                "\"" + pdf.getAbsolutePath() + "\"", "\"" + txt.getAbsolutePath() + "\""), txt.getParentPath(), new Processes.Log());
-    }
+	public static void extractpdftext(FilePath xpdfexe, FilePath pdf, FilePath txt) {
+		if (txt == null) {
+			txt = pdf.appendExtension("txt");
+		} else {
+			txt.getParentPath().createDirectory();
+		}
 
-    public static FilePath xpdf(String version) throws MalformedURLException, IOException {
-        if (version == null) version = VERSION;
+		Processes.process(Processes
+				.log(Arrays.asList("\"" + xpdfexe.getAbsolutePath() + "\"", "-enc", "Latin1", "-eol", "dos",
+						// "-nopgbrk", // "\u000C" // FORM FEED (FF)
+						"\"" + pdf.getAbsolutePath() + "\"", "\"" + txt.getAbsolutePath() + "\""))
+				.throwExitValue(true).dir(txt.getParentPath()));
+	}
 
-        // https://dl.xpdfreader.com/xpdf-tools-linux-4.03.tar.gz
-        // https://dl.xpdfreader.com/xpdf-tools-win-4.03.zip
-        // https://dl.xpdfreader.com/xpdf-tools-mac-4.03.tar.gz
-        FilePath xpdf = new FilePath(System.getProperty("user.home")).child("xpdf" + "-" + version).createDirectory();
-        FilePath xpdfarchive;
-        String os;
-        String file;
-        String ext;
-        switch (SystemSettings.osgroup) {
-            case Mac:
-                os = "mac";
-                file = "xpdf-tools-" + os + "-" + version + ".tar.gz";
-                xpdfarchive = xpdf.child(file);
-                ext = "";
-                break;
-            case Nix:
-                os = "linux";
-                file = "xpdf-tools-" + os + "-" + version + ".tar.gz";
-                xpdfarchive = xpdf.child(file);
-                ext = "";
-                break;
-            case Windows:
-                os = "win";
-                file = "xpdf-tools-" + os + "-" + version + ".zip";
-                xpdfarchive = xpdf.child(file);
-                ext = "exe";
-                break;
-            default:
-                throw new RuntimeException("unknow os");
-        }
+	public static FilePath xpdf(String version) throws MalformedURLException, IOException {
+		if (version == null)
+			version = VERSION;
 
-        if (xpdfarchive.notExists()) {
-            FilePath tmp = xpdfarchive.appendExtension("partial");
-            tmp.download(new URL("https://dl.xpdfreader.com/" + file));
-            tmp.renameTo(xpdfarchive);
-        }
+		// https://dl.xpdfreader.com/xpdf-tools-linux-4.03.tar.gz
+		// https://dl.xpdfreader.com/xpdf-tools-win-4.03.zip
+		// https://dl.xpdfreader.com/xpdf-tools-mac-4.03.tar.gz
+		FilePath xpdf = new FilePath(System.getProperty("user.home")).child("xpdf" + "-" + version).createDirectory();
+		FilePath xpdfarchive;
+		String os;
+		String file;
+		String ext;
+		switch (SystemSettings.osgroup) {
+		case Mac:
+			os = "mac";
+			file = "xpdf-tools-" + os + "-" + version + ".tar.gz";
+			xpdfarchive = xpdf.child(file);
+			ext = "";
+			break;
+		case Nix:
+			os = "linux";
+			file = "xpdf-tools-" + os + "-" + version + ".tar.gz";
+			xpdfarchive = xpdf.child(file);
+			ext = "";
+			break;
+		case Windows:
+			os = "win";
+			file = "xpdf-tools-" + os + "-" + version + ".zip";
+			xpdfarchive = xpdf.child(file);
+			ext = "exe";
+			break;
+		default:
+			throw new RuntimeException("unknow os");
+		}
 
-        // http://www.foolabs.com/xpdf/
-        FilePath xpdfexe = xpdf.child("xpdf-tools-" + os + "-" + version).child("bin64").child("pdftotext" + (StringUtils.isBlank(ext) ? "" : "." + ext));
-        if (xpdfexe.notExists()) {
-            if (xpdfarchive.getName().equals(".zip")) {
-                xpdfarchive.unzip(xpdf);
-            } else if (xpdfarchive.getName().equals(".tar.gz")) {
-                extractTarGZ(xpdfarchive.newInputStream(), xpdf);
-            } else {
-                throw new IllegalArgumentException("archive not supported " + file);
-            }
-        }
+		if (xpdfarchive.notExists()) {
+			FilePath tmp = xpdfarchive.appendExtension("partial");
+			tmp.download(new URL("https://dl.xpdfreader.com/" + file));
+			tmp.renameTo(xpdfarchive);
+		}
 
-        return xpdfexe;
-    }
+		// http://www.foolabs.com/xpdf/
+		FilePath xpdfexe = xpdf.child("xpdf-tools-" + os + "-" + version).child("bin64")
+				.child("pdftotext" + (StringUtils.isBlank(ext) ? "" : "." + ext));
+		if (xpdfexe.notExists()) {
+			if (xpdfarchive.getName().equals(".zip")) {
+				xpdfarchive.unzip(xpdf);
+			} else if (xpdfarchive.getName().equals(".tar.gz")) {
+				extractTarGZ(xpdfarchive.newInputStream(), xpdf);
+			} else {
+				throw new IllegalArgumentException("archive not supported " + file);
+			}
+		}
 
-    public FilePath getXpdfExecutable() {
-        if (xpdfExecutable == null) {
-            try {
-                xpdfExecutable = xpdf(version);
-            } catch (IOException ex) {
-                throw new UncheckedIOException(ex);
-            }
-        }
-        return xpdfExecutable;
-    }
+		return xpdfexe;
+	}
 
-    public String getVersion() {
-        return this.version;
-    }
+	public FilePath getXpdfExecutable() {
+		if (xpdfExecutable == null) {
+			try {
+				xpdfExecutable = xpdf(version);
+			} catch (IOException ex) {
+				throw new UncheckedIOException(ex);
+			}
+		}
+		return xpdfExecutable;
+	}
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
+	public String getVersion() {
+		return this.version;
+	}
 
-    // https://stackoverflow.com/questions/7128171/how-to-compress-decompress-tar-gz-files-in-java
-    static public void extractTarGZ(InputStream in, FilePath target) {
-        // Files.createDirectories(Paths.get(target));
-        // ProcessBuilder builder = new ProcessBuilder();
-        // builder.command("sh", "-c", String.format("tar xfz %s -C %s", tarGzPathLocation, target));
-        // builder.directory(new File("/tmp"));
-        // Process process = builder.start();
-        // int exitCode = process.waitFor();
-        // assert exitCode == 0;
+	public void setVersion(String version) {
+		this.version = version;
+	}
 
-        try {
-            int BUFFER_SIZE = 1024 * 64;
-            byte data[] = new byte[BUFFER_SIZE];
-            try (GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);) {
-                try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
-                    TarArchiveEntry entry;
-                    while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
-                        FilePath f = target.child(entry.getName());
-                        if (entry.isDirectory()) {
-                            f.createDirectory();
-                        } else {
-                            int count;
-                            try (OutputStream fos = f.newBufferedOutputStream();) {
-                                while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
-                                    fos.write(data, 0, count);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
-    }
+	// https://stackoverflow.com/questions/7128171/how-to-compress-decompress-tar-gz-files-in-java
+	static public void extractTarGZ(InputStream in, FilePath target) {
+		// Files.createDirectories(Paths.get(target));
+		// ProcessBuilder builder = new ProcessBuilder();
+		// builder.command("sh", "-c", String.format("tar xfz %s -C %s",
+		// tarGzPathLocation, target));
+		// builder.directory(new File("/tmp"));
+		// Process process = builder.start();
+		// int exitCode = process.waitFor();
+		// assert exitCode == 0;
+
+		try {
+			int BUFFER_SIZE = 1024 * 64;
+			byte data[] = new byte[BUFFER_SIZE];
+			try (GzipCompressorInputStream gzipIn = new GzipCompressorInputStream(in);) {
+				try (TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn)) {
+					TarArchiveEntry entry;
+					while ((entry = (TarArchiveEntry) tarIn.getNextEntry()) != null) {
+						FilePath f = target.child(entry.getName());
+						if (entry.isDirectory()) {
+							f.createDirectory();
+						} else {
+							int count;
+							try (OutputStream fos = f.newBufferedOutputStream();) {
+								while ((count = tarIn.read(data, 0, BUFFER_SIZE)) != -1) {
+									fos.write(data, 0, count);
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (IOException ex) {
+			throw new UncheckedIOException(ex);
+		}
+	}
 }
