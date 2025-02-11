@@ -1,17 +1,21 @@
 package org.jhaws.common.elasticsearch8.impl;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
+import co.elastic.clients.elasticsearch._types.analysis.CustomAnalyzer;
+import co.elastic.clients.elasticsearch._types.analysis.ElisionTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.LengthTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.PatternCaptureTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.PatternReplaceTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.StemmerTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.StopTokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.TokenFilter;
+import co.elastic.clients.elasticsearch._types.analysis.TokenFilterDefinition;
+import co.elastic.clients.json.JsonpSerializable;
+import co.elastic.clients.json.JsonpSerializer;
+import co.elastic.clients.json.JsonpUtils;
+import co.elastic.clients.json.SimpleJsonpMapper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.elasticsearch.common.Analyzer;
 import org.jhaws.common.elasticsearch.common.Analyzers;
@@ -30,26 +34,111 @@ import org.jhaws.common.elasticsearch.common.NestedField;
 import org.jhaws.common.elasticsearch.common.OnlySave;
 import org.jhaws.common.elasticsearch.common.Stemmer;
 import org.jhaws.common.elasticsearch.common.Tokenizer;
+import org.jhaws.common.web.resteasy.CustomObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-
-import co.elastic.clients.elasticsearch._types.analysis.CustomAnalyzer;
-import co.elastic.clients.elasticsearch._types.analysis.ElisionTokenFilter;
-import co.elastic.clients.elasticsearch._types.analysis.LengthTokenFilter;
-import co.elastic.clients.elasticsearch._types.analysis.PatternCaptureTokenFilter;
-import co.elastic.clients.elasticsearch._types.analysis.PatternReplaceTokenFilter;
-import co.elastic.clients.elasticsearch._types.analysis.StemmerTokenFilter;
-import co.elastic.clients.elasticsearch._types.analysis.StopTokenFilter;
-import co.elastic.clients.elasticsearch._types.analysis.TokenFilter;
-import co.elastic.clients.elasticsearch._types.analysis.TokenFilterDefinition;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Component
 public class ElasticCustomizer {
+    static JsonpSerializer<?> configToJson_JsonpSerializer = (JsonpSerializer<Object>) (value, generator, mapper) -> {
+        if (value == null) {
+            generator.writeNull();
+        } else {
+            generator.write(value.toString());
+        }
+    };
+    static SimpleJsonpMapper configToJson_SimpleJsonpMapper = new SimpleJsonpMapper() {
+        @Override
+        protected <T> JsonpSerializer<T> getDefaultSerializer(T value) {
+            return (JsonpSerializer<T>) configToJson_JsonpSerializer;
+        }
+    };
+
+    public static String serializeJsonp(JsonpSerializable o) {
+        StringBuilder sb = new StringBuilder();
+        JsonpUtils.toString(o, configToJson_SimpleJsonpMapper, sb);
+        return sb.toString();
+    }
+
+    private static final String FILTER = "filter";
+
+    private static final String ANALYZER = "analyzer";
+
+    private static final String ANALYSIS = "analysis";
+
+    private static final String CHAR_FILTER = "char_filter";
+
+    private static final String TOKENIZER = "tokenizer";
+
+    private static final String NORMALIZER = "normalizer";
+
+    public static void main(String[] args) {
+        try {
+            ElasticCustomizer eb = new ElasticCustomizer();
+            CustomObjectMapper om = new CustomObjectMapper();
+            om.configure(com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT, true);
+
+            Map<String, Object> configMap = new LinkedHashMap<>();
+            Map<String, Object> analysisMap = new LinkedHashMap<>();
+            configMap.put(ANALYSIS, analysisMap);
+
+            TypeReference<Map<String, Object>> valueTypeRef = new TypeReference<>() {
+            };
+            if (!eb.analyzers().isEmpty()) {
+                Map<String, Map<String, Object>> analyzerMap = new LinkedHashMap<>();
+                for (Map.Entry<String, co.elastic.clients.elasticsearch._types.analysis.Analyzer> entry : eb.analyzers().entrySet()) {
+                    analyzerMap.put(entry.getKey(), om.readValue(serializeJsonp(entry.getValue()), valueTypeRef));
+                }
+                analysisMap.put(ANALYZER, analyzerMap);
+            }
+            if (!eb.tokenizers().isEmpty()) {
+                Map<String, Map<String, Object>> tokenizerMap = new LinkedHashMap<>();
+                for (Map.Entry<String, co.elastic.clients.elasticsearch._types.analysis.Tokenizer> entry : eb.tokenizers().entrySet()) {
+                    tokenizerMap.put(entry.getKey(), om.readValue(serializeJsonp(entry.getValue()), valueTypeRef));
+                }
+                analysisMap.put(TOKENIZER, tokenizerMap);
+            }
+            if (!eb.tokenFilters().isEmpty()) {
+                Map<String, Map<String, Object>> tokenFiltersMap = new LinkedHashMap<>();
+                for (Map.Entry<String, co.elastic.clients.elasticsearch._types.analysis.TokenFilter> entry : eb.tokenFilters().entrySet()) {
+                    tokenFiltersMap.put(entry.getKey(), om.readValue(serializeJsonp(entry.getValue()), valueTypeRef));
+                }
+                analysisMap.put(FILTER, tokenFiltersMap);
+            }
+            if (!eb.charFilters().isEmpty()) {
+                Map<String, Map<String, Object>> charFiltersMap = new LinkedHashMap<>();
+                for (Map.Entry<String, co.elastic.clients.elasticsearch._types.analysis.CharFilter> entry : eb.charFilters().entrySet()) {
+                    charFiltersMap.put(entry.getKey(), om.readValue(serializeJsonp(entry.getValue()), valueTypeRef));
+                }
+                analysisMap.put(CHAR_FILTER, charFiltersMap);
+            }
+            if (!eb.normalizers().isEmpty()) {
+                Map<String, Map<String, Object>> normalizersMap = new LinkedHashMap<>();
+                for (Map.Entry<String, co.elastic.clients.elasticsearch._types.analysis.Normalizer> entry : eb.normalizers().entrySet()) {
+                    normalizersMap.put(entry.getKey(), om.readValue(serializeJsonp(entry.getValue()), valueTypeRef));
+                }
+                analysisMap.put(NORMALIZER, normalizersMap);
+            }
+            System.out.println(om.writer().writeValueAsString(configMap));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static final String INDEX_SETTINGS_BLOCKS_READ_ONLY = "blocks.read_only";
 
     public static final String INDEX_SETTINGS_HIGHLIGHT_MAX_ANALYZED_OFFSET = "highlight.max_analyzed_offset";
@@ -70,7 +159,6 @@ public class ElasticCustomizer {
 
     public static final String TYPE = "type";
 
-    public static final String ANALYZER = "analyzer";
 
     public Map<String, co.elastic.clients.elasticsearch._types.analysis.Normalizer> normalizers() {
         Map<String, co.elastic.clients.elasticsearch._types.analysis.Normalizer> normalizers = new LinkedHashMap<>();
@@ -372,7 +460,7 @@ public class ElasticCustomizer {
     }
 
     protected void $mappings_field_onlySave(Map<String, Object> mapping, List<String> prefixList, @SuppressWarnings("unused") List<String> actualNestingList, java.lang.reflect.Field reflectField, OnlySave onlySave,
-            @SuppressWarnings("unused") MappingListener listener) {
+                                            @SuppressWarnings("unused") MappingListener listener) {
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
         String fullName = prefixList.stream().collect(Collectors.joining()) + (StringUtils.isBlank(onlySaveName(onlySave)) ? reflectField.getName() : onlySaveName(onlySave));
         Map<String, Object> fieldMapping = new TreeMap<>();
@@ -407,7 +495,7 @@ public class ElasticCustomizer {
     }
 
     protected void $mappings_field_jsonUnwrapped(Language language, Map<String, Object> mapping, List<String> prefixList, List<String> actualNestingList, java.lang.reflect.Field reflectField, JsonUnwrapped jsonUnwrapped, NestedField nestedField,
-            MappingListener listener) {
+                                                 MappingListener listener) {
         String exceptionErrorMsgPrefix = "\n\t" + "field: " + (prefixList.stream().collect(Collectors.joining()) + " " + reflectField).trim() + "\n\t\t" + "error: ";
         if (actualNestingList.size() > 25) {
             throw new IllegalArgumentException(exceptionErrorMsgPrefix + "depth > 25: " + actualNestingList);
@@ -798,11 +886,15 @@ public class ElasticCustomizer {
         this.trackTotalHits = trackTotalHits;
     }
 
-    /** in milliseconds */
+    /**
+     * in milliseconds
+     */
     @Value("${elasticCustomizer.client.connection.timeout:1000}") // 1_000
     public Integer connectionTimeout = 1_000;
 
-    /** in milliseconds */
+    /**
+     * in milliseconds
+     */
     @Value("${elasticCustomizer.client.connection.socketTimeout:30000}") // 30_000
     public Integer socketTimeout = 30_000;
 

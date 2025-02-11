@@ -1,17 +1,7 @@
 package org.jhaws.common.elasticsearch.impl;
 
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.apache.commons.lang3.StringUtils;
 import org.jhaws.common.elasticsearch.common.Analyzer;
 import org.jhaws.common.elasticsearch.common.Analyzers;
@@ -24,22 +14,44 @@ import org.jhaws.common.elasticsearch.common.Field;
 import org.jhaws.common.elasticsearch.common.FieldExtra;
 import org.jhaws.common.elasticsearch.common.FieldType;
 import org.jhaws.common.elasticsearch.common.Filter;
+import org.jhaws.common.elasticsearch.common.Filters;
 import org.jhaws.common.elasticsearch.common.Ignore;
 import org.jhaws.common.elasticsearch.common.Language;
 import org.jhaws.common.elasticsearch.common.NestedField;
 import org.jhaws.common.elasticsearch.common.OnlySave;
 import org.jhaws.common.elasticsearch.common.Stemmer;
 import org.jhaws.common.elasticsearch.common.Tokenizer;
+import org.jhaws.common.web.resteasy.CustomObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Component
 public class ElasticCustomizer {
+    public static void main(String[] args) {
+        try {
+            ElasticCustomizer eb = new ElasticCustomizer();
+            CustomObjectMapper om = new CustomObjectMapper();
+            om.configure(com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT, true);
+            om.writeValue(System.out, eb.settings());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     protected final Logger LOGGER = LoggerFactory.getLogger(ElasticCustomizer.class);
 
     protected final Logger LOGGER_DETAILS = LoggerFactory.getLogger(ElasticCustomizer.class.getName() + ".details");
@@ -101,6 +113,8 @@ public class ElasticCustomizer {
 
     private static final String TOKENIZER = "tokenizer";
 
+    private static final String NORMALIZER = "normalizer";
+
     private static final String ARTICLES = "articles";
 
     private static final String ARTICLES_CASE = "articles_case";
@@ -113,49 +127,65 @@ public class ElasticCustomizer {
         // }
 
         Map<String, Object> analysis = new LinkedHashMap<>();
-        Map<String, Object> filter = new LinkedHashMap<>();
-        filter.put(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER, customCleanupFilter());
-        filter.put(Filters.CUSTOM_EMAIL_NAME_FILTER, customEmailNameFilter());
-        filter.put(Filters.CUSTOM_EMAIL_DOMAIN_FILTER, customEmailDomainFilter());
-        filter.put(Filters.ENGLISH_STOP, customEnglishStopFilter());
-        filter.put(Filters.ENGLISH_STEMMER, customEnglishStemmerFilter());
-        filter.put(Filters.ENGLISH_POSSESSIVE_STEMMER, customEnglishPossessiveStemmerFilter());
-        filter.put(Filters.DUTCH_STOP, customDutchStopFilter());
-        filter.put(Filters.DUTCH_STEMMER, customDutchStemmerFilter());
-        filter.put(Filters.CUSTOM_TO_SPACE_FILTER, customToSpaceFilter());
-        filter.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter());
-        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter());
-        filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter());
-        filter.put(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER, customOnlyKeepExtendedAlphaNumericFilter());
-        filter.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter());
-        filter.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter());
-        filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter());
-        analysis.put(FILTER, filter);
-        Map<String, Object> tokenizer = new LinkedHashMap<>();
-        // tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER, customPunctuationTokenizer());
-        // tokenizer.put(Tokenizers.CUSTOM_FILENAME_TOKENIZER, customFilenameTokenizer());
-        analysis.put(TOKENIZER, tokenizer);
-        Map<String, Object> analyzer = new LinkedHashMap<>();
-        analyzer.put(Analyzers.CUSTOM_CLEANUP_ANALYZER, customCleanupAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_DUTCH_HTML_ANALYZER, customDutchHtmlAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_ENGLISH_HTML_ANALYZER, customEnglishHtmlAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_ASCIIFOLDING_ANALYZER, customAsciiFoldingAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_NAME_ANALYZER, customEmailNameAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_NAME_KEEP_TOGETHER_ANALYZER, customEmailNameKeepTogetherAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_DOMAIN_ANALYZER, customEmailDomainAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_EMAIL_ANALYZER, customEmailAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_FILENAME_ANALYZER, customFilenameAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_WORD_DELIMITER_GRAPH_ANALYZER, customWordDelimiterGraphAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_WHITESPACE_LOWERCASE_ANALYZER, customWhitespaceAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_NAME_KEEP_TOGETHER_ANALYZER, customNameKeepTogetherAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_ANALYZER, customSortableAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER, customSortableOnlyAlphaAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER, customSortableOnlyAlphaNumericAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_SORTABLE_EXTENDED_ALPHANUMERIC_ANALYZER, customSortableExtendedAlphaNumericAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
-        analyzer.put(Analyzers.CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER, customFoldedLowercaseTokensAnalyzer());
-        analysis.put(ANALYZER, analyzer);
+        if (false) {
+            Map<String, Object> charFilter = new LinkedHashMap<>();
+            // charFilter.put(CharacterFilters...., ...());
+            analysis.put(CHAR_FILTER, charFilter);
+        }
+        {
+            Map<String, Object> filter = new LinkedHashMap<>();
+            filter.put(Filters.CUSTOM_LENGTH_3_TO_20_CHAR_LENGTH_FILTER, customCleanupFilter());
+            filter.put(Filters.CUSTOM_EMAIL_NAME_FILTER, customEmailNameFilter());
+            filter.put(Filters.CUSTOM_EMAIL_DOMAIN_FILTER, customEmailDomainFilter());
+            filter.put(Filters.ENGLISH_STOP, customEnglishStopFilter());
+            filter.put(Filters.ENGLISH_STEMMER, customEnglishStemmerFilter());
+            filter.put(Filters.ENGLISH_POSSESSIVE_STEMMER, customEnglishPossessiveStemmerFilter());
+            filter.put(Filters.DUTCH_STOP, customDutchStopFilter());
+            filter.put(Filters.DUTCH_STEMMER, customDutchStemmerFilter());
+            filter.put(Filters.CUSTOM_TO_SPACE_FILTER, customToSpaceFilter());
+            filter.put(Filters.CUSTOM_REMOVE_SPACE_FILTER, customRemoveSpaceFilter());
+            filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHA_FILTER, customOnlyKeepAlphaFilter());
+            filter.put(Filters.CUSTOM_ONLY_KEEP_ALPHANUMERIC_FILTER, customOnlyKeepAlphaNumericFilter());
+            filter.put(Filters.CUSTOM_ONLY_KEEP_EXTENDED_ALPHANUMERIC_FILTER, customOnlyKeepExtendedAlphaNumericFilter());
+            filter.put(Filters.CUSTOM_FRENCH_ELISION_FILTER, customFrenchElisionFilter());
+            filter.put(Filters.CUSTOM_FRENCH_STOP_FILTER, customFrenchStopFilter());
+            filter.put(Filters.CUSTOM_FRENCH_STEMMER_FILTER, customFrenchStemmerFilter());
+            analysis.put(FILTER, filter);
+        }
+        if (false) {
+            Map<String, Object> tokenizer = new LinkedHashMap<>();
+            // tokenizer.put(Tokenizers.CUSTOM_PUNCTUATION_TOKENIZER, customPunctuationTokenizer());
+            // tokenizer.put(Tokenizers.CUSTOM_FILENAME_TOKENIZER, customFilenameTokenizer());
+            analysis.put(TOKENIZER, tokenizer);
+        }
+        if (false) {
+            Map<String, Object> normalizers = new LinkedHashMap<>();
+            // normalizers.put(Normalizers...., ...());
+            analysis.put(NORMALIZER, normalizers);
+        }
+        {
+            Map<String, Object> analyzer = new LinkedHashMap<>();
+            analyzer.put(Analyzers.CUSTOM_CLEANUP_ANALYZER, customCleanupAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_DUTCH_HTML_ANALYZER, customDutchHtmlAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_ENGLISH_HTML_ANALYZER, customEnglishHtmlAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_ASCIIFOLDING_ANALYZER, customAsciiFoldingAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_EMAIL_NAME_ANALYZER, customEmailNameAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_EMAIL_NAME_KEEP_TOGETHER_ANALYZER, customEmailNameKeepTogetherAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_EMAIL_DOMAIN_ANALYZER, customEmailDomainAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_EMAIL_ANALYZER, customEmailAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_FILENAME_ANALYZER, customFilenameAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_WORD_DELIMITER_GRAPH_ANALYZER, customWordDelimiterGraphAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_WHITESPACE_LOWERCASE_ANALYZER, customWhitespaceAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_NAME_KEEP_TOGETHER_ANALYZER, customNameKeepTogetherAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_SORTABLE_ANALYZER, customSortableAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHA_ANALYZER, customSortableOnlyAlphaAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_SORTABLE_ONLY_ALPHANUMERIC_ANALYZER, customSortableOnlyAlphaNumericAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_SORTABLE_EXTENDED_ALPHANUMERIC_ANALYZER, customSortableExtendedAlphaNumericAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_ANY_LANGUAGE_ANALYZER, customAnyLanguageAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_FRENCH_LANGUAGE_ANALYZER, customFrenchLanguageAnalyzer());
+            analyzer.put(Analyzers.CUSTOM_FOLDED_LOWERCASE_TOKENS_ANALYZER, customFoldedLowercaseTokensAnalyzer());
+            analysis.put(ANALYZER, analyzer);
+        }
         Map<String, Object> settings = new LinkedHashMap<>();
         settings.put(ANALYSIS, analysis);
         {
@@ -419,7 +449,7 @@ public class ElasticCustomizer {
     }
 
     protected void $mappings_field_onlySave(Map<String, Object> mapping, List<String> prefixList, @SuppressWarnings("unused") List<String> actualNestingList, java.lang.reflect.Field reflectField, OnlySave onlySave,
-            @SuppressWarnings("unused") MappingListener listener) {
+                                            @SuppressWarnings("unused") MappingListener listener) {
         // https://www.elastic.co/guide/en/elasticsearch/reference/current/enabled.html
         String fullName = prefixList.stream().collect(Collectors.joining()) + (StringUtils.isBlank(onlySaveName(onlySave)) ? reflectField.getName() : onlySaveName(onlySave));
         Map<String, Object> fieldMapping = new TreeMap<>();
@@ -454,7 +484,7 @@ public class ElasticCustomizer {
     }
 
     protected void $mappings_field_jsonUnwrapped(Language language, Map<String, Object> mapping, List<String> prefixList, List<String> actualNestingList, java.lang.reflect.Field reflectField, JsonUnwrapped jsonUnwrapped, NestedField nestedField,
-            MappingListener listener) {
+                                                 MappingListener listener) {
         String exceptionErrorMsgPrefix = "\n\t" + "field: " + (prefixList.stream().collect(Collectors.joining()) + " " + reflectField).trim() + "\n\t\t" + "error: ";
         if (actualNestingList.size() > 25) {
             throw new IllegalArgumentException(exceptionErrorMsgPrefix + "depth > 25: " + actualNestingList);
@@ -885,11 +915,15 @@ public class ElasticCustomizer {
         this.trackTotalHits = trackTotalHits;
     }
 
-    /** in milliseconds */
+    /**
+     * in milliseconds
+     */
     @Value("${elasticCustomizer.client.connection.timeout:1000}") // 1_000
     private Integer connectionTimeout = 1_000;
 
-    /** in milliseconds */
+    /**
+     * in milliseconds
+     */
     @Value("${elasticCustomizer.client.connection.socketTimeout:30000}") // 30_000
     private Integer socketTimeout = 30_000;
 

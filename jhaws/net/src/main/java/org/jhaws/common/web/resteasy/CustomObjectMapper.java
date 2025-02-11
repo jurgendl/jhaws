@@ -18,10 +18,26 @@ public class CustomObjectMapper extends ObjectMapper {
         // https://github.com/FasterXML/jackson-modules-java8
         // registerModule(new
         // com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule());
-        registerModule(new com.fasterxml.jackson.datatype.jsr353.JSR353Module());
-        registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-        registerModule(new com.fasterxml.jackson.datatype.joda.JodaModule());
-        registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
+        try {
+            registerModule(new com.fasterxml.jackson.datatype.jsr353.JSR353Module());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            registerModule(new com.fasterxml.jackson.datatype.joda.JodaModule());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            registerModule(new com.fasterxml.jackson.datatype.jdk8.Jdk8Module());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // registerModule(new
         // com.fasterxml.jackson.module.paramnames.ParameterNamesModule());
         // registerModule(new
