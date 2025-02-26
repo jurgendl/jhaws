@@ -111,10 +111,14 @@
 		<version.jaxb-runtime>2.4.0-b180830.0438</version.jaxb-runtime>
 		<!-- logging -->
 		<version.janino>3.1.2</version.janino>
-		<!--version.slf4j>1.7.32</version.slf4j>
+		<!--
+		<version.slf4j>2.0.17</version.slf4j>
 		<version.logback>1.5.17</version.logback>
+		<version.janino>3.1.2</version.janino>
 		<version.logback.spring>0.1.5</version.logback.spring>
-		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>-->        <!-- log4j 2 bridge naar slf4j zit in log4j -->
+		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>
+		-->
+        <!-- log4j 2 bridge naar slf4j zit in log4j -->
 		<!-- INHERITED -->
 		<thymeleaf.version>3.0.14.RELEASE</thymeleaf.version>
 		<netty.version>4.1.79.Final</netty.version>
