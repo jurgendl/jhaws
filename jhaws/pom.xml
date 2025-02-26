@@ -96,7 +96,7 @@
 		<version.miglayout>4.2</version.miglayout>
 		<version.ostermiller>1.07.00</version.ostermiller>
 		<version.pdfbox>2.0.24</version.pdfbox>
-		<version.wicket.core>9.11.0</version.wicket.core>
+		<version.wicket.core>9.20.0</version.wicket.core>
 		<version.wicket.stuff>${version.wicket.core}</version.wicket.stuff>
 		<version.jaxb-api>2.4.0-b180830.0359</version.jaxb-api>
 		<version.jaxb-core>2.3.0.1</version.jaxb-core>
