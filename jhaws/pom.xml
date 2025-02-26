@@ -468,7 +468,7 @@
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcpg-jdk18on</artifactId>
-				<version>${version.bouncycastle</version>
+				<version>${version.bouncycastle}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
@@ -480,11 +480,13 @@
 				<artifactId>bcutil-jdk18on</artifactId>
 				<version>${version.bouncycastle}</version>
 			</dependency>
+			<!--
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bctsp-jdk18on</artifactId>
 				<version>${version.bouncycastle}</version>
 			</dependency>
+			-->
 			<!-- ====== -->
 			<dependency>
 				<groupId>com.google.guava</groupId>
