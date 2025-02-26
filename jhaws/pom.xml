@@ -29,14 +29,16 @@
 	<!--((commit/commit/push)) -->
 
 	<properties>
+		<deploy.skip.demo>true</deploy.skip.demo>
+		<deploy.skip.web>true</deploy.skip.web>
 		<targetJdk.short>17</targetJdk.short>
-		<targetJdk>17</targetJdk>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<targetJdk>${targetJdk.short}</targetJdk>
+		<maven.compiler.source>${targetJdk.short}</maven.compiler.source>
+		<maven.compiler.target>${targetJdk.short}</maven.compiler.target>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 		<forceRecheck>false</forceRecheck>
 		<scope.activation>provided</scope.activation>
+		<project.reporting.outputEncoding>${project.build.sourceEncoding}</project.reporting.outputEncoding>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<maven.site.skip>false</maven.site.skip>
 		<maven.compiler.fork>true</maven.compiler.fork>
@@ -45,8 +47,6 @@
 		<maven.compiler.debuglevel>lines,vars,source</maven.compiler.debuglevel>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<maven.test.failure.ignore>true</maven.test.failure.ignore>
-		<deploy.skip.demo>true</deploy.skip.demo>
-		<deploy.skip.web>true</deploy.skip.web>
 		<!-- DEPENDENCIES -->
 		<version.bouncycastle>1.80</version.bouncycastle>
 		<version.commons.codec>1.15</version.commons.codec>
@@ -1495,7 +1495,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>3.11.0</version>
+						<version>3.14.0</version>
 						<configuration>
 							<!--<release>${targetJdk.short}</release> -->
 							<fork>false</fork>
@@ -1566,6 +1566,7 @@
 		</repository>
 	</repositories>
 	<build>
+		<!--
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
@@ -1573,11 +1574,12 @@
 				<version>1.0</version>
 			</extension>
 		</extensions>
+		-->
 		<plugins>
 			<!-- http://stackoverflow.com/questions/4725668/how-to-deploy-snapshot-with-sources-and-javadoc -->
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -1591,7 +1593,7 @@
 			<plugin>
 				<!-- explicitly define maven-deploy-plugin after other to force exec order -->
 				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.2</version>
+				<version>3.1.3</version>
 				<executions>
 					<execution>
 						<id>deploy</id>
@@ -1605,7 +1607,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>                <!--$NO-MVN-MAN-VER$ -->
+				<version>3.1.1</version>
 				<configuration>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>src</releaseProfiles>
@@ -1614,7 +1616,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.9</version>
+				<version>2.1.0</version>
 				<configuration>
 					<connectionType>developerConnection</connectionType>
 				</configuration>
@@ -1622,7 +1624,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.7.1</version>
+				<version>4.0.0-M16</version>
 				<configuration>
 					<locales>en</locales>
 					<generateSitemap>true</generateSitemap>
@@ -1631,12 +1633,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
+				<version>3.4.2</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.14.0</version>
 				<configuration>
 					<!--<release>${targetJdk.short}</release> -->
 					<fork>false</fork>
@@ -1653,10 +1655,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0-M5</version>                <!--$NO-MVN-MAN-VER$ -->
+				<version>3.5.2</version>
 				<configuration>
 					<testFailureIgnore>false</testFailureIgnore>
-					<forkMode>pertest</forkMode>
 					<useSystemClassLoader>false</useSystemClassLoader>
 					<forkCount>1</forkCount>
 					<reuseForks>true</reuseForks>
@@ -1665,7 +1666,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.4.0</version>
+				<version>5.1.9</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
@@ -1712,10 +1713,11 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+			<!--https://jeremylong.github.io/DependencyCheck/dependency-check-maven/index.html -->
+			<!--https://www.owasp.org/index.php/OWASP_Dependency_Check -->
+			<!--https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities -->
+			<!--
 			<plugin>
-				<!--https://jeremylong.github.io/DependencyCheck/dependency-check-maven/index.html -->
-				<!--https://www.owasp.org/index.php/OWASP_Dependency_Check -->
-				<!--https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities -->
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
 				<version>10.0.3</version>
@@ -1724,8 +1726,10 @@
 					<suppressionFiles>
 						<suppressionFile>${project.basedir}/owasp-dependency-check-suppression.xml</suppressionFile>
 					</suppressionFiles>
+					<nvdApiKey>...</nvdApiKey>
 				</configuration>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changes-plugin</artifactId>
@@ -1738,6 +1742,7 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
@@ -1748,6 +1753,7 @@
 					<minimumTokens>100</minimumTokens>
 				</configuration>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clover-plugin</artifactId>
