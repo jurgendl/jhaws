@@ -107,31 +107,33 @@
 		<!-- -->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk15to18</artifactId>
+			<artifactId>bcprov-jdk18on</artifactId>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-ext-jdk15to18</artifactId>
+			<artifactId>bcprov-ext-jdk18on</artifactId>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcmail-jdk15to18</artifactId>
+			<artifactId>bcmail-jdk18on</artifactId>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcpg-jdk15to18</artifactId>
+			<artifactId>bcpg-jdk18on</artifactId>
 		</dependency>-->
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcpkix-jdk15to18</artifactId>
+			<artifactId>bcpkix-jdk18on</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcutil-jdk15to18</artifactId>
+			<artifactId>bcutil-jdk18on</artifactId>
 		</dependency>
 		<!--<dependency>
 			<groupId>org.bouncycastle</groupId>
-			<artifactId>bctsp-jdk15to18</artifactId>
+			<artifactId>bctsp-jdk18on</artifactId>
 		</dependency>-->
 		<dependency>
 			<groupId>org.xerial</groupId>

@@ -37,7 +37,6 @@
 		<!-- ______________________ -->
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<maven.site.skip>false</maven.site.skip>
-		<maven.compiler.optimize>true</maven.compiler.optimize>
 		<maven.compiler.fork>true</maven.compiler.fork>
 		<maven.compiler.verbose>true</maven.compiler.verbose>
 		<maven.compiler.debug>true</maven.compiler.debug>
