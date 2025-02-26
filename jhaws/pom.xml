@@ -1663,6 +1663,7 @@
 					<useSystemClassLoader>false</useSystemClassLoader>
 					<forkCount>1</forkCount>
 					<reuseForks>true</reuseForks>
+					<argLine>--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-modules java.sql</argLine>
 				</configuration>
 			</plugin>
 			<plugin>
