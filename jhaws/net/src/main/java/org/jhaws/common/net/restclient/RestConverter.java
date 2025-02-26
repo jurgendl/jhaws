@@ -1,4 +1,4 @@
-package org.jhaws.common.net.reastclient;
+package org.jhaws.common.net.restclient;
 
 import java.util.List;
 import java.util.Map;

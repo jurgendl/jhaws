@@ -1,4 +1,4 @@
-package org.jhaws.common.net.reastclient;
+package org.jhaws.common.net.restclient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
