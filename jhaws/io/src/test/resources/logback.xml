@@ -3,7 +3,7 @@
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<charset>UTF-8</charset>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+			<pattern>[%d{ISO8601}] [%contextName] [%highlight(%-5level)] [%thread] [%cyan( %class:%line )] [%logger] %msg%n</pattern>
 			<outputPatternAsHeader>false</outputPatternAsHeader>
 		</encoder>
 	</appender>
