@@ -139,7 +139,6 @@
 		<module>lucene6</module>
 		<module>lucene7</module>
 		<module>lucene8</module>
-		<module>svn</module>
 		<module>swing</module>
 		<module>media</module>
 		<module>elasticsearch-common</module>
