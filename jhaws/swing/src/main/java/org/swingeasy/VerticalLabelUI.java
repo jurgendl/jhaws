@@ -3,6 +3,12 @@
  */
 package org.swingeasy;
 
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -10,28 +16,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-import javax.swing.plaf.ComponentUI;
-import javax.swing.plaf.basic.BasicLabelUI;
-
 /**
  * A UI delegate for JLabel that rotates the label 90 degrees
- * <P>
+ * <p>
  * Extends {@link BasicLabelUI}.
- * <P>
+ * <p>
  * The only difference between the appearance of labels in the Basic and Metal L&Fs is the manner in which diabled text is painted. As VerticalLabelUI does not override the method
  * paintDisabledText, this class can be adapted for Metal L&F by extending MetalLabelUI instead of BasicLabelUI.
- * <P>
+ * <p>
  * No other changes are required.
  *
  * @author Darryl
  */
 public class VerticalLabelUI extends BasicLabelUI {
 
-    private final static VerticalLabelUI SAFE_VERTICAL_LABEL_UI = new VerticalLabelUI();
+    //private final static VerticalLabelUI SAFE_VERTICAL_LABEL_UI = new VerticalLabelUI();
 
     protected static VerticalLabelUI verticalLabelUI = new VerticalLabelUI();
 
@@ -39,9 +38,9 @@ public class VerticalLabelUI extends BasicLabelUI {
      * @see ComponentUI#createUI(javax.swing.JComponent)
      */
     public static ComponentUI createUI(JComponent c) {
-        if (System.getSecurityManager() != null) {
-            return VerticalLabelUI.SAFE_VERTICAL_LABEL_UI;
-        }
+        //if (System.getSecurityManager() != null) {
+        //    return VerticalLabelUI.SAFE_VERTICAL_LABEL_UI;
+        //}
         return VerticalLabelUI.verticalLabelUI;
     }
 
@@ -63,7 +62,7 @@ public class VerticalLabelUI extends BasicLabelUI {
 
     /**
      * Constructs a <code>VerticalLabelUI</code> with the desired rotation.
-     * <P>
+     * <p>
      *
      * @param clockwise true to rotate clockwise, false for anticlockwise
      */
@@ -147,9 +146,12 @@ public class VerticalLabelUI extends BasicLabelUI {
 
         text = super.layoutCL(label, fontMetrics, text, icon, verticalViewR, verticalIconR, verticalTextR);
 
-        /* viewR = */copyRectangle(verticalViewR, viewR);
-        /* iconR = */copyRectangle(verticalIconR, iconR);
-        /* textR = */copyRectangle(verticalTextR, textR);
+        /* viewR = */
+        copyRectangle(verticalViewR, viewR);
+        /* iconR = */
+        copyRectangle(verticalIconR, iconR);
+        /* textR = */
+        copyRectangle(verticalTextR, textR);
         return text;
     }
 
