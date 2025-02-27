@@ -86,7 +86,7 @@
 		<version.jcifs>1.3.17</version.jcifs>
 		<version.ostermiller>1.07.00</version.ostermiller>
 		<version.htmlcleaner>2.25</version.htmlcleaner>
-		<version.jtidy>r938</version.jtidy>
+		<version.jtidy>1.0.5</version.jtidy>
 		<version.jsoup>1.16.2</version.jsoup>
 		<version.poi>4.1.2</version.poi>
 		<version.tika>1.28.3</version.tika>
@@ -1120,21 +1120,6 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			<!-- <dependency>
-				<groupId>org.jboss.resteasy</groupId>
-				<artifactId>tjws</artifactId>
-				<version>${version.resteasy}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.jboss.logging</groupId>
-						<artifactId>jboss-logging</artifactId>
-					</exclusion>
-					<exclusion>
-						<artifactId>servlet-api</artifactId>
-						<groupId>javax.servlet</groupId>
-					</exclusion>
-				</exclusions>
-			</dependency>-->
 			<dependency>
 				<groupId>org.jboss.resteasy</groupId>
 				<artifactId>resteasy-jdk-http</artifactId>
@@ -1232,8 +1217,6 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			<!-- <dependency> <groupId>org.apache.tika</groupId> <artifactId>tika-app</artifactId> <version>${version.tika}</version> <optional>true</optional> <exclusions> <exclusion> <groupId>org.apache.httpcomponents</groupId> <artifactId>httpmime</artifactId> </exclusion> <exclusion> <groupId>org.apache.httpcomponents</groupId> <artifactId>httpcore</artifactId> </exclusion> <exclusion> <groupId>org.apache.httpcomponents</groupId> <artifactId>httpclient</artifactId> </exclusion> <exclusion> <groupId>javax.ws.rs</groupId> 
-				<artifactId>javax.ws.rs-api</artifactId> </exclusion> <exclusion> <groupId>org.slf4j</groupId> <artifactId>slf4j-log4j12</artifactId> </exclusion> </exclusions> </dependency> -->
 			<dependency>
 				<groupId>org.apache.tika</groupId>
 				<artifactId>tika-core</artifactId>
@@ -1300,7 +1283,7 @@
 				<version>${version.jsoup}</version>
 			</dependency>
 			<dependency>
-				<groupId>net.sf.jtidy</groupId>
+				<groupId>com.github.jtidy</groupId>
 				<artifactId>jtidy</artifactId>
 				<version>${version.jtidy}</version>
 			</dependency>
@@ -1500,7 +1483,7 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>3.14.0</version>
 						<configuration>
-							<!--<release>${targetJdk.short}</release> -->
+							<release>${targetJdk.short}</release>
 							<fork>false</fork>
 							<source>${targetJdk}</source>
 							<target>${targetJdk}</target>
@@ -1554,7 +1537,7 @@
 		<connection>scm:git:git@github.com:jurgendl/jhaws.git</connection>
 		<url>scm:git:git@github.com:jurgendl/jhaws.git</url>
 		<developerConnection>scm:git:git@github.com:jurgendl/jhaws.git</developerConnection>
-		<tag>modules-2.0.1</tag>
+		<tag>master</tag>
 	</scm>
 	<repositories>
 		<repository>
@@ -1783,11 +1766,6 @@
 				<version>3.2.1</version>
 				<configuration>
 					<multipleLineComments>true</multipleLineComments>
-					<tags>
-						<tag>TODO</tag>
-						<tag>FIXME</tag>
-						<tag>XXX</tag>
-					</tags>
 				</configuration>
 			</plugin>
 		</plugins>

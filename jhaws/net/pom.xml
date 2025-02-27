@@ -164,7 +164,7 @@
 		</dependency>
 		<!-- <dependency> <groupId>org.xhtmlrenderer</groupId> <artifactId>flying-saucer-pdf-itext5</artifactId> </dependency> -->
 		<dependency>
-			<groupId>net.sf.jtidy</groupId>
+			<groupId>com.github.jtidy</groupId>
 			<artifactId>jtidy</artifactId>
 			<optional>true</optional>			<!-- only for org.jhaws.common.net.client.HtmlCleanup -->
 		</dependency>
