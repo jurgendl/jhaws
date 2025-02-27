@@ -1673,8 +1673,10 @@
 				<artifactId>spotbugs-maven-plugin</artifactId>
 				<version>4.9.1.0</version>
 				<configuration>
-					<threshold>Low</threshold>
 					<xmlOutput>true</xmlOutput>
+					<!-- Optional directory to put spotbugs xdoc xml report -->
+					<xmlOutputDirectory>target/site</xmlOutputDirectory>
+					<threshold>medium</threshold>
 				</configuration>
 			</plugin>
 			<!-- https://maven.apache.org/plugins/maven-pmd-plugin/usage.html -->
