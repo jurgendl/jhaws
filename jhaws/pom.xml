@@ -121,7 +121,7 @@
 		<version.janino>3.1.2</version.janino>
 		<version.logback.spring>0.1.5</version.logback.spring>
 		<version.log4j-to-slf4j>2.17.1</version.log4j-to-slf4j>
-        <!-- log4j 2 bridge naar slf4j zit in log4j -->
+		<!-- log4j 2 bridge naar slf4j zit in log4j -->
 	</properties>
 	<modules>
 		<module>logging</module>
@@ -1666,6 +1666,19 @@
 	<!-- mvn site -->
 	<reporting>
 		<plugins>
+			<!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.6.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
