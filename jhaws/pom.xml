@@ -1661,6 +1661,19 @@
 					</instructions>
 				</configuration>
 			</plugin>
+			<!-- https://spotbugs.github.io/spotbugs-maven-plugin/usage.html -->
+			<!-- mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.9.1.0</version>
+				<configuration>
+					<xmlOutput>true</xmlOutput>
+					<!-- Optional directory to put spotbugs xdoc xml report -->
+					<xmlOutputDirectory>target/site</xmlOutputDirectory>
+					<threshold>High</threshold><!--Low, Medium, High-->
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<!-- mvn site -->
@@ -1676,7 +1689,7 @@
 					<xmlOutput>true</xmlOutput>
 					<!-- Optional directory to put spotbugs xdoc xml report -->
 					<xmlOutputDirectory>target/site</xmlOutputDirectory>
-					<threshold>medium</threshold>
+					<threshold>High</threshold><!--Low, Medium, High-->
 				</configuration>
 			</plugin>
 			<!-- https://maven.apache.org/plugins/maven-pmd-plugin/usage.html -->
