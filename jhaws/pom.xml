@@ -1625,7 +1625,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.14.0</version>
 				<configuration>
-					<!--<release>${targetJdk.short}</release> -->
+					<release>${targetJdk.short}</release>
 					<fork>false</fork>
 					<source>${targetJdk}</source>
 					<target>${targetJdk}</target>
@@ -1666,7 +1666,26 @@
 	<!-- mvn site -->
 	<reporting>
 		<plugins>
+			<!-- https://spotbugs.github.io/spotbugs-maven-plugin/usage.html -->
+			<!-- mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.9.1.0</version>
+				<configuration>
+					<threshold>Low</threshold>
+					<xmlOutput>true</xmlOutput>
+				</configuration>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-pmd-plugin/usage.html -->
+			<!-- mvn pmd:aggregate-cpd -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.26.0</version>
+			</plugin>
 			<!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html -->
+			<!-- mvn checkstyle:checkstyle -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
@@ -1741,18 +1760,6 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<version>3.26.0</version>
-				<configuration>
-					<format>xml</format>
-					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-					<minimumTokens>100</minimumTokens>
-				</configuration>
-			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clover-plugin</artifactId>
@@ -1767,18 +1774,11 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
 				<version>2.1</version>
-				<configuration>
-					<projectDirectory>${basedir}</projectDirectory>
-					<classDirectory>${project.build.directory}/classes</classDirectory>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>taglist-maven-plugin</artifactId>
 				<version>3.2.1</version>
-				<configuration>
-					<multipleLineComments>true</multipleLineComments>
-				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
