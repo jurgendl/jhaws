@@ -1,6 +1,7 @@
 // https://www.jenkins.io/doc/book/pipeline/jenkinsfile/
 // https://www.jenkins.io/doc/book/pipeline/syntax/
 // https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables
+// https://www.jenkins.io/doc/pipeline/examples/#ansi-color-build-wrapper
 // localhost/pipeline-syntax/globals
 
 // setting outside parameters
@@ -16,11 +17,14 @@ pipeline {
     parameters {
         string(name: 'TESTPARAMETER', defaultValue: 'testparameter', description: 'description')
     }
+	options {
+		ansiColor('xterm') // Enables color output globally
+	}
 	stages {
 		stage('Pre') {
 			steps {
 				echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
-				echo "${env.testvar} ${params.TESTPARAMETER} ${params.EMAIL}"
+				echo "${env.TESTVAR} ${params.TESTPARAMETER} ${params.EMAIL}"
 				sh 'printenv'
 			}
 		}
