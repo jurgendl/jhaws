@@ -76,8 +76,8 @@ pipeline {
 				notifyEveryUnstableBuild: true,
 				recipients: "test@hotmail.com",
 				sendToIndividuals: true])
-			emailext body: 'BUILD COMPLETED', subject: 'BUILD COMPLETED emailext', to: 'test@hotmail.com'
-			mail to: test@hotmail.com, subject: 'BUILD COMPLETED mail'
+			//emailext body: 'BUILD COMPLETED', subject: 'BUILD COMPLETED emailext', to: 'test@hotmail.com'
+			//mail to: test@hotmail.com, subject: 'BUILD COMPLETED mail'
 		}
 	}
 }
