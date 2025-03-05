@@ -2,6 +2,11 @@ pipeline {
     agent any
 
     stages {
+        stage('Pre') {
+            steps {
+                sh 'printenv'
+            }
+        }
         stage('Build') {
             steps {
                 echo 'BUILD STARTING'
