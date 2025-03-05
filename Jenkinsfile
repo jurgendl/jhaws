@@ -71,12 +71,9 @@ pipeline {
 			post {
 				success {
 					echo 'DEPLOY WAS SUCCESFUL'
-					//step([$class: 'Mailer',
-					//	notifyEveryUnstableBuild: true,
-					//	recipients: "${params.EMAIL}",
-					//	sendToIndividuals: true])
-					//emailext body: 'BUILD COMPLETED emailext', subject: 'BUILD COMPLETED emailext', to: '${params.EMAIL}'
-					mail to: '${params.EMAIL}', subject: 'BUILD COMPLETED mail', body: 'BUILD COMPLETED mail'
+					//step([$class: 'Mailer', notifyEveryUnstableBuild: true, recipients: "${params.EMAIL}", sendToIndividuals: true])
+					//emailext to: '${params.EMAIL}', subject: 'BUILD COMPLETED emailext', body: 'BUILD COMPLETED emailext'
+					//mail to: '${params.EMAIL}', subject: 'BUILD COMPLETED mail', body: 'BUILD COMPLETED mail'
 				}
 				failure {
 					echo 'DEPLOY FAILED'
