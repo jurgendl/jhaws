@@ -4,16 +4,30 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building..'
+                echo 'BUILD STARTING'
 				sh 'mvn install -DskipTests  -f jhaws/pom.xml'
+            }
+            post {
+                success {
+					echo 'BUILD WAS SUCCESFUL'
+                }
+				failure {
+					echo 'BUILD FAILED'
+                }
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                echo 'TEST STARTING'
 				sh 'mvn test -f jhaws/pom.xml'
             }
             post {
+                success {
+					echo 'TEST WAS SUCCESFUL'
+                }
+				failure {
+					echo 'TEST FAILED'
+                }
                 always {
                     junit '**/target/surefire-reports/*.xml'
                 }
@@ -21,7 +35,15 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....'
+                echo 'DEPLOY STARTING'
+            }
+            post {
+                success {
+					echo 'DEPLOY WAS SUCCESFUL'
+                }
+				failure {
+					echo 'DEPLOY FAILED'
+                }
             }
         }
     }
