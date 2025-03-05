@@ -15,7 +15,7 @@ pipeline {
 		stage('Pre') {
 			steps {
 				echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
-				echo "${env.testvar} ${params.TESTPARAMETER}"
+				echo "${env.testvar} ${params.TESTPARAMETER} ${params.EMAIL}"
 				sh 'printenv'
 			}
 		}
@@ -74,10 +74,10 @@ pipeline {
 		always {
 			step([$class: 'Mailer',
 				notifyEveryUnstableBuild: true,
-				recipients: "test@hotmail.com",
+				recipients: "${params.EMAIL}",
 				sendToIndividuals: true])
-			//emailext body: 'BUILD COMPLETED', subject: 'BUILD COMPLETED emailext', to: 'test@hotmail.com'
-			//mail to: test@hotmail.com, subject: 'BUILD COMPLETED mail'
+			//emailext body: 'BUILD COMPLETED', subject: 'BUILD COMPLETED emailext', to: '${params.EMAIL}'
+			//mail to: ${params.EMAIL}, subject: 'BUILD COMPLETED mail'
 		}
 	}
 }
