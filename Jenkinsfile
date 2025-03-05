@@ -76,7 +76,7 @@ pipeline {
 					//	recipients: "${params.EMAIL}",
 					//	sendToIndividuals: true])
 					//emailext body: 'BUILD COMPLETED', subject: 'BUILD COMPLETED emailext', to: '${params.EMAIL}'
-					mail to: ${params.EMAIL}, subject: 'BUILD COMPLETED mail'
+					mail to: '${params.EMAIL}', subject: 'BUILD COMPLETED mail'
 				}
 				failure {
 					echo 'DEPLOY FAILED'
