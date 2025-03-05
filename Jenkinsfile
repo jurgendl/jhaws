@@ -3,6 +3,11 @@
 // https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables
 // localhost/pipeline-syntax/globals
 
+// setting outside parameters
+// pipeline, configure, This project is parameterized
+// curl -X POST JENKINS_URL/job/YOUR_JOB/buildWithParameters --data-urlencode "EMAIL=test@hotmail.com"
+
+
 pipeline {
 	agent any
     environment { 
@@ -62,22 +67,17 @@ pipeline {
 			post {
 				success {
 					echo 'DEPLOY WAS SUCCESFUL'
+					step([$class: 'Mailer',
+						notifyEveryUnstableBuild: true,
+						recipients: "${params.EMAIL}",
+						sendToIndividuals: true])
+					//emailext body: 'BUILD COMPLETED', subject: 'BUILD COMPLETED emailext', to: '${params.EMAIL}'
+					//mail to: ${params.EMAIL}, subject: 'BUILD COMPLETED mail'
 				}
 				failure {
 					echo 'DEPLOY FAILED'
 				}
 			}
-		}
-	}
-	
-	post {
-		always {
-			step([$class: 'Mailer',
-				notifyEveryUnstableBuild: true,
-				recipients: "${params.EMAIL}",
-				sendToIndividuals: true])
-			//emailext body: 'BUILD COMPLETED', subject: 'BUILD COMPLETED emailext', to: '${params.EMAIL}'
-			//mail to: ${params.EMAIL}, subject: 'BUILD COMPLETED mail'
 		}
 	}
 }
