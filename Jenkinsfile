@@ -5,13 +5,13 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-				sh 'mvn install -DskipTests'
+				sh 'mvn install -DskipTests  -f jhaws/pom.xml'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
-				sh 'mvn test'
+				sh 'mvn test -f jhaws/pom.xml'
             }
             post {
                 always {
@@ -25,4 +25,13 @@ pipeline {
             }
         }
     }
+	
+	post {
+		always {
+          step([$class: 'Mailer',
+            notifyEveryUnstableBuild: true,
+            recipients: "test@test.test",
+            sendToIndividuals: true])
+		}
+	}
 }
