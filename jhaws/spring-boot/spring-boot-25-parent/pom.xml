@@ -428,4 +428,138 @@
 		</dependency>
 		<!-- _________________________ -->
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>4.0.0-M16</version>
+				<configuration>
+					<locales>en</locales>
+					<generateSitemap>true</generateSitemap>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<!-- mvn site -->
+	<reporting>
+		<plugins>
+			<!-- https://spotbugs.github.io/spotbugs-maven-plugin/usage.html -->
+			<!-- mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs -->
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<version>4.9.1.0</version>
+				<configuration>
+					<xmlOutput>true</xmlOutput>
+					<!-- Optional directory to put spotbugs xdoc xml report -->
+					<xmlOutputDirectory>target/site</xmlOutputDirectory>
+					<threshold>High</threshold><!--Low, Medium, High-->
+				</configuration>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-pmd-plugin/usage.html -->
+			<!-- mvn pmd:aggregate-cpd -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.26.0</version>
+			</plugin>
+			<!-- https://maven.apache.org/plugins/maven-checkstyle-plugin/usage.html -->
+			<!-- mvn checkstyle:checkstyle -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.6.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>checkstyle</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>4.0.0-M16</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.8.0</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>ci-management</report>
+							<report>dependencies</report>
+							<report>dependency-convergence</report>
+							<report>dependency-info</report>
+							<report>dependency-management</report>
+							<report>distribution-management</report>
+							<report>help</report>
+							<report>index</report>
+							<report>issue-management</report>
+							<report>licenses</report>
+							<report>mailing-lists</report>
+							<report>modules</report>
+							<report>plugin-management</report>
+							<report>plugins</report>
+							<report>scm</report>
+							<report>summary</report>
+							<report>team</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<!--https://jeremylong.github.io/DependencyCheck/dependency-check-maven/index.html -->
+			<!--https://www.owasp.org/index.php/OWASP_Dependency_Check -->
+			<!--https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities -->
+			<!--
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>10.0.3</version>
+				<configuration>
+					<failBuildOnCVSS>8</failBuildOnCVSS>
+					<suppressionFiles>
+						<suppressionFile>${project.basedir}/owasp-dependency-check-suppression.xml</suppressionFile>
+					</suppressionFiles>
+					<nvdApiKey>...</nvdApiKey>
+				</configuration>
+			</plugin>
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<version>3.0.0-M2</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>changes-report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clover-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>3.5.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+				<version>2.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>3.2.1</version>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
