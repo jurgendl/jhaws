@@ -1749,20 +1749,18 @@
 			<!--https://jeremylong.github.io/DependencyCheck/dependency-check-maven/index.html -->
 			<!--https://www.owasp.org/index.php/OWASP_Dependency_Check -->
 			<!--https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities -->
-			<!--
 			<plugin>
 				<groupId>org.owasp</groupId>
 				<artifactId>dependency-check-maven</artifactId>
-				<version>10.0.3</version>
+				<version>12.1.0</version>
 				<configuration>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
 					<suppressionFiles>
 						<suppressionFile>${project.basedir}/owasp-dependency-check-suppression.xml</suppressionFile>
 					</suppressionFiles>
-					<nvdApiKey>...</nvdApiKey>
+					<!-- <nvdApiKey>...</nvdApiKey> -->
 				</configuration>
 			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changes-plugin</artifactId>
