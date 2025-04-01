@@ -1756,7 +1756,7 @@
 				<configuration>
 					<failBuildOnCVSS>8</failBuildOnCVSS>
 					<suppressionFiles>
-						<suppressionFile>${project.basedir}/owasp-dependency-check-suppression.xml</suppressionFile>
+						<suppressionFile>owasp-ignore.xml</suppressionFile>
 					</suppressionFiles>
 					<!-- <nvdApiKey>...</nvdApiKey> -->
 				</configuration>
