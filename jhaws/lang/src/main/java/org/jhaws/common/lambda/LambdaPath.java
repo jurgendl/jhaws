@@ -9,19 +9,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Stack;
 
-public class LambdaPath<C> implements Serializable {
-    final Class<?> type;
+public class LambdaPath<S, T> implements Serializable {
+    final Class<S> type;
     final String methodName;
-    final LambdaPath<?> parent;
+    final Class<T> methodResultType;
+    final LambdaPath<?, ?> parent;
 
-    private LambdaPath(Class<?> type, String methodName) {
-        this(null, type, methodName);
-    }
-
-    private LambdaPath(LambdaPath<?> parent, Class<?> type, String methodName) {
+    private LambdaPath(LambdaPath<?, ?> parent, Class<S> type, String methodName, Class<T> methodResultType) {
         this.parent = parent;
         this.type = type;
         this.methodName = methodName;
+        this.methodResultType = methodResultType;
     }
 
     public Class<?> getType() {
@@ -32,8 +30,12 @@ public class LambdaPath<C> implements Serializable {
         return methodName;
     }
 
+    public Class<?> getMethodResultType() {
+        return methodResultType;
+    }
+
     public String getFullPath() {
-        LambdaPath<?> current = this;
+        LambdaPath<?, ?> current = this;
         Stack<String> path = new Stack<>();
         while (current != null) {
             path.add(current.methodName);
@@ -49,29 +51,30 @@ public class LambdaPath<C> implements Serializable {
 
     @Override
     public String toString() {
-        return (parent == null ? "" : parent + ">") + type.getName() + "#" + methodName;
+        return (parent == null ? "" : parent + " > ") + type.getName() + " # " + methodResultType.getName() + " " + methodName;
     }
 
-    public <D> LambdaPath<D> j(SerializableFunction<C, D> function) {
+    public <U> LambdaPath<T, U> j(SerializableFunction<T, U> function) {
         return p(this, function);
     }
 
-    public static <S, T> LambdaPath<T> p(SerializableFunction<S, T> function) {
+    public static <S, T> LambdaPath<S, T> p(SerializableFunction<S, T> function) {
         return p(null, function);
     }
 
-    private static <S, T> LambdaPath<T> p(LambdaPath<?> parent, SerializableFunction<S, T> function) {
+    private static <S, T> LambdaPath<S, T> p(LambdaPath<?, ?> parent, SerializableFunction<S, T> function) {
         SerializedLambda sf = getSerializedLambda(function);
         if (sf.getImplMethodKind() == 6) throw new IllegalArgumentException("expected LambdaFunction");
-        String fn = sf.getImplMethodName();
-        if (!fn.startsWith("get") && !fn.startsWith("set"))
+        String methodName = sf.getImplMethodName();
+        if (!methodName.startsWith("get") && !methodName.startsWith("set"))
             throw new IllegalArgumentException("expected getter or setter");
-        fn = fn.substring(3);
-        fn = Character.toLowerCase(fn.charAt(0)) + fn.substring(1);
+        methodName = methodName.substring(3);
+        methodName = Character.toLowerCase(methodName.charAt(0)) + methodName.substring(1);
         try {
-            Class<?> c = Class.forName(sf.getImplClass().replace('/', '.'));
-            return new LambdaPath<>(parent, c, fn);
-        } catch (ClassNotFoundException e) {
+            Class<S> type = (Class<S>) Class.forName(sf.getImplClass().replace('/', '.'));
+            Class<T> returnType = (Class<T>) type.getDeclaredMethod(sf.getImplMethodName()).getReturnType();
+            return new LambdaPath<>(parent, type, methodName, returnType);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
