@@ -1,7 +1,5 @@
 package org.jhaws.common.web.wicket.forms.common;
 
-import java.io.Serializable;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -28,6 +26,8 @@ import org.jhaws.common.web.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 import org.jhaws.common.web.wicket.spin.Spin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 /**
  * @see http://wicket.apache.org/guide/guide/forms2.html#forms2_1
@@ -94,10 +94,6 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
         return this.formActions;
     }
 
-    public T proxy() {
-        return WebHelper.proxy(getFormActions().forObjectClass());
-    }
-
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
@@ -142,37 +138,51 @@ public abstract class FormPanelParent<T extends Serializable> extends Panel impl
         return this.rowRepeater;
     }
 
-    /** defaults: form-group form-row mb-1 */
+    /**
+     * defaults: form-group form-row mb-1
+     */
     protected String getComponentRepeaterCssClass() {
         return "form-group form-row mb-1 mt-1";
     }
 
-    /** defaults: "container-fluid" */
+    /**
+     * defaults: "container-fluid"
+     */
     protected String getFormContainerCssClass() {
         return "container-fluid";
     }
 
-    /** defaults: "form-group form-row mb-1 mt-1" */
+    /**
+     * defaults: "form-group form-row mb-1 mt-1"
+     */
     protected String getActionsCssClass() {
         return "form-group form-row mb-1 mt-1";
     }
 
-    /** defaults: "form-group form-row mb-1 mt-1" */
+    /**
+     * defaults: "form-group form-row mb-1 mt-1"
+     */
     protected String getFeedbackCssClass() {
         return "form-group form-row mb-1 mt-1";
     }
 
-    /** defaults: "btn btn-primary btn-sm mr-1" */
+    /**
+     * defaults: "btn btn-primary btn-sm mr-1"
+     */
     protected String getSubmitButtonCssClass() {
         return "btn btn-primary btn-sm mr-1";
     }
 
-    /** defaults: "btn btn-secondary btn-sm mr-1" */
+    /**
+     * defaults: "btn btn-secondary btn-sm mr-1"
+     */
     protected String getResetButtonCssClass() {
         return "btn btn-secondary btn-sm mr-1";
     }
 
-    /** defaults: "btn btn-secondary btn-sm mr-1 " */
+    /**
+     * defaults: "btn btn-secondary btn-sm mr-1 "
+     */
     protected String getCancelButtonCssClass() {
         return "btn btn-secondary btn-sm mr-1";
     }

@@ -1,14 +1,15 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.io.Serializable;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.TextFieldSettings;
+
+import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<T, TextField<T>, TextFieldSettings> {
@@ -16,7 +17,7 @@ public class TextFieldPanel<T extends Serializable> extends DefaultFormRowPanel<
 
     public static final String ONCLICK = ";this.setSelectionRange(0,this.value.length);";
 
-    public TextFieldPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings, TextFieldSettings componentSettings) {
+    public TextFieldPanel(final IModel<?> model, final LambdaPath<?, T> propertyPath, FormSettings formSettings, TextFieldSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }
 

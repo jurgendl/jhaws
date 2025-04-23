@@ -1,16 +1,17 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import static org.jhaws.common.web.wicket.WebHelper.tag;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.NumberFieldSettings;
 
+import static org.jhaws.common.web.wicket.WebHelper.tag;
+
 @SuppressWarnings("serial")
 public class NumberTextFieldPanel<N extends Number & Comparable<N>> extends DefaultFormRowPanel<N, TextField<N>, NumberFieldSettings<N>> {
-    public NumberTextFieldPanel(IModel<?> model, N propertyPath, FormSettings formSettings, NumberFieldSettings<N> componentSettings) {
+    public NumberTextFieldPanel(IModel<?> model, LambdaPath<?, N> propertyPath, FormSettings formSettings, NumberFieldSettings<N> componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }
 

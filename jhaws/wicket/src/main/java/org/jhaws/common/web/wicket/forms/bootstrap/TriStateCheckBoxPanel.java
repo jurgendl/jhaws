@@ -1,7 +1,5 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.util.Locale;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -9,9 +7,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.convert.converter.BooleanConverter;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.FormConstants;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.TriStateCheckBoxSettings;
+
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, TriStateCheckBoxSettings> {
@@ -32,7 +33,7 @@ public class TriStateCheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox
 
     private CheckBox checkBox;
 
-    public TriStateCheckBoxPanel(IModel<?> model, Boolean propertyPath, FormSettings formSettings, TriStateCheckBoxSettings componentSettings) {
+    public TriStateCheckBoxPanel(IModel<?> model, LambdaPath<?, Boolean> propertyPath, FormSettings formSettings, TriStateCheckBoxSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }
 

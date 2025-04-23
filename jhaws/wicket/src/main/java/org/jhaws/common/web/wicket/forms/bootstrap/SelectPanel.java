@@ -1,10 +1,5 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
@@ -17,10 +12,16 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.forms.common.AbstractSelectSettings;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.renderer.DefaultOptionRenderer;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S extends AbstractSelectSettings<S>> extends DefaultFormRowPanel<T, C, S> {
@@ -37,13 +38,13 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
     protected IOptionRenderer<T> renderer;
 
     @SuppressWarnings("unchecked")
-    public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
+    public SelectPanel(IModel<?> model, LambdaPath<?, T> propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
         super(model, propertyPath, formSettings, componentSettings);
-        this.choices = new IModel[] { choices };
+        this.choices = new IModel[]{choices};
         this.renderer = fallback(renderer);
     }
 
-    public SelectPanel(IModel<?> model, T propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+    public SelectPanel(IModel<?> model, LambdaPath<?, T> propertyPath, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
         this.renderer = fallback(renderer);
@@ -51,13 +52,13 @@ public abstract class SelectPanel<T extends Serializable, C extends Select<T>, S
     }
 
     @SuppressWarnings("unchecked")
-    public SelectPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
+    public SelectPanel(LambdaPath<?, T> propertyPath, IModel<T> valueModel, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
         super(propertyPath, valueModel, formSettings, componentSettings);
-        this.choices = new IModel[] { choices };
+        this.choices = new IModel[]{choices};
         this.renderer = fallback(renderer);
     }
 
-    public SelectPanel(T propertyPath, IModel<T> valueModel, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+    public SelectPanel(LambdaPath<?, T> propertyPath, IModel<T> valueModel, FormSettings formSettings, S componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(propertyPath, valueModel, formSettings, componentSettings);
         this.choices = choices;
         this.renderer = fallback(renderer);

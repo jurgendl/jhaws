@@ -5,12 +5,13 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.tinymce.BootstrapTinyMCE;
 
 @SuppressWarnings("serial")
 public class TinyMCEPanel extends DefaultFormRowPanel<String, TextArea<String>, TinyMCESettings> {
-    public TinyMCEPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, TinyMCESettings componentSettings) {
+    public TinyMCEPanel(final IModel<?> model, final LambdaPath<?, String> propertyPath, FormSettings formSettings, TinyMCESettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }
 

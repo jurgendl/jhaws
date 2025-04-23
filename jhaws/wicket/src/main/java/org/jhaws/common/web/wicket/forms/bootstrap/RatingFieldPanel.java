@@ -1,7 +1,5 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import static org.jhaws.common.web.wicket.WebHelper.tag;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.CssHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -9,13 +7,16 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.NumberTextField;
 import org.apache.wicket.model.IModel;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.CssResourceReference;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.RatingFieldSettings;
 
+import static org.jhaws.common.web.wicket.WebHelper.tag;
+
 @SuppressWarnings("serial")
 public class RatingFieldPanel extends DefaultFormRowPanel<Integer, NumberTextField<Integer>, RatingFieldSettings> {
-    public RatingFieldPanel(IModel<?> model, Integer propertyPath, FormSettings formSettings, RatingFieldSettings componentSettings) {
+    public RatingFieldPanel(IModel<?> model, LambdaPath<?, Integer> propertyPath, FormSettings formSettings, RatingFieldSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }
 

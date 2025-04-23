@@ -2,6 +2,7 @@ package org.jhaws.common.web.wicket.components.tree;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.WebHelper;
 
 public class LabelModel implements IModel<String> {
@@ -12,15 +13,9 @@ public class LabelModel implements IModel<String> {
 
     protected final String key;
 
-    public LabelModel(Component component, Object key) {
+    public LabelModel(Component component, LambdaPath<?, ?> key) {
         this.component = component;
-        String k;
-        try {
-            k = WebHelper.name(key);
-        } catch (Exception ex) {
-            k = (String) key;
-        }
-        this.key = k;
+        this.key = WebHelper.name(key);
     }
 
     @Override

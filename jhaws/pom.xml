@@ -106,7 +106,6 @@
 		<version.itextpdf7>7.2.5</version.itextpdf7>
 		<version.javassist>3.28.0-GA</version.javassist>
 		<version.joda-time>2.12.1</version.joda-time>
-		<version.cglib>3.3.0</version.cglib>
 		<version.ehcache>2.10.6</version.ehcache>
 		<version.sqlite>3.41.2.2</version.sqlite>
 		<version.gson>2.9.1</version.gson>
@@ -606,11 +605,6 @@
 				<version>${version.javassist}</version>
 			</dependency>
 			<dependency>
-				<groupId>cglib</groupId>
-				<artifactId>cglib</artifactId>
-				<version>${version.cglib}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.codehaus.groovy</groupId>
 				<artifactId>groovy</artifactId>
 				<version>${version.groovy}</version>
@@ -734,17 +728,6 @@
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache</artifactId>
 				<version>${version.ehcache}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.googlecode.lambdaj</groupId>
-				<artifactId>lambdaj</artifactId>
-				<version>2.4</version>
-				<exclusions>
-					<exclusion>
-						<groupId>cglib</groupId>
-						<artifactId>cglib-nodep</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>com.fasterxml.jackson.core</groupId>

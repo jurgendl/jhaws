@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.CheckBoxSettings;
 import org.jhaws.common.web.wicket.forms.common.FormConstants;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
@@ -13,7 +14,7 @@ import org.jhaws.common.web.wicket.forms.common.FormSettings;
 public class CheckBoxPanel extends DefaultFormRowPanel<Boolean, CheckBox, CheckBoxSettings> {
     public static final String CHECKBOXLABEL = "checkboxlabel";
 
-    public CheckBoxPanel(IModel<?> model, Boolean propertyPath, FormSettings formSettings, CheckBoxSettings componentSettings) {
+    public CheckBoxPanel(IModel<?> model, LambdaPath<?, Boolean> propertyPath, FormSettings formSettings, CheckBoxSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }
 

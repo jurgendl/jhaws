@@ -1,19 +1,20 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import static org.jhaws.common.web.wicket.WebHelper.tag;
-
-import java.io.Serializable;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.TextAreaSettings;
 
+import java.io.Serializable;
+
+import static org.jhaws.common.web.wicket.WebHelper.tag;
+
 @SuppressWarnings("serial")
 public class TextAreaPanel<T extends Serializable> extends DefaultFormRowPanel<T, TextArea<T>, TextAreaSettings> {
-    public TextAreaPanel(final IModel<?> model, final T propertyPath, FormSettings formSettings, TextAreaSettings textAreaSettings) {
+    public TextAreaPanel(final IModel<?> model, final LambdaPath<?, T> propertyPath, FormSettings formSettings, TextAreaSettings textAreaSettings) {
         super(model, propertyPath, formSettings, textAreaSettings);
     }
 

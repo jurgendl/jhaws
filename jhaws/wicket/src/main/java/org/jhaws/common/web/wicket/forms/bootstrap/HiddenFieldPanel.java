@@ -1,15 +1,16 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.io.Serializable;
-
 import org.apache.wicket.markup.html.form.HiddenField;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.FormElementSettings;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 
+import java.io.Serializable;
+
 @SuppressWarnings("serial")
 public class HiddenFieldPanel<T extends Serializable> extends DefaultFormRowPanel<T, HiddenField<T>, FormElementSettings> {
-    public HiddenFieldPanel(final IModel<?> model, final T propertyPath) {
+    public HiddenFieldPanel(final IModel<?> model, final LambdaPath<?, T> propertyPath) {
         super(model, propertyPath, new FormSettings(), new FormElementSettings());
     }
 
