@@ -54,6 +54,10 @@
 		<version.spring-ldap-core-tiger>2.4.4</version.spring-ldap-core-tiger>
 		<version.spring-ldap-ldif-batch>2.3.8.RELEASE</version.spring-ldap-ldif-batch>
 		<!--<version.spring-integration-splunk>1.1.0.RELEASE</version.spring-integration-splunk>-->
+
+		<!-- do not force upgrade to Hibernate 6 (overwrite version 3.4.5, 6.2.6) -->
+		<version.spring-data-jpa>2.7.18</version.spring-data-jpa>
+		<version.spring.orm>5.3.39</version.spring.orm>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -260,7 +264,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>
-				<version>${version.spring}</version>
+				<version>${version.spring.orm}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
@@ -1275,7 +1279,7 @@
 			<dependency>
 				<groupId>org.springframework.data</groupId>
 				<artifactId>spring-data-jpa</artifactId>
-				<version>${version.spring-data}</version>
+				<version>${version.spring-data-jpa}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>commons-logging</artifactId>
