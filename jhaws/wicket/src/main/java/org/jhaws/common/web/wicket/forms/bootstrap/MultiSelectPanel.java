@@ -111,19 +111,17 @@ public class MultiSelectPanel<T extends Serializable> extends DefaultFormRowPane
     }
 
     protected SelectOptions<T> createSelectOptions(String id, IModel<? extends List<? extends T>> choicesModel) {
-        SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
+        return new SelectOptions<T>(id, choicesModel, renderer) {
             @Override
-            protected SelectOption<T> newOption(final String text, final IModel<T> optModel) {
+            protected SelectOption<T> newOption(String id1, String text, IModel<T> optModel) {
                 final String textF = StringUtils.isBlank(text) ? "..." : text;
-                SelectOption<T> selectOption = createSelectOption(text, optModel, textF);
-                return selectOption;
+                return createSelectOption(text, optModel, textF);
             }
         };
-        return options;
     }
 
     protected SelectOption<T> createSelectOption(final String text, final IModel<T> optModel, final String textF) {
-        SelectOption<T> selectOption = new SelectOption<T>(OPTION_ID, optModel) {
+        return new SelectOption<T>(OPTION_ID, optModel) {
             @Override
             public void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag) {
                 replaceComponentTagBody(markupStream, openTag, textF);
@@ -146,7 +144,6 @@ public class MultiSelectPanel<T extends Serializable> extends DefaultFormRowPane
                 return super.getValue();
             }
         };
-        return selectOption;
     }
 
     protected boolean isNullValid() {

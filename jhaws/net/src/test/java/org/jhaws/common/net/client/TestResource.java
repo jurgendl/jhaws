@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -291,7 +291,7 @@ public class TestResource implements TestResourceI {
     }
 
     /**
-     * @see org.jhaws.common.net.client.TestResourceI#get(javax.servlet.http.HttpServletRequest)
+     * @see org.jhaws.common.net.client.TestResourceI#get(jakarta.servlet.http.HttpServletRequest)
      */
     @Override
     public String get(HttpServletRequest req) {
@@ -299,7 +299,7 @@ public class TestResource implements TestResourceI {
     }
 
     /**
-     * @see org.jhaws.common.net.client.TestResourceI#get(javax.servlet.ServletConfig)
+     * @see org.jhaws.common.net.client.TestResourceI#get(jakarta.servlet.ServletConfig)
      */
     @Override
     public String get(ServletConfig req) {
@@ -307,7 +307,7 @@ public class TestResource implements TestResourceI {
     }
 
     /**
-     * @see org.jhaws.common.net.client.TestResourceI#get(javax.servlet.ServletContext)
+     * @see org.jhaws.common.net.client.TestResourceI#get(jakarta.servlet.ServletContext)
      */
     @Override
     public String get(ServletContext req) {

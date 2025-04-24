@@ -1,18 +1,6 @@
 package org.jhaws.common.net.restclient;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.Properties;
-import java.util.function.Function;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -48,7 +36,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.security.PrivilegedAction;
+import java.util.Properties;
+import java.util.function.Function;
 
 public abstract class RestClientHttpClient extends RestClientParent {
     private CloseableHttpClient client;
@@ -66,12 +63,16 @@ public abstract class RestClientHttpClient extends RestClientParent {
     }
 
     private static String getProperty(final String key) {
-        return AccessController.doPrivileged(new PrivilegedAction<String>() {
-            @Override
-            public String run() {
-                return System.getProperty(key);
-            }
-        });
+        try {
+            return java.security.AccessController.doPrivileged(new PrivilegedAction<String>() {
+                @Override
+                public String run() {
+                    return System.getProperty(key);
+                }
+            });
+        } catch (Error ex) {
+            return System.getProperty(key);
+        }
     }
 
     private static String[] getSystemCipherSuits() {
@@ -93,11 +94,11 @@ public abstract class RestClientHttpClient extends RestClientParent {
                         .register("http", PlainConnectionSocketFactory.getSocketFactory()//
                         )//
                         .register("https", new SSLConnectionSocketFactory(//
-                                SSLContexts.createSystemDefault()//
-                                , new String[] { "TLSv1.3", "TLSv1.2" }//
-                                , getSystemCipherSuits()//
-                                , new DefaultHostnameVerifier()//
-                        )//
+                                        SSLContexts.createSystemDefault()//
+                                        , new String[]{"TLSv1.3", "TLSv1.2"}//
+                                        , getSystemCipherSuits()//
+                                        , new DefaultHostnameVerifier()//
+                                )//
                         )//
                         .build()//
         );
@@ -160,29 +161,24 @@ public abstract class RestClientHttpClient extends RestClientParent {
     protected <B, R> R call(MediaType accept, Function<UriBuilder, URI> uriFunction, B bodyValue, RestConverter<R> elementTypeRef, HttpMethod method) {
         URI uri = uri(uriFunction);
         HttpRequest request = null;
-        switch (method) {
-            case DELETE:
-                request = new HttpDelete(uri);
-                break;
-            case GET:
-                request = new HttpGet(uri);
-                break;
-            case HEAD:
-                throw new IllegalArgumentException();
-            case OPTIONS:
-                throw new IllegalArgumentException();
-            case PATCH:
-                throw new IllegalArgumentException();
-            case POST:
-                request = new HttpPost(uri);
-                break;
-            case PUT:
-                request = new HttpPut(uri);
-                break;
-            case TRACE:
-                throw new IllegalArgumentException();
-            default:
-                throw new IllegalArgumentException();
+        if (method == HttpMethod.DELETE) {
+            request = new HttpDelete(uri);
+        } else if (method == HttpMethod.GET) {
+            request = new HttpGet(uri);
+        } else if (method == HttpMethod.HEAD) {
+            throw new IllegalArgumentException();
+        } else if (method == HttpMethod.OPTIONS) {
+            throw new IllegalArgumentException();
+        } else if (method == HttpMethod.PATCH) {
+            throw new IllegalArgumentException();
+        } else if (method == HttpMethod.POST) {
+            request = new HttpPost(uri);
+        } else if (method == HttpMethod.PUT) {
+            request = new HttpPut(uri);
+        } else if (method == HttpMethod.TRACE) {
+            throw new IllegalArgumentException();
+        } else {
+            throw new IllegalArgumentException();
         }
         HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
         HttpClientContext context = HttpClientContext.create();

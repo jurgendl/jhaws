@@ -2,7 +2,7 @@ package org.jhaws.common.web.wicket.recaptcha.v3;
 
 import static org.apache.http.client.fluent.Form.form;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.fluent.Content;

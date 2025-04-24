@@ -3,7 +3,7 @@ package org.jhaws.common.web.resteasy;
 // import java.io.IOException;
 //
 // import javax.inject.Inject;
-// import javax.servlet.ServletContext;
+// import jakarta.servlet.ServletContext;
 // import javax.ws.rs.container.ContainerRequestContext;
 // import javax.ws.rs.container.ContainerRequestFilter;
 // import javax.ws.rs.ext.Provider;

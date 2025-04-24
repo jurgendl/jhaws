@@ -139,19 +139,17 @@ public class BootstrapSelectPanel<T extends Serializable> extends DefaultFormRow
 
     protected SelectOptions<T> createSelectOptions(String id, //
                                                    IModel<? extends List<? extends T>> choicesModel) {
-        SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
+        return new SelectOptions<T>(id, choicesModel, renderer) {
             @Override
-            protected SelectOption<T> newOption(final String text, final IModel<T> optModel) {
+            protected SelectOption<T> newOption(String id1, String text, IModel<T> optModel) {
                 final String textF = StringUtils.isBlank(text) ? "..." : text;
                 String data = null;
                 if (contentRenderer != null) {
                     data = contentRenderer.getDisplayValue(optModel.getObject());
                 }
-                SelectOption<T> selectOption = createSelectOption(text, optModel, textF, data);
-                return selectOption;
+                return createSelectOption(text, optModel, textF, data);
             }
         };
-        return options;
     }
 
     protected SelectOption<T> createSelectOption(final String text, final IModel<T> optModel, final String textF, final String data) {

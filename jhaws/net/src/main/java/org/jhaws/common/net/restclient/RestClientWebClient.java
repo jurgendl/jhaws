@@ -1,20 +1,13 @@
 package org.jhaws.common.net.restclient;
 
-import java.io.IOException;
-import java.net.URI;
-import java.time.Duration;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.ClientCodecConfigurer;
@@ -24,13 +17,17 @@ import org.springframework.web.reactive.function.client.WebClient.RequestBodySpe
 import org.springframework.web.reactive.function.client.WebClient.RequestBodyUriSpec;
 import org.springframework.web.reactive.function.client.WebClient.ResponseSpec;
 import org.springframework.web.util.UriBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.netty.channel.ChannelOption;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
 import reactor.netty.tcp.TcpClient;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.net.URI;
+import java.time.Duration;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 // https://www.baeldung.com/spring-5-webclient
 // https://www.baeldung.com/webflux-webclient-parameters
@@ -112,7 +109,7 @@ public abstract class RestClientWebClient extends RestClientParent {
     protected <B, R> R call(MediaType accept, Function<UriBuilder, URI> uriFunction, B bodyValue, RestConverter<R> elementTypeRef, RequestBodyUriSpec method) {
         RequestBodySpec requestBodySpec = method.uri(uriFunction).accept(accept);
         ResponseSpec responseSpec = Optional.ofNullable(bodyValue).map(bodyValueNotNull -> requestBodySpec.bodyValue(bodyValueNotNull).retrieve()).orElseGet(() -> requestBodySpec.retrieve())//
-                .onStatus((HttpStatus httpStatus) -> httpStatus.value() == RestException.REST_API_SERVER_ERROR_STATUSCODE, (ClientResponse clientResponse) -> {
+                .onStatus((HttpStatusCode httpStatus) -> httpStatus.value() == RestException.REST_API_SERVER_ERROR_STATUSCODE, (ClientResponse clientResponse) -> {
                     try {
                         throw clientResponse.bodyToMono(RestExceptionInfo.class).block(Duration.ofSeconds(callTimeoutInSeconds)).toRestException();
                     } catch (RestException ex) {

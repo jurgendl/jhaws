@@ -19,7 +19,7 @@
 				<artifactId>jhaws-spring-bom</artifactId>
 				<version>${project.version}</version>
 				<type>pom</type>
-				<scope>import</scope>				<!--http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html -->
+				<scope>import</scope>                <!--http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html -->
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -29,10 +29,18 @@
 			<artifactId>snakeyaml</artifactId>
 			<version>1.33</version>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${version.javax.servlet-api}</version>
+			<scope>provided</scope>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

@@ -1,17 +1,17 @@
 package org.jhaws.common.web.filter;
 
-import java.io.IOException;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.http.HttpSession;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 /**
  * <pre>
@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession;
  * </filter-mapping>
  * </pre>
  *
- * @see https://randomcoder.org/articles/jsessionid-considered-harmful
+ * @see <a href="https://randomcoder.org/articles/jsessionid-considered-harmful">...</a>
  */
 public class DisableUrlSessionFilter implements Filter {
     @Override
@@ -48,20 +48,20 @@ public class DisableUrlSessionFilter implements Filter {
         }
 
         HttpServletResponseWrapper wrappedResponse = new HttpServletResponseWrapper(httpResponse) {
-            @Override
-            public String encodeRedirectUrl(String url) {
-                return url;
-            }
+            //@Override
+            //public String encodeRedirectUrl(String url) {
+            //    return url;
+            //}
 
             @Override
             public String encodeRedirectURL(String url) {
                 return url;
             }
 
-            @Override
-            public String encodeUrl(String url) {
-                return url;
-            }
+            //@Override
+            //public String encodeUrl(String url) {
+            //    return url;
+            //}
 
             @Override
             public String encodeURL(String url) {
@@ -73,8 +73,10 @@ public class DisableUrlSessionFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig config) throws ServletException {}
+    public void init(FilterConfig config) throws ServletException {
+    }
 
     @Override
-    public void destroy() {}
+    public void destroy() {
+    }
 }

@@ -2,7 +2,7 @@ package org.jhaws.common.web.wicket.recaptcha;
 
 import java.io.Serializable;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.ajax.attributes.AjaxCallListener;
 import org.apache.wicket.markup.html.form.Form;

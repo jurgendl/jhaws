@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.StreamingOutput;
@@ -77,7 +77,7 @@ public class FileStoreResourceImpl implements FileStoreResource {
     }
 
     /**
-     * @see org.jhaws.common.web.wicket.resteasy.resources.FileStoreResource#upload(javax.servlet.http.HttpServletRequest,
+     * @see org.jhaws.common.web.wicket.resteasy.resources.FileStoreResource#upload(jakarta.servlet.http.HttpServletRequest,
      *      org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput)
      */
     @Override
