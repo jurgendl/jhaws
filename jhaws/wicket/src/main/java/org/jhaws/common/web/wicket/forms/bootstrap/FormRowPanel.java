@@ -3,17 +3,18 @@ package org.jhaws.common.web.wicket.forms.bootstrap;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.AbstractFormElementSettings;
 import org.jhaws.common.web.wicket.forms.common.FormRowPanelParent;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 
 @SuppressWarnings("serial")
 public abstract class FormRowPanel<P, T, C extends FormComponent<T>, ElementSettings extends AbstractFormElementSettings<ElementSettings>> extends FormRowPanelParent<P, T, C, ElementSettings> {
-    public FormRowPanel(IModel<?> model, P propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
+    public FormRowPanel(IModel<?> model, LambdaPath<?, P> propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
     }
 
-    public FormRowPanel(P propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
+    public FormRowPanel(LambdaPath<?, P> propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
         super(propertyPath, valueModel, formSettings, componentSettings);
     }
 

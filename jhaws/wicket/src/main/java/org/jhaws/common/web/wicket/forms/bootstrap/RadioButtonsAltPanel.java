@@ -1,12 +1,13 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.FormElementSettings;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
+
+import java.io.Serializable;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class RadioButtonsAltPanel<T extends Serializable> extends DefaultFormRowPanel<T, BootstrapRadioChoice<T>, FormElementSettings> {
@@ -14,7 +15,7 @@ public class RadioButtonsAltPanel<T extends Serializable> extends DefaultFormRow
 
     protected IChoiceRenderer<T> renderer;
 
-    public RadioButtonsAltPanel(IModel<?> model, T propertyPath, FormSettings formSettings, FormElementSettings componentSettings, IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer) {
+    public RadioButtonsAltPanel(IModel<?> model, LambdaPath<?, T> propertyPath, FormSettings formSettings, FormElementSettings componentSettings, IModel<? extends List<? extends T>> choices, IChoiceRenderer<T> renderer) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
         this.renderer = renderer;

@@ -1,9 +1,5 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
@@ -15,11 +11,16 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.FormConstants;
 import org.jhaws.common.web.wicket.forms.common.FormRowPanelParent;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.TypeAheadTextFieldSettings;
 import org.jhaws.common.web.wicket.jquery_typeahead.JqueryTypeAhead;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 // //https://github.com/lipis/flag-icon-css
 @SuppressWarnings("serial")
@@ -32,7 +33,7 @@ public class TypeAheadTextFieldPanel extends DefaultFormRowPanel<String, TextFie
 
     protected Component results;
 
-    public TypeAheadTextFieldPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, TypeAheadTextFieldSettings componentSettings, IModel<? extends List<Map<String, String>>> choices) {
+    public TypeAheadTextFieldPanel(final IModel<?> model, final LambdaPath<?, String> propertyPath, FormSettings formSettings, TypeAheadTextFieldSettings componentSettings, IModel<? extends List<Map<String, String>>> choices) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
     }
@@ -104,7 +105,7 @@ public class TypeAheadTextFieldPanel extends DefaultFormRowPanel<String, TextFie
                 .replace("$MIN$", String.valueOf(getComponentSettings().getMinLength()))//
                 .replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
                 .replace("$MAX$", String.valueOf(getComponentSettings().getMax()))//
-        ;
+                ;
     }
 
     public IModel<? extends List<Map<String, String>>> getChoices() {

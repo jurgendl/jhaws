@@ -1,17 +1,18 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.util.List;
-
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.jhaws.common.io.FilePath;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.lang.StringUtils;
 import org.jhaws.common.web.wicket.forms.common.FormConstants;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.TagItTextFieldSettings;
+
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<String>, TagItTextFieldSettings> {
@@ -29,7 +30,7 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
 
     protected IModel<? extends List<String>> choices;
 
-    public TagItTextFieldPanel(final IModel<?> model, final String propertyPath, FormSettings formSettings, TagItTextFieldSettings componentSettings, IModel<? extends List<String>> choices) {
+    public TagItTextFieldPanel(final IModel<?> model, final LambdaPath<?, String> propertyPath, FormSettings formSettings, TagItTextFieldSettings componentSettings, IModel<? extends List<String>> choices) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
     }
@@ -90,7 +91,7 @@ public class TagItTextFieldPanel extends DefaultFormRowPanel<String, TextField<S
                 .replace("$FREE$", String.valueOf(getComponentSettings().isFree()))//
                 .replace("$DELIMITER$", String.valueOf(getComponentSettings().getFieldDelimiter()))//
                 .replace("$MAX$", String.valueOf(getComponentSettings().getMax()))//
-        ;
+                ;
     }
 
     public IModel<? extends List<String>> getChoices() {

@@ -1,12 +1,5 @@
 package org.jhaws.common.web.wicket;
 
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Consumer;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
@@ -14,11 +7,16 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.lang.EnhancedRunnable;
 import org.springframework.beans.BeanUtils;
 
-import ch.lambdaj.Lambda;
-import ch.lambdaj.function.argument.Argument;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+
 
 public class WebHelper {
     // static public class LocalDateArgumentCreator implements FinalClassArgumentCreator<LocalDate> {
@@ -31,29 +29,19 @@ public class WebHelper {
     // return new LocalDate(seed * MSECS_IN_DAY);
     // }
     // }
-    //
-    // static {
-    // ArgumentsFactory.registerFinalClassArgumentCreator(LocalDate.class, new LocalDateArgumentCreator());
-    // }
 
-    public static <T> T proxy(Class<T> type) {
-        if (Modifier.isFinal(type.getModifiers())) {
-            throw new IllegalArgumentException(type + " cannot be final");
-        }
-        return Lambda.on(type);
-    }
 
-    public static <A> Class<A> type(A arg) {
-        return Lambda.argument(arg).getReturnType();
+    public static <A> Class<A> type(LambdaPath<?, ?> arg) {
+        return (Class<A>) arg.getMethodResultType();
     }
 
     /**
      * welke generic type implementatie heeft een class implementatie (werkt ook op anonymous inner classes)
      *
-     * @param object de implementatie class (this waar opgeroepen)
+     * @param object                          de implementatie class (this waar opgeroepen)
      * @param classOrInterfaceWithGenericType class of interface waardat de generic type naam op gedeclareerd staat
-     * @param genericTypeIndex de index binnen de &lt; en &gt; waar de generic type naam op gedeclareerd staat; als er maar 1 is wordt die zowiezo genomen (maw index 0)
-     * @param requiredGenericType vereiste class (alternatief voor index)
+     * @param genericTypeIndex                de index binnen de &lt; en &gt; waar de generic type naam op gedeclareerd staat; als er maar 1 is wordt die zowiezo genomen (maw index 0)
+     * @param requiredGenericType             vereiste class (alternatief voor index)
      * @return de effectieve implementatie
      * @throws IllegalArgumentException wanneer index niet gevonden wordt of geen implementatie van class c
      */
@@ -140,12 +128,8 @@ public class WebHelper {
         return _getImplementation(object, classOrInterfaceWithGenericType, -1, requiredGenericType);
     }
 
-    public static <A> String name(A arg) {
-        return arg(arg).getInkvokedPropertyName();
-    }
-
-    public static <A> Argument<A> arg(A arg) {
-        return Lambda.argument(arg);
+    public static <A> String name(LambdaPath<?, ?> arg) {
+        return arg.getFullPath();
     }
 
     public static void run(EnhancedRunnable runnable) {
@@ -234,7 +218,7 @@ public class WebHelper {
         return pp;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static IModel<List<String>> model(String... options) {
         return (IModel) Model.of(Arrays.asList(options));
     }

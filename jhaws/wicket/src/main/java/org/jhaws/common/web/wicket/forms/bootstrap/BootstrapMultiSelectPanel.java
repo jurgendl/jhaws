@@ -1,9 +1,5 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
@@ -17,10 +13,15 @@ import org.apache.wicket.markup.parser.XmlTag.TagType;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.forms.common.BootstrapMultiSelectSettings;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.renderer.DefaultOptionRenderer;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class BootstrapMultiSelectPanel<T extends Serializable> extends DefaultFormRowPanel<List<T>, Select<List<T>>, BootstrapMultiSelectSettings> {
@@ -39,16 +40,16 @@ public class BootstrapMultiSelectPanel<T extends Serializable> extends DefaultFo
     protected IOptionRenderer<T> contentRenderer;
 
     @SuppressWarnings("unchecked")
-    public BootstrapMultiSelectPanel(IModel<?> model, List<T> propertyPath, FormSettings formSettings, BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer, IOptionRenderer<T> contentRenderer,
-            IModel<? extends List<? extends T>> choices) {
+    public BootstrapMultiSelectPanel(IModel<?> model, LambdaPath<?, List<T>> propertyPath, FormSettings formSettings, BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer, IOptionRenderer<T> contentRenderer,
+                                     IModel<? extends List<? extends T>> choices) {
         super(model, propertyPath, formSettings, componentSettings);
-        this.choices = new IModel[] { choices };
+        this.choices = new IModel[]{choices};
         this.renderer = fallback(renderer);
         this.contentRenderer = contentRenderer;
     }
 
-    public BootstrapMultiSelectPanel(IModel<?> model, List<T> propertyPath, FormSettings formSettings, BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer, IOptionRenderer<T> contentRenderer,
-            IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+    public BootstrapMultiSelectPanel(IModel<?> model, LambdaPath<?, List<T>> propertyPath, FormSettings formSettings, BootstrapMultiSelectSettings componentSettings, IOptionRenderer<T> renderer, IOptionRenderer<T> contentRenderer,
+                                     IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(model, propertyPath, formSettings, componentSettings);
         this.choices = choices;
         this.renderer = fallback(renderer);
@@ -141,7 +142,7 @@ public class BootstrapMultiSelectPanel<T extends Serializable> extends DefaultFo
     }
 
     protected SelectOptions<T> createSelectOptions(String id, //
-            IModel<? extends List<? extends T>> choicesModel) {
+                                                   IModel<? extends List<? extends T>> choicesModel) {
         SelectOptions<T> options = new SelectOptions<T>(id, choicesModel, renderer) {
             @Override
             protected SelectOption<T> newOption(final String text, final IModel<T> optModel) {

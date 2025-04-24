@@ -1,7 +1,5 @@
 package org.jhaws.common.web.wicket.forms.common;
 
-import java.util.MissingResourceException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -17,12 +15,15 @@ import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.AttributeRemover;
 import org.jhaws.common.web.wicket.HtmlEvent.HtmlFormEvent;
 import org.jhaws.common.web.wicket.WebHelper;
 import org.jhaws.common.web.wicket.bootstrap.BootstrapFencedFeedbackPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.MissingResourceException;
 
 @SuppressWarnings("serial")
 public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, ElementSettings extends AbstractFormElementSettings<ElementSettings>> extends Panel implements FormConstants {
@@ -38,8 +39,10 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
     protected IModel<T> valueModel;
 
-    /** normally a lambda path */
-    protected transient P propertyPath;
+    /**
+     * normally a lambda path
+     */
+    protected transient LambdaPath<?, ?> propertyPath;
 
     protected Class<T> propertyType;
 
@@ -53,7 +56,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
     protected ElementSettings componentSettings;
 
-    protected FormRowPanelParent(IModel<?> model, P propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
+    protected FormRowPanelParent(IModel<?> model, LambdaPath<?, ?> propertyPath, FormSettings formSettings, ElementSettings componentSettings) {
         super(FormConstants.FORM_ELEMENT, model);
         if (formSettings == null) {
             throw new NullPointerException("formSettings");
@@ -67,7 +70,7 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
         WebHelper.hide(this);
     }
 
-    public FormRowPanelParent(P propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
+    public FormRowPanelParent(LambdaPath<?, ?> propertyPath, IModel<T> valueModel, FormSettings formSettings, ElementSettings componentSettings) {
         this(valueModel, propertyPath, formSettings, componentSettings);
         this.valueModel = valueModel;
     }
@@ -221,11 +224,11 @@ public abstract class FormRowPanelParent<P, T, C extends FormComponent<T>, Eleme
 
     public String getPropertyName() {
         if (this.propertyName == null) {
-            try {
-                this.propertyName = WebHelper.name(this.propertyPath);
-            } catch (ch.lambdaj.function.argument.ArgumentConversionException ex) {
-                this.propertyName = this.propertyPath == null ? null : this.propertyPath.toString();
-            }
+            // try {
+            this.propertyName = WebHelper.name(this.propertyPath);
+            // } catch (ch.lambdaj.function.argument.ArgumentConversionException ex) {
+            //    this.propertyName = this.propertyPath == null ? null : this.propertyPath.toString();
+            // }
         }
         return this.propertyName;
     }

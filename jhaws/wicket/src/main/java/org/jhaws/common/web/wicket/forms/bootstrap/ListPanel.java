@@ -1,24 +1,25 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import static org.jhaws.common.web.wicket.WebHelper.tag;
-
-import java.io.Serializable;
-import java.util.List;
-
 import org.apache.wicket.extensions.markup.html.form.select.IOptionRenderer;
 import org.apache.wicket.extensions.markup.html.form.select.Select;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.model.IModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.forms.common.ListSettings;
 
+import java.io.Serializable;
+import java.util.List;
+
+import static org.jhaws.common.web.wicket.WebHelper.tag;
+
 @SuppressWarnings("serial")
 public class ListPanel<T extends Serializable> extends SelectPanel<T, Select<T>, ListSettings> {
-    public ListPanel(IModel<?> model, T propertyPath, FormSettings formSettings, ListSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
+    public ListPanel(IModel<?> model, LambdaPath<?, T> propertyPath, FormSettings formSettings, ListSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>> choices) {
         super(model, propertyPath, formSettings, componentSettings, renderer, choices);
     }
 
-    public ListPanel(IModel<?> model, T propertyPath, FormSettings formSettings, ListSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
+    public ListPanel(IModel<?> model, LambdaPath<?, T> propertyPath, FormSettings formSettings, ListSettings componentSettings, IOptionRenderer<T> renderer, IModel<? extends List<? extends T>>[] choices, IModel<String>[] groupLabels) {
         super(model, propertyPath, formSettings, componentSettings, renderer, choices, groupLabels);
     }
 

@@ -1,17 +1,12 @@
 package org.jhaws.common.web.wicket.forms.bootstrap;
 
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Map;
-
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.FormComponent;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.jhaws.common.lambda.LambdaPath;
 import org.jhaws.common.web.wicket.AttributeRemover;
 import org.jhaws.common.web.wicket.converter.Converter;
 import org.jhaws.common.web.wicket.converter.ModelConverter;
@@ -21,18 +16,24 @@ import org.jhaws.common.web.wicket.forms.common.FormRowPanelParent;
 import org.jhaws.common.web.wicket.forms.common.FormSettings;
 import org.jhaws.common.web.wicket.moment.MomentJs;
 
-@SuppressWarnings({ "unchecked", "rawtypes", "serial" })
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+
+@SuppressWarnings({"unchecked", "rawtypes", "serial"})
 public class DatePickerPanel<X extends Serializable> extends DefaultFormRowPanel {
     protected String dateFormat;
 
     protected Converter<X, Date> dateConverter;
 
-    public DatePickerPanel(IModel<?> model, Date propertyPath, FormSettings formSettings, DatePickerSettings componentSettings) {
+    public DatePickerPanel(IModel<?> model, LambdaPath<?, Date> propertyPath, FormSettings formSettings, DatePickerSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
         this.dateConverter = null;
     }
 
-    public DatePickerPanel(IModel<?> model, X propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings, DatePickerSettings componentSettings) {
+    public DatePickerPanel(IModel<?> model, LambdaPath<?, X> propertyPath, Converter<X, Date> dateConverter, FormSettings formSettings, DatePickerSettings componentSettings) {
         super(model, propertyPath, formSettings, componentSettings);
         this.dateConverter = dateConverter;
     }
