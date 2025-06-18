@@ -1,32 +1,5 @@
 package org.jhaws.common.elasticsearch.impl;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -160,6 +133,32 @@ import org.jhaws.common.elasticsearch.common.ElasticDocument;
 import org.jhaws.common.elasticsearch.common.FieldType;
 import org.jhaws.common.elasticsearch.common.Pagination;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 // TODO https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/migrate-hlrc.html
 //
 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-search.html
@@ -230,7 +229,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/_basic_authentication.html
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(getUser(), getPassword()));
-        HttpHost[] array = Arrays.stream(getUrl().split(",")).map(u -> new HttpHost(u, getPort(), getProtocol())).toArray(l -> new HttpHost[l]);
+        HttpHost[] array = Arrays.stream(getUrl().split(",")).map(u -> new HttpHost(u, getPort(), getProtocol())).toArray(HttpHost[]::new);
         RestClientBuilder restClientBuilder = RestClient.builder(array)//
                 // https://discuss.elastic.co/t/how-to-avoid-30-000ms-timeout-during-reindexing/231370/2
                 // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/_timeouts.html
@@ -366,7 +365,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public <T extends ElasticDocument> Map<String, Map<String, ?>> getIndexMapping(Class<T> type) {
-        return getIndexMapping(index(type), allFields(type).toArray(l -> new String[l]));
+        return getIndexMapping(index(type), allFields(type).toArray(String[]::new));
     }
 
     public Map<String, Map<String, ?>> getIndexMapping(String index) {
@@ -486,9 +485,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public void handleIndexResponse(IndexResponse response) {
         handleDocWriteResponse(response);
         ReplicationResponse.ShardInfo shardInfo = response.getShardInfo();
-        if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
-            // LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
-        }
+        //if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
+        // LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
+        //}
         if (shardInfo.getFailed() > 0) {
             for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
                 String reason = failure.reason();
@@ -544,7 +543,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     public Map<String, Object> performGetRequest(GetRequest request) {
-        GetResponse response = null;
+        GetResponse response;
         try {
             response = getClient().get(request, getRequestOptions());
         } catch (IOException ex) {
@@ -568,14 +567,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public Map<String, Object> handleGetResponse(GetResponse response) {
         if (response.isExists()) {
-            // long version = getResponse.getVersion();
-            // LOGGER.debug(version);
-            // String sourceAsString = getResponse.getSourceAsString();
-            // LOGGER.debug(sourceAsString);
-            Map<String, Object> sourceAsMap = response.getSourceAsMap();
-            return sourceAsMap;
-            // byte[] sourceAsBytes = getResponse.getSourceAsBytes();
-            // LOGGER.debug(sourceAsBytes);
+            return response.getSourceAsMap();
         }
         LOGGER.debug("NOT EXISTS");
         return null;
@@ -616,9 +608,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public void handleDeleteResponse(DeleteResponse response) {
         handleDocWriteResponse(response);
         ReplicationResponse.ShardInfo shardInfo = response.getShardInfo();
-        if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
-            // LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
-        }
+        //if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
+        // LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
+        //}
         if (shardInfo.getFailed() > 0) {
             for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
                 String reason = failure.reason();
@@ -661,9 +653,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public void handleUpdateResponse(UpdateResponse response) {
         handleDocWriteResponse(response);
         ReplicationResponse.ShardInfo shardInfo = response.getShardInfo();
-        if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
-            // LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
-        }
+        //if (shardInfo.getTotal() != shardInfo.getSuccessful()) {
+        // LOGGER.debug(shardInfo.getTotal() + "!=" + shardInfo.getSuccessful());
+        //}
         if (shardInfo.getFailed() > 0) {
             for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
                 String reason = failure.reason();
@@ -715,7 +707,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public <T extends ElasticDocument> T getDocument(Class<T> type, T o) {
         GetRequest request = createGetRequest(o);
-        GetResponse response = null;
+        GetResponse response;
         try {
             response = getClient().get(request, getRequestOptions());
         } catch (IOException ex) {
@@ -739,7 +731,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     public void bulk(String index, @SuppressWarnings("rawtypes") List<? extends DocWriteRequest> requests) {
         // https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-high-document-bulk.html
         BulkRequest request = new BulkRequest(index);
-        requests.forEach(r -> request.add(r));
+        requests.forEach(request::add);
         request.timeout(getTimeout());
         requests.stream().filter(req -> req instanceof UpdateRequest).map(UpdateRequest.class::cast).forEach(req -> req.setRefreshPolicy(UpdateRequest.RefreshPolicy.NONE));
         requests.stream().filter(req -> req instanceof DeleteRequest).map(DeleteRequest.class::cast).forEach(req -> req.setRefreshPolicy(DeleteRequest.RefreshPolicy.NONE));
@@ -865,7 +857,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         searchFailures.forEach(i -> LOGGER.error("{}", i));
         List<BulkItemResponse.Failure> bulkFailures = bulkResponse.getBulkFailures();
         bulkFailures.forEach(i -> LOGGER.error("{}", i));
-        return updatedDocs > 0l ? updatedDocs : deletedDocs;
+        return updatedDocs > 0L ? updatedDocs : deletedDocs;
     }
 
     public <T extends ElasticDocument> long updateDocumentsByQuery(Class<T> type, QueryBuilder query, Integer max, String script, Map<String, Object> params) {
@@ -951,7 +943,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // int skippedShards = countResponse.getSkippedShards();
         // int successfulShards = countResponse.getSuccessfulShards();
         // int failedShards = countResponse.getFailedShards();
-        if (countResponse.getShardFailures() != null && countResponse.getShardFailures().length > 0) {
+        if (countResponse.getShardFailures() != null) {
             for (ShardSearchFailure failure : countResponse.getShardFailures()) {
                 String reason = failure.reason();
                 LOGGER.debug(reason);
@@ -1016,7 +1008,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             // https://discuss.elastic.co/t/running-cardinality-for-more-than-10000-buckets/192717/2
             // .includeExclude(new IncludeExclude(0, 10))//
         }
-        aggregations.entrySet().forEach(e -> e.getValue().forEach(agg -> buildAggregation(aggBuilder, /* subAggregationField */e.getKey(), agg)));
+        aggregations.forEach((key1, value1) -> value1.forEach(agg -> buildAggregation(aggBuilder, /* subAggregationField */key1, agg)));
         searchSourceBuilder.aggregation(aggBuilder);
 
         SearchRequest searchRequest = new SearchRequest(index);
@@ -1034,6 +1026,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         SearchHits hits = searchResponse.getHits();
         TotalHits totalHits = hits.getTotalHits();
         // the total number of hits, must be interpreted in the context of totalHits.relation
+        assert totalHits != null;
         long numHits = totalHits.value;
         // whether the number of hits is accurate (EQUAL_TO) or a lower bound of the total (GREATER_THAN_OR_EQUAL_TO)
         TotalHits.Relation relation = totalHits.relation;
@@ -1041,17 +1034,17 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             LOGGER.warn("{} {}", relation, numHits);
         }
 
-        searchResponse.getAggregations().getAsMap().entrySet().forEach(e -> {
-            if (e.getValue() instanceof ParsedTerms) {
-                ParsedTerms.class.cast(e.getValue()).getBuckets().forEach(bucket -> {
+        searchResponse.getAggregations().getAsMap().forEach((key, value) -> {
+            if (value instanceof ParsedTerms) {
+                ParsedTerms.class.cast(value).getBuckets().forEach(bucket -> {
                     AggregationResult aggregationResult = new AggregationResult(bucket.getKeyAsString(), bucket.getDocCount());
                     aggregationResults.add(aggregationResult);
                     bucket.getAggregations().forEach(subAggregation -> aggregationResultsParser(aggregationResult, subAggregation));
                 });
-            } else if (e.getValue() instanceof ParsedGlobal) {
-                ParsedGlobal.class.cast(e.getValue()).getAggregations().forEach(subAggregation -> aggregationResults.add(aggregationResultsParser(new AggregationResult(), subAggregation)));
+            } else if (value instanceof ParsedGlobal) {
+                ParsedGlobal.class.cast(value).getAggregations().forEach(subAggregation -> aggregationResults.add(aggregationResultsParser(new AggregationResult(), subAggregation)));
             } else {
-                throw new UnsupportedOperationException(e.getValue().getClass().getName());
+                throw new UnsupportedOperationException(value.getClass().getName());
             }
         });
 
@@ -1085,9 +1078,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         request.add(context.searchRequest);
 
         int[] order = new int[queries.size() - 1];
-        for (int i = 0; i < order.length; i++) {
-            order[i] = -1;
-        }
+        Arrays.fill(order, -1);
         int orderIndex = 0;
         List<QueryBuilder> extra = new ArrayList<>();
         for (int i = 1; i < queries.size(); i++) {
@@ -1099,7 +1090,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             }
         }
 
-        extra.stream().forEach(partialQuery -> {
+        extra.forEach(partialQuery -> {
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.fetchSource(fetchNone());
             searchSourceBuilder.from(0);
@@ -1129,44 +1120,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         queryResults.setPagination(context.pagination);
         queryResults.setMaxScore(context.maxScore);
         long[] partialTotalHits = new long[queries.size() - 1];
-        for (int i = 0; i < partialTotalHits.length; i++) {
-            partialTotalHits[i] = -1;
-        }
+        Arrays.fill(partialTotalHits, -1);
         for (int i = 1; i < multiResponse.getResponses().length; i++) {
-            partialTotalHits[order[i - 1]] = multiResponse.getResponses()[i].getResponse().getHits().getTotalHits().value;
+            partialTotalHits[order[i - 1]] = Objects.requireNonNull(Objects.requireNonNull(multiResponse.getResponses()[i].getResponse()).getHits().getTotalHits()).value;
         }
         queryResults.setPartialTotalHits(Arrays.stream(partialTotalHits).boxed().collect(Collectors.toList()));
         return queryResults;
-    }
-
-    static class QueryContext<T> {
-        String index;
-
-        QueryBuilder query;
-
-        Pagination pagination;
-
-        List<SortBuilder<?>> sort;
-
-        String[] includes;
-
-        String[] excludes;
-
-        Mapper<T> mapper;
-
-        List<String> highlight;
-
-        Scrolling scrolling;
-
-        SearchSourceBuilder searchSourceBuilder;
-
-        SearchRequest searchRequest;
-
-        SearchScrollRequest scrollRequest;
-
-        SearchResponse searchResponse;
-
-        float maxScore;
     }
 
     protected <T> List<QueryResult<T>> $query(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight) {
@@ -1254,6 +1213,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         TotalHits totalHits = hits.getTotalHits();
         // the total number of hits, must be interpreted in the context of
         // totalHits.relation
+        assert totalHits != null;
         long numHits = totalHits.value;
         // whether the number of hits is accurate (EQUAL_TO) or a lower bound of the
         // total (GREATER_THAN_OR_EQUAL_TO)
@@ -1269,11 +1229,11 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
 
         List<QueryResult<T>> qr = new ArrayList<>();
-        if (searchHits != null && searchHits.length > 0) {
+        if (searchHits != null) {
             for (SearchHit hit : searchHits) {
                 @SuppressWarnings("unchecked")
-                T result = context.mapper == null ? (T) hit.getSourceAsMap() : context.mapper.map(hit.getIndex(), hit.getId(), hit.getVersion() == -1l ? null : hit.getVersion(), hit.getSourceAsString(), hit.getSourceAsMap());
-                Map<String, List<String>> highlightC = new LinkedHashMap<String, List<String>>();
+                T result = context.mapper == null ? (T) hit.getSourceAsMap() : context.mapper.map(hit.getIndex(), hit.getId(), hit.getVersion() == -1L ? null : hit.getVersion(), hit.getSourceAsString(), hit.getSourceAsMap());
+                Map<String, List<String>> highlightC = new LinkedHashMap<>();
                 if (context.highlight != null && !context.highlight.isEmpty()) {
                     Map<String, HighlightField> highlightFields = hit.getHighlightFields();
                     context.highlight.forEach(veld -> {
@@ -1304,7 +1264,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // int totalShards = searchResponse.getTotalShards();
         // int successfulShards = searchResponse.getSuccessfulShards();
         // int failedShards = searchResponse.getFailedShards();
-        if (searchResponse.getShardFailures() != null && searchResponse.getShardFailures().length > 0) {
+        if (searchResponse.getShardFailures() != null) {
+            searchResponse.getShardFailures();
             for (ShardSearchFailure failure : searchResponse.getShardFailures()) {
                 String reason = failure.reason();
                 LOGGER.error("{}", reason);
@@ -1368,7 +1329,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             context.searchSourceBuilder.trackTotalHitsUpTo(elasticCustomizer.getTrackTotalHits());
         }
 
-        if (context.sort != null && !context.sort.isEmpty()) context.searchSourceBuilder.trackScores(true);// adds score when sorting
+        if (context.sort != null && !context.sort.isEmpty())
+            context.searchSourceBuilder.trackScores(true);// adds score when sorting
 
         // searchSourceBuilder.profile(true); // doesn't work with pagination
 
@@ -1570,13 +1532,13 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         List<String> collect2 = null;
         List<String> collect3 = null;
         if (explain && response.detail() != null && response.detail().analyzer() != null && response.detail().analyzer().getTokens() != null) {
-            collect1 = Arrays.stream(response.detail().analyzer().getTokens()).map(token -> token.getTerm()).collect(Collectors.toList());
+            collect1 = Arrays.stream(response.detail().analyzer().getTokens()).map(AnalyzeResponse.AnalyzeToken::getTerm).collect(Collectors.toList());
         }
         if (response.getTokens() != null) {
-            collect2 = response.getTokens().stream().map(token -> token.getTerm()).collect(Collectors.toList());
+            collect2 = response.getTokens().stream().map(AnalyzeResponse.AnalyzeToken::getTerm).collect(Collectors.toList());
         }
         if (response.detail() != null && response.detail().tokenizer() != null && response.detail().tokenizer().getTokens() != null) {
-            collect3 = Arrays.stream(response.detail().tokenizer().getTokens()).map(token -> token.getTerm()).collect(Collectors.toList());
+            collect3 = Arrays.stream(response.detail().tokenizer().getTokens()).map(AnalyzeResponse.AnalyzeToken::getTerm).collect(Collectors.toList());
         }
         if (collect1 != null) return collect1;
         if (collect2 != null) return collect2;
@@ -1727,7 +1689,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public <T extends ElasticDocument> T getDocument(Class<T> type, String id) {
         GetRequest request = createGetRequest(type, id);
-        GetResponse response = null;
+        GetResponse response;
         try {
             response = getClient().get(request, getRequestOptions());
         } catch (IOException ex) {
@@ -1822,8 +1784,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             request.source(mapping);
             request.setTimeout(TimeValue.timeValueMinutes(2));
             AcknowledgedResponse putMappingResponse = getClient().indices().putMapping(request, getRequestOptions());
-            boolean acknowledged = putMappingResponse.isAcknowledged();
-            return acknowledged;
+            return putMappingResponse.isAcknowledged();
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
@@ -1847,13 +1808,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // boolean exists = response.isExists();
         // boolean match = response.isMatch();
         // boolean hasExplanation = response.hasExplanation();
-        Explanation explanation = response.getExplanation();
         // GetResult getResult = response.getGetResult();
         // if (getResult != null) {
         // Map<String, Object> source = getResult.getSource();
         // Map<String, DocumentField> fields = getResult.getFields();
         // }
-        return explanation;
+        return response.getExplanation();
     }
 
     public <T extends ElasticDocument> List<String> uniqueTerms(Class<T> type, QueryBuilder query, String field) {
@@ -1881,7 +1841,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         // }
         // }
         // }
-        List<MetricAggregation> aggregations = Arrays.asList(MetricAggregation.cardinality);
+        List<MetricAggregation> aggregations = List.of(MetricAggregation.cardinality);
         Map<String, List<MetricAggregation>> agg = Collections.singletonMap("uniqueValueCount", aggregations);
         List<AggregationResult> aggregationResults = aggregate(index, query, field, agg, null);
         return aggregationResults.stream().map(AggregationResult::getKey).collect(Collectors.toList());
@@ -1897,8 +1857,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
-        boolean acknowledged = response.isAcknowledged();
-        return acknowledged;
+        return response.isAcknowledged();
     }
 
     public List<org.elasticsearch.cluster.metadata.RepositoryMetadata> getRepositories(String... repositories) {
@@ -1914,8 +1873,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
-        List<org.elasticsearch.cluster.metadata.RepositoryMetadata> repositoryMetadataResponse = response.repositories();
-        return repositoryMetadataResponse;
+        return response.repositories();
     }
 
     public boolean createRepository(String repositoryName, Path location) {
@@ -1936,8 +1894,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
-        boolean acknowledged = response.isAcknowledged();
-        return acknowledged;
+        return response.isAcknowledged();
     }
 
     public List<SnapshotInfo> getSnapshots(String repositoryName) {
@@ -1952,8 +1909,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
-        List<SnapshotInfo> snapshotsInfos = response.getSnapshots();
-        return snapshotsInfos;
+        return response.getSnapshots();
     }
 
     public SnapshotInfo getSnapshotInfo(String repositoryName, String snapshotName, String... indices) {
@@ -1976,8 +1932,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
         RestStatus status = response.status();
         LOGGER.info("{}", "CreateSnapshotResponse.status=" + status);
-        SnapshotInfo snapshotInfo = response.getSnapshotInfo();
-        return snapshotInfo;
+        return response.getSnapshotInfo();
     }
 
     public void excludeTryouts() {
@@ -1986,7 +1941,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 analyzeGlobal(excludeTryout, "test");
                 LOGGER.info("analyzer {} is available", excludeTryout);
             } catch (ConnectionException ex) {
-                LOGGER.error("{}", ex);
+                LOGGER.error("", ex);
                 throw ex;
             } catch (RuntimeException ex) {
                 String id = excludeTryout.id(null);
@@ -2005,26 +1960,23 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     @SuppressWarnings("unchecked")
     public Map<String, Object> getObjectMappingClean(Class<? extends ElasticDocument> indexClass) {
         Map<String, Object> properties = (Map<String, Object>) getObjectMapping(indexClass).get("properties");
-        Map<String, Object> jsonToObject = (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class, objectToJson(getObjectMapper(), properties.entrySet().stream().filter(entry -> {
+        return (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class, objectToJson(getObjectMapper(), properties.entrySet().stream().filter(entry -> {
             Map<String, Object> tmp = (Map<String, Object>) entry.getValue();
             Object enabled = tmp.get("enabled");
             if (enabled == null) return true;
             return !"false".equals(enabled.toString());
-        }).map(entry -> {
+        }).peek(entry -> {
             Map<String, Object> tmp = (Map<String, Object>) entry.getValue();
             if ("date".equals(tmp.get("type"))) {
                 tmp.remove("format");
             }
-            return entry;
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
-        return jsonToObject;
     }
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> getIndexMappingClean(Class<? extends ElasticDocument> indexClass) {
-        Map<String, Object> jsonToObject = (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class,
+        return (Map<String, Object>) jsonToObject(getObjectMapper(), Object.class,
                 objectToJson(getObjectMapper(), getIndexMapping(indexClass).entrySet().stream().filter(entry -> !entry.getKey().contains(".")).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, TreeMap::new))));
-        return jsonToObject;
     }
 
     private boolean skip(Object o) {
@@ -2065,11 +2017,11 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                     }
                     Map<String, Object> fields = (Map<String, Object>) x.get("fields");
                     if (fields != null) {
-                        fields.entrySet().forEach(fe -> {
-                            Map<String, Object> fv = (Map<String, Object>) fe.getValue();
+                        fields.forEach((key, value1) -> {
+                            Map<String, Object> fv = (Map<String, Object>) value1;
                             String analyzer = String.class.cast(fv.get("analyzer"));
                             if (analyzer != null) {
-                                System.out.println(e.getKey() + "." + fe.getKey() + "/" + fv.get("type") + "/" + analyzer + "/" + value);
+                                System.out.println(e.getKey() + "." + key + "/" + fv.get("type") + "/" + analyzer + "/" + value);
                                 if (value instanceof Collection) {
                                     Collection.class.cast(value).forEach(v -> {
                                         if (v instanceof String) {
@@ -2199,8 +2151,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         String name = "index." + ElasticCustomizer.INDEX_SETTINGS_BLOCKS_READ_ONLY;
         GetSettingsResponse indexSettings = getIndexSettings(index, name);
         String indexReadOnly = indexSettings.getSetting(index, name);
-        boolean isReadOnly = "true".equals(indexReadOnly);
-        return isReadOnly;
+        return "true".equals(indexReadOnly);
     }
 
     public <T extends ElasticDocument> boolean setIndexReadOnly(Class<T> type, boolean readOnly) {
@@ -2332,7 +2283,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             getAliasesRequest.indices(index);
             getAliasesRequest.indicesOptions(IndicesOptions.lenientExpandOpen());
             Map<String, Set<AliasMetadata>> r = handleGetAliasesResponse(getClient().indices().getAlias(getAliasesRequest, getRequestOptions()));
-            return r.entrySet().stream().map(e -> e.getValue().stream()).flatMap(Function.identity()).map(meta -> Map.entry(meta.getAlias(), stringToQuery(meta.getFilter()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            return r.values().stream().map(Collection::stream).flatMap(Function.identity()).map(meta -> Map.entry(meta.getAlias(), stringToQuery(meta.getFilter()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (IOException ex) {
             throw handleIOException(ex);
         }
