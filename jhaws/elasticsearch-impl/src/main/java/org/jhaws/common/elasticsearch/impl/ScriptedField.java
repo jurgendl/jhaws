@@ -11,6 +11,15 @@ public class ScriptedField {
 
     private Map<String, Object> parameters = new HashMap<>();
 
+    public ScriptedField() {
+        super();
+    }
+
+    public ScriptedField(String name, String script) {
+        this.name = name;
+        this.script = script;
+    }
+
     public ScriptedField parameter(String name, Object value) {
         parameters.put(name, value);
         return this;

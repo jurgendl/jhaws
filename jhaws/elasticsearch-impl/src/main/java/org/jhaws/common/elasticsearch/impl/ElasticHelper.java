@@ -1,5 +1,24 @@
 package org.jhaws.common.elasticsearch.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
+import org.apache.lucene.search.Explanation;
+import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.common.document.DocumentField;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.jhaws.common.elasticsearch.common.ElasticDocument;
+import org.jhaws.common.elasticsearch.common.Id;
+import org.jhaws.common.elasticsearch.common.Index;
+import org.jhaws.common.elasticsearch.common.Version;
+
+import javax.annotation.PostConstruct;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonString;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +38,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,26 +48,6 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
-import javax.annotation.PostConstruct;
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonString;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.lucene.search.Explanation;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.jhaws.common.elasticsearch.common.ElasticDocument;
-import org.jhaws.common.elasticsearch.common.Id;
-import org.jhaws.common.elasticsearch.common.Index;
-import org.jhaws.common.elasticsearch.common.Version;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ElasticHelper {
     public static MessageDigest SHA256;
@@ -237,13 +237,46 @@ public class ElasticHelper {
 
     public static <T> T toObject(ObjectMapper om, Class<T> type, GetResponse response) {
         if (!response.isExists()) return null;
-        return toObject(om, type, response.getIndex(), response.getId(), response.getVersion(), response.getSourceAsString());
+        return toObject(om, type, response.getIndex(), response.getId(), response.getVersion(), response.getSourceAsString(), convertCalculatedFields(response.getFields()));
     }
 
-    public static <T> T toObject(ObjectMapper om, Class<T> type, @SuppressWarnings("unused") String _index, String _id, Long _version, String json) {
+    public static <T> T toObject(ObjectMapper om, Class<T> type, @SuppressWarnings("unused") String _index, String _id, Long _version, String json, Map<String, Object> calculatedFields) {
         T o = jsonToObject(om, type, json);
         id(o, _id);
         version(o, _version);
+        setCalculatedFields(o, calculatedFields);
+        return o;
+    }
+
+    public static Map<String, Object> convertCalculatedFields(Map<String, DocumentField> documentFields) {
+        if (documentFields == null || documentFields.isEmpty()) return null;
+        Map<String, Object> calculatedFields = new HashMap<>();
+        for (Map.Entry<String, DocumentField> documentField : documentFields.entrySet()) {
+            String name = documentField.getKey();
+            List<Object> values = documentField.getValue().getValues();
+            Object value = documentField.getValue().getValue();
+            calculatedFields.put(name, values == null || values.size() == 1 ? value : values);
+        }
+        return calculatedFields;
+    }
+
+    public static <T> T setCalculatedFields(T o, Map<String, Object> calculatedFields) {
+        if (calculatedFields != null && !calculatedFields.isEmpty()) {
+            for (java.lang.reflect.Field f : o.getClass().getDeclaredFields()) {
+                String name = f.getName();
+                if (calculatedFields.containsKey(name)) {
+                    Object value = calculatedFields.get(name);
+                    if (value != null) {
+                        try {
+                            f.setAccessible(true);
+                            f.set(o, value);
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        }
         return o;
     }
 

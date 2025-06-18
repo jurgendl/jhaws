@@ -1234,7 +1234,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         if (searchHits != null) {
             for (SearchHit hit : searchHits) {
                 @SuppressWarnings("unchecked")
-                T result = context.mapper == null ? (T) hit.getSourceAsMap() : context.mapper.map(hit.getIndex(), hit.getId(), hit.getVersion() == -1L ? null : hit.getVersion(), hit.getSourceAsString(), hit.getSourceAsMap());
+                T result = context.mapper == null ? (T) hit.getSourceAsMap() : context.mapper.map(hit.getIndex(), hit.getId(), hit.getVersion() == -1L ? null : hit.getVersion(), hit.getSourceAsString(), hit.getSourceAsMap(), ElasticHelper.convertCalculatedFields(hit.getDocumentFields()));
                 Map<String, List<String>> highlightC = new LinkedHashMap<>();
                 if (context.highlight != null && !context.highlight.isEmpty()) {
                     Map<String, HighlightField> highlightFields = hit.getHighlightFields();
