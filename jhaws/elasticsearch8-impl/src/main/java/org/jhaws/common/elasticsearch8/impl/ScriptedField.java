@@ -1,5 +1,4 @@
-package org.jhaws.common.elasticsearch.impl;
-
+package org.jhaws.common.elasticsearch8.impl;
 
 import java.util.HashMap;
 import java.util.Map;
