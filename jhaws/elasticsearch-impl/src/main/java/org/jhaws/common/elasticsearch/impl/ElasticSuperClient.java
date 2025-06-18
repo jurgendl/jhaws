@@ -953,20 +953,20 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return count;
     }
 
-    public <T extends ElasticDocument> List<QueryResult<T>> query(Class<T> type, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
-        return $query(index(type), query, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), null);
+    public <T extends ElasticDocument> List<QueryResult<T>> query(Class<T> type, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Collection<ScriptedField> scriptedFields) {
+        return $query(index(type), query, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), null, scriptedFields);
     }
 
-    public List<QueryResult<Map<String, Object>>> query(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
-        return $query(index, query, pagination, sort, includes, excludes, Mapper.toMap(), null);
+    public List<QueryResult<Map<String, Object>>> query(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Collection<ScriptedField> scriptedFields) {
+        return $query(index, query, pagination, sort, includes, excludes, Mapper.toMap(), null, scriptedFields);
     }
 
-    public <T extends ElasticDocument> List<QueryResult<T>> highlight(Class<T> type, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, List<String> highlight) {
-        return $query(index(type), query, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), highlight);
+    public <T extends ElasticDocument> List<QueryResult<T>> highlight(Class<T> type, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, List<String> highlight, Collection<ScriptedField> scriptedFields) {
+        return $query(index(type), query, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), highlight, scriptedFields);
     }
 
-    public <T> List<QueryResult<Map<String, Object>>> highlight(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, List<String> highlight) {
-        return $query(index, query, pagination, sort, includes, excludes, Mapper.toMap(), highlight);
+    public <T> List<QueryResult<Map<String, Object>>> highlight(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, List<String> highlight, Collection<ScriptedField> scriptedFields) {
+        return $query(index, query, pagination, sort, includes, excludes, Mapper.toMap(), highlight, scriptedFields);
     }
 
     public <T extends ElasticDocument> List<AggregationResult> aggregate(Class<T> type, QueryBuilder query, String aggregationField, Map<String, List<MetricAggregation>> aggregations, Long minDocCount) {
@@ -1051,15 +1051,15 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return aggregationResults;
     }
 
-    public <T extends ElasticDocument> QueryResults<T> multiQuery(Class<T> type, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
-        return $multi_query(index(type), queries, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), null);
+    public <T extends ElasticDocument> QueryResults<T> multiQuery(Class<T> type, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Collection<ScriptedField> scriptedFields) {
+        return $multi_query(index(type), queries, pagination, sort, includes, excludes, Mapper.toObject(getObjectMapper(), type), null, scriptedFields);
     }
 
-    public QueryResults<Map<String, Object>> multiQuery(String index, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes) {
-        return $multi_query(index, queries, pagination, sort, includes, excludes, Mapper.toMap(), null);
+    public QueryResults<Map<String, Object>> multiQuery(String index, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Collection<ScriptedField> scriptedFields) {
+        return $multi_query(index, queries, pagination, sort, includes, excludes, Mapper.toMap(), null, scriptedFields);
     }
 
-    protected <T> QueryResults<T> $multi_query(String index, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight) {
+    protected <T> QueryResults<T> $multi_query(String index, List<QueryBuilder> queries, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight, Collection<ScriptedField> scriptedFields) {
         QueryContext<T> context = new QueryContext<>();
         context.index = index;
         context.query = queries.get(0);
@@ -1069,6 +1069,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         context.excludes = excludes;
         context.mapper = mapper;
         context.highlight = highlight;
+        context.scriptedFields = scriptedFields;
 
         $$query_prepare(context);
 
@@ -1128,7 +1129,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         return queryResults;
     }
 
-    protected <T> List<QueryResult<T>> $query(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight) {
+    protected <T> List<QueryResult<T>> $query(String index, QueryBuilder query, Pagination pagination, List<SortBuilder<?>> sort, String[] includes, String[] excludes, Mapper<T> mapper, List<String> highlight, Collection<ScriptedField> scriptedFields) {
         QueryContext<T> context = new QueryContext<>();
         context.index = index;
         context.query = query;
@@ -1138,6 +1139,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         context.excludes = excludes;
         context.mapper = mapper;
         context.highlight = highlight;
+        context.scriptedFields = scriptedFields;
         return $$query(context);
     }
 
@@ -1352,6 +1354,12 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
 
         context.searchSourceBuilder.fetchSource(fetch(true, context.includes, context.excludes));
+
+        if (context.scriptedFields != null) {
+            for (ScriptedField scriptedField : context.scriptedFields) {
+                context.searchSourceBuilder.scriptField(scriptedField.getName(), script(scriptedField.getScript(), scriptedField.getParameters()));
+            }
+        }
     }
 
     protected AggregationResult aggregationResultsParser(AggregationResult aggregationResult, Aggregation subAggregation) {
@@ -2048,7 +2056,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public <T extends ElasticDocument> Map<String, Boolean> updateDocumentsByQuery(Class<T> type, QueryBuilder query, Pagination pagination, Predicate<T> changer) {
         Map<String, Boolean> changed = new LinkedHashMap<>();
-        for (QueryResult<T> result : query(type, query, pagination, null, null, null)) {
+        for (QueryResult<T> result : query(type, query, pagination, null, null, null, null)) {
             T document = result.getResult();
             if (changer.test(document)) {
                 indexDocument(document);
@@ -2069,7 +2077,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
 
     public Map<String, Boolean> updateDocumentsByQuery(String index, QueryBuilder query, Pagination pagination, Predicate<Map<String, Object>> changer) {
         Map<String, Boolean> changed = new LinkedHashMap<>();
-        for (QueryResult<Map<String, Object>> result : query(index, query, pagination, null, null, null)) {
+        for (QueryResult<Map<String, Object>> result : query(index, query, pagination, null, null, null, null)) {
             Map<String, Object> document = result.getResult();
             if (changer.test(document)) {
                 indexDocument(index, result.getId(), document);
