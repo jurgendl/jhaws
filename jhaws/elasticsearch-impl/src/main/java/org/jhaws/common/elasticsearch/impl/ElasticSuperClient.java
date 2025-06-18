@@ -2291,7 +2291,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             getAliasesRequest.indices(index);
             getAliasesRequest.indicesOptions(IndicesOptions.lenientExpandOpen());
             Map<String, Set<AliasMetadata>> r = handleGetAliasesResponse(getClient().indices().getAlias(getAliasesRequest, getRequestOptions()));
-            return r.values().stream().map(Collection::stream).flatMap(Function.identity()).map(meta -> Map.entry(meta.getAlias(), stringToQuery(meta.getFilter()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            return r.values().stream().flatMap(Collection::stream).map(meta -> Map.entry(meta.getAlias(), stringToQuery(meta.getFilter()))).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (IOException ex) {
             throw handleIOException(ex);
         }

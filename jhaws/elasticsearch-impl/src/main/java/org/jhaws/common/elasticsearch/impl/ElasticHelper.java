@@ -1,6 +1,5 @@
 package org.jhaws.common.elasticsearch.impl;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,7 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UncheckedIOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -78,7 +76,7 @@ public class ElasticHelper {
     public static <T> T jsonToObject(ObjectMapper om, Class<T> type, String json) {
         if (json == null) return null;
         try {
-            return om.readValue(json.getBytes(StandardCharsets.UTF_8.toString()), type);
+            return om.readValue(json.getBytes(StandardCharsets.UTF_8), type);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -87,7 +85,7 @@ public class ElasticHelper {
     public static <T> T jsonToObject(ObjectMapper om, TypeReference<T> type, String json) {
         if (json == null) return null;
         try {
-            return om.readValue(json.getBytes(StandardCharsets.UTF_8.toString()), type);
+            return om.readValue(json.getBytes(StandardCharsets.UTF_8), type);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -102,7 +100,7 @@ public class ElasticHelper {
     private static Map<Class<?>, Optional<Method>> initializers = Collections.synchronizedMap(new LinkedHashMap<>());
 
     public static <T> Optional<Method> initializer(T o) {
-        Class<? extends Object> type = o.getClass();
+        Class<?> type = o.getClass();
         return initializer(type);
     }
 
@@ -116,21 +114,16 @@ public class ElasticHelper {
     }
 
     public static <T> String index(T o) {
-        Class<? extends Object> type = o.getClass();
+        Class<?> type = o.getClass();
         return index(type);
     }
 
     public static <T> String index(Class<T> type) {
-        String value = index.get(type);
-        if (value == null) {
-            value = type.getAnnotation(Index.class).value();
-            index.put(type, value);
-        }
-        return value;
+        return index.computeIfAbsent(type, k -> type.getAnnotation(Index.class).value());
     }
 
     public static <T> String id(T o) {
-        Class<? extends Object> type = o.getClass();
+        Class<?> type = o.getClass();
         Field field = id.get(type);
         if (field == null) {
             field = fields(type)//
@@ -154,23 +147,23 @@ public class ElasticHelper {
         Class<?> current = type;
         List<Field> fields = new ArrayList<>();
         while (!Object.class.equals(current)) {
-            Arrays.stream(current.getDeclaredFields()).forEach(fields::add);
+            fields.addAll(Arrays.asList(current.getDeclaredFields()));
             current = current.getSuperclass();
         }
         return fields.stream();
     }
 
     public static <T> T id(T o, String oid) {
-        Class<? extends Object> type = o.getClass();
+        Class<?> type = o.getClass();
         Field field = id.get(type);
         if (field == null) {
             field = fields(type)//
                     .filter(f -> f.getAnnotation(Id.class) != null)//
                     .findAny().orElseThrow();
-            if (field.getAnnotation(JsonIgnore.class) == null) {
-                // throw new IllegalArgumentException("JsonIgnore missing on " +
-                // field);
-            }
+            //if (field.getAnnotation(JsonIgnore.class) == null) {
+            // throw new IllegalArgumentException("JsonIgnore missing on " +
+            // field);
+            //}
             field.setAccessible(true);
             id.put(type, field);
         }
@@ -183,7 +176,7 @@ public class ElasticHelper {
     }
 
     public static <T> Long version(T o) {
-        Class<? extends Object> type = o.getClass();
+        Class<?> type = o.getClass();
         Field field = version.get(type);
         if (field == null) {
             field = fields(type)//
@@ -201,7 +194,7 @@ public class ElasticHelper {
 
     public static <T> T version(T o, Long v) {
         if (v == null) return o;
-        Class<? extends Object> type = o.getClass();
+        Class<?> type = o.getClass();
         Field field = version.get(type);
         if (field == null) {
             field = fields(type)//
@@ -324,15 +317,11 @@ public class ElasticHelper {
     }
 
     public static String readText(String resourceName) {
-        try {
-            return new String(readBytes(resourceName), StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        return new String(readBytes(resourceName), StandardCharsets.UTF_8);
     }
 
     public static List<String> readLines(String resourceName) {
-        return IOUtils.readLines(readInputStream(resourceName), StandardCharsets.UTF_8.toString());
+        return IOUtils.readLines(readInputStream(resourceName), StandardCharsets.UTF_8);
     }
 
     public static InputStream readInputStream(String resourceName) {
@@ -364,11 +353,7 @@ public class ElasticHelper {
     }
 
     public static String readString(InputStream in) {
-        try {
-            return new String(read(in), StandardCharsets.UTF_8.toString());
-        } catch (IOException ex) {
-            throw new UncheckedIOException(ex);
-        }
+        return new String(read(in), StandardCharsets.UTF_8);
     }
 
     public static byte[] read(InputStream in) {
@@ -386,7 +371,7 @@ public class ElasticHelper {
     public static List<String> searchParts(String query) {
         // https://stackoverflow.com/questions/7804335/split-string-on-spaces-in-java-except-if-between-quotes-i-e-treat-hello-wor
         Matcher m = PATTERN_SEARCHPARTS.matcher(query);
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         while (m.find()) {
             list.add(m.group(1).replace("\"", "").toLowerCase());
         }
@@ -456,7 +441,7 @@ public class ElasticHelper {
                 current = JsonObject.class.cast(current).get(parts[i]);
             }
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println("" + ex);
         }
         if (current == null) return null;
         try {
@@ -465,7 +450,7 @@ public class ElasticHelper {
             else
                 val = current.toString();
         } catch (Exception ex) {
-            System.out.println(ex);
+            System.out.println("" + ex);
         }
         if (val.length() > 500) val = "...";
         return val.replace("\r\n", " ").replace("\r", " ").replace("\n", " ");
@@ -490,7 +475,7 @@ public class ElasticHelper {
         StringBuilder buffer = new StringBuilder();
 
         if (explanation.getDescription().equals("max of:")) {
-            if (codes) buffer.append(d + "A ");
+            if (codes) buffer.append(d).append("A ");
             buffer.append(MID);
             for (int i = 0; i < d; i++) {
                 if (i + 1 == d) {
@@ -499,24 +484,20 @@ public class ElasticHelper {
                     buffer.append(MID);
                 }
             }
-            buffer.append("max[" + explanation.getValue() + "](");
+            buffer.append("max[").append(explanation.getValue()).append("](");
         } else if (explanation.getDescription().equals("sum of:")) {
-            if (codes) buffer.append(d + "B ");
+            if (codes) buffer.append(d).append("B ");
             if (d == 0)
                 buffer.append(START);
             else
                 buffer.append(MID);
-            for (int i = 0; i < d; i++) {
-                buffer.append(START);
-            }
-            buffer.append("Σ[" + explanation.getValue() + "](");
+            buffer.append(START.repeat(Math.max(0, d)));
+            buffer.append("Σ[").append(explanation.getValue()).append("](");
         } else {
-            if (codes) buffer.append(d + "C ");
+            if (codes) buffer.append(d).append("C ");
             if (hasSub) {
                 buffer.append(MID);
-                for (int i = 0; i < d; i++) {
-                    buffer.append(MID);
-                }
+                buffer.append(MID.repeat(Math.max(0, d)));
             } else {
                 buffer.append(MID);
                 for (int i = 0; i < d; i++) {
@@ -541,16 +522,16 @@ public class ElasticHelper {
         buffer.append("\n");
 
         Explanation[] details = explanation.getDetails();
-        for (int i = 0; i < details.length; i++) {
-            if (details[i].getValue().doubleValue() > 0.0d) {
-                buffer.append(explanation0(jso, details[i], d + 1));
+        for (Explanation detail : details) {
+            if (detail.getValue().doubleValue() > 0.0d) {
+                buffer.append(explanation0(jso, detail, d + 1));
             }
         }
 
         boolean $d = explanation.getDescription().equals("max of:") || explanation.getDescription().equals("sum of:");
 
         if ($d) {
-            if (codes) buffer.append(d + "D ");
+            if (codes) buffer.append(d).append("D ");
             if (d == 0)
                 buffer.append(END);
             else
