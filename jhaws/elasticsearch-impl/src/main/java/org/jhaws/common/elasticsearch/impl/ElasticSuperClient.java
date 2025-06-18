@@ -268,8 +268,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     protected RuntimeException handleIOException(IOException ex) {
-        if (ex instanceof java.net.ConnectException) {
-            return new ConnectionException(java.net.ConnectException.class.cast(ex));
+        if (ex instanceof java.net.ConnectException conn) {
+            return new ConnectionException(conn);
         }
         return new UncheckedIOException(ex);
     }
@@ -1035,14 +1035,14 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         }
 
         searchResponse.getAggregations().getAsMap().forEach((key, value) -> {
-            if (value instanceof ParsedTerms) {
-                ParsedTerms.class.cast(value).getBuckets().forEach(bucket -> {
+            if (value instanceof ParsedTerms parsedTerms) {
+                parsedTerms.getBuckets().forEach(bucket -> {
                     AggregationResult aggregationResult = new AggregationResult(bucket.getKeyAsString(), bucket.getDocCount());
                     aggregationResults.add(aggregationResult);
                     bucket.getAggregations().forEach(subAggregation -> aggregationResultsParser(aggregationResult, subAggregation));
                 });
-            } else if (value instanceof ParsedGlobal) {
-                ParsedGlobal.class.cast(value).getAggregations().forEach(subAggregation -> aggregationResults.add(aggregationResultsParser(new AggregationResult(), subAggregation)));
+            } else if (value instanceof ParsedGlobal parsedGlobal) {
+                parsedGlobal.getAggregations().forEach(subAggregation -> aggregationResults.add(aggregationResultsParser(new AggregationResult(), subAggregation)));
             } else {
                 throw new UnsupportedOperationException(value.getClass().getName());
             }
@@ -1319,8 +1319,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
         if (context.pagination == null) {
             context.pagination = new Pagination();
         }
-        if (context.pagination instanceof Scrolling) {
-            context.scrolling = Scrolling.class.cast(context.pagination);
+        if (context.pagination instanceof Scrolling scrolling) {
+            context.scrolling = scrolling;
         }
 
         context.searchSourceBuilder = new SearchSourceBuilder();
@@ -1363,11 +1363,9 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
     }
 
     protected AggregationResult aggregationResultsParser(AggregationResult aggregationResult, Aggregation subAggregation) {
-        if (subAggregation instanceof NumericMetricsAggregation.SingleValue) {
-            NumericMetricsAggregation.SingleValue p = NumericMetricsAggregation.SingleValue.class.cast(subAggregation);
+        if (subAggregation instanceof NumericMetricsAggregation.SingleValue p) {
             aggregationResult.getResults().put(subAggregation.getName() + "[" + subAggregation.getType() + "]", p.value());
-        } else if (subAggregation instanceof PercentileRanks) {
-            PercentileRanks p = PercentileRanks.class.cast(subAggregation);
+        } else if (subAggregation instanceof PercentileRanks p) {
             Iterator<Percentile> it = p.iterator();
             Map<Integer, Double> tmp = new LinkedHashMap<>();
             while (it.hasNext()) {
@@ -1375,8 +1373,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                 tmp.put((int) percentile.getPercent(), percentile.getValue());
             }
             aggregationResult.getResults().put(subAggregation.getName() + "[" + subAggregation.getType() + "]", tmp);
-        } else if (subAggregation instanceof ParsedExtendedStats) {
-            ParsedExtendedStats p = ParsedExtendedStats.class.cast(subAggregation);
+        } else if (subAggregation instanceof ParsedExtendedStats p) {
             aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.avg + "]", p.getAvg());
             aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.max + "]", p.getMax());
             aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.min + "]", p.getMin());
@@ -1386,8 +1383,7 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
             aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.sum + "]", p.getSum());
             aggregationResult.getResults().put(subAggregation.getName() + "[" + "sum_of_squares" + "]", p.getSumOfSquares());
             aggregationResult.getResults().put(subAggregation.getName() + "[" + "variance" + "]", p.getVariance());
-        } else if (subAggregation instanceof ParsedStats) {
-            ParsedStats p = ParsedStats.class.cast(subAggregation);
+        } else if (subAggregation instanceof ParsedStats p) {
             aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.avg + "]", p.getAvg());
             aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.max + "]", p.getMax());
             aggregationResult.getResults().put(subAggregation.getName() + "[" + MetricAggregation.min + "]", p.getMin());
@@ -2010,15 +2006,15 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                         String analyzer = String.class.cast(x.get("analyzer"));
                         if (analyzer != null) {
                             System.out.println(e.getKey() + "/" + x.get("type") + "/" + analyzer + "/" + value);
-                            if (value instanceof Collection) {
-                                Collection.class.cast(value).forEach(v -> {
-                                    if (v instanceof String) {
-                                        System.out.println("\t" + v + ">" + analyzeIndex(idx, analyzer, String.class.cast(v)));
+                            if (value instanceof Collection<?> coll) {
+                                coll.forEach(v -> {
+                                    if (v instanceof String s) {
+                                        System.out.println("\t" + v + ">" + analyzeIndex(idx, analyzer, s));
                                     }
                                 });
                             } else {
-                                if (value instanceof String) {
-                                    System.out.println("\t" + value + ">" + analyzeIndex(idx, analyzer, String.class.cast(value)));
+                                if (value instanceof String s) {
+                                    System.out.println("\t" + value + ">" + analyzeIndex(idx, analyzer, s));
                                 }
                             }
                         }
@@ -2030,8 +2026,8 @@ public class ElasticSuperClient extends ElasticLowLevelClient {
                             String analyzer = String.class.cast(fv.get("analyzer"));
                             if (analyzer != null) {
                                 System.out.println(e.getKey() + "." + key + "/" + fv.get("type") + "/" + analyzer + "/" + value);
-                                if (value instanceof Collection) {
-                                    Collection.class.cast(value).forEach(v -> {
+                                if (value instanceof Collection<?> coll) {
+                                    coll.forEach(v -> {
                                         if (v instanceof String) {
                                             System.out.println("\t" + v + ">" + analyzeIndex(idx, analyzer, String.class.cast(v)));
                                         }
