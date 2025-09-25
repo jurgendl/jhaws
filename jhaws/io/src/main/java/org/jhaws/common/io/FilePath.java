@@ -1787,7 +1787,7 @@ public class FilePath implements Path, Externalizable {
 	}
 
 	public List<FilePath> getDirectories() {
-		return getDirectories();
+		return getFolders();
 	}
 
 	public long getFileCount() {
