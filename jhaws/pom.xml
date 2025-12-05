@@ -87,7 +87,7 @@
 		<version.jtidy>1.0.5</version.jtidy>
 		<version.jsoup>1.16.2</version.jsoup>
 		<version.poi>4.1.2</version.poi>
-		<version.tika>1.28.3</version.tika>
+		<version.tika>3.2.2</version.tika>
 		<version.opencsv>5.6</version.opencsv>
 		<version.jai>1.4.0</version.jai>
 		<version.glazedlists>1.9.1</version.glazedlists>
