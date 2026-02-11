@@ -92,7 +92,7 @@
 		<!-- BEGIN DEPENDENCIES -->
 		<version.liquibase>4.9.0</version.liquibase>
 		<version.liquibase-hibernate5>4.9.0</version.liquibase-hibernate5>
-		<version.reactor-netty>1.1.25</version.reactor-netty>
+		<version.reactor-netty>1.2.8</version.reactor-netty>
 		<version.reactor-core>3.6.13</version.reactor-core>
 		<version.stax2-api>4.2</version.stax2-api>
 		<version.javax.json>1.1.4</version.javax.json>
