@@ -1,15 +1,14 @@
 package org.swingeasy;
 
-import java.text.Format;
-import java.util.Locale;
+import org.swingeasy.MethodInvoker.InvocationException;
+import org.swingeasy.formatters.EFormatBuilder;
+import org.swingeasy.system.SystemSettings;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.ToolTipManager;
 import javax.swing.text.DefaultFormatterFactory;
-
-import org.swingeasy.MethodInvoker.InvocationException;
-import org.swingeasy.formatters.EFormatBuilder;
-import org.swingeasy.system.SystemSettings;
+import java.text.Format;
+import java.util.Locale;
 
 /**
  * @author Jurgen
@@ -95,21 +94,19 @@ public class EFormattedTextField<T> extends JFormattedTextField implements EComp
     }
 
     protected void setFormat(Format format) {
-        AbstractFormatterFactory ff;
         try {
             // thank you for making this private
-            ff = MethodInvoker.invoke(this, "getDefaultFormatterFactory", Object.class, format, AbstractFormatterFactory.class);
-
+            AbstractFormatterFactory ff = MethodInvoker.invoke(this, "getDefaultFormatterFactory", Object.class, format, AbstractFormatterFactory.class);
             if (ff instanceof DefaultFormatterFactory) {
                 DefaultFormatterFactory defaultFormatterFactory = DefaultFormatterFactory.class.cast(ff);
                 defaultFormatterFactory.setDisplayFormatter(defaultFormatterFactory.getDefaultFormatter());
                 defaultFormatterFactory.setEditFormatter(defaultFormatterFactory.getDefaultFormatter());
                 defaultFormatterFactory.setNullFormatter(defaultFormatterFactory.getDefaultFormatter());
             }
+            setFormatterFactory(ff);
         } catch (InvocationException ex) {
-            throw new RuntimeException(ex);
+            ex.printStackTrace();
         }
-        setFormatterFactory(ff);
     }
 
     /**
