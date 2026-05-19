@@ -1,25 +1,15 @@
 package org.swingeasy;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import javax.swing.SpinnerDateModel;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import java.util.Date;
 
 /**
  * @author Jurgen
  */
 public class ESpinnerDateModel extends SpinnerDateModel {
     private static final long serialVersionUID = 3829866433193892549L;
-
-    protected static final String VALUE = "value";
-
-    protected final ObjectWrapper ow;
-
-    public ESpinnerDateModel() {
-        ow = new ObjectWrapper(this);
-    }
 
     /**
      * @see javax.swing.SpinnerDateModel#getNextValue()
@@ -50,8 +40,7 @@ public class ESpinnerDateModel extends SpinnerDateModel {
      */
     @Override
     public Object getValue() {
-        Calendar calendarValue = ow.get(ESpinnerDateModel.VALUE, Calendar.class);
-        return calendarValue == null ? null : super.getValue();
+        return super.getValue();
     }
 
     /**
@@ -59,17 +48,8 @@ public class ESpinnerDateModel extends SpinnerDateModel {
      */
     @Override
     public void setValue(Object value) {
-        Calendar calendarValue = ow.get(ESpinnerDateModel.VALUE, Calendar.class);
-        if (!new EqualsBuilder().append(value, calendarValue == null ? null : calendarValue.getTime()).isEquals()) {
-            if (value == null) {
-                ow.unset(ESpinnerDateModel.VALUE);
-            } else {
-                if (calendarValue == null) {
-                    calendarValue = Calendar.getInstance();
-                    ow.set(ESpinnerDateModel.VALUE, calendarValue);
-                }
-                calendarValue.setTime((Date) value);
-            }
+        if (!new EqualsBuilder().append(value, getDate()).isEquals()) {
+            super.setValue(value);
             fireStateChanged();
         }
     }
