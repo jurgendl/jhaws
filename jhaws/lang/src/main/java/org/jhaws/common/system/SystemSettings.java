@@ -43,6 +43,7 @@ public class SystemSettings {
         Windows_8, //
         Windows_8_1, //
         Windows_10, //
+        Windows_11, //
         Windows_95, //
         Windows_98, //
         Windows_NT, //
@@ -56,37 +57,59 @@ public class SystemSettings {
         Mac, Nix, Windows, unknown;
     }
 
-    /** 32/64 bit */
+    /**
+     * 32/64 bit
+     */
     public static final BIT bit;
 
-    /** see enum */
+    /**
+     * see enum
+     */
     public static final OS os;
 
-    /** see enum */
+    /**
+     * see enum
+     */
     public static final OS_GROUP osgroup;
 
-    /** nix /usr/lib/ */
+    /**
+     * nix /usr/lib/
+     */
     public static final File NIX_LIB;
 
-    /** default open file commands for windows */
+    /**
+     * default open file commands for windows
+     */
     public static final Map<String, String> WIN_FILE_OPEN_CMDS = new HashMap<>();
 
-    /** file extension map for windows */
+    /**
+     * file extension map for windows
+     */
     public static final Map<String, String> WIN_FILE_EXTS = new HashMap<>();
 
-    /** windows specific dir */
+    /**
+     * windows specific dir
+     */
     public static final String WINDIR_PROGRAM_FILES;
 
-    /** windows specific dir */
+    /**
+     * windows specific dir
+     */
     public static final String WINDIR_SYSTEM_ROOT;
 
-    /** windows specific dir */
+    /**
+     * windows specific dir
+     */
     public static final String WINDIR_WINDIR;
 
-    /** windows specific dir */
+    /**
+     * windows specific dir
+     */
     public static final String WINDIR_SYSTEM32;
 
-    /** windows specific dir */
+    /**
+     * windows specific dir
+     */
     public static final String WINDIR_USER_PROFILE;
 
     public static final String LOCALE = "locale";
@@ -97,7 +120,9 @@ public class SystemSettings {
 
     public static final String CLIPBOARD = "clipboard";
 
-    /** singleton */
+    /**
+     * singleton
+     */
     protected static final SystemSettings singleton = new SystemSettings();
 
     protected static String newline;
@@ -177,6 +202,7 @@ public class SystemSettings {
                 case Windows_8:
                 case Windows_8_1:
                 case Windows_10:
+                case Windows_11:
                     _osgroup = OS_GROUP.Windows;
 
                     break;
@@ -361,12 +387,12 @@ public class SystemSettings {
     /**
      * probeer library met naam en extentie in te lezen van libpath en als dat niet lukt, schrijft tmp file vanuit classpath en leest dat in
      *
-     * @param libname libname
-     * @param ext lib extentie, neem null voor default op besturingssysteem
-     * @param temp maak een temp file en probeer van daar in te laden
+     * @param libname    libname
+     * @param ext        lib extentie, neem null voor default op besturingssysteem
+     * @param temp       maak een temp file en probeer van daar in te laden
      * @param tempSuffix enkel van belang wanneer temp=true; bv versie library als die niet in libname zelf zit, wanneer null wordt dat niet in de temp filename gestoken; als deze
-     *            waarde niet null is wordt een tmp file met een vaste naam gegenereerd zodat deze bij volgende keer kan worden hergebruikt in tegenstelling tot volledig random
-     *            naam wanneer deze parameter null is
+     *                   waarde niet null is wordt een tmp file met een vaste naam gegenereerd zodat deze bij volgende keer kan worden hergebruikt in tegenstelling tot volledig random
+     *                   naam wanneer deze parameter null is
      * @throws IOException
      * @throws NullPointerException
      * @throws UnsatisfiedLinkError
